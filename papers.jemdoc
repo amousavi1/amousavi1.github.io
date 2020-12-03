@@ -1,0 +1,23 @@
+# jemdoc: menu{MENU}{index.html}
+= Ahmad Mousavi 
+
+== Publications
+:{[https://arxiv.org/pdf/2011.08475.pdf  Density Estimation using Entropy Maximization for Semi-continuous Data]} SK. Popuri, NK. Neerchal, A. Mehta, A. Mousavi 
+\n  arXiv:2011.08475, 2020
+:{[https://arxiv.org/pdf/1908.08616.pdf Quadratic surface support vector machine with l1 norm regularization]} A. Mousavi, Z. Gao, L. Han, A. Lim 
+\n  arXiv:1908.08616, 2019
+:{[https://arxiv.org/pdf/1908.01014.pdf A survey on compressive sensing: Classical results and recent advancements]} A. Mousavi, M. Rezaee, R. Ayanzadeh 
+\n  arXiv:1908.01014, 2019 
+:{[https://arxiv.org/pdf/1903.07236.pdf Exact support and vector recovery of constrained sparse vectors via constrained matching pursuit]} J. Shen, A. Mousavi 
+\n  arXiv:1903.07236, 2019  
+:{[https://search.proquest.com/openview/7024665526e3f8494a55f1da4be35285/1?pq-origsite=gscholar&cbl=18750&diss=y Topics in Sparse Recovery via Constrained Optimization: Least Sparsity, Solution Uniqueness, and Constrained Exact Recovery]} A. Mousavi 
+\n University of Maryland, Baltimore County, 2019
+:{[https://arxiv.org/pdf/1711.05882.pdf Solution uniqueness of convex piecewise affine functions based optimization with applications to constrained l1 minimization]} A. Mousavi, J. Shen 
+\n ESAIM: Control, Optimisation and Calculus of Variations 25, 56, 2019
+:{[https://arxiv.org/pdf/1901.00088.pdf Quantum annealing based binary compressive sensing with matrix uncertainty]} R. Ayanzadeh, A. Mousavi, M. Halem, T. Finin 
+\n  arXiv:1901.00088, 2019
+:{[https://arxiv.org/pdf/1708.06055.pdf Least Sparsity of p-Norm Based Optimization Problems with p>1]} J. Shen, A. Mousavi 
+\n SIAM Journal on Optimization 28 (3), 2721-2751, 2018 
+
+
+
