@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmad Mousavi</title>
+    <link rel="stylesheet" href="jemdoc.css">
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #f0f0f0;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            flex: 1;
+        }
+        .sidebar a {
+            display: block;
+            margin: 10px 0;
+            text-decoration: none;
+            color: #0073e6;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        h1, h2, h3 {
+            color: #003399;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile img {
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        /* Hide sections initially */
+        .section {
+            display: none;
+        }
+    </style>
+    <script>
+        // Function to switch between sections
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.style.display = 'none');
+
+            // Show the clicked section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Display the biography section by default when the page loads
+        window.onload = function() {
+            showSection('biography');
+        };
+    </script>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Links</h2>
+    <a onclick="showSection('biography')">Biography</a>
+    <a onclick="showSection('publications')">Publications</a>
+    <a onclick="showSection('thesis')">Ph.D. Thesis</a>
+    <a onclick="showSection('education')">Education</a>
+    <a onclick="showSection('interests')">Research Interests</a>
+    <a onclick="showSection('experience')">Work Experience</a>
+    <a onclick="showSection('skills')">Computer Skills</a>
+    <a onclick="showSection('teaching')">Teaching</a>
+    <a onclick="showSection('collaborators')">Selected Collaborators</a>
+    <a onclick="showSection('contact')">Contact</a>
+</div>
+
+<div class="content">
+    <!-- Biography Section -->
+    <div id="biography" class="section">
+        <div class="profile">
+            <img src="ahmad3.jpg" alt="Ahmad Mousavi" width="200px" />
+            <div>
+                <h1>Ahmad Mousavi, Ph.D.</h1>
+                <p>
+                    Postdoctoral Associate at Informatics Institute, University of Florida <br>
+                    Former advisor: Professor Jinglai Shen <br>
+                    <a href="https://scholar.google.com">Google Scholar</a>, <a href="ahmad_CV.pdf">Curriculum Vitae</a> <br>
+                    Contact: <a href="mailto:youremail@example.com">email</a>, <a href="https://www.linkedin.com/in/yourprofile">LinkedIn</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publications Section -->
+    <div id="publications" class="section">
+        <h2>Publications</h2>
+        <ul>
+            <li>
+                <strong><a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/itor.13123" target="_blank">
+                A penalty decomposition algorithm with greedy improvement for mean-reverting portfolios with sparsity and volatility constraints</a></strong> <br>
+                A. Mousavi, J. Shen <br>
+                <em>International Transactions in Operational Research, 2022</em>
+            </li>
+            <li>
+                <strong><a href="https://onlinelibrary.wiley.com/doi/abs/10.1111/itor.13123" target="_blank">
+                A penalty decomposition algorithm with greedy improvement for mean-reverting portfolios with sparsity and volatility constraints</a></strong> <br>
+                A. Mousavi, J. Shen <br>
+                <em>International Transactions in Operational Research, 2022</em>
+            </li>
+            <li>
+                <strong><a href="https://www.sciencedirect.com/science/article/pii/S1051200421000192" target="_blank">
+                Density estimation using entropy maximization for semi-continuous Data</a></strong> <br>
+                S. Popuri, N. Neerchal, A. Mehta, A. Mousavi <br>
+                <em>Digital Signal Processing, Elsevier, 2021</em>
+            </li>
+            <li>
+                <strong><a href="https://arxiv.org/abs/2104.01331" target="_blank">
+                Sparse universum quadratic surface support vector machine models for binary classification</a></strong> <br>
+                H. Mooseai, A. Mousavi, M. Hladík, Z. Gao <br>
+                <em>arXiv preprint arXiv:2104.01331, 2021</em>
+            </li>
+            <li>
+                <strong><a href="https://www.aimsciences.org/article/doi/10.3934/jimo.2021017" target="_blank">
+                Quadratic surface support vector machine with L1 norm regularization</a></strong> <br>
+                A. Mousavi, Z. Gao, L. Han, A. Lim <br>
+                <em>Journal of Industrial and Management Optimization, 2022</em>
+            </li>
+            <li>
+                <strong><a href="https://www.sciencedirect.com/science/article/abs/pii/S1877050915004348" target="_blank">
+                A survey on compressive sensing: classical results and recent advancements</a></strong> <br>
+                A. Mousavi, M. Rezaee, R. Ayanzadeh <br>
+                <em>Journal of Mathematical Modeling 8 (3), 309-344, 2020</em>
+            </li>
+            <li>
+                <strong><a href="https://arxiv.org/abs/1903.07236" target="_blank">
+                Exact support and vector recovery of constrained sparse vectors via constrained matching pursuit</a></strong> <br>
+                J. Shen, A. Mousavi <br>
+                <em>arXiv:1903.07236, 2019</em>
+            </li>
+            <li>
+                <strong><a href="https://link.springer.com/article/10.1007/s00186-019-00667-2" target="_blank">
+                Solution uniqueness of convex piecewise affine functions based optimization with applications to constrained l1 minimization</a></strong> <br>
+                A. Mousavi, J. Shen <br>
+                <em>ESAIM: Control, Optimisation and Calculus of Variations 25, 56, 2019</em>
+            </li>
+            <li>
+                <strong><a href="https://arxiv.org/abs/1901.00088" target="_blank">
+                Quantum annealing based binary compressive sensing with matrix uncertainty</a></strong> <br>
+                R. Ayanzadeh, A. Mousavi, M. Halem, T. Finin <br>
+                <em>arXiv:1901.00088, 2019</em>
+            </li>
+            <li>
+                <strong><a href="https://arxiv.org/abs/1903.07236" target="_blank">
+                Least sparsity of p-norm based optimization problems with p>1</a></strong> <br>
+                A. Mousavi <br>
+                <em>arXiv:1903.07236, 2019</em>
+            </li>
+            </ul>
+    </div>
+
+    <!-- Ph.D. Thesis Section -->
+    <div id="thesis" class="section">
+        <h2>Ph.D. Thesis</h2>
+        <dl>
+            <dt><a href="https://search.proquest.com/openview/7024665526e3f8494a55f1da4be35285/1?pq-origsite=gscholar&amp;cbl=18750&amp;diss=y" target="_blank">
+                Topics in Sparse Recovery via Constrained Optimization: Least Sparsity, Solution Uniqueness, and Constrained Exact Recovery</a></dt>
+            <dd>
+                <p>A. Mousavi<br>
+                University of Maryland, Baltimore County, 2019</p>
+            </dd>
+        </dl>
+    </div>
+
+    <!-- Education Section -->
+    <div id="education" class="section">
+        <h2>Education</h2>
+        <ul>
+            <li>Ph.D., University of Maryland, BC, Applied Math. 2013-2019.</li>
+            <li>M.S., Sharif University of Technology, Applied Math. 2008-2011.</li>
+            <li>B.S., University of Guilan, Applied Math. 2004-2008.</li>
+        </ul>
+    </div>
+
+    <!-- Research Interests Section -->
+    <div id="interests" class="section">
+        <h2>Research Interests</h2>
+        <ul>
+            <li>Sparse Optimization, Machine Learning, Large Scale Optimization, Mathematical Modeling, Numerical Linear Algebra</li>
+            <li>Specific: L1-Minimization, Greedy Algorithms, Semidefinite Programming, Matrix Decomposition</li>
+        </ul>
+    </div>
+
+    <!-- Work Experience Section -->
+    <div id="experience" class="section">
+        <h2>Work Experience</h2>
+        <ul>
+            <li>Industrial Associate, Informatics Institute, Gainesville, FL, Sep. 2021-Present.</li>
+            <li>Industrial Postdoctoral Associate, Cargil, Data Science team, Minneapolis, MN, Sep. 2019-2021.</li>
+            <li>Research and Development Intern, Precima, R&D division, Chicago, IL, Summer 2019.</li>
+        </ul>
+    </div>
+
+    <!-- Computer Skills Section -->
+    <div id="skills" class="section">
+        <h2>Computer Skills</h2>
+        <ul>
+            <li>Python, MATLAB, LaTeX</li>
+        </ul>
+    </div>
+
+    <!-- Teaching Section -->
+    <div id="teaching" class="section">
+        <h2>Teaching</h2>
+        <p>Instructor at University of Maryland, Baltimore County:</p>
+        <ul>
+            <li>MATH 225: Introduction to Differential Equations, Summer and Winter 2018, and Winter 2019.</li>
+        </ul>
+        <p>Instructor at Azad University:</p>
+        <ul>
+            <li>Numerical Computations: Spring 2016.</li>
+        </ul>
+        <p>Teaching Assistant at University of Maryland, Baltimore County:</p>
+        <ul>
+            <li>MATH 152: Calculus and Analytic Geometry II, Fall 2014-Spring 2017, Summer 2017.</li>
+            <li>MATH 151: Calculus and Analytic Geometry I, Summer 2015-Fall 2018.</li>
+        </ul>
+    </div>
+
+    <!-- Selected Collaborators Section -->
+    <div id="collaborators" class="section">
+        <h2>Selected Collaborators</h2>
+        <p>(Include a list of collaborators here.)</p>
+    </div>
+
+    <!-- Contact Section -->
+    <div id="contact" class="section">
+        <h2>Contact</h2>
+        <p>
+            Feel free to reach out via email or LinkedIn: <br>
+            <a href="mailto:youremail@example.com">Email</a> | <a href="https://www.linkedin.com/in/yourprofile">LinkedIn</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
