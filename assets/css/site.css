@@ -1,0 +1,160 @@
+/*
+  Overrides for this static (file://) build.
+*/
+
+/* Fix masthead to top so JS-added body padding-top doesn't create a blank gap above it.
+   Explicit background needed because position:fixed removes it from the normal flow. */
+.masthead {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+}
+
+.greedy-nav button {
+  z-index: 30;
+}
+
+.greedy-nav .hidden-links {
+  z-index: 20;
+}
+
+/* Offset theme button so it doesn't overlap the hamburger toggle. */
+.greedy-nav #theme-toggle {
+  right: 3rem;
+}
+
+/* ==========================================================================
+   DARK MODE
+   The compiled main.css uses hardcoded light-theme colors. These rules
+   override them when JS sets data-theme="dark" on <html>.
+   ========================================================================== */
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background-color: #474747;
+  color: #fff;
+}
+
+html[data-theme="dark"] a {
+  color: #0ea1c5;
+}
+
+html[data-theme="dark"] a:hover {
+  color: #0b7fa0;
+}
+
+html[data-theme="dark"] .masthead {
+  background-color: #474747;
+  border-bottom-color: #5e5e5e;
+}
+
+/* .greedy-nav has its own hardcoded background:#fff in main.css — must override it */
+html[data-theme="dark"] .greedy-nav {
+  background: #474747;
+}
+
+html[data-theme="dark"] .masthead a,
+html[data-theme="dark"] .masthead .site-title,
+html[data-theme="dark"] .masthead .masthead__menu-item a {
+  color: #fff;
+}
+
+html[data-theme="dark"] .masthead .masthead__menu-item a:hover {
+  color: #0ea1c5;
+}
+
+html[data-theme="dark"] .masthead .masthead__menu-item a.active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+html[data-theme="dark"] #theme-toggle,
+html[data-theme="dark"] .greedy-nav__toggle {
+  color: #fff;
+}
+
+html[data-theme="dark"] .sidebar {
+  background-color: #474747;
+}
+
+html[data-theme="dark"] .author__name,
+html[data-theme="dark"] .author__bio,
+html[data-theme="dark"] .author__urls .label {
+  color: #fff;
+}
+
+html[data-theme="dark"] .author__urls {
+  background: #3a3a3a;
+  border-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .author__urls a {
+  color: #fff;
+}
+
+html[data-theme="dark"] .author__urls a:hover {
+  color: #0ea1c5;
+}
+
+html[data-theme="dark"] .btn--inverse {
+  color: #fff;
+  border-color: #5e5e5e;
+  background-color: transparent;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+  color: #fff;
+}
+
+html[data-theme="dark"] .page__title {
+  color: #fff;
+}
+
+html[data-theme="dark"] .page__content h2 {
+  border-bottom-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .page__footer {
+  background-color: #3a3a3a;
+  color: #ccc;
+  border-top-color: #5e5e5e;
+}
+
+html[data-theme="dark"] thead {
+  background-color: #3a3a3a;
+  border-bottom-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .page__footer a {
+  color: #0ea1c5;
+}
+
+html[data-theme="dark"] .page__footer-copyright {
+  color: #ccc;
+}
+
+html[data-theme="dark"] .hidden-links {
+  background: #3a3a3a;
+  border-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .hidden-links a {
+  color: #fff;
+}
+
+html[data-theme="dark"] li,
+html[data-theme="dark"] p,
+html[data-theme="dark"] dt,
+html[data-theme="dark"] dd {
+  color: #fff;
+}
+
+html[data-theme="dark"] strong {
+  color: #fff;
+}
