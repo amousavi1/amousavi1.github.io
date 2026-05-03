@@ -15,13 +15,72 @@
   z-index: 30;
 }
 
-.greedy-nav .hidden-links {
-  z-index: 20;
+/* Horizontal top nav — all links visible; wraps on small viewports (no hamburger). */
+#site-nav.greedy-nav.masthead-nav-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.35rem 0.65rem;
+  padding: 0.4rem 1em;
+  width: 100%;
+  max-width: 100%;
+  clear: both;
 }
 
-/* Offset theme button so it doesn't overlap the hamburger toggle. */
-.greedy-nav #theme-toggle {
-  right: 3rem;
+#site-nav.masthead-nav-bar .site-title {
+  flex: 0 0 auto;
+  margin-right: 0.35rem;
+  padding: 0.25em 0;
+}
+
+#site-nav.masthead-nav-bar .visible-links {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+#site-nav.masthead-nav-bar .visible-links li {
+  display: list-item !important;
+  list-style: none;
+}
+
+#site-nav.masthead-nav-bar .visible-links li:first-child {
+  font-weight: inherit;
+}
+
+#site-nav.masthead-nav-bar .masthead__menu-item {
+  margin: 0;
+  padding: 0;
+}
+
+#site-nav.masthead-nav-bar .masthead__menu-item a {
+  display: inline-block;
+  margin: 0 0.1rem;
+  padding: 0.45em 0.55em;
+  white-space: nowrap;
+}
+
+#site-nav.masthead-nav-bar #theme-toggle {
+  position: relative !important;
+  right: auto !important;
+  top: auto !important;
+  height: auto !important;
+  flex: 0 0 auto;
+  margin-left: auto;
+  align-self: center;
+}
+
+@media (max-width: 28rem) {
+  #site-nav.masthead-nav-bar #theme-toggle {
+    margin-left: 0;
+  }
 }
 
 /* ==========================================================================

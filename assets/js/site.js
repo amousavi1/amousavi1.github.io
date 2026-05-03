@@ -89,71 +89,6 @@
     }
   }
 
-  function initGreedyNav() {
-    const nav = document.getElementById('site-nav');
-    if (!nav) return;
-
-    const visible = nav.querySelector('.visible-links');
-    const hidden = nav.querySelector('.hidden-links');
-    const toggle = nav.querySelector('.greedy-nav__toggle');
-
-    if (!visible || !hidden || !toggle) return;
-
-    const ensureToggleState = () => {
-      const hiddenCount = hidden.children.length;
-      if (hiddenCount > 0) {
-        toggle.classList.remove('hidden');
-        toggle.setAttribute('count', String(hiddenCount));
-      } else {
-        toggle.classList.add('hidden');
-        toggle.setAttribute('count', '');
-        hidden.classList.add('hidden');
-        toggle.classList.remove('close');
-      }
-    };
-
-    const availableWidth = () => {
-      // Width nav can use, minus toggle buttons.
-      const navWidth = nav.getBoundingClientRect().width;
-      const title = nav.querySelector('.site-title');
-      const titleWidth = title ? title.getBoundingClientRect().width : 0;
-      const toggleWidth = toggle.getBoundingClientRect().width;
-      const themeToggle = nav.querySelector('#theme-toggle');
-      const themeWidth = themeToggle ? themeToggle.getBoundingClientRect().width : 0;
-      // Small buffer for padding/gaps.
-      return navWidth - titleWidth - toggleWidth - themeWidth - 40;
-    };
-
-    const linksWidth = () => visible.getBoundingClientRect().width;
-
-    const update = () => {
-      // Reset: move everything back to visible first, preserving order.
-      while (hidden.firstElementChild) {
-        visible.appendChild(hidden.firstElementChild);
-      }
-
-      // If overflow, move from end to hidden until it fits.
-      let tries = 0;
-      while (linksWidth() > availableWidth() && visible.children.length > 0 && tries < 50) {
-        hidden.insertBefore(visible.lastElementChild, hidden.firstElementChild);
-        tries++;
-      }
-
-      ensureToggleState();
-    };
-
-    toggle.addEventListener('click', () => {
-      hidden.classList.toggle('hidden');
-      toggle.classList.toggle('close');
-    });
-
-    update();
-    window.addEventListener('resize', update);
-    if (screen.orientation && screen.orientation.addEventListener) {
-      screen.orientation.addEventListener('change', update);
-    }
-  }
-
   // Run early.
   setHtmlJsClass();
 
@@ -162,6 +97,5 @@
     initTheme();
     initAuthorUrlsToggle();
     initMastheadSpacing();
-    initGreedyNav();
   });
 })();
