@@ -28,7 +28,7 @@
   clear: both;
 }
 
-/* Title on its own row so the link row lines up with the sidebar name below (same left edge). */
+/* Title on its own row; link row below aligns with main column headings (e.g. page h1). */
 #site-nav.masthead-nav-bar .site-title {
   flex: 1 0 100%;
   width: 100%;
@@ -89,6 +89,19 @@
 @media (max-width: 28rem) {
   #site-nav.masthead-nav-bar #theme-toggle {
     margin-left: 0;
+  }
+}
+
+/* Align first nav link with main article column (same as .page content start in main.css). */
+@media (min-width: 57.8125em) {
+  #site-nav.masthead-nav-bar .visible-links {
+    margin-left: calc(15.2542372881% + 1.6949152542% + 4.2372881356%);
+  }
+}
+
+@media (max-width: 57.8124em) {
+  #site-nav.masthead-nav-bar .visible-links {
+    margin-left: 0 !important;
   }
 }
 
