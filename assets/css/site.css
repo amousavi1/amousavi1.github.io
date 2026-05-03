@@ -83,6 +83,51 @@
   }
 }
 
+/* Align first nav link with main column (same % as sidebar + gap in main.css). */
+@media (min-width: 57.8125em) {
+  #site-nav.masthead-nav-bar .visible-links {
+    margin-left: calc(15.2542372881% + 1.6949152542%);
+  }
+}
+
+@media (max-width: 57.8124em) {
+  #site-nav.masthead-nav-bar .visible-links {
+    margin-left: 0 !important;
+  }
+}
+
+/* Home is the site title; show current page on index. */
+#site-nav.masthead-nav-bar .site-title.site-title--current {
+  font-weight: 700;
+  border-bottom: 4px solid #bc4f51;
+  padding-bottom: 0.2em;
+}
+
+/* Soft vertical fade between sidebar and main content (two-column layout). */
+@media (min-width: 57.8125em) {
+  #main > .sidebar.sticky {
+    position: relative;
+    padding-right: 1.15rem;
+  }
+
+  #main > .sidebar.sticky::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 14px;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.045) 35%,
+      rgba(0, 0, 0, 0.09) 72%,
+      rgba(0, 0, 0, 0.03) 100%
+    );
+    pointer-events: none;
+  }
+}
+
 /* ==========================================================================
    DARK MODE
    The compiled main.css uses hardcoded light-theme colors. These rules
@@ -128,9 +173,24 @@ html[data-theme="dark"] .masthead .masthead__menu-item a.active {
   border-bottom-color: #fff;
 }
 
+html[data-theme="dark"] #site-nav.masthead-nav-bar .site-title.site-title--current {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
 html[data-theme="dark"] #theme-toggle,
 html[data-theme="dark"] .greedy-nav__toggle {
   color: #fff;
+}
+
+html[data-theme="dark"] #main > .sidebar.sticky::after {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 35%,
+    rgba(255, 255, 255, 0.1) 72%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
 }
 
 html[data-theme="dark"] .sidebar {
