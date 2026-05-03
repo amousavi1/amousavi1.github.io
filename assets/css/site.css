@@ -99,6 +99,27 @@
   padding-bottom: 0.2em;
 }
 
+/* Research page: numbered projects with headings inside list items */
+ol.research-projects {
+  margin-top: 0.75em;
+  padding-left: 1.35rem;
+}
+
+ol.research-projects > li {
+  margin-bottom: 1.75em;
+}
+
+ol.research-projects > li:last-child {
+  margin-bottom: 0;
+}
+
+ol.research-projects h3 {
+  margin: 0.35em 0 0.5em;
+  font-size: 1.05em;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
 /* Soft vertical fade between sidebar and main content (two-column layout). */
 @media (min-width: 57.8125em) {
   #main > .sidebar.sticky {
