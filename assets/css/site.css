@@ -153,13 +153,22 @@ ol.research-projects h3 {
   font-weight: 700;
 }
 
-/* Dashed red vertical rule between sidebar and main content (two-column layout). */
+/* Solid blue vertical rule between sidebar and main content (two-column layout). */
 @media (min-width: 57.8125em) {
   #main > .sidebar.sticky {
     position: relative;
     padding-right: 1.1rem;
-    border-right: 2px dashed #a51417;
+    border-right: 2px solid #1a73e8;
   }
+}
+
+/* Publication list: blue links (scoped to publications page only). */
+body.page-publications .page__content a {
+  color: #0b57d0;
+}
+
+body.page-publications .page__content a:hover {
+  color: #084298;
 }
 
 /* ==========================================================================
@@ -218,7 +227,15 @@ html[data-theme="dark"] .greedy-nav__toggle {
 }
 
 html[data-theme="dark"] #main > .sidebar.sticky {
-  border-right: 2px dashed #ff6b6b;
+  border-right: 2px solid #58a6ff;
+}
+
+html[data-theme="dark"] body.page-publications .page__content a {
+  color: #79c0ff;
+}
+
+html[data-theme="dark"] body.page-publications .page__content a:hover {
+  color: #a5d6ff;
 }
 
 html[data-theme="dark"] .sidebar {
