@@ -75,10 +75,10 @@
   white-space: nowrap;
 }
 
-/* Wide layout: line up first nav link with main column title (h1) and bio — sidebar + gap + .page padding-left. */
+/* Wide layout: line up first nav link with main column title (h1) and bio — sidebar + gap + .page padding-left, nudged 3cm left. */
 @media (min-width: 57.8125em) {
   #site-nav.masthead-nav-bar .visible-links {
-    margin-left: calc(15.2542372881% + 1.6949152542% + 4.2372881356%);
+    margin-left: calc(15.2542372881% + 1.6949152542% + 4.2372881356% - 3cm);
   }
 
   #site-nav.masthead-nav-bar .visible-links .masthead__menu-item:first-child a {
@@ -144,28 +144,12 @@ ol.research-projects h3 {
   font-weight: 700;
 }
 
-/* Soft vertical fade between sidebar and main content (two-column layout). */
+/* Light blue vertical rule between sidebar and main content (two-column layout). */
 @media (min-width: 57.8125em) {
   #main > .sidebar.sticky {
     position: relative;
-    padding-right: 1.15rem;
-  }
-
-  #main > .sidebar.sticky::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 14px;
-    background: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0.045) 35%,
-      rgba(0, 0, 0, 0.09) 72%,
-      rgba(0, 0, 0, 0.03) 100%
-    );
-    pointer-events: none;
+    padding-right: 1.1rem;
+    border-right: 2px solid #9fd4fa;
   }
 }
 
@@ -224,14 +208,8 @@ html[data-theme="dark"] .greedy-nav__toggle {
   color: #fff;
 }
 
-html[data-theme="dark"] #main > .sidebar.sticky::after {
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.05) 35%,
-    rgba(255, 255, 255, 0.1) 72%,
-    rgba(255, 255, 255, 0.04) 100%
-  );
+html[data-theme="dark"] #main > .sidebar.sticky {
+  border-right-color: #7ec8ea;
 }
 
 html[data-theme="dark"] .sidebar {
