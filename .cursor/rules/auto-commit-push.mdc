@@ -1,0 +1,23 @@
+---
+description: Commit and push site changes automatically after edits
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Auto commit and push (mousavi-site)
+
+After you finish any task that changes files in this repository:
+
+1. Run `git status` and `git diff` to see what changed.
+2. Stage only files related to the task (do not commit secrets such as `.env`).
+3. Commit with a short, clear message describing why the change was made.
+4. Push to GitHub without waiting for the user to ask:
+   - `git push origin main`
+   - `git push origin main:master` — **required** because GitHub Pages for this repo deploys from `master`, not `main`.
+
+If the user explicitly says not to commit, skip steps 2–4.
+
+If push fails because `main` has no upstream, use `git push -u origin main` once, then push `main:master` as above.
+
+Briefly tell the user the commit hash and that changes were pushed to `master` for the live site.
