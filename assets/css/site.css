@@ -127,6 +127,16 @@
   border-bottom: none;
 }
 
+/* Make the News tab red across all pages. */
+#site-nav.masthead-nav-bar .masthead__menu-item a[href="news.html"] {
+  color: #d93025;
+  font-weight: 700;
+}
+
+#site-nav.masthead-nav-bar .masthead__menu-item a[href="news.html"]:hover {
+  color: #b3261e;
+}
+
 /* Home is the site title; show current page on index (no horizontal rule). */
 #site-nav.masthead-nav-bar .site-title.site-title--current {
   font-weight: 700;
@@ -252,6 +262,15 @@ html[data-theme="dark"] .masthead .masthead__menu-item a:hover {
 html[data-theme="dark"] .masthead .masthead__menu-item a.active {
   color: #fff;
   border-bottom: none;
+}
+
+/* Keep the News tab red (brighter) in dark mode. */
+html[data-theme="dark"] #site-nav.masthead-nav-bar .masthead__menu-item a[href="news.html"] {
+  color: #ff6b5e;
+}
+
+html[data-theme="dark"] #site-nav.masthead-nav-bar .masthead__menu-item a[href="news.html"]:hover {
+  color: #ff8a80;
 }
 
 html[data-theme="dark"] #site-nav.masthead-nav-bar .site-title.site-title--current {
