@@ -2,6 +2,56 @@
   Overrides for this static (file://) build.
 */
 
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
+:root {
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.site-title,
+.author__name,
+.page__title,
+.page__content h1,
+.page__content h2,
+.page__content h3,
+.page__content h4,
+.research-projects h3 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.site-title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.page__title {
+  font-weight: 700;
+  font-size: 2.15em;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.page__content h2 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.author__name {
+  font-weight: 600;
+}
+
 /* Fix masthead to top so JS-added body padding-top doesn't create a blank gap above it.
    Explicit background needed because position:fixed removes it from the normal flow. */
 .masthead {
