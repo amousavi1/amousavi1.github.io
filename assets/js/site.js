@@ -1,4 +1,29 @@
 (() => {
+  // Single source of truth for the site-wide "Last updated" footer date.
+  // Bump this ISO date (YYYY-MM-DD) whenever website content is changed.
+  const SITE_LAST_UPDATED = '2026-08-12';
+
+  function formatSiteLastUpdated(isoDate) {
+    const parts = isoDate.split('-').map((n) => Number(n));
+    if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return isoDate;
+    const [y, m, d] = parts;
+    const date = new Date(Date.UTC(y, m - 1, d));
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    });
+  }
+
+  function initSiteLastUpdated() {
+    const label = formatSiteLastUpdated(SITE_LAST_UPDATED);
+    document.querySelectorAll('.js-site-last-updated').forEach((el) => {
+      el.setAttribute('datetime', SITE_LAST_UPDATED);
+      el.textContent = label;
+    });
+  }
+
   function setHtmlJsClass() {
     const html = document.documentElement;
     html.className = (html.className || '').replace(/\bno-js\b/g, '').trim();
@@ -97,5 +122,6 @@
     initTheme();
     initAuthorUrlsToggle();
     initMastheadSpacing();
+    initSiteLastUpdated();
   });
 })();

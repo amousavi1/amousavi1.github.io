@@ -360,6 +360,16 @@ html[data-theme="dark"] .page__footer-copyright {
   color: #ccc;
 }
 
+.page__footer-updated {
+  margin-top: 0.35rem;
+  font-size: 0.85em;
+  opacity: 0.9;
+}
+
+html[data-theme="dark"] .page__footer-updated {
+  color: #ccc;
+}
+
 html[data-theme="dark"] .hidden-links {
   background: #3a3a3a;
   border-color: #5e5e5e;
