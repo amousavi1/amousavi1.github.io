@@ -125,19 +125,19 @@ body {
   white-space: nowrap;
 }
 
-/* Wide layout: slightly wider sidebar + .page; align nav with main column (nudged 3cm + 1cm left). */
+/* Wide layout: wider sidebar so bio lines fit on one line each; align nav with main column. */
 @media (min-width: 57.8125em) {
   #main .sidebar {
-    width: 17.5% !important;
-    margin-right: 1.6949152542% !important;
+    width: 26% !important;
+    margin-right: 1.5% !important;
   }
 
   #main .page {
-    width: 80.8050847458% !important;
+    width: 72.5% !important;
   }
 
   #site-nav.masthead-nav-bar .visible-links {
-    margin-left: calc(17.5% + 1.6949152542% + 4.2372881356% - 3cm - 1cm);
+    margin-left: calc(26% + 1.5% + 4.2372881356% - 3cm - 1cm);
   }
 
   #site-nav.masthead-nav-bar .visible-links .masthead__menu-item:first-child a {
@@ -256,18 +256,19 @@ html[data-theme="dark"] ul.news-list .news-date {
   #main > .sidebar.sticky {
     position: relative;
     padding-right: 1.1rem;
-    border-right: none;
+    border-right: 2px solid #1a73e8;
   }
+}
 
-  #main > .sidebar.sticky::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    /* Sit a bit farther right in the gutter between sidebar and content. */
-    right: -1rem;
-    width: 2px;
-    background-color: #1a73e8;
+/* Keep each sidebar bio line on one row on desktop (intentional <br> breaks still apply). */
+.author__bio {
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+@media (min-width: 57.8125em) {
+  .author__bio {
+    white-space: nowrap;
   }
 }
 
@@ -345,11 +346,7 @@ html[data-theme="dark"] .greedy-nav__toggle {
 }
 
 html[data-theme="dark"] #main > .sidebar.sticky {
-  border-right: none;
-}
-
-html[data-theme="dark"] #main > .sidebar.sticky::after {
-  background-color: #58a6ff;
+  border-right: 2px solid #58a6ff;
 }
 
 html[data-theme="dark"] body.page-publications .page__content a {
