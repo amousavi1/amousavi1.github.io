@@ -125,19 +125,23 @@ body {
   white-space: nowrap;
 }
 
-/* Wide layout: wider sidebar so bio lines fit on one line each; align nav with main column. */
+/* Wide layout: sidebar hugs profile text; blue rule sits just past the longest bio line. */
 @media (min-width: 57.8125em) {
   #main .sidebar {
-    width: 26% !important;
-    margin-right: 1.5% !important;
+    width: max-content !important;
+    max-width: 22rem;
+    margin-right: 1.25rem !important;
+    float: left;
   }
 
   #main .page {
-    width: 72.5% !important;
+    width: auto !important;
+    overflow: hidden;
   }
 
   #site-nav.masthead-nav-bar .visible-links {
-    margin-left: calc(26% + 1.5% + 4.2372881356% - 3cm - 1cm);
+    /* Align nav with main column: content-sized sidebar (~bio width) + gutter. */
+    margin-left: calc(4.2372881356% + 20rem - 3cm - 1cm);
   }
 
   #site-nav.masthead-nav-bar .visible-links .masthead__menu-item:first-child a {
@@ -251,22 +255,15 @@ html[data-theme="dark"] ul.news-list .news-date {
   color: #58a6ff;
 }
 
-/* Solid blue vertical rule between sidebar and main content (two-column layout). */
+/* Blue vertical rule: immediately to the right of the left-column text (e.g. Statistics). */
 @media (min-width: 57.8125em) {
   #main > .sidebar.sticky {
-    position: relative;
-    padding-right: 1.1rem;
-    border-right: none;
+    padding-right: 0.55rem;
+    border-right: 2px solid #1a73e8;
   }
 
   #main > .sidebar.sticky::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 4cm;
-    width: 2px;
-    background-color: #1a73e8;
+    content: none;
   }
 }
 
@@ -356,11 +353,11 @@ html[data-theme="dark"] .greedy-nav__toggle {
 }
 
 html[data-theme="dark"] #main > .sidebar.sticky {
-  border-right: none;
+  border-right: 2px solid #58a6ff;
 }
 
 html[data-theme="dark"] #main > .sidebar.sticky::after {
-  background-color: #58a6ff;
+  content: none;
 }
 
 html[data-theme="dark"] body.page-publications .page__content a {
