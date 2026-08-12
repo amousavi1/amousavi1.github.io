@@ -256,7 +256,17 @@ html[data-theme="dark"] ul.news-list .news-date {
   #main > .sidebar.sticky {
     position: relative;
     padding-right: 1.1rem;
-    border-right: 2px solid #1a73e8;
+    border-right: none;
+  }
+
+  #main > .sidebar.sticky::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 1cm;
+    width: 2px;
+    background-color: #1a73e8;
   }
 }
 
@@ -346,7 +356,11 @@ html[data-theme="dark"] .greedy-nav__toggle {
 }
 
 html[data-theme="dark"] #main > .sidebar.sticky {
-  border-right: 2px solid #58a6ff;
+  border-right: none;
+}
+
+html[data-theme="dark"] #main > .sidebar.sticky::after {
+  background-color: #58a6ff;
 }
 
 html[data-theme="dark"] body.page-publications .page__content a {
