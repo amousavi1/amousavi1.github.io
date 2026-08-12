@@ -425,10 +425,25 @@ html[data-theme="dark"] .page__footer-copyright {
   color: #ccc;
 }
 
+.page__footer > footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1.25rem;
+}
+
+.page__footer-copyright {
+  margin: 0;
+}
+
 .page__footer-updated {
-  margin-top: 0.35rem;
+  margin: 0;
+  margin-left: auto;
   font-size: 0.85em;
   opacity: 0.9;
+  text-align: right;
+  white-space: nowrap;
 }
 
 html[data-theme="dark"] .page__footer-updated {

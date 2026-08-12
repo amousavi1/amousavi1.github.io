@@ -1,18 +1,18 @@
 (() => {
-  // Single source of truth for the site-wide "Last updated" footer date.
-  // Bump this ISO date (YYYY-MM-DD) whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-12';
+  // Single source of truth for the site-wide "Last updated" footer stamp.
+  // Bump this ISO datetime whenever website content is changed.
+  const SITE_LAST_UPDATED = '2026-08-12T07:30:00-07:00';
 
-  function formatSiteLastUpdated(isoDate) {
-    const parts = isoDate.split('-').map((n) => Number(n));
-    if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return isoDate;
-    const [y, m, d] = parts;
-    const date = new Date(Date.UTC(y, m - 1, d));
-    return date.toLocaleDateString('en-US', {
+  function formatSiteLastUpdated(isoDateTime) {
+    const date = new Date(isoDateTime);
+    if (Number.isNaN(date.getTime())) return isoDateTime;
+    return date.toLocaleString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      timeZone: 'UTC',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short',
     });
   }
 

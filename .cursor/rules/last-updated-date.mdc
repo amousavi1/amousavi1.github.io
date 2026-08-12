@@ -1,5 +1,5 @@
 ---
-description: Bump site Last updated date on every website content change
+description: Bump site Last updated datetime on every website content change
 globs:
   - "**/*"
 alwaysApply: true
@@ -9,7 +9,7 @@ alwaysApply: true
 
 Whenever you change website content in this repository (HTML, CSS, JS, files linked from the site, etc.):
 
-1. Update `SITE_LAST_UPDATED` in `assets/js/site.js` to today's date as `YYYY-MM-DD`.
-2. Also update the visible fallback text and `datetime` on each page's `<time class="js-site-last-updated">` in the footer so it matches (same calendar day).
+1. Update `SITE_LAST_UPDATED` in `assets/js/site.js` to the current local datetime as an ISO 8601 string with offset, e.g. `2026-08-12T07:30:00-07:00`.
+2. Also update the visible fallback text and `datetime` on each page's `<time class="js-site-last-updated">` in the footer so it matches (include date and time).
 
-Do this in the same task before committing. Do not leave a stale last-updated date after content edits.
+Do this in the same task before committing. Do not leave a stale last-updated stamp after content edits.
