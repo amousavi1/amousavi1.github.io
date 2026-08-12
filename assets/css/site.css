@@ -264,7 +264,7 @@ html[data-theme="dark"] ul.news-list .news-date {
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 1cm;
+    right: 4cm;
     width: 2px;
     background-color: #1a73e8;
   }
