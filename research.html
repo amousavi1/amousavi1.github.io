@@ -101,6 +101,11 @@
                         <h1 id="page-title" class="page__title" itemprop="headline">Research</h1>
                     </header>
                     <section class="page__content" itemprop="text">
+                        <p>
+                            My research develops mathematical methods for sparse and structured learning, with emphasis on exact
+                            sparsity, constrained optimization, and machine learning. Current work follows three directions that share
+                            a common base in nonconvex constrained optimization.
+                        </p>
                         <p>Research interests include:</p>
                         <ul>
                             <li>
@@ -115,51 +120,38 @@
                             </li>
                         </ul>
 
-                        <h2>Current research projects</h2>
+                        <h2>Current research</h2>
                         <ol class="research-projects">
                             <li>
-                                <h3>Soft hate speech detection via camouflaged-implicature modeling (CAM-Soft)</h3>
+                                <h3>Cardinality-constrained structured optimization</h3>
                                 <p>
-                                    This project develops CAM-Soft, a multimodal framework for detecting soft hate speech—implicit,
-                                    context-dependent hostility that camouflages within otherwise benign conversation. The approach separates
-                                    literal reading from contextual implicature, models an implicature gap and camouflage score, and uses
-                                    implicature-conditioned counterfactual consistency together with a self-bootstrapping coded-term glossary.
-                                    Evaluation emphasizes forward-time coded-term generalization so the system must recognize soft hate carried
-                                    by newly emerging coded language. This work contributes to responsible AI and nuanced language understanding.
+                                    I develop penalty decomposition methods that enforce exact sparsity and related structural constraints
+                                    directly, rather than through convex relaxations. This line includes mean-reverting and mean-variance
+                                    portfolios under cardinality, volatility, and CVaR constraints, and an efficient quasi-Newton penalty
+                                    decomposition algorithm for minimization over sparse symmetric sets (under review at
+                                    <em>Mathematical Programming Computation</em>). Related work includes Weaver, a hybrid quantum-classical
+                                    method for binary compressive sensing under matrix uncertainty (submitted to AAAI 2027).
                                 </p>
                             </li>
                             <li>
-                                <h3>Exact sparse optimization via penalty decomposition and safeguarded MM</h3>
+                                <h3>Sparse and structured quadratic surface support vector machines</h3>
                                 <p>
-                                    This project develops a general optimization framework for &ell;<sub>0</sub>-constrained problems under
-                                    polyhedral and structured constraints. The methodology combines penalty decomposition (PD) with
-                                    majorization–minimization (MM) techniques, enabling the separation of discrete sparsity enforcement from
-                                    continuous optimization. By incorporating safeguarding strategies and flexible surrogate models (e.g., diagonal
-                                    and quasi-Newton approximations), the approach remains stable even in nonconvex and ill-conditioned settings.
-                                    Theoretical results target convergence to Lu–Zhang stationary points, while practical implementations emphasize
-                                    efficiency and robustness. This project serves as a core theoretical foundation for multiple applications.
+                                    Kernel-free quadratic surface SVMs model nonlinear boundaries without kernel selection, but the number of
+                                    parameters grows quadratically with dimension. I develop sparsity-inducing and Universum-augmented QSVM
+                                    models, including &ell;<sub>1</sub>-regularized QSVMs, quadratic twin SVMs for imbalanced data, and
+                                    &ell;<sub>0</sub>-regularized QSVMs via explicit cardinality constraints. Ongoing work studies ensembles of
+                                    random sparse quadratic twin parametric-margin SVMs (SSRN preprint).
                                 </p>
                             </li>
                             <li>
-                                <h3>Event-centric multimodal misinformation detection (E-CaTCH)</h3>
+                                <h3>Robust multi-scale and multi-modal learning</h3>
                                 <p>
-                                    This project develops E-CaTCH, a framework for misinformation detection that integrates textual, visual, and
-                                    temporal signals within an event-based structure. By clustering posts into events and temporal sequences, the
-                                    model captures how misinformation evolves and propagates over time. It employs intra-modal and cross-modal
-                                    attention mechanisms, along with temporal modeling via sequence models, to produce robust predictions. The
-                                    framework also incorporates class imbalance handling and interpretability mechanisms, making it both effective
-                                    and transparent. This work contributes to multimodal learning and trustworthy AI systems.
-                                </p>
-                            </li>
-                            <li>
-                                <h3>AI-assisted mathematical discovery system</h3>
-                                <p>
-                                    This project aims to build an AI system that mirrors the process of mathematical discovery, including
-                                    intuition formation, experimental validation, and conjecture generation. The system autonomously generates
-                                    hypotheses, runs computational experiments, and iteratively refines conjectures based on observed patterns.
-                                    By structuring discovery as a sequence of optimization and validation steps, the framework significantly reduces
-                                    the time between initial insight and rigorous testing. The long-term vision is to position AI as a collaborator
-                                    in mathematical research, capable of exploring large conceptual spaces and assisting in theory development.
+                                    This direction develops lightweight, attention-based frameworks for settings with distribution shift,
+                                    heterogeneous modalities, and nonstationary signals. Published and submitted work includes EMO-CARE
+                                    (subject-independent EEG emotion recognition), E-CaTCH (event-centric multimodal misinformation detection),
+                                    and MOMENTA (mixture-of-experts multimodal embeddings with temporal aggregation). Related projects include
+                                    CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation, BLADE for constrained bilevel
+                                    LLM unlearning, and physics-conditioned attention for next-day wildfire spread prediction.
                                 </p>
                             </li>
                         </ol>
@@ -171,7 +163,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-12T17:18:00-07:00">August 12, 2026, 5:18 PM PDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-12T18:20:00-07:00">August 12, 2026, 6:20 PM PDT</time></div>
             </footer>
         </div>
 
