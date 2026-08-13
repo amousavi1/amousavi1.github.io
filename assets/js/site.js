@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-12T18:20:00-07:00';
+  const SITE_LAST_UPDATED = '2026-08-12T18:45:00-07:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -103,8 +103,9 @@
     if (!masthead) return;
 
     const update = () => {
-      const h = masthead.getBoundingClientRect().height;
-      document.body.style.paddingTop = `${Math.ceil(h)}px`;
+      const h = Math.ceil(masthead.getBoundingClientRect().height);
+      document.body.style.paddingTop = `${h}px`;
+      document.documentElement.style.setProperty('--masthead-height', `${h}px`);
     };
 
     update();
@@ -112,6 +113,117 @@
     if (screen.orientation && screen.orientation.addEventListener) {
       screen.orientation.addEventListener('change', update);
     }
+  }
+
+  function slugifyHeading(text) {
+    const slug = String(text || '')
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    return slug || 'section';
+  }
+
+  function ensureHeadingId(heading) {
+    if (heading.id) return heading.id;
+    const base = slugifyHeading(heading.textContent);
+    let id = base;
+    let n = 2;
+    while (document.getElementById(id)) {
+      id = `${base}-${n}`;
+      n += 1;
+    }
+    heading.id = id;
+    return id;
+  }
+
+  function initTocSpy(nav, headings) {
+    const links = Array.from(nav.querySelectorAll('a[href^="#"]'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+
+    const linkById = new Map(links.map((link) => [link.getAttribute('href').slice(1), link]));
+    let currentId = '';
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (!visible.length) return;
+        const id = visible[0].target.id;
+        if (!id || id === currentId) return;
+        currentId = id;
+        links.forEach((link) => {
+          const active = linkById.get(id) === link;
+          link.classList.toggle('is-active', active);
+          if (active) link.setAttribute('aria-current', 'location');
+          else link.removeAttribute('aria-current');
+        });
+      },
+      { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.25, 1] }
+    );
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+
+  function initPageToc() {
+    const main = document.getElementById('main');
+    const content = document.querySelector('#main > .page .page__content');
+    if (!main || !content) return;
+
+    const headings = Array.from(content.querySelectorAll('h2, h3'));
+    const aside = document.createElement('aside');
+    aside.className = 'sidebar-right';
+    aside.setAttribute('aria-label', 'On this page');
+
+    if (headings.length) {
+      const nav = document.createElement('nav');
+      nav.className = 'page-toc';
+
+      const title = document.createElement('p');
+      title.className = 'page-toc__title';
+      title.textContent = 'On this page';
+      nav.appendChild(title);
+
+      const list = document.createElement('ul');
+      list.className = 'page-toc__list';
+
+      let currentH2Item = null;
+      let h3List = null;
+
+      headings.forEach((heading) => {
+        const id = ensureHeadingId(heading);
+        const link = document.createElement('a');
+        link.href = `#${id}`;
+        link.textContent = heading.textContent.replace(/\s+/g, ' ').trim();
+
+        if (heading.tagName === 'H3' && currentH2Item) {
+          if (!h3List) {
+            h3List = document.createElement('ul');
+            h3List.className = 'page-toc__sublist';
+            currentH2Item.appendChild(h3List);
+          }
+          const item = document.createElement('li');
+          item.appendChild(link);
+          h3List.appendChild(item);
+          return;
+        }
+
+        const item = document.createElement('li');
+        item.appendChild(link);
+        list.appendChild(item);
+        currentH2Item = item;
+        h3List = null;
+      });
+
+      nav.appendChild(list);
+      aside.appendChild(nav);
+      initTocSpy(nav, headings);
+    }
+
+    const page = main.querySelector(':scope > .page');
+    if (page) page.insertAdjacentElement('afterend', aside);
+    else main.appendChild(aside);
   }
 
   // Run early.
@@ -123,5 +235,6 @@
     initAuthorUrlsToggle();
     initMastheadSpacing();
     initSiteLastUpdated();
+    initPageToc();
   });
 })();
