@@ -264,7 +264,7 @@ body {
 
 .page-toc__sublist {
   margin-top: 0.3em;
-  padding-left: 0.45em;
+  padding-left: 0.85rem;
 }
 
 .page-toc__sublist > li {
@@ -281,6 +281,10 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.page-toc__sublist a {
+  margin-left: 0;
 }
 
 .page-toc a:hover {
