@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-14T11:20:00-07:00';
+  const SITE_LAST_UPDATED = '2026-08-14T11:22:00-07:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -135,7 +135,7 @@
     'sparse and structured quadratic surface support vector machines': 'QSVMs',
     'robust multi-scale and multi-modal learning': 'Multimodal',
     'teaching experience': 'Courses',
-    'course development': 'New course',
+    'course development': 'New Course',
     'recent news': 'News',
     'template': 'Template',
     'theme foundation': 'Theme',
@@ -143,13 +143,28 @@
     'licensing': 'License',
   };
 
+  function toTitleCase(text) {
+    return String(text || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .split(' ')
+      .filter(Boolean)
+      .map((word) =>
+        word
+          .split('-')
+          .map((part) => (part ? part.charAt(0).toUpperCase() + part.slice(1) : part))
+          .join('-')
+      )
+      .join(' ');
+  }
+
   function shortTocTitle(fullTitle) {
     const full = String(fullTitle || '').replace(/\s+/g, ' ').trim();
     const key = full.toLowerCase();
-    if (TOC_SHORT_TITLES[key]) return TOC_SHORT_TITLES[key];
-    const words = full.split(' ').filter(Boolean);
-    if (words.length <= 2) return full;
-    return words.slice(0, 2).join(' ');
+    const short = TOC_SHORT_TITLES[key]
+      ? TOC_SHORT_TITLES[key]
+      : full.split(' ').filter(Boolean).slice(0, 2).join(' ');
+    return toTitleCase(short);
   }
 
   function slugifyHeading(text) {
@@ -234,7 +249,7 @@
         const link = document.createElement('a');
         link.href = `#${id}`;
         link.textContent = shortTocTitle(fullTitle);
-        link.title = fullTitle;
+        link.title = toTitleCase(fullTitle);
 
         if (heading.tagName === 'H3' && currentH2Item) {
           if (!h3List) {
