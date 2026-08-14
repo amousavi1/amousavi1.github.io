@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-14T11:30:00-07:00';
+  const SITE_LAST_UPDATED = '2026-08-14T12:05:00-07:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -115,6 +115,12 @@
     }
   }
 
+  const TOC_SHORT_TITLES = {
+    'cardinality-constrained structured optimization': 'Sparse Optimization',
+    'sparse and structured quadratic surface support vector machines': 'QSVMs',
+    'robust multi-scale and multi-modal learning': 'Multi-Modal Learning',
+  };
+
   function toTitleCase(text) {
     return String(text || '')
       .replace(/\s+/g, ' ')
@@ -131,7 +137,9 @@
   }
 
   function shortTocTitle(fullTitle) {
-    return toTitleCase(fullTitle);
+    const full = String(fullTitle || '').replace(/\s+/g, ' ').trim();
+    const mapped = TOC_SHORT_TITLES[full.toLowerCase()];
+    return toTitleCase(mapped || full);
   }
 
   function slugifyHeading(text) {
