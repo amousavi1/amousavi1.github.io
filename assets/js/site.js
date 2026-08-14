@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-12T18:45:00-07:00';
+  const SITE_LAST_UPDATED = '2026-08-14T11:05:00-07:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -115,6 +115,43 @@
     }
   }
 
+  const TOC_SHORT_TITLES = {
+    'positions': 'Positions',
+    'education': 'Education',
+    'work experience': 'Work',
+    'supervising experience': 'Supervising',
+    'review experience': 'Review',
+    'conference and workshop presentations and attendance': 'Talks',
+    'service': 'Service',
+    'selected honors and awards': 'Honors',
+    'miscellaneous': 'Misc',
+    'journal articles': 'Journals',
+    'conference papers': 'Conferences',
+    'preprints': 'Preprints',
+    'working papers': 'Working',
+    'book': 'Book',
+    'current research': 'Current',
+    'cardinality-constrained structured optimization': 'Cardinality',
+    'sparse and structured quadratic surface support vector machines': 'QSVMs',
+    'robust multi-scale and multi-modal learning': 'Multimodal',
+    'teaching experience': 'Courses',
+    'course development': 'New course',
+    'recent news': 'News',
+    'template': 'Template',
+    'theme foundation': 'Theme',
+    'site adaptation': 'Site',
+    'licensing': 'License',
+  };
+
+  function shortTocTitle(fullTitle) {
+    const full = String(fullTitle || '').replace(/\s+/g, ' ').trim();
+    const key = full.toLowerCase();
+    if (TOC_SHORT_TITLES[key]) return TOC_SHORT_TITLES[key];
+    const words = full.split(' ').filter(Boolean);
+    if (words.length <= 2) return full;
+    return words.slice(0, 2).join(' ');
+  }
+
   function slugifyHeading(text) {
     const slug = String(text || '')
       .toLowerCase()
@@ -182,7 +219,7 @@
 
       const title = document.createElement('p');
       title.className = 'page-toc__title';
-      title.textContent = 'On this page';
+        title.textContent = 'Contents';
       nav.appendChild(title);
 
       const list = document.createElement('ul');
@@ -193,9 +230,11 @@
 
       headings.forEach((heading) => {
         const id = ensureHeadingId(heading);
+        const fullTitle = heading.textContent.replace(/\s+/g, ' ').trim();
         const link = document.createElement('a');
         link.href = `#${id}`;
-        link.textContent = heading.textContent.replace(/\s+/g, ' ').trim();
+        link.textContent = shortTocTitle(fullTitle);
+        link.title = fullTitle;
 
         if (heading.tagName === 'H3' && currentH2Item) {
           if (!h3List) {

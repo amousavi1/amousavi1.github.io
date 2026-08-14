@@ -128,13 +128,12 @@ body {
 /*
   Wide layout: three columns —
   left sidebar (profile), middle content (full-width justified lines),
-  right rail (on-page table of contents) at half the left column width.
+  right rail (short one-line table of contents).
 */
 @media (min-width: 57.8125em) {
   #main {
     display: grid;
-    /* Slightly narrower left column so the middle content starts farther left. */
-    grid-template-columns: 21% minmax(0, 1fr) 10.5%;
+    grid-template-columns: 21% 63% 12.5%;
     column-gap: 1.5%;
     align-items: start;
   }
@@ -237,18 +236,19 @@ body {
 .page-toc {
   position: sticky;
   top: calc(var(--masthead-height, 4rem) + 0.85rem);
-  font-size: 0.78rem;
-  line-height: 1.35;
+  font-size: 0.65rem;
+  line-height: 1.25;
 }
 
 .page-toc__title {
-  margin: 0 0 0.55em;
+  margin: 0 0 0.45em;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #5f6368;
+  white-space: nowrap;
 }
 
 .page-toc__list,
@@ -263,8 +263,8 @@ body {
 }
 
 .page-toc__sublist {
-  margin-top: 0.35em;
-  padding-left: 0.65em;
+  margin-top: 0.3em;
+  padding-left: 0.45em;
 }
 
 .page-toc__sublist > li {
@@ -278,8 +278,9 @@ body {
   border-left: 2px solid transparent;
   padding-left: 0.45em;
   margin-left: -0.45em;
-  overflow-wrap: anywhere;
-  hyphens: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .page-toc a:hover {
