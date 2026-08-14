@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-14T11:22:00-07:00';
+  const SITE_LAST_UPDATED = '2026-08-14T11:30:00-07:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -115,34 +115,6 @@
     }
   }
 
-  const TOC_SHORT_TITLES = {
-    'positions': 'Positions',
-    'education': 'Education',
-    'work experience': 'Work',
-    'supervising experience': 'Supervising',
-    'review experience': 'Review',
-    'conference and workshop presentations and attendance': 'Talks',
-    'service': 'Service',
-    'selected honors and awards': 'Honors',
-    'miscellaneous': 'Misc',
-    'journal articles': 'Journals',
-    'conference papers': 'Conferences',
-    'preprints': 'Preprints',
-    'working papers': 'Working',
-    'book': 'Book',
-    'current research': 'Current',
-    'cardinality-constrained structured optimization': 'Cardinality',
-    'sparse and structured quadratic surface support vector machines': 'QSVMs',
-    'robust multi-scale and multi-modal learning': 'Multimodal',
-    'teaching experience': 'Courses',
-    'course development': 'New Course',
-    'recent news': 'News',
-    'template': 'Template',
-    'theme foundation': 'Theme',
-    'site adaptation': 'Site',
-    'licensing': 'License',
-  };
-
   function toTitleCase(text) {
     return String(text || '')
       .replace(/\s+/g, ' ')
@@ -159,12 +131,7 @@
   }
 
   function shortTocTitle(fullTitle) {
-    const full = String(fullTitle || '').replace(/\s+/g, ' ').trim();
-    const key = full.toLowerCase();
-    const short = TOC_SHORT_TITLES[key]
-      ? TOC_SHORT_TITLES[key]
-      : full.split(' ').filter(Boolean).slice(0, 2).join(' ');
-    return toTitleCase(short);
+    return toTitleCase(fullTitle);
   }
 
   function slugifyHeading(text) {
