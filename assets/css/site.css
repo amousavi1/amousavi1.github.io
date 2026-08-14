@@ -242,6 +242,7 @@ body {
 
 .page-toc__title {
   margin: 0 0 0.45em;
+  padding-left: 0.45em;
   font-family: var(--font-display);
   font-size: 0.58rem;
   font-weight: 700;
@@ -264,7 +265,7 @@ body {
 
 .page-toc__sublist {
   margin-top: 0.3em;
-  margin-left: -0.7rem;
+  margin-left: 0;
   padding-left: 0;
 }
 
@@ -278,7 +279,7 @@ body {
   text-decoration: none;
   border-left: 2px solid transparent;
   padding-left: 0.45em;
-  margin-left: -0.45em;
+  margin-left: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
