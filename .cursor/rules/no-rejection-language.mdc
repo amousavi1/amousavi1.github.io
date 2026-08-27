@@ -1,0 +1,12 @@
+---
+description: Never mention paper rejections or declines on the site or CV
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# No rejection language (mousavi-site)
+
+Never write that a paper was declined, rejected, unsuccessful, or not accepted. This applies everywhere: news, publications, CV (HTML and TeX/PDF), research, teaching, and any other public page.
+
+If a submission was declined, describe the manuscript only as **submitted**, **in revision**, or **a working paper** as appropriate. Do not name the venue that declined it, and do not imply a failed outcome (for example “in revision after RecSys”).
