@@ -122,7 +122,7 @@ A useful habit is:
 
 Save the script. You can reopen it in a later session.
 
-Lab 1 is a script. R Markdown and Quarto are for later assignments; see note **1.3**.
+Lab 1 is a script. R Markdown and Quarto are for later assignments; see note **1.4**.
 
 ---
 
@@ -226,7 +226,7 @@ Use `/` in paths in R, even on Windows.
 
 If `read.csv("students.csv")` fails, the usual reason is that the file is not in the working directory.
 
-Note **1.1** shows how to import `students.csv`. Lab 1 asks you to import it.
+Note **1.2** shows how to import `students.csv`. Lab 1 asks you to import it.
 
 ---
 
@@ -250,7 +250,7 @@ You do not need to memorize every error. You do need to read it.
 
 Once R and RStudio are installed and you can run a line from a script, continue with:
 
-- **1.1** R Packages and the Tidyverse, including how to import a CSV
-- **1.2** Introduction to R Concepts
-- **1.3** R Markdown and Quarto
+- **1.2** R Packages and the Tidyverse, including how to import a CSV
+- **1.3** Introduction to R Concepts
+- **1.4** R Markdown and Quarto
 - **Lab 1**, which asks you to predict what R will do *before* you run the code. Work in a `.R` script.

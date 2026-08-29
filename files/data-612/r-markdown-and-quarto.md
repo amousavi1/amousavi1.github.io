@@ -59,7 +59,7 @@ When you want a document, click **Knit** (or **Knit to HTML**). Knitting:
 
 That fresh session is the point. Everything the document needs must be in the file: `library()` calls, data import, and the code that produces the numbers you quote.
 
-Do **not** put `install.packages()` in the document. Install packages once in the console, as in note **1.1**.
+Do **not** put `install.packages()` in the document. Install packages once in the console, as in note **1.2**.
 
 If knitting to PDF fails, you are missing a LaTeX installation. Knit to HTML this week. PDF can wait until a later assignment actually requires it.
 
@@ -126,4 +126,4 @@ Later homework
   → a knitted or rendered document, as the assignment says
 ```
 
-Note **1.0** is how you run a script and find files. Note **1.1** is how you import `students.csv`. Lab 1 uses both.
+Note **1.1** is how you run a script and find files. Note **1.2** is how you import `students.csv`. Lab 1 uses both.

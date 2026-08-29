@@ -16,28 +16,28 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-29T13:10:00-04:00"
-LAST_UPDATED_TEXT = "August 29, 2026, 1:10 PM EDT"
+LAST_UPDATED_ISO = "2026-08-29T13:20:00-04:00"
+LAST_UPDATED_TEXT = "August 29, 2026, 1:20 PM EDT"
 
 NOTES = [
     {
         "slug": "getting-started",
-        "title": "1.0 Getting Started with R and RStudio",
+        "title": "1.1 Getting Started with R and RStudio",
         "lead": "Install R and RStudio, run a script, and keep files where R can find them.",
     },
     {
         "slug": "r-packages-and-the-tidyverse",
-        "title": "1.1 R Packages and the Tidyverse",
+        "title": "1.2 R Packages and the Tidyverse",
         "lead": "Installing packages, loading them, the tidyverse, and the pipe.",
     },
     {
         "slug": "introduction-to-r-concepts",
-        "title": "1.2 Introduction to R Concepts",
+        "title": "1.3 Introduction to R Concepts",
         "lead": "Data types, data structures, indexing, functions, and special values.",
     },
     {
         "slug": "r-markdown-and-quarto",
-        "title": "1.3 R Markdown and Quarto",
+        "title": "1.4 R Markdown and Quarto",
         "lead": "When to use a script, how to knit a short document, and how Quarto relates to R Markdown.",
     },
     {
