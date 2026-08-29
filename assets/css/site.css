@@ -607,6 +607,10 @@ html[data-theme="dark"] .page__content a.course-material__pdf:hover {
   color: #ffa198;
 }
 
+html[data-theme="dark"] .course-material__note {
+  color: #b0b0b0;
+}
+
 html[data-theme="dark"] .sidebar {
   background-color: #474747;
 }
@@ -794,6 +798,13 @@ html[data-theme="dark"] strong {
 
 .page__content a.course-material__pdf:hover {
   color: #a50e0e;
+}
+
+.course-material__note {
+  margin-left: 0.2em;
+  color: #5f6368;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .lecture-meta {

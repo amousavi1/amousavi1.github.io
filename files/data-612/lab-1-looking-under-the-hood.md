@@ -301,5 +301,3 @@ Submit `lab01.R` with:
 - a short explanation comment below the output of each block
 
 If a result still feels impossible after you have explained it, write down the question you now have. That question is part of the lab.
-
-Solutions are on a [separate page](data-612-lab-1-solutions.html) and open only with a password.
