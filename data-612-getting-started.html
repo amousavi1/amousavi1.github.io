@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Teaching - Ahmad Mousavi</title>
+        <title>1.0 Getting Started with R and RStudio - DATA 612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -22,8 +22,8 @@
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
-                        <li class="masthead__menu-item"><a href="teaching.html" class="active">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,44 +97,107 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Teaching</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.0 Getting Started with R and RStudio</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            I teach data science, machine learning, and applied mathematics with a focus on mathematical foundations,
-                            computation, and current AI topics. Students derive algorithms from optimization principles and implement
-                            models in R or Python. Coursework includes fairness, interpretability, and related responsible-AI topics,
-                            and several class projects have continued as practicum or independent research.
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="files/data-612/getting-started.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
-                        <h2>Teaching Experience</h2>
-                        <ul>
-                            <li><strong>DATA 441/641: Applied Natural Language Processing</strong>, Spring 2025.</li>
-                            <li>
-                                <strong>DATA 442/642: Advanced Machine Learning</strong>, Fall 2024; Fall 2025 (two sections).
-                            </li>
-                            <li>
-                                <strong>STAT/DATA 427/627: Statistical Machine Learning</strong>, Spring 2024, Fall 2024, Spring 2025, Summer
-                                2025.
-                            </li>
-                            <li>
-                                <strong>DATA 412/612: Statistical Programming in R</strong>, Fall 2023, Spring 2024; Fall 2026.
-                            </li>
-                            <li>
-                                <strong>MATH 225: Introduction to Differential Equations</strong>, Summer and Winter 2018, and Winter 2019
-                                (University of Maryland, Baltimore County).
-                            </li>
-                        </ul>
-                        <h2>Course Development</h2>
-                        <ul>
-                            <li>
-                                <strong>DATA 443/643: Advanced Concepts in Large Language Models</strong> (proposed). A unified treatment of
-                                transformers, alignment, multimodal systems, retrieval-augmented generation, fairness, and unlearning, with
-                                labs in Python, PyTorch, and Hugging Face.
-                            </li>
-                        </ul>
+                        <p>
+                            Install R and RStudio, run a script, and comment your code.
+                        </p>
+<h2>1. Install R, then RStudio</h2>
+<p>R is the language. RStudio (Posit) is an editor that makes R easier to use.</p>
+<p>Install them in this order:</p>
+<ol>
+<li><a href="https://www.r-project.org/">R</a> for Windows, macOS, or Linux.</li>
+<li><a href="https://posit.co/download/rstudio-desktop/">RStudio Desktop</a>.</li>
+</ol>
+<p>RStudio will not work properly if R is not installed first.</p>
+<p>When you open RStudio, you will typically see several panes:</p>
+<ul>
+<li>the <strong>console</strong>, where R evaluates code immediately</li>
+<li>a <strong>script</strong> editor, where you write code you want to keep</li>
+<li>an environment / history pane</li>
+<li>a files / plots / help pane</li>
+</ul>
+<hr />
+<h2>2. The Console</h2>
+<p>The console is the pane with the <code>&gt;</code> prompt.</p>
+<p>Type:</p>
+<pre><code class="language-r">1 + 1
+</code></pre>
+<p>and press Enter.</p>
+<p>R prints:</p>
+<pre><code class="language-r"># [1] 2
+</code></pre>
+<p>The <code>[1]</code> is not part of the answer. It is the index of the first element R is showing you.</p>
+<p>The console is useful for short experiments. It is a poor place to keep your work. When you close RStudio, console history is not a script.</p>
+<hr />
+<h2>3. Scripts</h2>
+<p>A <strong>script</strong> is a text file of R code, usually with a <code>.R</code> extension.</p>
+<p>Create one with <strong>File → New File → R Script</strong>.</p>
+<p>Type this into the script:</p>
+<pre><code class="language-r">x &lt;- 10
+x * 2
+</code></pre>
+<p>Place the cursor on a line and run it with <strong>Ctrl+Enter</strong> (Windows/Linux) or <strong>Cmd+Enter</strong> (macOS). You can also click <strong>Run</strong>.</p>
+<p>The code is sent to the console, and the console shows the result.</p>
+<p>A useful habit is:</p>
+<blockquote>
+<p>Type in a script. Run from the script. Treat the console as a scratch pad.</p>
+</blockquote>
+<p>Save the script. You can reopen it in a later session.</p>
+<hr />
+<h2>4. Comments</h2>
+<p>R ignores anything after <code>#</code> on a line:</p>
+<pre><code class="language-r"># This line is only for humans.
+
+x &lt;- 10   # store 10 in x
+</code></pre>
+<p>Comments are how you explain <em>why</em> you wrote something, not how you hide code you might need later.</p>
+<hr />
+<h2>5. Assignment</h2>
+<p>We store a value with <code>&lt;-</code>:</p>
+<pre><code class="language-r">greeting &lt;- &quot;Hello&quot;
+greeting
+</code></pre>
+<p>In this course:</p>
+<ul>
+<li><code>&lt;-</code> stores a value in an object</li>
+<li><code>=</code> names an argument inside a function call, for example <code>mean(x, na.rm = TRUE)</code></li>
+</ul>
+<hr />
+<h2>6. Where Are Your Files?</h2>
+<p>R reads and writes files relative to the <strong>working directory</strong>.</p>
+<pre><code class="language-r">getwd()
+</code></pre>
+<p>In RStudio you can also use <strong>Session → Set Working Directory</strong>.</p>
+<p>For a course project, a better habit is <strong>File → New Project</strong>. An RStudio project keeps the working directory attached to that folder, so <code>read.csv("students.csv")</code> works when the file is in the project folder.</p>
+<p>If <code>read.csv("students.csv")</code> fails, the usual reason is that the file is not in the working directory.</p>
+<hr />
+<h2>7. Errors Are Information</h2>
+<p>If R cannot run a line, it prints an error. Read it from the top.</p>
+<p>Common first-week mistakes include:</p>
+<ul>
+<li>a missing quotation mark</li>
+<li>a missing parenthesis</li>
+<li>running <code>install.packages(ggplot2)</code> without quotes</li>
+<li>calling a function from a package you have not loaded</li>
+</ul>
+<p>You do not need to memorize every error. You do need to read it.</p>
+<hr />
+<h2>8. What to Do Next</h2>
+<p>Once R and RStudio are installed and you can run a line from a script, continue with:</p>
+<ul>
+<li><strong>1.1</strong> R Packages and the Tidyverse</li>
+<li><strong>1.2</strong> Introduction to R Concepts</li>
+<li><strong>Lab 1</strong>, which asks you to predict what R will do <em>before</em> you run the code</li>
+</ul>
                     </section>
                 </div>
             </article>

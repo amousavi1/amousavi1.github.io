@@ -16,10 +16,15 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-29T12:15:00-04:00"
-LAST_UPDATED_TEXT = "August 29, 2026, 12:15 PM EDT"
+LAST_UPDATED_ISO = "2026-08-29T12:25:00-04:00"
+LAST_UPDATED_TEXT = "August 29, 2026, 12:25 PM EDT"
 
 NOTES = [
+    {
+        "slug": "getting-started",
+        "title": "1.0 Getting Started with R and RStudio",
+        "lead": "Install R and RStudio, run a script, and comment your code.",
+    },
     {
         "slug": "r-packages-and-the-tidyverse",
         "title": "1.1 R Packages and the Tidyverse",
@@ -29,6 +34,11 @@ NOTES = [
         "slug": "introduction-to-r-concepts",
         "title": "1.2 Introduction to R Concepts",
         "lead": "Data types, data structures, indexing, functions, and special values.",
+    },
+    {
+        "slug": "lab-1-looking-under-the-hood",
+        "title": "Lab 1: Looking Under the Hood of R",
+        "lead": "Predict, then run. The point is to catch R in the act.",
     },
 ]
 

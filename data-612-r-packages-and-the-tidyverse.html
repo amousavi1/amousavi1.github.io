@@ -366,11 +366,21 @@ filter(students, grade &gt; 80)
 <pre><code class="language-r">library(tidyverse)
 </code></pre>
 <h3>Step 3 — Import or create data</h3>
+<p>We can create a small data set in code:</p>
 <pre><code class="language-r">students &lt;- data.frame(
   name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
   grade = c(75, 92, 85)
 )
 </code></pre>
+<p>We can also read a file. Download
+<a href="files/data-612/students.csv">students.csv</a>
+and place it in your working directory. Then:</p>
+<pre><code class="language-r">students &lt;- read.csv(&quot;students.csv&quot;)
+</code></pre>
+<p>With the tidyverse, an equivalent approach is:</p>
+<pre><code class="language-r">students &lt;- readr::read_csv(&quot;students.csv&quot;)
+</code></pre>
+<p><code>read.csv()</code> is Base R. <code>read_csv()</code> comes from the <code>readr</code> package.</p>
 <h3>Step 4 — Explore the data</h3>
 <pre><code class="language-r">head(students)
 str(students)
@@ -457,7 +467,7 @@ dplyr::filter()                 # Use a specific function
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T12:15:00-04:00">August 29, 2026, 12:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T12:25:00-04:00">August 29, 2026, 12:25 PM EDT</time></div>
             </footer>
         </div>
 

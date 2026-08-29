@@ -17,6 +17,14 @@ name <- "John"
 passed <- TRUE
 ```
 
+Anything after `#` on a line is a **comment**. R ignores it:
+
+```r
+x <- 10   # store the number 10 in x
+```
+
+In this course we use `<-` for assignment. We use `=` for named function arguments, which we will meet shortly.
+
 We can then use these objects later:
 
 ```r
@@ -181,6 +189,25 @@ duplicated(x)
 sort(x)
 rev(x)
 ```
+
+### Vectorized arithmetic
+
+R applies arithmetic to every element of a vector:
+
+```r
+x <- c(10, 20, 30, 40)
+
+x * 2
+# 20 40 60 80
+
+x + 1
+# 11 21 31 41
+
+x / 10
+# 1 2 3 4
+```
+
+If two vectors have different lengths, R **recycles** the shorter one. We will look at this more carefully in the lab.
 
 Useful numerical summaries include:
 
@@ -575,6 +602,16 @@ Both produce:
 ```
 
 Using argument names often makes code easier to understand.
+
+A useful distinction is:
+
+```r
+x <- 10                      # assignment: store a value
+
+round(3.14159, digits = 2)   # = gives a name to an argument
+```
+
+`<-` creates an object. `=` inside a function call names an argument.
 
 ---
 

@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-29T12:15:00-04:00';
+  const SITE_LAST_UPDATED = '2026-08-29T12:25:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -119,7 +119,12 @@
     'cardinality-constrained structured optimization': 'Sparse Optimization',
     'sparse and structured quadratic surface support vector machines': 'QSVMs',
     'robust multi-scale and multi-modal learning': 'Multi-Modal Learning',
-    '13. important package commands to remember': '13. Package Commands',
+    'a. what `c()` actually builds': 'A. What c() Builds',
+    'c. indexing is a language': 'C. Indexing',
+    'd. packages, names, and what r is searching': 'D. Packages and Names',
+    'e. arithmetic that is not the arithmetic you learned in school': 'E. Arithmetic',
+    'f. files, data frames, and silent shape changes': 'F. Files and Data Frames',
+    'g. optional: the questions that are meant to bother you': 'G. Optional',
     '4. what happens when types are mixed?': '4. Coercion',
     '11. the seq() function': '11. seq()',
     '12. special values: na, nan, inf, and null': '12. Special Values',

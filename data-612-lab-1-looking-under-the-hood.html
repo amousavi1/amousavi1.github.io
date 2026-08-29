@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 1: Looking Under the Hood of R - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Professor of Data Science,<br />
+                            Department of Mathematics and Statistics,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1: Looking Under the Hood of R</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="files/data-612/lab-1-looking-under-the-hood.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Predict, then run. The point is to catch R in the act.
+                        </p>
+<p>Work in an <strong>R script</strong>, not only in the console. Save it as <code>lab01.R</code>.</p>
+<p>Do <strong>1.0</strong>, <strong>1.1</strong>, and <strong>1.2</strong> first. You will need <code>tidyverse</code> installed as in note 1.1.</p>
+<p>Download <a href="files/data-612/students.csv">students.csv</a> and put it in your working directory (<code>getwd()</code> should see it).</p>
+<p>For every item marked <strong>Predict</strong>, do the following in order:</p>
+<ol>
+<li>Write your prediction in a comment, <em>before</em> you run the code.</li>
+<li>Run the code.</li>
+<li>Write a short explanation of <em>why</em> R did that. "R printed that" is not an explanation.</li>
+</ol>
+<p>Some of these questions are meant to surprise people who already use R. That is the point. The notes for 1.1 and 1.2 are enough to <em>start</em> each part; they are not enough to finish it.</p>
+<p>Do not look up the answer until you have a written prediction.</p>
+<hr />
+<h2>A. What <code>c()</code> actually builds</h2>
+<p>R's atomic vectors are not "lists of values of any type." They are typed objects. <code>c()</code> is willing to rewrite your values in order to keep that true.</p>
+<h3>A1. Predict</h3>
+<pre><code class="language-r">typeof(c(1, TRUE))
+typeof(c(1L, TRUE))
+typeof(c(1, &quot;2&quot;, TRUE))
+</code></pre>
+<p>Why are the three answers not the same? What did <code>TRUE</code> become in each case?</p>
+<h3>A2. Predict</h3>
+<pre><code class="language-r">TRUE + TRUE + TRUE
+c(TRUE, FALSE, TRUE) * 2
+</code></pre>
+<p>If <code>TRUE</code> is a logical value, why is arithmetic legal?</p>
+<h3>A3. Predict</h3>
+<pre><code class="language-r">1 == 1L
+identical(1, 1L)
+typeof(1)
+typeof(1L)
+is.numeric(1L)
+</code></pre>
+<p><code>==</code> and <code>identical()</code> are answering different questions. Which question is each one answering?</p>
+<h3>A4. Predict</h3>
+<pre><code class="language-r">f &lt;- factor(c(&quot;10&quot;, &quot;2&quot;, &quot;2&quot;))
+as.numeric(f)
+as.numeric(as.character(f))
+</code></pre>
+<p>This is one of the most expensive mistakes in R. What is <code>as.numeric()</code> looking at when the object is a factor?</p>
+<h3>A5. Predict</h3>
+<pre><code class="language-r">is.vector(c(1, 2, 3))
+is.vector(list(1, &quot;a&quot;))
+is.atomic(list(1, &quot;a&quot;))
+is.vector(matrix(1:4, nrow = 2))
+is.vector(factor(c(&quot;a&quot;, &quot;b&quot;)))
+</code></pre>
+<p>If you believed "vector" means "atomic vector," this part exists to break that belief. What does <code>is.vector()</code> actually test?</p>
+<hr />
+<h2>B. Three kinds of nothing</h2>
+<p><code>NA</code>, <code>NaN</code>, and <code>NULL</code> are not three names for the same idea. R will not let you treat them as if they were.</p>
+<h3>B1. Predict</h3>
+<pre><code class="language-r">x &lt;- c(NA, NaN, Inf, NULL)
+x
+length(x)
+typeof(x)
+</code></pre>
+<p>You passed four things to <code>c()</code>. Why does <code>x</code> not have length 4?</p>
+<h3>B2. Predict</h3>
+<pre><code class="language-r">NA == NA
+NaN == NaN
+NULL == NULL
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-r">identical(NA, NA)
+identical(NaN, NaN)
+identical(NULL, NULL)
+</code></pre>
+<p>Why can <code>==</code> refuse to say that a missing value equals a missing value? Why is <code>NaN == NaN</code> different from <code>identical(NaN, NaN)</code>?</p>
+<h3>B3. Predict</h3>
+<pre><code class="language-r">is.na(NaN)
+is.nan(NA)
+typeof(NA)
+typeof(c(NA, 1))
+typeof(c(NA, &quot;a&quot;))
+</code></pre>
+<p><code>NA</code> looks like one object. It is not. What happened to <code>NA</code> when it entered those two vectors?</p>
+<h3>B4. Predict</h3>
+<pre><code class="language-r">mean(numeric(0))
+sum(numeric(0))
+mean(NULL)
+sum(NULL)
+</code></pre>
+<p>Empty is not the same as missing, and missing is not the same as absent. Which of these is <code>NaN</code>, which is <code>0</code>, and which is a warning?</p>
+<h3>B5. Predict</h3>
+<pre><code class="language-r">c(1, 2)[0]
+c(1, 2)[3]
+c(1, 2)[NA]
+</code></pre>
+<p>Out-of-range indexing in R does not behave like Python. What object do you get in each case, and why is <code>[0]</code> not an error?</p>
+<hr />
+<h2>C. Indexing is a language</h2>
+<p><code>[</code> is not "get the nth thing." It is a function with rules for integers, negatives, logicals, names, and recycling.</p>
+<h3>C1. Predict</h3>
+<pre><code class="language-r">x &lt;- 10:13
+x[c(1, 1, 1)]
+x[-c(1, 1)]
+</code></pre>
+<p>Positive indices select. Negative indices drop. Why does repeating <code>1</code> mean two different things in these two lines?</p>
+<h3>C2. Predict</h3>
+<pre><code class="language-r">x &lt;- c(10, 20, 30, 40)
+x[c(TRUE, FALSE)]
+x[c(TRUE, FALSE, TRUE)]
+</code></pre>
+<p>The first logical index is shorter than <code>x</code>. The second is not the same length either. What rule is R using, and where does the extra <code>TRUE</code> go?</p>
+<h3>C3. Predict</h3>
+<pre><code class="language-r">student &lt;- list(name = &quot;Ada&quot;, age = 36, grades = c(90, 85))
+student[1]
+student[[1]]
+student$n
+student[[&quot;n&quot;]]
+student[&quot;n&quot;]
+</code></pre>
+<p><code>$</code> is doing something that <code>[[</code> refuses to do. What is it, and why is that dangerous?</p>
+<h3>C4. Predict</h3>
+<pre><code class="language-r">students &lt;- data.frame(name = c(&quot;Ada&quot;, &quot;Bob&quot;), grade = c(91, 74))
+class(students[, &quot;grade&quot;])
+class(students[, &quot;grade&quot;, drop = FALSE])
+class(students[&quot;grade&quot;])
+class(students[[&quot;grade&quot;]])
+</code></pre>
+<p>One of these is a data frame, one is a vector, and the difference is easy to miss in a larger script. Which is which, and what is <code>drop</code> for?</p>
+<h3>C5. Predict</h3>
+<pre><code class="language-r">m &lt;- matrix(1:6, nrow = 2)
+m
+m[2, 1]
+</code></pre>
+<p>Fill in the matrix on paper before you run this. R fills matrices in a particular order. Which order, and why is <code>m[2, 1]</code> equal to 2 rather than 4?</p>
+<h3>C6. Predict</h3>
+<pre><code class="language-r">c(list(1), 2)
+list(1, 2)
+c(list(1), c(2, 3))
+list(1, c(2, 3))
+</code></pre>
+<p><code>c()</code> concatenates. <code>list()</code> nests. Count the top-level elements in each result, and explain why the last two are different shapes.</p>
+<hr />
+<h2>D. Packages, names, and what R is searching</h2>
+<p>A function name is not a unique identity. It is a name R looks up on a search path.</p>
+<h3>D1. Explain, then try only the quoted form for installation</h3>
+<p>Why does this fail (do not keep running it):</p>
+<pre><code class="language-r">install.packages(ggplot2)
+</code></pre>
+<p>while this is the intended form:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)
+</code></pre>
+<p>and yet both of these can succeed:</p>
+<pre><code class="language-r">library(ggplot2)
+library(&quot;ggplot2&quot;)
+</code></pre>
+<p>What is <code>library()</code> doing with an unquoted name that <code>install.packages()</code> will not do?</p>
+<h3>D2. Predict, in a session where you have not yet loaded dplyr</h3>
+<pre><code class="language-r">students &lt;- data.frame(name = c(&quot;Ada&quot;, &quot;Bob&quot;), grade = c(91, 74))
+filter
+filter(students, grade &gt; 80)
+</code></pre>
+<p>Then load dplyr and run the same two lines again.</p>
+<pre><code class="language-r">library(dplyr)
+filter
+filter(students, grade &gt; 80)
+</code></pre>
+<p>There is already a <code>filter()</code> in Base R / stats. What changed after <code>library(dplyr)</code>? How can two functions share a name? How do you call the older one anyway?</p>
+<h3>D3. Predict</h3>
+<pre><code class="language-r">x &lt;- c(10, 20, 30)
+x |&gt; mean()
+x %&gt;% mean()
+</code></pre>
+<p>Run this <em>before</em> loading tidyverse. Why does one pipe exist in Base R and the other does not? After <code>library(tidyverse)</code>, try:</p>
+<pre><code class="language-r">mtcars |&gt; lm(mpg ~ wt, data = _)
+</code></pre>
+<p>What is <code>_</code> doing, and why is it necessary here when it was not necessary in <code>x |&gt; mean()</code>?</p>
+<h3>D4. Predict</h3>
+<pre><code class="language-r">search()
+library(ggplot2)
+search()
+</code></pre>
+<p>Where did <code>ggplot2</code> go on the search path, and why does that position matter when two packages contain the same function name?</p>
+<hr />
+<h2>E. Arithmetic that is not the arithmetic you learned in school</h2>
+<h3>E1. Predict</h3>
+<pre><code class="language-r">c(1, 2) + c(10, 20, 30, 40)
+1:3 * 1:6
+</code></pre>
+<p>Write the recycled vectors out by hand. When does R warn, and when does it stay silent?</p>
+<h3>E2. Predict</h3>
+<pre><code class="language-r">0.1 + 0.2 == 0.3
+sqrt(2)^2 == 2
+identical(0.1 + 0.2, 0.3)
+</code></pre>
+<p>R is not "bad at arithmetic." What class of numbers is it actually using, and why is <code>==</code> the wrong tool here?</p>
+<h3>E3. Predict</h3>
+<pre><code class="language-r">round(1.5)
+round(2.5)
+round(3.5)
+round(4.5)
+</code></pre>
+<p>If you expected "halves round away from zero" or "halves round up," you will get this wrong. What rule is <code>round()</code> using, and why would a language choose it?</p>
+<h3>E4. Predict</h3>
+<pre><code class="language-r">1 / 0
+0 / 0
+TRUE / FALSE
+Inf - Inf
+NA + 1
+NULL + 1
+</code></pre>
+<p>Which of these are <code>Inf</code>, <code>NaN</code>, <code>NA</code>, and which is an error? What coercion makes <code>TRUE / FALSE</code> legal?</p>
+<hr />
+<h2>F. Files, data frames, and silent shape changes</h2>
+<p>Place <code>students.csv</code> in your working directory.</p>
+<h3>F1. Run and compare</h3>
+<pre><code class="language-r">base_students &lt;- read.csv(&quot;students.csv&quot;)
+tidy_students &lt;- readr::read_csv(&quot;students.csv&quot;)
+
+class(base_students)
+class(tidy_students)
+str(base_students)
+str(tidy_students)
+</code></pre>
+<p>Both read the same file. Why are the objects not the same class? What extra classes does <code>read_csv()</code> attach, and what is a tibble claiming to be besides a data frame?</p>
+<h3>F2. Predict</h3>
+<pre><code class="language-r">base_students$grade * 0.01
+base_students[, &quot;grade&quot;]
+base_students[&quot;grade&quot;]
+base_students$g
+</code></pre>
+<p>One of these uses the vectorized arithmetic from note 1.2. One may use partial matching. Which extraction still has two dimensions?</p>
+<h3>F3. Predict</h3>
+<pre><code class="language-r">T &lt;- 0
+T
+TRUE
+if (T) &quot;yes&quot; else &quot;no&quot;
+</code></pre>
+<p><code>TRUE</code> is not the same kind of name as <code>T</code>. What is <code>T</code> in a fresh session, and why is assigning to it legal when assigning to <code>TRUE</code> is not?</p>
+<hr />
+<h2>G. Optional: the questions that are meant to bother you</h2>
+<p>Do these last. They are not extra credit in the sense of being optional forever; they are the questions the rest of the lab is training you to ask.</p>
+<h3>G1. Predict</h3>
+<pre><code class="language-r">any(c(FALSE, NA))
+all(c(TRUE, NA))
+any(c(TRUE, NA))
+all(c(FALSE, NA))
+</code></pre>
+<p><code>NA</code> means "unknown." Translate each line into English with the word <em>unknown</em> in it, then check whether R agrees with your English.</p>
+<h3>G2. Predict</h3>
+<pre><code class="language-r">unique(c(NaN, NaN))
+duplicated(c(NA, NA))
+duplicated(c(NaN, NaN))
+</code></pre>
+<p>If <code>NaN == NaN</code> is <code>FALSE</code>, how can <code>unique()</code> collapse two <code>NaN</code>s? What notion of sameness is <code>unique()</code> using?</p>
+<h3>G3. Predict</h3>
+<pre><code class="language-r">1:0
+1:(-1)
+seq_len(0)
+seq_along(NULL)
+</code></pre>
+<p><code>:</code> is not "the empty range" when the ends look empty. What does <code>1:0</code> actually generate, and when would <code>seq_len()</code> be the safer function?</p>
+<h3>G4. Predict</h3>
+<pre><code class="language-r">x &lt;- 1:5
+y &lt;- x
+x[1] &lt;- 99L
+x
+y
+</code></pre>
+<p>You might think <code>y</code> is an alias for <code>x</code>. In R it usually is not, after you modify <code>x</code>. What did the assignment <code>y &lt;- x</code> actually copy, and when did R bother to copy it?</p>
+<h3>G5. Predict</h3>
+<pre><code class="language-r">gender &lt;- factor(c(&quot;Male&quot;, &quot;Female&quot;, &quot;Female&quot;))
+c(gender, &quot;Other&quot;)
+</code></pre>
+<p>You asked for another category. What values do you actually get, and what did <code>c()</code> do to the factor before it could append a character?</p>
+<hr />
+<h2>What to submit</h2>
+<p>Submit <code>lab01.R</code> with:</p>
+<ul>
+<li>a prediction comment above every <strong>Predict</strong> block</li>
+<li>the code</li>
+<li>a short explanation comment below the output of each block</li>
+</ul>
+<p>If a result still feels impossible after you have explained it, write down the question you now have. That question is part of the lab.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T12:25:00-04:00">August 29, 2026, 12:25 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

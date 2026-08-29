@@ -401,12 +401,30 @@ library(tidyverse)
 
 ### Step 3 — Import or create data
 
+We can create a small data set in code:
+
 ```r
 students <- data.frame(
   name = c("John", "Sara", "David"),
   grade = c(75, 92, 85)
 )
 ```
+
+We can also read a file. Download
+[students.csv](files/data-612/students.csv)
+and place it in your working directory. Then:
+
+```r
+students <- read.csv("students.csv")
+```
+
+With the tidyverse, an equivalent approach is:
+
+```r
+students <- readr::read_csv("students.csv")
+```
+
+`read.csv()` is Base R. `read_csv()` comes from the `readr` package.
 
 ### Step 4 — Explore the data
 
