@@ -1,6 +1,6 @@
 Work in an **R script**, not only in the console. Save it as `lab01.R`.
 
-Do **1.1**, **1.2**, and **1.3** first. You will need `tidyverse` installed as in note 1.2. Note **1.4** is about R Markdown and Quarto; you do not need it for this lab.
+Do **1.1**, **1.2**, **1.3**, and **1.4** first. You will need `tidyverse` installed as in note 1.2, and you will import `students.csv` as in note 1.3. Note **1.5** is about R Markdown and Quarto; you do not need it for this lab.
 
 Download [students.csv](files/data-612/students.csv) and put it in your working directory (`getwd()` should see it).
 
@@ -10,7 +10,7 @@ For every item marked **Predict**, do the following in order:
 2. Run the code.
 3. Write a short explanation of *why* R did that. "R printed that" is not an explanation.
 
-Some of these questions are meant to surprise people who already use R. That is the point. The notes for 1.2 and 1.3 are enough to *start* each part; they are not enough to finish it.
+Some of these questions are meant to surprise people who already use R. That is the point. The notes for 1.2, 1.3, and 1.4 are enough to *start* each part; they are not enough to finish it.
 
 Do not look up the answer until you have a written prediction.
 
@@ -362,7 +362,7 @@ base_students["grade"]
 base_students$g
 ```
 
-One of these uses the vectorized arithmetic from note 1.3. One may use partial matching. Which extraction still has two dimensions?
+One of these uses the vectorized arithmetic from note 1.4. One may use partial matching. Which extraction still has two dimensions?
 
 ### F3. Predict
 

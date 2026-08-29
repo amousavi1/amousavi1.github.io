@@ -16,14 +16,14 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-29T14:05:00-04:00"
-LAST_UPDATED_TEXT = "August 29, 2026, 2:05 PM EDT"
+LAST_UPDATED_ISO = "2026-08-29T14:40:00-04:00"
+LAST_UPDATED_TEXT = "August 29, 2026, 2:40 PM EDT"
 
 NOTES = [
     {
         "slug": "getting-started",
         "title": "1.1 Getting Started with R and RStudio",
-        "lead": "Install R and RStudio, run a script, and keep files where R can find them.",
+        "lead": "Install R and RStudio, run a script, and open a project so R can find your files.",
     },
     {
         "slug": "r-packages-and-the-tidyverse",
@@ -31,13 +31,18 @@ NOTES = [
         "lead": "Installing packages, loading them, the tidyverse, and the pipe.",
     },
     {
+        "slug": "files-and-paths",
+        "title": "1.3 Working with Files and Paths",
+        "lead": "Find a file, tell R where it is, import it, and save the result.",
+    },
+    {
         "slug": "introduction-to-r-concepts",
-        "title": "1.3 Introduction to R Concepts",
+        "title": "1.4 Introduction to R Concepts",
         "lead": "Data types, data structures, indexing, functions, and special values.",
     },
     {
         "slug": "r-markdown-and-quarto",
-        "title": "1.4 R Markdown and Quarto",
+        "title": "1.5 R Markdown and Quarto",
         "lead": "When to use a script, how to knit a short document, and how Quarto relates to R Markdown.",
     },
     {

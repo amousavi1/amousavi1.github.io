@@ -108,7 +108,7 @@
                             <a href="files/data-612/getting-started.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Install R and RStudio, run a script, and keep files where R can find them.
+                            Install R and RStudio, run a script, and open a project so R can find your files.
                         </p>
 <h2>1. Install R, then RStudio</h2>
 <p>R is the language. RStudio (Posit) is an editor that makes R easier to use.</p>
@@ -192,7 +192,7 @@ x * 2
 <p>Type in a script. Run from the script. Treat the console as a scratch pad.</p>
 </blockquote>
 <p>Save the script. You can reopen it in a later session.</p>
-<p>Lab 1 is a script. R Markdown and Quarto are for later assignments; see note <strong>1.4</strong>.</p>
+<p>Lab 1 is a script. R Markdown and Quarto are for later assignments; see note <strong>1.5</strong>.</p>
 <hr />
 <h2>6. Comments</h2>
 <p>R ignores anything after <code>#</code> on a line:</p>
@@ -250,115 +250,8 @@ help(&quot;%%&quot;)
 <pre><code class="language-r">getwd()
 </code></pre>
 <p>That path is "where R is standing." In RStudio you can also read it just under the Console tab.</p>
-<p>In RStudio you can change it with <strong>Session → Set Working Directory</strong>, or in the <strong>Files</strong> pane: go to the folder, then <strong>More → Set As Working Directory</strong>.</p>
-<p>A better habit for the course is <strong>File → New Project</strong>. An RStudio project pins the working directory to that folder. When the project is open, <code>getwd()</code> is the project folder. Do not nest one project inside another.</p>
-<h3>Absolute paths versus relative paths</h3>
-<p>A <strong>path</strong> is the address of a file.</p>
-<p>An <strong>absolute path</strong> starts from the top of the drive or from your user folder:</p>
-<pre><code class="language-r">&quot;C:/Users/you/Documents/data_612/students.csv&quot;
-&quot;/Users/you/Documents/data_612/students.csv&quot;
-</code></pre>
-<p>It works only on <em>your</em> computer. If your username is in the path, nobody else can run the code — including whoever grades it. Do not put absolute paths in work you submit.</p>
-<p>A <strong>relative path</strong> starts from the working directory. Think of it as directions from the house you are already in, not from the city.</p>
-<p>Use <code>/</code> in paths in R, even on Windows. Do not use <code>\</code>.</p>
-<h3>How to read a relative path</h3>
-<p>Three pieces do all the work:</p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Piece</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>file.csv</code> or <code>./file.csv</code></td>
-<td>the file is in the working directory</td>
-</tr>
-<tr>
-<td><code>folder/file.csv</code></td>
-<td>go <strong>down</strong> into <code>folder</code>, then take the file</td>
-</tr>
-<tr>
-<td><code>../file.csv</code></td>
-<td>go <strong>up</strong> one folder, then take the file</td>
-</tr>
-</tbody>
-</table></div>
-<p><code>.</code> means "this folder." <code>..</code> means "the parent folder." You can stack them: <code>../../</code> goes up twice. You can go up and then down: <code>../other_folder/file.csv</code>.</p>
-<p>The RStudio <strong>Files</strong> pane shows <code>..</code> at the top of a folder. That is the same <code>..</code> you write in a path.</p>
-<h3>A concrete folder tree</h3>
-<p>Suppose this is an RStudio project, and <code>getwd()</code> is <code>data_612</code>:</p>
-<pre><code class="language-text">data_612/                 ← working directory
-  students.csv
-  lab01.R
-  data/
-    students.csv
-    extra/
-      midterm.csv
-  R/
-    import_students.R
-  output/
-  assignments/
-    lab_01/
-      lab01.R
-</code></pre>
-<p>From this working directory, these paths all make sense:</p>
-<pre><code class="language-r">&quot;students.csv&quot;                      # the copy in data_612/
-&quot;./students.csv&quot;                    # the same file
-&quot;lab01.R&quot;
-&quot;data/students.csv&quot;                 # one folder down
-&quot;data/extra/midterm.csv&quot;            # two folders down
-&quot;R/import_students.R&quot;
-&quot;assignments/lab_01/lab01.R&quot;
-</code></pre>
-<p>So:</p>
-<pre><code class="language-r">read.csv(&quot;students.csv&quot;)
-read.csv(&quot;data/students.csv&quot;)
-read.csv(&quot;data/extra/midterm.csv&quot;)
-</code></pre>
-<p>read three different files. The first is next to the project. The second is in <code>data/</code>. The third is in <code>data/extra/</code>.</p>
-<p>To write a file into <code>output/</code>:</p>
-<pre><code class="language-r">write.csv(students, &quot;output/grades.csv&quot;)
-</code></pre>
-<h3>Same tree, different working directory</h3>
-<p>Relative paths change if you move where R is standing.</p>
-<p>If you set the working directory to <code>data_612/data</code>, then <code>getwd()</code> ends in <code>.../data_612/data</code>, and the same files look like this:</p>
-<pre><code class="language-r">&quot;students.csv&quot;                      # now this is data/students.csv
-&quot;extra/midterm.csv&quot;
-&quot;../students.csv&quot;                   # up to data_612/, then that copy
-&quot;../lab01.R&quot;
-&quot;../R/import_students.R&quot;
-&quot;../assignments/lab_01/lab01.R&quot;
-&quot;../output/grades.csv&quot;
-</code></pre>
-<p>If you set the working directory to <code>data_612/assignments/lab_01</code>:</p>
-<pre><code class="language-r">&quot;lab01.R&quot;                           # the copy in lab_01/
-&quot;../..&quot;                             # that path is the project folder itself
-&quot;../../students.csv&quot;                # up to assignments/, up to data_612/
-&quot;../../data/students.csv&quot;
-&quot;../../data/extra/midterm.csv&quot;
-&quot;../../R/import_students.R&quot;
-</code></pre>
-<p><code>../</code> once leaves <code>lab_01</code> and lands in <code>assignments</code>. <code>../../</code> leaves <code>assignments</code> and lands in <code>data_612</code>.</p>
-<h3>Check that R sees the file</h3>
-<p>Before you import, ask R what it can see:</p>
-<pre><code class="language-r">getwd()
-list.files()
-list.files(&quot;data&quot;)
-file.exists(&quot;students.csv&quot;)
-file.exists(&quot;data/students.csv&quot;)
-</code></pre>
-<p><code>list.files()</code> lists the working directory. <code>file.exists()</code> is <code>TRUE</code> only if that relative path is right from <em>here</em>.</p>
-<p>If <code>read.csv("students.csv")</code> fails, the usual reasons are:</p>
-<ul>
-<li>the file is not in the working directory (it is in <code>data/</code>, or still in Downloads)</li>
-<li>the name is slightly wrong (<code>Students.csv</code> is not <code>students.csv</code> on some systems)</li>
-<li>you used an absolute path that does not exist on this computer</li>
-<li>you used <code>\</code> instead of <code>/</code></li>
-</ul>
-<p>Move the file, or fix the relative path. Do not paste a <code>C:/Users/...</code> path into the script.</p>
-<p>Note <strong>1.2</strong> shows how to import <code>students.csv</code>. Lab 1 asks you to import it. Put that file in the working directory, or use a relative path such as <code>"data/students.csv"</code> if you keep data in a subfolder.</p>
+<p>A better habit for the course is <strong>File → New Project</strong>. An RStudio project pins the working directory to that folder. Do not nest one project inside another.</p>
+<p>Note <strong>1.3</strong> is the full treatment: relative vs absolute paths, <code>.</code> and <code>..</code>, choosing an import function, and saving results.</p>
 <hr />
 <h2>11. Errors Are Information</h2>
 <p>If R cannot run a line, it prints an error. Read it from the top.</p>
@@ -375,9 +268,10 @@ file.exists(&quot;data/students.csv&quot;)
 <h2>12. What to Do Next</h2>
 <p>Once R and RStudio are installed and you can run a line from a script, continue with:</p>
 <ul>
-<li><strong>1.2</strong> R Packages and the Tidyverse, including how to import a CSV</li>
-<li><strong>1.3</strong> Introduction to R Concepts</li>
-<li><strong>1.4</strong> R Markdown and Quarto</li>
+<li><strong>1.2</strong> R Packages and the Tidyverse</li>
+<li><strong>1.3</strong> Working with Files and Paths</li>
+<li><strong>1.4</strong> Introduction to R Concepts</li>
+<li><strong>1.5</strong> R Markdown and Quarto</li>
 <li><strong>Lab 1</strong>, which asks you to predict what R will do <em>before</em> you run the code. Work in a <code>.R</code> script.</li>
 </ul>
                     </section>
@@ -388,7 +282,7 @@ file.exists(&quot;data/students.csv&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T14:05:00-04:00">August 29, 2026, 2:05 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T14:40:00-04:00">August 29, 2026, 2:40 PM EDT</time></div>
             </footer>
         </div>
 

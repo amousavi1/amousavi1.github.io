@@ -126,4 +126,4 @@ Later homework
   → a knitted or rendered document, as the assignment says
 ```
 
-Note **1.1** is how you run a script and find files. Note **1.2** is how you import `students.csv`. Lab 1 uses both.
+Note **1.1** is how you run a script and find the working directory. Note **1.3** is how you import `students.csv`. Lab 1 uses both.
