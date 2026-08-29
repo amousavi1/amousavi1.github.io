@@ -108,7 +108,7 @@
                             <a href="files/data-612/getting-started.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Install R and RStudio, run a script, and comment your code.
+                            Install R and RStudio, run a script, and keep files where R can find them.
                         </p>
 <h2>1. Install R, then RStudio</h2>
 <p>R is the language. RStudio (Posit) is an editor that makes R easier to use.</p>
@@ -118,15 +118,40 @@
 <li><a href="https://posit.co/download/rstudio-desktop/">RStudio Desktop</a>.</li>
 </ol>
 <p>RStudio will not work properly if R is not installed first.</p>
+<p>We will work in RStudio, not in the older R application that installs with R.</p>
+<p>R was designed for statistics. It is free, it is built around packages, and it is a good language for analysis you can rerun. Python is also widely used in data science. This course uses R.</p>
+<hr />
+<h2>2. The RStudio Layout</h2>
 <p>When you open RStudio, you will typically see several panes:</p>
 <ul>
 <li>the <strong>console</strong>, where R evaluates code immediately</li>
-<li>a <strong>script</strong> editor, where you write code you want to keep</li>
-<li>an environment / history pane</li>
-<li>a files / plots / help pane</li>
+<li>a <strong>source</strong> editor, where you write scripts and documents you want to keep</li>
+<li>an <strong>environment / history</strong> pane, which lists objects in the current session</li>
+<li>a <strong>files / plots / packages / help</strong> pane</li>
+</ul>
+<p>The source pane stays closed until you open or create a file.</p>
+<p>A few habits that save time:</p>
+<ul>
+<li>The <strong>Files</strong> tab is a limited file manager. You can open, copy, and delete files, and you can set the console working directory from <strong>More</strong>.</li>
+<li>The <strong>Environment</strong> tab shows objects you have created in this session.</li>
+<li>The <strong>Help</strong> tab shows documentation. You can also type <code>help(mean)</code> or <code>?mean</code> in the console.</li>
 </ul>
 <hr />
-<h2>2. The Console</h2>
+<h2>3. Configure RStudio Once</h2>
+<p>Open <strong>Tools → Global Options… → General</strong>.</p>
+<p>Under <strong>Workspace</strong>:</p>
+<ul>
+<li>uncheck <strong>Restore .RData into workspace at startup</strong></li>
+<li>set <strong>Save workspace to .RData on exit</strong> to <strong>Never</strong></li>
+</ul>
+<p>If RStudio restores yesterday's objects, you can accidentally use results you no longer have code for. That looks convenient and is bad for reproducibility.</p>
+<p>Other useful options:</p>
+<ul>
+<li><strong>Code → Editing</strong>: turn on soft wrapping</li>
+<li><strong>Appearance</strong>: choose a font size you can read</li>
+</ul>
+<hr />
+<h2>4. The Console</h2>
 <p>The console is the pane with the <code>&gt;</code> prompt.</p>
 <p>Type:</p>
 <pre><code class="language-r">1 + 1
@@ -136,9 +161,24 @@
 <pre><code class="language-r"># [1] 2
 </code></pre>
 <p>The <code>[1]</code> is not part of the answer. It is the index of the first element R is showing you.</p>
+<p>The up and down arrow keys cycle through recent console commands. That is useful when you mistype a line.</p>
+<p>R is a calculator:</p>
+<pre><code class="language-r">3 * 7
+9 / 3
+(3 + 5) * 6
+3 ^ 2
+</code></pre>
+<p><code>%%</code> is remainder after integer division:</p>
+<pre><code class="language-r">1 %% 2
+# 1
+
+4 %% 2
+# 0
+</code></pre>
 <p>The console is useful for short experiments. It is a poor place to keep your work. When you close RStudio, console history is not a script.</p>
+<p>If a command is incomplete, R shows a <code>+</code> prompt and waits. Press <strong>Esc</strong> to get back to <code>&gt;</code>.</p>
 <hr />
-<h2>3. Scripts</h2>
+<h2>5. Scripts</h2>
 <p>A <strong>script</strong> is a text file of R code, usually with a <code>.R</code> extension.</p>
 <p>Create one with <strong>File → New File → R Script</strong>.</p>
 <p>Type this into the script:</p>
@@ -152,8 +192,9 @@ x * 2
 <p>Type in a script. Run from the script. Treat the console as a scratch pad.</p>
 </blockquote>
 <p>Save the script. You can reopen it in a later session.</p>
+<p>Lab 1 is a script. R Markdown and Quarto are for later assignments; see note <strong>1.3</strong>.</p>
 <hr />
-<h2>4. Comments</h2>
+<h2>6. Comments</h2>
 <p>R ignores anything after <code>#</code> on a line:</p>
 <pre><code class="language-r"># This line is only for humans.
 
@@ -161,7 +202,7 @@ x &lt;- 10   # store 10 in x
 </code></pre>
 <p>Comments are how you explain <em>why</em> you wrote something, not how you hide code you might need later.</p>
 <hr />
-<h2>5. Assignment</h2>
+<h2>7. Assignment</h2>
 <p>We store a value with <code>&lt;-</code>:</p>
 <pre><code class="language-r">greeting &lt;- &quot;Hello&quot;
 greeting
@@ -171,16 +212,55 @@ greeting
 <li><code>&lt;-</code> stores a value in an object</li>
 <li><code>=</code> names an argument inside a function call, for example <code>mean(x, na.rm = TRUE)</code></li>
 </ul>
+<p>R is <strong>case sensitive</strong>. <code>x</code> and <code>X</code> are different objects. <code>TRUE</code> is not <code>true</code>. <code>sum()</code> is not <code>Sum()</code>.</p>
 <hr />
-<h2>6. Where Are Your Files?</h2>
+<h2>8. Getting Help</h2>
+<p>Almost every function has a help page:</p>
+<pre><code class="language-r">help(mean)
+?mean
+help(&quot;%%&quot;)
+</code></pre>
+<p><code>??topic</code> searches help pages. Adding <code>"in R"</code> to a web search is often faster than memorizing function names.</p>
+<hr />
+<h2>9. Organize Your Files</h2>
+<p>Do not keep every course file on the Desktop with names like <code>file 1</code>. You will not be able to tell R where the data is, and other people will not be able to rerun your work.</p>
+<p>Create one folder for the course, for example <code>data_612</code>, and keep lecture work and assignments in separate subfolders. Use <strong>snake_case</strong> names. Avoid spaces and special characters.</p>
+<pre><code class="language-text">data_612/
+  class/
+    week_01/
+  assignments/
+    lab_01/
+</code></pre>
+<p>Inside a project, a common pattern is:</p>
+<ul>
+<li><code>R/</code> for <code>.R</code> scripts</li>
+<li><code>data/</code> for files you import</li>
+<li><code>output/</code> for files you write</li>
+</ul>
+<p>You do not need every folder every week. You do need a place that is not a pile.</p>
+<p>Back up that folder to Google Drive or another cloud service. A crashed laptop is a common way to lose a course.</p>
+<hr />
+<h2>10. Where Are Your Files?</h2>
 <p>R reads and writes files relative to the <strong>working directory</strong>.</p>
 <pre><code class="language-r">getwd()
 </code></pre>
-<p>In RStudio you can also use <strong>Session → Set Working Directory</strong>.</p>
-<p>For a course project, a better habit is <strong>File → New Project</strong>. An RStudio project keeps the working directory attached to that folder, so <code>read.csv("students.csv")</code> works when the file is in the project folder.</p>
+<p>In RStudio you can also use <strong>Session → Set Working Directory</strong>, or the <strong>Files</strong> pane <strong>More</strong> menu.</p>
+<p>For a course project, a better habit is <strong>File → New Project</strong>. An RStudio project keeps the working directory attached to that folder, so <code>read.csv("students.csv")</code> works when the file is in the project folder. Do not nest one project inside another.</p>
+<p>There are two kinds of paths:</p>
+<ul>
+<li>An <strong>absolute path</strong> starts from the drive or user folder, for example <code>C:/Users/you/Documents/data_612/students.csv</code>. It works only on your computer. Do not put absolute paths in work you submit.</li>
+<li>A <strong>relative path</strong> starts from the working directory.</li>
+</ul>
+<pre><code class="language-r">&quot;students.csv&quot;           # in the working directory
+&quot;data/students.csv&quot;      # one folder down
+&quot;./students.csv&quot;         # same as the first
+&quot;../students.csv&quot;        # one folder up
+</code></pre>
+<p>Use <code>/</code> in paths in R, even on Windows.</p>
 <p>If <code>read.csv("students.csv")</code> fails, the usual reason is that the file is not in the working directory.</p>
+<p>Note <strong>1.1</strong> shows how to import <code>students.csv</code>. Lab 1 asks you to import it.</p>
 <hr />
-<h2>7. Errors Are Information</h2>
+<h2>11. Errors Are Information</h2>
 <p>If R cannot run a line, it prints an error. Read it from the top.</p>
 <p>Common first-week mistakes include:</p>
 <ul>
@@ -188,15 +268,17 @@ greeting
 <li>a missing parenthesis</li>
 <li>running <code>install.packages(ggplot2)</code> without quotes</li>
 <li>calling a function from a package you have not loaded</li>
+<li>looking for a file that is not in the working directory</li>
 </ul>
 <p>You do not need to memorize every error. You do need to read it.</p>
 <hr />
-<h2>8. What to Do Next</h2>
+<h2>12. What to Do Next</h2>
 <p>Once R and RStudio are installed and you can run a line from a script, continue with:</p>
 <ul>
-<li><strong>1.1</strong> R Packages and the Tidyverse</li>
+<li><strong>1.1</strong> R Packages and the Tidyverse, including how to import a CSV</li>
 <li><strong>1.2</strong> Introduction to R Concepts</li>
-<li><strong>Lab 1</strong>, which asks you to predict what R will do <em>before</em> you run the code</li>
+<li><strong>1.3</strong> R Markdown and Quarto</li>
+<li><strong>Lab 1</strong>, which asks you to predict what R will do <em>before</em> you run the code. Work in a <code>.R</code> script.</li>
 </ul>
                     </section>
                 </div>
@@ -206,7 +288,7 @@ greeting
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T12:30:00-04:00">August 29, 2026, 12:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T13:10:00-04:00">August 29, 2026, 1:10 PM EDT</time></div>
             </footer>
         </div>
 

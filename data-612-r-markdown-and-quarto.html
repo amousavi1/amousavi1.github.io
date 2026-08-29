@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Research - Ahmad Mousavi</title>
+        <title>1.3 R Markdown and Quarto - DATA 612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -20,10 +20,10 @@
                     <ul class="visible-links">
                         <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
-                        <li class="masthead__menu-item"><a href="research.html" class="active">Research</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
                         <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,68 +97,132 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Research</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.3 R Markdown and Quarto</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            My research develops mathematical methods for sparse and structured learning, with emphasis on exact
-                            sparsity, constrained optimization, and machine learning. Current work follows three directions that share
-                            a common base in nonconvex constrained optimization.
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="files/data-612/r-markdown-and-quarto.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
-                        <p>Research interests include:</p>
-                        <ul>
-                            <li>
-                                <strong>General</strong>: natural language processing, machine learning, deep learning, sparse optimization,
-                                large-scale optimization, mathematical finance, mathematical modeling, quantum computing, numerical linear
-                                algebra
-                            </li>
-                            <li>
-                                <strong>Methods and topics</strong>: support vector machines, penalty decomposition, L1-minimization, greedy
-                                algorithms, semidefinite programming, ADMM, inexact Newton methods, matrix decomposition, linear programming,
-                                quadratic optimization, and related areas
-                            </li>
-                        </ul>
+                        <p>
+                            When to use a script, how to knit a short document, and how Quarto relates to R Markdown.
+                        </p>
+<h2>1. Three Kinds of Files</h2>
+<p>RStudio can edit more than one kind of file. The three you will see in this course are:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Extension</th>
+<th>What it is for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R script</td>
+<td><code>.R</code></td>
+<td>Code you want to keep and rerun</td>
+</tr>
+<tr>
+<td>R Markdown</td>
+<td><code>.Rmd</code></td>
+<td>A document that mixes writing and R code</td>
+</tr>
+<tr>
+<td>Quarto</td>
+<td><code>.qmd</code></td>
+<td>A newer document format with the same idea</td>
+</tr>
+</tbody>
+</table></div>
+<p>A <strong>script</strong> is the right tool when the product is code: a lab, a function, a data-cleaning pipeline.</p>
+<p>A <strong>document</strong> is the right tool when the product is something a human should read: a homework writeup, a report, slides. The file holds prose, headings, and code. RStudio can turn that file into HTML, PDF, or Word.</p>
+<p>Lab 1 is a script. Later assignments will ask for an R Markdown or Quarto document. You should know how to create one this week so the later request is not a surprise.</p>
+<hr />
+<h2>2. R Markdown in Brief</h2>
+<p>Markdown is a way to write headings, lists, links, and emphasis in plain text. <strong>R Markdown</strong> adds R code to that file.</p>
+<p>Create one with <strong>File → New File → R Markdown…</strong>. Choose HTML as the default output. Save it in your project folder.</p>
+<p>An <code>.Rmd</code> file has three parts:</p>
+<ol>
+<li>a <strong>YAML header</strong> between <code>---</code> lines, which names the document and the output format</li>
+<li><strong>text</strong>, formatted with Markdown</li>
+<li><strong>code chunks</strong>, which contain R</li>
+</ol>
+<p>A small file looks like this:</p>
+<pre><code class="language-markdown">---
+title: &quot;Week 1 practice&quot;
+author: &quot;Your Name&quot;
+output: html_document
+---
 
-                        <h2>Current Research</h2>
-                        <ol class="research-projects">
-                            <li>
-                                <h3>Cardinality-Constrained Structured Optimization</h3>
-                                <p>
-                                    I develop penalty decomposition methods that enforce exact sparsity and related structural constraints
-                                    directly, rather than through convex relaxations. This line includes mean-reverting and mean-variance
-                                    portfolios under cardinality, volatility, and CVaR constraints, and an efficient quasi-Newton penalty
-                                    decomposition algorithm for minimization over sparse symmetric sets (under review at
-                                    <em>Mathematical Programming Computation</em>). Related work includes Weaver, a hybrid quantum-classical
-                                    method for binary compressive sensing under matrix uncertainty (submitted to AAAI 2027), and a preprint
-                                    with Mojtaba Soltanalian on the rank-collapse principle for low-rank quadratic optimization.
-                                </p>
-                            </li>
-                            <li>
-                                <h3>Sparse And Structured Quadratic Surface Support Vector Machines</h3>
-                                <p>
-                                    Kernel-free quadratic surface SVMs model nonlinear boundaries without kernel selection, but the number of
-                                    parameters grows quadratically with dimension. I develop sparsity-inducing and Universum-augmented QSVM
-                                    models, including &ell;<sub>1</sub>-regularized QSVMs, quadratic twin SVMs for imbalanced data, and
-                                    &ell;<sub>0</sub>-regularized QSVMs via explicit cardinality constraints. Ongoing work studies ensembles of
-                                    random sparse quadratic twin parametric-margin SVMs (SSRN preprint).
-                                </p>
-                            </li>
-                            <li>
-                                <h3>Robust Multi-Scale And Multi-Modal Learning</h3>
-                                <p>
-                                    This direction develops lightweight, attention-based frameworks for settings with distribution shift,
-                                    heterogeneous modalities, and nonstationary signals. Published and submitted work includes EMO-CARE
-                                    (subject-independent EEG emotion recognition), E-CaTCH (event-centric multimodal misinformation detection),
-                                    and MOMENTA (mixture-of-experts multimodal embeddings with temporal aggregation). Related projects include
-                                    CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation, BLADE (accepted to EMNLP
-                                    2026) for constrained bilevel LLM unlearning, and physics-conditioned attention for next-day wildfire
-                                    spread prediction.
-                                </p>
-                            </li>
-                        </ol>
+# A heading
+
+This is ordinary writing. R can compute inline with an `r` expression inside backticks.
+
+```{r}
+x &lt;- 1:5
+mean(x)
+```
+</code></pre>
+<p>Insert a code chunk with <strong>Ctrl+Alt+I</strong> (Windows/Linux) or <strong>Cmd+Option+I</strong> (macOS), or <strong>Code → Insert Chunk</strong>.</p>
+<p>Run a line or a chunk with <strong>Ctrl+Enter</strong> / <strong>Cmd+Enter</strong>, the same way you run a script. Results appear in the console, and often under the chunk.</p>
+<p>When you want a document, click <strong>Knit</strong> (or <strong>Knit to HTML</strong>). Knitting:</p>
+<ul>
+<li>saves the file</li>
+<li>runs the code in a <strong>fresh</strong> R session, not from leftover console objects</li>
+<li>writes an HTML (or PDF, or Word) file next to the <code>.Rmd</code></li>
+</ul>
+<p>That fresh session is the point. Everything the document needs must be in the file: <code>library()</code> calls, data import, and the code that produces the numbers you quote.</p>
+<p>Do <strong>not</strong> put <code>install.packages()</code> in the document. Install packages once in the console, as in note <strong>1.1</strong>.</p>
+<p>If knitting to PDF fails, you are missing a LaTeX installation. Knit to HTML this week. PDF can wait until a later assignment actually requires it.</p>
+<hr />
+<h2>3. Markdown You Will Use Constantly</h2>
+<pre><code class="language-text"># Heading
+## Subheading
+
+*italic*  **bold**  `code`
+
+- a list
+- of items
+
+1. a numbered list
+1. the numbers update themselves
+
+[a link](https://example.com)
+</code></pre>
+<p>A single Enter does not start a new paragraph. Leave a blank line, or end a line with two spaces.</p>
+<p>YAML is picky about spacing. If Knit fails with a YAML error, look at indentation around <code>output:</code>.</p>
+<hr />
+<h2>4. Quarto</h2>
+<p><strong>Quarto</strong> is the newer sibling of R Markdown. It uses the same Markdown-plus-code idea, and it also works with Python and other languages. The file extension is <code>.qmd</code>.</p>
+<p>Create one with <strong>File → New File → Quarto Document…</strong>. The header looks similar:</p>
+<pre><code class="language-markdown">---
+title: &quot;Week 1 practice&quot;
+author: &quot;Your Name&quot;
+format: html
+---
+</code></pre>
+<p>Code chunks still use <code>{r}</code> fences. Instead of <strong>Knit</strong>, you click <strong>Render</strong>.</p>
+<p>For this course, R Markdown and Quarto are interchangeable for a simple HTML or PDF writeup. If an assignment specifies one, use that one. If it does not, either is fine.</p>
+<p>Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.</p>
+<hr />
+<h2>5. What to Use When</h2>
+<pre><code class="language-text">Need to keep code and rerun it?
+  → .R script
+
+Need a readable writeup with results baked in?
+  → .Rmd or .qmd
+
+Lab 1
+  → lab01.R
+
+Later homework
+  → a knitted or rendered document, as the assignment says
+</code></pre>
+<p>Note <strong>1.0</strong> is how you run a script and find files. Note <strong>1.1</strong> is how you import <code>students.csv</code>. Lab 1 uses both.</p>
                     </section>
                 </div>
             </article>

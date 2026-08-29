@@ -387,6 +387,18 @@ summary(students)
 
 is.data.frame(students)
 </code></pre>
+<p><code>View(students)</code> opens the data in an RStudio tab. That is often easier than printing a large table in the console.</p>
+<p>A <strong>tibble</strong> is the tidyverse version of a data frame. Printing is cleaner, and character columns stay character instead of being turned into factors. <code>readr::read_csv()</code> returns a tibble.</p>
+<pre><code class="language-r">library(tidyverse)
+
+as_tibble(students)
+
+tibble(
+  name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
+  grade = c(90, 85, 95)
+)
+</code></pre>
+<p>A tibble is still a data frame. <code>is.data.frame()</code> is <code>TRUE</code> for both.</p>
 <h3>Factor</h3>
 <p>A factor is commonly used to represent <strong>categorical data</strong>:</p>
 <pre><code class="language-r">gender &lt;- factor(c(&quot;Male&quot;, &quot;Female&quot;, &quot;Female&quot;, &quot;Male&quot;))
@@ -398,7 +410,56 @@ table(gender)
 is.factor(gender)
 </code></pre>
 <hr />
-<h2>7. Indexing</h2>
+<h2>7. Comparisons and Logical Operators</h2>
+<p>A <strong>logical</strong> value is <code>TRUE</code> or <code>FALSE</code>. Comparison operators produce logicals:</p>
+<pre><code class="language-r">13 &gt; 4
+# TRUE
+
+13 &lt; 4
+# FALSE
+
+4 &gt;= 4
+# TRUE
+
+4 == 4
+# TRUE
+
+13 != 4
+# TRUE
+</code></pre>
+<p>Use <code>==</code> to test equality. A single <code>=</code> is assignment or a named argument, not a comparison.</p>
+<p>The operators are vectorized:</p>
+<pre><code class="language-r">x &lt;- c(1, 2, 3, 4)
+y &lt;- c(1, 4, 4, 4)
+
+x == y
+# TRUE FALSE FALSE TRUE
+
+x &lt; y
+# FALSE TRUE TRUE FALSE
+</code></pre>
+<p>Combine conditions with <code>&amp;</code> (and) and <code>|</code> (or):</p>
+<pre><code class="language-r">TRUE &amp; FALSE
+# FALSE
+
+TRUE | FALSE
+# TRUE
+
+(x &lt; 3) &amp; (y &gt;= 4)
+# FALSE TRUE FALSE FALSE
+
+(x &lt; 3) | (y &gt;= 4)
+# TRUE TRUE TRUE TRUE
+</code></pre>
+<p><code>!</code> negates a logical. <code>xor(a, b)</code> is true when exactly one of <code>a</code> or <code>b</code> is true.</p>
+<p>A comparison is the usual way to subset a vector:</p>
+<pre><code class="language-r">x &lt;- 1:5
+x[x &lt; 3]
+# 1 2
+</code></pre>
+<p><code>%%</code> is useful here. <code>n %% 3 == 0</code> is true when <code>n</code> is a multiple of 3.</p>
+<hr />
+<h2>8. Indexing</h2>
 <p>We often need part of an object, not the entire object.</p>
 <p>The main indexing operator in R is <code>[ ]</code>.</p>
 <h3>Vectors</h3>
@@ -484,7 +545,7 @@ students[, &quot;grade&quot;, drop = FALSE]
 </code></pre>
 <p>By default, extracting a single column drops the data-frame structure.</p>
 <hr />
-<h2>8. Functions</h2>
+<h2>9. Functions</h2>
 <p>A <strong>function</strong> performs a particular task.</p>
 <p>The general form is:</p>
 <pre><code class="language-r">function_name(arguments)
@@ -514,7 +575,7 @@ students[, &quot;grade&quot;, drop = FALSE]
 <pre><code class="language-r">args(round)
 </code></pre>
 <hr />
-<h2>9. Positional and Named Arguments</h2>
+<h2>10. Positional and Named Arguments</h2>
 <p>Consider:</p>
 <pre><code class="language-r">seq(from = 1, to = 10, by = 2)
 </code></pre>
@@ -537,7 +598,7 @@ round(3.14159, digits = 2)   # = gives a name to an argument
 </code></pre>
 <p><code>&lt;-</code> creates an object. <code>=</code> inside a function call names an argument.</p>
 <hr />
-<h2>10. Default Arguments</h2>
+<h2>11. Default Arguments</h2>
 <p>Functions can provide <strong>default values</strong> for arguments.</p>
 <p>For example:</p>
 <pre><code class="language-r">round(3.14159)
@@ -552,7 +613,7 @@ round(3.14159, digits = 2)   # = gives a name to an argument
 <pre><code class="language-r">?round
 </code></pre>
 <hr />
-<h2>11. The <code>seq()</code> Function</h2>
+<h2>12. The <code>seq()</code> Function</h2>
 <p><code>seq()</code> is a useful example for understanding function arguments.</p>
 <p>It creates sequences.</p>
 <pre><code class="language-r">seq(from = 1, to = 10, by = 2)
@@ -572,7 +633,7 @@ by   = 2    step size
 <p>So there are different ways to tell <code>seq()</code> what sequence we want.</p>
 <p>Some arguments in <code>seq()</code> have a default value of <code>NULL</code>. This brings us to several important special values in R.</p>
 <hr />
-<h2>12. Special Values: <code>NA</code>, <code>NaN</code>, <code>Inf</code>, and <code>NULL</code></h2>
+<h2>13. Special Values: <code>NA</code>, <code>NaN</code>, <code>Inf</code>, and <code>NULL</code></h2>
 <p>R has several special values that have different meanings:</p>
 <div class="table-wrap"><table>
 <thead>
@@ -616,7 +677,7 @@ by   = 2    step size
 <p><strong><code>Inf</code></strong> = The numerical result is infinite.</p>
 <p><strong><code>NULL</code></strong> = There is no value at all.</p>
 <hr />
-<h2>13. Detecting Special Values: The <code>is.*()</code> Family</h2>
+<h2>14. Detecting Special Values: The <code>is.*()</code> Family</h2>
 <p>Consider:</p>
 <pre><code class="language-r">x &lt;- c(NA, NaN, Inf, 5)
 </code></pre>
@@ -684,7 +745,7 @@ is.nan(NA)
 </code></pre>
 <p>Thus, <code>NaN</code> is also considered a missing value by <code>is.na()</code>.</p>
 <hr />
-<h2>14. Why Is <code>NULL</code> Different?</h2>
+<h2>15. Why Is <code>NULL</code> Different?</h2>
 <p>Consider:</p>
 <pre><code class="language-r">x &lt;- c(NA, NaN, Inf, NULL)
 
@@ -717,7 +778,7 @@ length(NULL)
 # TRUE
 </code></pre>
 <hr />
-<h2>15. Missing Values in Real Data</h2>
+<h2>16. Missing Values in Real Data</h2>
 <p>Suppose we have:</p>
 <pre><code class="language-r">grades &lt;- c(90, 85, NA, 95)
 </code></pre>
@@ -757,7 +818,7 @@ complete.cases(students)
 # TRUE FALSE FALSE
 </code></pre>
 <hr />
-<h2>16. Useful <code>is.*()</code> Functions</h2>
+<h2>17. Useful <code>is.*()</code> Functions</h2>
 <p>R has a large family of functions beginning with <code>is.</code>. They ask questions about an object and usually return <code>TRUE</code> or <code>FALSE</code>.</p>
 <h3>Checking data types</h3>
 <pre><code class="language-r">is.numeric(x)
@@ -797,7 +858,7 @@ is.null(x)
 <p>"Is <code>x</code> missing?"</p>
 </blockquote>
 <hr />
-<h2>17. Useful <code>as.*()</code> Functions</h2>
+<h2>18. Useful <code>as.*()</code> Functions</h2>
 <p>The <code>as.*()</code> family usually attempts to <strong>convert</strong> an object.</p>
 <pre><code class="language-r">as.numeric(x)
 as.integer(x)
@@ -827,7 +888,7 @@ as.numeric(x)
 # 25
 </code></pre>
 <hr />
-<h2>18. A Useful Family of Functions to Remember</h2>
+<h2>19. A Useful Family of Functions to Remember</h2>
 <p>At this stage, students should recognize several families of functions.</p>
 <h3>Investigating an object</h3>
 <pre><code class="language-r">typeof()
@@ -914,7 +975,7 @@ complete.cases()
 <pre><code class="language-r">na.rm = TRUE
 </code></pre>
 <hr />
-<h2>19. The Big Picture</h2>
+<h2>20. The Big Picture</h2>
 <p>The concepts introduced so far fit together:</p>
 <pre><code class="language-text">VALUES
   │
@@ -977,7 +1038,7 @@ as.numeric(x)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T12:30:00-04:00">August 29, 2026, 12:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T13:10:00-04:00">August 29, 2026, 1:10 PM EDT</time></div>
             </footer>
         </div>
 

@@ -1,6 +1,6 @@
 Work in an **R script**, not only in the console. Save it as `lab01.R`.
 
-Do **1.0**, **1.1**, and **1.2** first. You will need `tidyverse` installed as in note 1.1.
+Do **1.0**, **1.1**, and **1.2** first. You will need `tidyverse` installed as in note 1.1. Note **1.3** is about R Markdown and Quarto; you do not need it for this lab.
 
 Download [students.csv](files/data-612/students.csv) and put it in your working directory (`getwd()` should see it).
 

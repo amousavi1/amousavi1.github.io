@@ -432,6 +432,7 @@ students <- readr::read_csv("students.csv")
 head(students)
 str(students)
 summary(students)
+View(students)
 ```
 
 ### Step 5 — Manipulate the data

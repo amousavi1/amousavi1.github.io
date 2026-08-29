@@ -367,6 +367,23 @@ summary(students)
 is.data.frame(students)
 ```
 
+`View(students)` opens the data in an RStudio tab. That is often easier than printing a large table in the console.
+
+A **tibble** is the tidyverse version of a data frame. Printing is cleaner, and character columns stay character instead of being turned into factors. `readr::read_csv()` returns a tibble.
+
+```r
+library(tidyverse)
+
+as_tibble(students)
+
+tibble(
+  name = c("John", "Sara", "David"),
+  grade = c(90, 85, 95)
+)
+```
+
+A tibble is still a data frame. `is.data.frame()` is `TRUE` for both.
+
 ### Factor
 
 A factor is commonly used to represent **categorical data**:
@@ -386,7 +403,73 @@ is.factor(gender)
 
 ---
 
-## 7. Indexing
+## 7. Comparisons and Logical Operators
+
+A **logical** value is `TRUE` or `FALSE`. Comparison operators produce logicals:
+
+```r
+13 > 4
+# TRUE
+
+13 < 4
+# FALSE
+
+4 >= 4
+# TRUE
+
+4 == 4
+# TRUE
+
+13 != 4
+# TRUE
+```
+
+Use `==` to test equality. A single `=` is assignment or a named argument, not a comparison.
+
+The operators are vectorized:
+
+```r
+x <- c(1, 2, 3, 4)
+y <- c(1, 4, 4, 4)
+
+x == y
+# TRUE FALSE FALSE TRUE
+
+x < y
+# FALSE TRUE TRUE FALSE
+```
+
+Combine conditions with `&` (and) and `|` (or):
+
+```r
+TRUE & FALSE
+# FALSE
+
+TRUE | FALSE
+# TRUE
+
+(x < 3) & (y >= 4)
+# FALSE TRUE FALSE FALSE
+
+(x < 3) | (y >= 4)
+# TRUE TRUE TRUE TRUE
+```
+
+`!` negates a logical. `xor(a, b)` is true when exactly one of `a` or `b` is true.
+
+A comparison is the usual way to subset a vector:
+
+```r
+x <- 1:5
+x[x < 3]
+# 1 2
+```
+
+`%%` is useful here. `n %% 3 == 0` is true when `n` is a multiple of 3.
+
+---
+
+## 8. Indexing
 
 We often need part of an object, not the entire object.
 
@@ -521,7 +604,7 @@ By default, extracting a single column drops the data-frame structure.
 
 ---
 
-## 8. Functions
+## 9. Functions
 
 A **function** performs a particular task.
 
@@ -573,7 +656,7 @@ args(round)
 
 ---
 
-## 9. Positional and Named Arguments
+## 10. Positional and Named Arguments
 
 Consider:
 
@@ -615,7 +698,7 @@ round(3.14159, digits = 2)   # = gives a name to an argument
 
 ---
 
-## 10. Default Arguments
+## 11. Default Arguments
 
 Functions can provide **default values** for arguments.
 
@@ -643,7 +726,7 @@ The help page of a function shows its available arguments and their defaults:
 
 ---
 
-## 11. The `seq()` Function
+## 12. The `seq()` Function
 
 `seq()` is a useful example for understanding function arguments.
 
@@ -677,7 +760,7 @@ Some arguments in `seq()` have a default value of `NULL`. This brings us to seve
 
 ---
 
-## 12. Special Values: `NA`, `NaN`, `Inf`, and `NULL`
+## 13. Special Values: `NA`, `NaN`, `Inf`, and `NULL`
 
 R has several special values that have different meanings:
 
@@ -701,7 +784,7 @@ A simple way to remember them:
 
 ---
 
-## 13. Detecting Special Values: The `is.*()` Family
+## 14. Detecting Special Values: The `is.*()` Family
 
 Consider:
 
@@ -748,7 +831,7 @@ Thus, `NaN` is also considered a missing value by `is.na()`.
 
 ---
 
-## 14. Why Is `NULL` Different?
+## 15. Why Is `NULL` Different?
 
 Consider:
 
@@ -799,7 +882,7 @@ is.null(NULL)
 
 ---
 
-## 15. Missing Values in Real Data
+## 16. Missing Values in Real Data
 
 Suppose we have:
 
@@ -871,7 +954,7 @@ complete.cases(students)
 
 ---
 
-## 16. Useful `is.*()` Functions
+## 17. Useful `is.*()` Functions
 
 R has a large family of functions beginning with `is.`. They ask questions about an object and usually return `TRUE` or `FALSE`.
 
@@ -929,7 +1012,7 @@ asks:
 
 ---
 
-## 17. Useful `as.*()` Functions
+## 18. Useful `as.*()` Functions
 
 The `as.*()` family usually attempts to **convert** an object.
 
@@ -970,7 +1053,7 @@ as.numeric(x)
 
 ---
 
-## 18. A Useful Family of Functions to Remember
+## 19. A Useful Family of Functions to Remember
 
 At this stage, students should recognize several families of functions.
 
@@ -1084,7 +1167,7 @@ na.rm = TRUE
 
 ---
 
-## 19. The Big Picture
+## 20. The Big Picture
 
 The concepts introduced so far fit together:
 
