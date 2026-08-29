@@ -180,8 +180,13 @@ Create one folder for the course, for example `data_612`, and keep lecture work 
 
 ```text
 data_612/
-  class/
-    week_01/
+  students.csv
+  lab01.R
+  data/
+    students.csv
+    extra/
+  R/
+  output/
   assignments/
     lab_01/
 ```
@@ -200,33 +205,150 @@ Back up that folder to Google Drive or another cloud service. A crashed laptop i
 
 ## 10. Where Are Your Files?
 
-R reads and writes files relative to the **working directory**.
+R does not search your whole computer for a file. It looks in one folder, called the **working directory**, unless you tell it a path.
 
 ```r
 getwd()
 ```
 
-In RStudio you can also use **Session → Set Working Directory**, or the **Files** pane **More** menu.
+That path is "where R is standing." In RStudio you can also read it just under the Console tab.
 
-For a course project, a better habit is **File → New Project**. An RStudio project keeps the working directory attached to that folder, so `read.csv("students.csv")` works when the file is in the project folder. Do not nest one project inside another.
+In RStudio you can change it with **Session → Set Working Directory**, or in the **Files** pane: go to the folder, then **More → Set As Working Directory**.
 
-There are two kinds of paths:
+A better habit for the course is **File → New Project**. An RStudio project pins the working directory to that folder. When the project is open, `getwd()` is the project folder. Do not nest one project inside another.
 
-- An **absolute path** starts from the drive or user folder, for example `C:/Users/you/Documents/data_612/students.csv`. It works only on your computer. Do not put absolute paths in work you submit.
-- A **relative path** starts from the working directory.
+### Absolute paths versus relative paths
+
+A **path** is the address of a file.
+
+An **absolute path** starts from the top of the drive or from your user folder:
 
 ```r
-"students.csv"           # in the working directory
-"data/students.csv"      # one folder down
-"./students.csv"         # same as the first
-"../students.csv"        # one folder up
+"C:/Users/you/Documents/data_612/students.csv"
+"/Users/you/Documents/data_612/students.csv"
 ```
 
-Use `/` in paths in R, even on Windows.
+It works only on *your* computer. If your username is in the path, nobody else can run the code — including whoever grades it. Do not put absolute paths in work you submit.
 
-If `read.csv("students.csv")` fails, the usual reason is that the file is not in the working directory.
+A **relative path** starts from the working directory. Think of it as directions from the house you are already in, not from the city.
 
-Note **1.2** shows how to import `students.csv`. Lab 1 asks you to import it.
+Use `/` in paths in R, even on Windows. Do not use `\`.
+
+### How to read a relative path
+
+Three pieces do all the work:
+
+| Piece | Meaning |
+| ----- | ------- |
+| `file.csv` or `./file.csv` | the file is in the working directory |
+| `folder/file.csv` | go **down** into `folder`, then take the file |
+| `../file.csv` | go **up** one folder, then take the file |
+
+`.` means "this folder." `..` means "the parent folder." You can stack them: `../../` goes up twice. You can go up and then down: `../other_folder/file.csv`.
+
+The RStudio **Files** pane shows `..` at the top of a folder. That is the same `..` you write in a path.
+
+### A concrete folder tree
+
+Suppose this is an RStudio project, and `getwd()` is `data_612`:
+
+```text
+data_612/                 ← working directory
+  students.csv
+  lab01.R
+  data/
+    students.csv
+    extra/
+      midterm.csv
+  R/
+    import_students.R
+  output/
+  assignments/
+    lab_01/
+      lab01.R
+```
+
+From this working directory, these paths all make sense:
+
+```r
+"students.csv"                      # the copy in data_612/
+"./students.csv"                    # the same file
+"lab01.R"
+"data/students.csv"                 # one folder down
+"data/extra/midterm.csv"            # two folders down
+"R/import_students.R"
+"assignments/lab_01/lab01.R"
+```
+
+So:
+
+```r
+read.csv("students.csv")
+read.csv("data/students.csv")
+read.csv("data/extra/midterm.csv")
+```
+
+read three different files. The first is next to the project. The second is in `data/`. The third is in `data/extra/`.
+
+To write a file into `output/`:
+
+```r
+write.csv(students, "output/grades.csv")
+```
+
+### Same tree, different working directory
+
+Relative paths change if you move where R is standing.
+
+If you set the working directory to `data_612/data`, then `getwd()` ends in `.../data_612/data`, and the same files look like this:
+
+```r
+"students.csv"                      # now this is data/students.csv
+"extra/midterm.csv"
+"../students.csv"                   # up to data_612/, then that copy
+"../lab01.R"
+"../R/import_students.R"
+"../assignments/lab_01/lab01.R"
+"../output/grades.csv"
+```
+
+If you set the working directory to `data_612/assignments/lab_01`:
+
+```r
+"lab01.R"                           # the copy in lab_01/
+"../.."                             # that path is the project folder itself
+"../../students.csv"                # up to assignments/, up to data_612/
+"../../data/students.csv"
+"../../data/extra/midterm.csv"
+"../../R/import_students.R"
+```
+
+`../` once leaves `lab_01` and lands in `assignments`. `../../` leaves `assignments` and lands in `data_612`.
+
+### Check that R sees the file
+
+Before you import, ask R what it can see:
+
+```r
+getwd()
+list.files()
+list.files("data")
+file.exists("students.csv")
+file.exists("data/students.csv")
+```
+
+`list.files()` lists the working directory. `file.exists()` is `TRUE` only if that relative path is right from *here*.
+
+If `read.csv("students.csv")` fails, the usual reasons are:
+
+- the file is not in the working directory (it is in `data/`, or still in Downloads)
+- the name is slightly wrong (`Students.csv` is not `students.csv` on some systems)
+- you used an absolute path that does not exist on this computer
+- you used `\` instead of `/`
+
+Move the file, or fix the relative path. Do not paste a `C:/Users/...` path into the script.
+
+Note **1.2** shows how to import `students.csv`. Lab 1 asks you to import it. Put that file in the working directory, or use a relative path such as `"data/students.csv"` if you keep data in a subfolder.
 
 ---
 

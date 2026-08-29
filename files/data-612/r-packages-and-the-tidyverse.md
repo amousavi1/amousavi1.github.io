@@ -426,6 +426,14 @@ students <- readr::read_csv("students.csv")
 
 `read.csv()` is Base R. `read_csv()` comes from the `readr` package.
 
+If the file is in a subfolder named `data`, the relative path is `"data/students.csv"`:
+
+```r
+students <- read.csv("data/students.csv")
+```
+
+Note **1.1** explains relative paths, including `../` when the file is above the working directory.
+
 ### Step 4 — Explore the data
 
 ```r
