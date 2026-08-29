@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Introduction to R Concepts - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Professor of Data Science,<br />
+                            Department of Mathematics and Statistics,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Introduction to R Concepts</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="files/data-612/introduction-to-r-concepts.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Data types, data structures, indexing, functions, and special values.
+                        </p>
+<h2>1. Values and Objects</h2>
+<p>R works with <strong>values</strong>. For example:</p>
+<pre><code class="language-r">10
+3.14
+&quot;Hello&quot;
+TRUE
+</code></pre>
+<p>We can store a value in an <strong>object</strong> using the assignment operator <code>&lt;-</code>:</p>
+<pre><code class="language-r">x &lt;- 10
+name &lt;- &quot;John&quot;
+passed &lt;- TRUE
+</code></pre>
+<p>We can then use these objects later:</p>
+<pre><code class="language-r">x
+name
+passed
+</code></pre>
+<hr />
+<h2>2. Basic Data Types</h2>
+<p>Some of the most common data types in R are:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Examples</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Numeric</td>
+<td><code>5</code>, <code>3.14</code>, <code>-10</code></td>
+<td>Numbers</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td><code>5L</code>, <code>10L</code></td>
+<td>Whole numbers explicitly stored as integers</td>
+</tr>
+<tr>
+<td>Character</td>
+<td><code>"Hello"</code>, <code>"John"</code></td>
+<td>Text</td>
+</tr>
+<tr>
+<td>Logical</td>
+<td><code>TRUE</code>, <code>FALSE</code></td>
+<td>Boolean values</td>
+</tr>
+<tr>
+<td>Complex</td>
+<td><code>2 + 3i</code></td>
+<td>Complex numbers</td>
+</tr>
+</tbody>
+</table></div>
+<p>Examples:</p>
+<pre><code class="language-r">x &lt;- 10
+y &lt;- &quot;Hello&quot;
+z &lt;- TRUE
+</code></pre>
+<p>We can investigate objects using several functions:</p>
+<pre><code class="language-r">typeof(x)
+class(x)
+mode(x)
+length(x)
+str(x)
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-r">typeof(10)
+# &quot;double&quot;
+
+typeof(&quot;Hello&quot;)
+# &quot;character&quot;
+
+typeof(TRUE)
+# &quot;logical&quot;
+</code></pre>
+<h3>Numeric vs. Integer</h3>
+<p>By default, R stores ordinary numbers as doubles:</p>
+<pre><code class="language-r">typeof(5)
+# &quot;double&quot;
+</code></pre>
+<p>To explicitly create an integer, add <code>L</code>:</p>
+<pre><code class="language-r">typeof(5L)
+# &quot;integer&quot;
+</code></pre>
+<p>Both are considered numeric:</p>
+<pre><code class="language-r">is.numeric(5)
+# TRUE
+
+is.numeric(5L)
+# TRUE
+</code></pre>
+<p>Useful type-checking functions include:</p>
+<pre><code class="language-r">is.numeric()
+is.integer()
+is.double()
+is.character()
+is.logical()
+is.complex()
+</code></pre>
+<p>R also provides conversion functions:</p>
+<pre><code class="language-r">as.numeric()
+as.integer()
+as.character()
+as.logical()
+as.complex()
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-r">as.character(25)
+# &quot;25&quot;
+
+as.numeric(&quot;25&quot;)
+# 25
+
+as.logical(1)
+# TRUE
+</code></pre>
+<hr />
+<h2>3. Vectors</h2>
+<p>A <strong>vector</strong> is one of the most fundamental data structures in R.</p>
+<p>A vector contains a sequence of values, normally of the <strong>same basic type</strong>.</p>
+<p>We use <code>c()</code> ("combine") to create a vector:</p>
+<pre><code class="language-r">x &lt;- c(10, 20, 30, 40)
+
+x
+# [1] 10 20 30 40
+</code></pre>
+<p>The vector contains four elements:</p>
+<pre><code class="language-r">length(x)
+# 4
+</code></pre>
+<p>We can create vectors of different types:</p>
+<pre><code class="language-r">numbers &lt;- c(10, 20, 30)
+
+names &lt;- c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;)
+
+answers &lt;- c(TRUE, FALSE, TRUE)
+</code></pre>
+<p>Useful functions for exploring vectors include:</p>
+<pre><code class="language-r">length(x)
+typeof(x)
+class(x)
+str(x)
+
+head(x)
+tail(x)
+
+unique(x)
+duplicated(x)
+
+sort(x)
+rev(x)
+</code></pre>
+<p>Useful numerical summaries include:</p>
+<pre><code class="language-r">sum(x)
+mean(x)
+median(x)
+min(x)
+max(x)
+range(x)
+var(x)
+sd(x)
+</code></pre>
+<hr />
+<h2>4. What Happens When Types Are Mixed?</h2>
+<p>An atomic vector normally contains one type.</p>
+<p>Consider:</p>
+<pre><code class="language-r">x &lt;- c(1, 2, &quot;hello&quot;)
+</code></pre>
+<p>R cannot keep some elements numeric and one character in the same atomic vector, so it converts them to a common type:</p>
+<pre><code class="language-r">x
+# &quot;1&quot; &quot;2&quot; &quot;hello&quot;
+
+typeof(x)
+# &quot;character&quot;
+</code></pre>
+<p>This automatic conversion is called <strong>coercion</strong>.</p>
+<p>Another example:</p>
+<pre><code class="language-r">c(TRUE, 5)
+</code></pre>
+<p>R converts <code>TRUE</code> to a numeric value:</p>
+<pre><code class="language-r"># 1 5
+</code></pre>
+<p>A useful simplified coercion hierarchy is:</p>
+<pre><code class="language-text">logical → integer → double → character
+</code></pre>
+<hr />
+<h2>5. Lists</h2>
+<p>What if we actually want one object to contain values of <strong>different types</strong>?</p>
+<p>We can use a <strong>list</strong>.</p>
+<p>A list is a data structure that can contain elements of different types and even different structures.</p>
+<pre><code class="language-r">x &lt;- list(
+  25,
+  &quot;John&quot;,
+  TRUE
+)
+
+x
+</code></pre>
+<p>Unlike an atomic vector, the elements do not need to have the same type.</p>
+<p>We can also name the elements:</p>
+<pre><code class="language-r">student &lt;- list(
+  name = &quot;John&quot;,
+  age = 25,
+  grades = c(90, 85, 95),
+  passed = TRUE
+)
+</code></pre>
+<p>Useful functions include:</p>
+<pre><code class="language-r">length(student)
+names(student)
+str(student)
+is.list(student)
+</code></pre>
+<p>Lists are extremely flexible: an element of a list can itself be a vector, matrix, data frame, or even another list.</p>
+<hr />
+<h2>6. Other Important Data Structures</h2>
+<h3>Matrix</h3>
+<p>A matrix organizes values into rows and columns:</p>
+<pre><code class="language-r">x &lt;- matrix(1:6, nrow = 2)
+
+x
+</code></pre>
+<p>Useful functions:</p>
+<pre><code class="language-r">dim(x)
+nrow(x)
+ncol(x)
+rownames(x)
+colnames(x)
+is.matrix(x)
+</code></pre>
+<h3>Data Frame</h3>
+<p>A data frame is one of the most important structures for data analysis.</p>
+<pre><code class="language-r">students &lt;- data.frame(
+  name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
+  grade = c(90, 85, 95),
+  passed = c(TRUE, TRUE, TRUE)
+)
+</code></pre>
+<p>Each column can have a different data type.</p>
+<p>Useful functions include:</p>
+<pre><code class="language-r">dim(students)
+nrow(students)
+ncol(students)
+
+names(students)
+colnames(students)
+rownames(students)
+
+head(students)
+tail(students)
+
+str(students)
+summary(students)
+
+is.data.frame(students)
+</code></pre>
+<h3>Factor</h3>
+<p>A factor is commonly used to represent <strong>categorical data</strong>:</p>
+<pre><code class="language-r">gender &lt;- factor(c(&quot;Male&quot;, &quot;Female&quot;, &quot;Female&quot;, &quot;Male&quot;))
+</code></pre>
+<p>Useful functions:</p>
+<pre><code class="language-r">levels(gender)
+nlevels(gender)
+table(gender)
+is.factor(gender)
+</code></pre>
+<hr />
+<h2>7. Indexing</h2>
+<p>We often need part of an object, not the entire object.</p>
+<p>The main indexing operator in R is <code>[ ]</code>.</p>
+<h3>Vectors</h3>
+<pre><code class="language-r">x &lt;- c(10, 20, 30, 40)
+
+x[1]
+# 10
+
+x[c(1, 4)]
+# 10 40
+
+x[2:3]
+# 20 30
+</code></pre>
+<p>Positions in R start at 1, not 0.</p>
+<p>Negative indices drop elements:</p>
+<pre><code class="language-r">x[-1]
+# 20 30 40
+</code></pre>
+<p>We can also index with a logical vector:</p>
+<pre><code class="language-r">x[c(TRUE, FALSE, TRUE, FALSE)]
+# 10 30
+</code></pre>
+<p>A common pattern is to keep the values that satisfy a condition:</p>
+<pre><code class="language-r">x[x &gt; 20]
+# 30 40
+</code></pre>
+<p>If the elements have names, we can index by name:</p>
+<pre><code class="language-r">scores &lt;- c(midterm = 90, final = 85)
+
+scores[&quot;final&quot;]
+# 85
+</code></pre>
+<h3>Lists</h3>
+<p>For a list, <code>[</code> and <code>[[</code> do different things.</p>
+<pre><code class="language-r">student &lt;- list(
+  name = &quot;John&quot;,
+  age = 25,
+  grades = c(90, 85, 95)
+)
+
+student[1]
+</code></pre>
+<p>This returns a <strong>list</strong> of length 1.</p>
+<pre><code class="language-r">student[[1]]
+# &quot;John&quot;
+</code></pre>
+<p>This returns the element itself.</p>
+<p>The <code>$</code> operator is a convenient way to extract a named element:</p>
+<pre><code class="language-r">student$name
+# &quot;John&quot;
+</code></pre>
+<p>A useful way to remember the difference is:</p>
+<pre><code class="language-text">[   → a piece of the list, still a list
+[[  → the element itself
+$   → a named element
+</code></pre>
+<h3>Matrices</h3>
+<p>A matrix is indexed by row and column:</p>
+<pre><code class="language-r">x &lt;- matrix(1:6, nrow = 2)
+
+x[1, 2]
+x[1, ]
+x[, 2]
+</code></pre>
+<p><code>x[1, ]</code> is the first row. <code>x[, 2]</code> is the second column.</p>
+<h3>Data Frames</h3>
+<p>A data frame can be indexed like a matrix and also like a list.</p>
+<pre><code class="language-r">students$grade
+
+students[1, ]
+
+students[, &quot;grade&quot;]
+</code></pre>
+<p><code>students$grade</code> extracts the <code>grade</code> column as a vector.</p>
+<p><code>students[1, ]</code> extracts the first row, still as a data frame.</p>
+<p>An important detail:</p>
+<pre><code class="language-r">students[, &quot;grade&quot;]
+# a vector
+
+students[, &quot;grade&quot;, drop = FALSE]
+# a data frame with one column
+</code></pre>
+<p>By default, extracting a single column drops the data-frame structure.</p>
+<hr />
+<h2>8. Functions</h2>
+<p>A <strong>function</strong> performs a particular task.</p>
+<p>The general form is:</p>
+<pre><code class="language-r">function_name(arguments)
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-r">sqrt(16)
+# 4
+</code></pre>
+<p>Here:</p>
+<ul>
+<li><code>sqrt</code> is the <strong>function name</strong>.</li>
+<li><code>16</code> is an <strong>argument</strong>.</li>
+<li><code>4</code> is the returned result.</li>
+</ul>
+<p>Another example:</p>
+<pre><code class="language-r">round(3.14159, digits = 2)
+# 3.14
+</code></pre>
+<p>This function has multiple arguments.</p>
+<p>You can read the documentation of a function using:</p>
+<pre><code class="language-r">?round
+</code></pre>
+<p>or:</p>
+<pre><code class="language-r">help(round)
+</code></pre>
+<p>You can also inspect the arguments:</p>
+<pre><code class="language-r">args(round)
+</code></pre>
+<hr />
+<h2>9. Positional and Named Arguments</h2>
+<p>Consider:</p>
+<pre><code class="language-r">seq(from = 1, to = 10, by = 2)
+</code></pre>
+<p>The arguments have names:</p>
+<pre><code class="language-text">from = 1
+to   = 10
+by   = 2
+</code></pre>
+<p>Because R can match arguments by their positions, we can also write:</p>
+<pre><code class="language-r">seq(1, 10, 2)
+</code></pre>
+<p>Both produce:</p>
+<pre><code class="language-r"># 1 3 5 7 9
+</code></pre>
+<p>Using argument names often makes code easier to understand.</p>
+<hr />
+<h2>10. Default Arguments</h2>
+<p>Functions can provide <strong>default values</strong> for arguments.</p>
+<p>For example:</p>
+<pre><code class="language-r">round(3.14159)
+# 3
+</code></pre>
+<p>We did not specify <code>digits</code>, so R uses its default.</p>
+<p>Compare:</p>
+<pre><code class="language-r">round(3.14159, digits = 2)
+# 3.14
+</code></pre>
+<p>The help page of a function shows its available arguments and their defaults:</p>
+<pre><code class="language-r">?round
+</code></pre>
+<hr />
+<h2>11. The <code>seq()</code> Function</h2>
+<p><code>seq()</code> is a useful example for understanding function arguments.</p>
+<p>It creates sequences.</p>
+<pre><code class="language-r">seq(from = 1, to = 10, by = 2)
+
+# 1 3 5 7 9
+</code></pre>
+<p>Here:</p>
+<pre><code class="language-text">from = 1    starting value
+to   = 10   ending value
+by   = 2    step size
+</code></pre>
+<p>We can also specify the desired number of elements:</p>
+<pre><code class="language-r">seq(from = 1, to = 10, length.out = 4)
+
+# 1 4 7 10
+</code></pre>
+<p>So there are different ways to tell <code>seq()</code> what sequence we want.</p>
+<p>Some arguments in <code>seq()</code> have a default value of <code>NULL</code>. This brings us to several important special values in R.</p>
+<hr />
+<h2>12. Special Values: <code>NA</code>, <code>NaN</code>, <code>Inf</code>, and <code>NULL</code></h2>
+<p>R has several special values that have different meanings:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NA</code></td>
+<td>Missing or unknown value</td>
+<td><code>c(10, NA, 20)</code></td>
+</tr>
+<tr>
+<td><code>NaN</code></td>
+<td>Undefined numerical result ("Not a Number")</td>
+<td><code>0/0</code></td>
+</tr>
+<tr>
+<td><code>Inf</code></td>
+<td>Infinity</td>
+<td><code>1/0</code></td>
+</tr>
+<tr>
+<td><code>-Inf</code></td>
+<td>Negative infinity</td>
+<td><code>-1/0</code></td>
+</tr>
+<tr>
+<td><code>NULL</code></td>
+<td>Absence of a value</td>
+<td><code>x &lt;- NULL</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>A simple way to remember them:</p>
+<p><strong><code>NA</code></strong> = I don't know the value.</p>
+<p><strong><code>NaN</code></strong> = The numerical calculation is undefined.</p>
+<p><strong><code>Inf</code></strong> = The numerical result is infinite.</p>
+<p><strong><code>NULL</code></strong> = There is no value at all.</p>
+<hr />
+<h2>13. Detecting Special Values: The <code>is.*()</code> Family</h2>
+<p>Consider:</p>
+<pre><code class="language-r">x &lt;- c(NA, NaN, Inf, 5)
+</code></pre>
+<p>Now apply several functions:</p>
+<pre><code class="language-r">is.na(x)
+# TRUE TRUE FALSE FALSE
+
+is.nan(x)
+# FALSE TRUE FALSE FALSE
+
+is.infinite(x)
+# FALSE FALSE TRUE FALSE
+
+is.finite(x)
+# FALSE FALSE FALSE TRUE
+</code></pre>
+<p>The results can be summarized as:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Value</th>
+<th style="text-align: right;"><code>is.na()</code></th>
+<th style="text-align: right;"><code>is.nan()</code></th>
+<th style="text-align: right;"><code>is.infinite()</code></th>
+<th style="text-align: right;"><code>is.finite()</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NA</code></td>
+<td style="text-align: right;">TRUE</td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">FALSE</td>
+</tr>
+<tr>
+<td><code>NaN</code></td>
+<td style="text-align: right;">TRUE</td>
+<td style="text-align: right;">TRUE</td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">FALSE</td>
+</tr>
+<tr>
+<td><code>Inf</code></td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">TRUE</td>
+<td style="text-align: right;">FALSE</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">FALSE</td>
+<td style="text-align: right;">TRUE</td>
+</tr>
+</tbody>
+</table></div>
+<p>An important observation is:</p>
+<pre><code class="language-r">is.na(NaN)
+# TRUE
+
+is.nan(NA)
+# FALSE
+</code></pre>
+<p>Thus, <code>NaN</code> is also considered a missing value by <code>is.na()</code>.</p>
+<hr />
+<h2>14. Why Is <code>NULL</code> Different?</h2>
+<p>Consider:</p>
+<pre><code class="language-r">x &lt;- c(NA, NaN, Inf, NULL)
+
+x
+# NA NaN Inf
+</code></pre>
+<p>Although we supplied four things:</p>
+<pre><code class="language-r">length(x)
+# 3
+</code></pre>
+<p>Why?</p>
+<p>Because <code>NULL</code> represents <strong>the absence of a value</strong>. It contributes no element to the vector.</p>
+<p>Compare:</p>
+<pre><code class="language-r">length(NA)
+# 1
+
+length(NaN)
+# 1
+
+length(Inf)
+# 1
+
+length(NULL)
+# 0
+</code></pre>
+<p>Therefore:</p>
+<p><strong><code>NA</code> is a missing value; <code>NULL</code> is no value.</strong></p>
+<p>We test for <code>NULL</code> using:</p>
+<pre><code class="language-r">is.null(NULL)
+# TRUE
+</code></pre>
+<hr />
+<h2>15. Missing Values in Real Data</h2>
+<p>Suppose we have:</p>
+<pre><code class="language-r">grades &lt;- c(90, 85, NA, 95)
+</code></pre>
+<p>Then:</p>
+<pre><code class="language-r">mean(grades)
+# NA
+</code></pre>
+<p>Because one grade is unknown, R cannot calculate the ordinary mean.</p>
+<p>Many R functions provide an <code>na.rm</code> argument:</p>
+<pre><code class="language-r">mean(grades, na.rm = TRUE)
+# 90
+</code></pre>
+<p><code>na.rm</code> means:</p>
+<pre><code class="language-text">NA remove
+</code></pre>
+<p>Other useful functions include:</p>
+<pre><code class="language-r">is.na(grades)
+</code></pre>
+<p>to identify missing values,</p>
+<pre><code class="language-r">anyNA(grades)
+</code></pre>
+<p>to determine whether there are any missing values,</p>
+<p>and:</p>
+<pre><code class="language-r">na.omit(grades)
+</code></pre>
+<p>to remove observations containing missing values.</p>
+<p>For data frames, another important function is:</p>
+<pre><code class="language-r">complete.cases()
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-r">students &lt;- data.frame(
+  grade = c(90, NA, 85),
+  age = c(20, 21, NA)
+)
+
+complete.cases(students)
+# TRUE FALSE FALSE
+</code></pre>
+<hr />
+<h2>16. Useful <code>is.*()</code> Functions</h2>
+<p>R has a large family of functions beginning with <code>is.</code>. They ask questions about an object and usually return <code>TRUE</code> or <code>FALSE</code>.</p>
+<h3>Checking data types</h3>
+<pre><code class="language-r">is.numeric(x)
+is.integer(x)
+is.double(x)
+is.character(x)
+is.logical(x)
+is.complex(x)
+</code></pre>
+<h3>Checking data structures</h3>
+<pre><code class="language-r">is.vector(x)
+is.list(x)
+is.matrix(x)
+is.array(x)
+is.data.frame(x)
+is.factor(x)
+</code></pre>
+<h3>Checking special values</h3>
+<pre><code class="language-r">is.na(x)
+is.nan(x)
+is.finite(x)
+is.infinite(x)
+is.null(x)
+</code></pre>
+<p>These functions make the naming convention easy to remember:</p>
+<pre><code class="language-text">is.numeric(x)
+</code></pre>
+<p>asks:</p>
+<blockquote>
+<p>"Is <code>x</code> numeric?"</p>
+</blockquote>
+<p>and:</p>
+<pre><code class="language-text">is.na(x)
+</code></pre>
+<p>asks:</p>
+<blockquote>
+<p>"Is <code>x</code> missing?"</p>
+</blockquote>
+<hr />
+<h2>17. Useful <code>as.*()</code> Functions</h2>
+<p>The <code>as.*()</code> family usually attempts to <strong>convert</strong> an object.</p>
+<pre><code class="language-r">as.numeric(x)
+as.integer(x)
+as.double(x)
+
+as.character(x)
+as.logical(x)
+
+as.vector(x)
+as.list(x)
+as.matrix(x)
+as.data.frame(x)
+as.factor(x)
+</code></pre>
+<p>This gives us a useful distinction:</p>
+<pre><code class="language-text">is.*()  → asks what something is
+
+as.*()  → tries to convert something
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-r">x &lt;- &quot;25&quot;
+
+is.numeric(x)
+# FALSE
+
+as.numeric(x)
+# 25
+</code></pre>
+<hr />
+<h2>18. A Useful Family of Functions to Remember</h2>
+<p>At this stage, students should recognize several families of functions.</p>
+<h3>Investigating an object</h3>
+<pre><code class="language-r">typeof()
+class()
+mode()
+str()
+length()
+attributes()
+names()
+dim()
+</code></pre>
+<h3>Asking what an object is</h3>
+<pre><code class="language-r">is.numeric()
+is.integer()
+is.character()
+is.logical()
+
+is.vector()
+is.list()
+is.matrix()
+is.data.frame()
+is.factor()
+
+is.na()
+is.nan()
+is.infinite()
+is.finite()
+is.null()
+</code></pre>
+<h3>Converting objects</h3>
+<pre><code class="language-r">as.numeric()
+as.integer()
+as.character()
+as.logical()
+
+as.vector()
+as.list()
+as.matrix()
+as.data.frame()
+as.factor()
+</code></pre>
+<h3>Indexing</h3>
+<pre><code class="language-r">x[1]
+x[1:3]
+x[-1]
+x[x &gt; 20]
+x[&quot;name&quot;]
+
+student[[1]]
+student$name
+
+m[1, 2]
+df[1, ]
+df$grade
+</code></pre>
+<h3>Basic vector operations</h3>
+<pre><code class="language-r">c()
+length()
+seq()
+rep()
+sort()
+rev()
+unique()
+duplicated()
+</code></pre>
+<h3>Basic numerical summaries</h3>
+<pre><code class="language-r">sum()
+mean()
+median()
+min()
+max()
+range()
+var()
+sd()
+summary()
+</code></pre>
+<h3>Missing-data functions</h3>
+<pre><code class="language-r">is.na()
+anyNA()
+na.omit()
+complete.cases()
+</code></pre>
+<p>and the commonly encountered argument:</p>
+<pre><code class="language-r">na.rm = TRUE
+</code></pre>
+<hr />
+<h2>19. The Big Picture</h2>
+<p>The concepts introduced so far fit together:</p>
+<pre><code class="language-text">VALUES
+  │
+  ├── Numeric
+  ├── Character
+  ├── Logical
+  └── Other types
+       │
+       ▼
+OBJECTS
+       │
+       ▼
+DATA STRUCTURES
+  │
+  ├── Vector
+  ├── List
+  ├── Matrix
+  ├── Data Frame
+  └── Factor
+       │
+       ▼
+INDEXING
+  │
+  ├── [    → select a part
+  ├── [[   → extract an element
+  └── $    → extract a named element
+       │
+       ▼
+FUNCTIONS
+  │
+  ├── Function name
+  ├── Arguments
+  ├── Named/positional arguments
+  └── Default arguments
+       │
+       ▼
+SPECIAL VALUES
+  │
+  ├── NA    → missing/unknown value
+  ├── NaN   → undefined numerical result
+  ├── Inf   → infinity
+  └── NULL  → absence of a value
+</code></pre>
+<p>Three function families are particularly useful to remember:</p>
+<pre><code class="language-text">is.*()   → What is it?
+as.*()   → Convert it
+?        → How does it work?
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-r">is.numeric(x)
+as.numeric(x)
+?as.numeric
+</code></pre>
+<p>These ideas form the foundation for working with data in R.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T11:40:00-04:00">August 29, 2026, 11:40 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

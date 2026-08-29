@@ -237,6 +237,9 @@ body {
 .page-toc {
   position: sticky;
   top: calc(var(--masthead-height, 4rem) + 0.85rem);
+  max-height: calc(100vh - var(--masthead-height, 4rem) - 1.5rem);
+  overflow-x: hidden;
+  overflow-y: auto;
   font-size: 0.65rem;
   line-height: 1.25;
 }
@@ -697,4 +700,174 @@ html[data-theme="dark"] dd {
 
 html[data-theme="dark"] strong {
   color: #fff;
+}
+
+/* Course hub: week tabs and material rows (title + PDF). */
+.course-weeks {
+  margin: 0.35em 0 0.25em;
+}
+
+.course-week-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.2rem;
+  margin: 0 0 0.85em;
+  padding: 0;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.course-week-tabs [role="tab"] {
+  appearance: none;
+  margin: 0;
+  padding: 0.45em 0.8em 0.5em;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-display);
+  font-size: 1.02em;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  cursor: pointer;
+}
+
+.course-week-tabs [role="tab"]:hover {
+  color: #1a73e8;
+}
+
+.course-week-tabs [role="tab"][aria-selected="true"] {
+  color: #1a73e8;
+  border-bottom-color: #1a73e8;
+}
+
+.course-week-panel {
+  margin: 0;
+  padding: 0.15em 0 0.35em;
+}
+
+.course-week-panel[hidden] {
+  display: none;
+}
+
+.course-materials {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.course-materials > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25em 0.85em;
+  padding: 0.45em 0;
+}
+
+.course-material__title {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.course-material__pdf {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lecture-meta {
+  margin: 0 0 1.15em;
+  color: #5f6368;
+}
+
+.lecture-meta a {
+  font-weight: 600;
+}
+
+body.page-lecture .page__content pre,
+body.page-lecture .page__content table,
+body.page-lecture .page__content th,
+body.page-lecture .page__content td,
+body.page-lecture .page__content :not(pre) > code {
+  text-align: left !important;
+  hyphens: none;
+  text-justify: auto;
+}
+
+body.page-lecture .page__content pre {
+  margin: 1em 0;
+  padding: 0.85em 1em;
+  overflow-x: auto;
+  background: #f4f6f8;
+  border: 1px solid #e3e3e3;
+  font-size: 0.88em;
+  line-height: 1.45;
+}
+
+body.page-lecture .page__content pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+body.page-lecture .page__content :not(pre) > code {
+  padding: 0.08em 0.32em;
+  background: #f4f6f8;
+  font-size: 0.92em;
+}
+
+body.page-lecture .page__content .table-wrap {
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+body.page-lecture .page__content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+body.page-lecture .page__content th,
+body.page-lecture .page__content td {
+  padding: 0.4em 0.55em;
+  border-bottom: 1px solid #e3e3e3;
+  vertical-align: top;
+}
+
+body.page-lecture .page__content th {
+  font-weight: 600;
+}
+
+body.page-lecture .page__content hr {
+  margin: 1.6em 0;
+  border: none;
+  border-top: 1px solid #e3e3e3;
+}
+
+html[data-theme="dark"] .course-week-tabs {
+  border-bottom-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .course-week-tabs [role="tab"]:hover,
+html[data-theme="dark"] .course-week-tabs [role="tab"][aria-selected="true"] {
+  color: #79c0ff;
+}
+
+html[data-theme="dark"] .course-week-tabs [role="tab"][aria-selected="true"] {
+  border-bottom-color: #58a6ff;
+}
+
+html[data-theme="dark"] .lecture-meta {
+  color: #b0b0b0;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content pre,
+html[data-theme="dark"] body.page-lecture .page__content :not(pre) > code {
+  background: #3a3a3a;
+  border-color: #5e5e5e;
+  color: #fff;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content th,
+html[data-theme="dark"] body.page-lecture .page__content td,
+html[data-theme="dark"] body.page-lecture .page__content hr {
+  border-color: #5e5e5e;
 }

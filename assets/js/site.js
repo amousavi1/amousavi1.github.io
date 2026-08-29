@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-29T11:20:00-04:00';
+  const SITE_LAST_UPDATED = '2026-08-29T11:40:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -119,6 +119,13 @@
     'cardinality-constrained structured optimization': 'Sparse Optimization',
     'sparse and structured quadratic surface support vector machines': 'QSVMs',
     'robust multi-scale and multi-modal learning': 'Multi-Modal Learning',
+    '4. what happens when types are mixed?': '4. Coercion',
+    '11. the seq() function': '11. seq()',
+    '12. special values: na, nan, inf, and null': '12. Special Values',
+    '13. detecting special values: the is.*() family': '13. Detecting Special Values',
+    '16. useful is.*() functions': '16. is.*() Functions',
+    '17. useful as.*() functions': '17. as.*() Functions',
+    '18. a useful family of functions to remember': '18. Function Families',
   };
 
   function toTitleCase(text) {
@@ -198,7 +205,8 @@
     const content = document.querySelector('#main > .page .page__content');
     if (!main || !content) return;
 
-    const headings = Array.from(content.querySelectorAll('h2, h3'));
+    const headingSelector = document.body.classList.contains('page-lecture') ? 'h2' : 'h2, h3';
+    const headings = Array.from(content.querySelectorAll(headingSelector));
     const aside = document.createElement('aside');
     aside.className = 'sidebar-right';
     aside.setAttribute('aria-label', 'On this page');
@@ -223,8 +231,15 @@
         const fullTitle = heading.textContent.replace(/\s+/g, ' ').trim();
         const link = document.createElement('a');
         link.href = `#${id}`;
-        link.textContent = shortTocTitle(fullTitle);
-        link.title = toTitleCase(fullTitle);
+        const lecturePage = document.body.classList.contains('page-lecture');
+        if (lecturePage) {
+          const mapped = TOC_SHORT_TITLES[fullTitle.toLowerCase()];
+          link.textContent = mapped || fullTitle;
+          link.title = fullTitle;
+        } else {
+          link.textContent = shortTocTitle(fullTitle);
+          link.title = toTitleCase(fullTitle);
+        }
 
         if (heading.tagName === 'H3' && currentH2Item) {
           if (!h3List) {
@@ -255,6 +270,35 @@
     else main.appendChild(aside);
   }
 
+  function initCourseWeekTabs() {
+    const root = document.querySelector('.course-weeks');
+    if (!root) return;
+
+    const tabs = Array.from(root.querySelectorAll('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll('[role="tabpanel"]'));
+    if (!tabs.length || !panels.length) return;
+
+    const selectTab = (tab) => {
+      const panelId = tab.getAttribute('aria-controls');
+      tabs.forEach((item) => {
+        const selected = item === tab;
+        item.setAttribute('aria-selected', selected ? 'true' : 'false');
+        item.tabIndex = selected ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.id !== panelId;
+      });
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => selectTab(tab));
+    });
+
+    const hash = window.location.hash.replace('#', '');
+    const fromHash = hash ? tabs.find((tab) => tab.getAttribute('aria-controls') === hash) : null;
+    selectTab(fromHash || tabs[0]);
+  }
+
   // Run early.
   setHtmlJsClass();
 
@@ -265,5 +309,6 @@
     initMastheadSpacing();
     initSiteLastUpdated();
     initPageToc();
+    initCourseWeekTabs();
   });
 })();
