@@ -422,8 +422,14 @@ body.page-courses a.course-card {
   color: inherit;
 }
 
+body.page-courses a.course-card .course-card__title {
+  color: #0b57d0;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 body.page-courses a.course-card:hover .course-card__title {
-  color: #1a73e8;
+  color: #084298;
 }
 
 .course-card__title {
@@ -453,6 +459,7 @@ html[data-theme="dark"] ul.course-list > li {
   border-bottom-color: #5e5e5e;
 }
 
+html[data-theme="dark"] a.course-card .course-card__title,
 html[data-theme="dark"] a.course-card:hover .course-card__title {
   color: #79c0ff;
 }
@@ -494,12 +501,12 @@ html[data-theme="dark"] .course-placeholder {
   }
 }
 
-/* Publication list: blue links (scoped to publications page only). */
-body.page-publications .page__content a {
+/* Content links are blue across the site. */
+.page__content a {
   color: #0b57d0;
 }
 
-body.page-publications .page__content a:hover {
+.page__content a:hover {
   color: #084298;
 }
 
@@ -584,12 +591,20 @@ html[data-theme="dark"] .page-toc a.is-active {
   border-left-color: #58a6ff;
 }
 
-html[data-theme="dark"] body.page-publications .page__content a {
+html[data-theme="dark"] .page__content a {
   color: #79c0ff;
 }
 
-html[data-theme="dark"] body.page-publications .page__content a:hover {
+html[data-theme="dark"] .page__content a:hover {
   color: #a5d6ff;
+}
+
+html[data-theme="dark"] .page__content a.course-material__pdf {
+  color: #ff7b72;
+}
+
+html[data-theme="dark"] .page__content a.course-material__pdf:hover {
+  color: #ffa198;
 }
 
 html[data-theme="dark"] .sidebar {
@@ -756,10 +771,6 @@ html[data-theme="dark"] strong {
 }
 
 .course-materials > li {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25em 0.85em;
   padding: 0.45em 0;
 }
 
@@ -769,8 +780,20 @@ html[data-theme="dark"] strong {
 }
 
 .course-material__pdf {
+  margin-left: 0.35em;
+  color: #c5221f;
   font-weight: 600;
   white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.page__content a.course-material__pdf {
+  color: #c5221f;
+}
+
+.page__content a.course-material__pdf:hover {
+  color: #a50e0e;
 }
 
 .lecture-meta {

@@ -20,8 +20,8 @@ PDF_PATH = ROOT / "files" / "data-612" / "introduction-to-r-concepts.pdf"
 PRINT_PATH = ROOT / "files" / "data-612" / "_print-introduction-to-r-concepts.html"
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-29T11:40:00-04:00"
-LAST_UPDATED_TEXT = "August 29, 2026, 11:40 AM EDT"
+LAST_UPDATED_ISO = "2026-08-29T11:50:00-04:00"
+LAST_UPDATED_TEXT = "August 29, 2026, 11:50 AM EDT"
 
 SIDEBAR = """            <div class="sidebar sticky">
                 <div itemscope itemtype="https://schema.org/Person">
