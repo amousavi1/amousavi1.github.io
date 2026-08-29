@@ -3,12 +3,13 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Credits - Ahmad Mousavi</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <title>Lab 1 solutions - DATA 612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -23,7 +24,7 @@
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
                         <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,48 +98,32 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Credits</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1 solutions</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>Attributions for the template and customization used to build this website.</p>
-
-                        <h2>Template</h2>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/academicpages/academicpages.github.io" target="_blank" rel="noopener">AcademicPages</a>
-                                — maintained by the
-                                <a href="https://github.com/academicpages" target="_blank" rel="noopener">AcademicPages contributors</a>
-                                (MIT license:
-                                <a
-                                    href="https://github.com/academicpages/academicpages.github.io/blob/master/LICENSE"
-                                    target="_blank"
-                                    rel="noopener"
-                                    >upstream</a
-                                >)
-                            </li>
-                        </ul>
-
-                        <h2>Theme Foundation</h2>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/mmistakes/minimal-mistakes" target="_blank" rel="noopener">Minimal Mistakes</a>
-                                by <a href="https://mademistakes.com" target="_blank" rel="noopener">Michael Rose</a> (MIT license:
-                                <a href="https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE" target="_blank" rel="noopener"
-                                    >upstream</a
-                                >)
-                            </li>
-                        </ul>
-
-                        <h2>Site Adaptation</h2>
-                        <ul>
-                            <li>Parker Chace — applied the Minimal Mistakes-style layout and migrated content for Dr. Ahmad Mousavi’s site.</li>
-                        </ul>
-
-                        <h2>Licensing</h2>
-                        <p>For the full license text for this site package, see <a href="LICENSE">LICENSE</a>.</p>
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="data-612-lab-1-looking-under-the-hood.html">Lab 1</a>
+                        </p>
+                        <p>
+                            This page is locked. The solutions stay encrypted in the browser until the password is entered. Share the password when you want students to open it.
+                        </p>
+                        <form id="lab-solutions-form" class="lab-solutions-form">
+                            <label for="lab-solutions-password">Password</label>
+                            <input
+                                id="lab-solutions-password"
+                                name="passphrase"
+                                type="password"
+                                autocomplete="off"
+                                spellcheck="false"
+                            />
+                            <button type="submit">Open solutions</button>
+                        </form>
+                        <p id="lab-solutions-status" class="lab-solutions-status" role="status"></p>
+                        <div id="lab-solutions-output" class="lab-solutions-output" hidden></div>
                     </section>
                 </div>
             </article>
@@ -153,5 +138,6 @@
 
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
         <script src="assets/js/site.js"></script>
+        <script src="assets/js/lab-solutions.js"></script>
     </body>
 </html>

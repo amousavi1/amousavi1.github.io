@@ -904,3 +904,52 @@ html[data-theme="dark"] body.page-lecture .page__content hr {
 html[data-theme="dark"] body.page-lecture .page__content blockquote {
   border-left-color: #58a6ff;
 }
+
+.lab-solutions-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+  margin: 1.1em 0 0.4em;
+}
+
+.lab-solutions-form label {
+  font-weight: 600;
+}
+
+.lab-solutions-form input[type="password"] {
+  min-width: 14em;
+  padding: 0.45em 0.65em;
+  border: 1px solid #c4c7c5;
+  font: inherit;
+}
+
+.lab-solutions-form button {
+  appearance: none;
+  padding: 0.45em 0.9em;
+  border: 1px solid #0b57d0;
+  background: #0b57d0;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lab-solutions-status {
+  min-height: 1.4em;
+  margin: 0.35em 0 1em;
+}
+
+.lab-solutions-status.is-error {
+  color: #c5221f;
+}
+
+html[data-theme="dark"] .lab-solutions-form input[type="password"] {
+  border-color: #5e5e5e;
+  background: #3a3a3a;
+  color: #fff;
+}
+
+html[data-theme="dark"] .lab-solutions-status.is-error {
+  color: #ff7b72;
+}
