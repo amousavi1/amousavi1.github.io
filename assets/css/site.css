@@ -865,6 +865,12 @@ body.page-lecture .page__content hr {
   border-top: 1px solid #e3e3e3;
 }
 
+body.page-lecture .page__content blockquote {
+  margin: 1em 0;
+  padding: 0.1em 0 0.1em 0.9em;
+  border-left: 3px solid #1a73e8;
+}
+
 html[data-theme="dark"] .course-week-tabs {
   border-bottom-color: #5e5e5e;
 }
@@ -893,4 +899,8 @@ html[data-theme="dark"] body.page-lecture .page__content th,
 html[data-theme="dark"] body.page-lecture .page__content td,
 html[data-theme="dark"] body.page-lecture .page__content hr {
   border-color: #5e5e5e;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content blockquote {
+  border-left-color: #58a6ff;
 }

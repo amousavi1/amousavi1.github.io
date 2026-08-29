@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.1 R Packages and the Tidyverse - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Professor of Data Science,<br />
+                            Department of Mathematics and Statistics,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.1 R Packages and the Tidyverse</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="files/data-612/r-packages-and-the-tidyverse.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Installing packages, loading them, the tidyverse, and the pipe.
+                        </p>
+<h2>1. What Is a Package?</h2>
+<p>R already contains many functions:</p>
+<pre><code class="language-r">mean()
+sum()
+sqrt()
+seq()
+data.frame()
+</code></pre>
+<p>These functions come with <strong>Base R</strong> and the standard R installation.</p>
+<p>However, not every useful function is included in Base R.</p>
+<p>R can be extended using <strong>packages</strong>.</p>
+<blockquote>
+<p>A <strong>package</strong> is a collection of functions, data sets, documentation, and other tools designed for particular tasks.</p>
+</blockquote>
+<p>Thousands of R packages are available for statistics, visualization, machine learning, data manipulation, and many other applications.</p>
+<hr />
+<h2>2. Installing a Package</h2>
+<p>Before using a package for the first time, we usually need to <strong>install</strong> it.</p>
+<p>For example:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)
+</code></pre>
+<p>The package name must be inside quotation marks:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)
+</code></pre>
+<p>not:</p>
+<pre><code class="language-r">install.packages(ggplot2)
+</code></pre>
+<p>Installation downloads the package and places it on your computer.</p>
+<h3>Usually, you install a package only once.</h3>
+<p>Think of installing an R package like installing an app on your computer.</p>
+<hr />
+<h2>3. Loading a Package</h2>
+<p>Installing a package does <strong>not</strong> automatically make its functions available in the current R session.</p>
+<p>We load an installed package using:</p>
+<pre><code class="language-r">library(ggplot2)
+</code></pre>
+<p>Notice the difference:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)   # Install
+library(ggplot2)              # Load
+</code></pre>
+<p>A useful rule to remember is:</p>
+<blockquote>
+<p><strong>Install once; load each new R session.</strong></p>
+</blockquote>
+<p>For example, you may install <code>ggplot2</code> once:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)
+</code></pre>
+<p>Then, whenever you start a new R session and want to use it:</p>
+<pre><code class="language-r">library(ggplot2)
+</code></pre>
+<hr />
+<h2>4. What Is an R Session?</h2>
+<p>An <strong>R session</strong> is the period during which R is currently running.</p>
+<p>When you close and restart R or RStudio, you begin a new session.</p>
+<p>Packages that you loaded previously are generally not automatically loaded into the new session.</p>
+<p>Therefore, your script might begin with:</p>
+<pre><code class="language-r">library(ggplot2)
+library(dplyr)
+</code></pre>
+<p>but you should <strong>not normally put</strong> this in a script that runs every time:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)
+</code></pre>
+<p>Installation is something you do when needed, not every time the script runs.</p>
+<hr />
+<h2>5. Using a Function from a Package</h2>
+<p>Suppose we load <code>ggplot2</code>:</p>
+<pre><code class="language-r">library(ggplot2)
+</code></pre>
+<p>We can now use functions provided by that package:</p>
+<pre><code class="language-r">ggplot()
+</code></pre>
+<p>Another way to use a function is:</p>
+<pre><code class="language-r">ggplot2::ggplot()
+</code></pre>
+<p>The notation:</p>
+<pre><code class="language-r">package::function()
+</code></pre>
+<p>means:</p>
+<blockquote>
+<p>"Use this function specifically from this package."</p>
+</blockquote>
+<p>For example:</p>
+<pre><code class="language-r">dplyr::filter()
+</code></pre>
+<p>means:</p>
+<blockquote>
+<p>Use the <code>filter()</code> function from the <code>dplyr</code> package.</p>
+</blockquote>
+<p>This can be useful because different packages can sometimes contain functions with the same name.</p>
+<hr />
+<h2>6. Getting Help</h2>
+<p>R has a built-in help system.</p>
+<p>To read the documentation for a function:</p>
+<pre><code class="language-r">?mean
+</code></pre>
+<p>or:</p>
+<pre><code class="language-r">help(mean)
+</code></pre>
+<p>For a function from a package:</p>
+<pre><code class="language-r">?ggplot2::ggplot
+</code></pre>
+<p>You can also search the help system:</p>
+<pre><code class="language-r">help.search(&quot;mean&quot;)
+</code></pre>
+<p>A shortcut is:</p>
+<pre><code class="language-r">??mean
+</code></pre>
+<p>Therefore:</p>
+<pre><code class="language-text">?function      → documentation for a function
+??topic        → search R help for a topic
+</code></pre>
+<hr />
+<h2>7. What Packages Are Currently Loaded?</h2>
+<p>You can see information about the current R session using:</p>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<p>You can also see the current search path:</p>
+<pre><code class="language-r">search()
+</code></pre>
+<p>For example, after:</p>
+<pre><code class="language-r">library(ggplot2)
+</code></pre>
+<p>try:</p>
+<pre><code class="language-r">search()
+</code></pre>
+<p>and notice that <code>ggplot2</code> appears in the search path.</p>
+<hr />
+<h2>8. What Packages Are Installed?</h2>
+<p>To see installed packages:</p>
+<pre><code class="language-r">installed.packages()
+</code></pre>
+<p>This returns considerable information.</p>
+<p>To see just their names:</p>
+<pre><code class="language-r">rownames(installed.packages())
+</code></pre>
+<p>To check whether a particular package is available:</p>
+<pre><code class="language-r">requireNamespace(&quot;ggplot2&quot;, quietly = TRUE)
+</code></pre>
+<hr />
+<h2>9. What Is the Tidyverse?</h2>
+<p>In this course, we will learn both <strong>Base R</strong> and the <strong>tidyverse</strong>.</p>
+<p>The tidyverse is a collection of R packages designed to work together for data science.</p>
+<p>We can install it using:</p>
+<pre><code class="language-r">install.packages(&quot;tidyverse&quot;)
+</code></pre>
+<p>and load it using:</p>
+<pre><code class="language-r">library(tidyverse)
+</code></pre>
+<p>Loading <code>tidyverse</code> loads several important packages.</p>
+<p>Some of the most commonly used are:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Main purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ggplot2</code></td>
+<td>Data visualization</td>
+</tr>
+<tr>
+<td><code>dplyr</code></td>
+<td>Data manipulation</td>
+</tr>
+<tr>
+<td><code>tidyr</code></td>
+<td>Reshaping and tidying data</td>
+</tr>
+<tr>
+<td><code>readr</code></td>
+<td>Reading data files</td>
+</tr>
+<tr>
+<td><code>tibble</code></td>
+<td>Modern data frames</td>
+</tr>
+<tr>
+<td><code>stringr</code></td>
+<td>Working with strings</td>
+</tr>
+<tr>
+<td><code>forcats</code></td>
+<td>Working with categorical data/factors</td>
+</tr>
+<tr>
+<td><code>purrr</code></td>
+<td>Functional programming and iteration</td>
+</tr>
+</tbody>
+</table></div>
+<p>We will encounter these packages gradually throughout the course.</p>
+<hr />
+<h2>10. Base R vs. Tidyverse</h2>
+<p>Often, the same task can be performed using either Base R or tidyverse tools.</p>
+<p>For example, suppose:</p>
+<pre><code class="language-r">students &lt;- data.frame(
+  name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
+  grade = c(75, 92, 85)
+)
+</code></pre>
+<p>Using <strong>Base R</strong>, we could select students with grades above 80:</p>
+<pre><code class="language-r">students[students$grade &gt; 80, ]
+</code></pre>
+<p>Using <strong>dplyr</strong>, we could write:</p>
+<pre><code class="language-r">library(dplyr)
+
+filter(students, grade &gt; 80)
+</code></pre>
+<p>Both approaches are valid.</p>
+<p>Throughout this course, we will learn how to work with data using both approaches.</p>
+<hr />
+<h2>11. The Pipe</h2>
+<p>One important idea in modern R and the tidyverse is the <strong>pipe</strong>.</p>
+<p>Suppose:</p>
+<pre><code class="language-r">x &lt;- c(10, 20, 30, 40)
+</code></pre>
+<p>We could calculate its mean using:</p>
+<pre><code class="language-r">mean(x)
+</code></pre>
+<p>Base R provides the pipe:</p>
+<pre><code class="language-r">x |&gt; mean()
+</code></pre>
+<p>You can read this approximately as:</p>
+<blockquote>
+<p>Take <code>x</code>, <strong>then</strong> calculate its mean.</p>
+</blockquote>
+<p>The tidyverse historically popularized another pipe:</p>
+<pre><code class="language-r">x %&gt;% mean()
+</code></pre>
+<p>The <code>%&gt;%</code> pipe is provided by <code>magrittr</code> and is commonly encountered in tidyverse code.</p>
+<p>In this course, you may encounter both:</p>
+<pre><code class="language-r">|&gt;      # Base R pipe
+
+%&gt;%     # traditional tidyverse pipe
+</code></pre>
+<p>The pipe becomes especially useful when several operations are performed in sequence.</p>
+<p>For example:</p>
+<pre><code class="language-r">students |&gt;
+  subset(grade &gt; 80) |&gt;
+  head()
+</code></pre>
+<p>Later, we will use pipes extensively with tidyverse functions.</p>
+<hr />
+<h2>12. A Typical R Workflow</h2>
+<p>A simple R project might follow this pattern:</p>
+<h3>Step 1 — Install required packages</h3>
+<p>Usually done only once:</p>
+<pre><code class="language-r">install.packages(&quot;tidyverse&quot;)
+</code></pre>
+<h3>Step 2 — Load packages</h3>
+<p>Done when beginning a new R session:</p>
+<pre><code class="language-r">library(tidyverse)
+</code></pre>
+<h3>Step 3 — Import or create data</h3>
+<pre><code class="language-r">students &lt;- data.frame(
+  name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
+  grade = c(75, 92, 85)
+)
+</code></pre>
+<h3>Step 4 — Explore the data</h3>
+<pre><code class="language-r">head(students)
+str(students)
+summary(students)
+</code></pre>
+<h3>Step 5 — Manipulate the data</h3>
+<pre><code class="language-r">students |&gt;
+  dplyr::filter(grade &gt; 80)
+</code></pre>
+<h3>Step 6 — Analyze or visualize the data</h3>
+<p>For example:</p>
+<pre><code class="language-r">mean(students$grade)
+</code></pre>
+<p>or later:</p>
+<pre><code class="language-r">ggplot(students, aes(x = name, y = grade)) +
+  geom_col()
+</code></pre>
+<hr />
+<h2>13. Important Package Commands to Remember</h2>
+<pre><code class="language-r">install.packages(&quot;package&quot;)
+</code></pre>
+<p><strong>Install</strong> a package.</p>
+<pre><code class="language-r">library(package)
+</code></pre>
+<p><strong>Load</strong> an installed package.</p>
+<pre><code class="language-r">package::function()
+</code></pre>
+<p>Use a particular <strong>function from a particular package</strong>.</p>
+<pre><code class="language-r">?function
+</code></pre>
+<p>Read a function's <strong>documentation</strong>.</p>
+<pre><code class="language-r">??topic
+</code></pre>
+<p><strong>Search</strong> R's help system.</p>
+<pre><code class="language-r">installed.packages()
+</code></pre>
+<p>See the packages that are <strong>installed</strong>.</p>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<p>See information about the current <strong>R session</strong>.</p>
+<pre><code class="language-r">search()
+</code></pre>
+<p>See packages currently attached to the <strong>search path</strong>.</p>
+<hr />
+<h2>14. The Big Picture</h2>
+<p>A useful way to think about the R ecosystem is:</p>
+<pre><code class="language-text">                         R
+                         │
+             ┌───────────┴───────────┐
+             │                       │
+           Base R                 Packages
+             │                       │
+     Built-in functions       Additional functions
+             │                       │
+     mean(), seq(), etc.      ┌──────┴─────────┐
+                              │                │
+                           tidyverse       Other packages
+                              │
+                 ┌────────────┼────────────┐
+                 │            │            │
+              dplyr        ggplot2       tidyr
+                 │            │            │
+               Data       Visualization  Reshaping
+            manipulation                  data
+</code></pre>
+<p>The central distinction to remember is:</p>
+<blockquote>
+<p><strong>R is the programming language. A package extends R by providing additional functions and tools.</strong></p>
+</blockquote>
+<p>And:</p>
+<blockquote>
+<p><strong>Base R and tidyverse are not two different programming languages. The tidyverse is a collection of packages that we use within R.</strong></p>
+</blockquote>
+<p>For packages, remember the three most important commands:</p>
+<pre><code class="language-r">install.packages(&quot;tidyverse&quot;)   # Get it
+library(tidyverse)              # Load it
+dplyr::filter()                 # Use a specific function
+</code></pre>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T12:15:00-04:00">August 29, 2026, 12:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

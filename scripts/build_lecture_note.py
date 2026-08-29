@@ -14,14 +14,23 @@ except ImportError:
     import markdown
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-MD_PATH = ROOT / "files" / "data-612" / "introduction-to-r-concepts.md"
-PAGE_PATH = ROOT / "data-612-introduction-to-r-concepts.html"
-PDF_PATH = ROOT / "files" / "data-612" / "introduction-to-r-concepts.pdf"
-PRINT_PATH = ROOT / "files" / "data-612" / "_print-introduction-to-r-concepts.html"
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-29T11:50:00-04:00"
-LAST_UPDATED_TEXT = "August 29, 2026, 11:50 AM EDT"
+LAST_UPDATED_ISO = "2026-08-29T12:15:00-04:00"
+LAST_UPDATED_TEXT = "August 29, 2026, 12:15 PM EDT"
+
+NOTES = [
+    {
+        "slug": "r-packages-and-the-tidyverse",
+        "title": "1.1 R Packages and the Tidyverse",
+        "lead": "Installing packages, loading them, the tidyverse, and the pipe.",
+    },
+    {
+        "slug": "introduction-to-r-concepts",
+        "title": "1.2 Introduction to R Concepts",
+        "lead": "Data types, data structures, indexing, functions, and special values.",
+    },
+]
 
 SIDEBAR = """            <div class="sidebar sticky">
                 <div itemscope itemtype="https://schema.org/Person">
@@ -167,13 +176,18 @@ def markdown_to_html(text: str) -> str:
     return html
 
 
-def write_site_page(body: str) -> None:
+def write_site_page(note: dict, body: str) -> pathlib.Path:
+    slug = note["slug"]
+    title = note["title"]
+    lead = note["lead"]
+    pdf_href = f"files/data-612/{slug}.pdf"
+    page_path = ROOT / f"data-612-{slug}.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Introduction to R Concepts - DATA 612 - Ahmad Mousavi</title>
+        <title>{title} - DATA 612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -209,15 +223,15 @@ def write_site_page(body: str) -> None:
             <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="name">Introduction to R Concepts</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">{title}</h1>
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
-                            <a href="files/data-612/introduction-to-r-concepts.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Data types, data structures, indexing, functions, and special values.
+                            {lead}
                         </p>
 {body}
                     </section>
@@ -237,55 +251,64 @@ def write_site_page(body: str) -> None:
     </body>
 </html>
 """
-    PAGE_PATH.write_text(page, encoding="utf-8")
+    page_path.write_text(page.replace("\r\n", "\n"), encoding="utf-8", newline="\n")
+    return page_path
 
 
-def write_print_page(body: str) -> None:
-    print_body = body.replace('<div class="table-wrap">', "").replace("</div>", "")
-    # The naive replace can strip other closing divs; rebuild tables without the wrapper instead.
-    print_body = markdown_to_html(MD_PATH.read_text(encoding="utf-8"))
+def write_print_page(note: dict, md_path: pathlib.Path) -> pathlib.Path:
+    print_path = ROOT / "files" / "data-612" / f"_print-{note['slug']}.html"
+    print_body = markdown_to_html(md_path.read_text(encoding="utf-8"))
     print_body = print_body.replace('<div class="table-wrap">', "").replace("</div>", "")
     html = f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Introduction to R Concepts</title>
+  <title>{note["title"]}</title>
   <style>{PRINT_CSS}</style>
 </head>
 <body>
   <p class="kicker">DATA 612 &middot; Statistical Programming in R &middot; Week 1</p>
-  <h1>Introduction to R Concepts</h1>
-  <p>Data types, data structures, indexing, functions, and special values.</p>
+  <h1>{note["title"]}</h1>
+  <p>{note["lead"]}</p>
   {print_body}
 </body>
 </html>
 """
-    PRINT_PATH.write_text(html, encoding="utf-8")
+    print_path.write_text(html.replace("\r\n", "\n"), encoding="utf-8", newline="\n")
+    return print_path
 
 
-def write_pdf() -> None:
+def write_pdf(note: dict, print_path: pathlib.Path) -> pathlib.Path:
     if not EDGE.exists():
         raise FileNotFoundError(f"Edge not found: {EDGE}")
-    uri = PRINT_PATH.resolve().as_uri()
+    pdf_path = ROOT / "files" / "data-612" / f"{note['slug']}.pdf"
+    uri = print_path.resolve().as_uri()
     cmd = [
         str(EDGE),
         "--headless",
         "--disable-gpu",
         "--no-pdf-header-footer",
-        f"--print-to-pdf={PDF_PATH}",
+        f"--print-to-pdf={pdf_path}",
         uri,
     ]
     subprocess.run(cmd, check=True)
-    PRINT_PATH.unlink(missing_ok=True)
+    print_path.unlink(missing_ok=True)
+    return pdf_path
+
+
+def build_note(note: dict) -> None:
+    md_path = ROOT / "files" / "data-612" / f"{note['slug']}.md"
+    body = markdown_to_html(md_path.read_text(encoding="utf-8"))
+    page_path = write_site_page(note, body)
+    print_path = write_print_page(note, md_path)
+    pdf_path = write_pdf(note, print_path)
+    print(f"Wrote {page_path.name}")
+    print(f"Wrote {pdf_path.name} ({pdf_path.stat().st_size} bytes)")
 
 
 def main() -> None:
-    body = markdown_to_html(MD_PATH.read_text(encoding="utf-8"))
-    write_site_page(body)
-    write_print_page(body)
-    write_pdf()
-    print(f"Wrote {PAGE_PATH.name}")
-    print(f"Wrote {PDF_PATH.name} ({PDF_PATH.stat().st_size} bytes)")
+    for note in NOTES:
+        build_note(note)
 
 
 if __name__ == "__main__":
