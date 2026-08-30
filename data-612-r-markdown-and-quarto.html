@@ -108,7 +108,7 @@
                             <a href="files/data-612/r-markdown-and-quarto.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            When to use a script, how to knit a short document, and how Quarto relates to R Markdown.
+                            Quarto is the document format for this course. Learn how to create and render a .qmd file, and how R Markdown fits as the older sibling.
                         </p>
 <h2>1. Three Kinds of Files</h2>
 <p>RStudio can edit more than one kind of file. The three you will see in this course are:</p>
@@ -127,25 +127,46 @@
 <td>Code you want to keep and rerun</td>
 </tr>
 <tr>
-<td>R Markdown</td>
-<td><code>.Rmd</code></td>
-<td>A document that mixes writing and R code</td>
-</tr>
-<tr>
 <td>Quarto</td>
 <td><code>.qmd</code></td>
-<td>A newer document format with the same idea</td>
+<td>A document that mixes writing and R code. <strong>This is the format we use.</strong></td>
+</tr>
+<tr>
+<td>R Markdown</td>
+<td><code>.Rmd</code></td>
+<td>The older document format with the same idea</td>
 </tr>
 </tbody>
 </table></div>
 <p>A <strong>script</strong> is the right tool when the product is code: a lab, a function, a data-cleaning pipeline.</p>
 <p>A <strong>document</strong> is the right tool when the product is something a human should read: a homework writeup, a report, slides. The file holds prose, headings, and code. RStudio can turn that file into HTML, PDF, or Word.</p>
-<p>Lab 1 is a script. Later assignments will ask for an R Markdown or Quarto document. You should know how to create one this week so the later request is not a surprise.</p>
+<p>Lab 1 is a script. Later assignments will ask for a Quarto document. You should create and render one this week so that request is not a surprise.</p>
 <hr />
-<h2>2. R Markdown in Brief</h2>
-<p>Markdown is a way to write headings, lists, links, and emphasis in plain text. <strong>R Markdown</strong> adds R code to that file.</p>
-<p>Create one with <strong>File → New File → R Markdown…</strong>. Choose HTML as the default output. Save it in your project folder.</p>
-<p>An <code>.Rmd</code> file has three parts:</p>
+<h2>2. Why Quarto</h2>
+<p><strong>Quarto</strong> is the current document system from Posit, the same people who make RStudio. It is the successor to R Markdown.</p>
+<p>The department wants you to learn Quarto. New work in this course should be a <code>.qmd</code> file, not a <code>.Rmd</code> file, unless an assignment says otherwise.</p>
+<p>Quarto is the better default because:</p>
+<ul>
+<li>it is what is maintained and taught now</li>
+<li>the same file can become HTML, PDF, Word, or slides</li>
+<li>it still uses ordinary Markdown and R code chunks</li>
+<li>it also works with Python and other languages later, if you need that</li>
+<li>RStudio's <strong>Render</strong> button is built around it</li>
+</ul>
+<p>R Markdown is not wrong. You will still open <code>.Rmd</code> files in older notes, Stack Overflow answers, and some textbooks. Read those files. For new work here, start a Quarto document.</p>
+<p>Quarto is a <strong>program</strong> that RStudio calls. It is not an R package. Recent RStudio / Posit Desktop already includes it. If <strong>Render</strong> is missing, install Quarto from <a href="https://quarto.org/">quarto.org</a> and reopen RStudio.</p>
+<p>You can confirm it is available in RStudio's <strong>Terminal</strong> pane:</p>
+<pre><code class="language-text">quarto --version
+</code></pre>
+<hr />
+<h2>3. Create a Quarto Document</h2>
+<ol>
+<li><strong>File → New File → Quarto Document…</strong></li>
+<li>Choose <strong>HTML</strong> as the default format this week.</li>
+<li>Give it a title and your name.</li>
+<li>Save it in your project folder with a <code>.qmd</code> extension, for example <code>week01_practice.qmd</code>.</li>
+</ol>
+<p>An <code>.qmd</code> file has three parts:</p>
 <ol>
 <li>a <strong>YAML header</strong> between <code>---</code> lines, which names the document and the output format</li>
 <li><strong>text</strong>, formatted with Markdown</li>
@@ -155,7 +176,7 @@
 <pre><code class="language-markdown">---
 title: &quot;Week 1 practice&quot;
 author: &quot;Your Name&quot;
-output: html_document
+format: html
 ---
 
 # A heading
@@ -167,19 +188,27 @@ x &lt;- 1:5
 mean(x)
 ```
 </code></pre>
+<p>Notice <code>format: html</code>, not <code>output: html_document</code>. That is the Quarto header. <code>format: pdf</code> and <code>format: docx</code> are the usual alternatives.</p>
 <p>Insert a code chunk with <strong>Ctrl+Alt+I</strong> (Windows/Linux) or <strong>Cmd+Option+I</strong> (macOS), or <strong>Code → Insert Chunk</strong>.</p>
 <p>Run a line or a chunk with <strong>Ctrl+Enter</strong> / <strong>Cmd+Enter</strong>, the same way you run a script. Results appear in the console, and often under the chunk.</p>
-<p>When you want a document, click <strong>Knit</strong> (or <strong>Knit to HTML</strong>). Knitting:</p>
+<hr />
+<h2>4. Render</h2>
+<p>When you want a document, click <strong>Render</strong> (not <strong>Knit</strong>). Rendering:</p>
 <ul>
 <li>saves the file</li>
 <li>runs the code in a <strong>fresh</strong> R session, not from leftover console objects</li>
-<li>writes an HTML (or PDF, or Word) file next to the <code>.Rmd</code></li>
+<li>writes an HTML (or PDF, or Word) file next to the <code>.qmd</code></li>
 </ul>
 <p>That fresh session is the point. Everything the document needs must be in the file: <code>library()</code> calls, data import, and the code that produces the numbers you quote.</p>
 <p>Do <strong>not</strong> put <code>install.packages()</code> in the document. Install packages once in the console, as in note <strong>1.2</strong>.</p>
-<p>If knitting to PDF fails, you are missing a LaTeX installation. Knit to HTML this week. PDF can wait until a later assignment actually requires it.</p>
+<p>If rendering to PDF fails, you are missing a LaTeX installation. Render to HTML this week. PDF can wait until a later assignment actually requires it. When that happens, a common path is:</p>
+<pre><code class="language-r">install.packages(&quot;tinytex&quot;)
+tinytex::install_tinytex()
+</code></pre>
+<p>then close and reopen RStudio.</p>
 <hr />
-<h2>3. Markdown You Will Use Constantly</h2>
+<h2>5. Markdown You Will Use Constantly</h2>
+<p>The same Markdown works in Quarto and in R Markdown:</p>
 <pre><code class="language-text"># Heading
 ## Subheading
 
@@ -194,35 +223,60 @@ mean(x)
 [a link](https://example.com)
 </code></pre>
 <p>A single Enter does not start a new paragraph. Leave a blank line, or end a line with two spaces.</p>
-<p>YAML is picky about spacing. If Knit fails with a YAML error, look at indentation around <code>output:</code>.</p>
+<p>YAML is picky about spacing. If Render fails with a YAML error, look at indentation around <code>format:</code>.</p>
 <hr />
-<h2>4. Quarto</h2>
-<p><strong>Quarto</strong> is the newer sibling of R Markdown. It uses the same Markdown-plus-code idea, and it also works with Python and other languages. The file extension is <code>.qmd</code>.</p>
-<p>Create one with <strong>File → New File → Quarto Document…</strong>. The header looks similar:</p>
+<h2>6. A Few Quarto Options Worth Knowing Now</h2>
+<p>You can ask Quarto for a table of contents and numbered headings:</p>
 <pre><code class="language-markdown">---
 title: &quot;Week 1 practice&quot;
 author: &quot;Your Name&quot;
-format: html
+format:
+  html:
+    toc: true
+    number-sections: true
 ---
 </code></pre>
-<p>Code chunks still use <code>{r}</code> fences. Instead of <strong>Knit</strong>, you click <strong>Render</strong>.</p>
-<p>For this course, R Markdown and Quarto are interchangeable for a simple HTML or PDF writeup. If an assignment specifies one, use that one. If it does not, either is fine.</p>
+<p>Indentation under <code>format:</code> matters. Two extra spaces, or a missing space after a colon, will stop Render.</p>
+<p>Chunk options go on <code>#|</code> lines at the top of the chunk. That is the Quarto style:</p>
+<pre><code class="language-markdown">```{r}
+#| echo: true
+#| warning: false
+
+mean(1:5)
+```
+</code></pre>
+<p><code>echo: true</code> keeps the code visible in the output. <code>warning: false</code> hides package startup noise. You do not need many options in week 1. Put <code>library(tidyverse)</code> in an early chunk so every later chunk can use it.</p>
+<p>Inline R still uses an <code>r</code> expression inside backticks. Use that for a number you have already computed, so the writeup updates when you Render again.</p>
+<hr />
+<h2>7. R Markdown, Briefly</h2>
+<p><strong>R Markdown</strong> is the older sibling. Create one with <strong>File → New File → R Markdown…</strong>. The file extension is <code>.Rmd</code>. The header uses <code>output:</code> instead of <code>format:</code>:</p>
+<pre><code class="language-markdown">---
+title: &quot;Week 1 practice&quot;
+author: &quot;Your Name&quot;
+output: html_document
+---
+</code></pre>
+<p>The button is <strong>Knit</strong>, not <strong>Render</strong>. The idea is the same: Markdown plus code chunks, run in a fresh session.</p>
+<p>If an old assignment or a book gives you a <code>.Rmd</code> file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto.</p>
 <p>Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.</p>
 <hr />
-<h2>5. What to Use When</h2>
+<h2>8. What to Use When</h2>
 <pre><code class="language-text">Need to keep code and rerun it?
   → .R script
 
 Need a readable writeup with results baked in?
-  → .Rmd or .qmd
+  → .qmd (Quarto)
+
+Someone handed you an old .Rmd?
+  → knit it; do not rewrite it unless you were asked to
 
 Lab 1
   → lab01.R
 
 Later homework
-  → a knitted or rendered document, as the assignment says
+  → a Quarto document, unless the assignment says otherwise
 </code></pre>
-<p>Note <strong>1.1</strong> is how you run a script and find the working directory. Note <strong>1.3</strong> is how you import <code>students.csv</code>. Lab 1 uses both.</p>
+<p>Note <strong>1.1</strong> is how you run a script and find the working directory. Note <strong>1.3</strong> is how you import <code>students.csv</code>. Lab 1 uses both. Lab 1 does not need this note.</p>
                     </section>
                 </div>
             </article>
@@ -231,7 +285,7 @@ Later homework
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T15:35:00-04:00">August 29, 2026, 3:35 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T22:50:00-04:00">August 29, 2026, 10:50 PM EDT</time></div>
             </footer>
         </div>
 

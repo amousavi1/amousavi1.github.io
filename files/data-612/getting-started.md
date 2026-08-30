@@ -122,7 +122,7 @@ A useful habit is:
 
 Save the script. You can reopen it in a later session.
 
-Lab 1 is a script. R Markdown and Quarto are for later assignments; see note **1.5**.
+Lab 1 is a script. Later assignments use Quarto documents; see note **1.5**.
 
 ---
 

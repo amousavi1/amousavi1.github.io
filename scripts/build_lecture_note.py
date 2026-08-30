@@ -16,8 +16,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-29T15:20:00-04:00"
-LAST_UPDATED_TEXT = "August 29, 2026, 3:20 PM EDT"
+LAST_UPDATED_ISO = "2026-08-29T22:50:00-04:00"
+LAST_UPDATED_TEXT = "August 29, 2026, 10:50 PM EDT"
 
 NOTES = [
     {
@@ -43,7 +43,7 @@ NOTES = [
     {
         "slug": "r-markdown-and-quarto",
         "title": "1.5 R Markdown and Quarto",
-        "lead": "When to use a script, how to knit a short document, and how Quarto relates to R Markdown.",
+        "lead": "Quarto is the document format for this course. Learn how to create and render a .qmd file, and how R Markdown fits as the older sibling.",
     },
     {
         "slug": "lab-1-looking-under-the-hood",
