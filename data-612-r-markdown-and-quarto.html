@@ -108,7 +108,7 @@
                             <a href="files/data-612/r-markdown-and-quarto.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Quarto is the document format for this course. Learn how to create and render a .qmd file, and how R Markdown fits as the older sibling.
+                            Quarto is the document format for this course. YAML is the control panel; chunk options decide what the reader sees.
                         </p>
 <h2>1. Three Kinds of Files</h2>
 <p>RStudio can edit more than one kind of file. The three you will see in this course are:</p>
@@ -168,7 +168,7 @@
 </ol>
 <p>An <code>.qmd</code> file has three parts:</p>
 <ol>
-<li>a <strong>YAML header</strong> between <code>---</code> lines, which names the document and the output format</li>
+<li>a <strong>YAML header</strong> between <code>---</code> lines — the control panel for the document</li>
 <li><strong>text</strong>, formatted with Markdown</li>
 <li><strong>code chunks</strong>, which contain R</li>
 </ol>
@@ -196,6 +196,7 @@ mean(x)
 <p>When you want a document, click <strong>Render</strong> (not <strong>Knit</strong>). Rendering:</p>
 <ul>
 <li>saves the file</li>
+<li>reads the YAML header</li>
 <li>runs the code in a <strong>fresh</strong> R session, not from leftover console objects</li>
 <li>writes an HTML (or PDF, or Word) file next to the <code>.qmd</code></li>
 </ul>
@@ -225,42 +226,323 @@ tinytex::install_tinytex()
 <p>A single Enter does not start a new paragraph. Leave a blank line, or end a line with two spaces.</p>
 <p>YAML is picky about spacing. If Render fails with a YAML error, look at indentation around <code>format:</code>.</p>
 <hr />
-<h2>6. A Few Quarto Options Worth Knowing Now</h2>
-<p>You can ask Quarto for a table of contents and numbered headings:</p>
+<h2>6. What YAML Does</h2>
+<p>YAML is the block at the top of the file, between two lines of <code>---</code>.</p>
+<p>It does <strong>not</strong> run R. It tells Quarto (or R Markdown) how to turn the file into a document:</p>
+<ul>
+<li>who wrote it and what it is called</li>
+<li>which output to build (HTML, PDF, Word, slides)</li>
+<li>how that output should look (table of contents, numbered headings, page numbers)</li>
+<li>default rules for every code chunk</li>
+</ul>
+<p>Think of it as the cover sheet and the settings panel. The Markdown and the chunks are the content. YAML is the instructions for assembling that content.</p>
+<p>A key is a word to the left of a colon. A value is to the right:</p>
+<pre><code class="language-text">title: &quot;Week 1 practice&quot;
+</code></pre>
+<p>Some keys have nested options. Those child lines must be indented. Two extra spaces, or a missing space after a colon, will stop Render.</p>
+<p>Quarto uses hyphens in option names (<code>number-sections</code>). R Markdown often uses underscores (<code>number_sections</code>). The idea is the same; the spelling is not.</p>
+<hr />
+<h2>7. Common YAML Options</h2>
+<p>These are the options you will actually use this semester.</p>
+<h3>Identity</h3>
+<pre><code class="language-markdown">---
+title: &quot;Lab 2&quot;
+author: &quot;Your Name&quot;
+date: today
+format: html
+---
+</code></pre>
+<p><code>date: today</code> inserts the date when you Render. You can also write a fixed date in quotes.</p>
+<h3>The output format</h3>
+<pre><code class="language-markdown">format: html
+</code></pre>
+<p>or, when you need options under that format:</p>
+<pre><code class="language-markdown">format:
+  html:
+    toc: true
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>format</code></th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>html</code></td>
+<td>A web page. Best default this week.</td>
+</tr>
+<tr>
+<td><code>pdf</code></td>
+<td>A paginated PDF. Needs LaTeX.</td>
+</tr>
+<tr>
+<td><code>docx</code></td>
+<td>A Word file.</td>
+</tr>
+<tr>
+<td><code>revealjs</code></td>
+<td>HTML slides.</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Table of contents and numbered headings</h3>
+<pre><code class="language-markdown">format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+</code></pre>
+<ul>
+<li><code>toc: true</code> adds a table of contents from your <code>#</code> and <code>##</code> headings.</li>
+<li><code>toc-depth: 2</code> includes headings down to <code>##</code>, not <code>###</code>.</li>
+<li><code>number-sections: true</code> numbers the headings: 1, 1.1, 2, 2.1.</li>
+</ul>
+<p><code>number-sections</code> numbers <strong>headings</strong>, not pages.</p>
+<h3>Page numbers</h3>
+<p>HTML is one scrolling page. It does not have page numbers.</p>
+<p>A <strong>PDF</strong> is paginated. Page numbers appear automatically in the footer once LaTeX is installed and you render with <code>format: pdf</code>. You do not add them by hand.</p>
+<pre><code class="language-markdown">format:
+  pdf:
+    toc: true
+    number-sections: true
+    papersize: letter
+</code></pre>
+<p><code>papersize: letter</code> is the usual US choice. <code>number-sections</code> still means heading numbers. The printed page numbers come with the PDF itself.</p>
+<p>For HTML slides (<code>format: revealjs</code>), slide numbers are a separate option:</p>
+<pre><code class="language-markdown">format:
+  revealjs:
+    slide-number: true
+</code></pre>
+<p>We will not need slides in week 1.</p>
+<h3>One HTML file you can email</h3>
+<pre><code class="language-markdown">format:
+  html:
+    embed-resources: true
+</code></pre>
+<p>That folds CSS and plots into a single <code>.html</code> file, which is easier to submit or send than a folder of extra files.</p>
+<h3>Default rules for every chunk</h3>
+<p>YAML can set chunk options for the whole document. Later you override one chunk if you need to.</p>
+<pre><code class="language-markdown">---
+title: &quot;Lab 2&quot;
+author: &quot;Your Name&quot;
+format: html
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+</code></pre>
+<p><code>execute:</code> is a Quarto key. It is not the same as <code>eval</code> on one chunk. It means: "unless a chunk says otherwise, do this."</p>
+<p>A compact header students often start from:</p>
 <pre><code class="language-markdown">---
 title: &quot;Week 1 practice&quot;
 author: &quot;Your Name&quot;
+date: today
 format:
   html:
     toc: true
     number-sections: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
 ---
 </code></pre>
-<p>Indentation under <code>format:</code> matters. Two extra spaces, or a missing space after a colon, will stop Render.</p>
-<p>Chunk options go on <code>#|</code> lines at the top of the chunk. That is the Quarto style:</p>
+<hr />
+<h2>8. Code Chunks: <code>echo</code>, <code>eval</code>, and <code>include</code></h2>
+<p>A code chunk is a fenced block of R. Quarto options go on <code>#|</code> lines at the top of the chunk:</p>
 <pre><code class="language-markdown">```{r}
 #| echo: true
-#| warning: false
+#| eval: true
+#| include: true
 
 mean(1:5)
 ```
 </code></pre>
-<p><code>echo: true</code> keeps the code visible in the output. <code>warning: false</code> hides package startup noise. You do not need many options in week 1. Put <code>library(tidyverse)</code> in an early chunk so every later chunk can use it.</p>
+<p>Three options decide what happens. Learn these first.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Question it answers</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>echo</code></td>
+<td>Does the reader see the code?</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>eval</code></td>
+<td>Does R run the code?</td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>include</code></td>
+<td>Does anything from this chunk appear in the document?</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>They combine. That is the point.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th><code>echo</code></th>
+<th><code>eval</code></th>
+<th><code>include</code></th>
+<th>The reader sees</th>
+<th>R runs the code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+<td>code and results</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>true</td>
+<td>results only</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+<td>code only</td>
+<td>no</td>
+</tr>
+<tr>
+<td>true</td>
+<td>true</td>
+<td>false</td>
+<td>nothing</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+<td>nothing</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table></div>
+<p>When to use each combination:</p>
+<ul>
+<li><strong>Show code and results</strong> (<code>echo: true</code>). The default. Good for homework where we want to see how you got the number.</li>
+<li><strong>Results only</strong> (<code>echo: false</code>). A report for a reader who does not need the code.</li>
+<li><strong>Code only</strong> (<code>eval: false</code>). An example you want people to read but not run: it would take too long, or it is incomplete on purpose.</li>
+<li><strong>Run, but hide everything</strong> (<code>include: false</code>). A setup chunk: <code>library(tidyverse)</code>, reading <code>students.csv</code>. The later chunks need those objects. The reader does not need that boilerplate.</li>
+</ul>
+<p><code>include: false</code> still <strong>evaluates</strong> the chunk unless you also set <code>eval: false</code>. The objects remain available.</p>
+<p>A usual start-of-file setup chunk:</p>
+<pre><code class="language-markdown">```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse)
+students &lt;- read_csv(&quot;data/students.csv&quot;)
+```
+</code></pre>
 <p>Inline R still uses an <code>r</code> expression inside backticks. Use that for a number you have already computed, so the writeup updates when you Render again.</p>
 <hr />
-<h2>7. R Markdown, Briefly</h2>
-<p><strong>R Markdown</strong> is the older sibling. Create one with <strong>File → New File → R Markdown…</strong>. The file extension is <code>.Rmd</code>. The header uses <code>output:</code> instead of <code>format:</code>:</p>
+<h2>9. Other Chunk Options You Will Meet</h2>
+<p>After <code>echo</code>, <code>eval</code>, and <code>include</code>, these are the next ones worth knowing.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>output</code></td>
+<td>If <code>false</code>, hide printed results but still run the chunk. Different from <code>include: false</code>, which also hides the code.</td>
+</tr>
+<tr>
+<td><code>warning</code></td>
+<td>If <code>false</code>, hide warnings. Useful for package startup noise.</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>If <code>false</code>, hide messages such as <code>read_csv()</code> column types.</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>If <code>true</code>, Render continues even if the chunk errors, and the error is printed. Leave this off unless you were asked to show a failing line.</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td>A name for the chunk, such as <code>setup</code> or <code>mean-grade</code>. Labels must be unique.</td>
+</tr>
+<tr>
+<td><code>fig-width</code>, <code>fig-height</code></td>
+<td>Figure size, in inches.</td>
+</tr>
+<tr>
+<td><code>fig-cap</code></td>
+<td>A caption under the figure.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Example:</p>
+<pre><code class="language-markdown">```{r}
+#| label: grade-mean
+#| echo: false
+#| warning: false
+#| fig-width: 6
+#| fig-height: 4
+#| fig-cap: &quot;Grades in the practice file.&quot;
+
+mean(students$grade)
+```
+</code></pre>
+<p>You do not need all of these in week 1. Put <code>library(tidyverse)</code> in an early chunk so every later chunk can use it. Use <code>echo</code> to control whether we see your code. Use <code>include: false</code> for setup.</p>
+<p>A chunk option overrides the document <code>execute:</code> default for that one chunk only.</p>
+<hr />
+<h2>10. The Same Options in R Markdown</h2>
+<p>R Markdown uses the same three ideas. The spelling and the button are different.</p>
+<p>The header uses <code>output:</code> instead of <code>format:</code>, and underscores instead of hyphens:</p>
 <pre><code class="language-markdown">---
 title: &quot;Week 1 practice&quot;
 author: &quot;Your Name&quot;
-output: html_document
+output:
+  html_document:
+    toc: true
+    number_sections: true
+  pdf_document:
+    toc: true
+    number_sections: true
 ---
 </code></pre>
+<p>Chunk options often sit in the fence line instead of on <code>#|</code> lines:</p>
+<pre><code class="language-markdown">```{r echo=FALSE, warning=FALSE, include=TRUE}
+mean(1:5)
+```
+</code></pre>
+<p>Document-wide defaults look like this, usually in a setup chunk:</p>
+<pre><code class="language-r">knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+</code></pre>
 <p>The button is <strong>Knit</strong>, not <strong>Render</strong>. The idea is the same: Markdown plus code chunks, run in a fresh session.</p>
-<p>If an old assignment or a book gives you a <code>.Rmd</code> file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto.</p>
+<p>If an old assignment or a book gives you a <code>.Rmd</code> file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto. Quarto will also accept the older <code>{r echo=FALSE}</code> fence style if you open an old example.</p>
 <p>Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.</p>
 <hr />
-<h2>8. What to Use When</h2>
+<h2>11. What to Use When</h2>
 <pre><code class="language-text">Need to keep code and rerun it?
   → .R script
 
@@ -276,6 +558,12 @@ Lab 1
 Later homework
   → a Quarto document, unless the assignment says otherwise
 </code></pre>
+<p>Three controls to remember:</p>
+<pre><code class="language-text">YAML              → how the document is built
+echo / eval / include → what each chunk shows and whether it runs
+number-sections   → heading numbers
+PDF format        → printed page numbers
+</code></pre>
 <p>Note <strong>1.1</strong> is how you run a script and find the working directory. Note <strong>1.3</strong> is how you import <code>students.csv</code>. Lab 1 uses both. Lab 1 does not need this note.</p>
                     </section>
                 </div>
@@ -285,7 +573,7 @@ Later homework
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-29T22:50:00-04:00">August 29, 2026, 10:50 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-30T09:55:00-04:00">August 30, 2026, 9:55 AM EDT</time></div>
             </footer>
         </div>
 

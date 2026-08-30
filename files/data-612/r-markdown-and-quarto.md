@@ -51,7 +51,7 @@ quarto --version
 
 An `.qmd` file has three parts:
 
-1. a **YAML header** between `---` lines, which names the document and the output format
+1. a **YAML header** between `---` lines — the control panel for the document
 2. **text**, formatted with Markdown
 3. **code chunks**, which contain R
 
@@ -87,6 +87,7 @@ Run a line or a chunk with **Ctrl+Enter** / **Cmd+Enter**, the same way you run 
 When you want a document, click **Render** (not **Knit**). Rendering:
 
 - saves the file
+- reads the YAML header
 - runs the code in a **fresh** R session, not from leftover console objects
 - writes an HTML (or PDF, or Word) file next to the `.qmd`
 
@@ -130,61 +131,298 @@ YAML is picky about spacing. If Render fails with a YAML error, look at indentat
 
 ---
 
-## 6. A Few Quarto Options Worth Knowing Now
+## 6. What YAML Does
 
-You can ask Quarto for a table of contents and numbered headings:
+YAML is the block at the top of the file, between two lines of `---`.
+
+It does **not** run R. It tells Quarto (or R Markdown) how to turn the file into a document:
+
+- who wrote it and what it is called
+- which output to build (HTML, PDF, Word, slides)
+- how that output should look (table of contents, numbered headings, page numbers)
+- default rules for every code chunk
+
+Think of it as the cover sheet and the settings panel. The Markdown and the chunks are the content. YAML is the instructions for assembling that content.
+
+A key is a word to the left of a colon. A value is to the right:
+
+```text
+title: "Week 1 practice"
+```
+
+Some keys have nested options. Those child lines must be indented. Two extra spaces, or a missing space after a colon, will stop Render.
+
+Quarto uses hyphens in option names (`number-sections`). R Markdown often uses underscores (`number_sections`). The idea is the same; the spelling is not.
+
+---
+
+## 7. Common YAML Options
+
+These are the options you will actually use this semester.
+
+### Identity
+
+```markdown
+---
+title: "Lab 2"
+author: "Your Name"
+date: today
+format: html
+---
+```
+
+`date: today` inserts the date when you Render. You can also write a fixed date in quotes.
+
+### The output format
+
+```markdown
+format: html
+```
+
+or, when you need options under that format:
+
+```markdown
+format:
+  html:
+    toc: true
+```
+
+| `format` | What you get |
+| -------- | ------------ |
+| `html` | A web page. Best default this week. |
+| `pdf` | A paginated PDF. Needs LaTeX. |
+| `docx` | A Word file. |
+| `revealjs` | HTML slides. |
+
+### Table of contents and numbered headings
+
+```markdown
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+```
+
+- `toc: true` adds a table of contents from your `#` and `##` headings.
+- `toc-depth: 2` includes headings down to `##`, not `###`.
+- `number-sections: true` numbers the headings: 1, 1.1, 2, 2.1.
+
+`number-sections` numbers **headings**, not pages.
+
+### Page numbers
+
+HTML is one scrolling page. It does not have page numbers.
+
+A **PDF** is paginated. Page numbers appear automatically in the footer once LaTeX is installed and you render with `format: pdf`. You do not add them by hand.
+
+```markdown
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    papersize: letter
+```
+
+`papersize: letter` is the usual US choice. `number-sections` still means heading numbers. The printed page numbers come with the PDF itself.
+
+For HTML slides (`format: revealjs`), slide numbers are a separate option:
+
+```markdown
+format:
+  revealjs:
+    slide-number: true
+```
+
+We will not need slides in week 1.
+
+### One HTML file you can email
+
+```markdown
+format:
+  html:
+    embed-resources: true
+```
+
+That folds CSS and plots into a single `.html` file, which is easier to submit or send than a folder of extra files.
+
+### Default rules for every chunk
+
+YAML can set chunk options for the whole document. Later you override one chunk if you need to.
+
+```markdown
+---
+title: "Lab 2"
+author: "Your Name"
+format: html
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+```
+
+`execute:` is a Quarto key. It is not the same as `eval` on one chunk. It means: "unless a chunk says otherwise, do this."
+
+A compact header students often start from:
 
 ```markdown
 ---
 title: "Week 1 practice"
 author: "Your Name"
+date: today
 format:
   html:
     toc: true
     number-sections: true
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
 ---
 ```
 
-Indentation under `format:` matters. Two extra spaces, or a missing space after a colon, will stop Render.
+---
 
-Chunk options go on `#|` lines at the top of the chunk. That is the Quarto style:
+## 8. Code Chunks: `echo`, `eval`, and `include`
+
+A code chunk is a fenced block of R. Quarto options go on `#|` lines at the top of the chunk:
 
 ````markdown
 ```{r}
 #| echo: true
-#| warning: false
+#| eval: true
+#| include: true
 
 mean(1:5)
 ```
 ````
 
-`echo: true` keeps the code visible in the output. `warning: false` hides package startup noise. You do not need many options in week 1. Put `library(tidyverse)` in an early chunk so every later chunk can use it.
+Three options decide what happens. Learn these first.
+
+| Option | Question it answers | Default |
+| ------ | ------------------- | ------- |
+| `echo` | Does the reader see the code? | `true` |
+| `eval` | Does R run the code? | `true` |
+| `include` | Does anything from this chunk appear in the document? | `true` |
+
+They combine. That is the point.
+
+| `echo` | `eval` | `include` | The reader sees | R runs the code |
+| ------ | ------ | --------- | --------------- | --------------- |
+| true | true | true | code and results | yes |
+| false | true | true | results only | yes |
+| true | false | true | code only | no |
+| true | true | false | nothing | yes |
+| false | true | false | nothing | yes |
+
+When to use each combination:
+
+- **Show code and results** (`echo: true`). The default. Good for homework where we want to see how you got the number.
+- **Results only** (`echo: false`). A report for a reader who does not need the code.
+- **Code only** (`eval: false`). An example you want people to read but not run: it would take too long, or it is incomplete on purpose.
+- **Run, but hide everything** (`include: false`). A setup chunk: `library(tidyverse)`, reading `students.csv`. The later chunks need those objects. The reader does not need that boilerplate.
+
+`include: false` still **evaluates** the chunk unless you also set `eval: false`. The objects remain available.
+
+A usual start-of-file setup chunk:
+
+````markdown
+```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse)
+students <- read_csv("data/students.csv")
+```
+````
 
 Inline R still uses an `r` expression inside backticks. Use that for a number you have already computed, so the writeup updates when you Render again.
 
 ---
 
-## 7. R Markdown, Briefly
+## 9. Other Chunk Options You Will Meet
 
-**R Markdown** is the older sibling. Create one with **File → New File → R Markdown…**. The file extension is `.Rmd`. The header uses `output:` instead of `format:`:
+After `echo`, `eval`, and `include`, these are the next ones worth knowing.
+
+| Option | What it does |
+| ------ | ------------ |
+| `output` | If `false`, hide printed results but still run the chunk. Different from `include: false`, which also hides the code. |
+| `warning` | If `false`, hide warnings. Useful for package startup noise. |
+| `message` | If `false`, hide messages such as `read_csv()` column types. |
+| `error` | If `true`, Render continues even if the chunk errors, and the error is printed. Leave this off unless you were asked to show a failing line. |
+| `label` | A name for the chunk, such as `setup` or `mean-grade`. Labels must be unique. |
+| `fig-width`, `fig-height` | Figure size, in inches. |
+| `fig-cap` | A caption under the figure. |
+
+Example:
+
+````markdown
+```{r}
+#| label: grade-mean
+#| echo: false
+#| warning: false
+#| fig-width: 6
+#| fig-height: 4
+#| fig-cap: "Grades in the practice file."
+
+mean(students$grade)
+```
+````
+
+You do not need all of these in week 1. Put `library(tidyverse)` in an early chunk so every later chunk can use it. Use `echo` to control whether we see your code. Use `include: false` for setup.
+
+A chunk option overrides the document `execute:` default for that one chunk only.
+
+---
+
+## 10. The Same Options in R Markdown
+
+R Markdown uses the same three ideas. The spelling and the button are different.
+
+The header uses `output:` instead of `format:`, and underscores instead of hyphens:
 
 ```markdown
 ---
 title: "Week 1 practice"
 author: "Your Name"
-output: html_document
+output:
+  html_document:
+    toc: true
+    number_sections: true
+  pdf_document:
+    toc: true
+    number_sections: true
 ---
+```
+
+Chunk options often sit in the fence line instead of on `#|` lines:
+
+````markdown
+```{r echo=FALSE, warning=FALSE, include=TRUE}
+mean(1:5)
+```
+````
+
+Document-wide defaults look like this, usually in a setup chunk:
+
+```r
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
 ```
 
 The button is **Knit**, not **Render**. The idea is the same: Markdown plus code chunks, run in a fresh session.
 
-If an old assignment or a book gives you a `.Rmd` file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto.
+If an old assignment or a book gives you a `.Rmd` file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto. Quarto will also accept the older `{r echo=FALSE}` fence style if you open an old example.
 
 Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.
 
 ---
 
-## 8. What to Use When
+## 11. What to Use When
 
 ```text
 Need to keep code and rerun it?
@@ -201,6 +439,15 @@ Lab 1
 
 Later homework
   → a Quarto document, unless the assignment says otherwise
+```
+
+Three controls to remember:
+
+```text
+YAML              → how the document is built
+echo / eval / include → what each chunk shows and whether it runs
+number-sections   → heading numbers
+PDF format        → printed page numbers
 ```
 
 Note **1.1** is how you run a script and find the working directory. Note **1.3** is how you import `students.csv`. Lab 1 uses both. Lab 1 does not need this note.
