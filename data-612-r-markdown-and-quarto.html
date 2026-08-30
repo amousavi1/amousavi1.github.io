@@ -546,7 +546,31 @@ mean(1:5)
 <p>If an old assignment or a book gives you a <code>.Rmd</code> file, knit it. There is no need to rewrite it as Quarto. When you start a new writeup, prefer a <code>.qmd</code> file. Quarto will also accept the older <code>{r echo=FALSE}</code> fence style if you open an old example.</p>
 <p>Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.</p>
 <hr />
-<h2>11. What to Use When</h2>
+<h2>11. A Sample Report</h2>
+<p>A complete <code>.qmd</code> is easier to learn from than isolated snippets. Download
+<a href="files/data-612/sample-quarto-report.qmd">sample-quarto-report.qmd</a>
+and Render it in an RStudio project.</p>
+<p>The report uses the built-in <code>mtcars</code> data, so you do not need <code>students.csv</code>.
+Open the source and read the comments. They mark:</p>
+<ul>
+<li>the YAML header (<code>toc</code>, <code>number-sections</code>, <code>execute</code>)</li>
+<li>a setup chunk with <code>include: false</code></li>
+<li>inline R for numbers that should not be typed by hand</li>
+<li>cross-references (<code>@tbl-vars</code>, <code>@fig-hist</code>, <code>@sec-extensions</code>)</li>
+<li>two plots side by side (<code>layout-ncol</code>)</li>
+<li>a short LaTeX equation</li>
+</ul>
+<p>You also need <code>broom</code> for the model table. Install it once in the console if
+R says the package is missing:</p>
+<pre><code class="language-r">install.packages(&quot;broom&quot;)
+</code></pre>
+<p>If Render to PDF fails, change <code>format: pdf</code> to <code>format: html</code> and Render
+again. A rendered
+<a href="files/data-612/sample-quarto-report.pdf">PDF of the sample</a>
+is posted so you can see the intended result.</p>
+<p>Lab 1 does not need this file.</p>
+<hr />
+<h2>12. What to Use When</h2>
 <pre><code class="language-text">Need to keep code and rerun it?
   → .R script
 
@@ -577,7 +601,7 @@ PDF format        → printed page numbers
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-30T10:15:00-04:00">August 30, 2026, 10:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-30T11:55:00-04:00">August 30, 2026, 11:55 AM EDT</time></div>
             </footer>
         </div>
 

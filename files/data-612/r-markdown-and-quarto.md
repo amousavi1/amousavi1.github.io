@@ -426,7 +426,39 @@ Jupyter notebooks are a third interactive format, used heavily in Python. We wil
 
 ---
 
-## 11. What to Use When
+## 11. A Sample Report
+
+A complete `.qmd` is easier to learn from than isolated snippets. Download
+[sample-quarto-report.qmd](files/data-612/sample-quarto-report.qmd)
+and Render it in an RStudio project.
+
+The report uses the built-in `mtcars` data, so you do not need `students.csv`.
+Open the source and read the comments. They mark:
+
+- the YAML header (`toc`, `number-sections`, `execute`)
+- a setup chunk with `include: false`
+- inline R for numbers that should not be typed by hand
+- cross-references (`@tbl-vars`, `@fig-hist`, `@sec-extensions`)
+- two plots side by side (`layout-ncol`)
+- a short LaTeX equation
+
+You also need `broom` for the model table. Install it once in the console if
+R says the package is missing:
+
+```r
+install.packages("broom")
+```
+
+If Render to PDF fails, change `format: pdf` to `format: html` and Render
+again. A rendered
+[PDF of the sample](files/data-612/sample-quarto-report.pdf)
+is posted so you can see the intended result.
+
+Lab 1 does not need this file.
+
+---
+
+## 12. What to Use When
 
 ```text
 Need to keep code and rerun it?

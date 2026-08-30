@@ -1,0 +1,227 @@
+---
+# YAML is the control panel. It does not run R.
+# It tells Quarto the title, the output format, and default chunk rules.
+title: "Fuel Efficiency in Motor Vehicles: An Exploratory Report"
+subtitle: "A Sample Report Demonstrating Quarto Features"
+author: "Student Name"
+date: today                          # filled in when you Render
+format:
+  pdf:                               # change to html if PDF / LaTeX fails
+    toc: true                        # table of contents from # / ## headings
+    number-sections: true            # 1, 1.1, 2, ... on headings
+    number-depth: 3                  # number down to ### as well
+    fig-width: 6                     # default figure width (inches)
+    fig-height: 4
+    colorlinks: true                 # blue links in the PDF
+execute:
+  echo: true                         # show code unless a chunk overrides this
+  warning: false                     # hide warnings (package startup, etc.)
+  message: false                     # hide messages (readr column types, etc.)
+---
+
+::: {.callout-note}
+This is a sample, not an assignment. Comments that start with `#` explain
+what Quarto is doing. You can delete them when you write your own report.
+Render the file from an RStudio project. If PDF fails, change `format: pdf`
+to `format: html` and click Render again.
+:::
+
+```{r setup}
+#| include: false
+# include: false → R still runs this chunk, but the reader sees neither
+# the code nor the output. Use this for libraries and data prep.
+
+# Load packages. Do this once per document, near the top.
+# Do not put install.packages() here. Install once in the console.
+library(tidyverse)
+library(knitr)
+library(broom) # turns model output into a table; install once if needed
+
+# mtcars ships with R, so this report needs no external CSV.
+data(mtcars)
+# rownames_to_column() makes the car names an ordinary column.
+mtcars <- mtcars |> rownames_to_column(var = "model")
+```
+
+# Introduction
+
+Fuel efficiency is one of the most important factors car buyers consider.
+In this report, we explore the relationship between a vehicle's weight and
+its fuel efficiency using the classic `mtcars` dataset, which contains
+specifications for `r nrow(mtcars)` car models from a 1974 *Motor Trend*
+magazine issue.
+
+Notice that the number of cars above (`r nrow(mtcars)`) was **not typed
+manually** — it was inserted with inline R code
+(`` `r knitr::inline_expr("nrow(mtcars)")` ``). This is one of the most
+useful habits to build: numbers that come from your data should be computed,
+not hard-coded, so the report updates automatically if the data changes.
+
+# Data Overview
+
+## Variable Description
+
+@tbl-vars describes the variables used in this report.
+<!-- @tbl-vars is a cross-reference. It becomes a clickable "Table 1" because
+     the next chunk has label: tbl-vars and tbl-cap. -->
+
+```{r}
+#| label: tbl-vars
+#| tbl-cap: "Description of key variables in the mtcars dataset"
+# label + tbl-cap together create a numbered table you can cite with @tbl-...
+
+var_table <- tibble(
+  Variable = c("mpg", "wt", "hp", "cyl"),
+  Description = c(
+    "Miles per gallon (fuel efficiency)",
+    "Weight (in 1000 lbs)",
+    "Gross horsepower",
+    "Number of cylinders"
+  )
+)
+
+kable(var_table) # knitr::kable() prints a clean table in HTML or PDF
+```
+
+## A Quick Look at the Data
+
+Here are the first few rows of the raw data, shown in @tbl-head.
+
+```{r}
+#| label: tbl-head
+#| tbl-cap: "First six cars in the dataset"
+
+kable(head(mtcars[, c("model", "mpg", "wt", "hp", "cyl")]))
+```
+
+# Exploratory Analysis
+
+## Distribution of Fuel Efficiency
+
+The average fuel efficiency across all cars is
+`r round(mean(mtcars$mpg), 1)` miles per gallon, with a standard deviation
+of `r round(sd(mtcars$mpg), 1)`.
+The two numbers in that sentence are inline R, not typed by hand.
+@fig-hist shows the full distribution.
+
+```{r}
+#| label: fig-hist
+#| fig-cap: "Distribution of miles per gallon across all cars"
+# label + fig-cap create a numbered figure you can cite with @fig-...
+
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 3, fill = "steelblue", color = "white") +
+  labs(x = "Miles per gallon", y = "Count") +
+  theme_minimal()
+```
+
+## Weight, Horsepower, and Efficiency
+
+To compare two relationships at once, we place two plots side by side using
+`layout-ncol`, shown in @fig-side.
+
+```{r}
+#| label: fig-side
+#| fig-cap: "Weight and horsepower versus fuel efficiency"
+#| layout-ncol: 2
+#| fig-subcap:
+#|   - "Weight vs. MPG"
+#|   - "Horsepower vs. MPG"
+# Two ggplot() calls in one chunk + layout-ncol: 2 → two panels.
+# fig-subcap labels each panel. The chunk still has one overall @fig-side.
+
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(color = "darkred") +
+  labs(x = "Weight (1000 lbs)", y = "MPG") +
+  theme_minimal()
+
+ggplot(mtcars, aes(x = hp, y = mpg)) +
+  geom_point(color = "darkgreen") +
+  labs(x = "Horsepower", y = "MPG") +
+  theme_minimal()
+```
+
+Both panels suggest a **negative relationship**: heavier, more powerful
+cars tend to be less fuel efficient.
+
+# Statistical Model
+
+## Model Specification
+
+We fit a simple linear regression of fuel efficiency on weight:
+
+$$
+\text{mpg}_i = \beta_0 + \beta_1 \cdot \text{wt}_i + \varepsilon_i
+$$
+
+<!-- Dollar signs mark LaTeX math. One $ is inline; two $$ is a centered equation. -->
+
+where $\beta_0$ is the intercept, $\beta_1$ is the slope, and
+$\varepsilon_i$ is the error term for car $i$.
+
+## Model Results
+
+```{r}
+#| label: tbl-model
+#| tbl-cap: "Linear regression results: MPG explained by weight"
+
+model <- lm(mpg ~ wt, data = mtcars)
+# broom::tidy() puts the coefficients in a data frame kable() can print.
+kable(broom::tidy(model), digits = 3)
+```
+
+The fitted model can be written as:
+
+$$
+\widehat{\text{mpg}} = `r round(coef(model)[1], 2)` \; `r round(coef(model)[2], 2)` \times \text{wt}
+$$
+
+<!-- Inline R can sit inside a math equation. coef(model) comes from the
+     chunk above; Render runs the file from top to bottom. -->
+
+This means that for every additional 1,000 lbs of weight, fuel efficiency
+drops by about `r abs(round(coef(model)[2], 2))` miles per gallon, holding
+all else constant.
+
+## Model Fit
+
+```{r}
+#| label: fig-fit
+#| fig-cap: "Fitted regression line over the observed data"
+
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(color = "steelblue") +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  labs(x = "Weight (1000 lbs)", y = "Miles per gallon") +
+  theme_minimal()
+```
+
+The model explains
+$R^2 = `r round(summary(model)$r.squared, 2)`$
+of the variation in fuel efficiency — a strong relationship for a
+single-variable model.
+
+# Conclusion
+
+This short analysis shows that vehicle weight is a strong predictor of
+fuel efficiency: heavier cars consistently get fewer miles per gallon.
+A natural next step would be to extend the model in @sec-extensions.
+
+## Possible Extensions {#sec-extensions}
+
+<!-- {#sec-extensions} names this heading so @sec-extensions can link here. -->
+
+Future work could include:
+
+- Adding horsepower and cylinder count as additional predictors
+- Comparing automatic vs. manual transmissions
+- Checking whether the relationship is linear or curved at extreme weights
+
+# References {.unnumbered}
+
+<!-- {.unnumbered} keeps this heading out of 1, 2, 3, ... even with
+     number-sections: true. -->
+
+Henderson, H. V. and Velleman, P. F. (1981). *Building multiple regression
+models interactively.* Biometrics, 37, 391-411. (Source of the `mtcars`
+dataset, distributed with base R.)
