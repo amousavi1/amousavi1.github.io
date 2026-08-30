@@ -108,7 +108,7 @@
                             <a href="files/data-612/r-markdown-and-quarto.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Quarto is the document format for this course. YAML is the control panel; chunk options decide what the reader sees.
+                            Prefer Quarto for new writeups. YAML is the control panel; chunk options decide what the reader sees.
                         </p>
 <h2>1. Three Kinds of Files</h2>
 <p>RStudio can edit more than one kind of file. The three you will see in this course are:</p>
@@ -129,7 +129,7 @@
 <tr>
 <td>Quarto</td>
 <td><code>.qmd</code></td>
-<td>A document that mixes writing and R code. <strong>This is the format we use.</strong></td>
+<td>A document that mixes writing and R code. <strong>Prefer this for new writeups.</strong></td>
 </tr>
 <tr>
 <td>R Markdown</td>
@@ -140,20 +140,24 @@
 </table></div>
 <p>A <strong>script</strong> is the right tool when the product is code: a lab, a function, a data-cleaning pipeline.</p>
 <p>A <strong>document</strong> is the right tool when the product is something a human should read: a homework writeup, a report, slides. The file holds prose, headings, and code. RStudio can turn that file into HTML, PDF, or Word.</p>
-<p>Lab 1 is a script. Later assignments will ask for a Quarto document. You should create and render one this week so that request is not a surprise.</p>
+<p>Lab 1 is a script. Later writeups are a good place to use Quarto. Create and render one this week so the habit is already there.</p>
 <hr />
 <h2>2. Why Quarto</h2>
-<p><strong>Quarto</strong> is the current document system from Posit, the same people who make RStudio. It is the successor to R Markdown.</p>
-<p>The department wants you to learn Quarto. New work in this course should be a <code>.qmd</code> file, not a <code>.Rmd</code> file, unless an assignment says otherwise.</p>
-<p>Quarto is the better default because:</p>
+<p><strong>Quarto</strong> is the current document system from Posit, the same people who make RStudio. It grew out of R Markdown and is the better place to start for new work.</p>
+<p>R Markdown still works. You will open <code>.Rmd</code> files in older notes, textbooks, and Stack Overflow answers. Knit those files. When you create a new writeup, reach for a <code>.qmd</code> file instead.</p>
+<p>Quarto is the stronger default because:</p>
 <ul>
-<li>it is what is maintained and taught now</li>
-<li>the same file can become HTML, PDF, Word, or slides</li>
-<li>it still uses ordinary Markdown and R code chunks</li>
-<li>it also works with Python and other languages later, if you need that</li>
-<li>RStudio's <strong>Render</strong> button is built around it</li>
+<li>Posit is actively developing it. New features land in Quarto first. R Markdown is stable, but it is no longer where the new work happens.</li>
+<li>One format covers HTML, PDF, Word, and slides with more consistent YAML. You spend less time remembering <code>html_document</code> versus <code>pdf_document</code>.</li>
+<li>Chunk options sit on <code>#|</code> lines, so they are easy to read and change. The older <code>{r echo=FALSE, warning=FALSE}</code> fence gets crowded fast.</li>
+<li>Document-wide <code>execute:</code> defaults live in the YAML. You set <code>echo</code> or <code>warning</code> once instead of repeating <code>knitr::opts_chunk$set()</code> in a setup chunk.</li>
+<li>The same <code>.qmd</code> file can include R now and Python later if a project needs both. R Markdown is built around R.</li>
+<li>HTML output is easier to share. <code>embed-resources: true</code> makes a single file you can email or submit, without a folder of extra plots.</li>
+<li>Cross-references, callouts, and diagrams are first-class later in the course. You do not have to switch tools when a writeup gets more ambitious.</li>
+<li>RStudio's <strong>Render</strong> button and the visual editor are built around Quarto.</li>
+<li>Learning Quarto first makes an old <code>.Rmd</code> easy to read. The reverse is less true for newer options.</li>
 </ul>
-<p>R Markdown is not wrong. You will still open <code>.Rmd</code> files in older notes, Stack Overflow answers, and some textbooks. Read those files. For new work here, start a Quarto document.</p>
+<p>You do not have to convert every file you find. Prefer Quarto when you start something new.</p>
 <p>Quarto is a <strong>program</strong> that RStudio calls. It is not an R package. Recent RStudio / Posit Desktop already includes it. If <strong>Render</strong> is missing, install Quarto from <a href="https://quarto.org/">quarto.org</a> and reopen RStudio.</p>
 <p>You can confirm it is available in RStudio's <strong>Terminal</strong> pane:</p>
 <pre><code class="language-text">quarto --version
@@ -539,7 +543,7 @@ mean(1:5)
 )
 </code></pre>
 <p>The button is <strong>Knit</strong>, not <strong>Render</strong>. The idea is the same: Markdown plus code chunks, run in a fresh session.</p>
-<p>If an old assignment or a book gives you a <code>.Rmd</code> file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto. Quarto will also accept the older <code>{r echo=FALSE}</code> fence style if you open an old example.</p>
+<p>If an old assignment or a book gives you a <code>.Rmd</code> file, knit it. There is no need to rewrite it as Quarto. When you start a new writeup, prefer a <code>.qmd</code> file. Quarto will also accept the older <code>{r echo=FALSE}</code> fence style if you open an old example.</p>
 <p>Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.</p>
 <hr />
 <h2>11. What to Use When</h2>
@@ -547,16 +551,16 @@ mean(1:5)
   → .R script
 
 Need a readable writeup with results baked in?
-  → .qmd (Quarto)
+  → start a .qmd (Quarto)
 
 Someone handed you an old .Rmd?
-  → knit it; do not rewrite it unless you were asked to
+  → knit it; no need to rewrite it
 
 Lab 1
   → lab01.R
 
 Later homework
-  → a Quarto document, unless the assignment says otherwise
+  → Quarto is the better default; an assigned .Rmd is still fine
 </code></pre>
 <p>Three controls to remember:</p>
 <pre><code class="language-text">YAML              → how the document is built
@@ -573,7 +577,7 @@ PDF format        → printed page numbers
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-30T09:55:00-04:00">August 30, 2026, 9:55 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-30T10:15:00-04:00">August 30, 2026, 10:15 AM EDT</time></div>
             </footer>
         </div>
 

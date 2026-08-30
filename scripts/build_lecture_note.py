@@ -16,8 +16,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-30T09:55:00-04:00"
-LAST_UPDATED_TEXT = "August 30, 2026, 9:55 AM EDT"
+LAST_UPDATED_ISO = "2026-08-30T10:15:00-04:00"
+LAST_UPDATED_TEXT = "August 30, 2026, 10:15 AM EDT"
 
 NOTES = [
     {
@@ -43,7 +43,7 @@ NOTES = [
     {
         "slug": "r-markdown-and-quarto",
         "title": "1.5 R Markdown and Quarto",
-        "lead": "Quarto is the document format for this course. YAML is the control panel; chunk options decide what the reader sees.",
+        "lead": "Prefer Quarto for new writeups. YAML is the control panel; chunk options decide what the reader sees.",
     },
     {
         "slug": "lab-1-looking-under-the-hood",

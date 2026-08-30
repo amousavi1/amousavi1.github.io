@@ -5,32 +5,36 @@ RStudio can edit more than one kind of file. The three you will see in this cour
 | File | Extension | What it is for |
 | ---- | --------- | -------------- |
 | R script | `.R` | Code you want to keep and rerun |
-| Quarto | `.qmd` | A document that mixes writing and R code. **This is the format we use.** |
+| Quarto | `.qmd` | A document that mixes writing and R code. **Prefer this for new writeups.** |
 | R Markdown | `.Rmd` | The older document format with the same idea |
 
 A **script** is the right tool when the product is code: a lab, a function, a data-cleaning pipeline.
 
 A **document** is the right tool when the product is something a human should read: a homework writeup, a report, slides. The file holds prose, headings, and code. RStudio can turn that file into HTML, PDF, or Word.
 
-Lab 1 is a script. Later assignments will ask for a Quarto document. You should create and render one this week so that request is not a surprise.
+Lab 1 is a script. Later writeups are a good place to use Quarto. Create and render one this week so the habit is already there.
 
 ---
 
 ## 2. Why Quarto
 
-**Quarto** is the current document system from Posit, the same people who make RStudio. It is the successor to R Markdown.
+**Quarto** is the current document system from Posit, the same people who make RStudio. It grew out of R Markdown and is the better place to start for new work.
 
-The department wants you to learn Quarto. New work in this course should be a `.qmd` file, not a `.Rmd` file, unless an assignment says otherwise.
+R Markdown still works. You will open `.Rmd` files in older notes, textbooks, and Stack Overflow answers. Knit those files. When you create a new writeup, reach for a `.qmd` file instead.
 
-Quarto is the better default because:
+Quarto is the stronger default because:
 
-- it is what is maintained and taught now
-- the same file can become HTML, PDF, Word, or slides
-- it still uses ordinary Markdown and R code chunks
-- it also works with Python and other languages later, if you need that
-- RStudio's **Render** button is built around it
+- Posit is actively developing it. New features land in Quarto first. R Markdown is stable, but it is no longer where the new work happens.
+- One format covers HTML, PDF, Word, and slides with more consistent YAML. You spend less time remembering `html_document` versus `pdf_document`.
+- Chunk options sit on `#|` lines, so they are easy to read and change. The older `{r echo=FALSE, warning=FALSE}` fence gets crowded fast.
+- Document-wide `execute:` defaults live in the YAML. You set `echo` or `warning` once instead of repeating `knitr::opts_chunk$set()` in a setup chunk.
+- The same `.qmd` file can include R now and Python later if a project needs both. R Markdown is built around R.
+- HTML output is easier to share. `embed-resources: true` makes a single file you can email or submit, without a folder of extra plots.
+- Cross-references, callouts, and diagrams are first-class later in the course. You do not have to switch tools when a writeup gets more ambitious.
+- RStudio's **Render** button and the visual editor are built around Quarto.
+- Learning Quarto first makes an old `.Rmd` easy to read. The reverse is less true for newer options.
 
-R Markdown is not wrong. You will still open `.Rmd` files in older notes, Stack Overflow answers, and some textbooks. Read those files. For new work here, start a Quarto document.
+You do not have to convert every file you find. Prefer Quarto when you start something new.
 
 Quarto is a **program** that RStudio calls. It is not an R package. Recent RStudio / Posit Desktop already includes it. If **Render** is missing, install Quarto from [quarto.org](https://quarto.org/) and reopen RStudio.
 
@@ -416,7 +420,7 @@ knitr::opts_chunk$set(
 
 The button is **Knit**, not **Render**. The idea is the same: Markdown plus code chunks, run in a fresh session.
 
-If an old assignment or a book gives you a `.Rmd` file, you can still knit it. Do not convert every file you find. For new work in DATA 612, use Quarto. Quarto will also accept the older `{r echo=FALSE}` fence style if you open an old example.
+If an old assignment or a book gives you a `.Rmd` file, knit it. There is no need to rewrite it as Quarto. When you start a new writeup, prefer a `.qmd` file. Quarto will also accept the older `{r echo=FALSE}` fence style if you open an old example.
 
 Jupyter notebooks are a third interactive format, used heavily in Python. We will not use them here.
 
@@ -429,16 +433,16 @@ Need to keep code and rerun it?
   → .R script
 
 Need a readable writeup with results baked in?
-  → .qmd (Quarto)
+  → start a .qmd (Quarto)
 
 Someone handed you an old .Rmd?
-  → knit it; do not rewrite it unless you were asked to
+  → knit it; no need to rewrite it
 
 Lab 1
   → lab01.R
 
 Later homework
-  → a Quarto document, unless the assignment says otherwise
+  → Quarto is the better default; an assigned .Rmd is still fine
 ```
 
 Three controls to remember:
