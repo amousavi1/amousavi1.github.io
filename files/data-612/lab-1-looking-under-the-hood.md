@@ -1,6 +1,6 @@
-Work in an **R script**, not only in the console. Save it as `lab01.R`.
+Work in an **R script**, not only in the console. Save the predict-run work as `lab01.R`. Section G is a short Quarto document.
 
-Do **1.1**, **1.2**, **1.3**, and **1.4** first. You will need `tidyverse` installed as in note 1.2, and you will import `students.csv` as in note 1.3. Note **1.5** is not needed for this lab.
+Do **1.1** through **1.5** first. You will need `tidyverse` installed as in note 1.2, and you will import `students.csv` as in note 1.3. Note **1.5** is for section G.
 
 Download [students.csv](files/data-612/students.csv) and put it in your working directory (`getwd()` should see it), or use a relative path from note 1.3.
 
@@ -10,7 +10,7 @@ For every item marked **Predict**, do the following in order:
 2. Run the code.
 3. Write a short explanation of *why* R did that, using the rules from the notes. "R printed that" is not an explanation.
 
-The notes give you the rules. The lab asks you to apply them *before* you see the output. Some results will surprise you. That is the point. You should not need material that is not in 1.1–1.4.
+The notes give you the rules. The lab asks you to apply them *before* you see the output. Some results will surprise you. That is the point. You should not need material that is not in 1.1–1.5.
 
 Do not look up the answer until you have a written prediction.
 
@@ -136,26 +136,33 @@ Note 1.4 says R recycles the shorter vector in arithmetic. What rule is R using 
 ### C3. Predict
 
 ```r
-student <- list(name = "Ada", age = 36, grades = c(90, 85))
-student[1]
-student[[1]]
-student$name
-student["name"]
+record <- list(
+  info = list(name = "Ada", year = 1L),
+  scores = c(90, 85)
+)
+record[1]
+record[[1]]
+record$info$name
+record[["info"]][1]
+record[["info"]][[1]]
 ```
 
-Note 1.4 distinguishes `[`, `[[`, and `$`. What does each line return, and which results are still lists?
+Note 1.4 distinguishes `[`, `[[`, and `$`. `info` is a list inside a list. What does each line return, and which results are still lists?
 
 ### C4. Predict
 
 ```r
 students <- data.frame(name = c("Ada", "Bob"), grade = c(91, 74))
+typeof(students)
+is.list(students)
+is.data.frame(students)
 class(students[, "grade"])
 class(students[, "grade", drop = FALSE])
 class(students["grade"])
 class(students[["grade"]])
 ```
 
-One of these is a data frame, one is a vector, and the difference is easy to miss in a larger script. Which is which, and what is `drop` for?
+`typeof()` and `is.list()` are from note 1.4. Why can a data frame be a list and a data frame at the same time? Which extractions are still data frames, and what is `drop` for?
 
 ### C5. Predict
 
@@ -241,11 +248,11 @@ Where did `ggplot2` go on the search path, and why does that position matter whe
 ### E1. Predict
 
 ```r
-c(1, 2) + c(10, 20, 30, 40)
-1:3 * 1:6
+seq(from = 1, to = 3) + c(10, 20, 30, 40, 50, 60)
+seq(1, 6, 2) * c(TRUE, FALSE)
 ```
 
-Note 1.4 says R recycles the shorter vector. Write the recycled vectors out by hand. When does R warn, and when does it stay silent?
+Note 1.4 covers `seq()`, named arguments, and recycling. Write the recycled vectors out by hand. When does R warn, and when does it stay silent? What did `TRUE` and `FALSE` become?
 
 ### E2. Predict
 
@@ -269,6 +276,9 @@ Place `students.csv` in your working directory.
 ### F1. Run and compare
 
 ```r
+file.exists("students.csv")
+file.exists(file.path(".", "students.csv"))
+
 base_students <- read.csv("students.csv")
 tidy_students <- readr::read_csv("students.csv")
 
@@ -278,7 +288,7 @@ str(base_students)
 str(tidy_students)
 ```
 
-Both read the same file. Why are the objects not the same class? What extra classes does `read_csv()` attach, and what is a tibble claiming to be besides a data frame?
+Note 1.3: `.` is the current directory, and `file.path()` builds a path. Why are the two existence checks the same? Both read the same file. Why are the objects not the same class? What extra classes does `read_csv()` attach, and what is a tibble claiming to be besides a data frame?
 
 ### F2. Predict
 
@@ -292,12 +302,35 @@ One of these uses the vectorized arithmetic from note 1.4. Which extraction stil
 
 ---
 
+## G. A document, not a script
+
+A script is the right tool for A–F. Note 1.5 is the right tool for a short writeup.
+
+Create `lab01_practice.qmd` as in note 1.5: YAML with a title, your name, and `format: html`. Put this chunk in it:
+
+````markdown
+```{r}
+#| echo: true
+
+students <- read.csv("students.csv")
+typeof(students)
+is.list(students)
+```
+````
+
+Render it. Then set `#| echo: false` and render again.
+
+What disappeared from the HTML, and why? Write one sentence in the Quarto file (ordinary prose, not a comment) answering that. The `typeof()` / `is.list()` lines are the same idea as C4.
+
+---
+
 ## What to submit
 
-Submit `lab01.R` with:
+Submit `lab01.R` and `lab01_practice.qmd` with:
 
 - a prediction comment above every **Predict** block
 - the code
 - a short explanation comment below the output of each block
+- for G, the Quarto file you ended with (`#| echo: false`) and the sentence about what disappeared
 
 If a result still feels impossible after you have explained it, write down the question you now have. That question is part of the lab.

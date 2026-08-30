@@ -122,7 +122,7 @@ A useful habit is:
 
 Save the script. You can reopen it in a later session.
 
-Lab 1 is a script. For later writeups, prefer Quarto; see note **1.5**.
+Lab 1 is mostly a script (`lab01.R`). Section G is a short Quarto file; see note **1.5**.
 
 ---
 

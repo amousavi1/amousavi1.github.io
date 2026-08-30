@@ -12,7 +12,7 @@ A **script** is the right tool when the product is code: a lab, a function, a da
 
 A **document** is the right tool when the product is something a human should read: a homework writeup, a report, slides. The file holds prose, headings, and code. RStudio can turn that file into HTML, PDF, or Word.
 
-Lab 1 is a script. Later writeups are a good place to use Quarto. Create and render one this week so the habit is already there.
+Lab 1 is mostly a script (`lab01.R`). Section G asks you to create and render a short Quarto file so the habit is already there.
 
 ---
 
@@ -51,7 +51,7 @@ quarto --version
 1. **File → New File → Quarto Document…**
 2. Choose **HTML** as the default format this week.
 3. Give it a title and your name.
-4. Save it in your project folder with a `.qmd` extension, for example `week01_practice.qmd`.
+4. Save it in your project folder with a `.qmd` extension, for example `lab01_practice.qmd`.
 
 An `.qmd` file has three parts:
 
