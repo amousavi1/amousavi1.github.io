@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-08-30T15:25:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-01T18:30:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -116,6 +116,7 @@
   }
 
   const TOC_SHORT_TITLES = {
+    'working with students': 'For Students',
     'cardinality-constrained structured optimization': 'Sparse Optimization',
     'sparse and structured quadratic surface support vector machines': 'QSVMs',
     'robust multi-scale and multi-modal learning': 'Multi-Modal Learning',

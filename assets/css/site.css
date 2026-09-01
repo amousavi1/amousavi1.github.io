@@ -23,7 +23,8 @@ body {
 .page__content h2,
 .page__content h3,
 .page__content h4,
-.research-projects h3 {
+.research-projects h3,
+.research-rep h4 {
   font-family: var(--font-display);
   font-optical-sizing: auto;
   font-weight: 600;
@@ -207,6 +208,12 @@ body {
   #main > .page .page__content .news-body {
     text-align: justify !important;
     text-justify: inter-word;
+  }
+
+  #main > .page .page__content figcaption {
+    text-align: left !important;
+    text-justify: auto;
+    hyphens: manual;
   }
 
   #main > .page .page__content .news-body {
@@ -963,4 +970,92 @@ html[data-theme="dark"] .lab-solutions-form input[type="password"] {
 
 html[data-theme="dark"] .lab-solutions-status.is-error {
   color: #ff7b72;
+}
+
+/* Cover banner (LinkedIn-style research graphic) and paper figures. */
+.site-cover {
+  margin: 0 0 1.35em;
+}
+
+.site-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.site-cover figcaption,
+.paper-figure figcaption {
+  margin: 0.45em 0 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+  color: #5f6368;
+  text-align: left;
+}
+
+.student-callout {
+  margin: 0.85em 0 1.6em;
+  padding: 0.85em 1.05em 0.15em;
+  border-left: 3px solid #1a73e8;
+  background: #f4f7fb;
+}
+
+.student-callout p:last-child {
+  margin-bottom: 0.85em;
+}
+
+.research-rep {
+  margin: 1.25em 0 1.65em;
+}
+
+.research-rep h4 {
+  margin: 0 0 0.2em;
+  font-size: 1.05em;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.research-rep__venue {
+  margin: 0 0 0.55em;
+  color: #5f6368;
+  font-size: 0.94em;
+}
+
+.paper-figure {
+  margin: 0.9em 0 0.35em;
+}
+
+.paper-figure img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  padding: 0.45em;
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+}
+
+.paper-figure--narrow img {
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+html[data-theme="dark"] .site-cover figcaption,
+html[data-theme="dark"] .paper-figure figcaption,
+html[data-theme="dark"] .research-rep__venue {
+  color: #b0b0b0;
+}
+
+html[data-theme="dark"] .student-callout {
+  background: #2f2f2f;
+  border-left-color: #58a6ff;
+}
+
+html[data-theme="dark"] .paper-figure img,
+html[data-theme="dark"] .site-cover img {
+  border-color: #5e5e5e;
+  background: #fff;
 }

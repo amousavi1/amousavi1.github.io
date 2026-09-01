@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-research">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -103,62 +103,335 @@
                         <h1 id="page-title" class="page__title" itemprop="headline">Research</h1>
                     </header>
                     <section class="page__content" itemprop="text">
+                        <figure class="site-cover">
+                            <img
+                                src="assets/images/research-cover.jpg"
+                                alt="Banner summarizing three research themes: applications and foundations of large language models, machine learning, and mathematical optimization, with the American University building."
+                            />
+                            <figcaption>
+                                Three connected themes: large language models and responsible AI, machine learning, and mathematical
+                                optimization.
+                            </figcaption>
+                        </figure>
                         <p>
                             My research develops mathematical methods for sparse and structured learning, with emphasis on exact
-                            sparsity, constrained optimization, and machine learning. Current work follows three directions that share
-                            a common base in nonconvex constrained optimization.
+                            sparsity, constrained optimization, and machine learning. The unifying idea is to put structure into models
+                            directly&mdash;how many assets a portfolio may hold, how curved a classifier may be, how text and images
+                            should be fused&mdash;rather than hoping a generic method will discover that structure on its own. Current
+                            work follows three directions that share a common base in nonconvex constrained optimization.
                         </p>
-                        <p>Research interests include:</p>
-                        <ul>
-                            <li>
-                                <strong>General</strong>: natural language processing, machine learning, deep learning, sparse optimization,
-                                large-scale optimization, mathematical finance, mathematical modeling, quantum computing, numerical linear
-                                algebra
-                            </li>
-                            <li>
-                                <strong>Methods and topics</strong>: support vector machines, penalty decomposition, L1-minimization, greedy
-                                algorithms, semidefinite programming, ADMM, inexact Newton methods, matrix decomposition, linear programming,
-                                quadratic optimization, and related areas
-                            </li>
-                        </ul>
+                        <p>
+                            The summaries below are written for students as well as colleagues. Each section names a few representative
+                            papers, explains what the method is doing in plain language, and shows a figure from the paper. The full
+                            list is on the <a href="publications.html">Publications</a> page.
+                        </p>
 
-                        <h2>Current Research</h2>
-                        <ol class="research-projects">
-                            <li>
-                                <h3>Cardinality-Constrained Structured Optimization</h3>
-                                <p>
-                                    I develop penalty decomposition methods that enforce exact sparsity and related structural constraints
-                                    directly, rather than through convex relaxations. This line includes mean-reverting and mean-variance
-                                    portfolios under cardinality, volatility, and CVaR constraints, and an efficient quasi-Newton penalty
-                                    decomposition algorithm for minimization over sparse symmetric sets (under review at
-                                    <em>Mathematical Programming Computation</em>). Related work includes Weaver, a hybrid quantum-classical
-                                    method for binary compressive sensing under matrix uncertainty (submitted to AAAI 2027), and a preprint
-                                    with Mojtaba Soltanalian on the rank-collapse principle for low-rank quadratic optimization.
-                                </p>
-                            </li>
-                            <li>
-                                <h3>Sparse And Structured Quadratic Surface Support Vector Machines</h3>
-                                <p>
-                                    Kernel-free quadratic surface SVMs model nonlinear boundaries without kernel selection, but the number of
-                                    parameters grows quadratically with dimension. I develop sparsity-inducing and Universum-augmented QSVM
-                                    models, including &ell;<sub>1</sub>-regularized QSVMs, quadratic twin SVMs for imbalanced data, and
-                                    &ell;<sub>0</sub>-regularized QSVMs via explicit cardinality constraints. Ongoing work studies ensembles of
-                                    random sparse quadratic twin parametric-margin SVMs (SSRN preprint).
-                                </p>
-                            </li>
-                            <li>
-                                <h3>Robust Multi-Scale And Multi-Modal Learning</h3>
-                                <p>
-                                    This direction develops lightweight, attention-based frameworks for settings with distribution shift,
-                                    heterogeneous modalities, and nonstationary signals. Published and submitted work includes EMO-CARE
-                                    (subject-independent EEG emotion recognition), E-CaTCH (event-centric multimodal misinformation detection),
-                                    and MOMENTA (mixture-of-experts multimodal embeddings with temporal aggregation). Related projects include
-                                    CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation, BLADE (accepted to EMNLP
-                                    2026) for constrained bilevel LLM unlearning, and physics-conditioned attention for next-day wildfire
-                                    spread prediction.
-                                </p>
-                            </li>
-                        </ol>
+                        <h2>Working With Students</h2>
+                        <div class="student-callout">
+                            <p>
+                                I welcome students who are persistent, motivated to learn, and willing to work carefully. You do not
+                                need to already know all of the mathematics. A foundation in programming, machine learning,
+                                optimization, or natural language processing is enough to start. Typical first projects include
+                                reproducing a figure from a paper, implementing a block of an algorithm, or running a controlled
+                                experiment on a public dataset. Several class projects have continued as practicum or independent
+                                research, including work with collaborators at AU and at other universities.
+                            </p>
+                            <p>
+                                If you would like to work together, email
+                                <a href="mailto:mousavi@american.edu">mousavi@american.edu</a> with your CV and a short note on your
+                                interests (coursework, projects, or links to code). Geographic location is not a limitation; remote
+                                collaboration is fully supported.
+                            </p>
+                        </div>
+
+                        <h2>Cardinality-Constrained Structured Optimization</h2>
+                        <p>
+                            Many real problems ask for a solution that is not just accurate, but also <em>simple in a precise
+                            way</em>: hold at most <em>k</em> stocks, keep only a few features, or recover a signal that is sparse.
+                            Convex relaxations are convenient, but they often cannot enforce that exact budget. I develop penalty
+                            decomposition methods that treat cardinality and related constraints directly, with convergence guarantees
+                            and algorithms that stay practical on real data.
+                        </p>
+                        <p>
+                            In finance this means portfolios that are sparse (few assets, lower trading cost), volatile enough to be
+                            useful, and, when desired, mean-reverting, so prices tend to oscillate around a level rather than wander.
+                            The same algorithmic ideas extend to sparse symmetric sets, hybrid quantum-classical compressive sensing
+                            (Weaver), and low-rank quadratic optimization (the rank-collapse principle).
+                        </p>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1111/itor.13442" target="_blank" rel="noopener"
+                                    >Statistical Proxy Based Mean-Reverting Portfolios with Sparsity and Volatility Constraints</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, G. Michailidis. <em>International Transactions in Operational Research</em>, 2025.</p>
+                            <p>
+                                Mean reversion can be measured in more than one way (predictability, portmanteau, and crossing
+                                statistics). This paper puts those proxies into one optimization model with sparsity and volatility
+                                constraints, and solves it with a unifying penalty decomposition method. On S&amp;P&nbsp;500 data, the
+                                crossing-statistics proxy produces the most attractive sparse portfolios among the three.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/mean-reverting-spreads.png"
+                                    alt="Time series of sparse mean-reverting portfolio spreads, daily returns, and cumulative profit for three statistical proxies with cardinality five."
+                                />
+                                <figcaption>
+                                    Sparse mean-reverting portfolios with cardinality <em>k</em>&nbsp;=&nbsp;5. Spreads, daily returns,
+                                    and cumulative profit for the three statistical proxies; the crossing-statistics portfolio (green)
+                                    accumulates the strongest gain in this example. Figure from Mousavi and Michailidis, ITOR 2025.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1007/s10589-025-00653-4" target="_blank" rel="noopener"
+                                    >Cardinality Constrained Mean-Variance Portfolios: A Penalty Decomposition Algorithm</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, G. Michailidis. <em>Computational Optimization and Applications</em>, 2025.</p>
+                            <p>
+                                Markowitz mean-variance optimization is classical, but asking for &ldquo;exactly <em>k</em>
+                                assets&rdquo; makes the problem nonconvex. Regularization can encourage sparsity without letting the
+                                investor set <em>k</em> directly. This paper solves the cardinality-constrained problem with a penalty
+                                decomposition method whose block updates have closed form, and shows that the method is faster than
+                                strong commercial and penalty baselines on real indexes while matching their risk-return profile.
+                            </p>
+                        </div>
+
+                        <p>
+                            Related work in this line includes a penalty decomposition method with greedy improvement for
+                            mean-reverting portfolios
+                            (<a href="https://doi.org/10.1111/itor.13123" target="_blank" rel="noopener">ITOR 2023</a>), sparse
+                            mean-variance-CVaR portfolios with short-selling
+                            (<a href="https://link.springer.com/article/10.1007/s13160-025-00760-z" target="_blank" rel="noopener"
+                                >JJIAM 2026</a
+                            >), an efficient quasi-Newton penalty decomposition algorithm for minimization over sparse symmetric sets
+                            (under review at <em>Mathematical Programming Computation</em>), Weaver, a hybrid quantum-classical method
+                            for binary compressive sensing (submitted to AAAI 2027), and a preprint with Mojtaba Soltanalian on the
+                            rank-collapse principle for low-rank quadratic optimization.
+                        </p>
+
+                        <h2>Sparse And Structured Quadratic Surface Support Vector Machines</h2>
+                        <p>
+                            A linear SVM draws a flat wall between two classes. That is easy to interpret, but many datasets are
+                            separated by a curve. Kernel SVMs can bend the boundary, at the cost of choosing a kernel and losing a
+                            direct geometric picture. Kernel-free quadratic surface SVMs (QSVMs) fit a quadratic surface in the
+                            original features, so the boundary can curve without a kernel. The price is that the number of parameters
+                            grows like the square of the dimension. My work uses sparsity and Universum data so the quadratic model
+                            stays flexible without becoming a dense, hard-to-read surface.
+                        </p>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.3934/jimo.2021046" target="_blank" rel="noopener"
+                                    >Quadratic Surface Support Vector Machine with &ell;<sub>1</sub> Norm Regularization</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                A. Mousavi, Z. Gao, L. Han, A. Lim. <em>Journal of Industrial and Management Optimization</em>, 2022.
+                            </p>
+                            <p>
+                                &ell;<sub>1</sub> regularization on the quadratic coefficients does two useful things. If the data are
+                                essentially linear, a large penalty flattens the surface toward an ordinary SVM. If the data are
+                                quadratic, the same penalty can recover the sparse pattern in the true surface. The figure below is
+                                the simplest picture of why the extra curvature matters: a linear SVM cuts through a U-shaped class
+                                structure, while the quadratic model follows it.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/qsvm-quadratic-boundary.png"
+                                    alt="Scatter plot of two classes with a U-shaped boundary. A linear SVM cuts across the curve, while L1-regularized quadratic SVM follows it."
+                                />
+                                <figcaption>
+                                    Linear SVM versus quadratic surface SVM on quadratically separable data. The curved boundary
+                                    separates the two classes; the linear hyperplane cannot. Figure from Mousavi, Gao, Han, and Lim,
+                                    JIMO 2022.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1007/s00500-023-07860-3" target="_blank" rel="noopener"
+                                    >Sparse &ell;<sub>1</sub>-Norm Quadratic Surface Support Vector Machine with Universum Data</a>
+                            </h4>
+                            <p class="research-rep__venue">H. Moosaei, A. Mousavi, M. Hladík, Z. Gao. <em>Soft Computing</em>, 2023.</p>
+                            <p>
+                                Universum points are examples that belong to neither class. They sit in the gap and tell the
+                                classifier where <em>not</em> to put the boundary. Combined with a quadratic surface and
+                                &ell;<sub>1</sub> sparsity, they improve generalization, especially when labeled data are limited. A
+                                later twin-QSVM paper uses the same idea for imbalanced classification, building two nonparallel
+                                quadratic surfaces so the minority class is not swallowed by the majority class.
+                            </p>
+                            <figure class="paper-figure paper-figure--narrow">
+                                <img
+                                    src="assets/images/research/qsvm-universum.png"
+                                    alt="Schematic of two classes on quadratic curves with Universum points in the middle band between f(x) equals 1 and f(x) equals minus 1."
+                                />
+                                <figcaption>
+                                    Universum points (triangles) occupy the region between the two classes and regularize the
+                                    quadratic decision surface. Figure from Moosaei, Mousavi, Hladík, and Gao, <em>Soft Computing</em>
+                                    2023.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2501.11268" target="_blank" rel="noopener"
+                                    >&ell;<sub>0</sub>-Regularized Quadratic Surface Support Vector Machines</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, R. Zandvakili, Z. Gao. arXiv:2501.11268, 2025 (journal version under review).</p>
+                            <p>
+                                &ell;<sub>1</sub> encourages sparsity; &ell;<sub>0</sub> asks for an exact number of nonzero
+                                quadratic coefficients. A penalty decomposition algorithm produces surfaces that satisfy first-order
+                                optimality conditions, with subproblems that admit closed-form or efficient dual solutions. The
+                                heatmap below is the practical payoff: most entries of the quadratic matrix <em>W</em> are driven to
+                                zero, so the classifier remains nonlinear but uses only a few interactions among features.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/qsvm-l0-sparsity.png"
+                                    alt="Heatmap of a sparse symmetric quadratic coefficient matrix W and vector b, with many exact zeros."
+                                />
+                                <figcaption>
+                                    Exact sparsity in an &ell;<sub>0</sub>-regularized QSVM: many quadratic coefficients are zero,
+                                    while the remaining entries define the curved boundary. Figure from Mousavi, Zandvakili, and Gao,
+                                    arXiv:2501.11268.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <p>
+                            Ongoing work studies ensembles of random sparse quadratic twin parametric-margin SVMs
+                            (<a href="https://ssrn.com/abstract=7022004" target="_blank" rel="noopener">SSRN preprint</a>) and
+                            quadratic twin SVMs for imbalanced data
+                            (<a href="https://link.springer.com/article/10.1007/s13042-026-03059-8" target="_blank" rel="noopener"
+                                >IJMLC 2026</a
+                            >).
+                        </p>
+
+                        <h2>Robust Multi-Scale And Multi-Modal Learning</h2>
+                        <p>
+                            Real systems mix sources: a social media post is text plus an image plus a timestamp; an EEG recording is
+                            many channels over time; a large language model may need to forget some facts without collapsing on the
+                            rest. Distribution shift, class imbalance, and weak alignment between modalities are the usual failure
+                            modes. This direction builds lightweight, attention-based models that stay accurate across subjects,
+                            events, and domains, and that remain efficient enough to train and inspect.
+                        </p>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1109/TCSS.2026.3693647" target="_blank" rel="noopener"
+                                    >E-CaTCH: Event-Centric Cross-Modal Attention with Temporal Consistency and Class-Imbalance Handling
+                                    for Misinformation Detection</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                A. Mousavi, Y. Abdollahinejad, R. Corizzo, N. Japkowicz, Z. Boukouvalas.
+                                <em>IEEE Transactions on Computational Social Systems</em>, 2026.
+                            </p>
+                            <p>
+                                Most detectors score posts one at a time. Misinformation, however, often spreads as a
+                                <em>story</em>: related posts, over days, with text that may not match the image. E-CaTCH groups posts
+                                into pseudo-events, aligns BERT text features with ResNet image features through intra- and
+                                cross-modal attention, and tracks how the event evolves with a trend-aware temporal encoder. Training
+                                uses class weighting, temporal consistency, and hard-example mining so rare deceptive events are not
+                                ignored.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/ecatch-architecture.jpg"
+                                    alt="Architecture diagram of E-CaTCH showing text and image encoders, cross-modal attention with soft gating, an event-level temporal encoder, and an imbalance-aware loss."
+                                />
+                                <figcaption>
+                                    E-CaTCH pipeline: encode text and image, fuse them with gated cross-modal attention, model the
+                                    event over time, and train with an imbalance-aware, temporally consistent loss. Figure from
+                                    Mousavi et al., IEEE TCSS 2026.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2604.16172" target="_blank" rel="noopener"
+                                    >MOMENTA: Mixture-of-Experts over Multimodal Embeddings with Neural Temporal Aggregation for
+                                    Misinformation Detection</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                Y. Abdollahinejad, A. Mousavi, N. Hassan, K. Shu, N. Japkowicz, S. Khosravi, A. Karami.
+                                arXiv:2604.16172, 2026 (submitted).
+                            </p>
+                            <p>
+                                MOMENTA is a later, more modular architecture in the same family. Separate experts specialize per
+                                modality, bidirectional co-attention aligns text and image, and a temporal branch tracks drift and
+                                momentum so a campaign that changes story over time is still recognized. The figure is useful for
+                                students because it makes the design pattern explicit: encode, specialize, align, fuse, then
+                                aggregate over time.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/momenta-architecture.jpg"
+                                    alt="MOMENTA architecture from text and image encoders through mixture-of-experts, cross-modal fusion, temporal aggregation, and the multi-objective training loss."
+                                />
+                                <figcaption>
+                                    MOMENTA: mixture-of-experts encoders, cross-modal fusion, temporal aggregation, and a
+                                    multi-objective training loss. Figure from Abdollahinejad et al., arXiv:2604.16172.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://ieeexplore.ieee.org/document/11348088" target="_blank" rel="noopener"
+                                    >EMO-CARE: EEG Multi-Scale Temporal Modeling with Channel-Aware Feature Attention for Robust
+                                    Subject-Independent Emotion Recognition</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                Y. Abdollahinejad, A. Mousavi, P. Siaplaouras, Z. Boukouvalas, R. Corizzo.
+                                <em>IEEE Open Journal of the Computer Society</em>, 2026.
+                            </p>
+                            <p>
+                                EEG emotion models often look strong when trained and tested on the same person, then fail on a new
+                                person. EMO-CARE is a lightweight network that reads the signal at several time scales and uses
+                                feature-level attention to weight the scales that matter. Evaluated under leave-one-subject-out
+                                protocols on SEED, SEED-V, and DREAMER, it is built for the harder, more realistic setting: the test
+                                subject was never seen in training. A related IEEE Access survey reviews EEG and physiological emotion
+                                recognition methods in healthcare.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2608.22557" target="_blank" rel="noopener"
+                                    >BLADE: Bilevel Low-Rank Augmented-Lagrangian Erasure for LLM Unlearning</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                Md Toufikuzzaman, A. Mousavi, D. Lee. <em>EMNLP 2026</em> (main conference, to appear).
+                            </p>
+                            <p>
+                                Unlearning asks a language model to forget targeted content (privacy, copyright, or outdated facts)
+                                without destroying the rest of its behavior. BLADE treats this as a constrained bilevel problem:
+                                forget in the outer loop, repair retain quality in the inner loop, with a low-rank (LoRA) bottleneck
+                                and an augmented-Lagrangian safeguard. The figure below is the practical test. A competing method
+                                collapses when the forget set grows or when unlearning is applied in sequence; BLADE stays stable.
+                            </p>
+                            <figure class="paper-figure paper-figure--narrow">
+                                <img
+                                    src="assets/images/research/blade-scalability.png"
+                                    alt="Two-panel plot showing BLADE remaining stable as forget-set size and sequential unlearning steps increase, while a baseline method collapses."
+                                />
+                                <figcaption>
+                                    BLADE remains stable as the forget set grows and as unlearning is applied repeatedly; a strong
+                                    baseline collapses. Figure from Toufikuzzaman, Mousavi, and Lee, EMNLP 2026.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <p>
+                            Related projects include CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation,
+                            physics-conditioned attention for next-day wildfire spread prediction, and an earlier IEEE BigData paper
+                            on event-based multimodal fusion for misinformation detection during high-impact events.
+                        </p>
                     </section>
                 </div>
             </article>
@@ -167,7 +440,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-08-30T12:30:00-04:00">August 30, 2026, 12:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-01T18:30:00-04:00">September 1, 2026, 6:30 PM EDT</time></div>
             </footer>
         </div>
 
