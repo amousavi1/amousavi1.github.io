@@ -250,6 +250,17 @@
                                 subject was never seen in training. A related IEEE Access survey reviews EEG and physiological emotion
                                 recognition methods in healthcare.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/emocare-architecture.jpg"
+                                    alt="EMO-CARE pipeline from EEG datasets and preprocessing through dilated temporal convolutions, feature fusion with multi-head attention, classification, and leave-one-subject-out evaluation."
+                                />
+                                <figcaption>
+                                    EMO-CARE: multi-scale temporal convolutions and channel-aware attention, trained and tested
+                                    leave-one-subject-out so the person at test time was never seen in training. Figure from
+                                    Abdollahinejad et al., IEEE OJCS 2026.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <p>
@@ -285,6 +296,17 @@
                                 practical message is that some high-dimensional quadratic models are governed by a much smaller
                                 effective dimension, which can make them easier to analyze and to solve.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/rank-collapse-geometry.png"
+                                    alt="Two-dimensional rank-space plot of projected vertices, an optimal shadow, and a supporting hyperplane illustrating quadratic rank collapse."
+                                />
+                                <figcaption>
+                                    Rank collapse in two-dimensional rank space: the quadratic problem reduces to exposing a low-dimensional
+                                    shadow, so a high-dimensional quadratic is governed by a much smaller effective geometry. Figure from
+                                    Soltanalian and Mousavi, arXiv:2608.07828.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -299,6 +321,17 @@
                                 the measurement matrix is uncertain. The goal is a hybrid method that can recover a sparse binary
                                 signal without pretending the sensing matrix is known exactly.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/weaver-hybrid.png"
+                                    alt="Flowchart of Weaver: measurements with an uncertain sensing matrix, a classical uncertainty-elimination step, a quantum binary search step, a reduced objective, and a global-optimality certificate."
+                                />
+                                <figcaption>
+                                    Schematic of Weaver: a classical step eliminates matrix uncertainty, a quantum step searches the
+                                    binary signal, and a certificate bounds the support of any better solution. Jayathilake, Mousavi,
+                                    and Ayanzadeh, submitted to AAAI 2027.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -315,6 +348,17 @@
                                 Cardinality still caps the number of assets, while CVaR brings a tail-risk measure into the same
                                 penalty-decomposition framework.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/cvar-portfolios.png"
+                                    alt="Four-panel plot of return, risk, Sharpe ratio, and CVaR versus number of stocks for a direct solver, PADM, and the proposed algorithm."
+                                />
+                                <figcaption>
+                                    Sparse mean-variance-CVaR portfolios as the cardinality budget grows. The penalty methods match
+                                    the direct solver on return, risk, Sharpe ratio, and tail risk (CVaR). Figure from Mousavi,
+                                    Salahi, and Boukouvalas, JJIAM 2026.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -331,6 +375,17 @@
                                 keeps the per-iteration cost manageable while still enforcing exact sparsity, rather than a convex
                                 surrogate.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/sparse-symmetric-profiles.png"
+                                    alt="Four performance-profile panels comparing PD-LM1-a with iterative hard thresholding on function evaluations and runtime at two accuracy targets."
+                                />
+                                <figcaption>
+                                    Performance profiles on sparse symmetric problems: PD-LM1-a solves a larger fraction of instances
+                                    than iterative hard thresholding, in both function evaluations and runtime. Figure from Mousavi,
+                                    Kimiaei, Babaie-Kafaki, and Kungurtsev, arXiv:2601.12383.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -371,6 +426,17 @@
                                 decomposition method whose block updates have closed form, and shows that the method is faster than
                                 strong commercial and penalty baselines on real indexes while matching their risk-return profile.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/cardinality-cpu.png"
+                                    alt="Three-panel plot of CPU time versus sparsity level for 226, 476, and 2196 assets, comparing CCMV-PADM, CCMV-PD, and Mosek."
+                                />
+                                <figcaption>
+                                    CPU time versus sparsity on indexes of 226, 476, and 2,196 assets. Penalty decomposition stays
+                                    far below a commercial mixed-integer solver as the universe grows. Figure from Mousavi and
+                                    Michailidis, COAP 2025.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -385,6 +451,17 @@
                                 method: penalty decomposition to a stationary point, then a greedy improvement step based on
                                 semidefinite relaxations of restricted subproblems.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/mean-reverting-pd-2023.png"
+                                    alt="Time series of portfolio spreads, daily ROI, and cumulative profit for a sparse mean-reverting portfolio with cardinality five, comparing penalty decomposition with greedy improvement to an SDP baseline."
+                                />
+                                <figcaption>
+                                    Sparse mean-reverting portfolio with cardinality <em>k</em>&nbsp;=&nbsp;5. Spreads, daily returns,
+                                    and cumulative profit: the penalty method with greedy improvement (PD-G) accumulates a stronger
+                                    gain than the SDP baseline in this example. Figure from Mousavi and Shen, ITOR 2023.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <h2>Sparse And Structured Quadratic Surface Support Vector Machines</h2>
@@ -411,6 +488,17 @@
                                 two nonparallel quadratic surfaces and uses Universum points to support the minority class, so the
                                 classifier is less biased on imbalanced data.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/qsvm-twin-surfaces.png"
+                                    alt="Scatter plot of two classes and Universum points with two nonparallel quadratic surfaces fitted by a twin quadratic SVM."
+                                />
+                                <figcaption>
+                                    Twin quadratic surfaces on imbalanced data. The two nonparallel curves (red and green) separate
+                                    the classes; Universum points (stars) sit in the gap and support the minority class. Figure from
+                                    Moosaei, Hladik, Mousavi, Gao, and Fu, IJMLC 2026.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -424,6 +512,17 @@
                                 subspaces and combines them. The ensemble keeps the kernel-free geometry while spreading the
                                 quadratic parameter cost across weaker models.
                             </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/qsvm-ensemble.png"
+                                    alt="Accuracy versus number of estimators for a sparse quadratic twin SVM ensemble on eight datasets."
+                                />
+                                <figcaption>
+                                    Ensemble accuracy as the number of sparse twin base learners grows. Most datasets stay stable
+                                    once a modest number of estimators is reached; Ionosphere continues to gain. Figure from Yang,
+                                    Luo, Mousavi, Corizzo, and Gao, SSRN 7022004.
+                                </figcaption>
+                            </figure>
                         </div>
 
                         <div class="research-rep">
@@ -511,7 +610,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-01T18:50:00-04:00">September 1, 2026, 6:50 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-01T19:55:00-04:00">September 1, 2026, 7:55 PM EDT</time></div>
             </footer>
         </div>
 
