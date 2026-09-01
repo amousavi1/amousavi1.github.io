@@ -103,27 +103,19 @@
                         <h1 id="page-title" class="page__title" itemprop="headline">Research</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <figure class="site-cover">
-                            <img
-                                src="assets/images/research-cover.jpg"
-                                alt="Banner summarizing three research themes: applications and foundations of large language models, machine learning, and mathematical optimization, with the American University building."
-                            />
-                            <figcaption>
-                                Three connected themes: large language models and responsible AI, machine learning, and mathematical
-                                optimization.
-                            </figcaption>
-                        </figure>
                         <p>
                             My research develops mathematical methods for sparse and structured learning, with emphasis on exact
                             sparsity, constrained optimization, and machine learning. The unifying idea is to put structure into models
                             directly&mdash;how many assets a portfolio may hold, how curved a classifier may be, how text and images
                             should be fused&mdash;rather than hoping a generic method will discover that structure on its own. Current
-                            work follows three directions that share a common base in nonconvex constrained optimization.
+                            work follows three directions that share a common base in nonconvex constrained optimization, listed
+                            below from the most recent line of work to the earlier ones. Papers within each section are in the same
+                            reverse-chronological order.
                         </p>
                         <p>
                             The summaries below are written for students as well as colleagues. Each section names a few representative
-                            papers, explains what the method is doing in plain language, and shows a figure from the paper. The full
-                            list is on the <a href="publications.html">Publications</a> page.
+                            papers, explains what the method is doing in plain language, and shows a figure from the paper when one is
+                            available. The full list is on the <a href="publications.html">Publications</a> page.
                         </p>
 
                         <h2>Working With Students</h2>
@@ -144,173 +136,6 @@
                             </p>
                         </div>
 
-                        <h2>Cardinality-Constrained Structured Optimization</h2>
-                        <p>
-                            Many real problems ask for a solution that is not just accurate, but also <em>simple in a precise
-                            way</em>: hold at most <em>k</em> stocks, keep only a few features, or recover a signal that is sparse.
-                            Convex relaxations are convenient, but they often cannot enforce that exact budget. I develop penalty
-                            decomposition methods that treat cardinality and related constraints directly, with convergence guarantees
-                            and algorithms that stay practical on real data.
-                        </p>
-                        <p>
-                            In finance this means portfolios that are sparse (few assets, lower trading cost), volatile enough to be
-                            useful, and, when desired, mean-reverting, so prices tend to oscillate around a level rather than wander.
-                            The same algorithmic ideas extend to sparse symmetric sets, hybrid quantum-classical compressive sensing
-                            (Weaver), and low-rank quadratic optimization (the rank-collapse principle).
-                        </p>
-
-                        <div class="research-rep">
-                            <h4>
-                                <a href="https://doi.org/10.1111/itor.13442" target="_blank" rel="noopener"
-                                    >Statistical Proxy Based Mean-Reverting Portfolios with Sparsity and Volatility Constraints</a>
-                            </h4>
-                            <p class="research-rep__venue">A. Mousavi, G. Michailidis. <em>International Transactions in Operational Research</em>, 2025.</p>
-                            <p>
-                                Mean reversion can be measured in more than one way (predictability, portmanteau, and crossing
-                                statistics). This paper puts those proxies into one optimization model with sparsity and volatility
-                                constraints, and solves it with a unifying penalty decomposition method. On S&amp;P&nbsp;500 data, the
-                                crossing-statistics proxy produces the most attractive sparse portfolios among the three.
-                            </p>
-                            <figure class="paper-figure">
-                                <img
-                                    src="assets/images/research/mean-reverting-spreads.png"
-                                    alt="Time series of sparse mean-reverting portfolio spreads, daily returns, and cumulative profit for three statistical proxies with cardinality five."
-                                />
-                                <figcaption>
-                                    Sparse mean-reverting portfolios with cardinality <em>k</em>&nbsp;=&nbsp;5. Spreads, daily returns,
-                                    and cumulative profit for the three statistical proxies; the crossing-statistics portfolio (green)
-                                    accumulates the strongest gain in this example. Figure from Mousavi and Michailidis, ITOR 2025.
-                                </figcaption>
-                            </figure>
-                        </div>
-
-                        <div class="research-rep">
-                            <h4>
-                                <a href="https://doi.org/10.1007/s10589-025-00653-4" target="_blank" rel="noopener"
-                                    >Cardinality Constrained Mean-Variance Portfolios: A Penalty Decomposition Algorithm</a>
-                            </h4>
-                            <p class="research-rep__venue">A. Mousavi, G. Michailidis. <em>Computational Optimization and Applications</em>, 2025.</p>
-                            <p>
-                                Markowitz mean-variance optimization is classical, but asking for &ldquo;exactly <em>k</em>
-                                assets&rdquo; makes the problem nonconvex. Regularization can encourage sparsity without letting the
-                                investor set <em>k</em> directly. This paper solves the cardinality-constrained problem with a penalty
-                                decomposition method whose block updates have closed form, and shows that the method is faster than
-                                strong commercial and penalty baselines on real indexes while matching their risk-return profile.
-                            </p>
-                        </div>
-
-                        <p>
-                            Related work in this line includes a penalty decomposition method with greedy improvement for
-                            mean-reverting portfolios
-                            (<a href="https://doi.org/10.1111/itor.13123" target="_blank" rel="noopener">ITOR 2023</a>), sparse
-                            mean-variance-CVaR portfolios with short-selling
-                            (<a href="https://link.springer.com/article/10.1007/s13160-025-00760-z" target="_blank" rel="noopener"
-                                >JJIAM 2026</a
-                            >), an efficient quasi-Newton penalty decomposition algorithm for minimization over sparse symmetric sets
-                            (under review at <em>Mathematical Programming Computation</em>), Weaver, a hybrid quantum-classical method
-                            for binary compressive sensing (submitted to AAAI 2027), and a preprint with Mojtaba Soltanalian on the
-                            rank-collapse principle for low-rank quadratic optimization.
-                        </p>
-
-                        <h2>Sparse And Structured Quadratic Surface Support Vector Machines</h2>
-                        <p>
-                            A linear SVM draws a flat wall between two classes. That is easy to interpret, but many datasets are
-                            separated by a curve. Kernel SVMs can bend the boundary, at the cost of choosing a kernel and losing a
-                            direct geometric picture. Kernel-free quadratic surface SVMs (QSVMs) fit a quadratic surface in the
-                            original features, so the boundary can curve without a kernel. The price is that the number of parameters
-                            grows like the square of the dimension. My work uses sparsity and Universum data so the quadratic model
-                            stays flexible without becoming a dense, hard-to-read surface.
-                        </p>
-
-                        <div class="research-rep">
-                            <h4>
-                                <a href="https://doi.org/10.3934/jimo.2021046" target="_blank" rel="noopener"
-                                    >Quadratic Surface Support Vector Machine with &ell;<sub>1</sub> Norm Regularization</a>
-                            </h4>
-                            <p class="research-rep__venue">
-                                A. Mousavi, Z. Gao, L. Han, A. Lim. <em>Journal of Industrial and Management Optimization</em>, 2022.
-                            </p>
-                            <p>
-                                &ell;<sub>1</sub> regularization on the quadratic coefficients does two useful things. If the data are
-                                essentially linear, a large penalty flattens the surface toward an ordinary SVM. If the data are
-                                quadratic, the same penalty can recover the sparse pattern in the true surface. The figure below is
-                                the simplest picture of why the extra curvature matters: a linear SVM cuts through a U-shaped class
-                                structure, while the quadratic model follows it.
-                            </p>
-                            <figure class="paper-figure">
-                                <img
-                                    src="assets/images/research/qsvm-quadratic-boundary.png"
-                                    alt="Scatter plot of two classes with a U-shaped boundary. A linear SVM cuts across the curve, while L1-regularized quadratic SVM follows it."
-                                />
-                                <figcaption>
-                                    Linear SVM versus quadratic surface SVM on quadratically separable data. The curved boundary
-                                    separates the two classes; the linear hyperplane cannot. Figure from Mousavi, Gao, Han, and Lim,
-                                    JIMO 2022.
-                                </figcaption>
-                            </figure>
-                        </div>
-
-                        <div class="research-rep">
-                            <h4>
-                                <a href="https://doi.org/10.1007/s00500-023-07860-3" target="_blank" rel="noopener"
-                                    >Sparse &ell;<sub>1</sub>-Norm Quadratic Surface Support Vector Machine with Universum Data</a>
-                            </h4>
-                            <p class="research-rep__venue">H. Moosaei, A. Mousavi, M. Hladík, Z. Gao. <em>Soft Computing</em>, 2023.</p>
-                            <p>
-                                Universum points are examples that belong to neither class. They sit in the gap and tell the
-                                classifier where <em>not</em> to put the boundary. Combined with a quadratic surface and
-                                &ell;<sub>1</sub> sparsity, they improve generalization, especially when labeled data are limited. A
-                                later twin-QSVM paper uses the same idea for imbalanced classification, building two nonparallel
-                                quadratic surfaces so the minority class is not swallowed by the majority class.
-                            </p>
-                            <figure class="paper-figure paper-figure--narrow">
-                                <img
-                                    src="assets/images/research/qsvm-universum.png"
-                                    alt="Schematic of two classes on quadratic curves with Universum points in the middle band between f(x) equals 1 and f(x) equals minus 1."
-                                />
-                                <figcaption>
-                                    Universum points (triangles) occupy the region between the two classes and regularize the
-                                    quadratic decision surface. Figure from Moosaei, Mousavi, Hladík, and Gao, <em>Soft Computing</em>
-                                    2023.
-                                </figcaption>
-                            </figure>
-                        </div>
-
-                        <div class="research-rep">
-                            <h4>
-                                <a href="https://arxiv.org/abs/2501.11268" target="_blank" rel="noopener"
-                                    >&ell;<sub>0</sub>-Regularized Quadratic Surface Support Vector Machines</a>
-                            </h4>
-                            <p class="research-rep__venue">A. Mousavi, R. Zandvakili, Z. Gao. arXiv:2501.11268, 2025 (journal version under review).</p>
-                            <p>
-                                &ell;<sub>1</sub> encourages sparsity; &ell;<sub>0</sub> asks for an exact number of nonzero
-                                quadratic coefficients. A penalty decomposition algorithm produces surfaces that satisfy first-order
-                                optimality conditions, with subproblems that admit closed-form or efficient dual solutions. The
-                                heatmap below is the practical payoff: most entries of the quadratic matrix <em>W</em> are driven to
-                                zero, so the classifier remains nonlinear but uses only a few interactions among features.
-                            </p>
-                            <figure class="paper-figure">
-                                <img
-                                    src="assets/images/research/qsvm-l0-sparsity.png"
-                                    alt="Heatmap of a sparse symmetric quadratic coefficient matrix W and vector b, with many exact zeros."
-                                />
-                                <figcaption>
-                                    Exact sparsity in an &ell;<sub>0</sub>-regularized QSVM: many quadratic coefficients are zero,
-                                    while the remaining entries define the curved boundary. Figure from Mousavi, Zandvakili, and Gao,
-                                    arXiv:2501.11268.
-                                </figcaption>
-                            </figure>
-                        </div>
-
-                        <p>
-                            Ongoing work studies ensembles of random sparse quadratic twin parametric-margin SVMs
-                            (<a href="https://ssrn.com/abstract=7022004" target="_blank" rel="noopener">SSRN preprint</a>) and
-                            quadratic twin SVMs for imbalanced data
-                            (<a href="https://link.springer.com/article/10.1007/s13042-026-03059-8" target="_blank" rel="noopener"
-                                >IJMLC 2026</a
-                            >).
-                        </p>
-
                         <h2>Robust Multi-Scale And Multi-Modal Learning</h2>
                         <p>
                             Real systems mix sources: a social media post is text plus an image plus a timestamp; an EEG recording is
@@ -319,6 +144,33 @@
                             modes. This direction builds lightweight, attention-based models that stay accurate across subjects,
                             events, and domains, and that remain efficient enough to train and inspect.
                         </p>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2608.22557" target="_blank" rel="noopener"
+                                    >BLADE: Bilevel Low-Rank Augmented-Lagrangian Erasure for LLM Unlearning</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                Md Toufikuzzaman, A. Mousavi, D. Lee. <em>EMNLP 2026</em> (main conference, to appear).
+                            </p>
+                            <p>
+                                Unlearning asks a language model to forget targeted content (privacy, copyright, or outdated facts)
+                                without destroying the rest of its behavior. BLADE treats this as a constrained bilevel problem:
+                                forget in the outer loop, repair retain quality in the inner loop, with a low-rank (LoRA) bottleneck
+                                and an augmented-Lagrangian safeguard. The figure below is the practical test. A competing method
+                                collapses when the forget set grows or when unlearning is applied in sequence; BLADE stays stable.
+                            </p>
+                            <figure class="paper-figure paper-figure--narrow">
+                                <img
+                                    src="assets/images/research/blade-scalability.png"
+                                    alt="Two-panel plot showing BLADE remaining stable as forget-set size and sequential unlearning steps increase, while a baseline method collapses."
+                                />
+                                <figcaption>
+                                    BLADE remains stable as the forget set grows and as unlearning is applied repeatedly; a strong
+                                    baseline collapses. Figure from Toufikuzzaman, Mousavi, and Lee, EMNLP 2026.
+                                </figcaption>
+                            </figure>
+                        </div>
 
                         <div class="research-rep">
                             <h4>
@@ -362,7 +214,7 @@
                                 arXiv:2604.16172, 2026 (submitted).
                             </p>
                             <p>
-                                MOMENTA is a later, more modular architecture in the same family. Separate experts specialize per
+                                MOMENTA is a mixture-of-experts architecture in the same family. Separate experts specialize per
                                 modality, bidirectional co-attention aligns text and image, and a temporal branch tracks drift and
                                 momentum so a campaign that changes story over time is still recognized. The figure is useful for
                                 students because it makes the design pattern explicit: encode, specialize, align, fuse, then
@@ -400,38 +252,257 @@
                             </p>
                         </div>
 
+                        <p>
+                            Related projects, also from newest to oldest, include physics-conditioned attention for next-day wildfire
+                            spread prediction, CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation, and an
+                            IEEE BigData 2024 paper on event-based multimodal fusion for misinformation detection during high-impact
+                            events.
+                        </p>
+
+                        <h2>Cardinality-Constrained Structured Optimization</h2>
+                        <p>
+                            Many real problems ask for a solution that is not just accurate, but also <em>simple in a precise
+                            way</em>: hold at most <em>k</em> stocks, keep only a few features, or recover a signal that is sparse.
+                            Convex relaxations are convenient, but they often cannot enforce that exact budget. I develop penalty
+                            decomposition methods that treat cardinality and related constraints directly, with convergence guarantees
+                            and algorithms that stay practical on real data.
+                        </p>
+                        <p>
+                            In finance this means portfolios that are sparse (few assets, lower trading cost), volatile enough to be
+                            useful, and, when desired, mean-reverting, so prices tend to oscillate around a level rather than wander.
+                            The same algorithmic ideas extend to sparse symmetric sets, hybrid quantum-classical compressive sensing,
+                            and low-rank quadratic optimization.
+                        </p>
+
                         <div class="research-rep">
                             <h4>
-                                <a href="https://arxiv.org/abs/2608.22557" target="_blank" rel="noopener"
-                                    >BLADE: Bilevel Low-Rank Augmented-Lagrangian Erasure for LLM Unlearning</a>
+                                <a href="https://arxiv.org/abs/2608.07828" target="_blank" rel="noopener"
+                                    >The Rank-Collapse Principle for Quadratic Optimization</a>
+                            </h4>
+                            <p class="research-rep__venue">M. Soltanalian, A. Mousavi. arXiv:2608.07828, 2026.</p>
+                            <p>
+                                This preprint studies when a quadratic optimization problem collapses to a low-rank form. The
+                                practical message is that some high-dimensional quadratic models are governed by a much smaller
+                                effective dimension, which can make them easier to analyze and to solve.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://openreview.net/forum?id=beBG2Qn0IX" target="_blank" rel="noopener"
+                                    >Weaver: A Hybrid Quantum-Classical Optimization Method for Binary Compressive Sensing under Matrix
+                                    Uncertainty</a>
+                            </h4>
+                            <p class="research-rep__venue">K. Jayathilake, A. Mousavi, R. Ayanzadeh. Submitted to AAAI 2027, July 2026.</p>
+                            <p>
+                                Weaver combines classical optimization with a quantum subroutine for binary compressive sensing when
+                                the measurement matrix is uncertain. The goal is a hybrid method that can recover a sparse binary
+                                signal without pretending the sensing matrix is known exactly.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://link.springer.com/article/10.1007/s13160-025-00760-z" target="_blank" rel="noopener"
+                                    >Sparse Extended Mean-Variance-CVaR Portfolios with Short-Selling</a>
                             </h4>
                             <p class="research-rep__venue">
-                                Md Toufikuzzaman, A. Mousavi, D. Lee. <em>EMNLP 2026</em> (main conference, to appear).
+                                A. Mousavi, M. Salahi, Z. Boukouvalas. <em>Japan Journal of Industrial and Applied Mathematics</em>,
+                                2026.
                             </p>
                             <p>
-                                Unlearning asks a language model to forget targeted content (privacy, copyright, or outdated facts)
-                                without destroying the rest of its behavior. BLADE treats this as a constrained bilevel problem:
-                                forget in the outer loop, repair retain quality in the inner loop, with a low-rank (LoRA) bottleneck
-                                and an augmented-Lagrangian safeguard. The figure below is the practical test. A competing method
-                                collapses when the forget set grows or when unlearning is applied in sequence; BLADE stays stable.
+                                This paper extends the sparse-portfolio line to mean-variance-CVaR models that allow short-selling.
+                                Cardinality still caps the number of assets, while CVaR brings a tail-risk measure into the same
+                                penalty-decomposition framework.
                             </p>
-                            <figure class="paper-figure paper-figure--narrow">
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2601.12383" target="_blank" rel="noopener"
+                                    >An Efficient Penalty Decomposition Algorithm for Minimization over Sparse Symmetric Sets</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                A. Mousavi, M. Kimiaei, S. Babaie-Kafaki, V. Kungurtsev. arXiv:2601.12383, 2026 (under review at
+                                <em>Mathematical Programming Computation</em>).
+                            </p>
+                            <p>
+                                Here the feasible set is both sparse and symmetric. A quasi-Newton penalty decomposition method
+                                keeps the per-iteration cost manageable while still enforcing exact sparsity, rather than a convex
+                                surrogate.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1111/itor.13442" target="_blank" rel="noopener"
+                                    >Statistical Proxy Based Mean-Reverting Portfolios with Sparsity and Volatility Constraints</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, G. Michailidis. <em>International Transactions in Operational Research</em>, 2025.</p>
+                            <p>
+                                Mean reversion can be measured in more than one way (predictability, portmanteau, and crossing
+                                statistics). This paper puts those proxies into one optimization model with sparsity and volatility
+                                constraints, and solves it with a unifying penalty decomposition method. On S&amp;P&nbsp;500 data, the
+                                crossing-statistics proxy produces the most attractive sparse portfolios among the three.
+                            </p>
+                            <figure class="paper-figure">
                                 <img
-                                    src="assets/images/research/blade-scalability.png"
-                                    alt="Two-panel plot showing BLADE remaining stable as forget-set size and sequential unlearning steps increase, while a baseline method collapses."
+                                    src="assets/images/research/mean-reverting-spreads.png"
+                                    alt="Time series of sparse mean-reverting portfolio spreads, daily returns, and cumulative profit for three statistical proxies with cardinality five."
                                 />
                                 <figcaption>
-                                    BLADE remains stable as the forget set grows and as unlearning is applied repeatedly; a strong
-                                    baseline collapses. Figure from Toufikuzzaman, Mousavi, and Lee, EMNLP 2026.
+                                    Sparse mean-reverting portfolios with cardinality <em>k</em>&nbsp;=&nbsp;5. Spreads, daily returns,
+                                    and cumulative profit for the three statistical proxies; the crossing-statistics portfolio (green)
+                                    accumulates the strongest gain in this example. Figure from Mousavi and Michailidis, ITOR 2025.
                                 </figcaption>
                             </figure>
                         </div>
 
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1007/s10589-025-00653-4" target="_blank" rel="noopener"
+                                    >Cardinality Constrained Mean-Variance Portfolios: A Penalty Decomposition Algorithm</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, G. Michailidis. <em>Computational Optimization and Applications</em>, 2025.</p>
+                            <p>
+                                Markowitz mean-variance optimization is classical, but asking for &ldquo;exactly <em>k</em>
+                                assets&rdquo; makes the problem nonconvex. Regularization can encourage sparsity without letting the
+                                investor set <em>k</em> directly. This paper solves the cardinality-constrained problem with a penalty
+                                decomposition method whose block updates have closed form, and shows that the method is faster than
+                                strong commercial and penalty baselines on real indexes while matching their risk-return profile.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1111/itor.13123" target="_blank" rel="noopener"
+                                    >A Penalty Decomposition Algorithm with Greedy Improvement for Mean-Reverting Portfolios with
+                                    Sparsity and Volatility Constraints</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, J. Shen. <em>International Transactions in Operational Research</em>, 2023.</p>
+                            <p>
+                                An earlier paper in this line builds sparse, volatile, mean-reverting portfolios with a two-stage
+                                method: penalty decomposition to a stationary point, then a greedy improvement step based on
+                                semidefinite relaxations of restricted subproblems.
+                            </p>
+                        </div>
+
+                        <h2>Sparse And Structured Quadratic Surface Support Vector Machines</h2>
                         <p>
-                            Related projects include CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation,
-                            physics-conditioned attention for next-day wildfire spread prediction, and an earlier IEEE BigData paper
-                            on event-based multimodal fusion for misinformation detection during high-impact events.
+                            A linear SVM draws a flat wall between two classes. That is easy to interpret, but many datasets are
+                            separated by a curve. Kernel SVMs can bend the boundary, at the cost of choosing a kernel and losing a
+                            direct geometric picture. Kernel-free quadratic surface SVMs (QSVMs) fit a quadratic surface in the
+                            original features, so the boundary can curve without a kernel. The price is that the number of parameters
+                            grows like the square of the dimension. My work uses sparsity and Universum data so the quadratic model
+                            stays flexible without becoming a dense, hard-to-read surface.
                         </p>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://link.springer.com/article/10.1007/s13042-026-03059-8" target="_blank" rel="noopener"
+                                    >Quadratic Surface Twin Support Vector Machine for Imbalanced Data</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                H. Moosaei, M. Hladík, A. Mousavi, Z. Gao, H. Fu.
+                                <em>International Journal of Machine Learning and Cybernetics</em>, 2026.
+                            </p>
+                            <p>
+                                When one class is rare, a single decision surface often hugs the majority class. This twin model fits
+                                two nonparallel quadratic surfaces and uses Universum points to support the minority class, so the
+                                classifier is less biased on imbalanced data.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://ssrn.com/abstract=7022004" target="_blank" rel="noopener"
+                                    >An Ensemble Learning Approach Based on Random Sparse Quadratic Twin Parametric-Margin SVMs</a>
+                            </h4>
+                            <p class="research-rep__venue">P. Yang, J. Luo, A. Mousavi, R. Corizzo, Z. Gao. SSRN 7022004, 2026 (submitted).</p>
+                            <p>
+                                Instead of one large quadratic classifier, this work trains many small sparse twin QSVMs on random
+                                subspaces and combines them. The ensemble keeps the kernel-free geometry while spreading the
+                                quadratic parameter cost across weaker models.
+                            </p>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2501.11268" target="_blank" rel="noopener"
+                                    >&ell;<sub>0</sub>-Regularized Quadratic Surface Support Vector Machines</a>
+                            </h4>
+                            <p class="research-rep__venue">A. Mousavi, R. Zandvakili, Z. Gao. arXiv:2501.11268, 2025 (journal version under review).</p>
+                            <p>
+                                &ell;<sub>1</sub> encourages sparsity; &ell;<sub>0</sub> asks for an exact number of nonzero
+                                quadratic coefficients. A penalty decomposition algorithm produces surfaces that satisfy first-order
+                                optimality conditions, with subproblems that admit closed-form or efficient dual solutions. The
+                                heatmap below is the practical payoff: most entries of the quadratic matrix <em>W</em> are driven to
+                                zero, so the classifier remains nonlinear but uses only a few interactions among features.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/qsvm-l0-sparsity.png"
+                                    alt="Heatmap of a sparse symmetric quadratic coefficient matrix W and vector b, with many exact zeros."
+                                />
+                                <figcaption>
+                                    Exact sparsity in an &ell;<sub>0</sub>-regularized QSVM: many quadratic coefficients are zero,
+                                    while the remaining entries define the curved boundary. Figure from Mousavi, Zandvakili, and Gao,
+                                    arXiv:2501.11268.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.1007/s00500-023-07860-3" target="_blank" rel="noopener"
+                                    >Sparse &ell;<sub>1</sub>-Norm Quadratic Surface Support Vector Machine with Universum Data</a>
+                            </h4>
+                            <p class="research-rep__venue">H. Moosaei, A. Mousavi, M. Hladík, Z. Gao. <em>Soft Computing</em>, 2023.</p>
+                            <p>
+                                Universum points are examples that belong to neither class. They sit in the gap and tell the
+                                classifier where <em>not</em> to put the boundary. Combined with a quadratic surface and
+                                &ell;<sub>1</sub> sparsity, they improve generalization, especially when labeled data are limited.
+                            </p>
+                            <figure class="paper-figure paper-figure--narrow">
+                                <img
+                                    src="assets/images/research/qsvm-universum.png"
+                                    alt="Schematic of two classes on quadratic curves with Universum points in the middle band between f(x) equals 1 and f(x) equals minus 1."
+                                />
+                                <figcaption>
+                                    Universum points (triangles) occupy the region between the two classes and regularize the
+                                    quadratic decision surface. Figure from Moosaei, Mousavi, Hladík, and Gao, <em>Soft Computing</em>
+                                    2023.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://doi.org/10.3934/jimo.2021046" target="_blank" rel="noopener"
+                                    >Quadratic Surface Support Vector Machine with &ell;<sub>1</sub> Norm Regularization</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                A. Mousavi, Z. Gao, L. Han, A. Lim. <em>Journal of Industrial and Management Optimization</em>, 2022.
+                            </p>
+                            <p>
+                                &ell;<sub>1</sub> regularization on the quadratic coefficients does two useful things. If the data are
+                                essentially linear, a large penalty flattens the surface toward an ordinary SVM. If the data are
+                                quadratic, the same penalty can recover the sparse pattern in the true surface. The figure below is
+                                the simplest picture of why the extra curvature matters: a linear SVM cuts through a U-shaped class
+                                structure, while the quadratic model follows it.
+                            </p>
+                            <figure class="paper-figure">
+                                <img
+                                    src="assets/images/research/qsvm-quadratic-boundary.png"
+                                    alt="Scatter plot of two classes with a U-shaped boundary. A linear SVM cuts across the curve, while L1-regularized quadratic SVM follows it."
+                                />
+                                <figcaption>
+                                    Linear SVM versus quadratic surface SVM on quadratically separable data. The curved boundary
+                                    separates the two classes; the linear hyperplane cannot. Figure from Mousavi, Gao, Han, and Lim,
+                                    JIMO 2022.
+                                </figcaption>
+                            </figure>
+                        </div>
                     </section>
                 </div>
             </article>
@@ -440,7 +511,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-01T18:40:00-04:00">September 1, 2026, 6:40 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-01T18:50:00-04:00">September 1, 2026, 6:50 PM EDT</time></div>
             </footer>
         </div>
 
