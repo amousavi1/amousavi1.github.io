@@ -1023,24 +1023,30 @@ html[data-theme="dark"] .lab-solutions-status.is-error {
 }
 
 .paper-figure {
-  margin: 0.9em 0 0.35em;
+  margin: 0.9em auto 0.35em;
+  max-width: 28rem;
 }
 
 .paper-figure img {
   width: 100%;
-  max-width: 100%;
-  height: auto;
+  height: 20rem;
+  object-fit: contain;
   display: block;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0.45em;
   background: #fff;
   border: 1px solid #e3e3e3;
   border-radius: 6px;
 }
 
-.paper-figure--narrow img {
-  max-width: 22rem;
-  margin-left: auto;
-  margin-right: auto;
+.paper-figure--wide {
+  max-width: 100%;
+}
+
+.paper-figure--wide img {
+  width: 100%;
+  height: auto;
 }
 
 html[data-theme="dark"] .site-cover figcaption,
