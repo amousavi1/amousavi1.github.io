@@ -974,7 +974,7 @@ html[data-theme="dark"] .lab-solutions-status.is-error {
 
 /* Cover banner (LinkedIn-style research graphic) and paper figures. */
 .site-cover {
-  margin: 0 0 1.35em;
+  margin: 1.15em 0;
 }
 
 .site-cover img {
