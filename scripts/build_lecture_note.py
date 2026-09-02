@@ -60,8 +60,8 @@ SIDEBAR = """            <div class="sidebar sticky">
                     <div class="author__content">
                         <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
                         <p class="author__bio" itemprop="description">
-                            Assistant Professor of Data Science,<br />
-                            Department of Mathematics and Statistics,<br />
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
                             American University
                         </p>
                     </div>
