@@ -23,7 +23,14 @@ In this course you may use either pipe:
 %>%     # magrittr / tidyverse. Comes with library(tidyverse).
 ```
 
-They are interchangeable for the work we do this week. The Base R pipe `|>` only fills the **first** argument of the next function. The magrittr pipe `%>%` can place the left-hand result elsewhere with `.`, which we will not need yet.
+They are interchangeable for the work we do this week. The Base R pipe `|>` only fills the **first** argument of the next function. The magrittr pipe `%>%` can place the left-hand result elsewhere with `.` if you need a later argument:
+
+```r
+x %>% mean(na.rm = TRUE)
+x %>% mean(., na.rm = TRUE)   # same thing; the dot is the piped value
+```
+
+We will not need the dot this week. Put extra arguments in the function that uses them, as in section 3.
 
 In RStudio, **Ctrl+Shift+M** (Windows) or **Cmd+Shift+M** (Mac) inserts a pipe with spaces around it. After a pipe, Enter indents the next line.
 

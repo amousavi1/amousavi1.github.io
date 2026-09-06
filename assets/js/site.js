@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-06T14:25:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-06T18:20:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -144,6 +144,7 @@
     '1. a script is code you keep': '1. Scripts',
     '2. write the function once': '2. Write Once',
     '3. `source()` makes the function available': '3. source()',
+    '5. this week, in one place': '5. Week Recap',
     '2. write `add_half()`': '2. add_half()',
     '3. check the inputs': '3. Input Checks',
   };

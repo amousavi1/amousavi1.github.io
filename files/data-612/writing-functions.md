@@ -13,7 +13,14 @@ add_two(2, 4)
 # [1] 6
 ```
 
-R returns the last value it evaluates. `return()` is useful when you want to leave early, or when several branches could be the last line. Put `return(...)` on its own line.
+R returns the last value it evaluates. `return()` is useful when you want to leave early, or when several branches could be the last line. Put `return(...)` on its own line. A clear pattern is to store the answer in one name and return it at the end:
+
+```r
+add_two <- function(a, b) {
+  total <- a + b
+  return(total)
+}
+```
 
 A useful order of work:
 
@@ -114,7 +121,12 @@ if (condition) {
 }
 ```
 
-The condition must be a **single** logical value. Vectorized `&` and `|` are for elementwise work. Inside `if`, use `&&` and `||`, or collapse a vector with `any()` or `all()`.
+The condition must be a **single** logical value. Vectorized `&` and `|` are for elementwise work. Inside `if`, use `&&` and `||`, or collapse a vector with `any()` or `all()`:
+
+```r
+any(c(FALSE, TRUE, FALSE))   # TRUE  — at least one TRUE
+all(c(TRUE, TRUE, FALSE))    # FALSE — not every value is TRUE
+```
 
 Prefer `identical()` to `==` when you want exact equality of two objects. For floating-point comparisons, `dplyr::near()` is safer than `==`.
 
@@ -199,6 +211,13 @@ wt_mean <- function(x, w) {
 
 When you call a function, you can leave names off the leading data arguments. Name the later ones (`na.rm = TRUE`) so a new argument in the middle will not silently shift yours.
 
+Usual argument names, when a short name is enough:
+
+- `x`, `y`, `z` for vectors
+- `df` for a data frame
+- `n` for a length or a count of rows
+- `i`, `j` for indices
+
 Look at `?mean`, `?log`, and `?t.test` for the usual pattern: data first, then options with defaults.
 
 ---
@@ -207,7 +226,21 @@ Look at `?mean`, `?log`, and `?t.test` for the usual pattern: data first, then o
 
 A `#` comment should say *why*, not restate the code. A line such as `# load data --------------------` is a useful section break.
 
-For a function you will keep, write a short header. Roxygen comments start with `#'`. Put the cursor on the `function(` line and use **Code → Insert Roxygen Skeleton** (install `roxygen2` once if needed).
+For a function you will keep, write a short header. Roxygen comments start with `#'`, not plain `#`. Install `roxygen2` once, put the cursor on the `function(` line, and use **Code → Insert Roxygen Skeleton**. You get something like:
+
+```r
+#' Title
+#'
+#' @param x
+#' @param y
+#'
+#' @return
+#'
+#' @examples
+my_fun <- function(x, y) {}
+```
+
+Fill it in. The first line is a short title (sentence case, no period). The next paragraph is a one- or two-sentence description. `@param` describes each argument, starting with the type. You can document two arguments together as `@param x,y`. `@return` describes the output. `@examples` should be code that actually runs. `@export` matters when you later turn the file into a package; ignore it this week.
 
 ```r
 #' Count positions that are NA in both vectors
@@ -223,8 +256,6 @@ both_na <- function(x, y) {
   sum(is.na(x) & is.na(y))
 }
 ```
-
-The first line is a short title. `@param` describes each argument. `@return` describes the output. `@examples` should be code that actually runs. `@export` matters when you later turn the file into a package; you can ignore it this week.
 
 ---
 

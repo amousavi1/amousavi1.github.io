@@ -126,7 +126,11 @@
 <pre><code class="language-r">|&gt;      # Base R (R 4.1 and later). No extra package.
 %&gt;%     # magrittr / tidyverse. Comes with library(tidyverse).
 </code></pre>
-<p>They are interchangeable for the work we do this week. The Base R pipe <code>|&gt;</code> only fills the <strong>first</strong> argument of the next function. The magrittr pipe <code>%&gt;%</code> can place the left-hand result elsewhere with <code>.</code>, which we will not need yet.</p>
+<p>They are interchangeable for the work we do this week. The Base R pipe <code>|&gt;</code> only fills the <strong>first</strong> argument of the next function. The magrittr pipe <code>%&gt;%</code> can place the left-hand result elsewhere with <code>.</code> if you need a later argument:</p>
+<pre><code class="language-r">x %&gt;% mean(na.rm = TRUE)
+x %&gt;% mean(., na.rm = TRUE)   # same thing; the dot is the piped value
+</code></pre>
+<p>We will not need the dot this week. Put extra arguments in the function that uses them, as in section 3.</p>
 <p>In RStudio, <strong>Ctrl+Shift+M</strong> (Windows) or <strong>Cmd+Shift+M</strong> (Mac) inserts a pipe with spaces around it. After a pipe, Enter indents the next line.</p>
 <p>You can turn the shortcut toward <code>|&gt;</code> or <code>%&gt;%</code> under <strong>Tools → Global Options… → Code</strong>.</p>
 <hr />
@@ -226,7 +230,7 @@ iris |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T14:25:00-04:00">September 6, 2026, 2:25 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T18:20:00-04:00">September 6, 2026, 6:20 PM EDT</time></div>
             </footer>
         </div>
 

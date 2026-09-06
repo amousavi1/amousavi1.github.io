@@ -120,7 +120,12 @@
 add_two(2, 4)
 # [1] 6
 </code></pre>
-<p>R returns the last value it evaluates. <code>return()</code> is useful when you want to leave early, or when several branches could be the last line. Put <code>return(...)</code> on its own line.</p>
+<p>R returns the last value it evaluates. <code>return()</code> is useful when you want to leave early, or when several branches could be the last line. Put <code>return(...)</code> on its own line. A clear pattern is to store the answer in one name and return it at the end:</p>
+<pre><code class="language-r">add_two &lt;- function(a, b) {
+  total &lt;- a + b
+  return(total)
+}
+</code></pre>
 <p>A useful order of work:</p>
 <ol>
 <li>get the logic right on a small example</li>
@@ -192,7 +197,10 @@ rescale01(x)
   # when condition is FALSE
 }
 </code></pre>
-<p>The condition must be a <strong>single</strong> logical value. Vectorized <code>&amp;</code> and <code>|</code> are for elementwise work. Inside <code>if</code>, use <code>&amp;&amp;</code> and <code>||</code>, or collapse a vector with <code>any()</code> or <code>all()</code>.</p>
+<p>The condition must be a <strong>single</strong> logical value. Vectorized <code>&amp;</code> and <code>|</code> are for elementwise work. Inside <code>if</code>, use <code>&amp;&amp;</code> and <code>||</code>, or collapse a vector with <code>any()</code> or <code>all()</code>:</p>
+<pre><code class="language-r">any(c(FALSE, TRUE, FALSE))   # TRUE  — at least one TRUE
+all(c(TRUE, TRUE, FALSE))    # FALSE — not every value is TRUE
+</code></pre>
 <p>Prefer <code>identical()</code> to <code>==</code> when you want exact equality of two objects. For floating-point comparisons, <code>dplyr::near()</code> is safer than <code>==</code>.</p>
 <p>This function reports which elements of a vector have names:</p>
 <pre><code class="language-r">has_name &lt;- function(x) {
@@ -256,11 +264,29 @@ do_op(2, 4, &quot;mod&quot;)
 }
 </code></pre>
 <p>When you call a function, you can leave names off the leading data arguments. Name the later ones (<code>na.rm = TRUE</code>) so a new argument in the middle will not silently shift yours.</p>
+<p>Usual argument names, when a short name is enough:</p>
+<ul>
+<li><code>x</code>, <code>y</code>, <code>z</code> for vectors</li>
+<li><code>df</code> for a data frame</li>
+<li><code>n</code> for a length or a count of rows</li>
+<li><code>i</code>, <code>j</code> for indices</li>
+</ul>
 <p>Look at <code>?mean</code>, <code>?log</code>, and <code>?t.test</code> for the usual pattern: data first, then options with defaults.</p>
 <hr />
 <h2>5. Comments and Roxygen</h2>
 <p>A <code>#</code> comment should say <em>why</em>, not restate the code. A line such as <code># load data --------------------</code> is a useful section break.</p>
-<p>For a function you will keep, write a short header. Roxygen comments start with <code>#'</code>. Put the cursor on the <code>function(</code> line and use <strong>Code → Insert Roxygen Skeleton</strong> (install <code>roxygen2</code> once if needed).</p>
+<p>For a function you will keep, write a short header. Roxygen comments start with <code>#'</code>, not plain <code>#</code>. Install <code>roxygen2</code> once, put the cursor on the <code>function(</code> line, and use <strong>Code → Insert Roxygen Skeleton</strong>. You get something like:</p>
+<pre><code class="language-r">#' Title
+#'
+#' @param x
+#' @param y
+#'
+#' @return
+#'
+#' @examples
+my_fun &lt;- function(x, y) {}
+</code></pre>
+<p>Fill it in. The first line is a short title (sentence case, no period). The next paragraph is a one- or two-sentence description. <code>@param</code> describes each argument, starting with the type. You can document two arguments together as <code>@param x,y</code>. <code>@return</code> describes the output. <code>@examples</code> should be code that actually runs. <code>@export</code> matters when you later turn the file into a package; ignore it this week.</p>
 <pre><code class="language-r">#' Count positions that are NA in both vectors
 #'
 #' @param x,y Atomic vectors of the same length.
@@ -274,7 +300,6 @@ both_na &lt;- function(x, y) {
   sum(is.na(x) &amp; is.na(y))
 }
 </code></pre>
-<p>The first line is a short title. <code>@param</code> describes each argument. <code>@return</code> describes the output. <code>@examples</code> should be code that actually runs. <code>@export</code> matters when you later turn the file into a package; you can ignore it this week.</p>
 <hr />
 <h2>6. Practice</h2>
 <ol>
@@ -293,7 +318,7 @@ both_na &lt;- function(x, y) {
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T14:25:00-04:00">September 6, 2026, 2:25 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T18:20:00-04:00">September 6, 2026, 6:20 PM EDT</time></div>
             </footer>
         </div>
 

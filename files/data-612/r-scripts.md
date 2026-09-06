@@ -69,3 +69,16 @@ Write a function that takes a numeric vector and returns `TRUE` where the value 
 1. Save it in `R/` under a name that matches the function.
 2. In a Quarto document (or an R script) in another folder, `source()` that file with a relative path.
 3. Call it on `c(0, 0.2, 0.4, 0.7)`.
+
+---
+
+## 5. This week, in one place
+
+By the end of Week 2 you should be able to:
+
+- use `|>` or `%>%` for a sequence of steps
+- write a function: small example first, name it, give arguments and defaults, return a value, check inputs, document it
+- branch with `if` / `else` / `else if`, or `switch()` when one argument picks among named options
+- save the function in an `.R` script and `source()` it from another file
+
+Functions and helpers from this week include `function()`, `set.seed()`, `rnorm()`, `sort()`, `diff()`, `round()`, `mean()`, `range()`, `stopifnot()`, `any()`, `all()`, `&&`, `||`, `switch()`, and `source()`. For floating-point equality, `dplyr::near()` is safer than `==`.

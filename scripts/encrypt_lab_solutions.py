@@ -7,7 +7,8 @@ Only the ciphertext JSON is published.
   python scripts/encrypt_lab_solutions.py --lab 1 --password "your-passphrase"
 
 If --password is omitted, the script uses files/data-612/.lab1-solutions-password
-or LAB_SOLUTIONS_PASSWORD. Keep the passphrase off the public site.
+or LAB_SOLUTIONS_PASSWORD. Use the same passphrase for every lab. Keep it off
+the public site.
 """
 
 from __future__ import annotations
