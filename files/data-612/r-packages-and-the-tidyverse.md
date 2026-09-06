@@ -309,7 +309,16 @@ Using **Base R**, we could select students with grades above 80:
 students[students$grade > 80, ]
 ```
 
-Using **dplyr**, we could write:
+or, with `subset()`:
+
+```r
+subset(students, grade > 80)
+```
+
+`subset()` lets you write the condition with the column name. In dplyr, two functions sit next to it:
+
+- `filter()` is the closest match for keeping rows
+- `select()` is the closest match for keeping columns (`subset(students, select = name)`)
 
 ```r
 library(dplyr)
@@ -317,7 +326,7 @@ library(dplyr)
 filter(students, grade > 80)
 ```
 
-Both approaches are valid.
+Both the Base R and dplyr approaches are valid.
 
 Throughout this course, we will learn how to work with data using both approaches.
 
@@ -374,6 +383,8 @@ students |>
   subset(grade > 80) |>
   head()
 ```
+
+`subset()` is Base R. The dplyr line that does the same row-keeping is `filter(grade > 80)`. Note 2.1 goes through `subset()`, `filter()`, and `select()` more carefully.
 
 Later, we will use pipes extensively with tidyverse functions.
 

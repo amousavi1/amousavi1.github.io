@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-06T18:20:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-06T18:35:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -136,7 +136,10 @@
     '1. read the pipe as "then"': '1. Then',
     '2. three ways to compute a geometric mean': '2. Geometric Mean',
     '3. extra arguments stay in the function that needs them': '3. Extra Arguments',
+    '4. `subset()` keeps the rows you want': '4. subset()',
     '4. other magrittr pipes (aside)': '4. Other Pipes',
+    '5. other magrittr pipes (aside)': '5. Other Pipes',
+    '6. practice': '6. Practice',
     '2. duplication is a reason to stop and wrap': '2. Duplication',
     '3. `if` needs one `true` or `false`': '3. if',
     '4. names, arguments, and scope': '4. Names and Scope',

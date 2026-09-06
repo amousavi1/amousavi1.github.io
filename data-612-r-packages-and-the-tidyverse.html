@@ -315,12 +315,19 @@ library(dplyr)
 <p>Using <strong>Base R</strong>, we could select students with grades above 80:</p>
 <pre><code class="language-r">students[students$grade &gt; 80, ]
 </code></pre>
-<p>Using <strong>dplyr</strong>, we could write:</p>
+<p>or, with <code>subset()</code>:</p>
+<pre><code class="language-r">subset(students, grade &gt; 80)
+</code></pre>
+<p><code>subset()</code> lets you write the condition with the column name. In dplyr, two functions sit next to it:</p>
+<ul>
+<li><code>filter()</code> is the closest match for keeping rows</li>
+<li><code>select()</code> is the closest match for keeping columns (<code>subset(students, select = name)</code>)</li>
+</ul>
 <pre><code class="language-r">library(dplyr)
 
 filter(students, grade &gt; 80)
 </code></pre>
-<p>Both approaches are valid.</p>
+<p>Both the Base R and dplyr approaches are valid.</p>
 <p>Throughout this course, we will learn how to work with data using both approaches.</p>
 <hr />
 <h2>11. The Pipe</h2>
@@ -353,6 +360,7 @@ filter(students, grade &gt; 80)
   subset(grade &gt; 80) |&gt;
   head()
 </code></pre>
+<p><code>subset()</code> is Base R. The dplyr line that does the same row-keeping is <code>filter(grade &gt; 80)</code>. Note 2.1 goes through <code>subset()</code>, <code>filter()</code>, and <code>select()</code> more carefully.</p>
 <p>Later, we will use pipes extensively with tidyverse functions.</p>
 <hr />
 <h2>12. A Typical R Workflow</h2>
@@ -469,7 +477,7 @@ dplyr::filter()                 # Use a specific function
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T18:20:00-04:00">September 6, 2026, 6:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T18:35:00-04:00">September 6, 2026, 6:35 PM EDT</time></div>
             </footer>
         </div>
 

@@ -140,9 +140,64 @@ A pipe helps you:
 
 ---
 
-## 4. Other magrittr pipes (aside)
+## 4. `subset()` keeps the rows you want
+
+`subset()` is Base R. Give it a data frame and a condition written with column names. It returns the rows where the condition is `TRUE`.
+
+```r
+subset(iris, Sepal.Length > mean(Sepal.Length))
+```
+
+That is the same idea as indexing, but you do not have to repeat the data name:
+
+```r
+iris[iris$Sepal.Length > mean(iris$Sepal.Length), ]
+```
+
+The optional `select` argument keeps columns. You can name them, or drop some with `-`:
+
+```r
+subset(iris, Sepal.Length > 5, select = c(Sepal.Length, Species))
+subset(iris, Sepal.Length > 5, select = -c(Sepal.Width, Petal.Width))
+```
+
+`subset()` also works on a vector. The condition is written in terms of the vector itself:
+
+```r
+x <- c(2, 9, 4, 11)
+subset(x, x > 5)
+# [1]  9 11
+```
+
+Rows (or values) where the condition is `NA` are dropped. `?subset` says the function is convenient for interactive work. In a function you will keep, prefer `[` or the dplyr verbs below. Non-standard evaluation of column names is the reason.
+
+### The closest dplyr functions
+
+`dplyr` splits the two jobs `subset()` can do in one call:
+
+- `filter()` is the closest match to the row condition (the second argument of `subset()`)
+- `select()` is the closest match to `select = ...`
+
+```r
+library(dplyr)
+
+iris |>
+  filter(Sepal.Length > mean(Sepal.Length))
+
+iris |>
+  filter(Sepal.Length > 5) |>
+  select(Sepal.Length, Species)
+```
+
+`filter()` and `select()` are the tidyverse versions we will use later. You can still read `subset()` when you see it, including in the next example.
+
+---
+
+## 5. Other magrittr pipes (aside)
 
 `magrittr` also has `%\%$`, which exposes column names on the right-hand side. You may see it in older code. We will stay with `|>` or `%>%`.
+
+The next pipeline first uses `subset()` to keep the longer sepals, then `%$%` so `cor()` can see `Sepal.Length` and `Sepal.Width` as names rather than as `iris$...`. `dplyr::filter()` would do the same row step. `dplyr::select()` plus `cor()` on two columns, or `dplyr::summarize(cor = cor(Sepal.Length, Sepal.Width))` after `filter()`, is the tidyverse version of the whole thing.
 
 ```r
 library(magrittr)
@@ -154,7 +209,7 @@ iris |>
 
 ---
 
-## 5. Practice
+## 6. Practice
 
 Using a pipe, and without intermediate objects:
 

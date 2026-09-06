@@ -203,8 +203,43 @@ geo_mean
 <li>add, comment, or drop a step without renaming intermediates</li>
 </ul>
 <hr />
-<h2>4. Other magrittr pipes (aside)</h2>
+<h2>4. <code>subset()</code> keeps the rows you want</h2>
+<p><code>subset()</code> is Base R. Give it a data frame and a condition written with column names. It returns the rows where the condition is <code>TRUE</code>.</p>
+<pre><code class="language-r">subset(iris, Sepal.Length &gt; mean(Sepal.Length))
+</code></pre>
+<p>That is the same idea as indexing, but you do not have to repeat the data name:</p>
+<pre><code class="language-r">iris[iris$Sepal.Length &gt; mean(iris$Sepal.Length), ]
+</code></pre>
+<p>The optional <code>select</code> argument keeps columns. You can name them, or drop some with <code>-</code>:</p>
+<pre><code class="language-r">subset(iris, Sepal.Length &gt; 5, select = c(Sepal.Length, Species))
+subset(iris, Sepal.Length &gt; 5, select = -c(Sepal.Width, Petal.Width))
+</code></pre>
+<p><code>subset()</code> also works on a vector. The condition is written in terms of the vector itself:</p>
+<pre><code class="language-r">x &lt;- c(2, 9, 4, 11)
+subset(x, x &gt; 5)
+# [1]  9 11
+</code></pre>
+<p>Rows (or values) where the condition is <code>NA</code> are dropped. <code>?subset</code> says the function is convenient for interactive work. In a function you will keep, prefer <code>[</code> or the dplyr verbs below. Non-standard evaluation of column names is the reason.</p>
+<h3>The closest dplyr functions</h3>
+<p><code>dplyr</code> splits the two jobs <code>subset()</code> can do in one call:</p>
+<ul>
+<li><code>filter()</code> is the closest match to the row condition (the second argument of <code>subset()</code>)</li>
+<li><code>select()</code> is the closest match to <code>select = ...</code></li>
+</ul>
+<pre><code class="language-r">library(dplyr)
+
+iris |&gt;
+  filter(Sepal.Length &gt; mean(Sepal.Length))
+
+iris |&gt;
+  filter(Sepal.Length &gt; 5) |&gt;
+  select(Sepal.Length, Species)
+</code></pre>
+<p><code>filter()</code> and <code>select()</code> are the tidyverse versions we will use later. You can still read <code>subset()</code> when you see it, including in the next example.</p>
+<hr />
+<h2>5. Other magrittr pipes (aside)</h2>
 <p><code>magrittr</code> also has <code>%\%$</code>, which exposes column names on the right-hand side. You may see it in older code. We will stay with <code>|&gt;</code> or <code>%&gt;%</code>.</p>
+<p>The next pipeline first uses <code>subset()</code> to keep the longer sepals, then <code>%$%</code> so <code>cor()</code> can see <code>Sepal.Length</code> and <code>Sepal.Width</code> as names rather than as <code>iris$...</code>. <code>dplyr::filter()</code> would do the same row step. <code>dplyr::select()</code> plus <code>cor()</code> on two columns, or <code>dplyr::summarize(cor = cor(Sepal.Length, Sepal.Width))</code> after <code>filter()</code>, is the tidyverse version of the whole thing.</p>
 <pre><code class="language-r">library(magrittr)
 iris |&gt;
   subset(Sepal.Length &gt; mean(Sepal.Length)) %$%
@@ -212,7 +247,7 @@ iris |&gt;
 # [1] 0.3361992
 </code></pre>
 <hr />
-<h2>5. Practice</h2>
+<h2>6. Practice</h2>
 <p>Using a pipe, and without intermediate objects:</p>
 <ol>
 <li>draw 100 values from a normal distribution with standard deviation 10</li>
@@ -230,7 +265,7 @@ iris |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T18:20:00-04:00">September 6, 2026, 6:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T18:35:00-04:00">September 6, 2026, 6:35 PM EDT</time></div>
             </footer>
         </div>
 
