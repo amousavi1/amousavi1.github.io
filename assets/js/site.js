@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-06T13:50:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-06T14:20:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -133,6 +133,19 @@
     '16. useful is.*() functions': '16. is.*() Functions',
     '17. useful as.*() functions': '17. as.*() Functions',
     '18. a useful family of functions to remember': '18. Function Families',
+    '1. read the pipe as "then"': '1. Then',
+    '2. three ways to compute a geometric mean': '2. Geometric Mean',
+    '3. extra arguments stay in the function that needs them': '3. Extra Arguments',
+    '4. other magrittr pipes (aside)': '4. Other Pipes',
+    '2. duplication is a reason to stop and wrap': '2. Duplication',
+    '3. `if` needs one `true` or `false`': '3. if',
+    '4. names, arguments, and scope': '4. Names and Scope',
+    '5. comments and roxygen': '5. Documentation',
+    '1. a script is code you keep': '1. Scripts',
+    '2. write the function once': '2. Write Once',
+    '3. `source()` makes the function available': '3. source()',
+    '2. write `add_half()`': '2. add_half()',
+    '3. check the inputs': '3. Input Checks',
   };
 
   function toTitleCase(text) {

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.2 Writing Functions - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.2 Writing Functions</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 2 &middot;
+                            <a href="files/data-612/writing-functions.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Write a function when you repeat a calculation. Test it, check the inputs, and document it.
+                        </p>
+<h2>1. When to write a function</h2>
+<p>Base R and packages already give you many functions. Write your own when you will do the same work more than once: a conversion, a summary, a plot you rebuild every week.</p>
+<p>A function has a name, arguments, a body, and a return value:</p>
+<pre><code class="language-r">add_two &lt;- function(a, b) {
+  a + b
+}
+
+add_two(2, 4)
+# [1] 6
+</code></pre>
+<p>R returns the last value it evaluates. <code>return()</code> is useful when you want to leave early, or when several branches could be the last line. Put <code>return(...)</code> on its own line.</p>
+<p>A useful order of work:</p>
+<ol>
+<li>get the logic right on a small example</li>
+<li>choose a verb-like name</li>
+<li>wrap the working code in <code>function(...) { ... }</code></li>
+<li>test ordinary inputs</li>
+<li>check bad inputs</li>
+<li>write a short comment or Roxygen header so you remember the contract</li>
+</ol>
+<hr />
+<h2>2. Duplication is a reason to stop and wrap</h2>
+<p>This example is the usual one from R for Data Science. Four columns, each rescaled to sit between 0 and 1:</p>
+<pre><code class="language-r">set.seed(1)
+df &lt;- tibble::tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+</code></pre>
+<p>Copy-paste looks like this:</p>
+<pre><code class="language-r">df$a &lt;- (df$a - min(df$a, na.rm = TRUE)) /
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+</code></pre>
+<p>Four columns means four copies. It is easy to reuse the wrong column in a <code>min()</code> or <code>max()</code>, and <code>min()</code> is computed twice. <code>range()</code> does both ends in one pass:</p>
+<pre><code class="language-r">x &lt;- df$a
+rng &lt;- range(x, na.rm = TRUE)
+(x - rng[1]) / (rng[2] - rng[1])
+</code></pre>
+<p>That is a function:</p>
+<pre><code class="language-r">rescale01 &lt;- function(x) {
+  rng &lt;- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+rescale01(c(0, 5, 10))
+# [1] 0.0 0.5 1.0
+
+rescale01(c(1, 2, 3, NA, 5))
+# [1] 0.00 0.25 0.50   NA 1.00
+</code></pre>
+<p>Now each column is one line, and a change happens in one place:</p>
+<pre><code class="language-r">df$a &lt;- rescale01(df$a)
+df$b &lt;- rescale01(df$b)
+df$c &lt;- rescale01(df$c)
+df$d &lt;- rescale01(df$d)
+</code></pre>
+<p><code>Inf</code> is a good test. <code>range()</code> treats it as a real endpoint unless you say otherwise:</p>
+<pre><code class="language-r">x &lt;- c(1:10, Inf)
+rescale01(x)
+#  [1]   0   0   0   0   0   0   0   0   0   0 NaN
+</code></pre>
+<p>That is not useful. Ignore non-finite values when you compute the range:</p>
+<pre><code class="language-r">rescale01 &lt;- function(x) {
+  rng &lt;- range(x, na.rm = TRUE, finite = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+
+rescale01(x)
+#  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444
+#  [6] 0.5555556 0.6666667 0.7777778 0.8888889 1.0000000       Inf
+</code></pre>
+<hr />
+<h2>3. <code>if</code> needs one <code>TRUE</code> or <code>FALSE</code></h2>
+<p>A conditional runs one block or the other:</p>
+<pre><code class="language-r">if (condition) {
+  # when condition is TRUE
+} else {
+  # when condition is FALSE
+}
+</code></pre>
+<p>The condition must be a <strong>single</strong> logical value. Vectorized <code>&amp;</code> and <code>|</code> are for elementwise work. Inside <code>if</code>, use <code>&amp;&amp;</code> and <code>||</code>, or collapse a vector with <code>any()</code> or <code>all()</code>.</p>
+<p>Prefer <code>identical()</code> to <code>==</code> when you want exact equality of two objects. For floating-point comparisons, <code>dplyr::near()</code> is safer than <code>==</code>.</p>
+<p>This function reports which elements of a vector have names:</p>
+<pre><code class="language-r">has_name &lt;- function(x) {
+  nms &lt;- names(x)
+  if (is.null(nms)) {
+    rep(FALSE, length(x))
+  } else {
+    !is.na(nms) &amp; nms != &quot;&quot;
+  }
+}
+
+has_name(c(1, 2, 3))
+# [1] FALSE FALSE FALSE
+
+has_name(c(a = 1, 2, c = 3))
+# [1]  TRUE FALSE  TRUE
+</code></pre>
+<p>Chain branches with <code>else if</code> when you have several exclusive cases. When one argument chooses among named options, <code>switch()</code> is often clearer:</p>
+<pre><code class="language-r">do_op &lt;- function(x, y, op) {
+  switch(
+    op,
+    plus = x + y,
+    minus = x - y,
+    times = x * y,
+    divide = x / y,
+    stop(&quot;Unknown op!&quot;)
+  )
+}
+
+do_op(2, 4, &quot;plus&quot;)
+# [1] 6
+
+do_op(2, 4, &quot;mod&quot;)
+# Error in do_op(2, 4, &quot;mod&quot;): Unknown op!
+</code></pre>
+<p>Opening <code>{</code> stays at the end of the <code>if</code> or <code>function</code> line. Closing <code>}</code> sits on its own line, unless <code>else</code> follows it. RStudio's <strong>Code → Reindent Lines</strong> will fix indentation.</p>
+<hr />
+<h2>4. Names, arguments, and scope</h2>
+<p>Use snake_case: lowercase letters, digits, and <code>_</code>. Related functions can share a prefix (<code>str_</code>, <code>fct_</code>). Do not reuse names of functions you still need, such as <code>sum</code> or <code>length</code>.</p>
+<p>When you call a function, R makes a <strong>new environment</strong> for that call. Arguments live there. A name you define inside the function does not overwrite the same name in the console.</p>
+<p>If the function uses a name it did not define, R walks outward until it finds one, or it errors with <code>object not found</code>. That is convenient and dangerous. Keep inputs as arguments. Use generic names inside the function (<code>x</code>, <code>y</code>, <code>df</code>) rather than data-specific names from the console.</p>
+<p>Put data arguments first, so a pipe can feed them. Give control arguments defaults when there is a sensible usual value:</p>
+<pre><code class="language-r">wt_mean &lt;- function(x, w, na.rm = FALSE) {
+  stopifnot(is.logical(na.rm), length(na.rm) == 1)
+  stopifnot(length(x) == length(w))
+
+  if (na.rm) {
+    miss &lt;- is.na(x) | is.na(w)
+    x &lt;- x[!miss]
+    w &lt;- w[!miss]
+  }
+  sum(w * x) / sum(w)
+}
+</code></pre>
+<p><code>stopifnot()</code> checks that each expression is <code>TRUE</code>. The error message names the failed check. <code>stop("...")</code> lets you write the message yourself:</p>
+<pre><code class="language-r">wt_mean &lt;- function(x, w) {
+  if (length(x) != length(w)) {
+    stop(&quot;`x` and `w` must be the same length&quot;, call. = FALSE)
+  }
+  sum(w * x) / sum(w)
+}
+</code></pre>
+<p>When you call a function, you can leave names off the leading data arguments. Name the later ones (<code>na.rm = TRUE</code>) so a new argument in the middle will not silently shift yours.</p>
+<p>Look at <code>?mean</code>, <code>?log</code>, and <code>?t.test</code> for the usual pattern: data first, then options with defaults.</p>
+<hr />
+<h2>5. Comments and Roxygen</h2>
+<p>A <code>#</code> comment should say <em>why</em>, not restate the code. A line such as <code># load data --------------------</code> is a useful section break.</p>
+<p>For a function you will keep, write a short header. Roxygen comments start with <code>#'</code>. Put the cursor on the <code>function(</code> line and use <strong>Code → Insert Roxygen Skeleton</strong> (install <code>roxygen2</code> once if needed).</p>
+<pre><code class="language-r">#' Count positions that are NA in both vectors
+#'
+#' @param x,y Atomic vectors of the same length.
+#'
+#' @return A single integer.
+#'
+#' @examples
+#' both_na(c(1, NA, 3), c(NA, NA, 4))
+both_na &lt;- function(x, y) {
+  stopifnot(length(x) == length(y))
+  sum(is.na(x) &amp; is.na(y))
+}
+</code></pre>
+<p>The first line is a short title. <code>@param</code> describes each argument. <code>@return</code> describes the output. <code>@examples</code> should be code that actually runs. <code>@export</code> matters when you later turn the file into a package; you can ignore it this week.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Recreate <code>range()</code> using <code>min()</code> and <code>max()</code>. Document it.</p>
+</li>
+<li>
+<p>Write <code>both_na(x, y)</code>: two vectors of the same length, return how many positions are <code>NA</code> in both. Check the inputs. Document it.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-06T14:20:00-04:00">September 6, 2026, 2:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

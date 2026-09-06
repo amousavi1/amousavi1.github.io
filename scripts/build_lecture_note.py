@@ -1,4 +1,4 @@
-"""Build the DATA 612 Week 1 lecture page and PDF from the markdown source."""
+"""Build DATA 612 lecture and lab pages and PDFs from the markdown sources."""
 
 from __future__ import annotations
 
@@ -16,39 +16,69 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-08-30T15:25:00-04:00"
-LAST_UPDATED_TEXT = "August 30, 2026, 3:25 PM EDT"
+LAST_UPDATED_ISO = "2026-09-06T14:20:00-04:00"
+LAST_UPDATED_TEXT = "September 6, 2026, 2:20 PM EDT"
 
 NOTES = [
     {
         "slug": "getting-started",
+        "week": 1,
         "title": "1.1 Getting Started with R and RStudio",
         "lead": "Install R and RStudio, run a script, and open a project so R can find your files.",
     },
     {
         "slug": "r-packages-and-the-tidyverse",
+        "week": 1,
         "title": "1.2 R Packages and the Tidyverse",
         "lead": "Installing packages, loading them, the tidyverse, and the pipe.",
     },
     {
         "slug": "files-and-paths",
+        "week": 1,
         "title": "1.3 Working with Files and Paths",
         "lead": "Find a file, tell R where it is, import it, and save the result.",
     },
     {
         "slug": "introduction-to-r-concepts",
+        "week": 1,
         "title": "1.4 Introduction to R Concepts",
         "lead": "Data types, data structures, indexing, functions, and special values.",
     },
     {
         "slug": "r-markdown-and-quarto",
+        "week": 1,
         "title": "1.5 R Markdown and Quarto",
         "lead": "Prefer Quarto for new writeups. YAML is the control panel; chunk options decide what the reader sees.",
     },
     {
         "slug": "lab-1-looking-under-the-hood",
+        "week": 1,
         "title": "Lab 1: Looking Under the Hood of R",
         "lead": "Predict, then run. The point is to catch R in the act.",
+    },
+    {
+        "slug": "pipes",
+        "week": 2,
+        "title": "2.1 Pipes",
+        "lead": "Read the pipe as then. Chain steps instead of nesting calls or leaving extra objects in the environment.",
+    },
+    {
+        "slug": "writing-functions",
+        "week": 2,
+        "title": "2.2 Writing Functions",
+        "lead": "Write a function when you repeat a calculation. Test it, check the inputs, and document it.",
+    },
+    {
+        "slug": "r-scripts",
+        "week": 2,
+        "title": "2.3 R Scripts",
+        "lead": "Put reusable functions in a .R file and source() them so you are not copy-pasting.",
+    },
+    {
+        "slug": "lab-2-pipes-functions",
+        "week": 2,
+        "title": "Lab 2: Pipes, Functions, and Conditionals",
+        "lead": "Use a pipe, then write a function with a conditional and a check on the inputs.",
     },
 ]
 
@@ -200,6 +230,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     slug = note["slug"]
     title = note["title"]
     lead = note["lead"]
+    week = note["week"]
     pdf_href = f"files/data-612/{slug}.pdf"
     page_path = ROOT / f"data-612-{slug}.html"
     page = f"""<!doctype html>
@@ -247,7 +278,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-612.html">DATA 612</a> &middot; Week 1 &middot;
+                            <a href="data-612.html">DATA 612</a> &middot; Week {week} &middot;
                             <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
@@ -287,7 +318,7 @@ def write_print_page(note: dict, md_path: pathlib.Path) -> pathlib.Path:
   <style>{PRINT_CSS}</style>
 </head>
 <body>
-  <p class="kicker">DATA 612 &middot; Statistical Programming in R &middot; Week 1</p>
+  <p class="kicker">DATA 612 &middot; Statistical Programming in R &middot; Week {note["week"]}</p>
   <h1>{note["title"]}</h1>
   <p>{note["lead"]}</p>
   {print_body}
@@ -327,7 +358,12 @@ def build_note(note: dict) -> None:
 
 
 def main() -> None:
+    week = None
+    if len(sys.argv) > 1:
+        week = int(sys.argv[1])
     for note in NOTES:
+        if week is not None and note["week"] != week:
+            continue
         build_note(note)
 
 

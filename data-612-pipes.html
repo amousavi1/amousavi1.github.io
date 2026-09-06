@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Credits - Ahmad Mousavi</title>
+        <title>2.1 Pipes - DATA 612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -23,7 +23,7 @@
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
                         <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,48 +97,127 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Credits</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.1 Pipes</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>Attributions for the template and customization used to build this website.</p>
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 2 &middot;
+                            <a href="files/data-612/pipes.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Read the pipe as then. Chain steps instead of nesting calls or leaving extra objects in the environment.
+                        </p>
+<h2>1. Read the pipe as "then"</h2>
+<p>Note 1.2 introduced the pipe. This note is about using it for a sequence of steps.</p>
+<p>You can do several things to the same data by:</p>
+<ul>
+<li>creating intermediate objects</li>
+<li>nesting functions</li>
+<li>piping the result of one function into the next</li>
+</ul>
+<p>Read either pipe as <strong>then</strong>: take what is on the left, <em>then</em> do what follows.</p>
+<pre><code class="language-r">x |&gt; mean()
+</code></pre>
+<p>is the same idea as <code>mean(x)</code>. The gain appears when there are several steps.</p>
+<p>In this course you may use either pipe:</p>
+<pre><code class="language-r">|&gt;      # Base R (R 4.1 and later). No extra package.
+%&gt;%     # magrittr / tidyverse. Comes with library(tidyverse).
+</code></pre>
+<p>They are interchangeable for the work we do this week. The Base R pipe <code>|&gt;</code> only fills the <strong>first</strong> argument of the next function. The magrittr pipe <code>%&gt;%</code> can place the left-hand result elsewhere with <code>.</code>, which we will not need yet.</p>
+<p>In RStudio, <strong>Ctrl+Shift+M</strong> (Windows) or <strong>Cmd+Shift+M</strong> (Mac) inserts a pipe with spaces around it. After a pipe, Enter indents the next line.</p>
+<p>You can turn the shortcut toward <code>|&gt;</code> or <code>%&gt;%</code> under <strong>Tools → Global Options… → Code</strong>.</p>
+<hr />
+<h2>2. Three ways to compute a geometric mean</h2>
+<p>The <a href="https://en.wikipedia.org/wiki/Geometric_mean">geometric mean</a> is useful for positive, skewed data, ratios, and growth rates. A numerically stable recipe is:</p>
+<ol>
+<li>take the log of each value</li>
+<li>average those logs</li>
+<li>exponentiate the average</li>
+</ol>
+<p>Additions of logs are usually more stable than a long product. A small illustration:</p>
+<pre><code class="language-r">a &lt;- sqrt(2)
+a^2 == 2
+# [1] FALSE
 
-                        <h2>Template</h2>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/academicpages/academicpages.github.io" target="_blank" rel="noopener">AcademicPages</a>
-                                — maintained by the
-                                <a href="https://github.com/academicpages" target="_blank" rel="noopener">AcademicPages contributors</a>
-                                (MIT license:
-                                <a
-                                    href="https://github.com/academicpages/academicpages.github.io/blob/master/LICENSE"
-                                    target="_blank"
-                                    rel="noopener"
-                                    >upstream</a
-                                >)
-                            </li>
-                        </ul>
-
-                        <h2>Theme Foundation</h2>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/mmistakes/minimal-mistakes" target="_blank" rel="noopener">Minimal Mistakes</a>
-                                by <a href="https://mademistakes.com" target="_blank" rel="noopener">Michael Rose</a> (MIT license:
-                                <a href="https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE" target="_blank" rel="noopener"
-                                    >upstream</a
-                                >)
-                            </li>
-                        </ul>
-
-                        <h2>Site Adaptation</h2>
-                        <ul>
-                            <li>Parker Chace — applied the Minimal Mistakes-style layout and migrated content for Dr. Ahmad Mousavi’s site.</li>
-                        </ul>
-
-                        <h2>Licensing</h2>
-                        <p>For the full license text for this site package, see <a href="LICENSE">LICENSE</a>.</p>
+exp(log(a) + log(a)) == 2
+# [1] TRUE
+</code></pre>
+<p>Generate some positive numbers so we can compare styles. <code>set.seed()</code> makes <code>rnorm()</code> repeatable.</p>
+<pre><code class="language-r">set.seed(10)
+x &lt;- abs(rnorm(100))
+head(x)
+# [1] 0.01874617 0.18425254 1.37133055 0.59916772 0.29454513 0.38979430
+</code></pre>
+<p><code>rnorm()</code> draws from a normal distribution. <code>abs()</code> makes the draws non-negative so <code>log()</code> is defined.</p>
+<h3>Intermediate objects</h3>
+<pre><code class="language-r">log_x &lt;- log(x)
+mean_lx &lt;- mean(log_x)
+geo_mean &lt;- exp(mean_lx)
+geo_mean
+# [1] 0.5703996
+</code></pre>
+<p>This is easy to debug one line at a time. The cost is extra names in the environment, especially if you repeat the calculation.</p>
+<h3>Nested calls</h3>
+<pre><code class="language-r">geo_mean &lt;- exp(mean(log(x)))
+geo_mean
+# [1] 0.5703996
+</code></pre>
+<p>Fine for two or three functions. Past that, the parentheses become hard to read and hard to edit.</p>
+<h3>A pipe</h3>
+<pre><code class="language-r">x |&gt;
+  log() |&gt;
+  mean() |&gt;
+  exp()
+# [1] 0.5703996
+</code></pre>
+<p>One task per line. To keep the result:</p>
+<pre><code class="language-r">geo_mean &lt;- x |&gt;
+  log() |&gt;
+  mean() |&gt;
+  exp()
+</code></pre>
+<p>Some people assign at the end with <code>-&gt;</code>. Either is fine. Left assignment at the top is the usual style in this course, because you can run the pipeline line by line without creating <code>geo_mean</code> until you want it.</p>
+<p>Load tidyverse if you want <code>%&gt;%</code> instead of <code>|&gt;</code>:</p>
+<pre><code class="language-r">library(tidyverse)
+</code></pre>
+<hr />
+<h2>3. Extra arguments stay in the function that needs them</h2>
+<p>The piped value usually becomes the <strong>first</strong> argument of the next function. Other arguments stay written in that call:</p>
+<pre><code class="language-r">geo_mean &lt;- x |&gt;
+  log() |&gt;
+  mean(na.rm = TRUE) |&gt;
+  exp()
+</code></pre>
+<p>That is <code>mean(log(x), na.rm = TRUE)</code>, then <code>exp(...)</code>.</p>
+<p>A pipe helps you:</p>
+<ul>
+<li>read the work top to bottom instead of inside-out</li>
+<li>avoid a nest of parentheses</li>
+<li>add, comment, or drop a step without renaming intermediates</li>
+</ul>
+<hr />
+<h2>4. Other magrittr pipes (aside)</h2>
+<p><code>magrittr</code> also has <code>%\%$</code>, which exposes column names on the right-hand side. You may see it in older code. We will stay with <code>|&gt;</code> or <code>%&gt;%</code>.</p>
+<pre><code class="language-r">library(magrittr)
+iris |&gt;
+  subset(Sepal.Length &gt; mean(Sepal.Length)) %$%
+  cor(Sepal.Length, Sepal.Width)
+# [1] 0.3361992
+</code></pre>
+<hr />
+<h2>5. Practice</h2>
+<p>Using a pipe, and without intermediate objects:</p>
+<ol>
+<li>draw 100 values from a normal distribution with standard deviation 10</li>
+<li>sort them</li>
+<li>take lagged differences</li>
+<li>average those differences</li>
+<li>round the average to one decimal place</li>
+</ol>
+<p>Useful functions: <code>rnorm()</code>, <code>sort()</code>, <code>diff()</code>, <code>mean()</code>, <code>round()</code>. Use <code>set.seed()</code> if you want a repeatable number.</p>
                     </section>
                 </div>
             </article>
