@@ -1,12 +1,13 @@
-"""Encrypt Lab 1 solutions for the password-gated page.
+"""Encrypt lab solutions for the password-gated pages.
 
-Plaintext lives in files/data-612/lab-1-solutions.md (gitignored).
+Plaintext lives in files/data-612/lab-*-solutions.md (gitignored).
 Only the ciphertext JSON is published.
 
-  python scripts/encrypt_lab_solutions.py --password "your-passphrase"
+  python scripts/encrypt_lab_solutions.py --lab 2
+  python scripts/encrypt_lab_solutions.py --lab 1 --password "your-passphrase"
 
-Keep the passphrase off the public site. Share it with students when you want
-them to open data-612-lab-1-solutions.html.
+If --password is omitted, the script uses files/data-612/.lab1-solutions-password
+or LAB_SOLUTIONS_PASSWORD. Keep the passphrase off the public site.
 """
 
 from __future__ import annotations
@@ -31,8 +32,7 @@ except ImportError:
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-MD_PATH = ROOT / "files" / "data-612" / "lab-1-solutions.md"
-OUT_PATH = ROOT / "files" / "data-612" / "lab-1-solutions.enc.json"
+PASSWORD_FILE = ROOT / "files" / "data-612" / ".lab1-solutions-password"
 ITERATIONS = 210_000
 
 
@@ -73,23 +73,38 @@ def encrypt(plaintext: bytes, password: str) -> dict:
     }
 
 
+def default_password() -> str | None:
+    env = os.environ.get("LAB_SOLUTIONS_PASSWORD") or os.environ.get(
+        "LAB1_SOLUTIONS_PASSWORD"
+    )
+    if env:
+        return env
+    if PASSWORD_FILE.exists():
+        return PASSWORD_FILE.read_text(encoding="utf-8").strip()
+    return None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--lab", default="1", help="Lab number, for example 1 or 2.")
     parser.add_argument(
         "--password",
-        default=os.environ.get("LAB1_SOLUTIONS_PASSWORD"),
-        help="Passphrase students will type. Or set LAB1_SOLUTIONS_PASSWORD.",
+        default=default_password(),
+        help="Passphrase students will type. Or set LAB_SOLUTIONS_PASSWORD.",
     )
     args = parser.parse_args()
     if not args.password:
-        sys.exit("Provide --password or LAB1_SOLUTIONS_PASSWORD.")
-    if not MD_PATH.exists():
-        sys.exit(f"Missing {MD_PATH}")
+        sys.exit("Provide --password, LAB_SOLUTIONS_PASSWORD, or the password file.")
 
-    html = markdown_to_html(MD_PATH.read_text(encoding="utf-8"))
+    md_path = ROOT / "files" / "data-612" / f"lab-{args.lab}-solutions.md"
+    out_path = ROOT / "files" / "data-612" / f"lab-{args.lab}-solutions.enc.json"
+    if not md_path.exists():
+        sys.exit(f"Missing {md_path}")
+
+    html = markdown_to_html(md_path.read_text(encoding="utf-8"))
     payload = encrypt(html.encode("utf-8"), args.password)
-    OUT_PATH.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {OUT_PATH.relative_to(ROOT)}")
+    out_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote {out_path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

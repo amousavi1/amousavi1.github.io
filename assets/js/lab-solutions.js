@@ -2,7 +2,8 @@
   const STATUS = document.getElementById('lab-solutions-status');
   const FORM = document.getElementById('lab-solutions-form');
   const OUTPUT = document.getElementById('lab-solutions-output');
-  const ENC_URL = 'files/data-612/lab-1-solutions.enc.json';
+  const ENC_URL =
+    (FORM && FORM.getAttribute('data-enc-url')) || 'files/data-612/lab-1-solutions.enc.json';
 
   function setStatus(text, isError) {
     if (!STATUS) return;
