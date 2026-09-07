@@ -836,6 +836,10 @@ html[data-theme="dark"] strong {
   white-space: nowrap;
 }
 
+.cv-download {
+  margin: 0 0 1.35em;
+}
+
 .lecture-meta {
   margin: 0 0 1.15em;
   color: #5f6368;
