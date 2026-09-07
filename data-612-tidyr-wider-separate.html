@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.2 tidyr: pivot_wider(), separate(), unite() - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.2 tidyr: pivot_wider(), separate(), unite()</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 7 &middot;
+                            <a href="files/data-612/tidyr-wider-separate.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Widen a key/value pair, split a combined column, or paste columns back together.
+                        </p>
+<h2>1. <code>pivot_wider()</code> is the inverse</h2>
+<p><code>table2</code> is long: a <code>type</code> column (<code>"cases"</code> or <code>"population"</code>) and a <code>count</code> column. That is tidy in a different way. For a rate you want cases and population <strong>side by side</strong>.</p>
+<pre><code class="language-r">library(tidyverse)
+
+table2 |&gt;
+  pivot_wider(names_from = type, values_from = count)
+</code></pre>
+<p><code>names_from</code> is the column whose <strong>values</strong> become new names. <code>values_from</code> is the column that fills the cells. The other columns (<code>country</code>, <code>year</code>) stay as keys.</p>
+<p><code>pivot_longer()</code> then <code>pivot_wider()</code> (with matching arguments) should return the table you started with.</p>
+<hr />
+<h2>2. Duplicate keys fail</h2>
+<p>Each key must point to <strong>one</strong> cell. Two ages for the same person cannot both occupy an <code>age</code> column.</p>
+<pre><code class="language-r">people &lt;- tribble(
+  ~name,             ~key,    ~value,
+  &quot;Phillip Woods&quot;,   &quot;age&quot;,       45,
+  &quot;Phillip Woods&quot;,   &quot;height&quot;,   186,
+  &quot;Phillip Woods&quot;,   &quot;age&quot;,       50,
+  &quot;Jessica Cordero&quot;, &quot;age&quot;,       37,
+  &quot;Jessica Cordero&quot;, &quot;height&quot;,   156
+)
+
+people |&gt;
+  pivot_wider(names_from = key, values_from = value)
+</code></pre>
+<p>The error is that the rows are not uniquely identified. Add a row id (<code>mutate(id = row_number())</code>), or decide which age to keep, before you widen.</p>
+<hr />
+<h2>3. <code>separate()</code> splits one column</h2>
+<p><code>table3</code> stores <code>rate</code> as <code>"745/19987071"</code>. Two values, one cell — not tidy.</p>
+<pre><code class="language-r">table3 |&gt;
+  separate(rate, into = c(&quot;cases&quot;, &quot;population&quot;), sep = &quot;/&quot;, convert = TRUE)
+</code></pre>
+<p><code>into</code> names the new columns. <code>sep</code> can be a string or a position. <code>convert = TRUE</code> runs <code>type.convert()</code> so the pieces become numbers when they look like numbers.</p>
+<p>Too many pieces: <code>extra = "merge"</code> or <code>"drop"</code>. Too few: <code>fill = "right"</code> or <code>"left"</code>.</p>
+<hr />
+<h2>4. <code>unite()</code> pastes columns</h2>
+<p><code>table5</code> splits the year into <code>century</code> and <code>year</code>. Paste them back:</p>
+<pre><code class="language-r">table5 |&gt;
+  unite(new, century, year, sep = &quot;&quot;)
+</code></pre>
+<p><code>sep = ""</code> glues with nothing in between. Default <code>sep</code> is <code>"_"</code>. <code>remove = FALSE</code> keeps the old columns.</p>
+<hr />
+<h2>5. Tidy, then join</h2>
+<p><code>table4a</code> is cases; <code>table4b</code> is population. Lengthen both, then join on the keys. <code>left_join()</code> keeps every row of the left table and adds matching columns from the right. Note 8.1 is the full join story.</p>
+<pre><code class="language-r">tidy4a &lt;- table4a |&gt;
+  pivot_longer(cols = -country, names_to = &quot;year&quot;, values_to = &quot;cases&quot;)
+
+tidy4b &lt;- table4b |&gt;
+  pivot_longer(cols = -country, names_to = &quot;year&quot;, values_to = &quot;population&quot;)
+
+left_join(tidy4a, tidy4b, by = c(&quot;country&quot;, &quot;year&quot;))
+</code></pre>
+<p>That result is <code>table1</code> (year may still be character).</p>
+<hr />
+<h2>6. Practice</h2>
+<p>Put course CSV files in a <code>data/</code> folder of your project.</p>
+<ol>
+<li>
+<p><code>flowers1.csv</code> uses <code>;</code> and a comma as the decimal mark. Load it with <code>read_delim("data/flowers1.csv", delim = ";")</code>. If <code>Value</code> is character, set <code>locale = locale(decimal_mark = ",")</code>. Then <code>pivot_wider()</code> so <code>Flowers</code> and <code>Intensity</code> are columns.</p>
+</li>
+<li>
+<p>Load <code>flowers2.csv</code>. <code>separate()</code> the <code>Flowers/Intensity</code> column. Then <code>unite()</code> those two columns again with a comma.</p>
+</li>
+<li>
+<p>In <code>nycflights13::flights</code>, <code>unite()</code> <code>month</code>, <code>day</code>, <code>hour</code>, and <code>minute</code> into <code>sd_time</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

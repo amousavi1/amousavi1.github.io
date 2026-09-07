@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.1 Presentations from R Markdown - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.1 Presentations from R Markdown</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 12 &middot;
+                            <a href="files/data-612/rmd-presentations.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Knit slides from code. ioslides, slidy, beamer, or Quarto reveal.
+                        </p>
+<h2>1. Why knit slides from code</h2>
+<p>A slide deck that is also a source file has one job: the numbers and plots on the slide come from the same code you would put in a homework file. Knit (or Render) again after a data fix and the deck updates. You are not pasting a screenshot of a plot you can no longer reproduce.</p>
+<p>The file is still Markdown plus chunks. The output is slides instead of a scrolling report. Note 1.5 is the document system; this note is the slide formats.</p>
+<hr />
+<h2>2. Formats</h2>
+<p>R Markdown presentation outputs you will see:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Output</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ioslides_presentation</code></td>
+<td>HTML slides (the usual starting point)</td>
+</tr>
+<tr>
+<td><code>slidy_presentation</code></td>
+<td>HTML slides, W3C Slidy</td>
+</tr>
+<tr>
+<td><code>beamer_presentation</code></td>
+<td>PDF slides. Needs LaTeX</td>
+</tr>
+<tr>
+<td><code>powerpoint_presentation</code></td>
+<td>A <code>.pptx</code> file</td>
+</tr>
+<tr>
+<td><code>xaringan::moon_reader</code></td>
+<td>HTML slides (remark.js). Needs the <code>xaringan</code> package</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quarto's HTML slide format is <code>format: revealjs</code>. Lab 12 accepts that as well.</p>
+<p>Pick <strong>one</strong> HTML format and stay with it for the lab. Beamer is for when you already have LaTeX and want a PDF. PowerPoint is for a file someone else will click through in PowerPoint.</p>
+<hr />
+<h2>3. YAML and slide breaks</h2>
+<p>R Markdown uses <code>output:</code>. A minimal ioslides header:</p>
+<pre><code class="language-markdown">---
+title: &quot;Arrival delay&quot;
+author: &quot;Your Name&quot;
+output: ioslides_presentation
+---
+</code></pre>
+<p>The title slide is built from <code>title</code> and <code>author</code>. Every later slide starts with <code>##</code>.</p>
+<pre><code class="language-markdown">## A slide title
+
+A sentence.
+
+```{r}
+mean(mtcars$mpg)
+```
+</code></pre>
+<p><code>#</code> is a section (ioslides can turn it into a divider). The slides you write are <code>##</code>.</p>
+<p>xaringan is the exception: slides are separated by a line with only <code>---</code>, not by <code>##</code>. If you pick xaringan, follow a xaringan template. If you pick ioslides or slidy, use <code>##</code>.</p>
+<p>Quarto reveal uses <code>format: revealjs</code> and the same <code>##</code> slide titles.</p>
+<hr />
+<h2>4. What to show</h2>
+<p>Do <strong>not</strong> show package-load code. Put <code>library()</code> in a setup chunk with <code>echo = FALSE</code> (R Markdown) or <code>#| echo: false</code> / <code>#| include: false</code> (Quarto). The reader came for the table and the plot.</p>
+<pre><code class="language-markdown">```{r setup, include=FALSE}
+library(tidyverse)
+```
+</code></pre>
+<p>A chunk that <strong>computes</strong> a table can show the code (<code>echo = TRUE</code>). A chunk that <strong>draws</strong> the plot the audience should look at often hides the code (<code>echo = FALSE</code>). Both chunks still run.</p>
+<p>HTML widgets (an interactive <code>plotly</code> chart, a <code>DT</code> table) need an <strong>HTML</strong> format: ioslides, slidy, xaringan, or Quarto reveal. They will not appear in Beamer or PowerPoint.</p>
+<p>PowerPoint is one-way. Knit writes a <code>.pptx</code>. Edits you then make in PowerPoint do not come back into the <code>.Rmd</code>. If you need to change a number, change the source and knit again.</p>
+<hr />
+<h2>5. One idea per slide</h2>
+<p>A slide is not a report page. One claim, one table, or one plot. If you need a second plot, it is a second slide.</p>
+<p>A few habits that keep a short deck readable:</p>
+<ul>
+<li>title the slide with the claim, not the function name</li>
+<li>show the code only when the code is the point</li>
+<li>give the plot room; drop <code>theme_bw()</code> legends you do not need</li>
+<li>end with a sentence the audience can repeat</li>
+</ul>
+<hr />
+<h2>6. Practice</h2>
+<p>Outline a 3-slide deck (do not spend the hour polishing fonts):</p>
+<ol>
+<li>Title slide (YAML <code>title</code> / <code>author</code>).</li>
+<li>A slide with a small table (a <code>summarize()</code> of a built-in table, or <code>mtcars</code> / <code>penguins</code>).</li>
+<li>A slide with a plot and <strong>no</strong> code (<code>echo = FALSE</code>).</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

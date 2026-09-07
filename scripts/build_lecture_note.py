@@ -16,8 +16,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-07T16:50:00-04:00"
-LAST_UPDATED_TEXT = "September 7, 2026, 4:50 PM EDT"
+LAST_UPDATED_ISO = "2026-09-07T17:15:00-04:00"
+LAST_UPDATED_TEXT = "September 7, 2026, 5:15 PM EDT"
 
 NOTES = [
     {
@@ -169,6 +169,156 @@ NOTES = [
         "week": 6,
         "title": "Lab 6: Import, Parse, and Explore",
         "lead": "Load the hate-crime files, parse a few strings, and explore diamonds.",
+    },
+    {
+        "slug": "tidyr-tidy-longer",
+        "week": 7,
+        "title": "7.1 tidyr: Tidy Data and pivot_longer()",
+        "lead": "One variable per column, one observation per row. pivot_longer() turns wide week columns into rows.",
+    },
+    {
+        "slug": "tidyr-wider-separate",
+        "week": 7,
+        "title": "7.2 tidyr: pivot_wider(), separate(), unite()",
+        "lead": "Widen a key/value pair, split a combined column, or paste columns back together.",
+    },
+    {
+        "slug": "lab-7-tidyr",
+        "week": 7,
+        "title": "Lab 7: Tidying Data",
+        "lead": "Pivot monkeymem and the flower files. Unite a few flight columns.",
+    },
+    {
+        "slug": "dplyr-joins",
+        "week": 8,
+        "title": "8.1 dplyr: Keys and Mutating Joins",
+        "lead": "Primary keys identify rows. inner_join() and left_join() add columns from a second table.",
+    },
+    {
+        "slug": "dplyr-filtering-joins",
+        "week": 8,
+        "title": "8.2 dplyr: Filtering Joins",
+        "lead": "semi_join() and anti_join() keep or drop rows of x. They do not add columns.",
+    },
+    {
+        "slug": "dbplyr-databases",
+        "week": 8,
+        "title": "8.3 dbplyr: Databases",
+        "lead": "tbl() is lazy SQL. collect() brings a result into R. Use an in-memory SQLite.",
+    },
+    {
+        "slug": "lab-8-joins",
+        "week": 8,
+        "title": "Lab 8: Relational Data",
+        "lead": "Join flights to airports, weather days, and planes.",
+    },
+    {
+        "slug": "stringr-basics",
+        "week": 9,
+        "title": "9.1 stringr: Strings",
+        "lead": "str_c() combines, str_sub() extracts, and case helpers change letters.",
+    },
+    {
+        "slug": "stringr-regex",
+        "week": 9,
+        "title": "9.2 stringr: Regular Expressions",
+        "lead": "A pattern is a regular expression. Escape in R with two backslashes.",
+    },
+    {
+        "slug": "lab-9-strings",
+        "week": 9,
+        "title": "Lab 9: Strings and Regex",
+        "lead": "Build a quote from pieces, then write a few patterns.",
+    },
+    {
+        "slug": "forcats-factors",
+        "week": 10,
+        "title": "10.1 forcats: Factors",
+        "lead": "A factor is an integer plus labels. Reorder, recode, collapse, and drop levels.",
+    },
+    {
+        "slug": "lubridate-dates",
+        "week": 10,
+        "title": "10.2 lubridate: Dates and Times",
+        "lead": "Parse with ymd(), pull pieces out, and know duration vs period vs interval.",
+    },
+    {
+        "slug": "lab-10-factors-dates",
+        "week": 10,
+        "title": "Lab 10: Factors and Dates",
+        "lead": "Reshape a factor, then parse the WMATA ridership dates.",
+    },
+    {
+        "slug": "stats-tests",
+        "week": 11,
+        "title": "11.1 Statistics: Tests",
+        "lead": "Plot first. Save t.test() and aov(). The p-value is evidence against H0.",
+    },
+    {
+        "slug": "stats-regression-summaries",
+        "week": 11,
+        "title": "11.2 Statistics: Regression and Summaries",
+        "lead": "lm() with two predictors, residual plots, then across() summaries.",
+    },
+    {
+        "slug": "lab-11-stats",
+        "week": 11,
+        "title": "Lab 11: Tests and Models",
+        "lead": "A t-test, an ANOVA, a linear model, and a column summary.",
+    },
+    {
+        "slug": "rmd-presentations",
+        "week": 12,
+        "title": "12.1 Presentations from R Markdown",
+        "lead": "Knit slides from code. ioslides, slidy, beamer, or Quarto reveal.",
+    },
+    {
+        "slug": "lab-12-presentations",
+        "week": 12,
+        "title": "Lab 12: A Short Presentation",
+        "lead": "Three slides: a title, a daily delay table, and a line plot.",
+    },
+    {
+        "slug": "rmd-chunks-tables",
+        "week": 13,
+        "title": "13.1 R Markdown: Chunks and Tables",
+        "lead": "Label chunks, set options, kable() a table, and include a child document.",
+    },
+    {
+        "slug": "rmd-citations-bookdown",
+        "week": 13,
+        "title": "13.2 R Markdown: Citations and Cross-References",
+        "lead": "Number figures with bookdown or Quarto. Cite with @key and a .bib file.",
+    },
+    {
+        "slug": "lab-13-rmarkdown",
+        "week": 13,
+        "title": "Lab 13: A Short Report",
+        "lead": "A penguin table, a captioned plot, and a citation.",
+    },
+    {
+        "slug": "vectors-lists",
+        "week": 14,
+        "title": "14.1 Vectors and Lists",
+        "lead": "[ keeps structure. [[ extracts one. A data frame is a list of columns.",
+    },
+    {
+        "slug": "purrr-iteration",
+        "week": 14,
+        "title": "14.2 Iteration: Loops and purrr",
+        "lead": "Pre-allocate a for-loop. map() walks a list. across() often replaces a column loop.",
+    },
+    {
+        "slug": "course-wrap",
+        "week": 14,
+        "title": "14.3 Course Wrap",
+        "lead": "Question, tidy, plot, model, communicate. Iterate.",
+    },
+    {
+        "slug": "lab-14-iteration",
+        "week": 14,
+        "title": "Lab 14: Vectors and Iteration",
+        "lead": "Simulate a sampling distribution, then map models over diamonds.",
     },
 ]
 

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 10: Factors and Dates - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 10: Factors and Dates</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 10 &middot;
+                            <a href="files/data-612/lab-10-factors-dates.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Reshape a factor, then parse the WMATA ridership dates.
+                        </p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>10.1</strong> and <strong>10.2</strong> first. Put <code>wmata_ridership.csv</code> in a <code>data/</code> folder of your project (see the Data section of the course page).</p>
+<pre><code class="language-r">library(tidyverse)
+library(lubridate)
+</code></pre>
+<hr />
+<h2>1. Factors</h2>
+<pre><code class="language-r">fc &lt;- factor(c(&quot;D&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;D&quot;,&quot;A&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;))
+</code></pre>
+<ol>
+<li>
+<p>Add level <code>"E"</code> without adding any observations.</p>
+</li>
+<li>
+<p>Bar chart of <code>fc</code> by frequency, most frequent on the <strong>right</strong>.</p>
+</li>
+<li>
+<p>Put the levels in reverse alphabetical order.</p>
+</li>
+<li>
+<p>Remove the observations that are <code>"C"</code>, then drop the unused level.</p>
+</li>
+<li>
+<p>Collapse <code>"A"</code> and <code>"B"</code> into <code>"z"</code>.</p>
+</li>
+</ol>
+<hr />
+<h2>2. Dates</h2>
+<p>Use <code>data/wmata_ridership.csv</code>.</p>
+<ol>
+<li>
+<p>Parse <code>Date</code>. Add <code>year</code>, <code>month</code>, and <code>wday</code> columns with <code>label = TRUE</code> where it applies.</p>
+</li>
+<li>
+<p>Drop 2004.</p>
+</li>
+<li>
+<p>Boxplot of daily <code>Total</code> by weekday.</p>
+</li>
+<li>
+<p>How long is the span as a duration and as an interval?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

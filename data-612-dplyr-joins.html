@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.1 dplyr: Keys and Mutating Joins - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.1 dplyr: Keys and Mutating Joins</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 8 &middot;
+                            <a href="files/data-612/dplyr-joins.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Primary keys identify rows. inner_join() and left_join() add columns from a second table.
+                        </p>
+<h2>1. Several tables, one system</h2>
+<p>One table is rarely the whole story. <code>nycflights13</code> is five tables about the same flights. Install the package once, then:</p>
+<pre><code class="language-r">library(tidyverse)
+library(nycflights13)
+
+flights
+planes
+airlines
+airports
+weather
+</code></pre>
+<ul>
+<li><code>flights</code> — one row per flight out of NYC in 2013</li>
+<li><code>planes</code> — one row per tail number</li>
+<li><code>airlines</code> — carrier code and full name</li>
+<li><code>airports</code> — one row per FAA code</li>
+<li><code>weather</code> — hourly weather at the three NYC airports</li>
+</ul>
+<p>A <strong>primary key</strong> uniquely identifies a row in its own table (<code>planes$tailnum</code>, <code>airlines$carrier</code>, <code>airports$faa</code>). A <strong>foreign key</strong> points at a primary key in another table (<code>flights$tailnum</code>, <code>flights$carrier</code>, <code>flights$dest</code>).</p>
+<p><code>weather</code> is identified by <code>origin</code>, <code>year</code>, <code>month</code>, <code>day</code>, and <code>hour</code> together. That is a compound key.</p>
+<hr />
+<h2>2. Check the keys</h2>
+<p><code>count()</code> then <code>filter(n &gt; 1)</code> finds duplicate keys. A real primary key has no such rows and no missing values.</p>
+<pre><code class="language-r">planes |&gt;
+  count(tailnum) |&gt;
+  filter(n &gt; 1)
+
+weather |&gt;
+  count(origin, year, month, day, hour) |&gt;
+  filter(n &gt; 1)
+
+flights |&gt;
+  count(year, month, day, flight, tailnum) |&gt;
+  filter(n &gt; 1)
+</code></pre>
+<p><code>flights</code> has no natural primary key. Add a surrogate if you need one:</p>
+<pre><code class="language-r">flights |&gt;
+  mutate(id = row_number())
+</code></pre>
+<hr />
+<h2>3. Mutating joins add columns</h2>
+<p>The first argument is <code>x</code>, the second is <code>y</code>. The join matches rows by key and pastes columns from <code>y</code> onto <code>x</code>.</p>
+<ul>
+<li><code>inner_join(x, y)</code> — only keys in both</li>
+<li><code>left_join(x, y)</code> — every row of <code>x</code> (the default you will use)</li>
+<li><code>right_join(x, y)</code> — every row of <code>y</code></li>
+<li><code>full_join(x, y)</code> — every key in either</li>
+</ul>
+<pre><code class="language-r">x &lt;- tribble(
+  ~key, ~val_x,
+     1, &quot;x1&quot;,
+     2, &quot;x2&quot;,
+     3, &quot;x3&quot;
+)
+y &lt;- tribble(
+  ~key, ~val_y,
+     1, &quot;y1&quot;,
+     2, &quot;y2&quot;,
+     4, &quot;y4&quot;
+)
+
+inner_join(x, y, by = &quot;key&quot;)
+left_join(x, y, by = &quot;key&quot;)
+right_join(x, y, by = &quot;key&quot;)
+full_join(x, y, by = &quot;key&quot;)
+</code></pre>
+<p>Unmatched rows get <code>NA</code> in the new columns (<code>left_join</code> / <code>right_join</code> / <code>full_join</code>).</p>
+<hr />
+<h2>4. <code>by</code></h2>
+<p>Same name in both tables: <code>by = "carrier"</code>. Different names: a named vector, left name first.</p>
+<pre><code class="language-r">flights |&gt;
+  left_join(airlines, by = &quot;carrier&quot;)
+
+flights |&gt;
+  left_join(airports, by = c(&quot;dest&quot; = &quot;faa&quot;))
+</code></pre>
+<p>Several keys: <code>by = c("origin", "year", "month", "day", "hour")</code> for weather. If you omit <code>by</code>, dplyr uses every shared name and tells you which.</p>
+<p>When both tables have a <code>year</code> (flights and planes), the join suffixes the clash: <code>year.x</code> and <code>year.y</code>, or set <code>suffix</code>. Safer: rename before you join.</p>
+<pre><code class="language-r">flights |&gt;
+  left_join(
+    planes |&gt; select(tailnum, plane_year = year),
+    by = &quot;tailnum&quot;
+  )
+</code></pre>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Add the airline name to every flight.</p>
+</li>
+<li>
+<p>Keep only flights that have a matching row in <code>planes</code>. How many flights are dropped?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

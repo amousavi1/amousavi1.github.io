@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>10.1 forcats: Factors - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">10.1 forcats: Factors</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 10 &middot;
+                            <a href="files/data-612/forcats-factors.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            A factor is an integer plus labels. Reorder, recode, collapse, and drop levels.
+                        </p>
+<h2>1. A factor is an integer plus labels</h2>
+<p>A factor stores a categorical vector as integer codes plus a <code>levels</code> attribute. What prints is the label. What sits underneath is <code>1</code>, <code>2</code>, <code>3</code>, … in the order of the levels.</p>
+<p>That is why <code>as.numeric()</code> on a factor of numbers is the <strong>index</strong>, not the printed value.</p>
+<pre><code class="language-r">library(tidyverse)
+
+xf &lt;- factor(c(10, 11, 13, 10))
+xf
+as.numeric(xf)
+parse_number(as.character(xf))
+parse_number(levels(xf)[xf])
+</code></pre>
+<p><code>as.character()</code> (or <code>levels(xf)[xf]</code>) gets the labels back. <code>parse_number()</code> turns them into numbers.</p>
+<p>Create a factor with <code>factor()</code>. Set <code>levels</code> yourself when the order is not alphabetical.</p>
+<pre><code class="language-r">month_levels &lt;- c(&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;,
+                  &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;)
+factor(c(&quot;Dec&quot;, &quot;Apr&quot;, &quot;Jan&quot;, &quot;Mar&quot;), levels = month_levels)
+</code></pre>
+<p>Values that are not in <code>levels</code> become <code>NA</code>. Extra levels stay in the attribute even if no row uses them.</p>
+<hr />
+<h2>2. <code>gss_cat</code></h2>
+<p><code>gss_cat</code> is a General Social Survey slice that ships with forcats. <code>?gss_cat</code>. Useful factors: <code>marital</code>, <code>rincome</code>, <code>partyid</code>, <code>relig</code>.</p>
+<pre><code class="language-r">gss_cat
+count(gss_cat, partyid)
+</code></pre>
+<p><code>forcats</code> comes with <code>library(tidyverse)</code>. Every helper starts with <code>fct_</code>.</p>
+<hr />
+<h2>3. Reorder levels</h2>
+<p>Plots follow the level order. Change the order, not the data.</p>
+<ul>
+<li><code>fct_reorder(f, x)</code> — order <code>f</code> by a summary of <code>x</code> (median by default). The usual choice for a scatter or bar of a summary.</li>
+<li><code>fct_infreq(f)</code> — most common level first.</li>
+<li><code>fct_rev(f)</code> — reverse the current levels.</li>
+<li><code>fct_relevel(f, ...)</code> — move named levels to the front (or pass a function).</li>
+</ul>
+<pre><code class="language-r">gss_cat |&gt;
+  group_by(relig) |&gt;
+  summarize(tv = mean(tvhours, na.rm = TRUE), n = n()) |&gt;
+  mutate(relig = fct_reorder(relig, tv)) |&gt;
+  ggplot(aes(x = tv, y = relig)) +
+  geom_point() +
+  theme_bw()
+
+gss_cat |&gt;
+  mutate(partyid = fct_relevel(partyid, &quot;Independent&quot;)) |&gt;
+  count(partyid)
+</code></pre>
+<p><code>fct_infreq()</code> then <code>fct_rev()</code> puts the most common level on the <strong>right</strong> of a bar chart.</p>
+<hr />
+<h2>4. Recode, collapse, lump</h2>
+<p><code>fct_recode()</code> renames levels. Old name on the right. Drop a level with <code>NULL = "old"</code>.</p>
+<pre><code class="language-r">gss_cat |&gt;
+  mutate(partyid = fct_recode(
+    partyid,
+    &quot;Rep, strong&quot; = &quot;Strong republican&quot;,
+    &quot;Rep, weak&quot;   = &quot;Not str republican&quot;,
+    &quot;Dem, weak&quot;   = &quot;Not str democrat&quot;,
+    &quot;Dem, strong&quot; = &quot;Strong democrat&quot;
+  )) |&gt;
+  count(partyid)
+</code></pre>
+<p><code>fct_collapse()</code> is recode for many-to-one. <code>fct_lump()</code> folds rare levels into <code>Other</code>. <code>n</code> keeps the most common; <code>prop</code> keeps levels above a share.</p>
+<pre><code class="language-r">gss_cat |&gt;
+  mutate(partyid = fct_collapse(
+    partyid,
+    other = c(&quot;No answer&quot;, &quot;Don't know&quot;, &quot;Other party&quot;),
+    rep   = c(&quot;Strong republican&quot;, &quot;Not str republican&quot;),
+    ind   = c(&quot;Ind,near rep&quot;, &quot;Independent&quot;, &quot;Ind,near dem&quot;),
+    dem   = c(&quot;Not str democrat&quot;, &quot;Strong democrat&quot;)
+  )) |&gt;
+  count(partyid)
+
+gss_cat |&gt;
+  mutate(relig = fct_lump(relig, n = 5)) |&gt;
+  count(relig)
+</code></pre>
+<hr />
+<h2>5. Add, drop, and missing levels</h2>
+<pre><code class="language-r">f &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;), levels = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
+fct_drop(f)
+
+g &lt;- factor(c(&quot;A&quot;, &quot;B&quot;))
+fct_expand(g, &quot;C&quot;, &quot;D&quot;)
+
+h &lt;- factor(c(&quot;A&quot;, NA, &quot;B&quot;))
+fct_explicit_na(h, na_level = &quot;(Missing)&quot;)
+</code></pre>
+<p><code>fct_drop()</code> removes unused levels. <code>fct_expand()</code> adds empty ones. <code>fct_explicit_na()</code> turns <code>NA</code> into a real level so it appears in tables and plots. Filtering out rows does <strong>not</strong> drop the level; call <code>fct_drop()</code> after.</p>
+<hr />
+<h2>6. Practice</h2>
+<p>Use <code>gss_cat</code>.</p>
+<ol>
+<li>
+<p>Reorder <code>partyid</code> alphabetically.</p>
+</li>
+<li>
+<p>Move <code>rincome</code> level <code>"Not applicable"</code> to the front.</p>
+</li>
+<li>
+<p>Abbreviate <code>marital</code> with <code>fct_recode()</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

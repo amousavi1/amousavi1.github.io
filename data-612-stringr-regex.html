@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>9.2 stringr: Regular Expressions - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">9.2 stringr: Regular Expressions</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 9 &middot;
+                            <a href="files/data-612/stringr-regex.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            A pattern is a regular expression. Escape in R with two backslashes.
+                        </p>
+<h2>1. A pattern is a regular expression</h2>
+<p>Note 9.1 used literal text. A <strong>regular expression</strong> describes a set of strings. <code>stringr</code> (through <code>stringi</code>) uses ICU regex. Write the pattern as an ordinary R string, so backslashes double: the regex <code>\.</code> is <code>"\\."</code> in R.</p>
+<p><code>words</code> is 980 common English words that come with stringr. Use it for the examples.</p>
+<pre><code class="language-r">library(tidyverse)
+
+str_view(words, &quot;ie&quot;)
+</code></pre>
+<p><code>str_view()</code> shows the match. It is the fastest way to test a pattern.</p>
+<hr />
+<h2>2. The language, in pieces</h2>
+<p><code>.</code> matches any single character (except a newline). Escape it when you want a real dot: <code>"\\."</code>.</p>
+<pre><code class="language-r">str_view(c(&quot;abc&quot;, &quot;a.c&quot;, &quot;ac&quot;), &quot;a.c&quot;)
+str_view(c(&quot;abc&quot;, &quot;a.c&quot;, &quot;ac&quot;), &quot;a\\.&quot;)
+</code></pre>
+<p><code>^</code> is the start of the string. <code>$</code> is the end.</p>
+<pre><code class="language-r">str_view(words, &quot;^a&quot;)
+str_view(words, &quot;x$&quot;)
+str_view(words, &quot;^apple$&quot;)
+</code></pre>
+<p>A <strong>character class</strong> matches one character from a set: <code>[abc]</code>, <code>[a-z]</code>, <code>[0-9]</code>. <code>[^aeiou]</code> is “not a vowel.” <code>[^ ]</code> is “not a space.”</p>
+<pre><code class="language-r">str_view(words, &quot;^[aeiou]&quot;)
+str_view(c(&quot;a b&quot;, &quot;ab&quot;), &quot;[^ ]&quot;)
+</code></pre>
+<p><code>(?i)</code> at the front makes the rest of the pattern case-insensitive.</p>
+<pre><code class="language-r">str_detect(c(&quot;Apple&quot;, &quot;BANANA&quot;, &quot;pear&quot;), &quot;(?i)^a&quot;)
+</code></pre>
+<p>Repetition sits after the thing it repeats:</p>
+<ul>
+<li><code>?</code> — 0 or 1</li>
+<li><code>+</code> — 1 or more</li>
+<li><code>*</code> — 0 or more</li>
+<li><code>{n}</code> — exactly n</li>
+<li><code>{n,}</code> — n or more</li>
+<li><code>{n,m}</code> — between n and m</li>
+</ul>
+<pre><code class="language-r">str_view(words, &quot;^a.{3}$&quot;)
+str_view(c(&quot;color&quot;, &quot;colour&quot;), &quot;colou?r&quot;)
+</code></pre>
+<p>Parentheses make a <strong>group</strong>. <code>\\1</code> is “whatever group 1 matched.” Note 4.2 used <code>matches("(.)\\1")</code> in <code>select()</code>. That is a repeated character.</p>
+<pre><code class="language-r">str_view(words, &quot;(.)\\1&quot;)
+str_replace(&quot;apple&quot;, &quot;(.)(.)&quot;, &quot;\\2\\1&quot;)
+</code></pre>
+<hr />
+<h2>3. Detect, count, extract, split, replace</h2>
+<p>All of these take the vector first, then the pattern.</p>
+<pre><code class="language-r">x &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;, &quot;mango&quot;)
+
+str_detect(x, &quot;a&quot;)
+x[str_detect(x, &quot;^p&quot;)]
+str_subset(x, &quot;^p&quot;)
+
+str_count(x, &quot;a&quot;)
+str_count(&quot;abababa&quot;, &quot;aba&quot;)
+
+str_extract(x, &quot;[aeiou]&quot;)
+str_extract_all(x, &quot;[aeiou]&quot;)
+
+str_split(&quot;a-b-c&quot;, &quot;-&quot;)
+str_replace(x, &quot;[aeiou]&quot;, &quot;-&quot;)
+str_replace_all(x, &quot;[aeiou]&quot;, &quot;-&quot;)
+</code></pre>
+<p><code>str_count()</code> counts <strong>non-overlapping</strong> matches. <code>"aba"</code> in <code>"abababa"</code> is 2, not 3.</p>
+<p><code>str_extract()</code> is the first match. <code>str_extract_all()</code> is every match, as a list.</p>
+<p><code>str_subset(x, pattern)</code> is <code>x[str_detect(x, pattern)]</code>.</p>
+<hr />
+<h2>4. <code>separate()</code> with a regex</h2>
+<p><code>tidyr::separate()</code> splits one column into several. <code>sep</code> can be a regex, not only a fixed character.</p>
+<pre><code class="language-r">tibble(x = c(&quot;a-1&quot;, &quot;b.2&quot;, &quot;c 3&quot;)) |&gt;
+  separate(x, into = c(&quot;letter&quot;, &quot;num&quot;), sep = &quot;[^[:alnum:]]&quot;)
+</code></pre>
+<p><code>[^[:alnum:]]</code> is any character that is not a letter or a digit: a hyphen, a dot, or a space.</p>
+<hr />
+<h2>5. Practice</h2>
+<p>Use <code>words</code>. Print the matches (or <code>str_view()</code> them).</p>
+<ol>
+<li>
+<p>Four-letter words that start with <code>a</code>.</p>
+</li>
+<li>
+<p>Words that start with a vowel.</p>
+</li>
+<li>
+<p>Words that end in <code>ed</code> but not <code>eed</code>.</p>
+</li>
+<li>
+<p>Words that start with three consonants.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

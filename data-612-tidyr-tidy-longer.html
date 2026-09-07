@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.1 tidyr: Tidy Data and pivot_longer() - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.1 tidyr: Tidy Data and pivot_longer()</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 7 &middot;
+                            <a href="files/data-612/tidyr-tidy-longer.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            One variable per column, one observation per row. pivot_longer() turns wide week columns into rows.
+                        </p>
+<h2>1. Tidy data</h2>
+<p>A table is <strong>tidy</strong> when:</p>
+<ol>
+<li>each variable is a column</li>
+<li>each observation is a row</li>
+<li>each value is a cell</li>
+</ol>
+<p>That is a shape, not a quality judgment. A tidy table can still have missing values, typos, and bad types. A <strong>clean</strong> table has those problems handled. You usually tidy first, then clean.</p>
+<p><code>tidyr</code> is the tidyverse package for the shape. It loads with <code>library(tidyverse)</code>.</p>
+<pre><code class="language-r">library(tidyverse)
+</code></pre>
+<hr />
+<h2>2. <code>table1</code> is tidy; <code>table4a</code> is not</h2>
+<p><code>tidyr</code> ships small WHO tuberculosis tables. <code>?table1</code>.</p>
+<pre><code class="language-r">table1
+table4a
+</code></pre>
+<p><code>table1</code> has <code>country</code>, <code>year</code>, <code>cases</code>, and <code>population</code>. One year is one row. You can compute a rate without extra reshaping:</p>
+<pre><code class="language-r">table1 |&gt;
+  mutate(rate = cases / population * 10000)
+</code></pre>
+<p><code>table4a</code> stores <strong>years as column names</strong> (<code>1999</code>, <code>2000</code>) and cases as the cells. Year is a variable, so those names are values in disguise. You cannot <code>filter(year == 1999)</code> until year is a column.</p>
+<p><code>table4b</code> is the same wide layout for population.</p>
+<hr />
+<h2>3. <code>pivot_longer()</code> makes columns into rows</h2>
+<p>Three arguments you will type every time:</p>
+<ul>
+<li><code>cols</code> — which columns are values of one variable</li>
+<li><code>names_to</code> — the new column that holds the old names</li>
+<li><code>values_to</code> — the new column that holds the cells</li>
+</ul>
+<pre><code class="language-r">table4a |&gt;
+  pivot_longer(
+    cols = c(`1999`, `2000`),
+    names_to = &quot;year&quot;,
+    values_to = &quot;cases&quot;
+  )
+</code></pre>
+<p>The result has one row per country-year. <code>year</code> is character because it came from names. <code>mutate(year = as.integer(year))</code> if you need a number.</p>
+<p><code>cols</code> uses the same helpers as <code>select()</code>. <code>cols = -country</code> is the usual shortcut when every other column should lengthen.</p>
+<pre><code class="language-r">table4a |&gt;
+  pivot_longer(cols = -country, names_to = &quot;year&quot;, values_to = &quot;cases&quot;)
+</code></pre>
+<hr />
+<h2>4. Numeric-looking names need backticks</h2>
+<p><code>1999</code> is a number. A bare number in <code>cols</code> is a <strong>position</strong>, not a name. Column 1999 does not exist.</p>
+<p>This also fails for a second reason: without <code>c()</code>, <code>2000</code> is a separate argument, not part of <code>cols</code>.</p>
+<pre><code class="language-r">table4a |&gt;
+  pivot_longer(cols = 1999, 2000, names_to = &quot;year&quot;, values_to = &quot;cases&quot;)
+</code></pre>
+<p>Write <code>`1999`</code> so R treats it as a name, and wrap the names in <code>c()</code>. The same backtick rule applies in <code>select()</code> and <code>mutate()</code>.</p>
+<p><code>values_drop_na = TRUE</code> drops rows whose cell was <code>NA</code>. Use it when a missing cell means "this combination was never measured," not "the value is unknown."</p>
+<pre><code class="language-r">table4a |&gt;
+  pivot_longer(
+    cols = -country,
+    names_to = &quot;year&quot;,
+    values_to = &quot;cases&quot;,
+    values_drop_na = TRUE
+  )
+</code></pre>
+<hr />
+<h2>5. Practice</h2>
+<p>Put course CSV files in a <code>data/</code> folder of your project (see the Data section of the course page).</p>
+<ol>
+<li>
+<p>Load <code>monkeymem.csv</code>. The <code>Week2</code> … <code>Week16</code> columns are weeks; the cells are accuracy. Pivot them longer so each row is one monkey-week.</p>
+</li>
+<li>
+<p>On <code>table4a</code>, explain why <code>pivot_longer(cols = 1999, 2000, names_to = "year", values_to = "cases")</code> fails. Write the version that works.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>11.1 Statistics: Tests - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">11.1 Statistics: Tests</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 11 &middot;
+                            <a href="files/data-612/stats-tests.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Plot first. Save t.test() and aov(). The p-value is evidence against H0.
+                        </p>
+<h2>1. Question, then evidence</h2>
+<p>A test is the last step, not the first. A useful order:</p>
+<ol>
+<li>a question you can say in words</li>
+<li>EDA (a plot, a table)</li>
+<li>a model that matches the question</li>
+<li>a test saved as an object</li>
+<li>a sentence a reader can use</li>
+</ol>
+<p>Always assign the test. Printing it once is not enough if you later want the p-value or the interval.</p>
+<pre><code class="language-r">library(tidyverse)
+library(palmerpenguins)
+
+tt &lt;- t.test(mpg ~ factor(am), data = mtcars)
+tt
+tt$p.value
+tt$estimate
+</code></pre>
+<p><code>Sleuth3</code> has the classic two-sample tables from <em>The Statistical Sleuth</em>. Install once in the console, then load a table by name:</p>
+<pre><code class="language-r">install.packages(&quot;Sleuth3&quot;)
+data(&quot;case0201&quot;, package = &quot;Sleuth3&quot;)
+</code></pre>
+<p><code>case0201</code> is wide: <code>Cross</code> and <code>Self</code> are two numeric columns. <code>t.test(Cross, Self)</code> is the two-vector form. The formula form needs a long table. If <code>Sleuth3</code> is not installed, use <code>palmerpenguins</code> or <code>mtcars</code>. Those are the fallbacks for the rest of this note.</p>
+<hr />
+<h2>2. Two-sample <code>t.test()</code></h2>
+<p>Plot first. A boxplot of the numeric variable by the two-level group tells you whether the question is even interesting.</p>
+<pre><code class="language-r">ggplot(mtcars, aes(x = factor(am), y = mpg)) +
+  geom_boxplot() +
+  theme_bw()
+</code></pre>
+<p>Then the test. The formula is <code>y ~ group</code>. The grouping variable should have <strong>exactly two</strong> levels.</p>
+<pre><code class="language-r">tt &lt;- t.test(mpg ~ factor(am), data = mtcars)
+</code></pre>
+<p><code>species</code> in <code>penguins</code> has three levels. Filter to a pair, then <code>droplevels()</code> so the unused level is gone. Without that, <code>t.test()</code> stops.</p>
+<pre><code class="language-r">penguins2 &lt;- penguins |&gt;
+  filter(species %in% c(&quot;Adelie&quot;, &quot;Gentoo&quot;)) |&gt;
+  droplevels()
+
+ggplot(penguins2, aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_bw()
+
+tt_bill &lt;- t.test(bill_length_mm ~ species, data = penguins2)
+</code></pre>
+<p><code>case0201</code> after a pivot is the same pattern:</p>
+<pre><code class="language-r">case0201 |&gt;
+  pivot_longer(everything(), names_to = &quot;type&quot;, values_to = &quot;height&quot;) |&gt;
+  t.test(height ~ type, data = _)
+</code></pre>
+<p>Default <code>t.test()</code> does not assume equal variances (Welch). That is the usual choice.</p>
+<hr />
+<h2>3. H0 and the p-value</h2>
+<p>State H0 in words before you look at the number.</p>
+<p>For the penguin pair: <em>mean bill length is the same for Adelie and Gentoo.</em> For <code>mtcars</code>: <em>mean <code>mpg</code> is the same for the two transmission codes.</em></p>
+<p>The p-value is evidence <strong>against</strong> that H0. A small p-value means the data would be surprising if H0 were true. It is not a stamp that the result is "real," and <code>0.05</code> is not a magic cutoff. Report the p-value, the estimates, and the interval. Then write the sentence.</p>
+<hr />
+<h2>4. ANOVA and nested models</h2>
+<p>Three or more groups: <code>aov(y ~ factor)</code>, then <code>summary()</code>. Save the object.</p>
+<pre><code class="language-r">fit_aov &lt;- aov(bill_length_mm ~ species, data = penguins)
+summary(fit_aov)
+</code></pre>
+<p>H0 in words: <em>mean bill length is the same for Adelie, Chinstrap, and Gentoo.</em> <code>iris</code> (<code>Sepal.Length ~ Species</code>) and <code>mtcars</code> (<code>mpg ~ factor(cyl)</code>) are the no-package backups. <code>Sleuth3</code> <code>case0501</code> is <code>Lifetime ~ Treatment</code> if you have the package.</p>
+<p><code>anova()</code> compares <strong>nested</strong> models. The smaller model is a special case of the larger one.</p>
+<pre><code class="language-r">m1 &lt;- lm(mpg ~ wt, data = mtcars)
+m2 &lt;- lm(mpg ~ wt + hp, data = mtcars)
+cmp &lt;- anova(m1, m2)
+cmp
+</code></pre>
+<p>H0: <em>once <code>wt</code> is in the model, <code>hp</code> does not improve the fit.</em> Same rule: save <code>cmp</code>, read the p-value as evidence against that H0, not as a 0.05 switch.</p>
+<p><code>aov()</code> is the one-factor (or multi-factor) fit. <code>anova()</code> is the comparison. Do not mix the two names by accident.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Boxplot and two-sample <code>t.test()</code> for a numeric variable by a two-level group. Use <code>mpg ~ factor(am)</code> in <code>mtcars</code>, or Adelie vs Gentoo bill length in <code>penguins</code> (filter, then <code>droplevels()</code>). If you have <code>Sleuth3</code>, do <code>case0201</code> as well. State H0 in words. Save the test object.</p>
+</li>
+<li>
+<p><code>aov()</code> of a numeric variable by a factor with three or more levels (<code>bill_length_mm ~ species</code>, or <code>mpg ~ factor(cyl)</code>, or <code>Sepal.Length ~ Species</code>). Save the fit. State H0 in words.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

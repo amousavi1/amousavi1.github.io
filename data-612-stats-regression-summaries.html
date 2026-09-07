@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>11.2 Statistics: Regression and Summaries - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">11.2 Statistics: Regression and Summaries</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 11 &middot;
+                            <a href="files/data-612/stats-regression-summaries.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            lm() with two predictors, residual plots, then across() summaries.
+                        </p>
+<h2>1. Fit a linear model</h2>
+<p><code>lm(y ~ x1 + x2)</code> is ordinary least squares. Save the fit. The same lifecycle as note 11.1 still applies: question, plot, model, then a sentence.</p>
+<pre><code class="language-r">library(tidyverse)
+library(palmerpenguins)
+
+fit &lt;- lm(mpg ~ wt + hp, data = mtcars)
+</code></pre>
+<p><code>wt</code> is weight; <code>hp</code> is horsepower. Both are in <code>mtcars</code>, which is built in. <code>palmerpenguins</code> is the other table this note uses (<code>bill_length_mm ~ flipper_length_mm + body_mass_g</code>). If <code>Sleuth3</code> is installed you can load a Sleuth regression table the same way as in 11.1 (<code>install.packages("Sleuth3")</code> once, then <code>data("case0201", package = "Sleuth3")</code> is the two-sample table; pick a later <code>case*</code> with a numeric response for regression). The examples below stay on <code>mtcars</code> and <code>penguins</code> so they run without extra files.</p>
+<p>Plot the main relationship before you trust the coefficients:</p>
+<pre><code class="language-r">ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_bw()
+</code></pre>
+<hr />
+<h2>2. Read the fit</h2>
+<p>Four things you will actually use:</p>
+<pre><code class="language-r">summary(fit)
+coef(fit)
+confint(fit)
+broom::tidy(fit, conf.int = TRUE)
+</code></pre>
+<p><code>summary()</code> is the printed report: coefficients, standard errors, t statistics, p-values, and R-squared. <code>coef()</code> is just the estimates. <code>confint()</code> is the interval for each coefficient. <code>broom::tidy()</code> puts the same numbers in a tibble you can pipe.</p>
+<p>Install <code>broom</code> once in the console if it is missing. Do not put <code>install.packages()</code> in the Quarto file.</p>
+<p>Read one coefficient in words. For <code>mpg ~ wt + hp</code>, the <code>wt</code> number is the change in fitted <code>mpg</code> associated with a one-unit change in <code>wt</code> <strong>holding <code>hp</code> fixed</strong>. The p-value on that row is evidence against "this coefficient is zero," not a quality stamp for the whole model.</p>
+<hr />
+<h2>3. Residual plots</h2>
+<p>A residual is observed minus fitted. If the model is a good description, residuals look like unstructured noise around zero.</p>
+<pre><code class="language-r">plot(fit, which = 1)
+plot(fit, which = 2)
+</code></pre>
+<p><code>which = 1</code> is residuals versus fitted. <code>which = 2</code> is the normal QQ plot. The ggplot version of the first one:</p>
+<pre><code class="language-r">aug &lt;- broom::augment(fit)
+
+ggplot(aug, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  geom_smooth(se = FALSE) +
+  theme_bw()
+</code></pre>
+<p>If the residual cloud <strong>fans out</strong> (small spread on the left, wide on the right), the variance is not constant. A transform of the response is the first thing to try, often <code>log(y)</code>:</p>
+<pre><code class="language-r">fit_log &lt;- lm(log(mpg) ~ wt + hp, data = mtcars)
+plot(fit_log, which = 1)
+</code></pre>
+<p>Refit, then look at the residual plot again. Do not transform only because a p-value looked nicer.</p>
+<hr />
+<h2>4. Numerical summaries</h2>
+<p><code>summary()</code> on a data frame is the base-R scan: min, quartiles, mean, max, and a count of <code>NA</code>s for each column.</p>
+<pre><code class="language-r">summary(penguins)
+summary(mtcars)
+</code></pre>
+<p>For a tibble of chosen summaries, use <code>across()</code> with a named list. <code>{.col}_{.fn}</code> builds the output names. <code>na.rm</code> belongs on the function, so pass a formula <code>~ mean(.x, na.rm = TRUE)</code> rather than the bare <code>mean</code>:</p>
+<pre><code class="language-r">penguins |&gt;
+  summarize(
+    across(
+      where(is.numeric),
+      list(
+        mean = ~ mean(.x, na.rm = TRUE),
+        sd = ~ sd(.x, na.rm = TRUE)
+      ),
+      .names = &quot;{.col}_{.fn}&quot;
+    )
+  )
+</code></pre>
+<p><code>list(mean = mean, sd = sd)</code> is the same idea without <code>na.rm</code>. On <code>penguins</code> that will propagate <code>NA</code>s. Prefer the formula form.</p>
+<p><code>skimr::skim()</code> is a compact one-function scan (types, missingness, mean, sd, quantiles). Install <code>skimr</code> once if you want it. It does not replace a plot.</p>
+<pre><code class="language-r">skimr::skim(penguins)
+</code></pre>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p><code>fit &lt;- lm(mpg ~ wt + hp, data = mtcars)</code>. Read <code>summary(fit)</code> and <code>confint(fit)</code>. Write one sentence that interprets the <code>wt</code> coefficient. Glance at <code>plot(fit, which = 1)</code>.</p>
+</li>
+<li>
+<p><code>across()</code> summaries of every numeric column in <code>penguins</code> or <code>mtcars</code>: mean and sd, <code>.names = "{.col}_{.fn}"</code>, <code>na.rm</code> via <code>~ mean(.x, na.rm = TRUE)</code>. If <code>skimr</code> is installed, run <code>skim()</code> on the same table.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

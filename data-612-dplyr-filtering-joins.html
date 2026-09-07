@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.2 dplyr: Filtering Joins - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.2 dplyr: Filtering Joins</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 8 &middot;
+                            <a href="files/data-612/dplyr-filtering-joins.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            semi_join() and anti_join() keep or drop rows of x. They do not add columns.
+                        </p>
+<h2>1. <code>semi_join()</code> and <code>anti_join()</code></h2>
+<p>A mutating join <strong>adds columns</strong>. A filtering join <strong>keeps or drops rows</strong> of <code>x</code> and leaves the columns of <code>x</code> alone.</p>
+<ul>
+<li><code>semi_join(x, y)</code> — rows of <code>x</code> that have a match in <code>y</code></li>
+<li><code>anti_join(x, y)</code> — rows of <code>x</code> that do <strong>not</strong> have a match in <code>y</code></li>
+</ul>
+<pre><code class="language-r">library(tidyverse)
+library(nycflights13)
+
+flights |&gt;
+  semi_join(planes, by = &quot;tailnum&quot;)
+
+flights |&gt;
+  anti_join(planes, by = &quot;tailnum&quot;)
+</code></pre>
+<p><code>inner_join(x, y)</code> also drops unmatched <code>x</code> rows, but it <strong>duplicates</strong> an <code>x</code> row once per match in <code>y</code>. <code>semi_join()</code> never duplicates <code>x</code>. If you only want "does a match exist?", use <code>semi_join()</code>.</p>
+<p><code>anti_join()</code> is the diagnostic: destinations with no airport row, planes that never flew, weather hours with no flights.</p>
+<pre><code class="language-r">flights |&gt;
+  anti_join(airports, by = c(&quot;dest&quot; = &quot;faa&quot;)) |&gt;
+  distinct(dest)
+</code></pre>
+<hr />
+<h2>2. Duplicate keys and many-to-many</h2>
+<p>If a key appears twice in <code>x</code> and three times in <code>y</code>, an inner or left join returns six rows for that key. That is a many-to-many join. Sometimes it is what you want; often it is a bad key.</p>
+<pre><code class="language-r">x &lt;- tribble(
+  ~key, ~val_x,
+     1, &quot;x1&quot;,
+     1, &quot;x2&quot;
+)
+y &lt;- tribble(
+  ~key, ~val_y,
+     1, &quot;y1&quot;,
+     1, &quot;y2&quot;
+)
+
+left_join(x, y, by = &quot;key&quot;)
+semi_join(x, y, by = &quot;key&quot;)
+</code></pre>
+<p>The left join has four rows. The semi join still has two — the original <code>x</code>. Check keys with <code>count()</code> before you join (note 8.1).</p>
+<hr />
+<h2>3. Worst delay days, then those flights</h2>
+<p>Ten days with the highest median <code>dep_delay</code>, then every flight on those days. Build a small table of keys, then <code>semi_join()</code>.</p>
+<pre><code class="language-r">worst &lt;- flights |&gt;
+  group_by(year, month, day) |&gt;
+  summarize(med_del = median(dep_delay, na.rm = TRUE), .groups = &quot;drop&quot;) |&gt;
+  slice_max(med_del, n = 10)
+
+flights |&gt;
+  semi_join(worst, by = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;))
+</code></pre>
+<p><code>filter()</code> with a long <code>%in%</code> list is clumsier once the key has several columns.</p>
+<hr />
+<h2>4. Plane age and delay</h2>
+<p><code>planes$year</code> is the year of manufacture. Age in 2013 is <code>2013 - year</code>. Join, then plot. Rename <code>year</code> first so it does not clash with <code>flights$year</code>.</p>
+<pre><code class="language-r">flights |&gt;
+  left_join(
+    planes |&gt; select(tailnum, plane_year = year),
+    by = &quot;tailnum&quot;
+  ) |&gt;
+  mutate(age = 2013 - plane_year) |&gt;
+  filter(!is.na(age), !is.na(dep_delay)) |&gt;
+  ggplot(aes(x = age, y = dep_delay)) +
+  geom_hex() +
+  geom_smooth(se = FALSE) +
+  theme_bw()
+</code></pre>
+<p><code>geom_hex()</code> needs the <code>hexbin</code> package. <code>geom_smooth()</code> alone is enough if you do not want the bins.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Destinations in <code>flights</code> that are missing from <code>airports</code>. How many flights is that?</p>
+</li>
+<li>
+<p>Airports that never appear as a <code>dest</code>.</p>
+</li>
+<li>
+<p>The ten days with the highest median <code>dep_delay</code>, then all flights on those days.</p>
+</li>
+<li>
+<p>A plot of plane age against <code>dep_delay</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

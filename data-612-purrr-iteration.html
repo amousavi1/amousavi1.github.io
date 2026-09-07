@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.2 Iteration: Loops and purrr - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.2 Iteration: Loops and purrr</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 14 &middot;
+                            <a href="files/data-612/purrr-iteration.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Pre-allocate a for-loop. map() walks a list. across() often replaces a column loop.
+                        </p>
+<h2>1. A for-loop, pre-allocated</h2>
+<pre><code class="language-r">for (i in seq_along(x)) {
+  # use x[[i]]
+}
+</code></pre>
+<p><code>seq_along(x)</code> is <code>1, 2, …, length(x)</code>. Prefer it to <code>1:length(x)</code>, which misbehaves on an empty <code>x</code>. Growing a vector with <code>c()</code> inside the loop is slow. Make the output first, then fill it.</p>
+<pre><code class="language-r">x &lt;- 1:5
+cumvec &lt;- vector(&quot;double&quot;, length(x))
+total &lt;- 0
+for (i in seq_along(x)) {
+  total &lt;- total + x[[i]]
+  cumvec[[i]] &lt;- total
+}
+</code></pre>
+<p><code>vector("double", n)</code> is <code>n</code> zeros. You overwrite them.</p>
+<hr />
+<h2>2. <code>while</code> when <code>n</code> is unknown</h2>
+<p>A <code>for</code> loop needs the sequence up front. A <code>while</code> loop keeps going until a condition is false:</p>
+<pre><code class="language-r">nheads &lt;- 0
+flips &lt;- 0
+while (nheads &lt; 3) {
+  flips &lt;- flips + 1
+  if (rbinom(1, size = 1, prob = 0.5) == 1) {
+    nheads &lt;- nheads + 1
+  }
+}
+</code></pre>
+<p>Use <code>while</code> when you cannot say how many steps you need.</p>
+<hr />
+<h2>3. <code>across()</code> often replaces a column loop</h2>
+<p>Looping over <code>mtcars</code> columns to take a mean works. <code>across()</code> is the dplyr version, and it stays in a pipeline:</p>
+<pre><code class="language-r">means &lt;- vector(&quot;double&quot;, ncol(mtcars))
+for (i in seq_along(mtcars)) {
+  means[[i]] &lt;- mean(mtcars[[i]], na.rm = TRUE)
+}
+
+mtcars |&gt;
+  summarize(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
+</code></pre>
+<p>Reach for a loop when the result is not one number per column: a model, a plot, a file.</p>
+<hr />
+<h2>4. <code>purrr::map</code></h2>
+<p><code>map()</code> applies a function to each element and returns a list. Typed variants return an atomic vector: <code>map_dbl()</code>, <code>map_chr()</code>, <code>map_lgl()</code>.</p>
+<p><code>.f</code> is a function name, <strong>not</strong> a call. <code>map_dbl(mtcars, mean)</code> works. <code>map_dbl(mtcars, mean())</code> does not.</p>
+<pre><code class="language-r">map_dbl(mtcars, mean)
+map_dbl(mtcars, mean, na.rm = TRUE)
+</code></pre>
+<p>A formula <code>~</code> is a short anonymous function. <code>.x</code> is the current element:</p>
+<pre><code class="language-r">map_dbl(mtcars, ~ mean(.x, na.rm = TRUE))
+</code></pre>
+<hr />
+<h2>5. <code>map2</code> and <code>pmap</code></h2>
+<p><code>map2(.x, .y, .f)</code> walks two vectors together. <code>pmap()</code> walks a list of arguments:</p>
+<pre><code class="language-r">mu &lt;- c(-10, 0, 10)
+sigma &lt;- c(1, 1, 2)
+map2(mu, sigma, rnorm, n = 5)
+
+args &lt;- list(n = 5, mean = mu, sd = sigma)
+pmap(args, rnorm)
+</code></pre>
+<hr />
+<h2>6. <code>keep</code> / <code>discard</code> and split-plus-map</h2>
+<p><code>keep()</code> holds the elements where a test is true. <code>discard()</code> drops them.</p>
+<pre><code class="language-r">iris |&gt;
+  keep(is.numeric) |&gt;
+  map_dbl(mean)
+</code></pre>
+<p><code>split()</code> turns a data frame into a list of data frames, one per group. Then <code>map()</code> fits a model on each:</p>
+<pre><code class="language-r">mtcars |&gt;
+  split(mtcars$cyl) |&gt;
+  map(~ lm(mpg ~ wt, data = .x)) |&gt;
+  map(summary) |&gt;
+  map_dbl(&quot;r.squared&quot;)
+</code></pre>
+<p>A string (or an integer) as <code>.f</code> extracts that name (or position) from each list element.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>The first two Fibonacci numbers are 0 and 1. Each later number is the sum of the previous two. Use a loop to compute the first 20.</p>
+</li>
+<li>
+<p><code>map_dbl()</code> means of every column of <code>mtcars</code>.</p>
+</li>
+<li>
+<p>Number of unique values in each column of <code>iris</code>.</p>
+</li>
+<li>
+<p>p-value of <code>t.test(mpg ~ am)</code> within each <code>cyl</code> group of <code>mtcars</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

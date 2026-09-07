@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>10.2 lubridate: Dates and Times - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">10.2 lubridate: Dates and Times</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 10 &middot;
+                            <a href="files/data-612/lubridate-dates.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Parse with ymd(), pull pieces out, and know duration vs period vs interval.
+                        </p>
+<h2>1. Load lubridate and look at the class</h2>
+<p>tidyverse attaches lubridate, but load it yourself so the parsers are obvious.</p>
+<pre><code class="language-r">library(tidyverse)
+library(lubridate)
+</code></pre>
+<p>Two classes matter. A <strong>Date</strong> is a calendar day. A <strong>POSIXct</strong> is a datetime: a Date plus a time of day, stored as seconds since 1970-01-01 UTC. <code>class()</code> tells you which you have.</p>
+<pre><code class="language-r">ymd(&quot;2017-01-31&quot;)
+ymd_hms(&quot;2017-01-31 20:11:59&quot;)
+</code></pre>
+<hr />
+<h2>2. Parsers and constructors</h2>
+<p>Name the function after the order of the pieces. The separators can vary.</p>
+<pre><code class="language-r">ymd(&quot;2017-01-31&quot;)
+mdy(&quot;January 31st, 2017&quot;)
+dmy(&quot;31-Jan-2017&quot;)
+ymd_hms(&quot;2017-01-31 20:11:59&quot;)
+mdy_hm(&quot;01/31/2017 08:15&quot;)
+</code></pre>
+<p><code>make_date()</code> and <code>make_datetime()</code> build a date from numeric columns.</p>
+<pre><code class="language-r">make_date(2017, 1, 31)
+make_datetime(2017, 1, 31, 20, 11, 59)
+</code></pre>
+<p>Put the CSV files from the Data section of the course page in a <code>data/</code> folder of your project. <code>wmata_ridership.csv</code> has a <code>Date</code> column (ISO text) and a <code>Total</code> column (daily Metro rail rides).</p>
+<pre><code class="language-r">wmata &lt;- read_csv(&quot;data/wmata_ridership.csv&quot;)
+wmata &lt;- wmata |&gt;
+  mutate(Date = ymd(Date))
+</code></pre>
+<hr />
+<h2>3. Pull pieces out</h2>
+<pre><code class="language-r">dt &lt;- ymd_hms(&quot;2016-07-08 12:34:56&quot;)
+year(dt)
+month(dt)
+month(dt, label = TRUE)
+day(dt)
+wday(dt)
+wday(dt, label = TRUE)
+hour(dt)
+</code></pre>
+<p><code>label = TRUE</code> on <code>month()</code> and <code>wday()</code> returns an ordered factor. <code>abbr = FALSE</code> spells the name out.</p>
+<pre><code class="language-r">wmata |&gt;
+  mutate(
+    year = year(Date),
+    month = month(Date, label = TRUE),
+    wday = wday(Date, label = TRUE)
+  )
+</code></pre>
+<hr />
+<h2>4. Durations, periods, and intervals</h2>
+<p>A <strong>duration</strong> is an exact number of seconds. <code>ddays(1)</code> is always 86,400 seconds.</p>
+<p>A <strong>period</strong> is a human unit. <code>days(1)</code> is “one calendar day,” which can be 23 or 25 hours when clocks change.</p>
+<p>An <strong>interval</strong> is the span between two instants.</p>
+<pre><code class="language-r">ddays(1)
+days(1)
+years(1)
+
+ymd(&quot;2016-01-01&quot;) + ddays(365)
+ymd(&quot;2016-01-01&quot;) + days(365)
+ymd(&quot;2016-01-01&quot;) + years(1)
+
+int &lt;- interval(ymd(&quot;2004-01-01&quot;), ymd(&quot;2018-12-21&quot;))
+int
+as.duration(int)
+</code></pre>
+<p>2016 is a leap year, so <code>ddays(365)</code> and <code>days(365)</code> land on different days. Use a duration when you want elapsed time. Use a period when you want “same date next month.” Use an interval when you have two endpoints.</p>
+<hr />
+<h2>5. Time zones</h2>
+<p>Datetimes default to <strong>UTC</strong>. <code>force_tz()</code> keeps the clock face and changes the zone (the instant moves). <code>with_tz()</code> keeps the instant and redraws the clock in another zone.</p>
+<pre><code class="language-r">x &lt;- ymd_hms(&quot;2020-03-08 01:30:00&quot;)
+x
+force_tz(x, &quot;America/New_York&quot;)
+with_tz(x, &quot;America/New_York&quot;)
+</code></pre>
+<p><code>OlsonNames()</code> lists the zone names. <code>"America/New_York"</code> is Eastern time, daylight saving included.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Parse <code>"2010-02-01"</code>, <code>"February 1, 2010"</code>, <code>"01-02-2010"</code>, and <code>"2010-02-01 08:15:00"</code>. <code>"01-02-2010"</code> is <code>dmy</code> or <code>mdy</code> depending on the country.</p>
+</li>
+<li>
+<p>Build dates from this tribble and keep the rows before <code>2010-02-01</code>.</p>
+</li>
+</ol>
+<pre><code class="language-r">events &lt;- tribble(
+  ~year, ~month, ~day,
+  2009,     12,   31,
+  2010,      1,   15,
+  2010,      2,    1,
+  2010,      3,   10
+)
+</code></pre>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

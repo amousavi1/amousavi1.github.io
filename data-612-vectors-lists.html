@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.1 Vectors and Lists - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.1 Vectors and Lists</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 14 &middot;
+                            <a href="files/data-612/vectors-lists.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            [ keeps structure. [[ extracts one. A data frame is a list of columns.
+                        </p>
+<h2>1. Two kinds of vectors</h2>
+<p>R has two kinds of vectors: <strong>atomic</strong> vectors and <strong>lists</strong>.</p>
+<p>An atomic vector holds one type: logical, integer, double, character (plus complex and raw, which we will not use). A list can hold mixed types, including other lists.</p>
+<pre><code class="language-r">x &lt;- c(1L, 10L, 2L)
+typeof(x)
+length(x)
+</code></pre>
+<p><code>c(1, 10, 2)</code> is double. The <code>L</code> makes an integer. <code>typeof()</code> is the storage type. <code>length()</code> is how many elements.</p>
+<p>A factor is an integer with labels. A <code>Date</code> is a double. Both still behave like atomic vectors when you subset them.</p>
+<hr />
+<h2>2. <code>[</code> keeps structure; <code>[[</code> extracts one</h2>
+<p><code>[</code> returns the same kind of object, names included. <code>[[</code> pulls out <strong>one</strong> element and drops the wrapper. <code>$</code> is <code>[[</code> for a name.</p>
+<pre><code class="language-r">x &lt;- c(horse = 7, man = 1, dog = 8)
+x[2:3]
+x[c(&quot;man&quot;, &quot;horse&quot;)]
+x[-3]
+x[[3]]
+</code></pre>
+<p><code>x[3]</code> is still a named vector of length 1. <code>x[[3]]</code> is the number <code>8</code>.</p>
+<p>A logical vector of the same length picks the <code>TRUE</code> positions:</p>
+<pre><code class="language-r">x[c(TRUE, FALSE, TRUE)]
+</code></pre>
+<hr />
+<h2>3. Recycling and names</h2>
+<p>R recycles a shorter vector to the length of the longer one:</p>
+<pre><code class="language-r">x &lt;- c(1, 2, 3, 4)
+x + 10
+# same idea as x + c(10, 10, 10, 10)
+</code></pre>
+<p>Recycling a non-scalar (<code>x + c(10, 20)</code>) is legal and easy to misread. Prefer a scalar, or write a vector of the same length.</p>
+<p><code>names(x)</code> is a character vector. You can set names when you create the object:</p>
+<pre><code class="language-r">c(Yoshi = 10L, Mario = 31L)
+</code></pre>
+<hr />
+<h2>4. Lists hold mixed types</h2>
+<pre><code class="language-r">my_list &lt;- list(
+  x = &quot;a&quot;,
+  y = 1,
+  z = c(1L, 2L, 3L)
+)
+</code></pre>
+<p><code>[</code> on a list returns a <strong>list</strong>. <code>[[</code> or <code>$</code> returns the element inside.</p>
+<pre><code class="language-r">my_list[1]
+my_list[[1]]
+my_list$y
+</code></pre>
+<p>Remove an element by assigning <code>NULL</code>:</p>
+<pre><code class="language-r">my_list$x &lt;- NULL
+</code></pre>
+<hr />
+<h2>5. A data frame is a list of columns</h2>
+<p>A tibble is a list. Each element is a column. That is why <code>df[[2]]</code> is the second column and <code>df$species</code> is the <code>species</code> column.</p>
+<p>A list can also hold a tibble as one of its elements. Subset the list to get the tibble; then use dplyr on that tibble.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>Create</li>
+</ol>
+<pre><code class="language-r">x &lt;- c(
+  Yoshi = 10L,
+  Mario = 31L,
+  Luigi = 72L,
+  Peach = 11L,
+  Toad  = 38L
+)
+</code></pre>
+<p>Extract Yoshi and Peach four ways: positive integers, negative integers, a logical vector, and names.</p>
+<ol start="2">
+<li>Build a wedding-style list: a <code>venue</code>, a <code>guest</code> tibble (name, meal, age), a <code>bride</code>, a <code>groom</code>, and a <code>date</code>. Remove one guest row from the embedded tibble. Add a named vector that decodes the meal codes. Extract the venue two ways.</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

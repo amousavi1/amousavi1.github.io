@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.3 dbplyr: Databases - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.3 dbplyr: Databases</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 8 &middot;
+                            <a href="files/data-612/dbplyr-databases.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            tbl() is lazy SQL. collect() brings a result into R. Use an in-memory SQLite.
+                        </p>
+<h2>1. When a data frame is not enough</h2>
+<p>A tibble lives in memory. That is fine for <code>flights</code>. It is not fine for a table that is larger than RAM, or that several people query at once, or that already lives in SQL.</p>
+<p>A <strong>database</strong> stores the tables on disk and runs the filter <strong>there</strong>. You pull back only the rows you need.</p>
+<p><code>dbplyr</code> translates dplyr verbs into SQL. It does <strong>not</strong> load with <code>library(tidyverse)</code>. Install <code>dbplyr</code>, <code>DBI</code>, and a backend (<code>RSQLite</code> is enough for this course).</p>
+<p>We will use an in-memory SQLite copy of <code>flights</code>. Skip large local <code>.sqlite</code> files; <code>":memory:"</code> is enough to see the translation.</p>
+<hr />
+<h2>2. Connect, copy, <code>tbl()</code></h2>
+<pre><code class="language-r">library(tidyverse)
+library(DBI)
+library(RSQLite)
+library(dbplyr)
+library(nycflights13)
+
+con &lt;- dbConnect(SQLite(), &quot;:memory:&quot;)
+copy_to(con, nycflights13::flights, &quot;flights&quot;, temporary = FALSE)
+flights_db &lt;- tbl(con, &quot;flights&quot;)
+</code></pre>
+<p><code>":memory:"</code> is a database that exists only in this R session. <code>copy_to()</code> writes a local data frame into that database. <code>tbl(con, "flights")</code> is a <strong>lazy</strong> handle: it looks like a tibble when you print it, but the rows are still in SQLite.</p>
+<p><code>dbDisconnect(con)</code> when you are done.</p>
+<hr />
+<h2>3. Lazy verbs, then <code>collect()</code></h2>
+<p>dplyr verbs on <code>flights_db</code> do not run immediately. They build a query. Printing shows a preview (often 10 rows). <code>show_query()</code> prints the SQL. <code>collect()</code> pulls the result into a local tibble.</p>
+<pre><code class="language-r">flights_db |&gt;
+  filter(month == 1) |&gt;
+  select(year:dep_delay)
+
+flights_db |&gt;
+  filter(month == 1) |&gt;
+  show_query()
+
+jan &lt;- flights_db |&gt;
+  filter(month == 1) |&gt;
+  collect()
+</code></pre>
+<p><code>jan</code> is an ordinary tibble. Everything after <code>collect()</code> is local. Printing <code>flights_db</code> is only a preview; it is not the full table in memory.</p>
+<p>Not every tidyverse verb is SQL. <code>pivot_longer()</code>, <code>separate()</code>, and most tidyr helpers need a local frame. <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>arrange()</code>, <code>group_by()</code>, <code>summarize()</code>, and the joins usually translate.</p>
+<pre><code class="language-r">flights_db |&gt;
+  group_by(carrier) |&gt;
+  summarize(mean_del = mean(dep_delay, na.rm = TRUE), n = n())
+</code></pre>
+<p>That summary still lives in the database until you <code>collect()</code>. ggplot2 needs a local data frame, so plot only after <code>collect()</code>.</p>
+<hr />
+<h2>4. Close the connection</h2>
+<pre><code class="language-r">dbDisconnect(con)
+</code></pre>
+<p>If you skip this, R will close it when the session ends. Close it yourself so you do not leave a lock on a file-backed database later.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Copy <code>flights</code> into an in-memory SQLite database. Mean <code>dep_delay</code> by <code>carrier</code> from the remote table. <code>collect()</code>, then plot.</p>
+</li>
+<li>
+<p>On the same remote table, <code>filter(month == 1)</code> and <code>show_query()</code>. What SQL did dbplyr write?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

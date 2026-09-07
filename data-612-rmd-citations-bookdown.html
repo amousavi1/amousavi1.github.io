@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>13.2 R Markdown: Citations and Cross-References - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">13.2 R Markdown: Citations and Cross-References</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 13 &middot;
+                            <a href="files/data-612/rmd-citations-bookdown.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Number figures with bookdown or Quarto. Cite with @key and a .bib file.
+                        </p>
+<h2>1. Numbered figures and tables</h2>
+<p>A caption on a plot is ordinary text until the document format knows how to number it. Two routes:</p>
+<ul>
+<li>R Markdown: <code>bookdown::html_document2</code> (or <code>pdf_document2</code>) instead of <code>html_document</code></li>
+<li>Quarto: <code>format: html</code> already numbers figures and tables that have captions</li>
+</ul>
+<pre><code class="language-markdown">output:
+  bookdown::html_document2:
+    toc: true
+</code></pre>
+<p>Install <code>bookdown</code> once in the console if you are knitting an <code>.Rmd</code>. A <code>.qmd</code> does not need that package for numbers.</p>
+<p>Put a caption on the chunk. In Quarto:</p>
+<pre><code class="language-markdown">```{r}
+#| label: fig-bills
+#| fig-cap: &quot;Bill length vs bill depth.&quot;
+
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  theme_bw()
+```
+</code></pre>
+<p>The HTML then prints <strong>Figure 1:</strong> in front of that sentence. <code>knitr::kable(caption = "...")</code> gets <strong>Table 1:</strong> the same way.</p>
+<hr />
+<h2>2. Cross-references</h2>
+<p>Once the figure has a label and a caption, you can point at it in the prose.</p>
+<p>Quarto: <code>Figure @fig-bills</code> or <code>@fig-bills</code>.</p>
+<p>bookdown: <code>\@ref(fig:bills)</code> when the chunk is labeled <code>bills</code> and has <code>fig.cap</code>.</p>
+<p>A heading can have a label too. Quarto uses <code>{#sec-methods}</code> after the heading. bookdown uses <code>{#methods}</code>. You do not need either for Lab 13.</p>
+<hr />
+<h2>3. A <code>.bib</code> file</h2>
+<p>Citations come from a BibTeX file, not from typing the reference by hand. A small <code>refs.bib</code> looks like this:</p>
+<pre><code class="language-text">@Manual{horst2020palmerpenguins,
+  title = {palmerpenguins: Palmer Archipelago penguin data},
+  author = {Allison Horst and Alison Hill and Kristen Gorman},
+  year = {2020},
+  url = {https://allisonhorst.github.io/palmerpenguins/},
+}
+</code></pre>
+<p>The word after <code>{</code> is the <strong>key</strong>. You cite the key, not the title.</p>
+<p>Point the document at the file. Quarto and R Markdown both use:</p>
+<pre><code class="language-markdown">bibliography: refs.bib
+</code></pre>
+<p>Put that line in the YAML, at the same indent as <code>title:</code>.</p>
+<hr />
+<h2>4. Cite in the text</h2>
+<p><code>@horst2020palmerpenguins</code> becomes an in-text citation when you Render. Wrapping it, <code>[@horst2020palmerpenguins]</code>, puts the citation in parentheses.</p>
+<p><code>nocite: '@*'</code> in the YAML lists <strong>every</strong> entry in the <code>.bib</code>, even keys you never typed. Useful for a reading list. Leave it out if you only want the sources you cited.</p>
+<p>Add a heading <code># References</code> (or <code># Bibliography</code>) at the end. Quarto and pandoc write the list there.</p>
+<hr />
+<h2>5. Style with CSL</h2>
+<p>The default author–year look is fine for this course. To match a journal, add a Citation Style Language file:</p>
+<pre><code class="language-markdown">bibliography: refs.bib
+csl: apa.csl
+</code></pre>
+<p>Download a <code>.csl</code> from <a href="https://www.zotero.org/styles">zotero.org/styles</a> and keep it next to the <code>.qmd</code>. You do not write CSL by hand.</p>
+<hr />
+<h2>6. The same idea in Quarto</h2>
+<p>A compact header:</p>
+<pre><code class="language-markdown">---
+title: &quot;Penguin bills&quot;
+author: &quot;Your Name&quot;
+format: html
+bibliography: refs.bib
+---
+</code></pre>
+<p>No <code>bookdown::</code> output. Captions still get numbers. <code>@key</code> still cites. The <code>.bib</code> format does not change.</p>
+<p>If you are handed an <code>.Rmd</code> that already uses <code>bookdown::html_document2</code>, knit it. Do not rewrite it as Quarto just to get a citation.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>Sketch a four-line BibTeX entry for a package or a paper (type, key, title, author or year).</p>
+</li>
+<li>
+<p>Write one sentence that cites that key with <code>@</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
