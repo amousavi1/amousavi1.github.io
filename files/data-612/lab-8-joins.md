@@ -40,3 +40,19 @@ The ten days with the highest median `dep_delay`. Then `semi_join()` to keep eve
 ## 5. Plane age and delay
 
 Join `planes`. Age is `2013 - year` of manufacture. Plot age against `dep_delay` (`geom_hex()` or `geom_smooth()`).
+
+---
+
+## 6. Distance from NYC
+
+1. Mean longitude and latitude of the three NYC airports (`EWR`, `JFK`, `LGA`). Treat that as the location of NYC.
+
+2. Write a function `dist_nyc(lon, lat, nyclon, nyclat)` that returns great-circle distance from NYC using `geosphere::distm()`. What unit does `distm()` use?
+
+3. Add that distance to every row of `airports`. Is mean arrival delay at a destination associated with distance from NYC?
+
+---
+
+## 7. Fair-weather takeoffs
+
+For each `tailnum`, the proportion of takeoffs in fair weather: `precip == 0`, `wind_speed < 20`, and `visib >= 10`. Join `weather` on `origin`, `year`, `month`, `day`, and `hour` (`hour` from `dep_time %/% 100`). Is that proportion associated with plane age?

@@ -148,6 +148,16 @@ fivenum(diamonds$carat)
 <li>One categorical and one quantitative: <code>geom_boxplot()</code>, maybe on a log scale.</li>
 <li>Two categorical: <code>table()</code>, <code>prop.table(table(...), margin = 1)</code> or <code>margin = 2</code> for conditional distributions. A count plot is <code>geom_count()</code>. A mosaic plot (<code>ggmosaic</code>) is optional.</li>
 </ul>
+<p><code>UCBAdmissions</code> is the classic Simpson warning: a third variable can reverse an association. The overall admission rate by gender is not the same story as the rate inside each department.</p>
+<pre><code class="language-r">ucb &lt;- as_tibble(UCBAdmissions)
+ucb |&gt;
+  group_by(Gender) |&gt;
+  summarize(p = sum(Freq[Admit == &quot;Admitted&quot;]) / sum(Freq), .groups = &quot;drop&quot;)
+
+ucb |&gt;
+  group_by(Dept, Gender) |&gt;
+  summarize(p = sum(Freq[Admit == &quot;Admitted&quot;]) / sum(Freq), .groups = &quot;drop&quot;)
+</code></pre>
 <pre><code class="language-r">ggplot(diamonds, aes(x = carat, y = price)) +
   geom_point(alpha = 0.05) +
   theme_bw()
@@ -190,7 +200,7 @@ ggplot(diamonds, aes(x = cut, y = price)) +
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

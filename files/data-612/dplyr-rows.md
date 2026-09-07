@@ -121,3 +121,5 @@ Character order follows the locale.
 4. The last 10 of the first 30 Newark (`EWR`) flights.
 
 5. Longest `distance`, ties broken by `air_time`.
+
+6. The 50 longest `air_time`s, then the 10 smallest `arr_delay`s among those. Repeat with `air_time < 300`. What does `with_ties = FALSE` change?

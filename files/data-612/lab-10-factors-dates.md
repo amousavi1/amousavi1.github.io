@@ -36,3 +36,21 @@ Use `data/wmata_ridership.csv`.
 3. Boxplot of daily `Total` by weekday.
 
 4. How long is the span as a duration and as an interval?
+
+---
+
+## 3. Capital Bikeshare (sample)
+
+Use `data/capital_trips_sample.csv` (a short extract of the 2016 trips file). Column names have spaces.
+
+1. `glimpse()` the file. Rename columns so they have no spaces.
+
+2. Parse start and end with `mdy_hm()`.
+
+3. Compute trip duration from start and end. Compare it to `duration_ms`. Where do they disagree by about an hour?
+
+4. Those hour-scale gaps sit on 13 March 2016 (spring-forward). `force_tz(..., tzone = "America/New_York")` on both times, then recompute.
+
+5. Time from the first start to the last end, as a duration.
+
+6. Plot duration against hour of day.

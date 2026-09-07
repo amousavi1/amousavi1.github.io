@@ -20,6 +20,8 @@ data("flights")
 
 5. `set.seed(1)`. A random 1% sample, and a sample of 3367 rows. Are the last 10 rows the same? Why?
 
+6. The 50 longest `air_time`s, then the 10 smallest `arr_delay`s among those. Repeat after `filter(air_time < 300)`. What does `with_ties = FALSE` change?
+
 ---
 
 ## 2. Arrange, select, mutate

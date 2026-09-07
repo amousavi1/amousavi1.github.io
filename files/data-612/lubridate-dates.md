@@ -110,6 +110,22 @@ with_tz(x, "America/New_York")
 
 `OlsonNames()` lists the zone names. `"America/New_York"` is Eastern time, daylight saving included.
 
+A clock that is missing a timezone is often stored as UTC by accident. On the spring-forward Sunday the computed duration can jump by an hour. `force_tz()` is the fix when the numbers on the clock were already Eastern.
+
+```r
+toy <- tibble(
+  start = mdy_hm(c("3/13/2016 1:30", "3/13/2016 1:30")),
+  end   = mdy_hm(c("3/13/2016 3:30", "3/13/2016 3:30"))
+)
+toy |>
+  mutate(
+    start_ny = force_tz(start, "America/New_York"),
+    end_ny = force_tz(end, "America/New_York"),
+    hours_utc = as.numeric(end - start) / 3600,
+    hours_ny = as.numeric(end_ny - start_ny) / 3600
+  )
+```
+
 ---
 
 ## 6. Practice

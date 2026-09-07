@@ -130,6 +130,7 @@ weather
 </ul>
 <p>A <strong>primary key</strong> uniquely identifies a row in its own table (<code>planes$tailnum</code>, <code>airlines$carrier</code>, <code>airports$faa</code>). A <strong>foreign key</strong> points at a primary key in another table (<code>flights$tailnum</code>, <code>flights$carrier</code>, <code>flights$dest</code>).</p>
 <p><code>weather</code> is identified by <code>origin</code>, <code>year</code>, <code>month</code>, <code>day</code>, and <code>hour</code> together. That is a compound key.</p>
+<p><img alt="The five nycflights13 tables and the keys that connect them" src="files/data-612/graphics/relational-nycflights.png" /></p>
 <hr />
 <h2>2. Check the keys</h2>
 <p><code>count()</code> then <code>filter(n &gt; 1)</code> finds duplicate keys. A real primary key has no such rows and no missing values.</p>
@@ -177,6 +178,9 @@ right_join(x, y, by = &quot;key&quot;)
 full_join(x, y, by = &quot;key&quot;)
 </code></pre>
 <p>Unmatched rows get <code>NA</code> in the new columns (<code>left_join</code> / <code>right_join</code> / <code>full_join</code>).</p>
+<p><img alt="Inner join keeps matching keys only" src="files/data-612/graphics/join-inner.png" /></p>
+<p><img alt="Outer joins keep unmatched rows and fill with NA" src="files/data-612/graphics/join-outer.png" /></p>
+<p><code>nest_join(x, y)</code> is the primitive: each row of <code>x</code> gets a list-column of the matching rows of <code>y</code>. The other joins are that idea plus <code>unnest()</code>. You will use <code>left_join()</code> day to day. Know <code>nest_join()</code> exists when you want the matches as a list instead of extra rows.</p>
 <hr />
 <h2>4. <code>by</code></h2>
 <p>Same name in both tables: <code>by = "carrier"</code>. Different names: a named vector, left name first.</p>
@@ -203,6 +207,9 @@ flights |&gt;
 <li>
 <p>Keep only flights that have a matching row in <code>planes</code>. How many flights are dropped?</p>
 </li>
+<li>
+<p>Name a primary key for <code>ggplot2::diamonds</code>. If there is none, say so. Optional: the same question for <code>Lahman::Batting</code> or <code>babynames::babynames</code> if you install those packages.</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -212,7 +219,7 @@ flights |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

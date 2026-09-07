@@ -21,4 +21,4 @@ library(nycflights13)
 
 2. Load `flowers2.csv`. Separate `Flowers/Intensity` into two numeric columns. Unite those two columns again with a comma.
 
-3. In `flights`, unite `month`, `day`, `hour`, and `minute` into `sd_time`. Keep the original columns.
+3. In `flights`, select `month`, `day`, `hour`, and `minute`. Unite `hour` and `minute` into `sd_time`, then parse that column as a time. What happens, and why? Fix it with `paste0()` or `stringr` so minutes stay two digits.

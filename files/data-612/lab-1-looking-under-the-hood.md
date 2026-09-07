@@ -324,6 +324,24 @@ What disappeared from the HTML, and why? Write one sentence in the Quarto file (
 
 ---
 
+## H. Source drills
+
+These are the original Week 1 lab items. Work in the Quarto file from G, or in a second `.qmd`. Number them.
+
+1. Sum the even numbers from 10 to 1002. Use `seq()` and `sum()`.
+
+2. `c("Hello", "world!", "How", "are", "you?")`, then one string with underscores between the words (`paste()` and `collapse`).
+
+3. What happens with `"1" + 2`?
+
+4. Comment that line out and rerun.
+
+5. Sum of the multiples of 3 or 5 that are less than 1000. Build `1:999`, then subset with `%%` and `|`.
+
+6. Render the document to HTML (Quarto) or knit an `.Rmd` to PDF.
+
+---
+
 ## What to submit
 
 Submit `lab01.R` and `lab01_practice.qmd` with:

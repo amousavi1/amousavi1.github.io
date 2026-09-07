@@ -10,6 +10,8 @@ That is a shape, not a quality judgment. A tidy table can still have missing val
 
 `tidyr` is the tidyverse package for the shape. It loads with `library(tidyverse)`.
 
+![Tidy data: one variable per column, one observation per row](files/data-612/graphics/tidy-1.png)
+
 ```r
 library(tidyverse)
 ```

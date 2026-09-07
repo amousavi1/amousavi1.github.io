@@ -134,7 +134,7 @@ library(nycflights13)
 <p>Load <code>flowers2.csv</code>. Separate <code>Flowers/Intensity</code> into two numeric columns. Unite those two columns again with a comma.</p>
 </li>
 <li>
-<p>In <code>flights</code>, unite <code>month</code>, <code>day</code>, <code>hour</code>, and <code>minute</code> into <code>sd_time</code>. Keep the original columns.</p>
+<p>In <code>flights</code>, select <code>month</code>, <code>day</code>, <code>hour</code>, and <code>minute</code>. Unite <code>hour</code> and <code>minute</code> into <code>sd_time</code>, then parse that column as a time. What happens, and why? Fix it with <code>paste0()</code> or <code>stringr</code> so minutes stay two digits.</p>
 </li>
 </ol>
                     </section>
@@ -145,7 +145,7 @@ library(nycflights13)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

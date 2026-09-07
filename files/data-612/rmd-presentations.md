@@ -87,6 +87,16 @@ A few habits that keep a short deck readable:
 
 ---
 
+Starter `.Rmd` files are in the Data / templates list on the course page: ioslides, slidy, Beamer, PowerPoint, xaringan, and Shiny. Download one and knit it. Do not vendor a 10 MB knitted deck.
+
+xaringan uses `---` between slides, not `##`. RStudio: **File → New File → R Markdown → From Template → Ninja Presentation**. `{xaringanExtra}` adds tile view (press `o`). `{xaringanthemer}` sets colors. `{plotly}` and `{DiagrammeR}` are HTML widgets: they need an HTML format.
+
+A Shiny presentation is not a static file. The viewer needs R running. Use it for a live demo, not for a PDF you email.
+
+`{revealjs}` and `{rmdshower}` are other HTML decks. Quarto `revealjs` is the current default if you are starting fresh.
+
+---
+
 ## 6. Practice
 
 Outline a 3-slide deck (do not spend the hour polishing fonts):

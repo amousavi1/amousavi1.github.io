@@ -23,6 +23,8 @@ A **primary key** uniquely identifies a row in its own table (`planes$tailnum`, 
 
 `weather` is identified by `origin`, `year`, `month`, `day`, and `hour` together. That is a compound key.
 
+![The five nycflights13 tables and the keys that connect them](files/data-612/graphics/relational-nycflights.png)
+
 ---
 
 ## 2. Check the keys
@@ -83,6 +85,12 @@ full_join(x, y, by = "key")
 
 Unmatched rows get `NA` in the new columns (`left_join` / `right_join` / `full_join`).
 
+![Inner join keeps matching keys only](files/data-612/graphics/join-inner.png)
+
+![Outer joins keep unmatched rows and fill with NA](files/data-612/graphics/join-outer.png)
+
+`nest_join(x, y)` is the primitive: each row of `x` gets a list-column of the matching rows of `y`. The other joins are that idea plus `unnest()`. You will use `left_join()` day to day. Know `nest_join()` exists when you want the matches as a list instead of extra rows.
+
 ---
 
 ## 4. `by`
@@ -116,3 +124,5 @@ flights |>
 1. Add the airline name to every flight.
 
 2. Keep only flights that have a matching row in `planes`. How many flights are dropped?
+
+3. Name a primary key for `ggplot2::diamonds`. If there is none, say so. Optional: the same question for `Lahman::Batting` or `babynames::babynames` if you install those packages.

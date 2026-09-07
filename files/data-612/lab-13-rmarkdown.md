@@ -20,6 +20,6 @@ Work in a **Quarto** document. Do notes **13.1** and **13.2** first. Render to H
 
 ## 3. A citation and folding
 
-1. One sentence that would cite `@horst2020palmerpenguins` if a `refs.bib` file existed. You may add a real `.bib` and a `bibliography:` line, or leave the `@key` in the prose so the syntax is visible.
+1. Download `test_rmd_file.bib` from the Data section into a `bib/` folder. Point YAML at it (`bibliography: bib/test_rmd_file.bib`). Cite the palmerpenguins entry with `@` plus the key from the file.
 
 2. Optional: fold the code in the YAML (`code-fold: true` in Quarto, or `code_folding: hide` in an `.Rmd`).

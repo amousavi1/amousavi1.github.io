@@ -119,10 +119,14 @@ A string (or an integer) as `.f` extracts that name (or position) from each list
 
 ## 7. Practice
 
-1. The first two Fibonacci numbers are 0 and 1. Each later number is the sum of the previous two. Use a loop to compute the first 20.
+1. The first two Fibonacci numbers are 0 and 1. Each later number is the sum of the previous two. Use a loop to compute the first 100. Sanity check: `log2()` of the 100th number is about 67.57.
 
 2. `map_dbl()` means of every column of `mtcars`.
 
-3. Number of unique values in each column of `iris`.
+3. Number of unique values in each column of `iris`. Repeat with `across()`. `typeof()` of each column of `nycflights13::flights` with `map_chr()`, then with `across()`.
 
 4. p-value of `t.test(mpg ~ am)` within each `cyl` group of `mtcars`.
+
+5. In three lines, keep the `mtcars` columns whose mean is greater than 10 and report those means (`keep()` then `map_dbl()`). You should get four variables.
+
+6. Standard deviation of each numeric column of `iris` with a for-loop, then with `across()`.

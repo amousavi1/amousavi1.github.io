@@ -52,6 +52,19 @@ Color or `geom_freqpoly()` to split one quantitative variable by a category.
 - One categorical and one quantitative: `geom_boxplot()`, maybe on a log scale.
 - Two categorical: `table()`, `prop.table(table(...), margin = 1)` or `margin = 2` for conditional distributions. A count plot is `geom_count()`. A mosaic plot (`ggmosaic`) is optional.
 
+`UCBAdmissions` is the classic Simpson warning: a third variable can reverse an association. The overall admission rate by gender is not the same story as the rate inside each department.
+
+```r
+ucb <- as_tibble(UCBAdmissions)
+ucb |>
+  group_by(Gender) |>
+  summarize(p = sum(Freq[Admit == "Admitted"]) / sum(Freq), .groups = "drop")
+
+ucb |>
+  group_by(Dept, Gender) |>
+  summarize(p = sum(Freq[Admit == "Admitted"]) / sum(Freq), .groups = "drop")
+```
+
 ```r
 ggplot(diamonds, aes(x = carat, y = price)) +
   geom_point(alpha = 0.05) +

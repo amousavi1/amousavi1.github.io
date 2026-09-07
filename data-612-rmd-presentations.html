@@ -190,6 +190,11 @@ library(tidyverse)
 <li>end with a sentence the audience can repeat</li>
 </ul>
 <hr />
+<p>Starter <code>.Rmd</code> files are in the Data / templates list on the course page: ioslides, slidy, Beamer, PowerPoint, xaringan, and Shiny. Download one and knit it. Do not vendor a 10 MB knitted deck.</p>
+<p>xaringan uses <code>---</code> between slides, not <code>##</code>. RStudio: <strong>File → New File → R Markdown → From Template → Ninja Presentation</strong>. <code>{xaringanExtra}</code> adds tile view (press <code>o</code>). <code>{xaringanthemer}</code> sets colors. <code>{plotly}</code> and <code>{DiagrammeR}</code> are HTML widgets: they need an HTML format.</p>
+<p>A Shiny presentation is not a static file. The viewer needs R running. Use it for a live demo, not for a PDF you email.</p>
+<p><code>{revealjs}</code> and <code>{rmdshower}</code> are other HTML decks. Quarto <code>revealjs</code> is the current default if you are starting fresh.</p>
+<hr />
 <h2>6. Practice</h2>
 <p>Outline a 3-slide deck (do not spend the hour polishing fonts):</p>
 <ol>
@@ -205,7 +210,7 @@ library(tidyverse)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

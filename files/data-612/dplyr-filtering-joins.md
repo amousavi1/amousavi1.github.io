@@ -1,3 +1,11 @@
+![semi_join keeps x rows that match y](files/data-612/graphics/join-semi.png)
+
+![anti_join keeps x rows that do not match y](files/data-612/graphics/join-anti.png)
+
+![One-to-many: a key that repeats in x](files/data-612/graphics/join-one-to-many.png)
+
+![Many-to-many: the same key repeats in both tables](files/data-612/graphics/join-many-to-many.png)
+
 ## 1. `semi_join()` and `anti_join()`
 
 A mutating join **adds columns**. A filtering join **keeps or drops rows** of `x` and leaves the columns of `x` alone.

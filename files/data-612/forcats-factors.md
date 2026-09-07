@@ -2,6 +2,8 @@
 
 A factor stores a categorical vector as integer codes plus a `levels` attribute. What prints is the label. What sits underneath is `1`, `2`, `3`, … in the order of the levels.
 
+A useful longer read: McNamara and Horton, [Wrangling Categorical Data in R](https://doi.org/10.7287/peerj.preprints.3163v2).
+
 That is why `as.numeric()` on a factor of numbers is the **index**, not the printed value.
 
 ```r

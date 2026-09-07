@@ -2,6 +2,8 @@
 
 R has two kinds of vectors: **atomic** vectors and **lists**.
 
+![Atomic vectors, lists, and data frames](files/data-612/graphics/data-structures-overview.png)
+
 An atomic vector holds one type: logical, integer, double, character (plus complex and raw, which we will not use). A list can hold mixed types, including other lists.
 
 ```r

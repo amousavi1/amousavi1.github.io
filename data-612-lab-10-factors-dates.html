@@ -152,6 +152,29 @@ library(lubridate)
 <p>How long is the span as a duration and as an interval?</p>
 </li>
 </ol>
+<hr />
+<h2>3. Capital Bikeshare (sample)</h2>
+<p>Use <code>data/capital_trips_sample.csv</code> (a short extract of the 2016 trips file). Column names have spaces.</p>
+<ol>
+<li>
+<p><code>glimpse()</code> the file. Rename columns so they have no spaces.</p>
+</li>
+<li>
+<p>Parse start and end with <code>mdy_hm()</code>.</p>
+</li>
+<li>
+<p>Compute trip duration from start and end. Compare it to <code>duration_ms</code>. Where do they disagree by about an hour?</p>
+</li>
+<li>
+<p>Those hour-scale gaps sit on 13 March 2016 (spring-forward). <code>force_tz(..., tzone = "America/New_York")</code> on both times, then recompute.</p>
+</li>
+<li>
+<p>Time from the first start to the last end, as a duration.</p>
+</li>
+<li>
+<p>Plot duration against hour of day.</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -160,7 +183,7 @@ library(lubridate)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

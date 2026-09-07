@@ -25,3 +25,9 @@ Use `words`. For each item, print the matching words.
 3. Words that end in `ed` but not `eed`.
 
 4. Words that start with three consonants.
+
+5. Words that end in a consonant.
+
+6. Words that end in `ing` or `ise`.
+
+7. Words with two or more vowel-consonant pairs in a row (`[aeiou][^aeiou]` twice).

@@ -189,16 +189,22 @@ pmap(args, rnorm)
 <h2>7. Practice</h2>
 <ol>
 <li>
-<p>The first two Fibonacci numbers are 0 and 1. Each later number is the sum of the previous two. Use a loop to compute the first 20.</p>
+<p>The first two Fibonacci numbers are 0 and 1. Each later number is the sum of the previous two. Use a loop to compute the first 100. Sanity check: <code>log2()</code> of the 100th number is about 67.57.</p>
 </li>
 <li>
 <p><code>map_dbl()</code> means of every column of <code>mtcars</code>.</p>
 </li>
 <li>
-<p>Number of unique values in each column of <code>iris</code>.</p>
+<p>Number of unique values in each column of <code>iris</code>. Repeat with <code>across()</code>. <code>typeof()</code> of each column of <code>nycflights13::flights</code> with <code>map_chr()</code>, then with <code>across()</code>.</p>
 </li>
 <li>
 <p>p-value of <code>t.test(mpg ~ am)</code> within each <code>cyl</code> group of <code>mtcars</code>.</p>
+</li>
+<li>
+<p>In three lines, keep the <code>mtcars</code> columns whose mean is greater than 10 and report those means (<code>keep()</code> then <code>map_dbl()</code>). You should get four variables.</p>
+</li>
+<li>
+<p>Standard deviation of each numeric column of <code>iris</code> with a for-loop, then with <code>across()</code>.</p>
 </li>
 </ol>
                     </section>
@@ -209,7 +215,7 @@ pmap(args, rnorm)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

@@ -16,10 +16,16 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-07T17:15:00-04:00"
-LAST_UPDATED_TEXT = "September 7, 2026, 5:15 PM EDT"
+LAST_UPDATED_ISO = "2026-09-07T17:45:00-04:00"
+LAST_UPDATED_TEXT = "September 7, 2026, 5:45 PM EDT"
 
 NOTES = [
+    {
+        "slug": "data-science-and-r",
+        "week": 1,
+        "title": "1.0 Data Science and R",
+        "lead": "Data science blends statistics, computing, and a domain question. This course uses R for that cycle.",
+    },
     {
         "slug": "getting-started",
         "week": 1,
@@ -414,6 +420,7 @@ h3 {
   page-break-after: avoid;
 }
 p, li { margin: 0.45em 0; }
+img { max-width: 100%; height: auto; page-break-inside: avoid; }
 ul, ol { padding-left: 1.25em; }
 pre {
   font-family: Consolas, "Courier New", monospace;
@@ -550,6 +557,7 @@ def write_print_page(note: dict, md_path: pathlib.Path) -> pathlib.Path:
     print_path = ROOT / "files" / "data-612" / f"_print-{note['slug']}.html"
     print_body = markdown_to_html(md_path.read_text(encoding="utf-8"))
     print_body = print_body.replace('<div class="table-wrap">', "").replace("</div>", "")
+    print_body = print_body.replace("files/data-612/graphics/", "graphics/")
     html = f"""<!doctype html>
 <html lang="en">
 <head>

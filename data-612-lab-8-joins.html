@@ -142,6 +142,22 @@ library(nycflights13)
 <hr />
 <h2>5. Plane age and delay</h2>
 <p>Join <code>planes</code>. Age is <code>2013 - year</code> of manufacture. Plot age against <code>dep_delay</code> (<code>geom_hex()</code> or <code>geom_smooth()</code>).</p>
+<hr />
+<h2>6. Distance from NYC</h2>
+<ol>
+<li>
+<p>Mean longitude and latitude of the three NYC airports (<code>EWR</code>, <code>JFK</code>, <code>LGA</code>). Treat that as the location of NYC.</p>
+</li>
+<li>
+<p>Write a function <code>dist_nyc(lon, lat, nyclon, nyclat)</code> that returns great-circle distance from NYC using <code>geosphere::distm()</code>. What unit does <code>distm()</code> use?</p>
+</li>
+<li>
+<p>Add that distance to every row of <code>airports</code>. Is mean arrival delay at a destination associated with distance from NYC?</p>
+</li>
+</ol>
+<hr />
+<h2>7. Fair-weather takeoffs</h2>
+<p>For each <code>tailnum</code>, the proportion of takeoffs in fair weather: <code>precip == 0</code>, <code>wind_speed &lt; 20</code>, and <code>visib &gt;= 10</code>. Join <code>weather</code> on <code>origin</code>, <code>year</code>, <code>month</code>, <code>day</code>, and <code>hour</code> (<code>hour</code> from <code>dep_time %/% 100</code>). Is that proportion associated with plane age?</p>
                     </section>
                 </div>
             </article>
@@ -150,7 +166,7 @@ library(nycflights13)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 

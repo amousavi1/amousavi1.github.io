@@ -183,6 +183,19 @@ force_tz(x, &quot;America/New_York&quot;)
 with_tz(x, &quot;America/New_York&quot;)
 </code></pre>
 <p><code>OlsonNames()</code> lists the zone names. <code>"America/New_York"</code> is Eastern time, daylight saving included.</p>
+<p>A clock that is missing a timezone is often stored as UTC by accident. On the spring-forward Sunday the computed duration can jump by an hour. <code>force_tz()</code> is the fix when the numbers on the clock were already Eastern.</p>
+<pre><code class="language-r">toy &lt;- tibble(
+  start = mdy_hm(c(&quot;3/13/2016 1:30&quot;, &quot;3/13/2016 1:30&quot;)),
+  end   = mdy_hm(c(&quot;3/13/2016 3:30&quot;, &quot;3/13/2016 3:30&quot;))
+)
+toy |&gt;
+  mutate(
+    start_ny = force_tz(start, &quot;America/New_York&quot;),
+    end_ny = force_tz(end, &quot;America/New_York&quot;),
+    hours_utc = as.numeric(end - start) / 3600,
+    hours_ny = as.numeric(end_ny - start_ny) / 3600
+  )
+</code></pre>
 <hr />
 <h2>6. Practice</h2>
 <ol>
@@ -209,7 +222,7 @@ with_tz(x, &quot;America/New_York&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:15:00-04:00">September 7, 2026, 5:15 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T17:45:00-04:00">September 7, 2026, 5:45 PM EDT</time></div>
             </footer>
         </div>
 
