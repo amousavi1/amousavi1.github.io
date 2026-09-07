@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 1: NumPy, NLTK, and Files - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1: NumPy, NLTK, and Files</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
+                            <a href="files/data-641/lab-1-numpy-nltk-files.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Arrays, stemming versus lemmatization, and a movie script.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>1.1</strong> through <strong>1.3</strong> first. You will need <code>numpy</code> and <code>nltk</code>.</p>
+<p>Download <a href="files/data-641/nemo.txt">nemo.txt</a> into the same folder as the notebook (or use a relative path).</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<pre><code class="language-python">import numpy as np
+import nltk
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+
+nltk.download(&quot;punkt&quot;)
+nltk.download(&quot;wordnet&quot;)
+</code></pre>
+<p>If <code>word_tokenize</code> asks for <code>punkt_tab</code>, run <code>nltk.download("punkt_tab")</code> as well.</p>
+<hr />
+<h2>1. NumPy</h2>
+<ol>
+<li>
+<p>Create a NumPy array <code>A</code> with shape <code>(6, 6)</code> using <code>np.random.rand()</code>.</p>
+</li>
+<li>
+<p>Print the entire third row (index <code>2</code>).</p>
+</li>
+<li>
+<p>Print every odd column (0-based: columns 0, 2, 4, …).</p>
+</li>
+<li>
+<p>Build a dictionary with keys <code>"even"</code> and <code>"odd"</code>. The value for <code>"even"</code> is the sum of entries whose row-plus-column index <code>i + j</code> is even. Same idea for <code>"odd"</code>.</p>
+</li>
+<li>
+<p>A class is a blueprint for objects. Write a class <code>matrixMaker</code> with:
+   - attributes <code>m</code> and <code>n</code>
+   - a matrix <code>A</code> of shape <code>(m, n)</code> with entries from (N(0, 1))
+   - a method <code>specialSum()</code> that returns the sum of entries of <code>A</code> that are greater than <code>0.5</code></p>
+</li>
+</ol>
+<p>Create <code>test = matrixMaker(5, 5)</code> and call <code>test.specialSum()</code>.</p>
+<hr />
+<h2>2. NLTK</h2>
+<pre><code class="language-python">plurals = [
+    &quot;caresses&quot;, &quot;flies&quot;, &quot;dies&quot;, &quot;mules&quot;, &quot;denied&quot;,
+    &quot;died&quot;, &quot;agreed&quot;, &quot;owned&quot;, &quot;humbled&quot;, &quot;sized&quot;,
+    &quot;meeting&quot;, &quot;stating&quot;, &quot;siezing&quot;, &quot;itemization&quot;,
+    &quot;sensational&quot;, &quot;traditional&quot;, &quot;reference&quot;, &quot;colonizer&quot;,
+    &quot;plotted&quot;,
+]
+</code></pre>
+<ol>
+<li>
+<p>Import NLTK. Use the <code>plurals</code> list above.</p>
+</li>
+<li>
+<p>Stem every word with a loop and <code>PorterStemmer().stem()</code>.</p>
+</li>
+<li>
+<p>Lemmatize every word with <code>WordNetLemmatizer</code>.</p>
+</li>
+<li>
+<p>Tokenize this sentence with <code>word_tokenize</code> and print the tokens:</p>
+</li>
+</ol>
+<pre><code class="language-text">Wow, we can finally stop using the split function!
+</code></pre>
+<p>Stemming chops a suffix and may leave a non-word (<code>flying</code> → <code>fli</code>). Lemmatization aims at a dictionary form and uses WordNet. Tokenization splits text into words and punctuation. <code>str.split()</code> does not treat punctuation as its own token.</p>
+<hr />
+<h2>3. Files</h2>
+<p>Required reading: <a href="https://www.pythonforbeginners.com/files/reading-and-writing-files-in-python">Reading and writing files in Python</a>.</p>
+<ol>
+<li>
+<p>Open <code>nemo.txt</code>.</p>
+</li>
+<li>
+<p>How many words are in the script? (<code>split()</code> on each line is enough.)</p>
+</li>
+<li>
+<p>How many times did a character speak? Who spoke the most?</p>
+</li>
+</ol>
+<p>Speaker names in this file sit alone on a line, in ALL CAPS, with no <code>?</code>, <code>.</code>, or <code>!</code>. Count those lines. Sort the counts.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T18:50:00-04:00">September 7, 2026, 6:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

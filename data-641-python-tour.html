@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.3 A Python Tour for NLP - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.3 A Python Tour for NLP</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
+                            <a href="files/data-641/python-tour.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Types, strings, containers, control flow, functions, files, NumPy, and a small class.
+                        </p>
+<h2>1. Why Python here</h2>
+<p>This course uses <strong>Python</strong>. Labs and homework are <strong>Jupyter</strong> notebooks. Submit an HTML export to Canvas (File → Download as → HTML).</p>
+<p>Install a current Python, then Jupyter (Anaconda or <code>pip install notebook</code> is fine). You will also need <code>numpy</code> and <code>nltk</code> for Lab 1.</p>
+<p>Python indexes from <strong>0</strong>. The first element of a list is <code>x[0]</code>.</p>
+<hr />
+<h2>2. Native types</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Example</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bool</code></td>
+<td><code>False</code></td>
+<td><code>True</code> / <code>False</code></td>
+</tr>
+<tr>
+<td><code>int</code>, <code>float</code></td>
+<td><code>42</code>, <code>12.245</code></td>
+<td>Numbers</td>
+</tr>
+<tr>
+<td><code>str</code></td>
+<td><code>"Hello there"</code></td>
+<td>Unicode text</td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td><code>[1, 2, 3]</code></td>
+<td>Ordered, mutable</td>
+</tr>
+<tr>
+<td><code>tuple</code></td>
+<td><code>(1, 2, 3)</code></td>
+<td>Ordered, <strong>immutable</strong></td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td><code>{1, 2, 3}</code></td>
+<td>Unique, unordered</td>
+</tr>
+<tr>
+<td><code>dict</code></td>
+<td><code>{"a": 2, "b": 3}</code></td>
+<td>Key → value</td>
+</tr>
+</tbody>
+</table></div>
+<p>A tuple does not support <code>t[0] = 2</code>. Build a new tuple instead.</p>
+<hr />
+<h2>3. Strings</h2>
+<pre><code class="language-python">my_string = &quot;Hi-Bye&quot;
+my_string[1]          # &quot;i&quot;
+&quot;hello&quot; + &quot; &quot; + &quot;world&quot;
+my_string[:2] + my_string[3:]
+my_string.upper()
+my_string.find(&quot;e&quot;)   # -1 if missing
+</code></pre>
+<p>Slices use <code>start:stop</code>. The stop index is <strong>not</strong> included. Negative indices count from the end: <code>my_string[-5:]</code>.</p>
+<hr />
+<h2>4. Lists, tuples, sets, dictionaries</h2>
+<pre><code class="language-python">my_list = [1, 2, 3, 4]
+my_list[2]
+my_list.append(5)
+my_list.extend([6, 7])
+my_list.remove(2)     # first matching value
+my_list.pop(0)        # by position
+my_list.sort()
+my_list.reverse()
+len(my_list)
+&quot;b&quot; in [&quot;a&quot;, &quot;b&quot;]
+[&quot;a&quot;, &quot;b&quot;] + [&quot;c&quot;]
+</code></pre>
+<pre><code class="language-python">my_tuple = (1, 2, 3)
+my_tuple = my_tuple + (4,)
+my_tuple.count(3)
+my_tuple.index(4)
+</code></pre>
+<pre><code class="language-python">my_set = {1, 2, 3}
+my_set.add(4)
+my_set.update([5, 6])
+my_set.remove(2)      # error if missing
+my_set.discard(3)     # quiet if missing
+{1, 2, 3}.union({3, 4})
+{1, 2, 3}.intersection({3, 4})
+</code></pre>
+<pre><code class="language-python">my_dict = {&quot;a&quot;: 1, &quot;b&quot;: 2}
+my_dict[&quot;a&quot;]
+my_dict[&quot;c&quot;] = 3
+my_dict.pop(&quot;a&quot;)
+del my_dict[&quot;b&quot;]
+my_dict.keys()
+my_dict.values()
+</code></pre>
+<hr />
+<h2>5. Conditionals and loops</h2>
+<pre><code class="language-python">my_num = 4
+if my_num &lt; 0:
+    print(&quot;Negative&quot;)
+elif my_num == 0:
+    print(&quot;Zero&quot;)
+else:
+    print(&quot;Positive&quot;)
+</code></pre>
+<p><code>if</code> / <code>elif</code> / <code>else</code> need a colon and an indented block.</p>
+<pre><code class="language-python">a = 0
+while a &lt; 5:
+    print(a)
+    a += 1
+</code></pre>
+<p>A <code>while</code> that never updates the condition runs forever.</p>
+<pre><code class="language-python">for i in range(1, 5):
+    print(i)
+</code></pre>
+<p><code>range(1, 5)</code> is 1, 2, 3, 4.</p>
+<hr />
+<h2>6. Functions</h2>
+<pre><code class="language-python">def add_two(x):
+    y = x + 2
+    return y
+
+def generate_tuple(x):
+    y = x * 2
+    z = y * 2
+    return (y, z)
+</code></pre>
+<p>Name arguments. Return something you can test. A function that only prints is harder to reuse.</p>
+<pre><code class="language-python">def squaring_dct(n):
+    if n &lt; 1 or not isinstance(n, int):
+        return &quot;Input must be a positive integer.&quot;
+    dct = {}
+    for i in range(1, n + 1):
+        dct[i] = i ** 2
+    return dct
+
+squaring_dct(4)
+# {1: 1, 2: 4, 3: 9, 4: 16}
+</code></pre>
+<hr />
+<h2>7. Files</h2>
+<pre><code class="language-python">with open(&quot;nemo.txt&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    lines = f.readlines()
+</code></pre>
+<p><code>with</code> closes the file even if the next line errors. <code>readlines()</code> is a list of strings, each usually ending in <code>\n</code>. <code>split()</code> on a line gives words.</p>
+<p>Download <a href="files/data-641/nemo.txt">nemo.txt</a> and put it in the same folder as the notebook, or pass a relative path.</p>
+<hr />
+<h2>8. NumPy in one minute</h2>
+<p>Lab 1 needs a 2-D array.</p>
+<pre><code class="language-python">import numpy as np
+
+A = np.random.rand(6, 6)     # uniform on [0, 1)
+A[2, :]                      # third row (index 2)
+A[:, ::2]                    # every other column
+A.shape                      # (6, 6)
+</code></pre>
+<p><code>np.random.normal(0, 1, (m, n))</code> draws from (N(0, 1)).</p>
+<hr />
+<h2>9. A small class</h2>
+<p>A <strong>class</strong> is a blueprint. An <strong>object</strong> is one instance. Lab 1 asks for this shape:</p>
+<pre><code class="language-python">class StringAnalyzer:
+    def __init__(self, content):
+        self.content = content
+
+    def analyze_string(self):
+        vowels = &quot;aeiouAEIOU&quot;
+        counts = {&quot;vowels&quot;: 0, &quot;consonants&quot;: 0, &quot;others&quot;: 0}
+        for char in self.content:
+            if char.isalpha():
+                if char in vowels:
+                    counts[&quot;vowels&quot;] += 1
+                else:
+                    counts[&quot;consonants&quot;] += 1
+            else:
+                counts[&quot;others&quot;] += 1
+        return counts
+
+analyzer = StringAnalyzer(&quot;Hello, World! 123&quot;)
+analyzer.analyze_string()
+</code></pre>
+<p><code>__init__</code> runs when you call the class. Methods take <code>self</code> as the first argument. Store data on <code>self</code>.</p>
+<hr />
+<h2>10. Practice</h2>
+<ol>
+<li>
+<p>Build <code>{"a": 1, "b": 2, "c": 3}</code>, drop <code>"a"</code>, and print the remaining keys.</p>
+</li>
+<li>
+<p>Write <code>add_two</code> and check <code>add_two(2) == 4</code>.</p>
+</li>
+<li>
+<p>Write <code>squaring_dct(4)</code> without looking. What should happen if <code>n</code> is <code>3.2</code>?</p>
+</li>
+<li>
+<p>Open <code>nemo.txt</code> and print the first line. Do not hard-code a <code>C:/Users/...</code> path.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T18:50:00-04:00">September 7, 2026, 6:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -4,6 +4,7 @@ Plaintext lives in files/data-612/lab-*-solutions.md (gitignored).
 Only the ciphertext JSON is published.
 
   python scripts/encrypt_lab_solutions.py --lab 2
+  python scripts/encrypt_lab_solutions.py --course data-641 --lab 1
   python scripts/encrypt_lab_solutions.py --lab 1 --password "your-passphrase"
 
 If --password is omitted, the script uses files/data-612/.lab1-solutions-password
@@ -33,7 +34,10 @@ except ImportError:
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-PASSWORD_FILE = ROOT / "files" / "data-612" / ".lab1-solutions-password"
+PASSWORD_FILES = (
+    ROOT / "files" / "data-612" / ".lab1-solutions-password",
+    ROOT / "files" / "data-641" / ".lab-solutions-password",
+)
 ITERATIONS = 210_000
 
 
@@ -80,14 +84,21 @@ def default_password() -> str | None:
     )
     if env:
         return env
-    if PASSWORD_FILE.exists():
-        return PASSWORD_FILE.read_text(encoding="utf-8").strip()
+    for path in PASSWORD_FILES:
+        if path.exists():
+            return path.read_text(encoding="utf-8").strip()
     return None
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lab", default="1", help="Lab number, for example 1 or 2.")
+    parser.add_argument(
+        "--course",
+        default="data-612",
+        choices=("data-612", "data-641"),
+        help="Course folder under files/.",
+    )
     parser.add_argument(
         "--password",
         default=default_password(),
@@ -97,8 +108,8 @@ def main() -> None:
     if not args.password:
         sys.exit("Provide --password, LAB_SOLUTIONS_PASSWORD, or the password file.")
 
-    md_path = ROOT / "files" / "data-612" / f"lab-{args.lab}-solutions.md"
-    out_path = ROOT / "files" / "data-612" / f"lab-{args.lab}-solutions.enc.json"
+    md_path = ROOT / "files" / args.course / f"lab-{args.lab}-solutions.md"
+    out_path = ROOT / "files" / args.course / f"lab-{args.lab}-solutions.enc.json"
     if not md_path.exists():
         sys.exit(f"Missing {md_path}")
 

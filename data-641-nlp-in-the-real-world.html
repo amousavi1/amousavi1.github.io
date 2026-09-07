@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.1 NLP in the Real World - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.1 NLP in the Real World</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
+                            <a href="files/data-641/nlp-in-the-real-world.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            What NLP is, the core tasks, and why human language is a hard input.
+                        </p>
+<h2>1. What NLP is</h2>
+<p>Natural language processing (NLP) is how we get a computer to work with <strong>human language</strong>: read it, write it, search it, translate it, or answer a question about it.</p>
+<p>It sits between linguistics, computer science, and artificial intelligence. The input is messy text (or speech turned into text). The output is a label, a span, a ranking, another sentence, or a number.</p>
+<p>This course is <strong>applied</strong>. The goal is to build systems that do a job, not to survey every theory of language.</p>
+<p>The main text for the ideas this week is <em>Practical Natural Language Processing</em> (Vajjala, Majumder, Gupta, Surana).</p>
+<hr />
+<h2>2. Tasks you will see all semester</h2>
+<p>A small set of jobs shows up in almost every project:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>What you ask the system to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Language modeling</td>
+<td>Predict the next word from the words so far</td>
+</tr>
+<tr>
+<td>Text classification</td>
+<td>Put a document into a known bucket (spam, topic, sentiment)</td>
+</tr>
+<tr>
+<td>Information extraction</td>
+<td>Pull out people, dates, events, or other fields</td>
+</tr>
+<tr>
+<td>Information retrieval</td>
+<td>Find documents that match a query</td>
+</tr>
+<tr>
+<td>Conversational agent</td>
+<td>Keep a dialogue going in ordinary language</td>
+</tr>
+<tr>
+<td>Text summarization</td>
+<td>Shorten a document and keep the point</td>
+</tr>
+<tr>
+<td>Question answering</td>
+<td>Answer a question written in English</td>
+</tr>
+<tr>
+<td>Machine translation</td>
+<td>Rewrite the text in another language</td>
+</tr>
+<tr>
+<td>Topic modeling</td>
+<td>Find themes in a large collection of documents</td>
+</tr>
+</tbody>
+</table></div>
+<p>Later weeks pick these up one at a time. Week 1 is the map.</p>
+<p><img alt="NLP applications" src="files/data-641/graphics/NLP_applications.png" /></p>
+<hr />
+<h2>3. Why the job is hard</h2>
+<p>Human language is not a clean table.</p>
+<p><strong>Ambiguity.</strong> The same string can mean more than one thing. <em>I saw her duck</em> is a bird or a movement. A model has to use context.</p>
+<p><strong>Common knowledge.</strong> Speakers leave facts unsaid. "The restaurant was packed, so we left" assumes you know what a packed restaurant is like. The text does not spell that out.</p>
+<p><strong>Creativity.</strong> Dialects, slang, sarcasm, and new coinages break rules you wrote last month.</p>
+<p><strong>Diversity across languages.</strong> There is no one-to-one map between vocabularies. A pipeline that works for English does not port by renaming a folder.</p>
+<p><img alt="Why NLP is difficult" src="files/data-641/graphics/NLP_Difficulty.png" /></p>
+<p><img alt="Challenges in real-world NLP" src="files/data-641/graphics/challenge.png" /></p>
+<hr />
+<h2>4. What this week is for</h2>
+<p>By the end of Week 1 you should be able to:</p>
+<ul>
+<li>name the core NLP tasks in the table above</li>
+<li>say why a rule-only system struggles</li>
+<li>write a short Python script that uses lists, dictionaries, functions, and files</li>
+</ul>
+<p>Note <strong>1.2</strong> is how machine learning and deep learning sit next to those tasks. Note <strong>1.3</strong> is the Python you need for Lab 1.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Pick a product you use (search, mail, maps, a chatbot). Name two NLP tasks from the table that it is doing.</p>
+</li>
+<li>
+<p>Write one English sentence that is ambiguous. Say the two readings.</p>
+</li>
+<li>
+<p>Why would a perfectly good English spam filter do poorly on another language even if you translate the training labels?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T18:50:00-04:00">September 7, 2026, 6:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

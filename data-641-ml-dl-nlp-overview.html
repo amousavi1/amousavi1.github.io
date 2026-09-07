@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.2 Machine Learning, Deep Learning, and NLP - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.2 Machine Learning, Deep Learning, and NLP</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
+                            <a href="files/data-641/ml-dl-nlp-overview.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Rules, then learning from examples, then stacked representations.
+                        </p>
+<h2>1. AI is bigger than learning</h2>
+<p>Artificial intelligence (AI) asks whether a computer can do work that looks like thinking. Not every AI system <strong>learns</strong>.</p>
+<p>Early chess programs followed rules a person wrote. That is <strong>symbolic AI</strong>: store knowledge, write rules, apply the rules. Expert systems in the 1980s were the high-water mark of that idea.</p>
+<p>Early NLP was the same shape. People wrote patterns for names, dates, or grammar. The program did not look at examples and invent the rules.</p>
+<p><img alt="AI, machine learning, and representation learning" src="files/data-641/graphics/Diagram.png" /></p>
+<hr />
+<h2>2. Heuristics-based NLP</h2>
+<p>A heuristic is a rule you believe is good enough. "If the word is capitalized and not at the start of the sentence, treat it as a name" is a heuristic.</p>
+<p><strong>WordNet</strong> is a hand-built database of English words and how they relate: synonyms, hyponyms (a <em>dog</em> is a kind of <em>canine</em>), meronyms (a <em>wheel</em> is part of a <em>car</em>). It is useful, and it does not learn from your corpus.</p>
+<p><img alt="A fragment of WordNet-style relations" src="files/data-641/graphics/wordnet.png" /></p>
+<p>Rules fail when the language moves, when the domain is new, or when two rules disagree. That is why the field shifted toward machine learning.</p>
+<hr />
+<h2>3. Machine learning turns the recipe around</h2>
+<p>The usual program: a person writes rules that turn input into output.</p>
+<p>Machine learning: you show <strong>input</strong>, <strong>the output you wanted</strong>, and a <strong>score</strong> that says how far off the current answer is. The machine searches for rules (or weights) that improve that score. It is <strong>trained</strong>, not fully programmed.</p>
+<p>Three things you always need:</p>
+<ol>
+<li>input examples (reviews, emails, spectrograms)</li>
+<li>the expected output (a label, a transcript, a tag)</li>
+<li>a measure of error, used as feedback</li>
+</ol>
+<p>The hard part is learning a <strong>representation</strong>: a transformation of the raw input that makes the task easy. The same photograph can be RGB or hue-saturation-value. Those are two representations. A good one lets a simple rule finish the job.</p>
+<p><img alt="A coordinate change that separates two classes" src="files/data-641/graphics/xy.png" /></p>
+<p>In that picture, after the right change of coordinates the rule is "black if (x &gt; 0)." Learning is an automatic search for transformations like that, inside a <strong>hypothesis space</strong> you chose in advance.</p>
+<p><img alt="The machine-learning loop" src="files/data-641/graphics/ml_paradigm.png" /></p>
+<p><img alt="Learning a useful representation" src="files/data-641/graphics/representation.png" /></p>
+<hr />
+<h2>4. Machine learning for NLP</h2>
+<p>Supervised methods are the workhorses:</p>
+<ul>
+<li><strong>Classification:</strong> news topic, spam vs ham, sentiment.</li>
+<li><strong>Regression:</strong> a number, for example a polarity score or a predicted price given the text around a stock.</li>
+</ul>
+<p>Unsupervised <strong>clustering</strong> groups documents that look alike when you do not have labels.</p>
+<p>The representation for text used to be counts (bag of words, TF–IDF). Later weeks build those, then replace them with embeddings.</p>
+<hr />
+<h2>5. Deep learning is stacked representations</h2>
+<p>Deep learning is still machine learning. The extra idea is <strong>layers</strong>. Each layer transforms the last one. The number of layers is the <strong>depth</strong>.</p>
+<p>Those layers are a <strong>neural network</strong>. The name comes from biology. The models are <strong>not</strong> models of the brain.</p>
+<p>Think of a stack of filters. Raw input goes in. Each stage keeps what helps the task and drops what does not.</p>
+<p><img alt="A deep network as stacked transformations" src="files/data-641/graphics/deep1.png" /></p>
+<p><img alt="Successive layers of representation" src="files/data-641/graphics/deep2.png" /></p>
+<p>Language is unstructured. That is why NLP adopted networks that can hold sequence and context: recurrent nets, convolutional nets, transformers, and autoencoders. You will meet them later. This week you only need the picture: rules, then shallow learners, then deep stacks.</p>
+<p>Figures and the representation story follow Chollet, <em>Deep Learning with Python</em> (2nd ed.), and <em>Practical Natural Language Processing</em>.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Is a regular-expression date extractor machine learning? Why or why not?</p>
+</li>
+<li>
+<p>For spam classification, name the three things from section 3.</p>
+</li>
+<li>
+<p>In one sentence, what does "deep" mean in deep learning?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T18:50:00-04:00">September 7, 2026, 6:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
