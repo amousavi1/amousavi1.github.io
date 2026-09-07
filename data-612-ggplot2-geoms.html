@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>3.2 ggplot2: Geoms - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.2 ggplot2: Geoms</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 3 &middot;
+                            <a href="files/data-612/ggplot2-geoms.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Choose the geom from the variables: points, smooths, histograms, densities, boxplots.
+                        </p>
+<h2>1. Smoothing: <code>geom_smooth()</code></h2>
+<p>A smooth line is a way to see a trend. The default is a loess curve with a gray standard-error band.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_smooth()
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_smooth(se = FALSE)
+</code></pre>
+<p><code>se = FALSE</code> drops the band. A categorical mapping in <code>aes()</code> gives one line per level:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
+  geom_smooth(se = FALSE)
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, linetype = drv)) +
+  geom_smooth(se = FALSE)
+</code></pre>
+<p><code>color</code> is usually easier to read than <code>linetype</code>.</p>
+<p><code>method = lm</code> is ordinary least squares. For a binary 0/1 response, <code>method = glm</code> with a binomial family is a logistic curve:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth(se = FALSE, method = lm)
+
+ggplot(data = mtcars, mapping = aes(x = hp, y = vs)) +
+  geom_point() +
+  geom_smooth(method = glm, method.args = list(family = &quot;binomial&quot;), se = FALSE)
+</code></pre>
+<hr />
+<h2>2. Where the mapping lives</h2>
+<p><code>ggplot(aes(...))</code> is the default mapping. Later geoms inherit it unless they set their own.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+</code></pre>
+<p>A mapping written only inside one geom stays there. Later geoms do not see it. That is how you color the points by <code>drv</code> and still get <strong>one</strong> smooth line:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(color = drv)) +
+  geom_smooth(se = FALSE)
+</code></pre>
+<p>If <code>aes(x, y)</code> is only on <code>geom_point()</code>, <code>geom_smooth()</code> has nothing to smooth and errors.</p>
+<hr />
+<h2>3. Overplotting</h2>
+<p>When many rows share the same rounded values, points sit on top of each other. <code>cty</code> and <code>hwy</code> in <code>mpg</code> do this.</p>
+<p>Three common fixes:</p>
+<ol>
+<li>A small data set: <code>geom_jitter()</code> nudges each point a little</li>
+<li>A large data set: <code>geom_point(alpha = 0.1)</code> (or smaller)</li>
+<li>A very large data set: take a random sample first</li>
+</ol>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point()
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_jitter()
+
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point(alpha = 0.1)
+</code></pre>
+<p><code>geom_hex()</code> bins the plane into hexagons and colors by the count. Useful when jitter and alpha are not enough:</p>
+<pre><code class="language-r">data(&quot;diamonds&quot;)
+
+ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+  geom_hex(bins = 50) +
+  viridis::scale_fill_viridis()
+</code></pre>
+<p><code>diamonds</code> is in ggplot2. <code>data("diamonds")</code> loads it.</p>
+<hr />
+<h2>4. One quantitative variable: histograms and densities</h2>
+<p>A histogram bins a numeric variable and counts how many values fall in each bin. The default is 30 bins; change <code>bins</code> or <code>binwidth</code> until the shape is readable.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
+  geom_histogram()
+
+ggplot(data = mpg, mapping = aes(x = hwy)) +
+  geom_histogram(bins = 20)
+
+ggplot(data = mpg, mapping = aes(x = hwy)) +
+  geom_histogram(binwidth = 5)
+</code></pre>
+<p><code>fill</code> colors the interior of the bars. <code>color</code> colors the outline. Mapping a categorical variable to <code>fill</code> stacks the groups inside each bin:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  geom_histogram(bins = 20)
+</code></pre>
+<p>Stacked bars are hard to compare. <code>position</code> changes the layout:</p>
+<ul>
+<li><code>"identity"</code>: all groups start at zero and can hide each other; add <code>alpha</code></li>
+<li><code>"dodge"</code>: bars side by side</li>
+<li><code>"fill"</code>: each bin is a proportion (the bar goes to 1)</li>
+</ul>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  geom_histogram(bins = 20, position = &quot;identity&quot;, alpha = 0.3)
+
+ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  geom_histogram(bins = 20, position = &quot;dodge&quot;)
+
+ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  geom_histogram(bins = 20, position = &quot;fill&quot;)
+</code></pre>
+<p>A density is a smoothed histogram:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
+  geom_density()
+
+ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  geom_density(alpha = 0.3)
+</code></pre>
+<hr />
+<h2>5. One categorical and one quantitative: boxplots</h2>
+<p>A boxplot shows the median, the 25th and 75th percentiles (the box, whose height is the IQR), whiskers out to 1.5 IQR from the hinges, and points beyond that.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = drv, y = hwy)) +
+  geom_boxplot()
+</code></pre>
+<p><code>geom_violin()</code> shows the density of the points inside the box. <code>ggbeeswarm::geom_beeswarm()</code> shows every point without stacking them on a line.</p>
+<p>Salaries, prices, and other right-skewed variables often need a log scale. Two different jobs:</p>
+<ul>
+<li><code>y = log(volume)</code> changes the <strong>data</strong>. The axis ticks are logs.</li>
+<li><code>scale_y_log10()</code> changes the <strong>axis</strong>. The ticks are still in the original units, spaced on a log scale.</li>
+</ul>
+<pre><code class="language-r">txhousing |&gt;
+  ggplot(aes(x = as.factor(year), y = volume)) +
+  geom_boxplot()
+
+txhousing |&gt;
+  ggplot(aes(x = as.factor(year), y = volume)) +
+  geom_boxplot() +
+  scale_y_log10()
+</code></pre>
+<p><code>txhousing</code> is in ggplot2.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Scatterplot petal length vs petal width. Color the points by species. Add <strong>one</strong> linear smooth (<code>method = lm</code>) that ignores species.</p>
+</li>
+<li>
+<p>Plot <code>price</code> vs <code>carat</code> in <code>diamonds</code>. Fix the overplotting.</p>
+</li>
+<li>
+<p>Histogram of diamond <code>price</code>, filled by <code>cut</code>.</p>
+</li>
+<li>
+<p>Boxplot of diamond price by <code>cut</code> on a log-<code>y</code> scale. Does Ideal look cheaper? Check <code>carat</code> the same way.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:15:00-04:00">September 7, 2026, 4:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

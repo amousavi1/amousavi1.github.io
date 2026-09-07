@@ -16,8 +16,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-07T13:35:00-04:00"
-LAST_UPDATED_TEXT = "September 7, 2026, 1:35 PM EDT"
+LAST_UPDATED_ISO = "2026-09-07T16:15:00-04:00"
+LAST_UPDATED_TEXT = "September 7, 2026, 4:15 PM EDT"
 
 NOTES = [
     {
@@ -79,6 +79,30 @@ NOTES = [
         "week": 2,
         "title": "Lab 2: Pipes, Functions, and Conditionals",
         "lead": "Use a pipe, then write a function with a conditional and a check on the inputs.",
+    },
+    {
+        "slug": "ggplot2-grammar",
+        "week": 3,
+        "title": "3.1 ggplot2: The Grammar of Graphics",
+        "lead": "A plot is data, a mapping, and a geom. ggplot() is the canvas; + adds a layer.",
+    },
+    {
+        "slug": "ggplot2-geoms",
+        "week": 3,
+        "title": "3.2 ggplot2: Geoms",
+        "lead": "Choose the geom from the variables: points, smooths, histograms, densities, boxplots.",
+    },
+    {
+        "slug": "ggplot2-facets-themes",
+        "week": 3,
+        "title": "3.3 ggplot2: Facets, Themes, and Saving",
+        "lead": "Facet to add a category, set a theme and a scale, then ggsave() the object.",
+    },
+    {
+        "slug": "lab-3-ggplot2",
+        "week": 3,
+        "title": "Lab 3: Graphics with ggplot2",
+        "lead": "Map, smooth, fix overplotting, and save a faceted boxplot.",
     },
 ]
 

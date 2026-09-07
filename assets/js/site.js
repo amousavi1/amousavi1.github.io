@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-07T13:35:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-07T16:15:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -148,6 +148,24 @@
     '2. write the function once': '2. Write Once',
     '3. `source()` makes the function available': '3. source()',
     '5. this week, in one place': '5. Week Recap',
+    '7. this week, in one place': '7. Week Recap',
+    '1. why we plot': '1. Why Plot',
+    '2. the grammar, in four pieces': '2. Grammar',
+    '3. which variable is `x`': '3. x and y',
+    '4. a third variable: categorical': '4. Categorical',
+    '5. a third variable: quantitative': '5. Quantitative',
+    '1. smoothing: `geom_smooth()`': '1. Smooth',
+    '2. where the mapping lives': '2. Mapping Scope',
+    '3. overplotting': '3. Overplotting',
+    '4. one quantitative variable: histograms and densities': '4. Histograms',
+    '5. one categorical and one quantitative: boxplots': '5. Boxplots',
+    '2. a fixed color is not a mapping': '2. Fixed Color',
+    '4. scales and colorblind palettes': '4. Scales',
+    '6. saving a plot': '6. ggsave()',
+    '1. mappings': '1. Mappings',
+    '2. smooths and overplotting': '2. Smooths',
+    '3. distributions and boxplots': '3. Distributions',
+    '4. facets, theme, and save': '4. Facets',
     '2. write `add_half()`': '2. add_half()',
     '3. check the inputs': '3. Input Checks',
   };

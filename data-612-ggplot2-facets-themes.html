@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>3.3 ggplot2: Facets, Themes, and Saving - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.3 ggplot2: Facets, Themes, and Saving</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 3 &middot;
+                            <a href="files/data-612/ggplot2-facets-themes.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Facet to add a category, set a theme and a scale, then ggsave() the object.
+                        </p>
+<h2>1. Facets</h2>
+<p>Facets make a panel for each level of a categorical variable. That is often clearer than twenty colors on one panel.</p>
+<p><code>facet_wrap(~ class)</code> wraps one variable into a grid:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_wrap(~ class)
+</code></pre>
+<p><code>facet_grid(rows ~ cols)</code> is a matrix of two categoricals:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(alpha = 0.3) +
+  facet_grid(drv ~ class)
+</code></pre>
+<p>A <code>.</code> means "no faceting on that side":</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(class ~ .)
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point() +
+  facet_grid(. ~ drv)
+</code></pre>
+<hr />
+<h2>2. A fixed color is not a mapping</h2>
+<p>To make every point blue, set <code>color</code> <strong>outside</strong> <code>aes()</code>:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  geom_point(color = &quot;blue&quot;)
+</code></pre>
+<p>The name is a character, so it is in quotes. Inside <code>aes()</code>, ggplot2 treats <code>"blue"</code> as a one-level categorical variable and draws a legend for it. That is a common mistake:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = &quot;blue&quot;)) +
+  geom_point()
+</code></pre>
+<p>The same rule applies to histograms. <code>fill</code> is the interior; <code>color</code> is the outline:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
+  geom_histogram(bins = 25, fill = &quot;white&quot;, color = &quot;black&quot;)
+</code></pre>
+<hr />
+<h2>3. Themes</h2>
+<p>A theme sets the background, grid, and fonts in one step. <code>theme_bw()</code> is a usual choice for a document. <code>theme_classic()</code> is quieter.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  theme_bw()
+</code></pre>
+<p><code>ggthemes</code> adds more, including <code>theme_economist()</code> and <code>theme_fivethirtyeight()</code>. Load the package first.</p>
+<hr />
+<h2>4. Scales and colorblind palettes</h2>
+<p>A scale maps data values to visual values. You can set the ends of a continuous color scale, or log both axes:</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
+  geom_point() +
+  scale_color_continuous(low = &quot;black&quot;, high = &quot;white&quot;)
+
+ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+  geom_point(alpha = 0.01) +
+  scale_x_log10() +
+  scale_y_log10()
+</code></pre>
+<p>For a plot you will share, use a colorblind-safe palette. <code>ggthemes::scale_color_colorblind()</code> and <code>scale_fill_colorblind()</code> are one option. viridis is another: colorful, perceptually even, and still readable in grayscale. Use <code>scale_color_viridis_d()</code> / <code>scale_fill_viridis_d()</code> for discrete groups and <code>_c</code> for continuous.</p>
+<pre><code class="language-r">library(ggthemes)
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  theme_bw() +
+  scale_color_colorblind()
+
+ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  geom_histogram(position = &quot;dodge&quot;, bins = 15) +
+  theme_bw() +
+  scale_fill_viridis_d()
+</code></pre>
+<hr />
+<h2>5. Labels</h2>
+<p><code>xlab()</code>, <code>ylab()</code>, and <code>ggtitle()</code> set the axis titles and the main title. The legend title is an argument on the scale (<code>name = ...</code>).</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  theme_bw() +
+  scale_color_discrete(name = &quot;Car Class&quot;) +
+  xlab(&quot;Displacement&quot;) +
+  ylab(&quot;Highway&quot;) +
+  ggtitle(&quot;Displacement vs Highway&quot;)
+</code></pre>
+<hr />
+<h2>6. Saving a plot</h2>
+<p>A ggplot is an object. Assign it, print it, then export.</p>
+<pre><code class="language-r">pl &lt;- ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  theme_bw()
+
+pl
+</code></pre>
+<p>In RStudio, <strong>Export</strong> in the Plots pane writes a file. In a script or Quarto document, <code>ggsave()</code> does the same. It overwrites without asking.</p>
+<pre><code class="language-r">ggsave(&quot;hwy-vs-displ.pdf&quot;, plot = pl, width = 6, height = 4)
+</code></pre>
+<p>If you omit <code>plot</code>, <code>ggsave()</code> uses the last plot you printed. Put the file in a folder you already have, or create one first.</p>
+<hr />
+<h2>7. This week, in one place</h2>
+<p>By the end of Week 3 you should be able to:</p>
+<ul>
+<li>build a plot with <code>ggplot()</code>, <code>aes()</code>, and a <code>geom_*()</code></li>
+<li>choose a geom from the variables: scatter (two quantitative), histogram or density (one quantitative), boxplot (one categorical and one quantitative)</li>
+<li>map a third variable with <code>color</code>, <code>fill</code>, or facets</li>
+<li>add a smooth, fix overplotting, change a theme and a scale</li>
+<li>label the plot and save it with <code>ggsave()</code></li>
+</ul>
+<p>Functions from this week include <code>ggplot()</code>, <code>aes()</code>, <code>geom_point()</code>, <code>geom_smooth()</code>, <code>geom_jitter()</code>, <code>geom_hex()</code>, <code>geom_histogram()</code>, <code>geom_density()</code>, <code>geom_boxplot()</code>, <code>facet_wrap()</code>, <code>facet_grid()</code>, <code>theme_bw()</code>, <code>scale_y_log10()</code>, <code>xlab()</code>, <code>ylab()</code>, <code>ggtitle()</code>, and <code>ggsave()</code>.</p>
+<p>Chapter 3 of <a href="https://r4ds.had.co.nz/data-visualisation.html">R for Data Science</a> and the <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">ggplot2 cheat sheet</a> are the usual references.</p>
+<hr />
+<h2>8. Practice</h2>
+<ol>
+<li>
+<p>Boxplots of diamond <code>price</code> vs <code>cut</code>, log-<code>y</code>, faceted by <code>color</code>.</p>
+</li>
+<li>
+<p>The same plot: orange boxes, <code>theme_bw()</code>.</p>
+</li>
+<li>
+<p>Save that plot with <code>ggsave()</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:15:00-04:00">September 7, 2026, 4:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

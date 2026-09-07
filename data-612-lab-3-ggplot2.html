@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Credits - Ahmad Mousavi</title>
+        <title>Lab 3: Graphics with ggplot2 - DATA 612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -23,7 +23,7 @@
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
                         <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,48 +97,77 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Credits</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 3: Graphics with ggplot2</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>Attributions for the template and customization used to build this website.</p>
-
-                        <h2>Template</h2>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/academicpages/academicpages.github.io" target="_blank" rel="noopener">AcademicPages</a>
-                                — maintained by the
-                                <a href="https://github.com/academicpages" target="_blank" rel="noopener">AcademicPages contributors</a>
-                                (MIT license:
-                                <a
-                                    href="https://github.com/academicpages/academicpages.github.io/blob/master/LICENSE"
-                                    target="_blank"
-                                    rel="noopener"
-                                    >upstream</a
-                                >)
-                            </li>
-                        </ul>
-
-                        <h2>Theme Foundation</h2>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/mmistakes/minimal-mistakes" target="_blank" rel="noopener">Minimal Mistakes</a>
-                                by <a href="https://mademistakes.com" target="_blank" rel="noopener">Michael Rose</a> (MIT license:
-                                <a href="https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE" target="_blank" rel="noopener"
-                                    >upstream</a
-                                >)
-                            </li>
-                        </ul>
-
-                        <h2>Site Adaptation</h2>
-                        <ul>
-                            <li>Parker Chace — applied the Minimal Mistakes-style layout and migrated content for Dr. Ahmad Mousavi’s site.</li>
-                        </ul>
-
-                        <h2>Licensing</h2>
-                        <p>For the full license text for this site package, see <a href="LICENSE">LICENSE</a>.</p>
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 3 &middot;
+                            <a href="files/data-612/lab-3-ggplot2.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Map, smooth, fix overplotting, and save a faceted boxplot.
+                        </p>
+<p>Work in a <strong>Quarto</strong> document. Number the exercises. Keep the plots. Do <strong>3.1</strong> through <strong>3.3</strong> first. You will need <code>ggplot2</code> (from <code>library(tidyverse)</code>), <code>mpg</code>, <code>iris</code>, and <code>diamonds</code>.</p>
+<pre><code class="language-r">library(tidyverse)
+data(&quot;mpg&quot;)
+data(&quot;iris&quot;)
+data(&quot;diamonds&quot;)
+</code></pre>
+<hr />
+<h2>1. Mappings</h2>
+<ol>
+<li>
+<p>What happens when you map a categorical variable to <code>size</code> or <code>alpha</code>? Try it on <code>mpg</code> with <code>drv</code>. Write one sentence about whether the mapping is a good idea.</p>
+</li>
+<li>
+<p>Look at <code>head(iris)</code>. Name the variables and say whether each is quantitative or categorical.</p>
+</li>
+<li>
+<p>Scatterplot petal length vs petal width, colored by species. What do you notice?</p>
+</li>
+<li>
+<p>What happens when you map a quantitative variable to <code>shape</code>? Try <code>shape = cty</code> on an <code>mpg</code> scatterplot of <code>displ</code> vs <code>hwy</code>.</p>
+</li>
+<li>
+<p>On <code>iris</code>, plot petal length vs petal width, and also map species, sepal length, and sepal width. Is the plot still readable?</p>
+</li>
+</ol>
+<hr />
+<h2>2. Smooths and overplotting</h2>
+<ol>
+<li>
+<p>Scatterplot petal length vs petal width. Color the points by species. Add <strong>one</strong> linear smooth (<code>method = lm</code>, <code>se = FALSE</code>) that does not use species.</p>
+</li>
+<li>
+<p>Plot <code>price</code> vs <code>carat</code> in <code>diamonds</code>. Show the overplotted version and a version that you can actually read.</p>
+</li>
+</ol>
+<hr />
+<h2>3. Distributions and boxplots</h2>
+<ol>
+<li>
+<p>Histogram of diamond <code>price</code>, filled by <code>cut</code>. Try <code>bins = 50</code>.</p>
+</li>
+<li>
+<p>Boxplot of <code>price</code> vs <code>cut</code> on a log-<code>y</code> scale. Does anything surprise you? Add a second plot that helps explain it.</p>
+</li>
+</ol>
+<hr />
+<h2>4. Facets, theme, and save</h2>
+<ol>
+<li>
+<p>Boxplots of <code>price</code> vs <code>cut</code>, log-<code>y</code>, faceted by <code>color</code>.</p>
+</li>
+<li>
+<p>Same plot: orange fill, <code>theme_bw()</code>.</p>
+</li>
+<li>
+<p>Save the plot from (2) with <code>ggsave()</code>. Put it in a folder you already have. <code>ggsave()</code> overwrites without asking.</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
