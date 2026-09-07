@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.2 dplyr: case_when() and Distinct Rows - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.2 dplyr: case_when() and Distinct Rows</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 5 &middot;
+                            <a href="files/data-612/dplyr-case-when.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            case_when() replaces nested if_else(). distinct() and rownames_to_column() clean identifiers.
+                        </p>
+<h2>1. <code>case_when()</code></h2>
+<p><code>case_when()</code> is a vectorized chain of <code>if</code> / <code>else</code>. Each argument is <code>condition ~ value</code>. Conditions are tried in order. End with <code>TRUE ~ ...</code> as the default. If nothing matches, you get <code>NA</code>.</p>
+<pre><code class="language-r">x &lt;- 1:16
+case_when(
+  x %% 35 == 0 ~ &quot;fizz buzz&quot;,
+  x %% 5 == 0 ~ &quot;fizz&quot;,
+  x %% 7 == 0 ~ &quot;buzz&quot;,
+  TRUE ~ as.character(x)
+)
+</code></pre>
+<p>Put the specific cases first. A leading <code>TRUE ~</code> catches everything and the later lines never run.</p>
+<p><code>NA</code> in <code>x</code> is not special. Handle it with <code>is.na(x) ~ ...</code>.</p>
+<p>Inside <code>mutate()</code> it is the usual way to build a category from several columns:</p>
+<pre><code class="language-r">starwars |&gt;
+  select(name:mass, gender, species) |&gt;
+  mutate(
+    type = case_when(
+      height &gt; 200 | mass &gt; 200 ~ &quot;large&quot;,
+      species == &quot;Droid&quot; ~ &quot;robot&quot;,
+      TRUE ~ &quot;other&quot;
+    )
+  )
+</code></pre>
+<p>All right-hand sides must have the same type.</p>
+<hr />
+<h2>2. Row names and <code>distinct()</code></h2>
+<p>Tibbles do not use row names. A matrix such as <code>state.x77</code> or <code>mtcars</code> does. <code>has_rownames()</code> checks. <code>rownames_to_column(mtcars, var = "car")</code> then <code>as_tibble()</code> turns the names into a real column.</p>
+<pre><code class="language-r">has_rownames(mtcars)
+mtcars |&gt;
+  rownames_to_column(var = &quot;car&quot;) |&gt;
+  as_tibble()
+</code></pre>
+<p><code>distinct()</code> keeps unique rows, in the original order. You can name columns, or use <code>across()</code>:</p>
+<pre><code class="language-r">starwars |&gt;
+  distinct(across(contains(&quot;color&quot;))) |&gt;
+  arrange(hair_color, skin_color, eye_color)
+</code></pre>
+<hr />
+<h2>3. Programming note (aside)</h2>
+<p>dplyr verbs use <strong>data masking</strong> (<code>filter(month == 1)</code> means the column, not an object in the console) or <strong>tidy selection</strong> (<code>select(starts_with("dep"))</code>). That is why interactive work is short. Inside a function, when the column name is stored in an ordinary R object, you need extra tools. We will stay with typed column names this week.</p>
+<hr />
+<h2>4. This week, in one place</h2>
+<ul>
+<li><code>rowwise()</code> and <code>c_across()</code> for a summary across columns in one row</li>
+<li><code>across()</code> to repeat a function on many columns</li>
+<li><code>case_when()</code> instead of nested <code>if_else()</code></li>
+<li><code>distinct()</code> and <code>rownames_to_column()</code> when you need them</li>
+</ul>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Check whether <code>mtcars</code> has row names. If it does, make a tibble with a <code>car</code> column.</p>
+</li>
+<li>
+<p>Min and max of every numeric column except <code>birth_year</code>, by <code>species</code> and <code>gender</code>, plus <code>n()</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

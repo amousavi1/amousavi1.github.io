@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>6.1 readr: Import and Export - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">6.1 readr: Import and Export</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 6 &middot;
+                            <a href="files/data-612/readr-import.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            read_lines() then read_csv(). Check types and NAs. write_csv() or saveRDS() to send data back out.
+                        </p>
+<h2>1. Paths, once more</h2>
+<p>Note 1.3 is the full story. A short reminder: store course files under a project, use a <strong>relative</strong> path from that project, and do not hard-code <code>C:/Users/...</code>. <code>getwd()</code> is the console's working directory. A Quarto file in <code>analysis/</code> reaches data with <code>"../data/hate_crimes2.csv"</code> or <code>here::here("data", "hate_crimes2.csv")</code>.</p>
+<p>The Data section of the course page has the <code>hate_crimes*.csv</code> files. Download them into a <code>data/</code> folder in your project. They are not tied to one week.</p>
+<hr />
+<h2>2. <code>readr</code> reads flat files into tibbles</h2>
+<p><code>readr</code> comes with <code>library(tidyverse)</code>. It is faster than <code>read.csv()</code> and it does <strong>not</strong> turn characters into factors.</p>
+<p>A <code>.csv</code> separates columns with commas. A <code>.tsv</code> uses tabs (<code>\t</code> in <code>read_lines()</code>). <code>read_csv2()</code> uses semicolons.</p>
+<pre><code class="language-r">library(tidyverse)
+
+read_lines(&quot;data/hate_crimes2.csv&quot;, n_max = 10)
+hate_crimes &lt;- read_csv(&quot;data/hate_crimes2.csv&quot;)
+</code></pre>
+<p><code>read_lines()</code> is how you see the delimiter before you choose a reader. A URL works as <code>file</code> if the file is public.</p>
+<p>Do not import an Excel workbook if you can avoid it. Export a sheet to CSV, then read the CSV. Watch for empty columns Excel leaves behind.</p>
+<hr />
+<h2>3. Check the import immediately</h2>
+<p>readr prints the types it guessed. Then check:</p>
+<pre><code class="language-r">str(hate_crimes)
+nrow(hate_crimes)
+ncol(hate_crimes)
+head(hate_crimes, 10)
+tail(hate_crimes, 10)
+
+hate_crimes |&gt;
+  summarize(across(everything(), ~ sum(is.na(.x))))
+
+nrow(distinct(hate_crimes))
+</code></pre>
+<p>If a column that should be numeric is character, <code>unique()</code> usually shows why: <code>"missing"</code>, <code>"."</code>, <code>"-99"</code>.</p>
+<p>Tell <code>read_csv()</code> those strings are missing:</p>
+<pre><code class="language-r">read_csv(&quot;data/hate_crimes_1a.csv&quot;, na = &quot;missing&quot;)
+</code></pre>
+<p>Other useful arguments:</p>
+<ul>
+<li><code>col_types</code> — you set the types (note 6.2)</li>
+<li><code>skip</code> — drop leading comment lines</li>
+<li><code>comment = "#"</code> — drop lines that start with <code>#</code></li>
+<li><code>locale</code> — decimal mark and other regional defaults (US by default)</li>
+</ul>
+<hr />
+<h2>4. Write files back out</h2>
+<pre><code class="language-r">write_csv(hate_crimes, &quot;data/hate_crimes_clean.csv&quot;)
+</code></pre>
+<p><code>write_tsv()</code> and <code>write_csv2()</code> match the readers. <code>saveRDS(obj, "obj.rds")</code> and <code>readRDS("obj.rds")</code> keep a single R object with its types. That is for your own later session, not for sharing with Excel.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p><code>read_lines()</code> on each <code>hate_crimes*.csv</code> in the Data section, then load it with the matching <code>read_*()</code>. Check <code>head()</code> and the <code>NA</code> counts.</p>
+</li>
+<li>
+<p>Load <code>hate_crimes_1a.csv</code> once as-is and once with <code>na = "missing"</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

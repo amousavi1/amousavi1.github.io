@@ -16,8 +16,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-07T16:15:00-04:00"
-LAST_UPDATED_TEXT = "September 7, 2026, 4:15 PM EDT"
+LAST_UPDATED_ISO = "2026-09-07T16:50:00-04:00"
+LAST_UPDATED_TEXT = "September 7, 2026, 4:50 PM EDT"
 
 NOTES = [
     {
@@ -103,6 +103,72 @@ NOTES = [
         "week": 3,
         "title": "Lab 3: Graphics with ggplot2",
         "lead": "Map, smooth, fix overplotting, and save a faceted boxplot.",
+    },
+    {
+        "slug": "dplyr-rows",
+        "week": 4,
+        "title": "4.1 dplyr: Rows",
+        "lead": "filter(), slice(), and arrange() choose and order rows. Use nycflights13::flights.",
+    },
+    {
+        "slug": "dplyr-columns",
+        "week": 4,
+        "title": "4.2 dplyr: Columns",
+        "lead": "select(), rename(), mutate(), and relocate() keep, name, and create columns.",
+    },
+    {
+        "slug": "dplyr-groups",
+        "week": 4,
+        "title": "4.3 dplyr: Groups and Summaries",
+        "lead": "group_by() marks groups. summarize() collapses them. Always keep n().",
+    },
+    {
+        "slug": "lab-4-dplyr",
+        "week": 4,
+        "title": "Lab 4: dplyr, Part 1",
+        "lead": "Filter, slice, arrange, select, mutate, and summarize flights.",
+    },
+    {
+        "slug": "dplyr-rowwise-across",
+        "week": 5,
+        "title": "5.1 dplyr: rowwise() and across()",
+        "lead": "rowwise() summarizes across columns in one row. across() repeats a function on many columns.",
+    },
+    {
+        "slug": "dplyr-case-when",
+        "week": 5,
+        "title": "5.2 dplyr: case_when() and Distinct Rows",
+        "lead": "case_when() replaces nested if_else(). distinct() and rownames_to_column() clean identifiers.",
+    },
+    {
+        "slug": "lab-5-dplyr",
+        "week": 5,
+        "title": "Lab 5: dplyr, Part 2",
+        "lead": "Row-wise maxima, across(), case_when(), and row names.",
+    },
+    {
+        "slug": "readr-import",
+        "week": 6,
+        "title": "6.1 readr: Import and Export",
+        "lead": "read_lines() then read_csv(). Check types and NAs. write_csv() or saveRDS() to send data back out.",
+    },
+    {
+        "slug": "readr-parsers",
+        "week": 6,
+        "title": "6.2 readr: Parsers",
+        "lead": "parse_date(), parse_number(), and col_types when the import guess is wrong.",
+    },
+    {
+        "slug": "eda-strategy",
+        "week": 6,
+        "title": "6.3 Exploratory Data Analysis",
+        "lead": "One variable, then pairs, then a third variable. Plot before you trust a summary.",
+    },
+    {
+        "slug": "lab-6-readr-eda",
+        "week": 6,
+        "title": "Lab 6: Import, Parse, and Explore",
+        "lead": "Load the hate-crime files, parse a few strings, and explore diamonds.",
     },
 ]
 

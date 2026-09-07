@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.2 dplyr: Columns - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.2 dplyr: Columns</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 4 &middot;
+                            <a href="files/data-612/dplyr-columns.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            select(), rename(), mutate(), and relocate() keep, name, and create columns.
+                        </p>
+<h2>1. <code>select()</code> keeps columns</h2>
+<pre><code class="language-r">flights |&gt; select(dep_delay, arr_delay)
+flights |&gt; select(year:carrier)
+flights |&gt; select(-dep_delay, -arr_delay)
+flights |&gt; select(-(year:day))
+</code></pre>
+<p>Helpers (from tidyselect) match <strong>names</strong>:</p>
+<ul>
+<li><code>starts_with("dep")</code></li>
+<li><code>ends_with("delay")</code></li>
+<li><code>contains("arr_")</code></li>
+<li><code>matches("(.)\\1")</code> — a regular expression; we will do those in the strings week</li>
+<li><code>num_range("x", 1:3)</code> — <code>x1</code>, <code>x2</code>, <code>x3</code></li>
+</ul>
+<pre><code class="language-r">flights |&gt; select(ends_with(&quot;delay&quot;))
+flights |&gt; select(starts_with(&quot;dep&quot;), year, month, day)
+</code></pre>
+<p><code>select()</code> talks about <strong>names</strong> (or positions). Bare names are allowed. Quoted names are also allowed: <code>select(flights, c("carrier", "tailnum"))</code>.</p>
+<hr />
+<h2>2. <code>rename()</code></h2>
+<p><code>rename(new = old)</code>. The old name goes away.</p>
+<pre><code class="language-r">flights |&gt; rename(departure_time = dep_time)
+</code></pre>
+<hr />
+<h2>3. <code>mutate()</code> and <code>transmute()</code></h2>
+<p><code>mutate()</code> adds or overwrites columns. New columns go on the right unless you set <code>.before</code> or <code>.after</code>. Use <code>=</code> inside <code>mutate()</code>, not <code>&lt;-</code>.</p>
+<pre><code class="language-r">flights |&gt;
+  mutate(
+    gain = dep_delay - arr_delay,
+    speed = distance / air_time * 60
+  ) |&gt;
+  select(year:day, gain, speed)
+
+flights |&gt;
+  mutate(distance = distance * 1.60934)
+</code></pre>
+<p><code>transmute()</code> keeps only the new columns.</p>
+<p>Nothing is saved until you assign:</p>
+<pre><code class="language-r">flights_k &lt;- flights |&gt;
+  mutate(distance_km = distance * 1.60934)
+</code></pre>
+<p><code>mutate()</code> talks about <strong>vectors</strong>. The name <code>dep_time</code> means the whole column, not the string <code>"dep_time"</code>.</p>
+<p>A useful conversion: <code>dep_time</code> is stored as 517 for 5:17. Minutes past midnight are <code>hours * 60 + minutes</code>:</p>
+<pre><code class="language-r">flights |&gt;
+  mutate(
+    dep_h = dep_time %/% 100,
+    dep_m = dep_time %% 100,
+    dep_elapsed_min = dep_h * 60 + dep_m
+  )
+</code></pre>
+<p><code>%/%</code> is integer division. <code>%%</code> is the remainder.</p>
+<hr />
+<h2>4. <code>relocate()</code></h2>
+<p>Same selection language as <code>select()</code>. Default is the left side. <code>.before</code> and <code>.after</code> place the block.</p>
+<pre><code class="language-r">flights |&gt; relocate(origin:dest)
+flights |&gt; relocate(starts_with(&quot;d&quot;), .after = day)
+flights |&gt; relocate(where(is.character))
+</code></pre>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Keep <code>origin</code> and <code>dest</code> two ways.</p>
+</li>
+<li>
+<p>Keep every arrival column plus <code>year</code>, <code>month</code>, and <code>day</code>. Use as few characters as you can.</p>
+</li>
+<li>
+<p>Convert <code>dep_time</code> and <code>sched_dep_time</code> to minutes past midnight. Assign the result if you want to keep it.</p>
+</li>
+<li>
+<p>Move columns that end with <code>"time"</code> to just before <code>flight</code>. Then put the <code>sched</code> columns before the actual times.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

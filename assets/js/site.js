@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-07T16:15:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-07T16:50:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -168,6 +168,44 @@
     '4. facets, theme, and save': '4. Facets',
     '2. write `add_half()`': '2. add_half()',
     '3. check the inputs': '3. Input Checks',
+    '1. why dplyr': '1. Why dplyr',
+    '2. `filter()` keeps rows by value': '2. filter()',
+    '3. `slice()` keeps rows by position': '3. slice()',
+    '4. `arrange()` sorts rows': '4. arrange()',
+    '1. `select()` keeps columns': '1. select()',
+    '2. `rename()`': '2. rename()',
+    '3. `mutate()` and `transmute()`': '3. mutate()',
+    '4. `relocate()`': '4. relocate()',
+    '1. `summarize()` collapses rows': '1. summarize()',
+    '2. `group_by()` makes virtual groups': '2. group_by()',
+    '3. this week, in one place': '3. Week Recap',
+    '1. filter and slice': '1. Filter and Slice',
+    '2. arrange, select, mutate': '2. Arrange and Mutate',
+    '3. summarize and group': '3. Summarize',
+    '1. `rowwise()` is a group of one': '1. rowwise()',
+    '2. `across()` repeats a function on columns': '2. across()',
+    '1. `case_when()`': '1. case_when()',
+    '2. row names and `distinct()`': '2. Distinct',
+    '3. programming note (aside)': '3. Programming',
+    '4. this week, in one place': '4. Week Recap',
+    '1. row-wise and across': '1. Row-wise',
+    '2. case_when and row names': '2. case_when',
+    '1. paths, once more': '1. Paths',
+    '2. `readr` reads flat files into tibbles': '2. readr',
+    '3. check the import immediately': '3. Check Import',
+    '4. write files back out': '4. Write Out',
+    '1. parse after the file is in': '1. Parse',
+    '2. dates and times': '2. Dates',
+    '3. numbers, logicals, factors': '3. Numbers',
+    '4. `col_types` at import': '4. col_types',
+    '1. a working order': '1. Working Order',
+    '2. one variable': '2. One Variable',
+    '3. two variables': '3. Two Variables',
+    '4. missingness, patterns, outliers': '4. Missingness',
+    '5. this week, in one place': '5. Week Recap',
+    '1. import': '1. Import',
+    '2. parsers': '2. Parsers',
+    '3. eda': '3. EDA',
   };
 
   function toTitleCase(text) {

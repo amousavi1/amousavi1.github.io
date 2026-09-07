@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>6.3 Exploratory Data Analysis - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">6.3 Exploratory Data Analysis</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 6 &middot;
+                            <a href="files/data-612/eda-strategy.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            One variable, then pairs, then a third variable. Plot before you trust a summary.
+                        </p>
+<h2>1. A working order</h2>
+<p>Once the file is in and the types look right, explore before you model. EDA is curiosity with a notebook: many plots, many summaries, then a few questions worth keeping. Write the dead ends down so you are not only keeping the pretty ones.</p>
+<p>A useful order:</p>
+<ol>
+<li>the distribution of each variable</li>
+<li>every pair of variables</li>
+<li>a third variable (color or facet)</li>
+<li>missingness and extremes</li>
+</ol>
+<p><code>diamonds</code> is the running example. <code>skimr::skim()</code> is a compact alternative to <code>summary()</code>.</p>
+<pre><code class="language-r">library(tidyverse)
+data(&quot;diamonds&quot;)
+</code></pre>
+<hr />
+<h2>2. One variable</h2>
+<p>A categorical variable: counts and proportions. <code>geom_bar()</code> for the picture; <code>table()</code> and <code>prop.table()</code> for the numbers.</p>
+<pre><code class="language-r">ggplot(diamonds, aes(x = color)) +
+  geom_bar() +
+  theme_bw()
+
+prop.table(table(diamonds$color))
+</code></pre>
+<p>Ask whether the levels have an order, and whether a rare level is real or a coding accident.</p>
+<p>A quantitative variable: <code>geom_histogram()</code> or <code>geom_density()</code>, plus <code>mean()</code>, <code>sd()</code>, and <code>fivenum()</code> (min, lower hinge, median, upper hinge, max). Look for skew and extra modes.</p>
+<pre><code class="language-r">ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(bins = 50) +
+  theme_bw()
+
+fivenum(diamonds$carat)
+</code></pre>
+<p>Color or <code>geom_freqpoly()</code> to split one quantitative variable by a category.</p>
+<hr />
+<h2>3. Two variables</h2>
+<ul>
+<li>Two quantitative: <code>geom_point()</code>, then a smooth. Overplotting: <code>alpha</code> or <code>geom_hex()</code> (note 3.2).</li>
+<li>One categorical and one quantitative: <code>geom_boxplot()</code>, maybe on a log scale.</li>
+<li>Two categorical: <code>table()</code>, <code>prop.table(table(...), margin = 1)</code> or <code>margin = 2</code> for conditional distributions. A count plot is <code>geom_count()</code>. A mosaic plot (<code>ggmosaic</code>) is optional.</li>
+</ul>
+<pre><code class="language-r">ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(alpha = 0.05) +
+  theme_bw()
+
+ggplot(diamonds, aes(x = cut, y = price)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  theme_bw()
+</code></pre>
+<p><code>GGally::ggpairs()</code> builds a panel of pairwise plots at once. Use it as a scan, then make the plots you actually need.</p>
+<hr />
+<h2>4. Missingness, patterns, outliers</h2>
+<p>Count <code>NA</code>s by column (<code>across</code> and <code>sum(is.na(.x))</code>, note 5.1). A hole you expected to be filled is information.</p>
+<p>A pattern is a relationship you can name: linear, curved, clustered, seasonal. An outlier is a point that does not follow that pattern. Do not delete it by reflex. Ask whether it is a data error or a real rare case. Note 3.1 (Anscombe) is why you plot before you trust a correlation.</p>
+<hr />
+<h2>5. This week, in one place</h2>
+<ul>
+<li><code>read_lines()</code> then <code>read_csv()</code> / <code>read_tsv()</code> / <code>read_csv2()</code></li>
+<li>check types, <code>NA</code>s, and duplicates</li>
+<li><code>parse_*()</code> and <code>col_types</code> when the guess is wrong</li>
+<li><code>write_csv()</code> and <code>saveRDS()</code></li>
+<li>EDA: one variable, then pairs, then a third variable</li>
+</ul>
+<p>Chapter 11 of <a href="https://r4ds.had.co.nz/data-import.html">R for Data Science</a> for readr; Chapter 7 for EDA.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>For <code>diamonds</code>, a bar chart of <code>cut</code> and a histogram of <code>price</code>.</p>
+</li>
+<li>
+<p>Boxplots of <code>price</code> by <code>cut</code>, log-<code>y</code>, colored or faceted by <code>color</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

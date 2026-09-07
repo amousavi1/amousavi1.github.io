@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 4: dplyr, Part 1 - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 4: dplyr, Part 1</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 4 &middot;
+                            <a href="files/data-612/lab-4-dplyr.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Filter, slice, arrange, select, mutate, and summarize flights.
+                        </p>
+<p>Work in a <strong>Quarto</strong> document. Number the exercises. Do <strong>4.1</strong> through <strong>4.3</strong> first.</p>
+<pre><code class="language-r">library(tidyverse)
+library(nycflights13)
+data(&quot;flights&quot;)
+</code></pre>
+<hr />
+<h2>1. Filter and slice</h2>
+<ol>
+<li>
+<p>Flights in odd months, or on even days of even months.</p>
+</li>
+<li>
+<p>Flights to Houston (<code>IAH</code> or <code>HOU</code>), on UA, AA, or DL, in July–September, that arrived more than 15 minutes late and did not leave late.</p>
+</li>
+<li>
+<p>Rows 10, 100, 1000, 10000, and 100000.</p>
+</li>
+<li>
+<p>The last 10 of the first 30 Newark (<code>EWR</code>) flights.</p>
+</li>
+<li>
+<p><code>set.seed(1)</code>. A random 1% sample, and a sample of 3367 rows. Are the last 10 rows the same? Why?</p>
+</li>
+</ol>
+<hr />
+<h2>2. Arrange, select, mutate</h2>
+<ol>
+<li>
+<p>Longest <code>distance</code>, ties broken by <code>air_time</code>.</p>
+</li>
+<li>
+<p>Keep every arrival column plus <code>year</code>, <code>month</code>, and <code>day</code>.</p>
+</li>
+<li>
+<p>Convert <code>dep_time</code> and <code>sched_dep_time</code> to minutes past midnight.</p>
+</li>
+<li>
+<p>Move columns ending in <code>"time"</code> to just before <code>flight</code>. Then put <code>sched</code> columns before the actual times.</p>
+</li>
+</ol>
+<hr />
+<h2>3. Summarize and group</h2>
+<ol>
+<li>
+<p>Standard deviation of <code>dep_delay</code>.</p>
+</li>
+<li>
+<p>Maximum <code>dep_delay</code> by <code>origin</code> in one pipeline.</p>
+</li>
+<li>
+<p>For each <code>day</code>, the number and proportion of canceled flights (<code>is.na(dep_delay) | is.na(arr_delay)</code>). Plot the proportion against day, and against average departure delay.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

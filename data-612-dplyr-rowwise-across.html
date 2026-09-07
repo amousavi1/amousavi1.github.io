@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.1 dplyr: rowwise() and across() - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.1 dplyr: rowwise() and across()</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 5 &middot;
+                            <a href="files/data-612/dplyr-rowwise-across.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            rowwise() summarizes across columns in one row. across() repeats a function on many columns.
+                        </p>
+<h2>1. <code>rowwise()</code> is a group of one</h2>
+<p><code>group_by()</code> groups many rows. <code>rowwise()</code> makes each row its own group so a summary runs <strong>across columns in that row</strong>. <code>ungroup()</code> removes it.</p>
+<pre><code class="language-r">df &lt;- tibble(name = c(&quot;Mara&quot;, &quot;Hadley&quot;), x = 1:2, y = 3:4, z = 5:6)
+
+df |&gt; mutate(m = mean(c(x, y, z)))
+# one mean for the whole table
+
+df |&gt;
+  rowwise(name) |&gt;
+  summarize(m = mean(c(x, y, z)), .groups = &quot;drop&quot;)
+# one mean per row
+</code></pre>
+<p><code>c_across()</code> selects several columns with the same helpers as <code>select()</code>:</p>
+<pre><code class="language-r">df &lt;- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
+rf &lt;- df |&gt; rowwise(id)
+
+rf |&gt; mutate(total = sum(c_across(w:z)))
+rf |&gt; mutate(total = sum(c_across(where(is.numeric))))
+</code></pre>
+<p>For speed on a whole frame, <code>rowSums()</code> and <code>rowMeans()</code> avoid the split-and-join:</p>
+<pre><code class="language-r">df |&gt; mutate(total = rowSums(across(where(is.numeric))))
+</code></pre>
+<p><code>starwars</code> (in dplyr) is the usual practice table. Without <code>rowwise()</code>, <code>max(height, mass, birth_year)</code> is one number for the whole column stack, repeated on every row.</p>
+<hr />
+<h2>2. <code>across()</code> repeats a function on columns</h2>
+<p><code>across()</code> lives <strong>inside</strong> <code>mutate()</code>, <code>summarize()</code>, <code>filter()</code>, and the other data-masking verbs. It does not change the data by itself.</p>
+<p>Two arguments:</p>
+<ul>
+<li><code>.cols</code>: tidyselect, default <code>everything()</code></li>
+<li><code>.fns</code>: a function, a named list of functions, or a formula <code>~ median(.x, na.rm = TRUE)</code>. <code>.x</code> is the current column.</li>
+</ul>
+<pre><code class="language-r">starwars |&gt;
+  summarize(across(where(is.numeric), ~ median(.x, na.rm = TRUE)), .groups = &quot;drop&quot;)
+
+starwars |&gt;
+  group_by(species) |&gt;
+  filter(n() &gt; 1) |&gt;
+  summarize(
+    across(c(sex, gender, homeworld), ~ length(unique(.x))),
+    n = n()
+  )
+</code></pre>
+<p>Grouping variables are skipped so you do not summarize them by accident.</p>
+<p>A named list makes several summaries per column:</p>
+<pre><code class="language-r">min_max &lt;- list(
+  min = ~ min(.x, na.rm = TRUE),
+  max = ~ max(.x, na.rm = TRUE)
+)
+starwars |&gt; summarize(across(where(is.numeric), min_max))
+</code></pre>
+<p>Order matters. If you compute <code>n = n()</code> first, <code>n</code> is numeric, so a later <code>across(where(is.numeric), sd)</code> will try to take the SD of that constant and give <code>NA</code>. Put <code>n = n()</code> last.</p>
+<p><code>across()</code> replaces the old <code>*_if()</code>, <code>*_at()</code>, and <code>*_all</code> helpers. <code>select()</code> and <code>rename()</code> already use tidyselect; use <code>rename_with()</code> to change names with a function.</p>
+<hr />
+<h2>3. Practice</h2>
+<ol>
+<li>
+<p>For each <code>starwars</code> character, the maximum of <code>height</code>, <code>mass</code>, and <code>birth_year</code> (<code>na.rm = TRUE</code>). Who is largest? Try it with and without <code>rowwise()</code>.</p>
+</li>
+<li>
+<p>Median of every numeric column, by <code>species</code> and <code>gender</code>, plus <code>n()</code>, sorted by <code>n</code> descending.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

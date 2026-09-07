@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>6.2 readr: Parsers - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">6.2 readr: Parsers</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 6 &middot;
+                            <a href="files/data-612/readr-parsers.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            parse_date(), parse_number(), and col_types when the import guess is wrong.
+                        </p>
+<h2>1. Parse after the file is in</h2>
+<p>Sometimes <code>read_csv()</code> guesses a character column because one bad token spoiled the first 1,000 rows. <code>parse_*()</code> converts a character vector in place. The same parsers sit behind <code>col_types</code>.</p>
+<pre><code class="language-r">library(tidyverse)
+
+dfdat &lt;- tribble(
+  ~date,        ~time,      ~number, ~factor, ~logical,
+  &quot;12-01-1988&quot;, &quot;10:10:02&quot;, &quot;2&quot;,     &quot;A&quot;,     &quot;TRUE&quot;,
+  &quot;11-12-1987&quot;, &quot;11:10:57&quot;, &quot;4&quot;,     &quot;A&quot;,     &quot;TRUE&quot;,
+  &quot;02-03-1989&quot;, &quot;10:10:25&quot;, &quot;6&quot;,     &quot;B&quot;,     &quot;FALSE&quot;,
+  &quot;06-03-1982&quot;, &quot;22:10:55&quot;, &quot;2&quot;,     &quot;B&quot;,     &quot;TRUE&quot;,
+  &quot;09-21-1981&quot;, &quot;10:10:02&quot;, &quot;1&quot;,     &quot;A&quot;,     &quot;N-A&quot;
+)
+</code></pre>
+<hr />
+<h2>2. Dates and times</h2>
+<p><code>parse_date()</code> expects <code>"YYYY-MM-DD"</code> unless you set <code>format</code>. <code>parse_datetime()</code> includes a time zone.</p>
+<pre><code class="language-r">parse_date(&quot;2018-01-02&quot;)
+parse_date(&quot;02/01/2018&quot;)                    # fails
+parse_date(&quot;02/01/2018&quot;, format = &quot;%m/%d/%Y&quot;)
+parse_date(&quot;January 1, 2018&quot;, format = &quot;%B %d, %Y&quot;)
+
+dfdat |&gt; mutate(date = parse_date(date, format = &quot;%m-%d-%Y&quot;))
+</code></pre>
+<p>Useful tokens: <code>%d</code> day, <code>%m</code> month number, <code>%b</code> Jan, <code>%B</code> January, <code>%y</code> two-digit year, <code>%Y</code> four-digit year.</p>
+<p>Times: <code>%H</code> 0–23, <code>%I</code> 1–12 with <code>%p</code> for am/pm, <code>%M</code> minutes, <code>%S</code> seconds.</p>
+<pre><code class="language-r">dfdat |&gt; mutate(time = parse_time(time, format = &quot;%H:%M:%S&quot;))
+parse_time(&quot;10:40 pm&quot;, format = &quot;%I:%M %p&quot;)
+</code></pre>
+<hr />
+<h2>3. Numbers, logicals, factors</h2>
+<p><code>parse_double()</code> and <code>parse_integer()</code> fail on <code>$</code> or <code>%</code>. <code>parse_number()</code> strips the extra characters.</p>
+<pre><code class="language-r">parse_double(&quot;$2.11&quot;)     # fail
+parse_number(&quot;$2.11&quot;)
+parse_number(&quot;2%&quot;)
+parse_number(&quot;2.555,11&quot;, locale = locale(grouping_mark = &quot;.&quot;, decimal_mark = &quot;,&quot;))
+</code></pre>
+<p><code>parse_logical()</code>, <code>parse_factor()</code>, <code>parse_character()</code>. Any parser accepts <code>na = "N-A"</code> or a vector of missing tokens.</p>
+<pre><code class="language-r">dfdat |&gt; mutate(logical = parse_logical(logical, na = &quot;N-A&quot;))
+</code></pre>
+<hr />
+<h2>4. <code>col_types</code> at import</h2>
+<p>Guessing from the first 1,000 rows is fast and can be wrong. Set types when you know them. The letters are wrappers for the parsers: <code>c</code> character, <code>i</code> integer, <code>d</code> double, <code>l</code> logical, <code>f</code> factor, <code>D</code> date, <code>T</code> datetime, <code>t</code> time, <code>_</code> skip.</p>
+<pre><code class="language-r">estate &lt;- read_csv(&quot;data/estate.csv&quot;)
+estate &lt;- read_csv(
+  &quot;data/estate.csv&quot;,
+  col_types = cols(price = col_double(), ac = col_logical())
+)
+</code></pre>
+<p><code>problems(estate)</code> lists rows that did not parse.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Parse <code>"01, January 2018"</code>, <code>"01-January/2000"</code>, and <code>"1 Jan 19"</code>.</p>
+</li>
+<li>
+<p>Parse <code>"10:40 pm"</code> and <code>"23:40-22"</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

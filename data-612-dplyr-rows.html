@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.1 dplyr: Rows - DATA 612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.1 dplyr: Rows</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 612</a> &middot; Week 4 &middot;
+                            <a href="files/data-612/dplyr-rows.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            filter(), slice(), and arrange() choose and order rows. Use nycflights13::flights.
+                        </p>
+<h2>1. Why dplyr</h2>
+<p>Real tables are messy: missing values, extra rows, names that do not match, numbers stored as text. <code>dplyr</code> is the tidyverse grammar for one table. The verbs have the same first argument, a data frame, so they pipe.</p>
+<pre><code class="language-r">library(tidyverse)
+library(nycflights13)
+data(&quot;flights&quot;)
+</code></pre>
+<p>Install <code>nycflights13</code> once in the console. <code>flights</code> is every flight out of New York City in 2013. <code>?flights</code>.</p>
+<p>A data frame is a list of atomic vectors of the same length: columns can differ in type; rows are the observational units. A <strong>tibble</strong> is the tidyverse data frame. We use the two words as synonyms.</p>
+<p>The usual verbs, by what they touch:</p>
+<ul>
+<li><strong>rows</strong>: <code>filter()</code>, <code>slice()</code>, <code>arrange()</code></li>
+<li><strong>columns</strong>: <code>select()</code>, <code>rename()</code>, <code>mutate()</code>, <code>relocate()</code></li>
+<li><strong>groups</strong>: <code>group_by()</code>, <code>summarize()</code></li>
+</ul>
+<p>A first pipeline. Average scheduled departure time, by carrier, in the second half of the year:</p>
+<pre><code class="language-r">flights |&gt;
+  filter(month &gt;= 7) |&gt;
+  group_by(carrier) |&gt;
+  summarize(mean_dep = mean(dep_time, na.rm = TRUE))
+</code></pre>
+<p>The Base R version is <code>flights[flights$month &gt;= 7, ]</code> then <code>aggregate()</code>. The pipe is easier to read and to debug: comment out a line, or insert <code>View()</code>.</p>
+<hr />
+<h2>2. <code>filter()</code> keeps rows by value</h2>
+<p><code>filter()</code> keeps rows where a condition is <code>TRUE</code>. Note 2.1 already compared it to <code>subset()</code>.</p>
+<pre><code class="language-r">flights |&gt;
+  filter(month == 1)
+</code></pre>
+<p>Several conditions separated by commas are <strong>and</strong>. Write <code>&amp;</code> and <code>|</code> when the logic is mixed. <code>xor()</code> is exclusive or.</p>
+<pre><code class="language-r">flights |&gt;
+  filter(month == 1, origin == &quot;JFK&quot;)
+
+flights |&gt;
+  filter((month == 1 &amp; origin == &quot;LGA&quot;) | (month == 12 &amp; origin == &quot;JFK&quot;))
+</code></pre>
+<p>Unknown levels: <code>unique(flights$origin)</code>, or <code>levels(as.factor(flights$origin))</code>.</p>
+<p><code>filter()</code> drops rows where the condition is <code>NA</code>. Ask for them with <code>is.na()</code>. <code>NA == NA</code> is <code>NA</code>, not <code>TRUE</code>.</p>
+<pre><code class="language-r">dfdat &lt;- data.frame(x = c(1, NA, 2), y = c(2, 4, 1))
+dfdat |&gt; filter(x == 1)
+dfdat |&gt; filter(x == 1 | is.na(x))
+</code></pre>
+<p>For doubles, <code>==</code> is strict. Use <code>dplyr::near()</code>:</p>
+<pre><code class="language-r">sqrt(2)^2 == 2
+near(sqrt(2)^2, 2)
+</code></pre>
+<p>Integers can use <code>==</code>.</p>
+<hr />
+<h2>3. <code>slice()</code> keeps rows by position</h2>
+<pre><code class="language-r">flights |&gt; slice(5:10)
+flights |&gt; slice(c(1, 4, 6))
+flights |&gt; slice(10:n())     # n() is the number of rows
+</code></pre>
+<p>Helpers:</p>
+<ul>
+<li><code>slice_head(n = 3)</code>, <code>slice_tail(n = 3)</code></li>
+<li><code>slice_sample(n = 200)</code> or <code>slice_sample(prop = 0.1)</code></li>
+<li><code>slice_min(arr_delay, n = 5)</code>, <code>slice_max(arr_delay, n = 5)</code></li>
+</ul>
+<p>Drop <code>NA</code>s in the ordering column first. Ties can return more rows than <code>n</code>. <code>with_ties = FALSE</code> cuts at <code>n</code> using the current row order.</p>
+<pre><code class="language-r">flights |&gt;
+  filter(!is.na(arr_delay)) |&gt;
+  slice_max(arr_delay, n = 5)
+</code></pre>
+<p><code>set.seed()</code> before <code>slice_sample()</code> if you want a repeatable draw. Two samples of the "same" size (<code>prop = 0.01</code> vs <code>n = 3367</code>) are still two draws.</p>
+<hr />
+<h2>4. <code>arrange()</code> sorts rows</h2>
+<p>Default is ascending. <code>desc(x)</code> or <code>-x</code> (numerics) reverses. Extra arguments break ties. Missing values go last, even under <code>desc()</code>.</p>
+<pre><code class="language-r">flights |&gt; arrange(dep_delay)
+flights |&gt; arrange(desc(dep_delay), arr_delay)
+</code></pre>
+<p>Character order follows the locale.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Flights in odd months, or on even days of even months (<code>%%</code>).</p>
+</li>
+<li>
+<p>Flights that went to Houston (<code>IAH</code> or <code>HOU</code>), on UA, AA, or DL, in July–September, arrived more than 15 minutes late, and did not leave late.</p>
+</li>
+<li>
+<p>Rows 10, 100, 1000, 10000, and 100000.</p>
+</li>
+<li>
+<p>The last 10 of the first 30 Newark (<code>EWR</code>) flights.</p>
+</li>
+<li>
+<p>Longest <code>distance</code>, ties broken by <code>air_time</code>.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-07T16:50:00-04:00">September 7, 2026, 4:50 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
