@@ -53,7 +53,12 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     slug = note["slug"]
     title = note["title"]
     week = note["week"]
-    pdf_href = f"files/{COURSE}/{slug}.pdf"
+    slide_pdfs = {
+        "nlp-in-the-real-world": "files/data-641/slides/1.1-nlp-in-the-real-world.pdf",
+        "ml-dl-nlp-overview": "files/data-641/slides/1.2-ml-dl-nlp-overview.pdf",
+        "python-tour": "files/data-641/slides/1.3-python-tour.pdf",
+    }
+    pdf_href = slide_pdfs.get(slug, f"files/{COURSE}/{slug}.pdf")
     page_path = ROOT / f"{COURSE}-{slug}.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
