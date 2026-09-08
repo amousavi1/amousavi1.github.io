@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.3 Dialog Systems - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.3 Dialog Systems</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 12 &middot;
+                            <a href="files/data-641/dialog-systems.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Frame-based, retrieval, and generative dialogue.
+                        </p>
+<h2>1. Understanding this turn in light of the last ones</h2>
+<p>The NLU block from note <strong>12.2</strong> has two jobs: <strong>intent</strong> (what act is this?) and <strong>slots</strong> (what values came with it?). Those labels are what you train on.</p>
+<p><img alt="Annotated restaurant turns" src="files/data-641/graphics/dialog-user.png" /></p>
+<p>A restaurant-booking dialog is the usual classroom example. Each user line gets an intent (<code>inform</code>, <code>request</code>, <code>affirm</code>) and slot values (<code>food=italian</code>, <code>price=cheaper</code>). You want a model that predicts those labels on new lines, using the history when the current line is short ("yes", "the cheaper one").</p>
+<hr />
+<h2>2. Dialog act / intent classification</h2>
+<p>A dialog act is the role of the utterance in the conversation: a yes/no question, an inform, a request, a goodbye. In product language this is the <strong>intent</strong>.</p>
+<p>This is text classification with extra constraints:</p>
+<ul>
+<li>classes are specific to your bot (<code>order_pizza</code> is not in a public intent set)</li>
+<li>the label can depend on the previous state ("7" is a time only after you asked for a time)</li>
+<li>you need enough labeled turns per intent</li>
+</ul>
+<p>Building this from scratch is expensive. Do it when Cloud NLU or an existing framework cannot express your acts and slots. Full control pays off when the ontology will grow and you will keep labeling.</p>
+<p>If your intents are a few dozen FAQs, a classifier plus a small set of examples per class is enough. If they are open-ended, you are no longer in goal-oriented NLU.</p>
+<hr />
+<h2>3. Slot filling</h2>
+<p>Once you know the intent, fill the slots. In "I'm looking for a cheaper restaurant," <code>price=cheaper</code> (take the value as written unless you have a canonical mapping).</p>
+<p>This is close to NER: find the span, assign a type. The difference is the type inventory is <strong>the slots of this intent</strong>, not a general PERSON/ORG list.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Utterance</th>
+<th>Intent</th>
+<th>Slots</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I'm looking for a cheaper restaurant</td>
+<td>find_restaurant</td>
+<td>price=cheaper</td>
+</tr>
+<tr>
+<td>Italian, around 7</td>
+<td>inform</td>
+<td>food=italian, time=7</td>
+</tr>
+<tr>
+<td>Yes, book it</td>
+<td>affirm</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>Two dedicated models (intent + slots) are accurate and <strong>slow</strong>. They also both want labels. Joint models exist. In a first system, two models plus a timeout budget is fine.</p>
+<p>Span extractors fail when the value is implied ("the same place as Friday") or when the user corrects a slot ("not large, medium"). The dialog manager has to accept updates, not only first fills.</p>
+<hr />
+<h2>4. Response generation</h2>
+<p>After intent and slots, the system must speak. Three designs:</p>
+<p><strong>Fixed responses.</strong> FAQ bots. Look up the best reply from a pool. The simplest table is one reply per intent and ignore slots. A better ranker scores the pool against the full dialog state.</p>
+<p><strong>Templates.</strong> Fill holes: "There are {n} {food} restaurants in that price range. Do you want a table at {time}?" This is the right tool for clarifying questions.</p>
+<p><strong>Automatic generation.</strong> A conditional model maps dialog state to the next agent sentence. Graphical models or neural language models. More natural, less controllable. Use when fluency matters more than a guaranteed legal sentence.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Best for</th>
+<th>Failure mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed lookup</td>
+<td>FAQ</td>
+<td>Sounds canned; misses slot-specific answers</td>
+</tr>
+<tr>
+<td>Templates</td>
+<td>Goal-oriented follow-ups</td>
+<td>Limited phrasing</td>
+</tr>
+<tr>
+<td>Learned NLG</td>
+<td>Chitchat, open prompts</td>
+<td>Off-policy, hard to test</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. What to remember</h2>
+<p>Intent without slots is a topic label. Slots without a manager are a pile of facts. Generation without a state is a language model with a microphone.</p>
+<p>Label a few real transcripts before you pick a vendor or a paper. The ontology (which intents, which slots) is the design. The model is how you fill it.</p>
+<p>A practical order: write ten made-up but realistic dialogs, define the intents and slots those dialogs need, label them, then train. If you cannot write the dialogs, you do not yet know the product. Cloud NLU is fine for that first ontology; replace it when the labels no longer fit.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Label intent and slots for "Make it 8 instead, still Italian."</p>
+</li>
+<li>
+<p>Why can "yes" be a complete, useful turn in a dialog and a useless document for a bag-of-words classifier?</p>
+</li>
+<li>
+<p>You have 40 FAQ answers and no labeled slots. Which response method do you ship first, and what data would you collect next?</p>
+</li>
+</ol>
+<p>Fixed lookup is a complete first bot. Slots come when the answers start to branch.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

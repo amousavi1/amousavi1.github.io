@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.5 TF-IDF - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.5 TF-IDF</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 4 &middot;
+                            <a href="files/data-641/tfidf.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Down-weight words that appear in almost every document.
+                        </p>
+<h2>1. Not every word should count the same</h2>
+<p>One-hot, bag of words, and bag of n-grams treat every token as equally important. <em>the</em> and <em>pneumonia</em> get the same kind of count. That is a problem. A word that appears in almost every document does not tell you which document you are looking at.</p>
+<p><strong>TF–IDF</strong> (term frequency–inverse document frequency) reweights the counts. The claim: if word (w) is common in document (d_i) and rare in the rest of the corpus, then (w) is <strong>about</strong> (d_i).</p>
+<p>Two pieces multiply:</p>
+<p>[
+\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \text{IDF}(t)
+]</p>
+<p>Same toy documents as the rest of Week 4. The encoding is still a (|V|)-vector per document. The numbers are no longer raw counts.</p>
+<hr />
+<h2>2. Term frequency</h2>
+<p>TF asks how often term (t) appears <strong>inside</strong> one document. Longer documents have more room to repeat a word, so we normalize by document length:</p>
+<p>[
+\text{TF}(t, d) = \frac{\text{count of } t \text{ in } d}{\text{number of tokens in } d}
+]</p>
+<p>In (D_1) = “dog bites man”, each of the three words has TF (= 1/3).</p>
+<p>Other textbooks use raw count, (\log(1 + \text{count})), or a Boolean. The idea is the same: more mentions inside (d) → larger TF.</p>
+<hr />
+<h2>3. Inverse document frequency</h2>
+<p>IDF asks how special the term is <strong>across the corpus</strong>. Stop words (<em>is</em>, <em>are</em>, <em>the</em>) have high TF everywhere and should be down-weighted. Rare content words should be up-weighted.</p>
+<p>[
+\text{IDF}(t) = \ln \frac{N}{\text{number of documents that contain } t}
+]</p>
+<p>(N) is the number of documents. A word that appears in every document has IDF (= \ln 1 = 0) (or a tiny number if the implementation adds smoothing). A word that appears in one document of four has IDF (= \ln 4).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Docs that contain it</th>
+<th>IDF (\ln(N/\text{df}))</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dog</td>
+<td>(D_1, D_2, D_3)</td>
+<td>(\ln(4/3) \approx 0.29)</td>
+</tr>
+<tr>
+<td>bites</td>
+<td>(D_1, D_2)</td>
+<td>(\ln(4/2) \approx 0.69)</td>
+</tr>
+<tr>
+<td>man</td>
+<td>(D_1, D_2, D_4)</td>
+<td>(\ln(4/3) \approx 0.29)</td>
+</tr>
+<tr>
+<td>eats</td>
+<td>(D_3, D_4)</td>
+<td>(\ln(4/2) \approx 0.69)</td>
+</tr>
+<tr>
+<td>meat</td>
+<td>(D_3)</td>
+<td>(\ln(4/1) \approx 1.39)</td>
+</tr>
+<tr>
+<td>food</td>
+<td>(D_4)</td>
+<td>(\ln(4/1) \approx 1.39)</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>meat</em> and <em>food</em> are the most informative unigrams in this toy set. <em>dog</em> and <em>man</em> are closer to stop words.</p>
+<hr />
+<h2>4. The product, and sklearn</h2>
+<p>For (D_3) = “dog eats meat”, TF of each word is (1/3). The TF–IDF entries (in vocabulary order dog, bites, man, eats, meat, food) are about</p>
+<p><code>[0.10, 0, 0, 0.23, 0.46, 0]</code></p>
+<p><em>meat</em> dominates. That is the scheme working.</p>
+<p><strong>Your hand calculation will not match <code>TfidfVectorizer</code>.</strong> sklearn uses a smoothed IDF, sometimes L2-normalizes the rows, and may use (\log(N/\text{df}) + 1). Read the docstring before you grade a lab against a spreadsheet. Several published variants exist. The product TF (\times) IDF is the shared idea.</p>
+<hr />
+<h2>5. What still fails</h2>
+<p>TF–IDF is still a <strong>discrete</strong> representation. <em>movie</em> and <em>film</em> do not share weight. There is no geometry that says they are related.</p>
+<p>The vectors are still <strong>sparse and high-dimensional</strong>. Larger vocabulary → more zeros → harder learning and more RAM.</p>
+<p><strong>OOV</strong> is unchanged. A new word has no IDF because it has no document frequency in the training corpus.</p>
+<p>Use TF–IDF as the default sparse baseline: <code>TfidfVectorizer</code> + linear SVM or logistic regression. Then ask whether a dense embedding (Week 5) is worth the complexity.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Compute TF–IDF for <em>bites</em> in (D_1). Use the formulas in sections 2 and 3.</p>
+</li>
+<li>
+<p>Why does IDF push <em>the</em> toward zero on a news corpus even if <em>the</em> has a huge TF?</p>
+</li>
+<li>
+<p>Name two reasons a TF–IDF vector for “the film was long” will not be close to one for “the movie was long.”</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

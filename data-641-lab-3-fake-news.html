@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 3: A Short Fake-News Pipeline - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 3: A Short Fake-News Pipeline</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 3 &middot;
+                            <a href="files/data-641/lab-3-fake-news.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Clean two news CSVs and walk them through the pipeline.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>2.3</strong>, <strong>3.1</strong>, <strong>3.2</strong>, and <strong>3.3</strong> first. You will need <code>pandas</code>, <code>nltk</code>, and <code>scikit-learn</code> (or another library you already know).</p>
+<p>Download <a href="files/data-641/fakeNews.csv">fakeNews.csv</a> and <a href="files/data-641/trueNews.csv">trueNews.csv</a> into the same folder as the notebook (or use a relative path).</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<p>These files are COVID-era claims: fact-checked <strong>false / misleading</strong> posts and <strong>true</strong> news posts. The job is binary classification, not sentiment.</p>
+<pre><code class="language-python">import pandas as pd
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+
+nltk.download(&quot;punkt&quot;)
+nltk.download(&quot;wordnet&quot;)
+</code></pre>
+<hr />
+<h2>1. Import (1 point)</h2>
+<ol>
+<li>
+<p>Read <code>fakeNews.csv</code> and <code>trueNews.csv</code> with pandas.</p>
+</li>
+<li>
+<p>Print column names, <code>shape</code>, and two sample rows from each file.</p>
+</li>
+<li>
+<p>Build <strong>one</strong> working frame with at least:
+   - a text column (use <code>Text</code>)
+   - a binary label (<code>0</code> = fake / misleading, <code>1</code> = true)
+   - <code>Country</code> if you will slice by country in Exercise 5</p>
+</li>
+</ol>
+<p><code>fakeNews.csv</code> has <code>Binary Label</code>. <code>trueNews.csv</code> has <code>Label</code>. Align the names before you concatenate. Drop rows with empty text.</p>
+<hr />
+<h2>2. Clean and lemmatize (1 point)</h2>
+<p>On the text column:</p>
+<ol>
+<li>
+<p>Remove the <code>#</code> character from hashtags (<code>#Covid</code> → <code>Covid</code>). Keep the token.</p>
+</li>
+<li>
+<p>Tokenize. Drop tokens of length <strong>less than 2</strong>. Drop tokens that are only punctuation.</p>
+</li>
+<li>
+<p>Lemmatize with <code>WordNetLemmatizer</code>. Join the lemmas back into a string (or keep a list — stay consistent).</p>
+</li>
+</ol>
+<p>Print <strong>one</strong> original text and its cleaned version.</p>
+<p>Do not lowercase away information you still want to inspect; if you lowercase, do it on purpose and say so.</p>
+<hr />
+<h2>3. Train (1 point)</h2>
+<ol>
+<li>
+<p>Split <strong>70% train / 30% test</strong>. Stratify on the label if you can (<code>train_test_split(..., stratify=y)</code>).</p>
+</li>
+<li>
+<p>Train a classifier. Bag-of-words or TF–IDF plus logistic regression (or Naive Bayes) is enough. Embeddings are allowed. You may use a library.</p>
+</li>
+<li>
+<p>Print the vectorizer and model you chose, and the train/test sizes.</p>
+</li>
+</ol>
+<pre><code class="language-python">from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+</code></pre>
+<p>Fit <strong>only</strong> on the training split. Transform the test set with the same vectorizer.</p>
+<hr />
+<h2>4. Intrinsic metrics (1 point)</h2>
+<p>On the test set, compute and print:</p>
+<ul>
+<li>accuracy</li>
+<li>precision</li>
+<li>recall</li>
+<li>F1</li>
+</ul>
+<p>Keep the file labels (<code>0</code> = fake / misleading, <code>1</code> = true) unless you recode — if you recode, say so. Use <code>sklearn.metrics</code> and show a classification report. For <code>precision_score</code> / <code>recall_score</code> / <code>f1_score</code> on two classes, set <code>average</code> (e.g. <code>macro</code> or <code>binary</code> with an explicit <code>pos_label</code>).</p>
+<pre><code class="language-python">from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report, confusion_matrix
+</code></pre>
+<hr />
+<h2>5. Extrinsic-style check (1 point)</h2>
+<p>Pick <strong>one</strong> and actually do it (not a one-line “I could…”):</p>
+<ul>
+<li>print a confusion matrix and read three false positives and three false negatives</li>
+<li>or compare F1 (or error rate) across <code>Country</code> / <code>Region</code> on the test rows</li>
+<li>or list the tokens with the largest coefficients if you used a linear model</li>
+</ul>
+<p>Write two or three sentences: what the model is actually using, and one failure that a metric average hid.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

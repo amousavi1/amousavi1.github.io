@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.4 Advanced Preprocessing - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.4 Advanced Preprocessing</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot;
+                            <a href="files/data-641/advanced-preprocessing.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            POS tags, a first look at entities, and why parsing is optional.
+                        </p>
+<h2>1. When the basic recipe is the wrong tool</h2>
+<p>Notes <strong>2.2</strong>–<strong>2.3</strong> get you a bag of tokens. Some jobs need <em>who did what to whom</em>, or <em>which span is a name</em>.</p>
+<p><strong>Example.</strong> Find person and organization names in a million company documents. Lowercasing and stop-word removal hide the signal. You want <strong>part-of-speech (POS)</strong> tags first: proper nouns are a cheap clue for names. Then you want <strong>named-entity recognition (NER)</strong>. Full <strong>parsing</strong> is the heavier option when you need syntax, not just tags.</p>
+<p>This note is a map, not a tagger from scratch. You will use NLTK or spaCy.</p>
+<hr />
+<h2>2. POS tagging</h2>
+<p>Given a sentence, attach a syntactic category to each token:</p>
+<pre><code class="language-text">This is a simple sentence
+This/DET is/VB a/DET simple/ADJ sentence/NOUN
+</code></pre>
+<p>POS is a first step toward syntax, and syntax is a first step toward meaning. A tagger is simpler and faster than a full parser, and often enough:</p>
+<ul>
+<li>features for text classification</li>
+<li>word-sense disambiguation (<code>water</code> as noun vs verb)</li>
+<li>a pre-filter for NER (proper nouns)</li>
+</ul>
+<hr />
+<h2>3. Why tagging is hard</h2>
+<p>The same string is not always the same tag.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>String</th>
+<th>Noun</th>
+<th>Verb</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>water</td>
+<td>glass of water</td>
+<td>water the plants</td>
+</tr>
+<tr>
+<td>lie</td>
+<td>tell a lie</td>
+<td>lie down</td>
+</tr>
+<tr>
+<td>wind</td>
+<td>a mighty wind</td>
+<td>wind down</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>Time flies like an arrow</code> has several legal analyses. Add words you have never seen, or a noun used as a verb (<code>to google</code>), and a dictionary alone fails.</p>
+<p><img alt="POS ambiguity" src="files/data-641/graphics/pos-ambiguity.png" /></p>
+<p>Other headaches: context, dialect, overlapping categories, and <strong>out-of-vocabulary</strong> words.</p>
+<hr />
+<h2>4. Penn Treebank</h2>
+<p>You need a labeled corpus to train or to evaluate a tagger. The <strong>Penn Treebank</strong> (1989–1996) is the English standard you will see cited:</p>
+<ul>
+<li>about 7 million words with POS tags</li>
+<li>millions more with partial or full parses</li>
+<li>spoken transcripts marked for disfluency</li>
+</ul>
+<p>Sources include Wall Street Journal, IBM manuals, nursing notes, and telephone speech. The WSJ section is what most off-the-shelf English taggers were measured on.</p>
+<p>The tag set is coarse but useful: <code>NNP</code> proper noun, <code>VB</code>/<code>VBD</code>/<code>VBN</code> verb forms, <code>JJ</code> adjective, <code>DT</code> determiner, and so on. NLTK’s <code>pos_tag</code> returns these tags.</p>
+<hr />
+<h2>5. How taggers are built (high level)</h2>
+<p><strong>Rules.</strong> Start with a dictionary of possible tags per word. Assign every possible tag. Write rules that delete the wrong ones until one tag remains (ENGTWOL-style). You need a large lexicon and a patient linguist.</p>
+<p><strong>Probabilistic.</strong> For tokens (w_1,\ldots,w_n), find the tag sequence (t_1,\ldots,t_n) with the highest probability. Hidden Markov models and related sequence models are the classic version.</p>
+<p><strong>Machine learning / deep learning.</strong> Sequence classifiers and neural taggers. They are strong, but they are not automatically cheaper than a good stochastic tagger. Cost still matters.</p>
+<p>In this course you do <strong>not</strong> train one from scratch. You call a library:</p>
+<pre><code class="language-python">import nltk
+from nltk.tokenize import word_tokenize
+
+text = &quot;Charles Spencer Chaplin was born in London England on April 16th 1889&quot;
+nltk.pos_tag(word_tokenize(text))
+</code></pre>
+<p>spaCy does the same in one pipeline object and is what you want if you also need NER.</p>
+<hr />
+<h2>6. NER and other span labels</h2>
+<p><strong>Named-entity recognition</strong> labels spans, not only single words:</p>
+<pre><code class="language-text">Barack/PER Obama/PER spoke/NON from/NON the/NON White/LOC House/LOC today/NON
+</code></pre>
+<p>Typical types: person, organization, location, date, money. Everything else is <code>O</code> / none. POS helps; it is not NER by itself. <code>White House</code> is two tokens and one entity.</p>
+<p><strong>Field segmentation</strong> is the same idea on a fixed template: in a classified ad, mark price, size, location; in a bibliography, mark author, title, year.</p>
+<hr />
+<h2>7. Parsing, at a high level</h2>
+<p>A <strong>parser</strong> builds a tree (constituency) or a graph of heads and dependents (dependency). That is how you get subject–verb–object without writing a new regex per sentence.</p>
+<p>You need a parse when the task is syntactic (relation extraction, some question answering). You do not need one to start a bag-of-words classifier. Parsers are slower and they error on messy web text. Use tags first; parse when the extra structure pays for itself.</p>
+<hr />
+<h2>8. Practice</h2>
+<ol>
+<li>
+<p>Tag <code>I saw her duck</code> in two different ways. What changes besides the POS of <code>duck</code>?</p>
+</li>
+<li>
+<p>Why is lowercasing a bad idea <em>before</em> POS tagging?</p>
+</li>
+<li>
+<p>Is “every capitalized word is a person” NER? Give a counterexample.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

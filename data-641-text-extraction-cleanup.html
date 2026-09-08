@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.2 Text Extraction and Cleanup - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.2 Text Extraction and Cleanup</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot;
+                            <a href="files/data-641/slides/2.2-text-extraction-cleanup.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Pull words out of HTML and PDF, then fix encoding and boilerplate.
+                        </p>
+<h2>1. Pull the words out first</h2>
+<p>Acquisition gives you a file, a URL, or a scan. That is not yet text a tokenizer can use.</p>
+<p><strong>Text extraction</strong> is taking the human language out and throwing away the rest: tags, headers, page numbers, nav bars, image bytes. <strong>Cleanup</strong> is making that string usable: encoding, Unicode, spelling, format-specific junk.</p>
+<p>This step is slow and it is application-dependent. A bad extract poisons every later box in the pipeline. Lab 2 is this note in code.</p>
+<p><img alt="Text lives inside invoices, HTML, and labels" src="files/data-641/graphics/text-sources.png" /></p>
+<hr />
+<h2>2. HTML: parse, do not regex the whole page</h2>
+<p>A typical page is a tree. The words you want sit in a few nodes. On a Stack Overflow question page, the question and the answers have their own tags and classes. Use those, then drop scripts, ads, and chrome.</p>
+<p>Do not write a general HTML parser. Use <strong>Beautiful Soup</strong> or <strong>Scrapy</strong>. They give you the tree, CSS selectors, and encoding help.</p>
+<p>What you keep depends on the job:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Keep</th>
+<th>Drop (usually)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Title, question, accepted answer</td>
+<td>Nav, footer, related-links sidebar</td>
+</tr>
+<tr>
+<td>Article body</td>
+<td>Cookie banners, share widgets</td>
+</tr>
+<tr>
+<td>User comment text</td>
+<td>Tracking pixels, JSON-LD you do not need</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Boilerplate</strong> is the repeated template around the article. If you leave it in, "Home", "Subscribe", and "Cookie policy" become high-count tokens and the model learns the site chrome, not the document.</p>
+<hr />
+<h2>3. Encoding and Unicode</h2>
+<p>Files lie about their encoding. <code>open(path)</code> with the wrong encoding turns <code>é</code> into <code>Ã©</code> or into a crash.</p>
+<p>Default to <strong>UTF-8</strong>. If a file is old Windows text, try <code>cp1252</code> or <code>latin-1</code> only after UTF-8 fails. In Python:</p>
+<pre><code class="language-python">with open(&quot;page.html&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+    raw = f.read()
+</code></pre>
+<p><strong>Unicode normalization</strong> folds characters that look the same but are stored differently (<code>é</code> as one code point vs <code>e</code> + combining accent). Emoji and other symbols are Unicode too. If you strip anything outside ASCII you delete meaning: a green heart, a warning sign, a name in another script.</p>
+<p><img alt="Unicode is more than English letters" src="files/data-641/graphics/unicode.png" /></p>
+<p>A practical rule: decode to Unicode once, normalize (NFC is the usual choice), then decide what to keep. Do not <code>.encode("ascii", "ignore")</code> unless you have a reason.</p>
+<hr />
+<h2>4. PDF and scans</h2>
+<p><strong>Digital PDFs</strong> (exported from Word or LaTeX) have a text layer. <code>pypdf</code> or PDFMiner can pull it. Columns, headers, and footnotes often come out in the wrong order. Hyphenated line breaks (<code>process-</code> / <code>ing</code>) need a join rule.</p>
+<p><strong>Scanned PDFs</strong> are pictures. You need OCR (optical character recognition). Expect errors: <code>rn</code> for <code>m</code>, lost tables, garbage near logos.</p>
+<p>Libraries are far from perfect. Some PDFs will not parse. That is a data problem, not a "you used the wrong import" problem. Print a page of raw extract and read it before you tokenize.</p>
+<hr />
+<h2>5. Spelling and system-specific junk</h2>
+<p>Spell correction is optional and it is not reliable. A dictionary checker will "fix" names and domain terms. If you build one, train it on <em>this</em> language and <em>this</em> domain, then spot-check.</p>
+<p>Other cleanup that shows up in real feeds:</p>
+<ul>
+<li>HTML entities (<code>&amp;amp;</code> → <code>&amp;</code>)</li>
+<li>soft hyphens and zero-width characters</li>
+<li>OCR letter swaps</li>
+<li>repeated whitespace and leftover markup (<code>&lt;br&gt;</code>, markdown hashes)</li>
+</ul>
+<p>Do the smallest cleanup that makes the next stage honest. Over-cleaning deletes signal (emoji in sentiment, <code>#hashtag</code> in tweets).</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>You extract a news article with Beautiful Soup and the word <code>Subscribe</code> is among the top ten tokens. What did you leave in?</p>
+</li>
+<li>
+<p>Why is <code>text.encode("ascii", "ignore").decode("ascii")</code> a bad default for tweets?</p>
+</li>
+<li>
+<p>A PDF of a two-column paper comes out as line 1 of the left column, line 1 of the right column, line 2 of the left column, … What went wrong, and what do you check before you train?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

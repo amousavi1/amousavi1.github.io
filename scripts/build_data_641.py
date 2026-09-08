@@ -10,55 +10,29 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from build_lecture_note import PRINT_CSS, SIDEBAR, markdown_to_html  # noqa: E402
+from data_641_catalog import BY_SLUG, DATA_FILES, NOTES, WEEKS  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-08T14:50:00-04:00"
-LAST_UPDATED_TEXT = "September 8, 2026, 2:50 PM EDT"
+LAST_UPDATED_ISO = "2026-09-08T18:45:00-04:00"
+LAST_UPDATED_TEXT = "September 8, 2026, 6:45 PM EDT"
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"
 COURSE_LONG = "Applied Natural Language Processing"
 FILES = ROOT / "files" / COURSE
 
-NOTES = [
-    {
-        "slug": "nlp-in-the-real-world",
-        "week": 1,
-        "title": "1.1 NLP in the Real World",
-        "lead": "What NLP is, the core tasks, and why human language is a hard input.",
-    },
-    {
-        "slug": "ml-dl-nlp-overview",
-        "week": 1,
-        "title": "1.2 Machine Learning, Deep Learning, and NLP",
-        "lead": "Rules, then learning from examples, then stacked representations.",
-    },
-    {
-        "slug": "python-tour",
-        "week": 1,
-        "title": "1.3 A Python Tour for NLP",
-        "lead": "Types, strings, containers, control flow, functions, files, NumPy, and a small class.",
-    },
-    {
-        "slug": "lab-1-numpy-nltk-files",
-        "week": 1,
-        "title": "Lab 1: NumPy, NLTK, and Files",
-        "lead": "Arrays, stemming versus lemmatization, and a movie script.",
-    },
-]
-
 
 def write_site_page(note: dict, body: str) -> pathlib.Path:
     slug = note["slug"]
     title = note["title"]
     week = note["week"]
-    slide_pdfs = {
-        "nlp-in-the-real-world": "files/data-641/slides/1.1-nlp-in-the-real-world.pdf",
-        "ml-dl-nlp-overview": "files/data-641/slides/1.2-ml-dl-nlp-overview.pdf",
-        "python-tour": "files/data-641/slides/1.3-python-tour.pdf",
-    }
-    pdf_href = slide_pdfs.get(slug, f"files/{COURSE}/{slug}.pdf")
+    slide = note.get("slide")
+    slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
+    if slide_path and slide_path.exists():
+        pdf_href = f"files/{COURSE}/slides/{slide}.pdf"
+    else:
+        pdf_href = f"files/{COURSE}/{slug}.pdf"
     page_path = ROOT / f"{COURSE}-{slug}.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
@@ -130,6 +104,144 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
 </html>
 """
     page_path.write_text(page.replace("\r\n", "\n"), encoding="utf-8", newline="\n")
+    return page_path
+
+
+def _material_item(title: str, href: str, pdf_href: str | None = None, note: str | None = None) -> str:
+    extra = ""
+    if pdf_href:
+        extra += (
+            f'<a class="course-material__pdf" href="{pdf_href}" target="_blank" rel="noopener">(PDF)</a>'
+        )
+    if note:
+        extra += f'<span class="course-material__note"> {note}</span>'
+    return f"""                                    <li>
+                                        <a class="course-material__title" href="{href}"{' target="_blank" rel="noopener"' if href.startswith("http") or href.endswith(".pdf") else ""}>{title}</a
+                                        >{extra}
+                                    </li>"""
+
+
+def write_hub() -> pathlib.Path:
+    tab_btns = []
+    panels = []
+    for week in range(1, 15):
+        selected = "true" if week == 1 else "false"
+        hidden = "" if week == 1 else " hidden"
+        tabindex = "" if week == 1 else ' tabindex="-1"'
+        tab_btns.append(
+            f"""                                <button type="button" role="tab" id="tab-week-{week}" aria-controls="week-{week}" aria-selected="{selected}"{tabindex}>
+                                    Week {week}
+                                </button>"""
+        )
+        spec = WEEKS[week]
+        chunks = []
+        lectures = spec.get("lectures") or []
+        if lectures:
+            items = []
+            for slug in lectures:
+                note = BY_SLUG[slug]
+                slide = note.get("slide")
+                slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
+                pdf = (
+                    f"files/{COURSE}/slides/{slide}.pdf"
+                    if slide_path and slide_path.exists()
+                    else f"files/{COURSE}/{slug}.pdf"
+                )
+                items.append(_material_item(note["title"], f"{COURSE}-{slug}.html", pdf))
+            chunks.append(
+                '                                <p class="course-group-title">Lectures</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(items)
+                + "\n                                </ul>"
+            )
+        labs = spec.get("labs") or []
+        if labs:
+            items = []
+            for slug, has_solutions in labs:
+                note = BY_SLUG[slug]
+                items.append(
+                    _material_item(note["title"], f"{COURSE}-{slug}.html", f"files/{COURSE}/{slug}.pdf")
+                )
+                if has_solutions:
+                    items.append(
+                        _material_item(
+                            "Lab 1 solutions",
+                            f"{COURSE}-lab-1-solutions.html",
+                            note="(password)",
+                        )
+                    )
+            chunks.append(
+                '                                <p class="course-group-title">Labs</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(items)
+                + "\n                                </ul>"
+            )
+        homework = spec.get("homework") or []
+        if homework:
+            items = []
+            for title, filename in homework:
+                href = f"files/{COURSE}/{filename}"
+                items.append(_material_item(title, href, href))
+            chunks.append(
+                '                                <p class="course-group-title">Homework</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(items)
+                + "\n                                </ul>"
+            )
+        readings = spec.get("readings") or []
+        if readings:
+            items = []
+            for title, url in readings:
+                items.append(_material_item(title, url))
+            chunks.append(
+                '                                <p class="course-group-title">Additional readings</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(items)
+                + "\n                                </ul>"
+            )
+        discussion = spec.get("discussion") or []
+        if discussion:
+            lis = "\n".join(f"                                    <li>{q}</li>" for q in discussion)
+            chunks.append(
+                '                                <p class="course-group-title">Discussion</p>\n'
+                '                                <ul class="course-discussion">\n'
+                + lis
+                + "\n                                </ul>"
+            )
+        panels.append(
+            f"""                            <div class="course-week-panel" id="week-{week}" role="tabpanel" aria-labelledby="tab-week-{week}"{hidden}>
+{chr(10).join(chunks)}
+                            </div>"""
+        )
+
+    data_lis = "\n".join(
+        f'                            <li><a href="files/{COURSE}/{name}">{name}</a></li>'
+        for name in DATA_FILES
+    )
+    page_path = ROOT / f"{COURSE}.html"
+    # Keep the existing chrome; only the weekly block is generated above.
+    existing = page_path.read_text(encoding="utf-8")
+    start = existing.index('<h2>Weekly Materials</h2>')
+    end = existing.index('<h2>Data</h2>')
+    weekly = f"""<h2>Weekly Materials</h2>
+                        <div class="course-weeks">
+                            <div class="course-week-tabs" role="tablist" aria-label="Course weeks">
+{chr(10).join(tab_btns)}
+                            </div>
+{chr(10).join(panels)}
+                        </div>
+
+                        """
+    data_block_end = existing.index('<h2>Resources</h2>')
+    data = f"""<h2>Data</h2>
+                        <p>These files can be used in any week.</p>
+                        <ul class="course-data-list">
+{data_lis}
+                        </ul>
+
+                        """
+    new = existing[:start] + weekly + data + existing[data_block_end:]
+    page_path.write_text(new.replace("\r\n", "\n"), encoding="utf-8", newline="\n")
     return page_path
 
 
@@ -288,6 +400,8 @@ def main() -> None:
         build_note(note)
     write_solutions_page()
     print("Wrote data-641-lab-1-solutions.html")
+    write_hub()
+    print("Wrote data-641.html")
 
 
 if __name__ == "__main__":

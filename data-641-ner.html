@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>11.1 Named Entity Recognition - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">11.1 Named Entity Recognition</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 11 &middot;
+                            <a href="files/data-641/ner.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Find people, places, organizations, and similar spans.
+                        </p>
+<h2>1. What NER is</h2>
+<p>A user types "Where was Albert Einstein born?" The search engine cannot answer <em>Ulm, Germany</em> unless it first sees that <strong>Albert Einstein is a person</strong>. That step is named entity recognition (NER).</p>
+<p><img alt="NER behind a search query" src="files/data-641/graphics/ner-albert.png" /></p>
+<p>NER finds <strong>spans</strong> in a document and labels each span with a type: person, location, organization, money, date, product, law, and whatever else your domain needs. It is not the same as keyword search. The string <em>Apple</em> is a company in one sentence and a fruit in another.</p>
+<hr />
+<h2>2. Why it sits in so many pipelines</h2>
+<p>NER is the IE step that later tasks wait on. Relation extraction and event extraction need entities first. Machine translation often <strong>leaves names untranslated</strong>. A chatbot fills slots from the same spans.</p>
+<p><img alt="NER spans in displaCy" src="files/data-641/graphics/ner-displacy.png" /></p>
+<p>Common textbook types:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PERSON</td>
+<td>Albert Einstein, Luca Maestri</td>
+</tr>
+<tr>
+<td>ORG</td>
+<td>Apple, the New York Times</td>
+</tr>
+<tr>
+<td>GPE / LOC</td>
+<td>Ulm, Germany, San Francisco</td>
+</tr>
+<tr>
+<td>DATE / TIME</td>
+<td>Tuesday, last year</td>
+</tr>
+<tr>
+<td>MONEY</td>
+<td>$75 billion</td>
+</tr>
+</tbody>
+</table></div>
+<p>Industry projects add types: drug names, SKUs, statute numbers, ticker symbols. The algorithm is the same idea. The label set is yours.</p>
+<hr />
+<h2>3. Gazetteers and rules</h2>
+<p>The simplest NER is a <strong>gazetteer</strong>: a list of client names, cities, and products you care about. Lookup is fast. If the list covers most of what you see, start there.</p>
+<p>Gazetteers fail on new names, on aliases (<em>USA</em> vs <em>United States</em>), and on anything not in the file. You then need a process to update the list.</p>
+<p><strong>Rule-based NER</strong> uses token and POS patterns. A pattern like <code>NNP was born</code> says the proper noun is a person. Rules are precise on the cases you wrote and silent on the rest. They also break when the wording moves.</p>
+<p>Use lists and rules as a baseline or as a fallback. Do not expect them to be the whole system once names are open-ended.</p>
+<hr />
+<h2>4. NER as sequence labeling</h2>
+<p>The practical approach is a model that, for each token, decides: is this an entity, and if so, of what type?</p>
+<p>That sounds like classification. The difference is <strong>context</strong>. A sentiment classifier can score a sentence without looking at the next one. NER cannot. If the previous token was <code>B-PERSON</code>, the current token is more likely <code>I-PERSON</code> (the last name) than a new organization.</p>
+<p>This is <strong>sequence labeling</strong>, the same family as POS tagging. Standard encodings:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>O</code></td>
+<td>Not an entity</td>
+</tr>
+<tr>
+<td><code>B-TYPE</code></td>
+<td>Beginning of a span of that type</td>
+</tr>
+<tr>
+<td><code>I-TYPE</code></td>
+<td>Inside / continuation of that span</td>
+</tr>
+</tbody>
+</table></div>
+<p>Training data is token-level. Evaluation is usually span-level F1: the whole name and the type must match.</p>
+<p>Features that used to be hand-built (shape, prefixes, surrounding POS) are now often learned by a bidirectional LSTM or a transformer. The modeling idea does not change: predict a tag path that is consistent left to right.</p>
+<hr />
+<h2>5. What this week is for</h2>
+<p>By the end of note <strong>11.1</strong> you should be able to:</p>
+<ul>
+<li>define NER and name the common entity types</li>
+<li>contrast a gazetteer, a rule list, and a sequence model</li>
+<li>explain why NER is sequence labeling and not document classification</li>
+</ul>
+<p>Note <strong>11.2</strong> is what you do <strong>after</strong> you have the spans: linking and relations.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Why does a gazetteer struggle with <em>J. K. Rowling</em> if it only stores <em>Joanne Rowling</em>?</p>
+</li>
+<li>
+<p>Tag <code>Ulm , Germany</code> with <code>B-</code> / <code>I-</code> / <code>O</code> if both tokens are a location. Then tag it if only <code>Ulm</code> is the location.</p>
+</li>
+<li>
+<p>A movie-review sentiment model ignores neighboring sentences. Why is that usually fine for sentiment and usually wrong for NER?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

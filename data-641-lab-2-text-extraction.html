@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 2: Text Extraction and Cleanup - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 2: Text Extraction and Cleanup</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot;
+                            <a href="files/data-641/lab-2-text-extraction.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Back-translation, HTML, a PDF, and a short preprocess chain.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>2.1</strong> through <strong>2.3</strong> first. You will need <code>BackTranslation</code> (or <code>googletrans</code>), <code>beautifulsoup4</code>, <code>requests</code>, a PDF library (<code>pypdf</code> or <code>pdfminer.six</code>), and <code>nltk</code>.</p>
+<p>Download <a href="files/data-641/sample.pdf">sample.pdf</a> into the same folder as the notebook (or use a relative path).</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<pre><code class="language-python">import nltk
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+nltk.download(&quot;punkt&quot;)
+nltk.download(&quot;wordnet&quot;)
+nltk.download(&quot;stopwords&quot;)
+</code></pre>
+<p>If <code>word_tokenize</code> asks for <code>punkt_tab</code>, run <code>nltk.download("punkt_tab")</code> as well.</p>
+<hr />
+<h2>1. Back translation (1 point)</h2>
+<p>Use <a href="https://pypi.org/project/BackTranslation/">BackTranslation</a> (it wraps Google Translate).</p>
+<ol>
+<li>
+<p>Pick one English sentence of your own.</p>
+</li>
+<li>
+<p>Back-translate it through at least <strong>three</strong> intermediate languages. Print the source, the intermediate text, and the English that comes back.</p>
+</li>
+<li>
+<p>Say in a short comment which language pair changed the sentence the most, and whether the label (if this were training data) would still be safe.</p>
+</li>
+</ol>
+<pre><code class="language-python"># pip install BackTranslation
+from BackTranslation import BackTranslation
+
+trans = BackTranslation(url=[&quot;translate.google.com&quot;, &quot;translate.google.gr&quot;])
+result = trans.translate(&quot;I love NLP&quot;, src=&quot;en&quot;, tmp=&quot;el&quot;)
+print(result.source_text)
+print(result.tran_text)
+print(result.result_text)
+</code></pre>
+<p><code>tmp</code> is the pivot language (Greek is <code>"el"</code>). <code>trans.searchLanguage("Greek")</code> looks up codes.</p>
+<p>Network calls can fail. If Translate rate-limits you, wait and retry, or switch the pivot. Do not paste a screenshot of someone else's output.</p>
+<hr />
+<h2>2. HTML parsing and cleanup (1 point)</h2>
+<p>Use <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a> and <code>requests</code>.</p>
+<ol>
+<li>
+<p>Open the Stack Overflow page for the question <strong>“What is the module/method used to get the current time?”</strong> Fetch the HTML. Extract the <strong>question text</strong> and the <strong>best / accepted answer</strong> text. Print both. (Find the tags/classes on that page; do not dump the whole document.)</p>
+</li>
+<li>
+<p>Download this file to your local directory and confirm it exists:</p>
+</li>
+</ol>
+<p><code>https://zoisboukouvalas.github.io/COVID19_Twitter_Dataset.xlsx</code></p>
+<p><code>requests.get</code> plus writing <code>response.content</code> is enough. Print the saved path and file size.</p>
+<p>Respect the sites: one request for the question page, one for the spreadsheet. No crawling loop.</p>
+<hr />
+<h2>3. Text from a PDF (1 point)</h2>
+<p>Open <a href="files/data-641/sample.pdf">sample.pdf</a>. Extract the plain text with <code>pypdf</code> or PDFMiner. Print the extracted string.</p>
+<p>If the extract looks broken (missing words, odd spaces), say so in a comment. That is part of the exercise.</p>
+<pre><code class="language-python">from pypdf import PdfReader
+
+reader = PdfReader(&quot;sample.pdf&quot;)
+text = &quot;&quot;.join(page.extract_text() or &quot;&quot; for page in reader.pages)
+print(text)
+</code></pre>
+<hr />
+<h2>4. Text pre-processing (2 points)</h2>
+<p>Use this corpus (copy it into the notebook):</p>
+<pre><code class="language-text">Need to finalize the demo corpus which will be used for this notebook &amp; should be done soon !!. It should be done by the ending of this month. But will it? This notebook has been run 4 times !!
+</code></pre>
+<ol>
+<li>
+<p>Lowercase the corpus.</p>
+</li>
+<li>
+<p>Remove digits, punctuation, and trailing whitespace.</p>
+</li>
+<li>
+<p>Tokenize with NLTK (or spaCy) and drop English stop words.</p>
+</li>
+<li>
+<p>Stem the remaining tokens with <code>PorterStemmer</code>. Print the list.</p>
+</li>
+<li>
+<p>Lemmatize the remaining tokens with <code>WordNetLemmatizer</code>. Print the list.</p>
+</li>
+</ol>
+<p>Stemming and lemmatization should run on the <strong>same</strong> cleaned tokens so you can compare them. <code>4</code> should be gone after step 2; <code>!!</code> should not be a token after step 3.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

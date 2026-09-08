@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>11.2 Other NER Applications - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">11.2 Other NER Applications</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 11 &middot;
+                            <a href="files/data-641/other-ner-applications.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Linking entities and extracting relations between them.
+                        </p>
+<h2>1. After you have the spans</h2>
+<p>NER says <em>Apple</em> is an organization and <em>Luca Maestri</em> is a person. That is not enough for a newsroom graphic that ties stories to <strong>real-world</strong> people and companies. You still need to know <em>which</em> Apple, and how two mentions relate.</p>
+<p>Imagine you are on the data team at a large paper. The job is to connect names in today's stories to the people and institutions they refer to, then draw the map. That job is several IE tasks stacked on NER and KPE.</p>
+<p><img alt="Entity linking in a news graph" src="files/data-641/graphics/nel-linking.png" /></p>
+<hr />
+<h2>2. Disambiguation and linking</h2>
+<p><strong>Named entity disambiguation (NED)</strong> assigns a unique identity to a mention. <em>Apple</em> in an earnings story is Apple Inc. (Q312 on Wikidata), not Apple Records and not the fruit.</p>
+<p><strong>Named entity linking (NEL)</strong> is NER plus NED: find the span, then point it at an entry in a knowledge base (Wikipedia, Wikidata, an internal client list).</p>
+<p>Question answering and knowledge-base construction need NEL. Without it you cannot join "the company said" in story A to the same company in story B.</p>
+<p>NEL wants <strong>more pre-processing than NER</strong>:</p>
+<ul>
+<li>a parse, so you know subjects, verbs, and objects</li>
+<li>coreference, so <em>the company</em> and <em>Apple</em> are one mention chain</li>
+<li>a catalog of candidate entities and their aliases</li>
+</ul>
+<p>State-of-the-art linkers are neural and hungry: large annotated sets plus an encyclopedia. In industry, many teams call a service (Watson, Azure, or similar) instead of training from scratch. Build in-house when your entities are internal and the public APIs will never have seen them.</p>
+<hr />
+<h2>3. Relation extraction</h2>
+<p>Relation extraction (RE) finds <strong>pairs of entities and the link between them</strong>. <em>Luca Maestri</em> —<code>finance_chief_of</code>→ <em>Apple</em>. That fact is what populates a knowledge base, improves search, and feeds a QA system.</p>
+<p><img alt="Relation extraction" src="files/data-641/graphics/relation-extraction.png" /></p>
+<p>Approaches, from tight to open:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>How it works</th>
+<th>Tradeoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hand-written patterns / regex</td>
+<td>High precision on the patterns you wrote</td>
+<td>Low coverage; you will not list every wording</td>
+</tr>
+<tr>
+<td>Supervised classification</td>
+<td>Labeled pairs and a fixed relation inventory</td>
+<td>Needs labeled data; closed set of relations</td>
+</tr>
+<tr>
+<td>Open IE (unsupervised)</td>
+<td>Extract triples from text with no fixed list</td>
+<td>No training set; noisier, harder to normalize</td>
+</tr>
+</tbody>
+</table></div>
+<p>The supervised setup is often <strong>two classifiers</strong> in a row:</p>
+<ol>
+<li>Are these two entities related at all? (binary)</li>
+<li>If yes, which relation? (multiclass)</li>
+</ol>
+<p>When you cannot get labels, open IE is the fallback. It reads the web (or your corpus) and emits triples in the language of the sentence, not in a schema you designed.</p>
+<hr />
+<h2>4. Event and time, briefly</h2>
+<p>Two neighbors of RE show up in the same projects.</p>
+<p><strong>Event extraction</strong> asks whether a document (or a sentence) reports an event of a known type—a buyback, a merger, a storm landfall—and who the participants are. It is RE plus a trigger (<em>announced</em>, <em>acquired</em>) and often a time.</p>
+<p><strong>Temporal IE</strong> pulls dates and relative expressions (<em>last year</em>, <em>Tuesday</em>) into a calendar. News and disaster bots need it; a static gazetteer of names does not.</p>
+<p>You will not implement these this week. Know they sit <strong>above</strong> NER and linking. If the spans are wrong, the event is wrong.</p>
+<hr />
+<h2>5. What to ship</h2>
+<p>Do not start by training a linker and a relation model. Start from the question the product must answer.</p>
+<ul>
+<li>If you only need names on a page, stop at NER.</li>
+<li>If you need to merge stories about the same company, you need NEL.</li>
+<li>If you need "who works for whom," you need RE on top of both.</li>
+</ul>
+<p>Each layer multiplies annotation cost and pre-processing risk. Off-the-shelf APIs are a reasonable first system. Replace a piece when the API is wrong on <strong>your</strong> entities, not because a paper beat it on a shared benchmark.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>NER tags two mentions of <em>Washington</em>. What extra information does NEL need that NER does not have?</p>
+</li>
+<li>
+<p>Write one sentence that contains two entities and a relation. Name the relation in <code>entity1 —rel→ entity2</code> form.</p>
+</li>
+<li>
+<p>When would you pick open IE over a supervised relation classifier?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

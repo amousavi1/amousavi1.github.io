@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.1 LDA Topic Modeling - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.1 LDA Topic Modeling</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 14 &middot;
+                            <a href="files/data-641/lda-topic-modeling.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            A probabilistic mixture of topics for each document.
+                        </p>
+<h2>1. A generative story, not only a factorization</h2>
+<p>Week 13 factored the document-term matrix with SVD (and previewed NMF). <strong>Latent Dirichlet allocation</strong> (LDA) is a different object: a <strong>generative statistical model</strong>.</p>
+<p>The story:</p>
+<ul>
+<li>A document is a <strong>mixture of topics</strong>, not a single label.</li>
+<li>A topic is a distribution over words.</li>
+<li>Most documents use only a few topics, and most words in a topic are rare. <strong>Sparse Dirichlet priors</strong> encode that. The point is interpretability: a news piece is "mostly markets, a little politics," not a uniform smear over 50 themes.</li>
+</ul>
+<p>You still pick the number of topics (k). LDA does not discover (k) for you.</p>
+<hr />
+<h2>2. Two matrices you will print</h2>
+<p>LDA is often drawn as a factorization of a (normalized) term–document matrix ({\bf C} \approx {\bf \Phi}\,{\bf \Theta}).</p>
+<p><img alt="LDA factors" src="files/data-641/graphics/lda.png" /></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Matrix</th>
+<th>Axes</th>
+<th>Entry</th>
+<th>Words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>({\bf \Phi})</td>
+<td>words × topics</td>
+<td>(\phi_{ij} = P(w_i \mid z_j))</td>
+<td>How likely is this word under this topic</td>
+</tr>
+<tr>
+<td>({\bf \Theta})</td>
+<td>topics × documents</td>
+<td>(\theta_{ij} = P(z_i \mid d_j))</td>
+<td>How much of this document is this topic</td>
+</tr>
+</tbody>
+</table></div>
+<p>To label a topic, sort a column of ({\bf \Phi}) and read the top words. To label a document, sort a column of ({\bf \Theta}).</p>
+<p>Those probabilities are why LDA topics are easier to show a client than SVD factors with minus signs.</p>
+<hr />
+<h2>3. How the algorithm runs</h2>
+<p><strong>Input.</strong> A bag-of-words corpus and a number of topics (k).</p>
+<p><strong>Initialize.</strong> Random (or mildly informed) ({\bf \Theta}) and ({\bf \Phi}).</p>
+<p><strong>Iterate.</strong> For each word token in each document, resample its topic using the current document–topic and topic–word estimates. This is the inference loop (collapsed Gibbs, variational Bayes, or a library default). Repeat until the assignments stop moving much.</p>
+<p><strong>Output.</strong></p>
+<ul>
+<li>a topic for every token, hence a topic mix per document</li>
+<li>a word distribution per topic</li>
+</ul>
+<p>You never see the "true" topics. You see the estimates that best explain the counts under the model.</p>
+<hr />
+<h2>4. When LDA is the right tool</h2>
+<p><strong>Use it</strong> when you want readable word lists, you have no document labels, and you want a mix (not a hard cluster) per document. It works across domains and languages if you preprocess honestly. You can run it on successive months and watch a topic's mass move. The (k)-dimensional (\theta) is a usable feature for later classification.</p>
+<p><strong>Watch out.</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Choosing (k)</td>
+<td>Try several; use coherence (note <strong>14.3</strong>), not only likelihood</td>
+</tr>
+<tr>
+<td>Topics are static</td>
+<td>A single LDA does not model drift; run it on windows</td>
+</tr>
+<tr>
+<td>Bag of words</td>
+<td>Word order is gone. <em>Not happy</em> ≈ <em>happy</em></td>
+</tr>
+<tr>
+<td>Sparse (\Phi) on huge vocabularies</td>
+<td>Aggressive stop lists and min-count cutoffs</td>
+</tr>
+<tr>
+<td>Flat model</td>
+<td>No natural hierarchy (sports → baseball)</td>
+</tr>
+<tr>
+<td>Preprocessing</td>
+<td>Tokenization and stops change the topics more than the optimizer does</td>
+</tr>
+<tr>
+<td>Priors</td>
+<td>(\alpha) (document–topic) and (\beta) (topic–word) need a sweep</td>
+</tr>
+</tbody>
+</table></div>
+<p>Libraries (<code>gensim</code>, scikit-learn) hide the sampler. They do not hide the need to read the top words.</p>
+<p>A first lab recipe: 10–20 topics, default priors, print 10 words per topic, drop obvious junk, rerun. Then change (k). Do not start by sweeping five knobs at once.</p>
+<p>LDA on raw HTML or on a corpus that still contains "click here" will discover a "navigation" topic. That is a cleanup miss, not a reason to drop LDA.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>A document has (\theta = (0.7, 0.2, 0.1)). What does that say, and why is that richer than assigning the document to topic 1 only?</p>
+</li>
+<li>
+<p>Why does a sparse Dirichlet prior help a human who has to name the topics?</p>
+</li>
+<li>
+<p>You stem aggressively and drop a custom stop list. The topics look worse. Is that an LDA bug? What do you change first?</p>
+</li>
+</ol>
+<p>Change the tokens before you change the sampler. LDA cannot undo a bad vocabulary.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

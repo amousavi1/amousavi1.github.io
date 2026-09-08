@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.2 Basic Components of a Chatbot - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.2 Basic Components of a Chatbot</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 12 &middot;
+                            <a href="files/data-641/chatbot-components.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            NLU, dialogue state, and how a reply is chosen.
+                        </p>
+<h2>1. A pipeline, not a single model</h2>
+<p>Weeks 6–11 gave you classification and entity detection. A dialog system <strong>uses both</strong>, plus a piece that decides what to say next.</p>
+<p><img alt="Dialog-system pipeline" src="files/data-641/graphics/chatbot-pipeline.png" /></p>
+<p>Four blocks, in order:</p>
+<p><strong>Speech recognition.</strong> If the channel is voice, turn audio into text. Production systems use a strong speech-to-text model. Text chat skips this block.</p>
+<p><strong>Natural language understanding (NLU).</strong> Analyze the transcript: intent, entities, sentiment, coreference. This is the NLP you already know, aimed at one utterance in a conversation.</p>
+<p><strong>Dialog and task manager.</strong> Decide what matters, what is still missing, and which action to take. This module <strong>owns the flow</strong>. It is not a classifier.</p>
+<p><strong>Natural language generation (NLG).</strong> Turn that decision into words. Templates are common. A learned generator is possible if you have the data and can live with the risk.</p>
+<hr />
+<h2>2. Why the manager is the product</h2>
+<p>NLU can be swapped. The manager is where the business rules live.</p>
+<p>A pizza bot that understands <em>large</em> and <em>pepperoni</em> but forgets them on the next turn is a failed product. The manager stores the order, asks for the missing slot, and only then calls payment.</p>
+<p>When something goes wrong in production, ask which block failed. Wrong transcript is speech. Wrong intent is NLU. Asking for toppings twice is the manager. A grammatically pretty but useless reply is NLG.</p>
+<hr />
+<h2>3. The vocabulary</h2>
+<p>People who build bots share a small ontology.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dialog act / <strong>intent</strong></td>
+<td>What the user is trying to do on this turn (<code>order_pizza</code>, <code>yes_no_question</code>)</td>
+</tr>
+<tr>
+<td><strong>Slot</strong></td>
+<td>A typed hole attached to that intent (<code>size</code>, <code>topping</code>, <code>address</code>)</td>
+</tr>
+<tr>
+<td><strong>Value</strong></td>
+<td>What filled the slot in the utterance (<code>large</code>, <code>pepperoni</code>)</td>
+</tr>
+<tr>
+<td>Entity</td>
+<td>Often the slot–value pair taken together</td>
+</tr>
+<tr>
+<td><strong>Dialog state</strong></td>
+<td>Current intent plus the slot–value map</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>The state plus history: earlier states, not only this turn</td>
+</tr>
+</tbody>
+</table></div>
+<p>Sentiment and other labels are sometimes hung on the intent. The intent is still the primary descriptor in classical systems.</p>
+<p><img alt="Intent and slots for a pizza order" src="files/data-641/graphics/chatbot-pizza.png" /></p>
+<p>Read a pizza turn as: intent <code>order_pizza</code>, slots <code>size=large</code>, <code>topping=pepperoni</code>. The next turn may add <code>address</code> without repeating the toppings. That only works if the state persists.</p>
+<hr />
+<h2>4. Templates vs generators</h2>
+<p>NLG has two honest designs.</p>
+<p><strong>Templates.</strong> "I have a {size} pizza with {toppings}. Is that all?" Safe, testable, on-brand. Use this for anything that can charge a card or give medical or legal information.</p>
+<p><strong>Learned generation.</strong> A model maps dialog state to a sentence. More fluent. Harder to constrain. Fine for chitchat; risky for goal-oriented flows unless you add a filter.</p>
+<p>Most industry stacks are template NLG plus a learned NLU. That split is a feature.</p>
+<hr />
+<h2>5. What this week is for</h2>
+<p>By the end of note <strong>12.2</strong> you should be able to:</p>
+<ul>
+<li>name the four pipeline blocks and what each one owns</li>
+<li>define intent, slot, value, and dialog state</li>
+<li>say why a correct NLU and a broken manager still fail the user</li>
+</ul>
+<p>Note <strong>12.3</strong> zooms in on intent classification, slot filling, and how responses are chosen.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>A user says "the same as last time, but no olives." Which pipeline block has to remember "last time"?</p>
+</li>
+<li>
+<p>Write intent, slots, and values for "Book me a table for two at 7 at Luigi's."</p>
+</li>
+<li>
+<p>Why might you keep template NLG even after you replace NLU with a large language model?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

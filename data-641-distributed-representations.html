@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.2 Distributed Representations - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.2 Distributed Representations</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 5 &middot;
+                            <a href="files/data-641/distributed-representations.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Similar words share dimensions instead of a single one-hot slot.
+                        </p>
+<h2>1. Why Week 4 is not enough</h2>
+<p>Basic vectorization (one-hot, BoW, n-grams, TF–IDF) shares three failures:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>What it means in a project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discrete / atomic</td>
+<td><em>film</em> and <em>movie</em> are unrelated coordinates</td>
+</tr>
+<tr>
+<td>Sparse, high-dimensional</td>
+<td>Most of the vector is zero; learning and storage suffer</td>
+</tr>
+<tr>
+<td>OOV</td>
+<td>A new word has no column (fastText is a later exception)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Distributed representations</strong> are the response: short, dense vectors whose directions encode meaning. Word2Vec (notes <strong>5.3–5.5</strong>) is the method this course uses first.</p>
+<p>Sources: <em>Practical Natural Language Processing</em> and Lane, Howard, Hapke, <em>Natural Language Processing in Action</em>.</p>
+<hr />
+<h2>2. Three terms people mix up</h2>
+<p><strong>Distributional</strong> and <strong>distributed</strong> are not the same word.</p>
+<p>A <strong>distributional</strong> representation comes from how a word is <strong>used</strong>. You look at the contexts it appears in. The raw object can still be huge: a row of a co-occurrence matrix, or a one-hot. Harris’s idea, in slogan form: words that occur in similar contexts mean similar things.</p>
+<p>Example corpus: <code>I like deep learning. I like NLP. I enjoy flying.</code> A windowed co-occurrence matrix counts how often two words share a neighborhood:</p>
+<p><img alt="A toy co-occurrence matrix" src="files/data-641/graphics/co-occurrence.png" /></p>
+<p>Each row is still high-dimensional and still mostly about counts.</p>
+<p>A <strong>distributed</strong> representation <strong>compresses</strong> that. The vector is low-dimensional (50–300 is typical) and <strong>dense</strong> (almost no zeros). Meaning is spread across the coordinates. No single index “is” the word <em>dog</em>.</p>
+<p>An <strong>embedding</strong> is the map from the distributional space (or from word ids) into that dense space. “We trained embeddings” means: we learned that map.</p>
+<hr />
+<h2>3. What the geometry is for</h2>
+<p>If the map is good, <strong>distance and direction mean something</strong>.</p>
+<p>Mikolov et al. showed that Word2Vec vectors support analogies:</p>
+<p>[
+\overrightarrow{\text{king}} - \overrightarrow{\text{man}} + \overrightarrow{\text{woman}} \approx \overrightarrow{\text{queen}}
+]</p>
+<p>The same kind of offset shows up for gender, verb tense, and country–capital pairs:</p>
+<p><img alt="Regular offsets in embedding space" src="files/data-641/graphics/wordsimilarities.png" /></p>
+<p>You are not memorizing the picture. You are taking the claim: a useful embedding turns a linguistic relation into a <strong>vector offset</strong> you can add.</p>
+<p>Nearest neighbors of a word (cosine) become a debug tool. If <em>Paris</em> sits next to <em>France</em> and <em>Berlin</em>, the space learned something. If <em>Paris</em> sits next to random tokens, training failed or the corpus is wrong.</p>
+<hr />
+<h2>4. How this is learned, in one paragraph</h2>
+<p>You do <strong>not</strong> build the huge co-occurrence matrix and then factor it (that is a different family: LSA, GloVe). Word2Vec trains a <strong>small two-layer net</strong> on a fake task: predict a word from its neighbors, or the neighbors from a word. After training you <strong>throw away the softmax</strong> and keep the hidden-layer weights. Those rows are the embeddings.</p>
+<p>CBOW (note <strong>5.3</strong>) predicts the center from the context. Skip-gram (note <strong>5.4</strong>) predicts the context from the center. The practical tricks that make either one scale are note <strong>5.5</strong>.</p>
+<hr />
+<h2>5. What you should walk away with</h2>
+<ul>
+<li>Distributional = from context. Distributed = dense and compressed.</li>
+<li>Embeddings are a learned map into the dense space.</li>
+<li>Cosine in that space is the default similarity.</li>
+<li>Week 4 vectors cannot do <em>king − man + woman</em>. These can, when training worked.</li>
+</ul>
+<p><strong>What you will type.</strong> In gensim, <code>model.wv.most_similar("king")</code> and <code>model.wv.most_similar(positive=["king", "woman"], negative=["man"])</code> are the two checks. If the first list is junk, do not bother with the analogy. Bad neighbors mean a bad corpus, a too-small window, or too few epochs—not a bad formula.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>In one sentence each, distinguish distributional representation, distributed representation, and embedding.</p>
+</li>
+<li>
+<p>Why is a 300-dimensional Word2Vec vector less prone to the sparsity problem than a 50,000-dimensional TF–IDF vector?</p>
+</li>
+<li>
+<p>You compute (\overrightarrow{\text{Paris}} - \overrightarrow{\text{France}} + \overrightarrow{\text{Italy}}) and the nearest word is <em>Rome</em>. What did the model learn?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.3 Bag of Words - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.3 Bag of Words</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 4 &middot;
+                            <a href="files/data-641/bow.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Count tokens and ignore order.
+                        </p>
+<h2>1. Count the words, drop the order</h2>
+<p><strong>Bag of words (BoW)</strong> is the workhorse representation for classical text classification. You treat the document as a <strong>collection</strong> of tokens. Order and syntax go away. What remains is “which words appeared, and how often.”</p>
+<p>The intuition: a class (spam, sports, negative review) has a characteristic vocabulary. If you count those words, a linear model can often find the class.</p>
+<p>Same toy corpus as notes <strong>4.1–4.2</strong>:</p>
+<p><img alt="Four-document toy corpus" src="files/data-641/graphics/vectorize.png" /></p>
+<p>Ids: dog = 1, bites = 2, man = 3, meat = 4, food = 5, eats = 6.</p>
+<p>Each document becomes one vector of length (|V|). Entry (i) is the number of times word (i) occurs.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Doc</th>
+<th>Text</th>
+<th>BoW</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(D_1)</td>
+<td>dog bites man</td>
+<td><code>[1 1 1 0 0 0]</code></td>
+</tr>
+<tr>
+<td>(D_2)</td>
+<td>man bites dog</td>
+<td><code>[1 1 1 0 0 0]</code></td>
+</tr>
+<tr>
+<td>(D_3)</td>
+<td>dog eats meat</td>
+<td><code>[1 0 0 1 0 1]</code></td>
+</tr>
+<tr>
+<td>(D_4)</td>
+<td>man eats food</td>
+<td><code>[0 0 1 0 1 1]</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>(D_1) and (D_2) are <strong>identical</strong>. The bite went the other way. BoW cannot see that.</p>
+<hr />
+<h2>2. Why people keep using it</h2>
+<p>It is simple. It gives a <strong>fixed-length</strong> vector for a sentence of any length. That is the main upgrade from one-hot sequences.</p>
+<p>Documents that share vocabulary land near each other. Euclidean distance (D_1) to (D_2) is 0. Distance (D_1) to (D_4) is 2. The space is a crude semantic map: similar word sets, similar vectors.</p>
+<p>For topic or spam, “crude” is often enough. A logistic regression or linear SVM on BoW (or TF–IDF, note <strong>4.5</strong>) is still a strong baseline. Build it before you reach for a network.</p>
+<p>In code you will use <code>sklearn.feature_extraction.text.CountVectorizer</code>. Fit on the training corpus only. Transform the test set with the same vocabulary.</p>
+<hr />
+<h2>3. What it cannot do</h2>
+<p><strong>Sparsity grows with (|V|).</strong> A news crawl has hundreds of thousands of types. Most entries in any one document vector are zero. A common fix is to keep only the (n) most frequent words, or words above a document-frequency cutoff.</p>
+<p><strong>No notion of synonymy.</strong> “I run”, “I ran”, and “I ate” are equally far apart. <em>run</em> and <em>ran</em> do not share a coordinate.</p>
+<p><strong>OOV.</strong> A word that never appeared in the training corpus has no column. The vectorizer drops it or maps it to an unknown bucket if you built one. The default is to drop it.</p>
+<p><strong>Order is gone.</strong> That is the name. (D_1) and (D_2) collapse. Negation (“not good”) is easy to miss if <em>not</em> and <em>good</em> are just two counts.</p>
+<hr />
+<h2>4. Practical knobs</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lowercase, strip punctuation</td>
+<td>Same token, one column</td>
+</tr>
+<tr>
+<td>Stop-word list</td>
+<td>Drops <em>the</em>, <em>a</em>, <em>of</em></td>
+</tr>
+<tr>
+<td><code>min_df</code> / <code>max_df</code></td>
+<td>Drops rare noise and corpus-wide glue words</td>
+</tr>
+<tr>
+<td><code>max_features</code></td>
+<td>Hard cap on (</td>
+</tr>
+<tr>
+<td>Binary BoW</td>
+<td>1 if present, ignore count</td>
+</tr>
+</tbody>
+</table></div>
+<p>Binary BoW is enough when presence matters more than frequency (short tweets, many function words already removed).</p>
+<p>None of these knobs restore word order. That is note <strong>4.4</strong>.</p>
+<p><strong>Lab habit.</strong> Fit the vectorizer on the training documents only, then <code>transform</code> the validation and test sets. If you <code>fit</code> on everything, rare test words leak into the vocabulary and your score is a lie. The same rule applies to TF–IDF in note <strong>4.5</strong>.</p>
+<p>A sanity check on the toy set: after <code>CountVectorizer</code>, (D_1) and (D_2) must be the same row. If they are not, you accidentally kept order (you built n-grams or you tokenized the two sentences differently).</p>
+<hr />
+<h2>5. Cosine on the toy set</h2>
+<p>(D_1 = D_2 = [1,1,1,0,0,0]). Cosine is 1. (D_3 = [1,0,0,1,0,1]) shares only <em>dog</em> with (D_1). The two vectors are not opposites; they just overlap in one coordinate. That is all BoW “semantics” is: shared types.</p>
+<p>If you L2-normalize each row, Euclidean nearest neighbors and cosine nearest neighbors agree. Many sklearn pipelines do that normalize without saying so. Know whether you turned it on.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Write the BoW vector for “dog bites dog” with the id table above.</p>
+</li>
+<li>
+<p>A reviewer writes “not good.” Another writes “good.” Why might a unigram bag confuse a sentiment model?</p>
+</li>
+<li>
+<p>You have 50,000 training documents and a vocabulary of 200,000 types. Name two CountVectorizer settings you would change before fitting a linear classifier.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.5 Machine Translation - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.5 Machine Translation</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 14 &middot;
+                            <a href="files/data-641/machine-translation.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Map a sentence in one language to a sentence in another.
+                        </p>
+<h2>1. The original NLP problem</h2>
+<p><strong>Machine translation</strong> (MT) is automatic translation from one language to another. It is one of the oldest research problems in the field. The methods changed. The job did not: map a string in language (L_1) to a string in (L_2) that a reader of (L_2) can use.</p>
+<p>You will almost never train a production MT system from scratch in this course. You will decide <strong>when to call one</strong>, and how to live with its errors.</p>
+<hr />
+<h2>2. Three eras</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Era</th>
+<th>How it worked</th>
+<th>What it needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rule-based</td>
+<td>Grammars and dictionaries written by linguists</td>
+<td>Expert time; brittle outside the grammar</td>
+</tr>
+<tr>
+<td>Statistical</td>
+<td>Phrase tables and language models from <strong>parallel</strong> text</td>
+<td>Huge aligned corpora (Europarl and friends)</td>
+</tr>
+<tr>
+<td>Neural</td>
+<td>Encoder–decoder (and now transformers); the current default</td>
+<td>Even more data and compute; Google Translate is the public example</td>
+</tr>
+</tbody>
+</table></div>
+<p>Neural MT is state of the art in research and in the APIs you will call. Training one for a new pair is a large-organization project. That is a resource fact, not a value judgment.</p>
+<hr />
+<h2>3. Where industry uses MT without being "a translation company"</h2>
+<p>Two patterns from the lecture:</p>
+<p><strong>Normalize into one language, then run the rest of the stack.</strong> Reviews arrive in many languages. You want sentiment. Either you find a sentiment model per language, or you translate into one language and reuse the analyzer you already trust. The second path is often faster. It also inherits every MT mistake into the sentiment score.</p>
+<p><strong>Treat messy text as a translation problem.</strong> <code>am gud</code> → <code>I am good</code> is informal-to-standard English. If you have pairs, an MT-style model is a reasonable rewriter. This is not "translation" in the passport sense. It is the same machinery.</p>
+<p>Other quiet uses: support tickets, product listings, and search queries that you want in the language of your index.</p>
+<hr />
+<h2>4. Practical advice</h2>
+<p><strong>Call an API first.</strong> Building your own neural MT is rarely the bottleneck you think it is. Read the price sheet. Cache.</p>
+<p><strong>Keep a translation memory.</strong> Repeated strings (UI labels, boilerplate, frequent product names) should hit a store, not the API. Cheaper, more consistent, easier to correct by hand.</p>
+<p><strong>New language or a narrow domain.</strong> If the API is weak:</p>
+<ul>
+<li>a small rule layer for the phrases you must get right (drug names, legal formulae)</li>
+<li><strong>back-translation</strong> to grow training data when you do train</li>
+<li>a <strong>hybrid</strong>: neural output plus rules and a post-edit filter when a wrong word is costly</li>
+</ul>
+<p><strong>Evaluation is its own field.</strong> BLEU and later metrics, human adequacy/fluency, dedicated conferences. If translation <strong>is</strong> the product, learn that literature. If translation is a preprocessor, measure the <strong>downstream</strong> task (sentiment F1, search NDCG), not only BLEU.</p>
+<p><strong>Names and codes.</strong> NER (Week 11) is useful here: lock person and product names so the MT system copies them. A translated drug name or a mangled SKU is worse than an awkward verb.</p>
+<p><strong>Do not chain blindly.</strong> Translate-then-classify is convenient. It also hides the language the user wrote. Keep the source text. When the downstream model is wrong, you need to know whether MT or the classifier failed.</p>
+<hr />
+<h2>5. What this note is for</h2>
+<p>You should be able to:</p>
+<ul>
+<li>place a system in the rule / statistical / neural timeline</li>
+<li>name two industry uses that are not "we are a translation company"</li>
+<li>choose API + memory over training, and say when a hybrid is worth it</li>
+</ul>
+<hr />
+<h2>6. The limit you should say out loud</h2>
+<p>Umberto Eco: "Translation is the art of failure." A model can be useful and still miss tone, idiom, and what the author left unsaid. Do not promise a perfect bilingual record. Promise a usable draft plus a place where a human can fix the lines that matter.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>You have a strong English sentiment model and reviews in six languages. Sketch the pipeline, and name one way MT error becomes a sentiment error.</p>
+</li>
+<li>
+<p>Why cache translations of a "Add to cart" button but not of a one-off tweet?</p>
+</li>
+<li>
+<p>When would you add a rule on top of a neural API instead of fine-tuning?</p>
+</li>
+</ol>
+<p>Fine-tuning is for a domain you will stay in. A dozen locked strings are a rule file, not a training run.</p>
+<p>If the client is a language-service company, this note is only the map. Their stack will be deeper than an API plus a cache.</p>
+<p>For everyone else, the win is usually "good enough translation in the pipeline," not a new MT paper.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.4 Bag of N-Grams - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.4 Bag of N-Grams</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 4 &middot;
+                            <a href="files/data-641/bonw.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Counts of short phrases keep a little local order.
+                        </p>
+<h2>1. Keep a little word order</h2>
+<p>One-hot and bag of words treat each token as an island. There is no phrase, and (in BoW) no order. <strong>Bag of n-grams (BoN)</strong> is the cheap fix: count <strong>contiguous chunks</strong> of (n) tokens instead of, or in addition to, single words.</p>
+<p>An n-gram is that chunk. Unigrams are (n=1) (ordinary BoW). Bigrams are (n=2). Trigrams are (n=3). The vocabulary (V) is now the set of <strong>distinct n-grams</strong> in the training corpus. Each document is a count vector of length (|V|).</p>
+<p>Same four documents:</p>
+<p><img alt="Four-document toy corpus" src="files/data-641/graphics/vectorize.png" /></p>
+<p>Bigrams in this corpus:</p>
+<p><code>{dog bites, bites man, man bites, bites dog, dog eats, eats meat, man eats, eats food}</code></p>
+<p>Eight columns. (D_1) and (D_2) finally split:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Doc</th>
+<th>Bigrams</th>
+<th>Vector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(D_1)</td>
+<td>dog bites, bites man</td>
+<td><code>[1 1 0 0 0 0 0 0]</code></td>
+</tr>
+<tr>
+<td>(D_2)</td>
+<td>man bites, bites dog</td>
+<td><code>[0 0 1 1 0 0 0 0]</code></td>
+</tr>
+<tr>
+<td>(D_3)</td>
+<td>dog eats, eats meat</td>
+<td><code>[0 0 0 0 1 1 0 0]</code></td>
+</tr>
+<tr>
+<td>(D_4)</td>
+<td>man eats, eats food</td>
+<td><code>[0 0 0 0 0 0 1 1]</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>“Dog bites man” and “man bites dog” are no longer the same point. That is the whole point of the note.</p>
+<p>In the literature this is also called <strong>n-gram feature selection</strong>.</p>
+<hr />
+<h2>2. What you gain</h2>
+<p>You buy a slice of <strong>context</strong>. <em>not good</em> is one feature, not two independent counts. <em>New York</em> is one unit. <em>bites man</em> is not <em>man bites</em>.</p>
+<p>Documents that share n-grams sit closer in Euclidean space than documents that only share unigrams by accident. The vector space is still sparse and discrete, but it is less blind to local syntax.</p>
+<p>In sklearn you do not write a new class. <code>CountVectorizer(ngram_range=(1, 2))</code> stacks unigrams and bigrams. That mix is the usual production setting: keep the word <em>good</em> and the phrase <em>not good</em>.</p>
+<hr />
+<h2>3. What it costs</h2>
+<p><strong>Dimension explodes.</strong> A vocabulary of 20,000 unigrams can yield hundreds of thousands of bigrams. Most never repeat. Sparsity gets worse, not better. Larger (n) means more context and a thinner matrix.</p>
+<p><strong>OOV is still there.</strong> A new word, or a new pair of known words in a new order, has no column. BoN does not invent features at test time.</p>
+<p><strong>Long-range order is still gone.</strong> A window of 2 or 3 will not tell you that <em>shone</em> at the end of a sentence refers to <em>hull</em> at the start. That is a job for later models (CNNs, RNNs, transformers).</p>
+<hr />
+<h2>4. How to choose (n)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Choice</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unigrams only</td>
+<td>Strong word-level signal, tiny data</td>
+</tr>
+<tr>
+<td><code>(1, 2)</code></td>
+<td>Default for sentiment, spam, topic</td>
+</tr>
+<tr>
+<td><code>(1, 3)</code></td>
+<td>Phrases matter and you have enough documents to fill the counts</td>
+</tr>
+<tr>
+<td>(n \ge 4)</td>
+<td>Rarely. Most 4-grams appear once.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Always cap features (<code>max_features</code>) or demand a minimum document frequency. A 4-gram that appears in one training email is a name, not a pattern.</p>
+<p>Note <strong>4.5</strong> keeps these discrete features but <strong>reweights</strong> them so common words do not dominate.</p>
+<p><strong>A negation example.</strong> Unigrams for “not good” are <code>{not, good}</code>. A linear model can assign <em>good</em> a positive weight and lose the review. The bigram <code>not good</code> is its own column. That is why sentiment labs almost always set <code>ngram_range=(1, 2)</code> before they try a neural net.</p>
+<p>Character n-grams (<code>analyzer="char"</code>) are a different tool: they help with typos and morphology (<em>run</em> / <em>running</em>). This note is <strong>word</strong> n-grams. Do not mix the two in your head; mix them in a vectorizer only if you have measured a gain.</p>
+<hr />
+<h2>5. What to report in a lab</h2>
+<p>When you add bigrams, say three numbers: vocabulary size, non-zero features per document, and validation F1 versus unigrams-only. If (|V|) grew by 10(\times) and F1 did not move, you paid sparsity for nothing. Drop <code>min_df</code> up until the F1 holds. That is n-gram feature selection as an experiment, not as a slogan.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>List the bigrams in “man eats meat” using the toy vocabulary. Which of them are already in the eight-gram set above, and which are new (OOV)?</p>
+</li>
+<li>
+<p>Why is <code>ngram_range=(1, 2)</code> usually safer than bigrams alone?</p>
+</li>
+<li>
+<p>You raise (n) from 2 to 5 on a corpus of 1,000 tweets. What happens to sparsity, and why is that a problem for a linear model?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

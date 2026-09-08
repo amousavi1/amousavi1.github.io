@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.2 RNNs for Text Classification - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.2 RNNs for Text Classification</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 8 &middot;
+                            <a href="files/data-641/rnns-classification.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Use the last state, or a bidirectional read, as the document vector.
+                        </p>
+<h2>1. Read the text, take a state</h2>
+<p>An RNN (note <strong>8.1</strong>) produces a state after every token. For <strong>document classification</strong> you need one vector per document.</p>
+<p>The simplest rule: use the <strong>last</strong> state. Only (\mathbf{h}_T) has seen every token (in a left-to-right net). Feed (\mathbf{h}_T) to a dense layer and a softmax.</p>
+<p><img alt="Last state as the document vector" src="files/data-641/graphics/rnn_final_state.png" /></p>
+<p>That is a one-layer unidirectional RNN classifier. It is the diagram to start from. Everything else this note adds is a fix for what that last state <strong>forgets</strong>.</p>
+<p>Sources: <em>Practical Natural Language Processing</em>, <em>Natural Language Processing in Action</em>, Voita.</p>
+<hr />
+<h2>2. Stack layers</h2>
+<p>One layer tends to pick up <strong>local</strong> regularities (short phrases). A second layer reads the first layer’s states as its input sequence. The hope: higher layers see <strong>topic</strong> and long-range tone.</p>
+<p><img alt="Stacked RNNs: each layer reads the states below" src="files/data-641/graphics/multi_layer.png" /></p>
+<p>States of layer (\ell) become the sequence for layer (\ell+1). You still take the <strong>last</strong> state of the <strong>top</strong> layer (or pool the top sequence) as the document vector.</p>
+<p>Two or three layers is the usual range. More layers without residual connections are hard to train and easy to overfit on a course-sized data set.</p>
+<hr />
+<h2>3. Bidirectional: both ends of the sentence</h2>
+<p>The last forward state remembers the <strong>end</strong> of the text better than the start. Even LSTMs drop early tokens on a long review. That is a problem if the sentiment word was in sentence one.</p>
+<p>A <strong>backward</strong> RNN reads right to left. Its last state (the leftmost token, in time) remembers the <strong>beginning</strong>. Concatenate (or add) the two finals. One vector saw the tail; the other saw the head.</p>
+<p><img alt="Forward and backward finals concatenated" src="files/data-641/graphics/bidirectional.png" /></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Document vector</th>
+<th>What it fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Last state</td>
+<td>(\mathbf{h}_T)</td>
+<td>Simplest; forgets the start</td>
+</tr>
+<tr>
+<td>Mean / max over (\mathbf{h}_t)</td>
+<td>pool all steps</td>
+<td>Less dependence on the last token</td>
+</tr>
+<tr>
+<td>Stacked</td>
+<td>last (or pooled) top state</td>
+<td>Deeper features</td>
+</tr>
+<tr>
+<td>Bidirectional</td>
+<td>([\overrightarrow{\mathbf{h}}_T; \overleftarrow{\mathbf{h}}_1])</td>
+<td>Start and end both represented</td>
+</tr>
+</tbody>
+</table></div>
+<p>“Or something else—it’s your choice” is the lecture line. Concatenate is the default in Keras (<code>Bidirectional</code> wraps the cell and concatenates).</p>
+<hr />
+<h2>4. How to choose, applied</h2>
+<ul>
+<li><strong>Short tweets, lots of data:</strong> last-state LSTM or the multi-kernel CNN from note <strong>7.3</strong>. Try both.</li>
+<li><strong>Long reviews, cue at the front:</strong> bidirectional. Unidirectional last-state will look worse than it “should.”</li>
+<li><strong>Tiny labeled set:</strong> TF–IDF + linear SVM (note <strong>6.2</strong>) still first.</li>
+</ul>
+<p>Evaluation does not change. Use F1 and a proper split. An RNN can overfit a small train set while the SVM does not.</p>
+<p>Do not leak: tokenize and pad <strong>after</strong> the split; the vocabulary and any pretrained embeddings are allowed to come from unlabeled text, not from test labels.</p>
+<hr />
+<h2>5. What you should be able to draw</h2>
+<p>Three boxes:</p>
+<ol>
+<li>embeddings in</li>
+<li>a loop (one layer, stacked, or bidirectional)</li>
+<li>a vector → dense → classes</li>
+</ol>
+<p>If you can mark <strong>which</strong> state becomes that vector, you have this week.</p>
+<p><strong>Keras names.</strong> <code>LSTM(128)</code> then a <code>Dense</code> is last-state classification (<code>return_sequences=False</code>). <code>return_sequences=True</code> plus another <code>LSTM</code> is stacking. <code>Bidirectional(LSTM(128))</code> concatenates the two finals. Read the <code>return_sequences</code> flag before you debug a “wrong shape” error—most lab failures are that flag, not the math.</p>
+<hr />
+<h2>6. Pad, then mask</h2>
+<p>Batches need a common length. Padding tokens at the end should not update the state. Set a mask on the pad id so (\mathbf{h}_t) freezes on pads. If you forget the mask, “last state” is a pad state, and the classifier reads junk.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>Why is (\mathbf{h}_1) a bad document vector in a forward-only RNN?</p>
+</li>
+<li>
+<p>A 2,000-word review opens with “worst meal of my life” and then narrates the evening. Which architecture in the table is most likely to keep that phrase, and why?</p>
+</li>
+<li>
+<p>You concatenate a forward final state of size 128 and a backward final state of size 128. What width does the classifier head see?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>3.3 Evaluation - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.3 Evaluation</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 3 &middot;
+                            <a href="files/data-641/evaluation.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Intrinsic versus extrinsic tests, and precision, recall, and F1.
+                        </p>
+<h2>1. Two kinds of evaluation</h2>
+<p>A spam filter can be scored in two different rooms.</p>
+<p><strong>Intrinsic</strong> evaluation scores the NLP module on a held-out set with labels. Precision, recall, F1, accuracy. The AI team can compute these without waiting on the rest of the company.</p>
+<p><strong>Extrinsic</strong> evaluation scores the <em>product</em> outcome. How much time did people waste because spam landed in the inbox, or a real message landed in junk?</p>
+<p>Intrinsic is cheaper and faster. It is a <strong>proxy</strong>. You run it first and often. You go to extrinsic only when intrinsic numbers are stably good. Bad intrinsic almost always means bad extrinsic. Good intrinsic does not guarantee a good product — that is why the second measurement exists.</p>
+<p>Stakeholders outside the AI team usually own extrinsic numbers. That is another reason to keep intrinsic in-house and current.</p>
+<hr />
+<h2>2. The confusion matrix</h2>
+<p>For a binary task, every test example falls in one cell.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Predicted positive</th>
+<th>Predicted negative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actually positive</td>
+<td>true positive (TP)</td>
+<td>false negative (FN)</td>
+</tr>
+<tr>
+<td>Actually negative</td>
+<td>false positive (FP)</td>
+<td>true negative (TN)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Spam as the positive class: TP is junk you caught, FP is a real email you buried, FN is junk you missed.</p>
+<p><img alt="Precision and recall from the confusion matrix" src="files/data-641/graphics/precision-recall.png" /></p>
+<p><img alt="A confusion matrix" src="files/data-641/graphics/confusion-matrix.png" /></p>
+<hr />
+<h2>3. Metrics you will compute</h2>
+<p>Let (P) be “predicted positive” and (T) be “actually positive.”</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Reads as</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>((\mathrm{TP}+\mathrm{TN})/N)</td>
+<td>Overall fraction correct</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>(\mathrm{TP}/(\mathrm{TP}+\mathrm{FP}))</td>
+<td>Of what you flagged, how much was right</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>(\mathrm{TP}/(\mathrm{TP}+\mathrm{FN}))</td>
+<td>Of what was truly positive, how much you caught</td>
+</tr>
+<tr>
+<td>F1</td>
+<td>(2\cdot\mathrm{prec}\cdot\mathrm{rec}/(\mathrm{prec}+\mathrm{rec}))</td>
+<td>Harmonic mean; punishes a large gap</td>
+</tr>
+</tbody>
+</table></div>
+<p>Accuracy is a poor headline when classes are unbalanced. A filter that never predicts spam is 98% accurate if 2% of mail is spam, and it is useless.</p>
+<p><strong>Precision-heavy</strong> tasks: you cannot afford false alarms (legal hold, medical alert). <strong>Recall-heavy</strong> tasks: you cannot afford misses (cancer mention, fraud). F1 is the compromise when both matter and you need one number.</p>
+<p>For more than two classes, compute precision/recall/F1 <strong>per class</strong>, then macro-average (each class equal) or micro-average (each example equal). Say which one you report.</p>
+<hr />
+<h2>4. How to run it so it means something</h2>
+<ul>
+<li>Hold out a <strong>test</strong> set you do not tune on. Use a validation split or cross-validation for decisions.</li>
+<li>Keep the same pre-processing on train and test (note <strong>2.3</strong>).</li>
+<li>Look at errors, not only the scalar. A confusion matrix and a few false positives/negatives tell you whether to change features or labels.</li>
+<li>If one country, language, or product line is systematically worse, that is a data problem (note <strong>2.1</strong>), not a reason to report only the average.</li>
+</ul>
+<p>Lab 3 asks for accuracy, precision, recall, F1, <strong>and</strong> one extrinsic-style check (hard errors, a matrix, or a slice).</p>
+<hr />
+<h2>5. Beyond a single F1</h2>
+<p>A ranking or retrieval system needs precision@k or recall@k, not document-level F1. Generation (summary, translation) needs overlap or human ratings; that is later in the course.</p>
+<p>For classification this week, also look at:</p>
+<ul>
+<li><strong>threshold:</strong> moving it trades precision for recall. Plot both if the product can choose a cutoff.</li>
+<li><strong>calibration:</strong> a score of 0.9 should be right about 90% of the time if someone will use the number as a probability.</li>
+<li><strong>slices:</strong> F1 on the whole test set can hide a language or a country that is failing.</li>
+</ul>
+<p>Those are still intrinsic. Extrinsic is “did the queue get shorter” or “did people open the email.” Do not call a prettier confusion matrix extrinsic.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>A spam model: TP 80, FP 20, FN 20, TN 880. Compute precision, recall, accuracy. Which number would you show a user who is angry about lost mail?</p>
+</li>
+<li>
+<p>Why is F1 closer to the worse of precision and recall, not the average?</p>
+</li>
+<li>
+<p>You raise recall on toxic-comment detection and precision collapses. What did you probably do to the threshold, and what extrinsic cost did you just buy?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

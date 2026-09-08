@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>10.2 Information Extraction Pipeline - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">10.2 Information Extraction Pipeline</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 10 &middot;
+                            <a href="files/data-641/ie-pipeline.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            The usual stages from a document to a filled record.
+                        </p>
+<h2>1. More pipeline than classification</h2>
+<p>Text classification can live on a bag of words. Information extraction usually cannot. You need to know where sentences end, what the words are, and often how they attach to each other.</p>
+<p>Not every IE task uses every step. The figure is a <strong>menu</strong>, not a mandatory checklist.</p>
+<p><img alt="General IE pipeline" src="files/data-641/graphics/ie-pipeline.png" /></p>
+<hr />
+<h2>2. The main stages</h2>
+<p>Read the pipeline top to bottom.</p>
+<p><strong>Sentence segmentation.</strong> Split the document into sentences. A period is not always a boundary (<code>U.S.</code>, <code>3.14</code>).</p>
+<p><strong>Word tokenization.</strong> Split each sentence into tokens. Contractions and hyphenated names matter later.</p>
+<p><strong>Part-of-speech tagging.</strong> Nouns, verbs, proper nouns. NER leans on this. A capitalized word at the start of a sentence is not automatically a name.</p>
+<p><strong>Syntactic parsing.</strong> Who is the subject, what is the object, what modifies what. Relation and event extractors use this structure.</p>
+<p><strong>Coreference resolution.</strong> <em>Albert Einstein</em>, <em>Einstein</em>, <em>the scientist</em>, and <em>he</em> are the same person. Without this step, you store four entities instead of one.</p>
+<hr />
+<h2>3. Which task needs which steps</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Typical requirements</th>
+<th>Often skip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keyphrase extraction</td>
+<td>Tokens; some methods add POS</td>
+<td>Parsing, coreference</td>
+</tr>
+<tr>
+<td>Named entity recognition</td>
+<td>Tokens and POS</td>
+<td>Full parse, sometimes coreference</td>
+</tr>
+<tr>
+<td>Entity disambiguation / linking</td>
+<td>Parse plus coreference, plus a knowledge base</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Relation extraction</td>
+<td>Entities plus syntax</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Event extraction</td>
+<td>Entities, relations, often time</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>KPE is the lightest job on the list. Some algorithms still POS-tag first so they keep noun phrases and drop "the" and "of" as standalone keys.</p>
+<p>NER needs POS because person and organization names are mostly proper nouns, and because the tagger helps with multi-word names.</p>
+<p>Linking and relations sit higher. You first find the mentions, then decide they are the same real-world thing, then decide how two things are related.</p>
+<hr />
+<h2>4. Errors cascade</h2>
+<p>IE is only as good as the steps underneath it.</p>
+<p>If the sentence splitter cuts a quote in half, the parser sees junk. If the POS tagger calls <em>Apple</em> a common noun, NER may miss the company. If coreference fails, the relation extractor never ties <em>he</em> to <em>Maestri</em>.</p>
+<p>When you collect training data or fine-tune a model, write down which pre-processing you used. A model trained on clean newswire will look worse on tweets even if the IE head is the same.</p>
+<hr />
+<h2>5. How IE is scored</h2>
+<p>Standard sets report <strong>precision</strong>, <strong>recall</strong>, and <strong>F1</strong> on spans and labels.</p>
+<ul>
+<li>Precision: of the spans you marked, how many were right.</li>
+<li>Recall: of the spans that should have been marked, how many you found.</li>
+<li>F1: the harmonic mean. One number when you cannot tune for only precision or only recall.</li>
+</ul>
+<p>Exact-span scoring is strict. Off-by-one token errors count as misses. That is why tokenization quality shows up in the metric.</p>
+<hr />
+<h2>6. What to take into a project</h2>
+<ol>
+<li>Start from the task, then keep only the pipeline steps that task needs.</li>
+<li>Measure the pre-processors on <strong>your</strong> text, not only on a textbook corpus.</li>
+<li>Budget time for labeled data. IE labels are spans, not document tags, so they cost more.</li>
+</ol>
+<p>Note <strong>10.3</strong> is KPE, the cheapest task on this pipeline. Week 11 is NER.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>Which pipeline steps would you keep for a keyphrase tagger on product reviews? Which would you skip?</p>
+</li>
+<li>
+<p>Give one example where failed coreference would break relation extraction.</p>
+</li>
+<li>
+<p>A system tags <em>New York Times</em> as <code>LOC</code> instead of <code>ORG</code>. Is that a tokenization error, a labeling error, or both? Say why.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

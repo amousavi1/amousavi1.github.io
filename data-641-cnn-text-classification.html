@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.3 CNN Text Classification - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.3 CNN Text Classification</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 7 &middot;
+                            <a href="files/data-641/cnn-text-classification.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Several kernel sizes, then a classifier on the pooled features.
+                        </p>
+<h2>1. From a sentence to one vector</h2>
+<p>Note <strong>7.2</strong> gave you 1-D filters over embeddings. Classification needs a <strong>single</strong> vector (or a small stack) that you can pass to a softmax.</p>
+<p>The basic move: run the convolutions, then <strong>global pool over time</strong>. Each filter becomes one number (its max, or its mean, over every window). A sentence of any length becomes a vector of length <code>n_filters</code>. Then a dense layer plus softmax (or sigmoid) produces the label.</p>
+<p><img alt="Basic CNN text classifier" src="files/data-641/graphics/cnn_model_basic.png" /></p>
+<p>The middle can change—more layers, dropout, a residual—but <strong>somewhere</strong> you have to collapse time. If you skip that collapse you still have a sequence, which is a tagging setup, not a document label.</p>
+<p>Sources: <em>Practical Natural Language Processing</em>, <em>Natural Language Processing in Action</em>, and Voita’s notes.</p>
+<hr />
+<h2>2. Why global max is the default</h2>
+<p>Global <strong>max</strong> asks: did this detector fire <strong>anywhere</strong>? For sentiment, topic, and spam that is usually the right question. <em>terrible</em> in position 2 or position 40 should both count.</p>
+<p>Global <strong>mean</strong> asks how often / how strongly it fired. Use it when the label depends on the whole document (average tone of a long review), not on one smoking-gun phrase.</p>
+<p>Either way you get a fixed-width representation. That is the CNN analogue of “average the word vectors,” except the features are <strong>learned phrases</strong>, not single tokens.</p>
+<hr />
+<h2>3. Several kernel sizes at once</h2>
+<p>A kernel of 2 sees pairs. A kernel of 3 sees short phrases. A kernel of 5 sees a longer idiom. You do not have to pick one.</p>
+<p>Train <strong>parallel</strong> conv banks: 100 filters of size 2, 100 of size 3, 100 of size 5 (Kim 2014 is the paper everyone cites). Concatenate the three global-pooled vectors. Classify.</p>
+<p><img alt="Parallel kernels, then concatenate" src="files/data-641/graphics/cnn_several_kernel_sizes.png" /></p>
+<p>That is the architecture you should be able to draw. It is also the one you will see in Keras as three <code>Conv1D</code> branches into <code>Concatenate</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>Typical choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Embeddings</td>
+<td>100–300-D, pretrained or learned</td>
+</tr>
+<tr>
+<td>Kernel sizes</td>
+<td>2, 3, 4 and/or 5</td>
+</tr>
+<tr>
+<td>Filters per size</td>
+<td>64–128 on small data; more if you have it</td>
+</tr>
+<tr>
+<td>Pool</td>
+<td>global max</td>
+</tr>
+<tr>
+<td>Regularization</td>
+<td>dropout on the concatenated vector</td>
+</tr>
+<tr>
+<td>Loss</td>
+<td>binary or categorical cross-entropy</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>4. How this sits next to Week 6</h2>
+<p>Week 6: TF–IDF + linear SVM. Fast, strong, no GPU.</p>
+<p>This note: embeddings + multi-kernel CNN. You pay for training time. You gain detectors that share strength across similar phrases (<em>not good</em> / <em>not great</em>) and a representation whose width does not grow with (|V|).</p>
+<p>If the CNN does not beat the SVM by enough to matter, ship the SVM. The pipeline in note <strong>6.1</strong> did not change: vectorize (here: embed + conv), train, evaluate with F1 when the classes are skewed.</p>
+<hr />
+<h2>5. Failure modes</h2>
+<ul>
+<li><strong>Too few examples.</strong> A CNN has more knobs than <code>LinearSVC</code>. On 500 labeled tweets the SVM usually wins.</li>
+<li><strong>Kernel too wide.</strong> Size 15 on tweets is almost the whole sentence, once. You wanted local features.</li>
+<li><strong>No padding / tiny sentences.</strong> Edge tokens never sit in the center of a valid window (note <strong>7.1</strong>).</li>
+<li><strong>Ignoring pretrained embeddings.</strong> Random embeddings need more data. Start from Word2Vec or GloVe unless the domain is truly alien.</li>
+</ul>
+<p>Week 8 replaces the fixed window with a <strong>loop</strong> that can carry information across the whole sentence.</p>
+<p><strong>Kim-style checklist.</strong> (1) Embed. (2) Three <code>Conv1D</code> branches. (3) Global max on each. (4) Concatenate. (5) Dropout. (6) Dense + softmax. If you cannot point to those six pieces in a notebook, you do not yet have the lecture model—you have a pile of layers.</p>
+<hr />
+<h2>6. Evaluation stays Week 6</h2>
+<p>Accuracy if the labels are balanced. F1 if they are not. A CNN that is 2 points of accuracy better than an SVM and 10 points of minority-class F1 worse is not an upgrade. Report the same <code>classification_report</code> you used for (k)-NN.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>A review has 40 tokens and you use 128 filters of size 3 with global max. What is the width of the vector that enters the dense layer?</p>
+</li>
+<li>
+<p>Why concatenate kernels of size 2, 3, and 5 instead of one kernel of size 5?</p>
+</li>
+<li>
+<p>You have 400 labeled emails and a good TF–IDF SVM. Should you replace it with this CNN first, or report the SVM as the baseline? Why?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.5 Word2Vec Practical Considerations - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.5 Word2Vec Practical Considerations</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 5 &middot;
+                            <a href="files/data-641/word2vec-practical.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Negative sampling, window size, and other training tricks.
+                        </p>
+<h2>1. The two recipes, in production</h2>
+<p>Mikolov’s own guidance, which this course repeats:</p>
+<ul>
+<li><strong>Skip-gram</strong> if the corpus is small or you care about <strong>rare</strong> words. More pairs per window means more updates for those rare types.</li>
+<li><strong>CBOW</strong> if you care about <strong>frequent</strong> words and wall-clock time. One pooled example per window is cheaper.</li>
+</ul>
+<p>Neither recipe scales if you treat every token and every negative class equally. Three tricks make Word2Vec usable on Wikipedia-scale text: phrase tokens, subsampling, and negative sampling.</p>
+<p>Sources: <em>Practical Natural Language Processing</em> and <em>Natural Language Processing in Action</em>.</p>
+<hr />
+<h2>2. Frequent bigrams as single tokens</h2>
+<p>Some pairs are almost one word. <em>Elvis</em> is usually followed by <em>Presley</em>. Predicting <em>Presley</em> from <em>Elvis</em> (or the other way) teaches the model very little. The pair should be one vocabulary item: <code>Elvis_Presley</code>.</p>
+<p>Score candidate bigrams and glue the ones that pass a cutoff:</p>
+<p>[
+\operatorname{score}(w_i, w_j) = \frac{\operatorname{count}(w_i, w_j) - \delta}{\operatorname{count}(w_i)\,\operatorname{count}(w_j)}
+]</p>
+<p>(\delta) is a discount so that a pair that appeared once by chance does not look like a phrase. You can run the same idea on trigrams. gensim’s <code>Phrases</code> is the usual implementation.</p>
+<p>After this step the “vocabulary” includes both unigrams and a handful of glued phrases. CBOW and skip-gram then run as before.</p>
+<hr />
+<h2>3. Subsample frequent tokens</h2>
+<p><em>the</em> and <em>a</em> sit next to almost every noun. If you train on every occurrence, the space fills with a false “everything is a little like <em>the</em>.” That is the same problem IDF solves for count vectors.</p>
+<p>Mikolov keeps token (w_i) in a given window with probability that <strong>falls</strong> as frequency rises:</p>
+<p>[
+P(w_i) = 1 - \sqrt{\frac{t}{f(w_i)}}
+]</p>
+<p>(f(w_i)) is the corpus frequency. (t) is a threshold; (10^{-5}) to (10^{-6}) is the usual range. Raise (t) on a small corpus, lower it on a huge one. Tokens rarer than (t) are always kept.</p>
+<p>The effect is IDF-like: rare content words drive the vectors. Stop words still appear, just less often.</p>
+<p>(The lecture slide writes (f(w_t)) in the square root. Same quantity: frequency of the token you are deciding to keep or drop.)</p>
+<hr />
+<h2>4. Negative sampling</h2>
+<p>A full softmax updates <strong>every</strong> output weight on every example. With a million types that is a million updates for the pair (<em>painted</em>, <em>Monet</em>). Almost all of those types were not in the window. You do not need their gradients.</p>
+<p><strong>Negative sampling</strong> keeps the positive pair and draws (n) words that were <strong>not</strong> in the window. You update only those (n+1) output rows. The task becomes: the true neighbor should score high; the random draws should score low (logistic / sigmoid, not a full softmax).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Corpus size</th>
+<th>Typical (n)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>5–20 negatives</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>2–5 negatives</td>
+</tr>
+</tbody>
+</table></div>
+<p>Quality holds up. Training time drops by orders of magnitude. This is why the Word2Vec papers could train on news crawls.</p>
+<hr />
+<h2>5. What you actually ship</h2>
+<p>After these tricks you still only ship the <strong>embedding matrix</strong>: one row per type (and per glued phrase). Look up, cosine, maybe average the rows in a sentence for a cheap document vector.</p>
+<p>Pretrained vectors (Google News, fastText, GloVe) already used some version of these ideas. If you train your own on domain text (clinical notes, legal filings), turn the three tricks on. A vanilla full-softmax Word2Vec on raw tokens will be slow and muddy.</p>
+<p><img alt="A 2-D sketch of a learned word space" src="files/data-641/graphics/word2vec_map.png" /></p>
+<p>Week 6 leaves representation and asks how to <strong>classify</strong> documents, first with the sparse vectors from Week 4, then with networks.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Why does glueing <em>New</em> + <em>York</em> into one token help skip-gram more than leaving them separate?</p>
+</li>
+<li>
+<p>A token has frequency far above (t). Does equation (section 3) make it more or less likely to appear in a training window?</p>
+</li>
+<li>
+<p>You have 2 million types and 5 negatives. How many output embeddings are updated on one skip-gram pair, versus a full softmax?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

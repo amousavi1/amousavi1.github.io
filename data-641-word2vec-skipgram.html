@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.4 Word2Vec Skip-gram - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.4 Word2Vec Skip-gram</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 5 &middot;
+                            <a href="files/data-641/word2vec-skipgram.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Predict the neighbors from the middle word.
+                        </p>
+<h2>1. Word2Vec as a prediction game</h2>
+<p>Word2Vec takes a large unlabeled corpus and puts every word in one vector space. The space is defined by <strong>context</strong>: words that show up in the same windows should end up nearby.</p>
+<p>The model starts with random vectors. It refines them by playing a supervised game on made-up labels: given a word, what else stood next to it? A <strong>two-layer</strong> net does the prediction. When training is done, you keep the hidden weights.</p>
+<p><strong>Skip-gram</strong> is the version of that game that predicts <strong>context from the center</strong>. CBOW (note <strong>5.3</strong>) predicts the center from the context.</p>
+<p>Sources: <em>Practical Natural Language Processing</em> and <em>Natural Language Processing in Action</em>.</p>
+<hr />
+<h2>2. What “skip” means</h2>
+<p>A skip-gram is an n-gram that is allowed to <strong>skip</strong> tokens. You predict <em>Claude</em> from <em>painted</em> and skip <em>Monet</em>. The window still bounds how far you look.</p>
+<p><img alt="Skip-gram: center in, context out" src="files/data-641/graphics/skipGram_training.png" /></p>
+<p>One center word produces <strong>several</strong> training pairs, one per neighbor. That is why skip-gram “sees” more examples than CBOW on the same sentence.</p>
+<hr />
+<h2>3. Softmax</h2>
+<p>The output layer is a classifier over the whole vocabulary. <strong>Softmax</strong> turns raw scores (z) into probabilities that sum to 1:</p>
+<p>[
+\sigma(z)<em>j = \frac{e^{z_j}}{\sum</em>{k=1}^{K} e^{z_k}}
+]</p>
+<p>Entry (j) is “probability that word (j) is a neighbor of the input.” During training you compare that distribution to a one-hot of the true neighbor (cross-entropy). At the end of an update you can pretend the argmax is a one-hot prediction; the useful object is still the <strong>weight matrices</strong>, not those predictions.</p>
+<p>A full softmax over a 100,000-word vocabulary is slow. Note <strong>5.5</strong> replaces it with negative sampling.</p>
+<hr />
+<h2>4. From a sentence to pairs</h2>
+<p>Window size 2, same sentence as CBOW:</p>
+<pre><code>sentence = &quot;Claude Monet painted the Grand Canal of Venice in 1806.&quot;
+</code></pre>
+<p>A 5-gram tokenizer puts each word in the center once. For four neighbors you get four updates per center: each neighbor is a separate target.</p>
+<p><img alt="Skip-gram network" src="files/data-641/graphics/SkipGram_net.png" /></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Center</th>
+<th>Neighbors you predict (window 2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>painted</td>
+<td>Claude, Monet, the, Grand</td>
+</tr>
+<tr>
+<td>Canal</td>
+<td>the, Grand, of, Venice</td>
+</tr>
+</tbody>
+</table></div>
+<p>Input is the <strong>one-hot</strong> of the center (size (|V|)). Hidden layer is size (d). Output is (|V|) softmax units. Four neighbors ⇒ four forward/backward passes with the same input one-hot and four different target one-hots.</p>
+<p>After training, <strong>each row of the input–hidden weight matrix</strong> is a word vector. The softmax head is discarded. Those rows are what you look up at inference.</p>
+<hr />
+<h2>5. CBOW versus skip-gram, in one table</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>CBOW</th>
+<th>Skip-gram</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direction</td>
+<td>context → center</td>
+<td>center → context</td>
+</tr>
+<tr>
+<td>Input</td>
+<td>pooled / multi-hot context</td>
+<td>one-hot center</td>
+</tr>
+<tr>
+<td>Examples per window</td>
+<td>one</td>
+<td>one per neighbor</td>
+</tr>
+<tr>
+<td>Tends to win on</td>
+<td>frequent words, speed</td>
+<td>rare words, small corpora</td>
+</tr>
+</tbody>
+</table></div>
+<p>Both learn the same kind of object: a (d)-dimensional vector per type. Neither models order inside the window. Neither is a language model you ship. They are <strong>representation</strong> methods.</p>
+<p><strong>Count the pairs.</strong> Ten tokens and window 2 give about (10 \times 4) skip-gram pairs (edges of the sentence have fewer neighbors). CBOW gives about 10 examples. That factor of ~4 is the “more examples” claim, not a different definition of meaning.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>For center <em>Monet</em> and window 2, list the skip-gram training pairs from the sentence above.</p>
+</li>
+<li>
+<p>Why does skip-gram produce more gradient updates per sentence than CBOW?</p>
+</li>
+<li>
+<p>Softmax outputs a distribution over (V). After training, do you use that distribution as the embedding? What do you use instead?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

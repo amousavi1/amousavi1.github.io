@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.6 Recommender Systems - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.6 Recommender Systems</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 14 &middot;
+                            <a href="files/data-641/recommender-systems.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Use text (and other signals) to rank items for a user.
+                        </p>
+<h2>1. Suggestions, not a class label</h2>
+<p>A <strong>recommender</strong> ranks items a user has not seen yet. On the web that is a movie, a product, or "related articles." The NLP angle is that many items <strong>are</strong> text, or have text attached (title, body, reviews).</p>
+<p>Two big families:</p>
+<p><strong>Collaborative filtering.</strong> Recommend what people <strong>like you</strong> liked. Netflix at scale is this idea: your history plus similar users. You need interactions (watches, clicks, ratings). You do not need to understand the plot.</p>
+<p><strong>Content-based.</strong> Recommend items whose <strong>stuff</strong> looks like items you already used. For news, the stuff is the article text. "Related articles" on a newspaper site is the usual example.</p>
+<p><img alt="Related articles from content" src="files/data-641/graphics/rec.png" /></p>
+<p>A production system often mixes both. This note is about the content side, because that is the topic-model and retrieval machinery from this module.</p>
+<hr />
+<h2>2. Topic models as a content engine</h2>
+<p>Take LDA or NMF from Weeks 13–14. Each document gets a topic mix (\theta). Two articles with close (\theta) (cosine, or a small Euclidean distance) are "about the same things."</p>
+<p>That is a content recommender:</p>
+<ol>
+<li>represent each document (topics, TF–IDF, or an embedding)</li>
+<li>at read time, score neighbors of the current document</li>
+<li>show the top few that are not the same URL</li>
+</ol>
+<p>You can swap the representation. Topics are interpretable ("we showed this because both are <em>elections</em> + <em>courts</em>"). Dense embeddings often rank better and explain worse.</p>
+<p>Collaborative filtering fails on a brand-new article with no clicks. Content-based does not. That <strong>cold start</strong> is why newsrooms keep a text similarity fallback.</p>
+<hr />
+<h2>3. How you know it worked</h2>
+<p>Offline accuracy on a toy split is not the product metric.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What you measure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Business counters</td>
+<td>Click-through, dwell, purchase if there is one, engagement</td>
+</tr>
+<tr>
+<td>A/B test</td>
+<td>Two rankers, two user groups, same counters</td>
+</tr>
+<tr>
+<td>User study</td>
+<td>People rate "was this related?" on a sample</td>
+</tr>
+<tr>
+<td>Tiny gold set</td>
+<td>For a fixed article, a hand-made list of good neighbors; compare overlap</td>
+</tr>
+<tr>
+<td>Analytics</td>
+<td>Dashboards (Google Analytics or your own) so a drop is visible</td>
+</tr>
+</tbody>
+</table></div>
+<p>Industry systems combine these. A ranker that wins ROUGE or NPMI but loses clicks loses.</p>
+<hr />
+<h2>4. Pre-processing is part of the ranker</h2>
+<p>Tokenization, lowercasing, and what you strip change the neighbors.</p>
+<p>Decide the <strong>objective</strong> first. If relatedness should ignore author bylines, strip them. If "same city" matters, keep place names. If boilerplate ("Subscribe to our newsletter") is in every file, it will glue unrelated articles together. That is a cleanup bug, not a model bug.</p>
+<p>The same lesson as KPE and summarization: run the cheap filters before you tune (k).</p>
+<hr />
+<h2>5. A minimal content stack</h2>
+<p>For a homework-sized news recommender:</p>
+<ol>
+<li>Clean boilerplate.</li>
+<li>Fit TF–IDF or a 20-topic NMF/LDA on the archive.</li>
+<li>For article (i), take the 5 nearest neighbors by cosine.</li>
+<li>Drop near-duplicates (same title, or cosine (\approx 1)).</li>
+<li>Measure overlap with a 20-article hand list, then (if you can) clicks.</li>
+</ol>
+<p>That is enough to feel the difference between "same topic" and "same story reprinted." Collaborative filtering can wait until you have a user–item matrix. Evaluation of the topic piece itself is note <strong>14.3</strong>.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>A brand-new op-ed has zero clicks. Why might collaborative filtering recommend nothing useful, and what do you use instead?</p>
+</li>
+<li>
+<p>Two articles share a high (\theta) on a "subscribe / cookie banner" topic. What do you fix?</p>
+</li>
+<li>
+<p>Name two metrics you would put on an A/B test for "related articles," and one metric you would <strong>not</strong> treat as a ship decision by itself.</p>
+</li>
+</ol>
+<p>Clicks without dwell can mean bait. Read both numbers before you ship.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>3.1 Feature Engineering - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.1 Feature Engineering</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 3 &middot;
+                            <a href="files/data-641/feature-engineering.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Turn cleaned text into numbers a model can use.
+                        </p>
+<h2>1. Text is not a table</h2>
+<p>A classifier wants a <strong>numeric vector</strong> per document (or per span). <strong>Feature engineering</strong> (also called <strong>feature extraction</strong>) is how you build that vector.</p>
+<p>Two families:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Who designs the features</th>
+<th>Typical look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Classical NLP + traditional ML</td>
+<td>You</td>
+<td>Counts, ratios, flags, TF–IDF</td>
+</tr>
+<tr>
+<td>Deep learning</td>
+<td>The network</td>
+<td>Embeddings learned from the raw (cleaned) text</td>
+</tr>
+</tbody>
+</table></div>
+<p>Note <strong>3.1</strong> is the choice. Later weeks build bag-of-words, TF–IDF, and embeddings in detail. Here you need the job description and the tradeoff.</p>
+<hr />
+<h2>2. Handcrafted features</h2>
+<p><strong>Example.</strong> Sentiment on product reviews. One usable vector:</p>
+<ul>
+<li>count of positive lexicon words</li>
+<li>count of negative lexicon words</li>
+<li>maybe length, <code>!</code> count, a <code>not</code> flag</li>
+</ul>
+<p>A linear model on those counts is already a system. You can say <em>how much</em> each feature moved the score. That is the main advantage of handcrafted features: <strong>interpretability</strong>.</p>
+<p>Other classical features you will meet:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>What it records</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bag of words</td>
+<td>Raw token counts (or binary presence)</td>
+</tr>
+<tr>
+<td>TF–IDF</td>
+<td>Counts down-weighted if the word is common in the corpus</td>
+</tr>
+<tr>
+<td>n-grams</td>
+<td>Consecutive token pairs/triples (<code>not good</code>)</td>
+</tr>
+<tr>
+<td>POS / NER counts</td>
+<td>How many adjectives, how many ORG spans</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>Length, language, time of day, source</td>
+</tr>
+</tbody>
+</table></div>
+<p>You design them from error analysis. If the model misses negation, add a negation feature. If it confuses product names with sentiment, add a lexicon flag.</p>
+<p>The cost: every new domain needs new features. That becomes the bottleneck for both accuracy and calendar time.</p>
+<hr />
+<h2>3. Learned features</h2>
+<p>In a deep-learning pipeline you still clean and tokenize, but you do not hand-build a lexicon vector. The model <strong>learns</strong> a representation from the labeled data (note <strong>1.2</strong>). Those features usually fit the task better than a list you wrote.</p>
+<p>The cost: you lose a simple story. Weights sit on dimensions that do not mean “positive word count.” Explaining a single prediction is hard.</p>
+<p><img alt="Learned features vs a hand-built vector" src="files/data-641/graphics/dl-features.png" /></p>
+<p>A practical middle: use a pre-trained embedding or transformer as the representation, then a small classifier on top. You still did feature engineering — you chose the representation — but you did not count words by hand.</p>
+<hr />
+<h2>4. What to pick this semester</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Start with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small data, need to explain the call</td>
+<td>Handcrafted + logistic regression or Naive Bayes</td>
+</tr>
+<tr>
+<td>Medium labeled set, bag-of-words is enough</td>
+<td>TF–IDF + a linear model</td>
+</tr>
+<tr>
+<td>Lots of data, accuracy first</td>
+<td>Learned embeddings / a neural model</td>
+</tr>
+<tr>
+<td>You have no labels yet</td>
+<td>Do not start with a deep net; get labels or use heuristics (note <strong>3.2</strong>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Features must be computed the same way at train time and at serve time. If you lowercase in training and not in production, the vector is a different language.</p>
+<p>Leakage is a feature bug: if a “source file” id or a timestamp perfectly separates classes, the model looks strong and fails in production. Look at the top-weighted features. If they are not about the text, you engineered the wrong thing.</p>
+<hr />
+<h2>5. A worked sketch</h2>
+<p>Same review, two vectors.</p>
+<pre><code class="language-text">&quot;The battery died in a week. Not happy.&quot;
+</code></pre>
+<p>Handcrafted (say): <code>{pos: 0, neg: 2, not: 1, bang: 0, len: 7}</code>.</p>
+<p>Bag-of-words (counts): <code>{battery: 1, died: 1, week: 1, not: 1, happy: 1, ...}</code>.</p>
+<p>A network would start from tokens or subwords and learn a dense vector. You never write the coordinates; you only choose the architecture and the loss.</p>
+<p>If <code>died</code> and <code>not</code> are what you care about, the first vector is enough to debug. If the language of “unhappy” keeps changing, the third representation has a chance to keep up.</p>
+<p>Sparse count vectors are high-dimensional and mostly zeros. Dense learned vectors are short and opaque. That is the whole tradeoff in one line.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>For spam, name two handcrafted features that are not bag-of-words counts.</p>
+</li>
+<li>
+<p>A review classifier puts huge weight on the token <code>amazon</code>. Is that a good feature? What would you check?</p>
+</li>
+<li>
+<p>In one sentence, what do you give up when you switch from a positive/negative word-count vector to a deep model?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

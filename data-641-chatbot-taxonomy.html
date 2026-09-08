@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.1 Chatbot Applications and Taxonomy - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.1 Chatbot Applications and Taxonomy</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 12 &middot;
+                            <a href="files/data-641/chatbot-taxonomy.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            What bots are used for, and the main design families.
+                        </p>
+<h2>1. A short history</h2>
+<p>Chatbots and AI grew up together.</p>
+<p><strong>1950s–60s.</strong> Turing asked whether a machine could talk well enough that a person could not tell. Weizenbaum built <strong>ELIZA</strong> (1966), a rule-and-regex "Rogerian" therapist. People knew it was a program and still treated it as a listener. That is a warning, not a success metric: users will anthropomorphize a shallow bot.</p>
+<p><strong>1980s–2000s.</strong> Spoken dialog systems appeared, many of them military (DARPA). The new piece was signal processing plus a limited vocabulary, not open chat.</p>
+<p><strong>2000s–now.</strong> NLP and machine learning made the same ideas usable in customer service, health, finance, and retail. Messenger, Google Assistant, and Alexa are the public face. Most industry bots are still <strong>narrow</strong>.</p>
+<p><img alt="Chatbots and assistants" src="files/data-641/graphics/chatbots-examples.png" /></p>
+<hr />
+<h2>2. Where they are used</h2>
+<p>A bot is a UI. The NLP inside it changes with the job.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>What the bot is asked to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shopping</td>
+<td>Place or change an order, take payment, recommend an item</td>
+</tr>
+<tr>
+<td>News</td>
+<td>Narrow a search in conversation, return a matching article</td>
+</tr>
+<tr>
+<td>Customer service</td>
+<td>FAQs, complaints, a scripted flow the business already wrote</td>
+</tr>
+<tr>
+<td>Medical</td>
+<td>Symptom FAQs; intake questions, especially for older patients</td>
+</tr>
+<tr>
+<td>Legal</td>
+<td>FAQ, then follow-up questions so the next document is the right one</td>
+</tr>
+<tr>
+<td>Education</td>
+<td>Tutor, language practice, registration and scheduling</td>
+</tr>
+</tbody>
+</table></div>
+<p>Conversational <strong>recommenders</strong> are a live research and product area. The hard part is not greeting the user. It is tracking constraints as they arrive one turn at a time.</p>
+<hr />
+<h2>3. Three kinds of bot</h2>
+<p>How you build the system depends on which of these you are in.</p>
+<p><strong>FAQ / exact-answer bot.</strong> A fixed set of answers. Understand the question, retrieve the matching response. Turns are mostly independent. This is close to classification plus lookup.</p>
+<p><strong>Flow-based bot.</strong> The user reveals the request over several turns. Pizza size, then toppings, then address. The bot must <strong>remember</strong> what it already knows and ask only for what is missing. This is a dialog state machine with NLU on each utterance.</p>
+<p><strong>Open-ended bot.</strong> Chitchat. No ticket to close. The bot does not have to drive toward a goal. Entertainment and brand mascots live here. So do the failure modes: hallucination, inconsistency, and users who think the bot is a person.</p>
+<p><img alt="A taxonomy of chatbots" src="files/data-641/graphics/chatbot-taxonomy.png" /></p>
+<hr />
+<h2>4. Goal-oriented vs chitchat</h2>
+<p>The coarse split used in research and in vendor tools:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Includes</th>
+<th>Success looks like</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Goal-oriented</td>
+<td>FAQ bots, flow-based bots</td>
+<td>The user completes a task</td>
+</tr>
+<tr>
+<td>Chitchat</td>
+<td>Open-ended bots</td>
+<td>The conversation stays coherent and on-tone</td>
+</tr>
+</tbody>
+</table></div>
+<p>Both are used in industry. Both are active research. Do not use a chitchat model as a customer-service bot and hope it will "figure out" the order. And do not use an FAQ lookup table when the user needs a five-slot pizza flow. Write the success test first (ticket closed, order placed, user still chatting). The test picks the cell.</p>
+<p>A hybrid product is normal: FAQ for "where is my order?", flow for "I want to return this," and a small chitchat layer for "thanks" and "hello." Keep the layers separate. One model that tries to do all three will be good at none of them.</p>
+<p>Note <strong>12.2</strong> is the shared pipeline (speech, NLU, dialog manager, NLG). Note <strong>12.3</strong> is intents, slots, and response generation.</p>
+<hr />
+<h2>5. What this week is for</h2>
+<p>By the end of note <strong>12.1</strong> you should be able to:</p>
+<ul>
+<li>place ELIZA, spoken dialog, and a modern assistant on the history line</li>
+<li>pick a domain row from the table and say whether the bot is FAQ, flow, or open</li>
+<li>refuse a design that uses chitchat weights for a goal-oriented task</li>
+</ul>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Is a password-reset bot FAQ, flow-based, or open-ended? What would make you change that label?</p>
+</li>
+<li>
+<p>Why did ELIZA convince people even though it had no model of the user?</p>
+</li>
+<li>
+<p>A retailer wants "something like Alexa" for returns. Which taxonomy cell do you start in, and what do you refuse to promise?</p>
+</li>
+</ol>
+<p>"Like Alexa" is a channel, not a taxonomy cell. Ask what task must complete.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

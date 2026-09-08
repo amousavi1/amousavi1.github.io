@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.1 Introduction to Deep Learning - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.1 Introduction to Deep Learning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 5 &middot;
+                            <a href="files/data-641/intro-deep-learning.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Layers, loss, and why we stack representations.
+                        </p>
+<h2>1. Why this note is here</h2>
+<p>Week 4 gave you sparse vectors. The rest of the course feeds those (or denser ones) to <strong>neural nets</strong>. This note is a first look at a net, not a survey of NLP architectures.</p>
+<p>Figures and the MNIST walk-through follow Chollet, <em>Deep Learning with Python</em> (2nd ed.), and Géron, <em>Hands-On Machine Learning</em>.</p>
+<hr />
+<h2>2. A short history</h2>
+<p>McCulloch and Pitts (1943) wrote a logical model of how neurons might compute. That is the start of <strong>artificial neural networks (ANNs)</strong>.</p>
+<p>Interest came back in the 1980s (connectionism, better architectures, better training) and then faded. In the 1990s, support vector machines looked cleaner and worked well. Networks spent another winter.</p>
+<p>Three things ended that winter:</p>
+<ul>
+<li><strong>Data.</strong> Large labeled sets exist now. On those sets, nets often beat the older methods.</li>
+<li><strong>Compute.</strong> GPUs, built for games, make the matrix multiplies cheap enough to train deep stacks.</li>
+<li><strong>Algorithms.</strong> Better initializations, activations, and optimizers. Funding followed headlines; headlines followed products.</li>
+</ul>
+<p>Hinton, Bengio, and LeCun shared the 2018 Turing Award for that line of work.</p>
+<p>You do not need the history on an exam. You do need the reason we switched: when the representation is learned in layers, and you have enough data, the older sparse recipes lose.</p>
+<hr />
+<h2>3. A first network: MNIST</h2>
+<p>The job: 28 (\times) 28 grayscale handwritten digits, ten classes (0–9).</p>
+<p><img alt="MNIST digits" src="files/data-641/graphics/MNIST.png" /></p>
+<p>Keras gives you the split already labeled:</p>
+<pre><code class="language-python">from tensorflow.keras.datasets import mnist
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+# train_images.shape -&gt; (60000, 28, 28)
+# test_images.shape  -&gt; (10000, 28, 28)
+</code></pre>
+<p>Sixty thousand training images, ten thousand held out. Labels are integers 0–9.</p>
+<hr />
+<h2>4. Layers, compile, fit</h2>
+<p>A <strong>layer</strong> is a transformation. Stack layers and you have a network. Each layer keeps what helps the task.</p>
+<p><img alt="Stacked layers as successive representations" src="files/data-641/graphics/deep2.png" /></p>
+<p>A two-layer classifier for MNIST:</p>
+<pre><code class="language-python">from tensorflow import keras
+from tensorflow.keras import layers
+model = keras.Sequential([
+    layers.Dense(512, activation=&quot;relu&quot;),
+    layers.Dense(10, activation=&quot;softmax&quot;),
+])
+</code></pre>
+<p>The last layer is a 10-way <strong>softmax</strong>: ten numbers that sum to 1, read as class probabilities.</p>
+<p><strong>Compile</strong> picks three things:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Optimizer</td>
+<td>How weights move after each batch (<code>rmsprop</code>, <code>adam</code>, …)</td>
+</tr>
+<tr>
+<td>Loss</td>
+<td>How wrong the current answer is (<code>sparse_categorical_crossentropy</code> for integer labels)</td>
+</tr>
+<tr>
+<td>Metric</td>
+<td>What you watch (<code>accuracy</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-python">model.compile(optimizer=&quot;rmsprop&quot;,
+              loss=&quot;sparse_categorical_crossentropy&quot;,
+              metrics=[&quot;accuracy&quot;])
+</code></pre>
+<p>Pixels arrive as <code>uint8</code> in ([0, 255]). Flatten and scale to ([0, 1]):</p>
+<pre><code class="language-python">train_images = train_images.reshape((60000, 28 * 28)).astype(&quot;float32&quot;) / 255
+test_images  = test_images.reshape((10000, 28 * 28)).astype(&quot;float32&quot;) / 255
+</code></pre>
+<p><strong>Fit</strong> needs a <strong>batch size</strong> (how many examples before a weight update) and <strong>epochs</strong> (full passes through the training set):</p>
+<pre><code class="language-python">model.fit(train_images, train_labels, epochs=5, batch_size=128)
+</code></pre>
+<p>The console prints training loss and training accuracy. Those are not the test numbers.</p>
+<hr />
+<h2>5. Predict and evaluate</h2>
+<pre><code class="language-python">predictions = model.predict(test_images[:10])
+predictions[0].argmax()          # predicted digit
+test_loss, test_acc = model.evaluate(test_images, test_labels)
+</code></pre>
+<p><code>argmax</code> on a softmax row is the predicted class. Always report <strong>test</strong> accuracy. Training accuracy can look fine while the net memorizes.</p>
+<p>3Blue1Brown’s neural-net videos are a useful watch after this note. They are not a substitute for running the cells.</p>
+<p>Week 5 then leaves pixels and asks how to learn <strong>word</strong> vectors the same way: a small net, a prediction task, and the hidden weights kept as the representation.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Why do we divide pixel values by 255 before <code>fit</code>?</p>
+</li>
+<li>
+<p>What does the softmax layer output, and why must those ten numbers sum to 1?</p>
+</li>
+<li>
+<p>You see 99% training accuracy and 70% test accuracy after 20 epochs. What is the model doing, and which of the two numbers do you quote?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

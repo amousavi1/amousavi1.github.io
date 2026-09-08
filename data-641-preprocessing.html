@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.3 Preprocessing - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.3 Preprocessing</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot;
+                            <a href="files/data-641/preprocessing.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Tokenize, normalize, drop stops, and choose stemming or lemmatization.
+                        </p>
+<h2>1. Canonical form</h2>
+<p>Cleanup gave you a string. <strong>Pre-processing</strong> turns that string into a sequence you can count, stem, or embed.</p>
+<p>Common steps:</p>
+<p><img alt="Sentence split, then lowercase, punctuation, stem, or lemmatize" src="files/data-641/graphics/preprocessing-steps.png" /></p>
+<p>Not every task wants every step. Named-entity work wants capitalization. Sentiment often wants <code>!</code> and emoji. A search index may want stems. Decide from the job, then keep the recipe fixed so train and test match.</p>
+<hr />
+<h2>2. Tokens and types</h2>
+<p>A <strong>token</strong> is one occurrence. A <strong>type</strong> is the distinct string.</p>
+<p><code>To be or not to be</code> → 6 tokens (<code>to</code>, <code>be</code>, <code>or</code>, <code>not</code>, <code>to</code>, <code>be</code>) and 4 types (<code>to</code>, <code>be</code>, <code>or</code>, <code>not</code>). The set of types is the <strong>vocabulary</strong>.</p>
+<p>Whitespace split is the baseline you already know:</p>
+<pre><code class="language-python">&quot;Every time I learn something new, it pushes some old stuff out of my brain.&quot;.split(&quot; &quot;)
+</code></pre>
+<p>You get <code>new,</code> and <code>brain.</code> glued to punctuation. <code>str.split()</code> is not a tokenizer.</p>
+<p>Use <code>nltk.word_tokenize</code> or spaCy. They split words <em>and</em> punctuation. That is what Lab 1 already showed.</p>
+<hr />
+<h2>3. Punctuation, case, stop words</h2>
+<p>Do not strip all punctuation by reflex.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Why keep it</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boundaries</td>
+<td><code>.</code> <code>?</code> <code>;</code> mark sentences and clauses</td>
+</tr>
+<tr>
+<td>Illocution</td>
+<td><code>!</code> and <code>?</code> change the act of the sentence</td>
+</tr>
+<tr>
+<td>Sentiment</td>
+<td><code>:-)</code> and emoji are features</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Lowercasing</strong> merges <code>Apple</code> the company with <code>apple</code> the fruit. That is good for topic bags of words. It is bad for names.</p>
+<p><strong>Stop words</strong> (<code>the</code>, <code>a</code>, <code>of</code>, <code>is</code>) are high-frequency function words. Dropping them shrinks a count vector. Do not drop them for tasks that need grammar or polarity (<code>not</code> is a stop word in many lists and it flips sentiment).</p>
+<pre><code class="language-python">from nltk.corpus import stopwords
+stops = set(stopwords.words(&quot;english&quot;))
+[t for t in tokens if t.lower() not in stops]
+</code></pre>
+<hr />
+<h2>4. Stemming vs lemmatization</h2>
+<p>English (and many other languages) inflects: <code>organizes</code>, <code>organized</code>, <code>organizing</code>. You often want one index term.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Stemming</th>
+<th>Lemmatization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method</td>
+<td>Chop a suffix with a heuristic</td>
+<td>Morphological analysis → dictionary form</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>organizes</code> → <code>organ</code></td>
+<td><code>organizes</code> → <code>organize</code></td>
+</tr>
+<tr>
+<td>Output</td>
+<td>May not be a word (<code>flying</code> → <code>fli</code>)</td>
+<td>Aims at a real lemma</td>
+</tr>
+<tr>
+<td>Tool</td>
+<td><code>PorterStemmer</code></td>
+<td><code>WordNetLemmatizer</code> (needs POS for best results)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Stemming is fast and crude. Lemmatization is slower and usually cleaner. Lab 1 already ran both on the same list. Use one consistently; do not mix them in the same vocabulary.</p>
+<hr />
+<h2>5. Other normalization</h2>
+<p>Typical extra steps:</p>
+<ul>
+<li>map digits (<code>9</code> → <code>nine</code>, or all numbers to <code>#</code>)</li>
+<li>expand a small set of abbreviations (<code>Dr.</code> → <code>Doctor</code>) if the domain is stable</li>
+<li>collapse repeated characters (<code>soooo</code> → <code>soo</code>) on social text</li>
+</ul>
+<p><strong>Language detection</strong> belongs near the front. Most tokenizers, stop lists, and stemmers are language-specific. English tools on Spanish (or on a mix) produce garbage, not a slightly worse model.</p>
+<p><strong>Code mixing</strong> is two or more languages in one post. Tokenizers trained on one language break. Language ID on the whole document is not enough.</p>
+<p><img alt="One sentence, several languages" src="files/data-641/graphics/code-mixing.png" /></p>
+<hr />
+<h2>6. A short recipe</h2>
+<p>For a bag-of-words classifier on English reviews, a default that is good enough:</p>
+<ol>
+<li>language-filter to English</li>
+<li>tokenize (not <code>split</code>)</li>
+<li>lowercase</li>
+<li>drop stop words <em>except</em> negators if you care about sentiment</li>
+<li>lemmatize (or stem, not both)</li>
+</ol>
+<p>For POS or NER (note <strong>2.4</strong>), skip lowercasing and stop-word removal.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>Tokenize <code>Wow, we can finally stop using the split function!</code> by hand the way NLTK would. How many tokens?</p>
+</li>
+<li>
+<p>Give one task where you should <em>not</em> lowercase, and one where you should.</p>
+</li>
+<li>
+<p>Why can <code>flying</code> → <code>fli</code> still be useful in a search index even though <code>fli</code> is not a word?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

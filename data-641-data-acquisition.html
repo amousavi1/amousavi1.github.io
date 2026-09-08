@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.1 Data Acquisition - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.1 Data Acquisition</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot;
+                            <a href="files/data-641/slides/2.1-data-acquisition.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Where the text comes from, and what counts as good enough data.
+                        </p>
+<h2>1. The pipeline this week sits in</h2>
+<p>An applied NLP system is a loop, not a single model.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data acquisition</td>
+<td>Get text that matches the task</td>
+</tr>
+<tr>
+<td>Text cleaning</td>
+<td>Pull the words out of HTML, PDF, or other junk</td>
+</tr>
+<tr>
+<td>Pre-processing</td>
+<td>Put the text into a form you can count or embed</td>
+</tr>
+<tr>
+<td>Feature engineering</td>
+<td>Turn that text into numbers</td>
+</tr>
+<tr>
+<td>Modeling</td>
+<td>Fit something that maps numbers to a decision</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>Measure whether the decision is good enough</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Plug the module into a larger product</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Watch it, then collect more data and start again</td>
+</tr>
+</tbody>
+</table></div>
+<p><img alt="Main components of an NLP pipeline" src="files/data-641/graphics/nlp-pipeline.png" /></p>
+<p>Note <strong>2.1</strong> is the first box. Notes <strong>2.2</strong>–<strong>2.4</strong> are cleaning and pre-processing. Week 3 is features, models, metrics, and production.</p>
+<p>The main text is still <em>Practical Natural Language Processing</em> (Vajjala, Majumder, Gupta, Surana), Chapter 2.</p>
+<hr />
+<h2>2. Data is usually the bottleneck</h2>
+<p>You can change the model in an afternoon. You cannot invent a labeled corpus in an afternoon.</p>
+<p><strong>Example.</strong> A chat system must route each incoming message to sales or to customer care. The model is ordinary text classification. The hard part is having enough messages, with the right labels, that look like the messages you will see next month.</p>
+<p>In the ideal case you already have thousands or millions of labeled examples from the same product. Then acquisition is done: you split, you train, you evaluate.</p>
+<p>Most projects are not that lucky. "Good enough" data means three things at once:</p>
+<ol>
+<li><strong>Enough volume</strong> to fit the model you want (a regex needs almost none; a transformer wants a lot).</li>
+<li><strong>The right domain.</strong> Product names, slang, and user habits have to match production. A public forum scrape will not contain your SKU codes.</li>
+<li><strong>Labels you can trust</strong>, or a plan to get them.</li>
+</ol>
+<p>If any of those is missing, you are still in data acquisition.</p>
+<hr />
+<h2>3. Where the text comes from</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Source</th>
+<th>What you get</th>
+<th>Watch for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Files you already have</td>
+<td>Logs, tickets, PDFs, CSVs, emails</td>
+<td>Encoding, PII, messy fields</td>
+</tr>
+<tr>
+<td>Public datasets</td>
+<td>A starting corpus (<a href="https://datasetsearch.research.google.com/">Dataset Search</a>)</td>
+<td>Domain shift; license</td>
+</tr>
+<tr>
+<td>Web pages</td>
+<td>HTML you parse yourself</td>
+<td>Boilerplate, ToS, drift</td>
+</tr>
+<tr>
+<td>APIs</td>
+<td>Tweets, news, reviews, transcripts</td>
+<td>Rate limits, schema changes, terms</td>
+</tr>
+<tr>
+<td>Licensed / purchased data</td>
+<td>Cleaner, sometimes labeled</td>
+<td>Cost; you still must check fit</td>
+</tr>
+<tr>
+<td>Product intervention</td>
+<td>Data the product itself collects</td>
+<td>Best match to production; needs a live feature</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Public data</strong> is the first stop. If a dataset is close to the task, build a baseline and measure the gap. Close is not the same as good enough.</p>
+<p><strong>Scraping</strong> plus human labels is the next stop. It is slow, and the text often lacks the product-specific language you need in production.</p>
+<p><strong>APIs</strong> are scrape-with-a-contract. You still own cleanup and labeling.</p>
+<p><strong>Licensed data</strong> (news wires, medical notes, speech transcripts) can save months. Read the license before you train. Some corpora cannot be redistributed or used commercially.</p>
+<p><strong>Product intervention</strong> is how Google, Facebook, and Netflix grow their own data: ship a feature, log the interaction, label what you can. In industry this is usually the best long-term source, because the distribution <em>is</em> production.</p>
+<hr />
+<h2>4. When you have too little: augmentation</h2>
+<p>Start from a small clean set. Make more examples that keep the label.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Trick</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Synonym replacement</td>
+<td>Swap a word for a near synonym</td>
+</tr>
+<tr>
+<td>Back translation</td>
+<td>English → another language → English. Keep the new sentence if it differs</td>
+</tr>
+<tr>
+<td>Bigram flip</td>
+<td><code>going to</code> → <code>to going</code> (noisy; use sparingly)</td>
+</tr>
+<tr>
+<td>Entity swap</td>
+<td><code>I live in California</code> → <code>I live in London</code></td>
+</tr>
+<tr>
+<td>Spelling noise</td>
+<td>Replace a word with a near-miss spelling</td>
+</tr>
+</tbody>
+</table></div>
+<p>Advanced options you will hear about: active learning (label the examples the model is unsure of), easy data augmentation, and weak supervision (<a href="https://www.snorkel.org/">Snorkel</a>).</p>
+<p>Augmentation is not a substitute for in-domain text. It stretches what you have. It does not invent a new domain.</p>
+<hr />
+<h2>5. A working rule</h2>
+<p>Collect the smallest set that is <em>from the product</em> and <em>labeled well</em>. Use public data and augmentation only to get a baseline or to fill obvious holes. Then go back to the pipeline figure: more data after monitoring is still data acquisition.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>For the sales-vs-care router, which is better as training data: 50,000 labeled Wikipedia talk-page comments, or 2,000 labeled chats from the same product? Why?</p>
+</li>
+<li>
+<p>Name one risk of scraping a public Q&amp;A site and treating the posts as if they were your customers.</p>
+</li>
+<li>
+<p>Write one back-translation pair (source sentence and a plausible English rewrite) that would <em>hurt</em> a sentiment classifier, not help it.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

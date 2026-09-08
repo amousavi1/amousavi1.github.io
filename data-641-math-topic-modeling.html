@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>13.1 Math for Topic Modeling - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">13.1 Math for Topic Modeling</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 13 &middot;
+                            <a href="files/data-641/math-topic-modeling.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Documents as mixtures, and the linear algebra underneath.
+                        </p>
+<h2>1. Topics are a matrix problem</h2>
+<p>Topic modeling finds <strong>themes</strong> in a large collection without document labels. A news archive is not 10,000 unrelated files. It is a mix of elections, sports, markets, and weather, and each article is a mix of those themes.</p>
+<p><img alt="Topics in a corpus" src="files/data-641/graphics/topic-modeling.png" /></p>
+<p>The starting object is a <strong>document-term matrix</strong> (DTM): rows are documents, columns are terms, cells are counts or TF–IDF. Everything this module does is an operation on that matrix, or on a close cousin of it.</p>
+<p>Linear algebra is not decoration here. SVD, NMF, PCA, and the inference inside LDA are all matrix factorizations or eigenvalue problems.</p>
+<hr />
+<h2>2. Why the linear algebra shows up</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Idea</th>
+<th>Role in topic modeling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document-term matrix</td>
+<td>The data. Rows = documents, columns = terms</td>
+</tr>
+<tr>
+<td>Matrix factorization (SVD, NMF)</td>
+<td>Split the DTM into "terms × topics" and "topics × documents"</td>
+</tr>
+<tr>
+<td>Eigenvalues / eigenvectors</td>
+<td>Directions of variation; importance of those directions</td>
+</tr>
+<tr>
+<td>PCA</td>
+<td>A ranked set of uncorrelated axes; a way to shrink the DTM</td>
+</tr>
+<tr>
+<td>LDA</td>
+<td>A probabilistic model; linear algebra still runs the inference</td>
+</tr>
+</tbody>
+</table></div>
+<p>You do not need a full linear-algebra course. You need vectors, matrix multiply, inverse and transpose, and the eigenvalue equation.</p>
+<hr />
+<h2>3. Vectors and matrices</h2>
+<p>A vector (\boldsymbol{x} \in \mathbb{R}^n) is a list of (n) numbers. Three operations you will use:</p>
+<ul>
+<li>Scalar: (\alpha\boldsymbol{x} = [\alpha x_1,\ldots,\alpha x_n])</li>
+<li>Dot product: (\boldsymbol{x}\cdot\boldsymbol{y} = \boldsymbol{x}^{\top}\boldsymbol{y} = \sum_i x_i y_i)</li>
+<li>Euclidean norm: (|\boldsymbol{x}|_2 = \sqrt{\sum_i x_i^2})</li>
+</ul>
+<p>A matrix ({\bf A} \in \mathbb{R}^{m \times n}) is the DTM shape. Pointwise (+), (-), and scalar multiply are entrywise. <strong>Matrix–vector</strong> multiply ({\bf A}\boldsymbol{x}) is a new vector whose (i)th entry is the dot product of row (i) with (\boldsymbol{x}). <strong>Matrix–matrix</strong> multiply ({\bf A}{\bf B}) is defined only when the inner dimensions match. ({\bf A}{\bf B}) is not ({\bf B}{\bf A}).</p>
+<p>The identity ({\bf I}_n) has ones on the diagonal. The inverse satisfies ({\bf A}{\bf A}^{-1} = {\bf I}) when it exists. The transpose ({\bf A}^{\top}) swaps rows and columns. Symmetric matrices (({\bf A}={\bf A}^{\top})) are the ones whose eigenvectors we trust first.</p>
+<hr />
+<h2>4. Eigenvalues, in one picture</h2>
+<p>For a square matrix ({\bf A}),</p>
+<p>[
+{\bf A}\boldsymbol{v} = \lambda \boldsymbol{v}.
+]</p>
+<p>(\boldsymbol{v}) is an <strong>eigenvector</strong>: a direction that ({\bf A}) does not rotate. (\lambda) is the <strong>eigenvalue</strong>: how much that direction is stretched. (\lambda &gt; 1) stretches, (0 &lt; \lambda &lt; 1) shrinks, (\lambda &lt; 0) flips.</p>
+<p><img alt="Geometry of an eigenpair" src="files/data-641/graphics/eigen-geometry.png" /></p>
+<p>In a term–term or document–document covariance, a large (\lambda) is a direction where the corpus actually varies. Those directions are the candidates for "topics" or for the axes PCA will keep.</p>
+<hr />
+<h2>5. PCA as a recipe</h2>
+<p>PCA turns correlated features into a new orthogonal basis, ordered by variance.</p>
+<ol>
+<li><strong>Center.</strong> Subtract the column mean: ({\bf X}_{\mathrm{centered}} = {\bf X} - \bar{{\bf X}}).</li>
+<li><strong>Covariance.</strong> ({\bf C} = \frac{1}{n-1}{\bf X}<em>{\mathrm{centered}}^{\top}{\bf X}</em>{\mathrm{centered}}).</li>
+<li><strong>Eigendecompose.</strong> ({\bf C}\boldsymbol{v} = \lambda\boldsymbol{v}). Large (\lambda) = a principal component that explains more variance.</li>
+<li><strong>Keep the top (k).</strong> Columns of ({\bf V}_k) are those eigenvectors.</li>
+<li><strong>Project.</strong> ({\bf X}<em>{\mathrm{reduced}} = {\bf X}</em>{\mathrm{centered}}{\bf V}_k).</li>
+</ol>
+<p>Each document is now a vector in (k) dimensions. You can cluster those vectors (k-means, DBSCAN) or pass them to LDA or NMF. Words and documents that load on the same component are a first draft of a topic.</p>
+<p>PCA is a tool, not the whole topic model. Note <strong>13.2</strong> is SVD / LSA, which is the factorization people actually run on a DTM. Week 14 is LDA and NMF: same matrix picture, different constraints (probabilities, non-negativity). Learn the multiply and the eigen-equation well enough to read those notes. You will not invert a 20,000-column matrix by hand.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>A DTM is 5,000 documents by 20,000 terms. What are (m) and (n) if we write ({\bf A}\in\mathbb{R}^{m\times n}) as documents × terms?</p>
+</li>
+<li>
+<p>Why is ({\bf A}{\bf B}) a different size from ({\bf B}{\bf A}) in the 3×2 times 2×3 example?</p>
+</li>
+<li>
+<p>In PCA, what does a small eigenvalue tell you about that direction, and why might you drop it before clustering?</p>
+</li>
+</ol>
+<p>If you can compute ({\bf A}\boldsymbol{v}) and compare it to (\lambda\boldsymbol{v}) on a 2×2 example, you are ready for SVD.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

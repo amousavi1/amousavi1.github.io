@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.2 One-Hot Vectors - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.2 One-Hot Vectors</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 4 &middot;
+                            <a href="files/data-641/one-hot.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            A word as a single 1 in a long, sparse vector.
+                        </p>
+<h2>1. The big idea</h2>
+<p>Give every word in the vocabulary a unique integer id. Represent a document as a stack of (|V|)-dimensional binary vectors, one per token.</p>
+<p>That is <strong>one-hot encoding</strong>. It is the first vectorization you should be able to write on paper.</p>
+<p>The toy corpus from note <strong>4.1</strong>:</p>
+<p><img alt="Four-document toy corpus" src="files/data-641/graphics/vectorize.png" /></p>
+<p>After lowercasing and dropping punctuation, (V =) <code>[dog, bites, man, eats, meat, food]</code>. Any order is legal. We use first-seen order.</p>
+<p>scikit-learn’s <code>OneHotEncoder</code> does the same job on categorical columns. The <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html">docs</a> are the implementation reference. The idea is what this note is for.</p>
+<hr />
+<h2>2. How a word becomes a vector</h2>
+<p>Word (w) gets an id (w_{\text{id}}) between 1 and (|V|). Its vector is all zeros except a <strong>1</strong> at that index.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>id</th>
+<th>One-hot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dog</td>
+<td>1</td>
+<td><code>[1 0 0 0 0 0]</code></td>
+</tr>
+<tr>
+<td>bites</td>
+<td>2</td>
+<td><code>[0 1 0 0 0 0]</code></td>
+</tr>
+<tr>
+<td>man</td>
+<td>3</td>
+<td><code>[0 0 1 0 0 0]</code></td>
+</tr>
+<tr>
+<td>meat</td>
+<td>4</td>
+<td><code>[0 0 0 1 0 0]</code></td>
+</tr>
+<tr>
+<td>food</td>
+<td>5</td>
+<td><code>[0 0 0 0 1 0]</code></td>
+</tr>
+<tr>
+<td>eats</td>
+<td>6</td>
+<td><code>[0 0 0 0 0 1]</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>A document is the <strong>sequence</strong> of those vectors. (D_1) = “dog bites man” becomes</p>
+<pre><code>[[1 0 0 0 0 0]
+ [0 1 0 0 0 0]
+ [0 0 1 0 0 0]]
+</code></pre>
+<p>(D_2) = “man bites dog” uses the same three vectors in a different order. The encoding still knows the order. Bag of words (note <strong>4.3</strong>) will throw that away.</p>
+<hr />
+<h2>3. What it gets right</h2>
+<p>The scheme is easy to explain and easy to code. Each column is a word. A 1 means “this token is that word.” There is no hidden geometry.</p>
+<p>If the vocabulary is tiny and every test sentence uses only those words, one-hot is a honest baseline. You will still meet it as the <strong>input layer</strong> of a neural language model: the network’s first job is to multiply that sparse vector by an embedding matrix.</p>
+<hr />
+<h2>4. Four problems you will hit</h2>
+<p><strong>Sparsity.</strong> Real vocabularies are tens or hundreds of thousands of types. Each word is a giant vector of zeros. Storage, arithmetic, and learning all get worse. Sparse high-dimensional features overfit.</p>
+<p><strong>Variable length.</strong> Ten tokens give ten rows. Five tokens give five. Most classical learners want a <strong>fixed-length</strong> feature vector. You cannot drop a one-hot matrix into logistic regression without collapsing it first (that collapse is bag of words).</p>
+<p><strong>Out of vocabulary (OOV).</strong> Train on the toy corpus. At runtime you see “man eats fruit.” There is no column for <em>fruit</em>. The encoder has no legal vector. One-hot cannot invent one.</p>
+<p><strong>No similarity.</strong> <em>dog</em> and <em>puppy</em> are orthogonal. <em>eats</em> and <em>ate</em> are orthogonal. Cosine of two different one-hots is 0. The geometry does not know that words mean related things.</p>
+<hr />
+<h2>5. When you would still use it</h2>
+<p>Use one-hot when you need a transparent token identity, or when a later layer will learn a dense map. Do not ship a one-hot document matrix as the only features of a production classifier on a large vocabulary.</p>
+<p>In a net, the first multiply <code>embedding_matrix @ one_hot</code> is just a table lookup. You will rarely build the one-hot by hand; <code>tf.keras.layers.Embedding</code> does the lookup from integer ids. The picture in this note is still the right one: the id is a coordinate, not a meaning.</p>
+<p>A practical check: if your “document vector” has a different number of rows for every review, you are still in one-hot-sequence land. Collapse it (BoW) or embed-and-pool before a linear model.</p>
+<p>Note <strong>4.3</strong> collapses the sequence into one count vector. That fixes the length problem. It does not fix OOV or similarity.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Write the one-hot sequence for (D_3) = “dog eats meat” using the id table above.</p>
+</li>
+<li>
+<p>A new sentence arrives: “man eats fruit.” Which tokens can you encode, and what breaks?</p>
+</li>
+<li>
+<p>Why is one-hot a poor feature matrix for logistic regression on documents of different lengths?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

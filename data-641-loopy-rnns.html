@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.1 Loopy Recurrent Neural Networks - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.1 Loopy Recurrent Neural Networks</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 8 &middot;
+                            <a href="files/data-641/loopy-rnns.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            A hidden state that reads the text one token at a time.
+                        </p>
+<h2>1. Networks without memory</h2>
+<p>A dense net and a CNN see an input, emit an output, and forget. Nothing is stored between examples, and (in a plain CNN) nothing is stored between distant tokens except what a fixed window can cover.</p>
+<p>Reading is not like that. You hold what came earlier and update it. <strong>Recurrent neural networks (RNNs)</strong> do the same: they keep a <strong>state</strong> and revise it at every token.</p>
+<p>Chollet’s picture: biological systems process a stream and maintain an internal model. An RNN is the engineering version of that idea, not a model of a brain.</p>
+<p>Sources: <em>Practical Natural Language Processing</em>, <em>Natural Language Processing in Action</em>, and Voita’s notes. StatQuest’s RNN video is a useful watch.</p>
+<hr />
+<h2>2. The cell</h2>
+<p>At step (t) the cell receives</p>
+<ul>
+<li>a new input (\mathbf{x}_t) (usually a token embedding), and</li>
+<li>the previous state (\mathbf{h}_{t-1}).</li>
+</ul>
+<p>It emits a new state (\mathbf{h}_t) that is supposed to hold <strong>both</strong>. That state is the input to the next step.</p>
+<p><img alt="RNN cell: input plus previous state" src="files/data-641/graphics/rnn1.png" /></p>
+<p>The state is <strong>reset</strong> between independent sequences (two reviews in a batch). Each review is still one data point. What changed is that the net <strong>loops</strong> inside that data point.</p>
+<p>Unrolled in time, the same weights appear at every step. That is weight sharing along the sequence, analogous to a CNN’s shared filter, but the path is a chain, not a slide.</p>
+<hr />
+<h2>3. Vanilla RNN</h2>
+<p>The simplest cell is a linear mix plus (\tanh):</p>
+<p>[
+\mathbf{h}<em>t = \tanh(\mathbf{h}</em>{t-1} W_h + \mathbf{x}_t W_x)
+]</p>
+<p>(Lecture writes (W_t) for the input map. Same idea.)</p>
+<p><img alt="Vanilla RNN cell" src="files/data-641/graphics/vanilla_cell.png" /></p>
+<p><strong>Vanishing and exploding gradients.</strong> Backprop through twenty (\tanh) steps multiplies twenty Jacobians. The signal to early tokens dies or blows up. Vanilla cells struggle on long reviews.</p>
+<p><strong>LSTM</strong> and <strong>GRU</strong> add <strong>gates</strong>: learned valves that decide what to keep, write, and forget. They do not remove the problem; they make long-range training feasible. This course will treat them as drop-in cells with the same loop around them.</p>
+<hr />
+<h2>4. Runtime, GPUs, and unrolling</h2>
+<p>A tiny RNN is a chain of small matrix multiplies inside a <code>for</code> loop. That chain does <strong>not</strong> parallelize well. On a multicore <strong>CPU</strong> it can beat a GPU. A large recurrent layer can use a GPU.</p>
+<p>In Keras, default <code>LSTM</code> / <code>GRU</code> on GPU call <strong>cuDNN</strong>. Those kernels are fast and rigid. <strong>Recurrent dropout</strong> is not in the default kernel; Keras falls back to a slower TensorFlow implementation with the same math.</p>
+<p>If you cannot use cuDNN, <strong>unrolling</strong> the loop (write the (T) steps into the graph) can help the compiler. It also makes the graph huge. Use it when sequences are short and you have measured a benefit.</p>
+<p>None of this changes the math. It changes whether the lab finishes before the session ends.</p>
+<hr />
+<h2>5. What this note is not</h2>
+<p>This is not yet a classifier. You have a sequence of states (\mathbf{h}_1, \ldots, \mathbf{h}_T). Note <strong>8.2</strong> says which state(s) you turn into a document label: last state, stacked layers, or a bidirectional pair.</p>
+<p>Do not use a vanilla RNN as your first production model. Use LSTM/GRU, or skip to a transformer later in the course. Do use this note to explain <strong>why</strong> a loop exists.</p>
+<p><strong>Unroll once on paper.</strong> Three tokens (x_1, x_2, x_3), start from (\mathbf{h}_0 = \mathbf{0}). Compute (\mathbf{h}_1), then (\mathbf{h}_2), then (\mathbf{h}_3) with the <strong>same</strong> (W_h, W_x). The classifier in note <strong>8.2</strong> will sit on (\mathbf{h}_3) (or on a bidirectional pair). If you cannot do that by hand for (d=2), the Keras layer will stay a black box.</p>
+<hr />
+<h2>6. CNN versus RNN, one line</h2>
+<p>A CNN looks at a <strong>fixed</strong> neighborhood at every position, in parallel. An RNN looks at <strong>everything so far</strong>, in order, and cannot be fully parallelized across time. That is the accuracy / speed tradeoff you are choosing.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>A CNN kernel of size 5 and a vanilla RNN both read a 40-token sentence. Which one can, in principle, mix token 1 with token 40 in a single representation, and how?</p>
+</li>
+<li>
+<p>Why do we reset (\mathbf{h}) between two training documents?</p>
+</li>
+<li>
+<p>You add recurrent dropout to an LSTM on a GPU and training becomes much slower. What happened?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.4 Text Summarization - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.4 Text Summarization</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 14 &middot;
+                            <a href="files/data-641/text-summarization.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Extractive versus abstractive shortening of a document.
+                        </p>
+<h2>1. Shorten the document, keep the point</h2>
+<p><strong>Text summarization</strong> turns a long document into a shorter text that a person (or an indexer) can use. The goal is not "as short as possible." It is a coherent piece that still carries the main ideas.</p>
+<p>Benefits you can sell: faster reading, a smaller search index, a cleaner store of "what this file was about."</p>
+<p>This note follows the same applied texts as the rest of the course: <em>Practical Natural Language Processing</em> and <em>NLP in Action</em>.</p>
+<hr />
+<h2>2. Three design choices</h2>
+<p>Research since the DUC conferences organizes the job along three axes.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Option A</th>
+<th>Option B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>How the words are produced</td>
+<td><strong>Extractive</strong>: pick sentences that already exist</td>
+<td><strong>Abstractive</strong>: write new sentences</td>
+</tr>
+<tr>
+<td>Whether a query exists</td>
+<td><strong>Query-focused</strong>: answer this information need</td>
+<td><strong>Query-independent</strong>: a general digest</td>
+</tr>
+<tr>
+<td>How many sources</td>
+<td><strong>Single-document</strong></td>
+<td><strong>Multi-document</strong>: fuse a cluster</td>
+</tr>
+</tbody>
+</table></div>
+<p>Extractive is copy-and-rank. It cannot invent a fact, and it can sound choppy. Abstractive can read more naturally and can also hallucinate.</p>
+<p>Query-focused summaries change with the user. Query-independent summaries are what you put at the top of an article or in an index.</p>
+<p>Multi-document work has to handle repetition and contradiction across files. Do not start there.</p>
+<hr />
+<h2>3. What people actually ship</h2>
+<p>The common industrial case is <strong>single-document, query-independent, extractive</strong>.</p>
+<p>Purpose: a short digest for a reader, or a stand-in document for a search index.</p>
+<p><img alt="Extractive summary as selected sentences" src="files/data-641/graphics/summarization.png" /></p>
+<p>Two other patterns from real deployments:</p>
+<ul>
+<li><strong>Highlight instead of rewrite.</strong> Color the sentences that carry the gist of a news story. The user still sees the article. You only need a sentence ranker.</li>
+<li><strong>Index the summary.</strong> Store the digest, not the full text, when the index is too large. Retrieval quality then depends on the digest.</li>
+</ul>
+<p>Both are extractive problems with a UI choice on top.</p>
+<hr />
+<h2>4. Practical advice</h2>
+<p><strong>Pre-processing dominates.</strong> Sentence splitting and HTML cleanup decide what the ranker is allowed to pick. Library splitters fail on lists, captions, and "U.S." A bad split becomes a bad "sentence" in the summary. Write a splitter for your format if the default is clearly wrong.</p>
+<p><strong>Length hurts some algorithms.</strong> Graph methods (TextRank and cousins) get expensive on long inputs. Two workarounds:</p>
+<ul>
+<li>summarize chunks, then summarize the union</li>
+<li>take the first (M\%) and last (N\%) when those parts hold the thesis (same trick as KPE)</li>
+</ul>
+<p><strong>Evaluate with a task.</strong> ROUGE against a reference is the research default. In a product, measure whether people click, whether search still finds the file, or whether a highlighter agrees with an editor. A fluent abstractive paragraph that adds a date the article never stated is a failure.</p>
+<p>Lead and conclusion bias is real: extractive rankers love the first paragraph. That is often correct for news and wrong for a methods section. If your corpus is scientific or legal, do not trust a "first 3 sentences" baseline without checking.</p>
+<p>Graph summarizers share DNA with graph KPE (note <strong>10.3</strong>): sentences are nodes, overlap is an edge, PageRank picks the summary. The same length and overlap warnings apply.</p>
+<hr />
+<h2>5. What this note is for</h2>
+<p>You should be able to:</p>
+<ul>
+<li>place a project on the three axes above</li>
+<li>say why extractive is the default first system</li>
+<li>name the two production failure modes: bad sentence splits and too-long graphs</li>
+</ul>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>A legal tool must not invent a clause. Extractive or abstractive? Why?</p>
+</li>
+<li>
+<p>You want "sentences that answer <em>What did the Fed do?</em>" Which cell of the table is that?</p>
+</li>
+<li>
+<p>TextRank times out on 80-page filings. What do you change before you change the algorithm?</p>
+</li>
+</ol>
+<p>Chunk first. A summary of summaries is cheaper than a graph on 2,000 sentences.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

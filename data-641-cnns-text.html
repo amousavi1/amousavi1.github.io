@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.2 CNNs for Text - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.2 CNNs for Text</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 7 &middot;
+                            <a href="files/data-641/cnns-text.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            1-D convolutions over a sequence of embeddings.
+                        </p>
+<h2>1. One dimension is the sentence</h2>
+<p>A page of words is not a 2-D image. Line breaks are arbitrary. Vertical neighbors are an accident of wrap. The structure you want is <strong>along the sequence</strong>: token (t) next to token (t+1).</p>
+<p>So the convolution is <strong>1-D</strong>. The filter moves left to right (or top to bottom in a vertical script). It does not slide down the embedding axis.</p>
+<p><img alt="1-D convolution over a sequence" src="files/data-641/graphics/1dconv.png" /></p>
+<p>Japanese written in columns is the same idea on the other axis. You still have one <strong>travel</strong> dimension.</p>
+<p>Figures follow Voita’s NLP course and <em>Natural Language Processing in Action</em>.</p>
+<hr />
+<h2>2. The “image” is an embedding matrix</h2>
+<p>Each token is a (d)-dimensional vector (Word2Vec, GloVe, or a learned embedding layer). A sentence of (T) tokens is a matrix (T \times d). Think of (d) as the “height” of a one-pixel-wide strip.</p>
+<p>A 1-D filter of width (k) covers (k) tokens and the <strong>entire</strong> embedding of each. It does not look at 3 of 300 coordinates. That is why “1-D” can sound wrong: the patch is (k \times d), but it <strong>moves</strong> only along time.</p>
+<p><img alt="A filter over word embeddings" src="files/data-641/graphics/convolution_linear_layer.png" /></p>
+<p>One filter = one feature (a detector for some local pattern). You want many features, so you use <strong>many filters</strong>. Each reads the same sentence and writes one channel.</p>
+<hr />
+<h2>3. The knobs</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Meaning on text</th>
+<th>Typical values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kernel size</td>
+<td>How many tokens the filter sees</td>
+<td>2–5</td>
+</tr>
+<tr>
+<td>Stride</td>
+<td>How far the filter jumps</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Padding</td>
+<td>Extra zero vectors on both ends</td>
+<td>enough to keep length, or none</td>
+</tr>
+<tr>
+<td>Bias</td>
+<td>Extra add after the dot product</td>
+<td>often off by default</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Kernel size 2</strong> is a learned bigram detector. <strong>Kernel size 3–5</strong> sees a short phrase. You will stack several sizes in note <strong>7.3</strong> instead of betting on one (k).</p>
+<p>Stride 1 is the default: every token is a possible start. Stride (&gt; 1) skips starts; you may need padding so the last tokens are still seen.</p>
+<p>Padding appends <strong>zero vectors</strong> (not the string <code>"PAD"</code> as letters). With stride (&gt; 1) you almost always pad.</p>
+<p>Bias is an optional (+b) after the linear map. Many text CNN diagrams omit it.</p>
+<hr />
+<h2>4. Pooling after the filters</h2>
+<p>Each filter writes a sequence of activations, one per window. <strong>Pooling</strong> summarizes a region (or the whole sentence).</p>
+<p><strong>Max pooling</strong> keeps the strongest fire: “did this pattern appear anywhere?” <strong>Mean pooling</strong> averages. Both shrink the time axis so the next layer sees fewer parameters.</p>
+<p>Global max-over-time (note <strong>7.3</strong>) collapses each filter’s sequence to <strong>one number</strong>. The sentence becomes a vector of length <code>n_filters</code>, regardless of how long it was. That is how a CNN becomes a classifier head.</p>
+<hr />
+<h2>5. What this buys you versus BoW</h2>
+<p>A unigram bag cannot see <em>not good</em>. A bigram bag can, but only as an exact string, and the column count explodes. A 2-wide filter over embeddings can fire on <em>not good</em>, <em>not great</em>, <em>not terrible</em> if those phrases sit in similar embedding neighborhoods. The pattern is learned, not listed.</p>
+<p>You still do not get long-distance syntax for free. A kernel of 5 will not bind <em>hull</em> to <em>shone</em> across a clause. That is the RNN week.</p>
+<p><strong>Shapes, once.</strong> Batch of 32 sentences, padded to length 40, 100-D embeddings: input <code>(32, 40, 100)</code>. Sixty-four filters of width 3, valid padding: activations <code>(32, 38, 64)</code>. Global max pool: <code>(32, 64)</code>. That last tensor is what a logistic head classifies. If your error says rank 3 where you wanted rank 2, you forgot the pool.</p>
+<hr />
+<h2>6. Compared with a bigram bag</h2>
+<p>A BoN column is an exact string. A kernel of size 2 is a linear template in embedding space. <em>not good</em> and <em>not great</em> can both fire the same filter if <em>good</em> and <em>great</em> are close. That is the reason to embed first, then convolve, instead of only counting strings.</p>
+<p>You still need enough labeled examples for those templates to be learned. On a tiny set, the exact bigram column can win.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>A sentence is 12 tokens with 100-D embeddings. A kernel of size 3, stride 1, no padding: how many time steps does one filter produce?</p>
+</li>
+<li>
+<p>Why does a 1-D text filter cover the full embedding dimension in one shot?</p>
+</li>
+<li>
+<p>You want a detector for negation plus an adjective. Which kernel sizes would you try first, and why not 15?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

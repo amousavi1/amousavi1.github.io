@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>10.1 Information Extraction - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">10.1 Information Extraction</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 10 &middot;
+                            <a href="files/data-641/information-extraction.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Pull structured fields out of free text.
+                        </p>
+<h2>1. What information extraction is</h2>
+<p>Classification gives a <strong>label</strong> for a whole document. Information extraction (IE) pulls <strong>fields</strong> out of the text: who, what, when, how much, and how those pieces relate.</p>
+<p>The input is still messy language. The output is closer to a row in a table. A news desk, a bank app, or a chatbot can act on that row.</p>
+<p>This week follows <em>Practical Natural Language Processing</em> (Vajjala, Majumder, Gupta, Surana) and <em>Natural Language Processing in Action</em> (Lane, Howard, Hapke).</p>
+<hr />
+<h2>2. Where you see it</h2>
+<p>IE is not one product. It is a family of jobs that show up inside other products.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Application</th>
+<th>What you extract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>News tagging</td>
+<td>People, companies, places, events so a story can be filed and linked</td>
+</tr>
+<tr>
+<td>Chatbots</td>
+<td>The object of the request ("order a pizza") so the bot can ask the next question</td>
+</tr>
+<tr>
+<td>Social media</td>
+<td>Time-sensitive facts: traffic, weather, disaster updates</td>
+</tr>
+<tr>
+<td>Forms and receipts</td>
+<td>Amounts, dates, account numbers from a scan</td>
+</tr>
+</tbody>
+</table></div>
+<p>A banking app that lets you photograph a check is doing IE: find the amount and the routing facts, then post the deposit.</p>
+<p><img alt="Social-media IE" src="files/data-641/graphics/ie-social.png" /></p>
+<p>Chatbots need the same skill. "I want to order online" is not a class label. The system has to see the <strong>intent</strong> (order) and then ask what to order.</p>
+<hr />
+<h2>3. One paragraph, many IE jobs</h2>
+<p>A human reader of an Apple earnings story sees at once: the company is Apple Inc., Luca Maestri is the finance chief, and the event is a stock buyback.</p>
+<p><img alt="Entities in a news snippet" src="files/data-641/graphics/ie-ner.png" /></p>
+<p>A machine has to climb a ladder of tasks:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>What it answers on that story</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keyphrase extraction (KPE)</td>
+<td>The piece is about <em>buyback</em> and <em>stock price</em></td>
+</tr>
+<tr>
+<td>Named entity recognition (NER)</td>
+<td><em>Apple</em> is an organization; <em>Luca Maestri</em> is a person</td>
+</tr>
+<tr>
+<td>Named entity disambiguation / linking</td>
+<td>This Apple is Apple, Inc., not a fruit company or another firm with the same name</td>
+</tr>
+<tr>
+<td>Relation extraction</td>
+<td>Maestri <strong>is finance chief of</strong> Apple</td>
+</tr>
+<tr>
+<td>Event extraction</td>
+<td>The article is about one event: a buyback</td>
+</tr>
+<tr>
+<td>Temporal IE</td>
+<td>Dates and times for a calendar or a timeline</td>
+</tr>
+</tbody>
+</table></div>
+<p>You will not build every layer this week. You need the map. Note <strong>10.2</strong> is the pipeline. Note <strong>10.3</strong> is KPE. Week 11 is NER and the tasks that sit on top of it.</p>
+<hr />
+<h2>4. Why this is harder than classification</h2>
+<p>A spam filter can be wrong on one email and still be useful. An extractor that mis-labels <em>Apple</em> as a fruit, or that misses the dollar amounts, writes a <strong>bad row</strong>. Downstream search, a knowledge graph, or a bot will repeat that error.</p>
+<p>IE also depends on earlier NLP steps. If sentence splitting or part-of-speech tagging is wrong, NER and relations usually follow it downhill. That is why the next note spends time on the pipeline, not only on the end task.</p>
+<p>Start with the row you need. If the product only needs tags for a filter, stop at KPE or NER. If it needs a knowledge graph, budget for linking and relations. Do not train the whole ladder because a survey paper listed every rung.</p>
+<hr />
+<h2>5. What this week is for</h2>
+<p>By the end of Week 10 you should be able to:</p>
+<ul>
+<li>name the main IE applications and the tasks in the table above</li>
+<li>say which task is KPE, which is NER, and which is a relation</li>
+<li>explain why a chatbot and a receipt scanner are both IE systems</li>
+</ul>
+<p>A useful habit on every new corpus: write one paragraph, underline the spans you would want in a table, then label each underline with a task name. If you cannot name the task, you are not ready to pick a model.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Take one product you use (mail, maps, a bank app). Name two IE tasks from the table that it is doing.</p>
+</li>
+<li>
+<p>In the Apple snippet, which span is an entity and which fact is a <strong>relation</strong>?</p>
+</li>
+<li>
+<p>Why is "the article is about a buyback" not the same job as "Luca Maestri is Apple's finance chief"?</p>
+</li>
+</ol>
+<p>Keep the Apple paragraph. You will reuse it in notes <strong>10.2</strong>, <strong>11.1</strong>, and <strong>11.2</strong>.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

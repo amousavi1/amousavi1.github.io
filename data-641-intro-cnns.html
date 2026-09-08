@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.1 Introduction to CNNs - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.1 Introduction to CNNs</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 7 &middot;
+                            <a href="files/data-641/intro-cnns.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Filters, padding, stride, and pooling.
+                        </p>
+<h2>1. Why a convolution for language</h2>
+<p>Dense nets and the Week 4 bags treat a document as one vector. They do not <strong>slide</strong> over local structure. Language has two kinds of local structure you care about:</p>
+<ol>
+<li><strong>Order.</strong> <em>The dog chased the cat</em> is not <em>The cat chased the dog</em>.</li>
+<li><strong>Proximity.</strong> In <em>The ship's hull, despite years at sea, … shone like new</em>, <em>shone</em> belongs with <em>hull</em>, not with the nearest noun.</li>
+</ol>
+<p>Those relations are <strong>spatial</strong> (who sits next to whom) and <strong>temporal</strong> (what came earlier). A <strong>convolutional net</strong> looks through a small window that moves across the input. It was built for images. It works for text once the “pixels” are embeddings (note <strong>7.2</strong>).</p>
+<p>Sources: <em>Practical Natural Language Processing</em>, Géron’s <em>Hands-On Machine Learning</em>, and Voita’s NLP course notes. The sliding-filter GIFs follow Dumoulin’s conv arithmetic.</p>
+<hr />
+<h2>2. What a CNN is doing</h2>
+<p>A filter is a small stack of weights plus an activation (usually ReLU). You place it on a patch, take a dot product, apply ReLU, step, repeat. The output is a <strong>feature map</strong>: where that pattern fired.</p>
+<p><img alt="A filter sliding over an input" src="files/data-641/graphics/CONV.png" /></p>
+<p>On an image the patch is (3 \times 3) pixels. On text the patch is (n) tokens (note <strong>7.2</strong>). The idea is the same: <strong>weight sharing</strong>. The same filter looks at every position, so a pattern can fire anywhere.</p>
+<p>CNNs are the default for image classification, faces, and detection. The rest of this week is the same blocks pointed at sentences.</p>
+<hr />
+<h2>3. The blocks</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Convolution</td>
+<td>Scan for a local pattern</td>
+</tr>
+<tr>
+<td>Activation</td>
+<td>Keep positive evidence (ReLU)</td>
+</tr>
+<tr>
+<td>Pooling</td>
+<td>Downsample; keep the strong fire</td>
+</tr>
+<tr>
+<td>Dense head</td>
+<td>Turn the maps into class scores</td>
+</tr>
+</tbody>
+</table></div>
+<p>A filter is a set of weights, not one number. On images, (3 \times 3) is common; other sizes exist. Each filter is unique. Inside one snapshot the weights are fixed. (z_0 = \max(\sum_i x_i w_i, 0)) is the ReLU picture from lecture.</p>
+<p><strong>Stride</strong> is how far the window jumps. Stride 1 is the default. It overlaps neighboring patches so a token (or pixel) is seen with its neighbors. A stride as large as the window loses that blur on purpose.</p>
+<p><strong>Padding.</strong> A (3 \times 3) filter that must stay inside a grid produces a smaller map (the right edge never sees a centered filter). <code>padding='valid'</code> accepts the shrink. That <strong>under-samples the edges</strong>. On a 12-megapixel photo you may not care. On a 10-word tweet, the first word is a large fraction of the signal. <strong>Pad</strong> (zeros, or a chosen scheme) so the first real token is treated like a middle one. Padding invents data; that is the tradeoff.</p>
+<hr />
+<h2>4. Pooling and the head</h2>
+<p><strong>Pooling</strong> (max or average) shrinks each map and keeps the strongest response. You lose precise position and gain a smaller tensor and some shift invariance: <em>not good</em> can fire in two different places and still reach the same pooled feature.</p>
+<p><img alt="Max pooling downsamples a map" src="files/data-641/graphics/pooling.png" /></p>
+<p>Then you flatten (or globally pool) and feed a fully connected layer. Loss on the label backpropagates through the dense layer <strong>and</strong> through every filter. The filters are learned, not drawn by hand.</p>
+<p>You can stack several conv–pool stages. Each stage sees a larger effective neighborhood. The last stage still ends in a vector you classify.</p>
+<hr />
+<h2>5. What to carry into 7.2</h2>
+<ul>
+<li>Convolution = shared filter, sliding window.</li>
+<li>Stride and padding are the two knobs that change map size and how edges are treated.</li>
+<li>Pooling compresses; the dense layer decides the class.</li>
+<li>Text will use a <strong>1-D</strong> window over tokens, not a 2-D window over a page. Note <strong>7.2</strong> is that translation.</li>
+</ul>
+<p><strong>Parameter count.</strong> A dense layer on a flattened 28 (\times) 28 image has a weight for every pixel-to-neuron pair. A (3 \times 3) convolution has nine weights per input channel, reused everywhere. That is why CNNs could train on images before we had today’s GPUs, and why a text CNN can look at every trigram without a column per trigram string.</p>
+<hr />
+<h2>6. A picture you should be able to redraw</h2>
+<p>Input grid → several filters (each a sliding dot-product + ReLU) → one map per filter → pooling → flatten → dense → class. Loss at the end updates <strong>every</strong> filter. If you can mark stride and padding on that sketch, you are ready for the 1-D version.</p>
+<p>The GIF in the original slides is the same story: one filter, many overlapping placements, one output map.</p>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>Why does stride 1 usually beat a no-overlap stride for detecting <em>not good</em>?</p>
+</li>
+<li>
+<p>You set <code>padding='valid'</code> on tweets of length 8 with a kernel of 5. Which tokens are under-sampled, and why might that matter for sentiment?</p>
+</li>
+<li>
+<p>Max pooling throws away exact position. Name one classification job where that is acceptable and one where it might hurt.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

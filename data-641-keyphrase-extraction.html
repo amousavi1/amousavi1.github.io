@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>10.3 Keyphrase Extraction - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">10.3 Keyphrase Extraction</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 10 &middot;
+                            <a href="files/data-641/keyphrase-extraction.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Find the phrases that name what a document is about.
+                        </p>
+<h2>1. The job</h2>
+<p>A product on Amazon can have a hundred reviews. Nobody reads all of them. Amazon's "Read reviews that mention" filter is <strong>keyphrase extraction</strong> (KPE): find short phrases that many reviewers actually used, then let the shopper click one.</p>
+<p><img alt="Keyphrases as review filters" src="files/data-641/graphics/keyphrase.png" /></p>
+<p>KPE is the lightest IE task from note <strong>10.2</strong>. The output is a ranked list of phrases, not a knowledge graph.</p>
+<hr />
+<h2>2. Supervised or unsupervised</h2>
+<p>There are two research families.</p>
+<p><strong>Supervised.</strong> You need documents paired with gold keyphrases. Then you train a classifier or a sequence model on engineered features or a network. Labeling is slow and expensive. A model trained on scientific abstracts will not automatically work on tweets.</p>
+<p><strong>Unsupervised.</strong> No phrase-level labels. The method is mostly domain-agnostic. This is what people ship. Recent comparisons have often found that deep supervised KPE does <strong>not</strong> beat a good unsupervised graph method once you count labeling cost.</p>
+<p>In production, start unsupervised. Add a short heuristic list for your domain if you have one.</p>
+<hr />
+<h2>3. Graph-based KPE</h2>
+<p>The popular unsupervised algorithms share one picture.</p>
+<ol>
+<li>Turn candidate words and phrases into <strong>nodes</strong>.</li>
+<li>Put a <strong>weighted edge</strong> between nodes that co-occur (same sentence or a sliding window).</li>
+<li>Score each node by how well connected it is to the rest of the graph (a PageRank-style walk).</li>
+<li>Return the top (N) nodes as keyphrases.</li>
+</ol>
+<p>A good keyphrase is <strong>frequent enough</strong> and <strong>tied to different parts of the text</strong>. A word that appears ten times in one paragraph and nowhere else is a local echo, not a theme.</p>
+<p>Algorithms differ in two places: how they pick candidates, and how they score the graph. Two you will see in code:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Idea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TextRank</td>
+<td>Rank words like web pages; nearby words vote for each other</td>
+</tr>
+<tr>
+<td>SGRank</td>
+<td>Mix statistical cues (position, frequency) with the graph score</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>4. A small implementation</h2>
+<p><code>textacy</code> sits on spaCy. Load English, read a document, then ask for keyterms.</p>
+<pre><code class="language-python">import spacy
+import textacy
+
+nlp = spacy.load(&quot;en_core_web_sm&quot;)
+doc = textacy.make_spacy_doc(open(&quot;nlphistory.txt&quot;).read(), lang=nlp)
+
+textacy.extract.keyterms.textrank(doc, topn=10)
+textacy.extract.keyterms.sgrank(doc, topn=10)
+</code></pre>
+<p>On a short history of NLP, TextRank tends to return long noun phrases (<em>statistical machine translation system</em>). SGRank can mix those with shorter, noisier terms (<em>early</em>, <em>world</em>). Always <strong>look at the list</strong>. Do not trust the default <code>topn</code>.</p>
+<p>Overlapping phrases are common: <em>natural language processing system</em> and <em>natural language system</em>. <code>textacy.extract.utils.aggregate_term_variants</code> groups variants so you can keep one phrase per group.</p>
+<hr />
+<h2>5. Practical advice</h2>
+<p>Graph methods misbehave in predictable ways.</p>
+<p><strong>Document length.</strong> Building every n-gram and a graph for a 50-page PDF is slow and noisy. A common fix is to use the first (M\%) and the last (N\%) of the text. Introductions and conclusions usually state the point.</p>
+<p><strong>Overlap.</strong> Each phrase is ranked on its own, so <em>buy back stock</em> and <em>buy back</em> both survive. Drop near-duplicates with cosine similarity, or use the variant-aggregation helper above.</p>
+<p><strong>Ugly patterns.</strong> A keyphrase that starts with a preposition is rarely what you wanted. Filter those patterns after scoring. That is cheaper than retraining.</p>
+<p><strong>Bad text extraction.</strong> KPE cares about sentence boundaries. A PDF or a scan that glues two columns together will invent phrases that never appeared. Clean the text first; post-process the phrase list second.</p>
+<p>A custom stack that works in projects: one graph algorithm, plus a short domain stop-list, plus a post-filter for overlap and junk patterns.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Why might unsupervised KPE beat a supervised deep model on a new product category?</p>
+</li>
+<li>
+<p>You extract both <em>battery life</em> and <em>long battery life</em>. What do you do before you show the list to a user?</p>
+</li>
+<li>
+<p>A 40-page report yields 200 candidates and a slow graph. What cheaper input would you try first?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

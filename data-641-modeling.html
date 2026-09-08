@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>3.2 Modeling - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.2 Modeling</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 3 &middot;
+                            <a href="files/data-641/modeling.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Heuristics, classical models, and when to stack them.
+                        </p>
+<h2>1. Start with a rule you can write today</h2>
+<p>Modeling does not begin with a neural net. It begins with a decision you can ship.</p>
+<p><strong>Heuristics</strong> are rules a person wrote. A spam filter may already have a blacklist of domains and a list of words that almost always mean junk. Those rules are a model. They have precision you can measure. They also fail in the usual way: language moves, and a pile of rules becomes a system nobody can debug.</p>
+<p>Use heuristics when you have little labeled data, when a stakeholder needs a first version, or when a pattern is cheap and stable (<code>unsubscribe</code> in the subject line).</p>
+<p>Existing APIs (a vendor toxicity score, a cloud language API) are the same idea: a model you did not train, used as a baseline.</p>
+<hr />
+<h2>2. Then fit a model, and keep the rules as features</h2>
+<p>As you collect labels, a learned model usually beats a growing rule pile. Do not throw the rules away. Two honest ways to keep them:</p>
+<p><strong>Make a feature.</strong> The blacklist hit becomes a 0/1 column next to TF–IDF. The model learns how much to trust it.</p>
+<p><strong>Pre-process the input.</strong> Normalize URLs, mask emails, drop the signature block, then send the cleaned text to the classifier. The heuristic is now part of the pipeline, not a competing system.</p>
+<p>If you keep adding <code>if</code> statements after the model, you are back to an unmaintainable rule base. Put the knowledge in features or in the input, then retrain.</p>
+<hr />
+<h2>3. Building “the” model is iteration</h2>
+<p>A first baseline (heuristic or Naive Bayes on counts) is required. Then you iterate until the thing is accurate <em>and</em> operable.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Lever</th>
+<th>What you change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Better features</td>
+<td>Note <strong>3.1</strong>: new counts, n-grams, embeddings</td>
+</tr>
+<tr>
+<td>Ensemble / stacking</td>
+<td>Combine several models</td>
+</tr>
+<tr>
+<td>Transfer learning</td>
+<td>Start from weights trained on a larger corpus</td>
+</tr>
+<tr>
+<td>Re-apply heuristics</td>
+<td>Catch the remaining systematic errors</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Stacking:</strong> train models that disagree in useful ways (a linear bag-of-words model and a small neural net). A second-stage model takes their scores as input and makes the call.</p>
+<p><img alt="Stacked models" src="files/data-641/graphics/stacking.png" /></p>
+<p>Transfer learning is the usual path once you leave classical features: a pre-trained language model, fine-tuned on your labels. It is still a modeling choice, not magic. If your data is tiny and unlike the pre-training domain, a linear model on good features can win.</p>
+<hr />
+<h2>4. Let the data pick the path</h2>
+<p>Volume and quality decide the strategy more than taste.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Data you have</th>
+<th>Sensible first model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almost no labels, clear rules</td>
+<td>Heuristics or a vendor API</td>
+</tr>
+<tr>
+<td>Hundreds of clean labels</td>
+<td>Linear model on handcrafted or TF–IDF features</td>
+</tr>
+<tr>
+<td>Thousands of in-domain labels</td>
+<td>Classical ML or a small neural net</td>
+</tr>
+<tr>
+<td>Large labeled set, messy text</td>
+<td>Deep model / transfer learning</td>
+</tr>
+<tr>
+<td>Lots of unlabeled text, few labels</td>
+<td>Pre-train or use the unlabeled text for embeddings; label what the model is unsure of</td>
+</tr>
+</tbody>
+</table></div>
+<p><img alt="Decision paths from data attributes" src="files/data-641/graphics/modeling-attributes.png" /></p>
+<p>“Production-ready” is part of the choice. A 2-point accuracy gain that cannot meet the latency budget is not an improvement. Note <strong>3.4</strong> is that constraint.</p>
+<hr />
+<h2>5. What “baseline” means here</h2>
+<p>Write the dummy first: majority class, or “always sales,” or “keyword <code>refund</code> → care.” Report its F1. Every later model has to beat <em>that</em> number, not a number from a blog.</p>
+<p>Then one classical model (Naive Bayes or logistic regression on TF–IDF). Then, if you still need more and you have the data, an ensemble or a transferred net.</p>
+<p>If the jump from dummy to TF–IDF is huge and the jump from TF–IDF to a transformer is 0.4 F1, stop. The labels or the extract are the problem (notes <strong>2.1</strong>–<strong>2.2</strong>), not the architecture.</p>
+<p>Keep a sheet: data size, features, model, intrinsic scores, latency. That sheet is the model. The <code>.pkl</code> file is just the current row.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>Write one heuristic for the sales-vs-care router from note <strong>2.1</strong>. Then say how you would turn it into a feature.</p>
+</li>
+<li>
+<p>You have 400 labeled tickets and 200,000 unlabeled ones. What modeling path from the table do you take first?</p>
+</li>
+<li>
+<p>Why can stacking two weak models beat either one, and when does it not?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

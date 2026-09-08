@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.3 Word2Vec CBOW - DATA 441/641 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.3 Word2Vec CBOW</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 5 &middot;
+                            <a href="files/data-641/word2vec-cbow.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Predict the middle word from its neighbors.
+                        </p>
+<h2>1. Predict the center word</h2>
+<p><strong>Continuous bag of words (CBOW)</strong> is one of the two Word2Vec training tasks. Given the words around a position, predict the word <strong>in</strong> that position.</p>
+<p>“Continuous” means the context is a <strong>dense</strong> combination of embeddings, not a sparse count bag. “Bag” means the context words are pooled. Order inside the window is not modeled.</p>
+<p>Skip-gram (note <strong>5.4</strong>) flips the arrow: one center word, predict each neighbor.</p>
+<p>Sources: <em>Practical Natural Language Processing</em> and <em>Natural Language Processing in Action</em>.</p>
+<hr />
+<h2>2. The training pairs</h2>
+<p>Take a sentence and a window. For window size 2 you look at two tokens on each side of the center (a 5-gram).</p>
+<pre><code>sentence = &quot;Claude Monet painted the Grand Canal of Venice in 1806.&quot;
+</code></pre>
+<p>Each 5-gram is one training example: the four context words are the input, the middle word is the target.</p>
+<p><img alt="CBOW: context in, center out" src="files/data-641/graphics/CBOW_training.png" /></p>
+<p>You do <strong>not</strong> feed four separate one-hots as a sequence. You add (or average) the one-hots of the context words into one <strong>multi-hot</strong> (or averaged) vector of length (|V|). The label is the one-hot of the center word.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Context (window 2)</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude, Monet, the, Grand</td>
+<td>painted</td>
+</tr>
+<tr>
+<td>Monet, painted, Grand, Canal</td>
+<td>the</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table></div>
+<p>A larger window means more context and more noise. 5-grams (window 2) are the picture used in lecture.</p>
+<hr />
+<h2>3. The network</h2>
+<p>Two layers. No hidden nonlinearity that you need to memorize.</p>
+<p><img alt="CBOW network" src="files/data-641/graphics/CBOW_net.png" /></p>
+<ul>
+<li><strong>Input:</strong> multi-hot (or average of one-hots) over the context, size (|V|).</li>
+<li><strong>Hidden:</strong> a dense vector of size (d) (the embedding size, often 100–300). This is (W_{\text{in}}^\top x) if (x) is the averaged context.</li>
+<li><strong>Output:</strong> (|V|) logits, then <strong>softmax</strong>. The target is the center word. Training is cross-entropy.</li>
+</ul>
+<p>The hidden width (d) is the embedding dimension you will keep. The softmax is a (|V|)-way classifier. That is expensive; note <strong>5.5</strong> is how people avoid a full softmax.</p>
+<p>After training, <strong>row (i) of the input weight matrix</strong> is the embedding of word (i). The output weights are a second set of vectors. In practice you take the input rows (or an average of input and output). You do not keep the softmax head.</p>
+<hr />
+<h2>4. What “bag” costs you</h2>
+<p>Because you sum or average the context, CBOW cannot see that <em>Monet</em> came before <em>painted</em>. It only sees “these four words were nearby.” That is enough to learn a usable space, and it is <strong>fast</strong>. Each example updates from a pooled context toward one target.</p>
+<p>Mikolov’s rule of thumb (expanded in note <strong>5.5</strong>): CBOW is better and quicker on <strong>frequent</strong> words. Skip-gram is better on <strong>rare</strong> words and small corpora.</p>
+<p>CBOW is a representation learner, not a product. You train it on a large unlabeled corpus (or load someone else’s vectors), then use the rows as features for classification, retrieval, or as the first layer of a larger net.</p>
+<p><strong>A size check.</strong> Hidden width (d = 100) and (|V| = 10{,}000) means the input matrix is (10{,}000 \times 100). That is the whole embedding table: one million numbers. The softmax matrix is the same size again. On a real crawl, (|V|) is larger and that second matrix is why note <strong>5.5</strong> exists.</p>
+<p>CBOW’s pooled context also <strong>smooths</strong>. A rare center word is predicted from common neighbors, so its vector gets pulled toward those neighbors. That helps frequent patterns and can wash out a rare word’s own geometry—another reason skip-gram is preferred when the tail of the vocabulary matters.</p>
+<hr />
+<h2>5. What you will run</h2>
+<p><code>gensim.models.Word2Vec(..., sg=0)</code> is CBOW (<code>sg=1</code> is skip-gram). Set <code>window</code>, <code>vector_size</code>, and <code>min_count</code>. Train on tokenized sentences, not raw files. After <code>build_vocab</code> and <code>train</code>, <code>model.wv["painted"]</code> is the row you kept. If that key is missing, the word was below <code>min_count</code>.</p>
+<p>Do not evaluate CBOW by its softmax accuracy. Evaluate the neighbors of a few words you care about.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>For the sentence above and window size 2, write the CBOW input and target for the center word <em>Canal</em>.</p>
+</li>
+<li>
+<p>Why is the input called a bag (or multi-hot) rather than a sequence of four one-hots?</p>
+</li>
+<li>
+<p>After training, which matrix do you save as the word vectors, and what do you discard?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T18:45:00-04:00">September 8, 2026, 6:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
