@@ -13,8 +13,8 @@ from build_lecture_note import PRINT_CSS, SIDEBAR, markdown_to_html  # noqa: E40
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-07T18:50:00-04:00"
-LAST_UPDATED_TEXT = "September 7, 2026, 6:50 PM EDT"
+LAST_UPDATED_ISO = "2026-09-08T14:50:00-04:00"
+LAST_UPDATED_TEXT = "September 8, 2026, 2:50 PM EDT"
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"

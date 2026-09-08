@@ -869,10 +869,13 @@ html[data-theme="dark"] strong {
 }
 
 body.page-lecture .page__content img {
-  max-width: 100%;
-  height: auto;
   display: block;
-  margin: 0.75em 0 1em;
+  margin: 1.1em auto 1.4em;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 38rem);
+  max-height: 22rem;
+  object-fit: contain;
 }
 
 body.page-lecture .page__content pre,

@@ -420,7 +420,16 @@ h3 {
   page-break-after: avoid;
 }
 p, li { margin: 0.45em 0; }
-img { max-width: 100%; height: auto; page-break-inside: avoid; }
+img {
+  display: block;
+  margin: 0.8em auto;
+  max-width: 5.8in;
+  max-height: 3.4in;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  page-break-inside: avoid;
+}
 ul, ol { padding-left: 1.25em; }
 pre {
   font-family: Consolas, "Courier New", monospace;

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -55,6 +56,51 @@ SLIDES = [
 ]
 
 
+SLIDE_FIGURE_CSS = """
+<style id="slide-figure-fit">
+.reveal section img,
+.reveal .slides img,
+.reveal .jp-RenderedMarkdown img {
+  display: block !important;
+  margin: 0.4em auto !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 82% !important;
+  max-height: 48vh !important;
+  object-fit: contain !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.reveal section center {
+  display: block !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+</style>
+"""
+
+
+def strip_img_size_attrs(html: str) -> str:
+    def repl(match: re.Match[str]) -> str:
+        tag = match.group(0)
+        tag = re.sub(
+            r"\s+(?:width|height)\s*=\s*(?:\"[^\"]*\"|'[^']*'|[^\s>]+)",
+            "",
+            tag,
+            flags=re.I,
+        )
+        tag = re.sub(
+            r"\s+style\s*=\s*\"[^\"]*(?:width|height)[^\"]*\"",
+            "",
+            tag,
+            flags=re.I,
+        )
+        return tag
+
+    return re.sub(r"<img\b[^>]*>", repl, html, flags=re.I)
+
+
 def copy_deck(html_src: pathlib.Path, dest_dir: pathlib.Path) -> pathlib.Path:
     dest_dir.mkdir(parents=True, exist_ok=True)
     dest_html = dest_dir / "slides.html"
@@ -66,6 +112,9 @@ def copy_deck(html_src: pathlib.Path, dest_dir: pathlib.Path) -> pathlib.Path:
             "window.Reveal = Reveal;\n        Reveal.initialize({",
             1,
         )
+    text = strip_img_size_attrs(text)
+    if 'id="slide-figure-fit"' not in text:
+        text = text.replace("</head>", SLIDE_FIGURE_CSS + "</head>", 1)
     dest_html.write_text(text, encoding="utf-8")
     for item in html_src.parent.iterdir():
         if item.name.startswith("."):
