@@ -3,8 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex, nofollow" />
-        <title>Lab 1 solutions - DATA 441/641 - Ahmad Mousavi</title>
+        <title>Lab 7: CNN Text Classification - DATA 441/641 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -101,33 +100,74 @@
             <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1 solutions</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 7: CNN Text Classification</h1>
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
-                            <a href="data-641-lab-1-numpy-nltk-files.html">Lab 1</a>
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 7 &middot;
+                            <a href="files/data-641/lab-7-cnn-classification.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            This page is locked. The solutions stay encrypted in the browser until the password is entered.
+                            A small 1-D CNN, then parallel kernels, on SMS spam.
                         </p>
-                        <form
-                            id="lab-solutions-form"
-                            class="lab-solutions-form"
-                            data-enc-url="files/data-641/lab-1-solutions.enc.json"
-                        >
-                            <label for="lab-solutions-password">Password</label>
-                            <input
-                                id="lab-solutions-password"
-                                name="passphrase"
-                                type="password"
-                                autocomplete="off"
-                                spellcheck="false"
-                            />
-                            <button type="submit">Open solutions</button>
-                        </form>
-                        <p id="lab-solutions-status" class="lab-solutions-status" role="status"></p>
-                        <div id="lab-solutions-output" class="lab-solutions-output" hidden></div>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>7.1</strong> through <strong>7.3</strong> first. You will need <code>pandas</code>, <code>numpy</code>, and <code>tensorflow</code> (Keras). A laptop CPU is enough if you keep the network small.</p>
+<p>Download <a href="files/data-641/spam.csv">spam.csv</a> into the same folder as the notebook. Open it with <code>encoding="latin1"</code>. <code>v2</code> is the message; <code>v1</code> is <code>ham</code> / <code>spam</code>.</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<pre><code class="language-python">import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Embedding, Conv1D, GlobalMaxPooling1D, Dense, Dropout
+</code></pre>
+<p>If <code>tensorflow</code> is not installed: <code>pip install tensorflow</code>.</p>
+<hr />
+<h2>1. Load and encode (1 point)</h2>
+<ol>
+<li>
+<p>Read <code>spam.csv</code> with <code>encoding="latin1"</code>. Keep <code>v1</code> and <code>v2</code>. Drop empty messages.</p>
+</li>
+<li>
+<p>Map <code>ham</code> → <code>0</code> and <code>spam</code> → <code>1</code>. Print the class counts. Spam is the minority class.</p>
+</li>
+<li>
+<p>Split <strong>70% train / 30% test</strong>, stratified on the label.</p>
+</li>
+</ol>
+<hr />
+<h2>2. Tokens to a matrix (1 point)</h2>
+<ol>
+<li>
+<p>Fit a Keras <code>Tokenizer</code> on the <strong>training</strong> messages only (<code>num_words</code> around 3000–5000 is enough).</p>
+</li>
+<li>
+<p>Convert train and test text to integer sequences. Pad / truncate to a fixed <code>maxlen</code> (40–80 is plenty for SMS).</p>
+</li>
+</ol>
+<p>Print <code>vocab</code> size, <code>maxlen</code>, and the shape of the two padded matrices. A row should look like a list of integers, not a TF–IDF vector.</p>
+<hr />
+<h2>3. A small 1-D CNN (1 point)</h2>
+<p>Build a Keras model with this spine (you may change the widths):</p>
+<ol>
+<li><code>Embedding</code> (50–100 dimensions is enough; you may learn it from scratch).</li>
+<li>At least one <code>Conv1D</code> (for example 64 filters, kernel size 3).</li>
+<li><code>GlobalMaxPooling1D</code>.</li>
+<li>A <code>Dense</code> hidden layer with dropout if you want it.</li>
+<li>A single sigmoid unit for binary spam/ham.</li>
+</ol>
+<p>Print <code>model.summary()</code>. In a comment: what does the kernel of size 3 see, and what does global max keep?</p>
+<hr />
+<h2>4. Train and score (1 point)</h2>
+<p>Train for a few epochs (<code>batch_size</code> 32 or 64). Use validation data or a validation split. Predict on the test set (threshold 0.5 unless you choose another and say why).</p>
+<p>Print accuracy, precision, recall, and F1 for the spam class, plus a classification report.</p>
+<p>The class split is uneven. A model that always says <code>ham</code> will look accurate and still be useless.</p>
+<hr />
+<h2>5. Parallel kernels (1 point)</h2>
+<p>Add a second model that follows note <strong>7.3</strong>: <strong>two or three</strong> <code>Conv1D</code> branches with different kernel sizes (for example 2, 3, and 5), concatenate the pooled vectors, then classify.</p>
+<p>You can use the Keras functional API for the branches. Train it the same way. Print the test F1 next to the single-kernel model.</p>
+<p>In two or three sentences: did the extra kernel sizes help, and would you keep them on this SMS set?</p>
                     </section>
                 </div>
             </article>
@@ -142,6 +182,5 @@
 
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
         <script src="assets/js/site.js"></script>
-        <script src="assets/js/lab-solutions.js"></script>
     </body>
 </html>

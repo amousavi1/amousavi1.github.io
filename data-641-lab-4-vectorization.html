@@ -3,8 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex, nofollow" />
-        <title>Lab 1 solutions - DATA 441/641 - Ahmad Mousavi</title>
+        <title>Lab 4: Vectorizing Tweets - DATA 441/641 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -101,33 +100,60 @@
             <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1 solutions</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 4: Vectorizing Tweets</h1>
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
-                            <a href="data-641-lab-1-numpy-nltk-files.html">Lab 1</a>
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 4 &middot;
+                            <a href="files/data-641/lab-4-vectorization.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            This page is locked. The solutions stay encrypted in the browser until the password is entered.
+                            One-hot, bag-of-words, n-grams, and TF–IDF on COVID tweets.
                         </p>
-                        <form
-                            id="lab-solutions-form"
-                            class="lab-solutions-form"
-                            data-enc-url="files/data-641/lab-1-solutions.enc.json"
-                        >
-                            <label for="lab-solutions-password">Password</label>
-                            <input
-                                id="lab-solutions-password"
-                                name="passphrase"
-                                type="password"
-                                autocomplete="off"
-                                spellcheck="false"
-                            />
-                            <button type="submit">Open solutions</button>
-                        </form>
-                        <p id="lab-solutions-status" class="lab-solutions-status" role="status"></p>
-                        <div id="lab-solutions-output" class="lab-solutions-output" hidden></div>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>4.1</strong> through <strong>4.5</strong> first. You will need <code>pandas</code> and <code>scikit-learn</code>.</p>
+<p>Download <a href="files/data-641/covid19_tweets.csv">covid19_tweets.csv</a> into the same folder as the notebook (or use a relative path). Columns are <code>Tweet</code> (text) and <code>Is_Unreliable</code> (label). <code>Category</code> is optional this week.</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<pre><code class="language-python">import pandas as pd
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+</code></pre>
+<p><code>MultiLabelBinarizer</code> is one way to build a one-hot matrix over a vocabulary. <code>CountVectorizer</code> and <code>TfidfVectorizer</code> are the usual sklearn versions of bag-of-words, n-grams, and TF–IDF.</p>
+<hr />
+<h2>1. Load the tweets (1 point)</h2>
+<ol>
+<li>
+<p>Read <code>covid19_tweets.csv</code> with pandas.</p>
+</li>
+<li>
+<p>Print <code>shape</code>, column names, the label counts for <code>Is_Unreliable</code>, and two sample tweets.</p>
+</li>
+<li>
+<p>Drop rows with empty <code>Tweet</code> text. Work from a list (or a Series) of the remaining tweets for the rest of the lab.</p>
+</li>
+</ol>
+<p>You are vectorizing this week, not classifying. You do not need a train/test split.</p>
+<hr />
+<h2>2. One-hot encoding (1 point)</h2>
+<p>Turn each tweet into a one-hot vector over the corpus vocabulary: a token is <code>1</code> if it appears in that tweet, <code>0</code> otherwise.</p>
+<p>Print:</p>
+<ul>
+<li>the vocabulary size</li>
+<li>the shape of the document-term matrix</li>
+<li>the vector for <strong>one</strong> tweet, and the tokens that are on in that vector</li>
+</ul>
+<p>A binary <code>CountVectorizer(binary=True)</code> or a <code>MultiLabelBinarizer</code> on tokenized tweets is enough. Say which you used.</p>
+<hr />
+<h2>3. Bag-of-words (1 point)</h2>
+<p>Same tweets, now with <strong>counts</strong>. Print the shape and the bag-of-words vector for the same tweet you used in Exercise 2, plus the tokens with nonzero counts.</p>
+<p>If a tweet repeats a word, the count should be greater than 1. That is the difference from one-hot.</p>
+<hr />
+<h2>4. Bag of n-grams (1 point)</h2>
+<p>Use <code>CountVectorizer</code> with an n-gram range that includes more than unigrams (for example <code>ngram_range=(1, 2)</code> or <code>(2, 2)</code>). Print the n-gram vocabulary size, a few feature names, and the vector for the same tweet.</p>
+<p>In a comment: which n-grams in that tweet would a unigram bag have missed?</p>
+<hr />
+<h2>5. TF–IDF (1 point)</h2>
+<p>Transform the same tweets with <code>TfidfVectorizer</code>. Print the shape and the TF–IDF vector for the same tweet.</p>
+<p>In a short comment: name one token that looks more important under TF–IDF than under raw counts (or the reverse), and why that happened.</p>
                     </section>
                 </div>
             </article>
@@ -142,6 +168,5 @@
 
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
         <script src="assets/js/site.js"></script>
-        <script src="assets/js/lab-solutions.js"></script>
     </body>
 </html>

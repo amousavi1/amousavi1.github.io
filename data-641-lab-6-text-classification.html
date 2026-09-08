@@ -3,8 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex, nofollow" />
-        <title>Lab 1 solutions - DATA 441/641 - Ahmad Mousavi</title>
+        <title>Lab 6: Traditional Text Classification - DATA 441/641 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -101,33 +100,60 @@
             <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1 solutions</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 6: Traditional Text Classification</h1>
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
-                            <a href="data-641-lab-1-numpy-nltk-files.html">Lab 1</a>
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 6 &middot;
+                            <a href="files/data-641/lab-6-text-classification.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            This page is locked. The solutions stay encrypted in the browser until the password is entered.
+                            TF–IDF with k-NN and a linear SVM on the COVID tweets.
                         </p>
-                        <form
-                            id="lab-solutions-form"
-                            class="lab-solutions-form"
-                            data-enc-url="files/data-641/lab-1-solutions.enc.json"
-                        >
-                            <label for="lab-solutions-password">Password</label>
-                            <input
-                                id="lab-solutions-password"
-                                name="passphrase"
-                                type="password"
-                                autocomplete="off"
-                                spellcheck="false"
-                            />
-                            <button type="submit">Open solutions</button>
-                        </form>
-                        <p id="lab-solutions-status" class="lab-solutions-status" role="status"></p>
-                        <div id="lab-solutions-output" class="lab-solutions-output" hidden></div>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>6.1</strong> and <strong>6.2</strong> first. You will need <code>pandas</code> and <code>scikit-learn</code>.</p>
+<p>Download <a href="files/data-641/covid19_tweets.csv">covid19_tweets.csv</a> into the same folder as the notebook. You already vectorized these tweets in Lab 4. This week you put a <strong>classifier</strong> on the end.</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<pre><code class="language-python">import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
+from sklearn.metrics import classification_report, confusion_matrix
+</code></pre>
+<hr />
+<h2>1. Load and split (1 point)</h2>
+<ol>
+<li>
+<p>Read <code>covid19_tweets.csv</code>. Use <code>Tweet</code> as <code>X</code> and <code>Is_Unreliable</code> as <code>y</code>. Drop empty tweets.</p>
+</li>
+<li>
+<p>Print the class counts. Say whether the problem is balanced.</p>
+</li>
+<li>
+<p>Split <strong>70% train / 30% test</strong>, stratified on <code>y</code>. Print the train and test sizes and the class mix in each.</p>
+</li>
+</ol>
+<p>Fit the vectorizer <strong>only</strong> on the training text.</p>
+<hr />
+<h2>2. TF–IDF features (1 point)</h2>
+<p>Build a <code>TfidfVectorizer</code> (unigrams, or unigrams plus bigrams). Fit on the training tweets. Transform train and test.</p>
+<p>Print the vocabulary size and the shape of the two document-term matrices. If you cap <code>max_features</code> or drop stop words, say so.</p>
+<hr />
+<h2>3. (k)-NN (1 point)</h2>
+<p>Train <code>KNeighborsClassifier</code> on the TF–IDF train matrix. Cosine distance is the usual choice on these vectors (<code>metric="cosine"</code>). Pick a <code>k</code> and say why.</p>
+<p>Print a classification report on the test set (accuracy, precision, recall, F1).</p>
+<hr />
+<h2>4. Linear SVM (1 point)</h2>
+<p>Train <code>LinearSVC</code> on the same train matrix. Print the test classification report.</p>
+<p>In a comment: which model wins on F1 (or on the class you care about), and is the gap large enough to matter?</p>
+<hr />
+<h2>5. Errors the average hid (1 point)</h2>
+<p>Print a confusion matrix for the <strong>better</strong> of the two models. Then do <strong>one</strong> of these:</p>
+<ul>
+<li>read three false positives and three false negatives (print the tweet text)</li>
+<li>or list the tokens with the largest SVM coefficients if you used <code>LinearSVC</code></li>
+</ul>
+<p>Write two or three sentences: what the model is using, and one failure a single F1 number hid.</p>
                     </section>
                 </div>
             </article>
@@ -142,6 +168,5 @@
 
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
         <script src="assets/js/site.js"></script>
-        <script src="assets/js/lab-solutions.js"></script>
     </body>
 </html>

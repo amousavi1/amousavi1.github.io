@@ -20,16 +20,20 @@ NOTES = [
     {"slug": "bow", "week": 4, "title": "4.3 Bag of Words", "lead": "Count tokens and ignore order.", "slide": "4.3-bow"},
     {"slug": "bonw", "week": 4, "title": "4.4 Bag of N-Grams", "lead": "Counts of short phrases keep a little local order.", "slide": "4.4-bonw"},
     {"slug": "tfidf", "week": 4, "title": "4.5 TF-IDF", "lead": "Down-weight words that appear in almost every document.", "slide": "4.5-tfidf"},
+    {"slug": "lab-4-vectorization", "week": 4, "title": "Lab 4: Vectorizing Tweets", "lead": "One-hot, bag-of-words, n-grams, and TF–IDF on COVID tweets."},
     {"slug": "intro-deep-learning", "week": 5, "title": "5.1 Introduction to Deep Learning", "lead": "Layers, loss, and why we stack representations.", "slide": "5.1-intro-deep-learning"},
     {"slug": "distributed-representations", "week": 5, "title": "5.2 Distributed Representations", "lead": "Similar words share dimensions instead of a single one-hot slot.", "slide": "5.2-distributed-representations"},
     {"slug": "word2vec-cbow", "week": 5, "title": "5.3 Word2Vec CBOW", "lead": "Predict the middle word from its neighbors.", "slide": "5.3-word2vec-cbow"},
     {"slug": "word2vec-skipgram", "week": 5, "title": "5.4 Word2Vec Skip-gram", "lead": "Predict the neighbors from the middle word.", "slide": "5.4-word2vec-skipgram"},
     {"slug": "word2vec-practical", "week": 5, "title": "5.5 Word2Vec Practical Considerations", "lead": "Negative sampling, window size, and other training tricks.", "slide": "5.5-word2vec-practical"},
+    {"slug": "lab-5-word2vec", "week": 5, "title": "Lab 5: Word2Vec on Text Messages", "lead": "Skip-gram, CBOW, and a t-SNE picture of SMS embeddings."},
     {"slug": "text-classification-pipeline", "week": 6, "title": "6.1 Text Classification Pipeline", "lead": "The full path from raw text to a label.", "slide": "6.1-text-classification-pipeline"},
     {"slug": "traditional-text-classification", "week": 6, "title": "6.2 Traditional Text Classification", "lead": "BoW or TF-IDF features with a linear or neighbor model.", "slide": "6.2-traditional-text-classification"},
+    {"slug": "lab-6-text-classification", "week": 6, "title": "Lab 6: Traditional Text Classification", "lead": "TF–IDF with k-NN and a linear SVM on the COVID tweets."},
     {"slug": "intro-cnns", "week": 7, "title": "7.1 Introduction to CNNs", "lead": "Filters, padding, stride, and pooling.", "slide": "7.1-intro-cnns"},
     {"slug": "cnns-text", "week": 7, "title": "7.2 CNNs for Text", "lead": "1-D convolutions over a sequence of embeddings.", "slide": "7.2-cnns-text"},
     {"slug": "cnn-text-classification", "week": 7, "title": "7.3 CNN Text Classification", "lead": "Several kernel sizes, then a classifier on the pooled features.", "slide": "7.3-cnn-text-classification"},
+    {"slug": "lab-7-cnn-classification", "week": 7, "title": "Lab 7: CNN Text Classification", "lead": "A small 1-D CNN, then parallel kernels, on SMS spam."},
     {"slug": "loopy-rnns", "week": 8, "title": "8.1 Loopy Recurrent Neural Networks", "lead": "A hidden state that reads the text one token at a time.", "slide": "8.1-loopy-rnns"},
     {"slug": "rnns-classification", "week": 8, "title": "8.2 RNNs for Text Classification", "lead": "Use the last state, or a bidirectional read, as the document vector.", "slide": "8.2-rnns-classification"},
     {"slug": "midterm", "week": 9, "title": "Midterm Review", "lead": "What the midterm covers and how to prepare."},
@@ -69,7 +73,7 @@ WEEKS = {
     },
     2: {
         "lectures": ["data-acquisition", "text-extraction-cleanup", "preprocessing", "advanced-preprocessing"],
-        "labs": [("lab-2-text-extraction", False)],
+        "labs": [("lab-2-text-extraction", True)],
         "homework": [("Homework 2", "hwk2.pdf")],
         "readings": [
             ("Practical NLP, Ch. 2 (pipeline)", "https://www.oreilly.com/library/view/practical-natural-language/9781492054047/"),
@@ -82,7 +86,7 @@ WEEKS = {
     },
     3: {
         "lectures": ["feature-engineering", "modeling", "evaluation", "deployment-monitoring"],
-        "labs": [("lab-3-fake-news", False)],
+        "labs": [("lab-3-fake-news", True)],
         "readings": [
             ("Practical NLP, Ch. 2 continued", "https://www.oreilly.com/library/view/practical-natural-language/9781492054047/"),
             ("sklearn: Precision, recall, F-score", "https://scikit-learn.org/stable/modules/model_evaluation.html#precision-recall-f-measure-metrics"),
@@ -94,6 +98,8 @@ WEEKS = {
     },
     4: {
         "lectures": ["text-representation-intro", "one-hot", "bow", "bonw", "tfidf"],
+        "labs": [("lab-4-vectorization", True)],
+        "homework": [("Homework 3", "hwk3.pdf")],
         "readings": [
             ("Practical NLP, Ch. 3 (text representation)", "https://www.oreilly.com/library/view/practical-natural-language/9781492054047/"),
             ("sklearn: TfidfVectorizer", "https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html"),
@@ -105,6 +111,7 @@ WEEKS = {
     },
     5: {
         "lectures": ["intro-deep-learning", "distributed-representations", "word2vec-cbow", "word2vec-skipgram", "word2vec-practical"],
+        "labs": [("lab-5-word2vec", True)],
         "readings": [
             ("Practical NLP, Ch. 3 continued", "https://www.oreilly.com/library/view/practical-natural-language/9781492054047/"),
             ("Mikolov et al., Efficient estimation of word representations", "https://arxiv.org/abs/1301.3781"),
@@ -116,6 +123,7 @@ WEEKS = {
     },
     6: {
         "lectures": ["text-classification-pipeline", "traditional-text-classification"],
+        "labs": [("lab-6-text-classification", True)],
         "readings": [
             ("Practical NLP, Ch. 4 (text classification)", "https://www.oreilly.com/library/view/practical-natural-language/9781492054047/"),
             ("sklearn: Working with text data", "https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html"),
@@ -127,6 +135,7 @@ WEEKS = {
     },
     7: {
         "lectures": ["intro-cnns", "cnns-text", "cnn-text-classification"],
+        "labs": [("lab-7-cnn-classification", True)],
         "readings": [
             ("Chollet, Deep Learning with Python: convnets", "https://www.manning.com/books/deep-learning-with-python-second-edition"),
             ("Kim, Convolutional neural networks for sentence classification", "https://aclanthology.org/D14-1181/"),
@@ -222,9 +231,11 @@ WEEKS = {
 }
 
 DATA_FILES = [
+    "covid19_tweets.csv",
     "fakeNews.csv",
     "nemo.txt",
     "sample.pdf",
+    "spam.csv",
     "TrainLabels.csv",
     "trueNews.csv",
 ]

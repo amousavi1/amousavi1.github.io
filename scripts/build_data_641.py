@@ -14,8 +14,8 @@ from data_641_catalog import BY_SLUG, DATA_FILES, NOTES, WEEKS  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-08T18:45:00-04:00"
-LAST_UPDATED_TEXT = "September 8, 2026, 6:45 PM EDT"
+LAST_UPDATED_ISO = "2026-09-08T20:15:00-04:00"
+LAST_UPDATED_TEXT = "September 8, 2026, 8:15 PM EDT"
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"
@@ -163,10 +163,11 @@ def write_hub() -> pathlib.Path:
                     _material_item(note["title"], f"{COURSE}-{slug}.html", f"files/{COURSE}/{slug}.pdf")
                 )
                 if has_solutions:
+                    lab_n = _lab_number(slug)
                     items.append(
                         _material_item(
-                            "Lab 1 solutions",
-                            f"{COURSE}-lab-1-solutions.html",
+                            f"Lab {lab_n} solutions",
+                            f"{COURSE}-lab-{lab_n}-solutions.html",
                             note="(password)",
                         )
                     )
@@ -245,15 +246,28 @@ def write_hub() -> pathlib.Path:
     return page_path
 
 
-def write_solutions_page() -> pathlib.Path:
-    page_path = ROOT / f"{COURSE}-lab-1-solutions.html"
+def _lab_number(slug: str) -> str:
+    return slug.split("-")[1]
+
+
+def labs_with_solutions() -> list[tuple[int, str, str]]:
+    out: list[tuple[int, str, str]] = []
+    for week, spec in WEEKS.items():
+        for slug, has_solutions in spec.get("labs") or []:
+            if has_solutions:
+                out.append((week, slug, _lab_number(slug)))
+    return out
+
+
+def write_solutions_page(week: int, slug: str, lab_n: str) -> pathlib.Path:
+    page_path = ROOT / f"{COURSE}-lab-{lab_n}-solutions.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="noindex, nofollow" />
-        <title>Lab 1 solutions - {COURSE_TITLE} - Ahmad Mousavi</title>
+        <title>Lab {lab_n} solutions - {COURSE_TITLE} - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -289,12 +303,12 @@ def write_solutions_page() -> pathlib.Path:
             <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1 solutions</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab {lab_n} solutions</h1>
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="{COURSE}.html">{COURSE_TITLE}</a> &middot; Week 1 &middot;
-                            <a href="{COURSE}-lab-1-numpy-nltk-files.html">Lab 1</a>
+                            <a href="{COURSE}.html">{COURSE_TITLE}</a> &middot; Week {week} &middot;
+                            <a href="{COURSE}-{slug}.html">Lab {lab_n}</a>
                         </p>
                         <p>
                             This page is locked. The solutions stay encrypted in the browser until the password is entered.
@@ -302,7 +316,7 @@ def write_solutions_page() -> pathlib.Path:
                         <form
                             id="lab-solutions-form"
                             class="lab-solutions-form"
-                            data-enc-url="files/{COURSE}/lab-1-solutions.enc.json"
+                            data-enc-url="files/{COURSE}/lab-{lab_n}-solutions.enc.json"
                         >
                             <label for="lab-solutions-password">Password</label>
                             <input
@@ -392,14 +406,21 @@ def build_note(note: dict) -> None:
 
 def main() -> None:
     week = None
+    slugs = None
     if len(sys.argv) > 1:
-        week = int(sys.argv[1])
+        if sys.argv[1].isdigit():
+            week = int(sys.argv[1])
+        else:
+            slugs = set(sys.argv[1:])
     for note in NOTES:
         if week is not None and note["week"] != week:
             continue
+        if slugs is not None and note["slug"] not in slugs:
+            continue
         build_note(note)
-    write_solutions_page()
-    print("Wrote data-641-lab-1-solutions.html")
+    for lab_week, slug, lab_n in labs_with_solutions():
+        write_solutions_page(lab_week, slug, lab_n)
+        print(f"Wrote {COURSE}-lab-{lab_n}-solutions.html")
     write_hub()
     print("Wrote data-641.html")
 

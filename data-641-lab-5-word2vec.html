@@ -3,8 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex, nofollow" />
-        <title>Lab 1 solutions - DATA 441/641 - Ahmad Mousavi</title>
+        <title>Lab 5: Word2Vec on Text Messages - DATA 441/641 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -101,33 +100,71 @@
             <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1 solutions</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 5: Word2Vec on Text Messages</h1>
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-641.html">DATA 441/641</a> &middot; Week 1 &middot;
-                            <a href="data-641-lab-1-numpy-nltk-files.html">Lab 1</a>
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 5 &middot;
+                            <a href="files/data-641/lab-5-word2vec.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            This page is locked. The solutions stay encrypted in the browser until the password is entered.
+                            Skip-gram, CBOW, and a t-SNE picture of SMS embeddings.
                         </p>
-                        <form
-                            id="lab-solutions-form"
-                            class="lab-solutions-form"
-                            data-enc-url="files/data-641/lab-1-solutions.enc.json"
-                        >
-                            <label for="lab-solutions-password">Password</label>
-                            <input
-                                id="lab-solutions-password"
-                                name="passphrase"
-                                type="password"
-                                autocomplete="off"
-                                spellcheck="false"
-                            />
-                            <button type="submit">Open solutions</button>
-                        </form>
-                        <p id="lab-solutions-status" class="lab-solutions-status" role="status"></p>
-                        <div id="lab-solutions-output" class="lab-solutions-output" hidden></div>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>5.2</strong> through <strong>5.5</strong> first. You will need <code>pandas</code>, <code>nltk</code>, <code>gensim</code>, <code>scikit-learn</code>, and <code>matplotlib</code>.</p>
+<p>Download <a href="files/data-641/spam.csv">spam.csv</a> into the same folder as the notebook (or use a relative path). The file is the classic SMS collection: column <code>v1</code> is <code>ham</code> / <code>spam</code>, column <code>v2</code> is the message. Open it with <code>encoding="latin1"</code>.</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas. Save the notebook before you export.</p>
+<pre><code class="language-python">import re
+import string
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from gensim.models import Word2Vec
+from sklearn.manifold import TSNE
+
+nltk.download(&quot;punkt&quot;)
+nltk.download(&quot;stopwords&quot;)
+</code></pre>
+<p>If <code>word_tokenize</code> asks for <code>punkt_tab</code>, run <code>nltk.download("punkt_tab")</code> as well.</p>
+<hr />
+<h2>1. Load and clean (1 point)</h2>
+<ol>
+<li>
+<p>Read <code>spam.csv</code> with <code>encoding="latin1"</code>. Keep <code>v1</code> and <code>v2</code>. Drop empty messages.</p>
+</li>
+<li>
+<p>Clean each message: lowercase, strip URLs, drop punctuation and English stop words. Tokenize. Print <strong>one</strong> raw message next to its token list.</p>
+</li>
+<li>
+<p>Build a list of token lists (one list per message). That is what <code>Word2Vec</code> wants.</p>
+</li>
+</ol>
+<p>You do not need the spam/ham label for training the embeddings. Keep it if you want to color the plot later.</p>
+<hr />
+<h2>2. Skip-gram (1 point)</h2>
+<p>Train <code>Word2Vec</code> with <code>sg=1</code> on the tokenized messages. Start with something like <code>vector_size=100</code> (or 300), <code>window=3</code>, <code>min_count=2</code>, <code>workers=1</code> so the run is repeatable.</p>
+<p>Print the vocabulary size and the nearest neighbors of two words that actually appear (try <code>free</code>, <code>call</code>, <code>win</code>, or <code>ok</code>).</p>
+<hr />
+<h2>3. CBOW (1 point)</h2>
+<p>Train a second model on the <strong>same</strong> token lists with <code>sg=0</code>. Same <code>vector_size</code> and <code>window</code> as Exercise 2.</p>
+<p>Print neighbors of the same two words. In a comment: which model’s neighbors look more usable on this small SMS corpus, and why that is plausible?</p>
+<hr />
+<h2>4. t-SNE (1 point)</h2>
+<p>Take the word vectors from <strong>one</strong> of the models (or both, in two plots). Project them to 2-D with <code>TSNE(n_components=2, random_state=42)</code>.</p>
+<p>If the vocabulary is large, plot a subset (for example the 200–400 most frequent words) so t-SNE finishes on a laptop. Scatter the points. Label a handful of words — and label the points that belong to <strong>those</strong> words, not the first few rows of the matrix.</p>
+<pre><code class="language-python">vectors = model.wv[words]
+coords = TSNE(n_components=2, random_state=42, init=&quot;pca&quot;, perplexity=30).fit_transform(vectors)
+</code></pre>
+<hr />
+<h2>5. Read the picture (1 point)</h2>
+<p>Write a short paragraph (a few sentences is enough):</p>
+<ul>
+<li>Do you see any clusters (greeting words, prize/spam language, numbers)?</li>
+<li>Name two words that landed near each other and whether that pairing makes sense.</li>
+<li>One limitation of training Word2Vec on a few thousand short SMS texts.</li>
+</ul>
                     </section>
                 </div>
             </article>
@@ -142,6 +179,5 @@
 
         <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
         <script src="assets/js/site.js"></script>
-        <script src="assets/js/lab-solutions.js"></script>
     </body>
 </html>
