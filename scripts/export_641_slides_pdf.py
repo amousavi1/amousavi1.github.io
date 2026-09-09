@@ -63,73 +63,116 @@ SLIDES = [
 ]
 
 
-SLIDE_FIGURE_CSS = """
-<style id="slide-figure-fit">
-.reveal section img,
-.reveal .slides img,
-.reveal .jp-RenderedMarkdown img {
-  display: block !important;
-  margin: 0.4em auto !important;
-  width: auto !important;
-  height: auto !important;
-  max-width: 82% !important;
-  max-height: 48vh !important;
-  object-fit: contain !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+# Hide notebook chrome only. Keep the notebook's own image sizes and math.
+SLIDE_CLEAN_CSS = """
+<style id="slide-notebook-clean">
+.jp-Collapser,
+.jp-InputPrompt,
+.jp-OutputPrompt {
+  display: none !important;
 }
-.reveal section center {
-  display: block !important;
-  text-align: center !important;
-  width: 100% !important;
+.reveal .slides {
+  text-align: left;
+}
+.reveal section {
+  height: 100%;
+  box-sizing: border-box;
 }
 </style>
 """
 
 
-def strip_img_size_attrs(html: str) -> str:
-    def repl(match: re.Match[str]) -> str:
-        tag = match.group(0)
-        tag = re.sub(
-            r"\s+(?:width|height)\s*=\s*(?:\"[^\"]*\"|'[^']*'|[^\s>]+)",
-            "",
-            tag,
-            flags=re.I,
-        )
-        tag = re.sub(
-            r"\s+style\s*=\s*\"[^\"]*(?:width|height)[^\"]*\"",
-            "",
-            tag,
-            flags=re.I,
-        )
-        return tag
-
-    return re.sub(r"<img\b[^>]*>", repl, html, flags=re.I)
+def find_notebook(html_src: pathlib.Path) -> pathlib.Path | None:
+    nbs = [
+        p
+        for p in html_src.parent.glob("*.ipynb")
+        if ".ipynb_checkpoints" not in str(p)
+        and "checkpoint" not in p.name.lower()
+        and "handout" not in p.name.lower()
+    ]
+    if not nbs:
+        return None
+    stem = html_src.name.replace(".slides.html", "")
+    for p in nbs:
+        if p.stem == stem or p.stem.replace("-Slides", "") in stem:
+            return p
+    slides = [p for p in nbs if "slide" in p.name.lower()]
+    return slides[0] if slides else nbs[0]
 
 
-def copy_deck(html_src: pathlib.Path, dest_dir: pathlib.Path) -> pathlib.Path:
+def notebook_slide_count(nb_path: pathlib.Path) -> int:
+    import json
+
+    data = json.loads(nb_path.read_text(encoding="utf-8"))
+    n = 0
+    for cell in data.get("cells", []):
+        kind = (cell.get("metadata") or {}).get("slideshow", {}).get("slide_type")
+        if kind in {"slide", "subslide"}:
+            n += 1
+    return n
+
+
+def copy_folder_assets(src_dir: pathlib.Path, dest_dir: pathlib.Path) -> None:
     dest_dir.mkdir(parents=True, exist_ok=True)
-    dest_html = dest_dir / "slides.html"
-    text = html_src.read_text(encoding="utf-8", errors="ignore")
-    # DeckTape's Reveal plugin needs a global Reveal; these decks load it via RequireJS.
+    for item in src_dir.iterdir():
+        if item.name.startswith(".") or item.is_dir():
+            continue
+        if item.suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ipynb"}:
+            if "checkpoint" in item.name.lower() or "handout" in item.name.lower():
+                continue
+            shutil.copy2(item, dest_dir / item.name)
+
+
+def polish_html(html_path: pathlib.Path) -> None:
+    text = html_path.read_text(encoding="utf-8", errors="ignore")
     if "window.Reveal = Reveal" not in text:
         text = text.replace(
             "Reveal.initialize({",
             "window.Reveal = Reveal;\n        Reveal.initialize({",
             1,
         )
-    text = strip_img_size_attrs(text)
-    if 'id="slide-figure-fit"' not in text:
-        text = text.replace("</head>", SLIDE_FIGURE_CSS + "</head>", 1)
+    if 'id="slide-notebook-clean"' not in text:
+        text = text.replace("</head>", SLIDE_CLEAN_CSS + "</head>", 1)
+    html_path.write_text(text, encoding="utf-8")
+
+
+def build_from_notebook(nb_src: pathlib.Path, dest_dir: pathlib.Path) -> pathlib.Path:
+    copy_folder_assets(nb_src.parent, dest_dir)
+    nb_local = dest_dir / nb_src.name
+    if not nb_local.exists():
+        shutil.copy2(nb_src, nb_local)
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "nbconvert",
+            "--to",
+            "slides",
+            "--output",
+            "slides",
+            str(nb_local),
+        ],
+        check=True,
+        cwd=str(dest_dir),
+    )
+    html = dest_dir / "slides.slides.html"
+    if not html.exists():
+        html = dest_dir / "slides.html"
+    if html.name != "slides.html":
+        dest = dest_dir / "slides.html"
+        dest.write_text(html.read_text(encoding="utf-8", errors="ignore"), encoding="utf-8")
+        html = dest
+    polish_html(html)
+    return html
+
+
+def copy_deck(html_src: pathlib.Path, dest_dir: pathlib.Path) -> pathlib.Path:
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest_html = dest_dir / "slides.html"
+    text = html_src.read_text(encoding="utf-8", errors="ignore")
     dest_html.write_text(text, encoding="utf-8")
-    for item in html_src.parent.iterdir():
-        if item.name.startswith("."):
-            continue
-        if item.is_dir():
-            continue
-        if item.suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}:
-            shutil.copy2(item, dest_dir / item.name)
+    polish_html(dest_html)
+    copy_folder_assets(html_src.parent, dest_dir)
     return dest_html
 
 
@@ -146,11 +189,20 @@ def export_pdf(html_path: pathlib.Path, pdf_path: pathlib.Path) -> None:
         "--size",
         "1920x1080",
         "--pause",
-        "1000",
+        "1500",
         "--load-pause",
-        "4000",
+        "8000",
     ]
     subprocess.run(cmd, check=True, shell=True)
+
+
+def pdf_pages(pdf_path: pathlib.Path) -> int:
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        from PyPDF2 import PdfReader
+
+    return len(PdfReader(str(pdf_path)).pages)
 
 
 def main() -> None:
@@ -168,10 +220,18 @@ def main() -> None:
         if pdf.exists() and "--force" not in sys.argv:
             print(f"Skip existing {pdf.name}")
             continue
-        html = copy_deck(src, dest)
-        print(f"Exporting {stem} ...")
+        nb = find_notebook(src)
+        expected = notebook_slide_count(nb) if nb else None
+        if nb:
+            print(f"Building {stem} from {nb.name} ({expected} slides) ...")
+            html = build_from_notebook(nb, dest)
+        else:
+            print(f"No notebook for {stem}; using existing slides HTML")
+            html = copy_deck(src, dest)
         export_pdf(html, pdf)
-        print(f"Wrote {pdf} ({pdf.stat().st_size} bytes)")
+        pages = pdf_pages(pdf)
+        extra = f", expected {expected}" if expected is not None else ""
+        print(f"Wrote {pdf.name} ({pages} pages{extra}, {pdf.stat().st_size} bytes)")
 
 
 if __name__ == "__main__":
