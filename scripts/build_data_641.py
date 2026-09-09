@@ -15,8 +15,11 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-08T23:45:00-04:00"
-LAST_UPDATED_TEXT = "September 8, 2026, 11:45 PM EDT"
+LAST_UPDATED_ISO = "2026-09-09T02:40:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 2:40 AM EDT"
+
+# Weeks whose lecture titles open written notes; (slides) still opens the original deck.
+PROSE_NOTE_WEEKS = {1}
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"
@@ -30,10 +33,15 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     week = note["week"]
     slide = note.get("slide")
     slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
+    notes_pdf = f"files/{COURSE}/{slug}.pdf"
+    meta_bits = [
+        f'<a href="{COURSE}.html">{COURSE_TITLE}</a> &middot; Week {week}',
+        f'<a href="{notes_pdf}" target="_blank" rel="noopener">PDF</a>',
+    ]
     if slide_path and slide_path.exists():
-        pdf_href = f"files/{COURSE}/slides/{slide}.pdf"
-    else:
-        pdf_href = f"files/{COURSE}/{slug}.pdf"
+        meta_bits.append(
+            f'<a href="files/{COURSE}/slides/{slide}.pdf" target="_blank" rel="noopener">Slides</a>'
+        )
     page_path = ROOT / f"{COURSE}-{slug}.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
@@ -80,8 +88,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="{COURSE}.html">{COURSE_TITLE}</a> &middot; Week {week} &middot;
-                            <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
+                            {" &middot; ".join(meta_bits)}
                         </p>
                         <p>
                             {note["lead"]}
@@ -108,11 +115,17 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     return page_path
 
 
-def _material_item(title: str, href: str, pdf_href: str | None = None, note: str | None = None) -> str:
+def _material_item(
+    title: str,
+    href: str,
+    pdf_href: str | None = None,
+    note: str | None = None,
+    extra_label: str = "(PDF)",
+) -> str:
     extra = ""
     if pdf_href:
         extra += (
-            f'<a class="course-material__pdf" href="{pdf_href}" target="_blank" rel="noopener">(PDF)</a>'
+            f'<a class="course-material__pdf" href="{pdf_href}" target="_blank" rel="noopener">{extra_label}</a>'
         )
     if note:
         extra += f'<span class="course-material__note"> {note}</span>'
@@ -143,9 +156,25 @@ def write_hub() -> pathlib.Path:
                 note = BY_SLUG[slug]
                 slide = note.get("slide")
                 slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
-                if slide_path and slide_path.exists():
-                    pdf = f"files/{COURSE}/slides/{slide}.pdf"
-                    items.append(_material_item(note["title"], pdf, pdf))
+                notes_page = ROOT / f"{COURSE}-{slug}.html"
+                notes_md = FILES / f"{slug}.md"
+                slides_href = f"files/{COURSE}/slides/{slide}.pdf" if slide_path and slide_path.exists() else None
+                if (
+                    note["week"] in PROSE_NOTE_WEEKS
+                    and notes_md.exists()
+                    and notes_page.exists()
+                    and slides_href
+                ):
+                    items.append(
+                        _material_item(
+                            note["title"],
+                            f"{COURSE}-{slug}.html",
+                            slides_href,
+                            extra_label="(slides)",
+                        )
+                    )
+                elif slides_href:
+                    items.append(_material_item(note["title"], slides_href, slides_href))
                 else:
                     items.append(
                         _material_item(

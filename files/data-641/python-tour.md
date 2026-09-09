@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Why Python here
 
 This course uses **Python**. Labs and homework are **Jupyter** notebooks. Submit an HTML export to Canvas (File → Download as → HTML).

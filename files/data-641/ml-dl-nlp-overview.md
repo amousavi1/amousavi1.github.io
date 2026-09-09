@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. AI is bigger than learning
 
 Artificial intelligence (AI) asks whether a computer can do work that looks like thinking. Not every AI system **learns**.
