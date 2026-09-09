@@ -810,6 +810,7 @@ html[data-theme="dark"] strong {
 }
 
 .course-week-panel {
+  display: flow-root;
   margin: 0;
   padding: 0 0 0.35em;
 }
@@ -834,18 +835,18 @@ html[data-theme="dark"] strong {
   letter-spacing: -0.015em;
 }
 
-.page__content .course-week-panel > p.course-group-title:first-child {
-  margin-top: 8px;
-}
-
 .page__content p.course-group-title + p.course-group-title {
   margin-top: 10px;
 }
 
-.page-courses .page__content p.course-group-title:has(+ p.course-group-title) {
-  margin-bottom: 4px;
+.page-courses .page__content p.course-group-title:has(+ p.course-group-title),
+.page-courses .page__content p.course-group-title--no-rule {
   padding-bottom: 0;
   border-bottom: none;
+}
+
+.page-courses .page__content p.course-group-title:has(+ p.course-group-title) {
+  margin-bottom: 4px;
 }
 
 .course-discussion {
