@@ -780,9 +780,9 @@ html[data-theme="dark"] strong {
   display: flex;
   flex-wrap: wrap;
   gap: 0.15rem 0.2rem;
-  margin: 0 0 0.85em;
+  margin: 0;
   padding: 0;
-  border-bottom: 1px solid #e3e3e3;
+  border-bottom: 1px solid #ccc;
 }
 
 .course-week-tabs [role="tab"] {
@@ -811,7 +811,7 @@ html[data-theme="dark"] strong {
 
 .course-week-panel {
   margin: 0;
-  padding: 0.15em 0 0.35em;
+  padding: 0 0 0.35em;
 }
 
 .course-week-panel[hidden] {
@@ -823,6 +823,7 @@ html[data-theme="dark"] strong {
   margin-top: 32px;
   margin-bottom: 10px;
   padding-bottom: 8px;
+  line-height: 1.2;
   border-bottom: 1px solid #ccc;
 }
 
@@ -834,7 +835,7 @@ html[data-theme="dark"] strong {
 }
 
 .page__content .course-week-panel > p.course-group-title:first-child {
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .page__content p.course-group-title + p.course-group-title {
