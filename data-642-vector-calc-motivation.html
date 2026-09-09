@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.2 Why Vector Calculus - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.2 Why Vector Calculus</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot;
+                            <a href="files/data-642/vector-calc-motivation.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Training is an optimization problem. Linear regression is the first example.
+                        </p>
+<h2>1. Training is optimization</h2>
+<p>A model is a function of <strong>parameters</strong> (\boldsymbol{\theta}). A <strong>cost</strong> (J(\boldsymbol{\theta})) says how well those parameters explain the data. Training is</p>
+<p>[
+\hat{\boldsymbol{\theta}} \in \arg\min_{\boldsymbol{\theta}} J(\boldsymbol{\theta}).
+]</p>
+<p>Three pictures you will see again:</p>
+<ul>
+<li><strong>Linear regression.</strong> (\boldsymbol{\theta}) are weights. (J) is squared error (or a likelihood).</li>
+<li><strong>Auto-encoders</strong> (Module 6). (\boldsymbol{\theta}) are layer weights. (J) is reconstruction error. The chain rule is how you differentiate through the stack.</li>
+<li><strong>Gaussian mixtures</strong> (Module 5). (\boldsymbol{\theta}) are means, covariances, and mixture weights. (J) is a (negative) likelihood.</li>
+</ul>
+<p>If you cannot write (J) and say what (\boldsymbol{\theta}) is, you do not yet have a learning problem.</p>
+<hr />
+<h2>2. Linear regression, written so the calculus is visible</h2>
+<p>Training pairs ((y_n, \mathbf{x}_n)), (n=1,\dots,N). Prediction (\hat y_n = \hat{\boldsymbol{\theta}}^\top \mathbf{x}_n). Cost</p>
+<p>[
+J(\boldsymbol{\theta}) = \sum_{n=1}^N \bigl(y_n - \boldsymbol{\theta}^\top \mathbf{x}_n\bigr)^2.
+]</p>
+<p>Set (\nabla J = \mathbf{0}). In matrix form that is the <strong>normal equation</strong></p>
+<p>[
+(\mathbf{X}^\top\mathbf{X})\hat{\boldsymbol{\theta}} = \mathbf{X}^\top\mathbf{y},
+\qquad
+\hat{\boldsymbol{\theta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}
+]</p>
+<p>when (\mathbf{X}^\top\mathbf{X}) is invertible. The inverse existing is a linear-algebra fact (full column rank). The (\nabla J=\mathbf{0}) step is calculus.</p>
+<p>For two weights the surface (J) is a convex bowl. One local minimum, and it is global. Neural nets will not be this kind.</p>
+<hr />
+<h2>3. What Module 1 still owes you</h2>
+<p>To minimize a smooth (J) you need:</p>
+<ul>
+<li>a <strong>gradient</strong> (first derivatives) — when to stop, which way is downhill;</li>
+<li>a <strong>Hessian</strong> (second derivatives) — how curved the bowl is;</li>
+<li>later, <strong>constraints</strong> (week 3) when (\boldsymbol{\theta}) is not free in (\mathbb{R}^l).</li>
+</ul>
+<p>The next two notes are those derivatives. Week 2 turns them into algorithms.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

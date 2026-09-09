@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.4 Basic Vector Calculus - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.4 Basic Vector Calculus</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot;
+                            <a href="files/data-642/vector-calculus.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Gradients, Jacobians, and Hessians in the notation this course uses.
+                        </p>
+<h2>1. Gradient</h2>
+<p>(J(\boldsymbol{\theta}):\mathbb{R}^l\to\mathbb{R}). Vary one coordinate, hold the others. Those partials, stacked, are the gradient. This course writes it as a <strong>row</strong></p>
+<p>[
+\nabla J
+=
+\Bigl[
+\tfrac{\partial J}{\partial\theta_1}
+\;
+\tfrac{\partial J}{\partial\theta_2}
+\;
+\cdots
+\;
+\tfrac{\partial J}{\partial\theta_l}
+\Bigr]
+\in\mathbb{R}^{1\times l}.
+]</p>
+<p>Some books write a column. Be consistent inside one derivation. Descent updates look like (\boldsymbol{\theta}\leftarrow\boldsymbol{\theta}-\alpha(\nabla J)^\top) if (\nabla J) is a row.</p>
+<hr />
+<h2>2. Chain rule</h2>
+<p>If (J=J(\theta_1(t),\theta_2(t))), then</p>
+<p>[
+\frac{\mathrm{d}J}{\mathrm{d}t}
+=
+\frac{\partial J}{\partial\theta_1}\frac{\mathrm{d}\theta_1}{\mathrm{d}t}
++
+\frac{\partial J}{\partial\theta_2}\frac{\mathrm{d}\theta_2}{\mathrm{d}t}.
+]</p>
+<p>That is a gradient times a Jacobian. Back-propagation (Module 6) is this rule applied to a long composition. You do not need the neural-net story yet. You do need to be willing to write the product.</p>
+<hr />
+<h2>3. Hessian</h2>
+<p>If (J) is twice differentiable,</p>
+<p>[
+\nabla^2 J
+=
+\begin{bmatrix}
+\partial^2 J/\partial\theta_1^2 &amp; \partial^2 J/\partial\theta_1\partial\theta_2 \
+\partial^2 J/\partial\theta_2\partial\theta_1 &amp; \partial^2 J/\partial\theta_2^2
+\end{bmatrix}.
+]</p>
+<p>The mixed partials match (Schwarz), so the Hessian is <strong>symmetric</strong>. It measures <strong>curvature</strong>.</p>
+<p>At a critical point (\nabla J=\mathbf{0}):</p>
+<ul>
+<li>(\nabla^2 J) positive definite (\Rightarrow) local <strong>minimum</strong>;</li>
+<li>negative definite (\Rightarrow) local <strong>maximum</strong>;</li>
+<li>indefinite (\Rightarrow) saddle.</li>
+</ul>
+<p>Newton’s method (week 2) solves a linear system with this matrix every step. Eigenvalues of (\nabla^2 J) are why a long thin valley makes steepest descent zigzag.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

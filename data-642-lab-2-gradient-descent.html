@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 2: Gradient Descent and Newton - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 2: Gradient Descent and Newton</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 2 &middot;
+                            <a href="files/data-642/lab-2-gradient-descent.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Step sizes, SGD versus batch, and a badly conditioned quadratic.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook. Number the exercises. Do notes <strong>2.1</strong> through <strong>2.3</strong> first. You will need <code>numpy</code> and <code>matplotlib</code>.</p>
+<p>The original assignment PDF is <a href="files/data-642/lab-2-assignment.pdf">lab-2-assignment.pdf</a>. Class provided a snippet that builds linear-looking data; the generator below is enough.</p>
+<p>When you are done: <strong>File → Download as → HTML</strong>, then upload the HTML on Canvas.</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+m = 100
+X = 2 * np.random.rand(m, 1)
+y = 4 + 3 * X + np.random.randn(m, 1)
+X_b = np.c_[np.ones((m, 1)), X]  # intercept column
+</code></pre>
+<hr />
+<h2>1. Three gradient methods, in words (1 point)</h2>
+<p>In a short markdown cell: how do <strong>batch</strong> GD, <strong>mini-batch</strong> GD, and <strong>SGD</strong> differ (gradient, noise, cost per step)? No code.</p>
+<hr />
+<h2>2. Paths on linear data (2 points)</h2>
+<p>MSE for (\boldsymbol{\theta}=(b,w)) on the data above.</p>
+<ol>
+<li>Batch GD, 1000 iterations, <strong>fixed</strong> rates (0.02), (0.1), (0.5). Plot the first 10 steps in the ((b,w)) plane for each rate. Which rate converges fastest without blowing up?</li>
+<li>SGD with a decaying schedule and a random start. Plot the first 20 steps. What do you see?</li>
+<li>Mini-batch GD, batch size <strong>20</strong>. Plot the first 20 steps.</li>
+<li>Overlay the three paths. Which one is smoothest? Which one makes progress fastest at the beginning?</li>
+</ol>
+<hr />
+<h2>3. Newton versus GD on a bad quadratic (2 points)</h2>
+<p>[
+J(\boldsymbol{\theta})=\tfrac12\boldsymbol{\theta}^\top H\boldsymbol{\theta}+\tfrac{\lambda}{2}|\boldsymbol{\theta}|^2,
+\qquad
+H=\begin{bmatrix}2&amp;0\0&amp;2000\end{bmatrix},\quad\lambda=10.
+]</p>
+<p>Start from a random (\boldsymbol{\theta}\in\mathbb{R}^2). Run Newton (the Hessian of this (J) is (H+\lambda I), constant). Then run gradient descent. Compare iteration counts to a small tolerance. A walkthrough of Newton is <a href="https://xavierbourretsicotte.github.io/Intro_optimization.html#Newton-Raphson's-method">here</a>.</p>
+<p>The condition number is the point of the exercise. Say so in a comment.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

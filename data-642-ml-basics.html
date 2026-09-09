@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.1 Machine Learning Basics - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.1 Machine Learning Basics</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot;
+                            <a href="files/data-642/ml-basics.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Supervised, unsupervised, batch versus online, and the usual failure modes.
+                        </p>
+<h2>1. Four learning setups</h2>
+<p>This course is advanced machine learning. The algorithms change. The <strong>setup</strong> usually does not.</p>
+<p><strong>Supervised.</strong> The training rows come with answers (labels). Classification puts a row in a bucket (spam / ham). Regression predicts a number (price of a car). Methods you already know still apply: (k)-NN, linear and logistic regression, SVMs, trees, forests, neural nets. Weeks 5 and 12–15 pick these up again with more math.</p>
+<p><strong>Unsupervised.</strong> No labels. Clustering ((k)-means, hierarchical), anomaly detection (one-class SVM, later GMMs), and latent-variable models (PCA, kernel PCA, ICA, tensors) are the second half of the semester.</p>
+<p><strong>Semi-supervised.</strong> A little labeled data, a lot of unlabeled. A photo app that clusters faces and then asks you to name each cluster is the usual picture.</p>
+<p><strong>Reinforcement.</strong> An agent takes actions, sees a reward, and updates a policy. We will not live here. Know the words.</p>
+<p>The Géron book is the informal source for this lecture. <em>Mathematics for Machine Learning</em> is the math source for the rest of Module 1.</p>
+<hr />
+<h2>2. Batch versus online</h2>
+<p><strong>Batch (offline).</strong> Fit on the whole training set, then freeze the model. Simple. Expensive if you retrain from scratch every night on a huge matrix. Fine when the world is slow.</p>
+<p><strong>Online.</strong> Update as points arrive. The <strong>learning rate</strong> is how fast you forget the past. High: you track a changing stream and you also chase noise. Low: you are stable and you are late.</p>
+<p>A live system that trains online can be poisoned by one bad sensor. Monitor the inputs. Be ready to switch learning off.</p>
+<hr />
+<h2>3. Why models fail</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>What it looks like</th>
+<th>What you do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Too little data</td>
+<td>High variance, lucky splits</td>
+<td>More data, or a simpler model</td>
+</tr>
+<tr>
+<td>Non-representative data</td>
+<td>Sampling bias; the test world is not the train world</td>
+<td>Fix how you sample</td>
+</tr>
+<tr>
+<td>Poor quality</td>
+<td>Errors, outliers, sensor junk</td>
+<td>Clean before you model</td>
+</tr>
+<tr>
+<td>Irrelevant features</td>
+<td>The signal is not in the columns</td>
+<td>Select, extract, or collect better ones</td>
+</tr>
+<tr>
+<td>Underfitting</td>
+<td>Train and test both bad</td>
+<td>Richer model, better features, less regularization</td>
+</tr>
+<tr>
+<td>Overfitting</td>
+<td>Train great, test poor</td>
+<td>Simpler model, more data, less noise</td>
+</tr>
+</tbody>
+</table></div>
+<p>Data can beat a clever algorithm on a large problem. Medium data is still the usual case in this course. Do not abandon the math.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.3 Second-Order Methods - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.3 Second-Order Methods</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 2 &middot;
+                            <a href="files/data-642/second-order.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Newton, Levenberg–Marquardt, and BFGS.
+                        </p>
+<h2>1. Newton</h2>
+<p>Approximate (J) by a quadratic at the current point (\boldsymbol{\theta}^{(k)}):</p>
+<p>[
+J(\boldsymbol{\theta}^{(k)}+\boldsymbol{\delta})
+\approx
+J(\boldsymbol{\theta}^{(k)})
++\boldsymbol{\delta}^\top\nabla J(\boldsymbol{\theta}^{(k)})
++\tfrac12\boldsymbol{\delta}^\top H(\boldsymbol{\theta}^{(k)})\boldsymbol{\delta},
+]</p>
+<p>where (H=\nabla^2 J). Minimize that quadratic: solve</p>
+<p>[
+H(\boldsymbol{\theta}^{(k)})\boldsymbol{\delta} = -\nabla J(\boldsymbol{\theta}^{(k)}),
+]</p>
+<p>then (\boldsymbol{\theta}^{(k+1)}=\boldsymbol{\theta}^{(k)}+\boldsymbol{\delta}). On a convex quadratic, <strong>one</strong> Newton step is exact. That is the point of Lab 2, exercise 3: a badly scaled bowl that GD crawls and Newton finishes.</p>
+<hr />
+<h2>2. When Newton breaks</h2>
+<p>If (H) is not positive definite, the quadratic is not a bowl and the step can go uphill or blow up. A cheap fix is to solve ((H+\lambda I)\boldsymbol{\delta}=-\nabla J) (<strong>Levenberg–Marquardt</strong>). Large (\lambda) looks like gradient descent. Small (\lambda) looks like Newton.</p>
+<p>Analytical second derivatives are often unpleasant. Finite differences are possible and do not guarantee an SPD (H).</p>
+<hr />
+<h2>3. Quasi-Newton and BFGS</h2>
+<p>Do not form (H). Keep a symmetric positive-definite <strong>stand-in</strong> (H_*) for (H^{-1}), update it from the observed (\Delta\boldsymbol{\theta}) and (\Delta(\nabla J)), and set</p>
+<p>[
+\boldsymbol{\delta}^{(k)} = -H_*(\boldsymbol{\theta}^{(k)})\nabla J(\boldsymbol{\theta}^{(k)}),
+]</p>
+<p>then line-search. <strong>BFGS</strong> is the update you should be able to name. Rank-two, stays SPD, no explicit Hessian. Faster and more stable than raw Newton on many medium-scale problems; still heavier than SGD on a million-example net.</p>
+<p>Module 6 will come back to first-order methods (Adam, RMSProp). The idea is the same: better than raw (-\nabla J), cheaper than (H^{-1}).</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
