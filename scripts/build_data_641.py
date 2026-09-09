@@ -255,7 +255,6 @@ def write_hub() -> pathlib.Path:
                         """
     data_block_end = existing.index('<h2>Resources</h2>')
     data = f"""<h2>Data</h2>
-                        <p>These files can be used in any week.</p>
                         <ul class="course-data-list">
 {data_lis}
                         </ul>
