@@ -111,7 +111,12 @@ def main() -> None:
     copied = set()
     for item in ITEMS:
         courses = {c for c, _w in item["assign"]}
-        if only_missing and all((ROOT / "files" / c / "extra" / item["pdf"]).exists() for c in courses):
+        def dest_dir(course: str) -> pathlib.Path:
+            if item["kind"] == "practice":
+                return ROOT / "files" / "_private-assessments" / course
+            return ROOT / "files" / course / "extra"
+
+        if only_missing and all((dest_dir(c) / item["pdf"]).exists() for c in courses):
             ok += 1
             continue
         src = ROOT / item["src"]
@@ -127,7 +132,10 @@ def main() -> None:
         ok += 1
         courses = {c for c, _w in item["assign"]}
         for course in courses:
-            out_dir = ROOT / "files" / course / "extra"
+            if item["kind"] == "practice":
+                out_dir = ROOT / "files" / "_private-assessments" / course
+            else:
+                out_dir = ROOT / "files" / course / "extra"
             out_dir.mkdir(parents=True, exist_ok=True)
             dest = out_dir / item["pdf"]
             shutil.copy2(pdf, dest)

@@ -494,7 +494,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{title} - DATA 612 - Ahmad Mousavi</title>
+        <title>{title} - DATA 412/612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
@@ -534,7 +534,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-612.html">DATA 612</a> &middot; Week {week} &middot;
+                            <a href="data-612.html">DATA 412/612</a> &middot; Week {week} &middot;
                             <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
@@ -575,7 +575,7 @@ def write_print_page(note: dict, md_path: pathlib.Path) -> pathlib.Path:
   <style>{PRINT_CSS}</style>
 </head>
 <body>
-  <p class="kicker">DATA 612 &middot; Statistical Programming in R &middot; Week {note["week"]}</p>
+  <p class="kicker">DATA 412/612 &middot; Statistical Programming in R &middot; Week {note["week"]}</p>
   <h1>{note["title"]}</h1>
   <p>{note["lead"]}</p>
   {print_body}

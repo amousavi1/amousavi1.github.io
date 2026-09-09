@@ -9,6 +9,6 @@ What should be in your hands, not in a formula sheet you have never used:
 - Kernel trick, kernel ridge, primal and dual SVM (Module 3).
 - PCA / SVD, kernel PCA, CCA or IVA at the level of “what is being correlated,” tensors as multi-way arrays (Module 4).
 
-A past **midterm sample** is under Practice on this week. It is practice, not this year’s exam.
+Quizzes and exams stay on Canvas, not on this page.
 
 Bring questions to office hours. Write one derivation you still cannot do with the notes closed, and do it.

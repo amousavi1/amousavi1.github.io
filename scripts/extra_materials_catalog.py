@@ -1,7 +1,11 @@
-"""Complementary notes and past practice, mapped onto DATA 641 and 642 weeks.
+"""Complementary notes mapped onto DATA 641 and 642 weeks.
 
-Sources live in files/Notes___641_and_642 and files/Quizzes___641and_642.
-Compiled PDFs go to files/<course>/extra/.
+Lecture spine comes from the Google Drive course folders.
+These TeX files (files/Notes___641_and_642) are extras only.
+
+Quizzes and exams live in files/Quizzes___641and_642 (gitignored) and
+compile to files/_private-assessments/ (gitignored). They are never
+linked from the public hubs.
 
 kind: notes | practice | homework
 assign: list of (course, week)
@@ -109,6 +113,8 @@ ITEMS = [
 
 
 def extras_for(course: str, week: int, kind: str) -> list[tuple[str, str]]:
+    if kind == "practice":
+        return []
     out = []
     for item in ITEMS:
         if item["kind"] != kind:
