@@ -785,8 +785,15 @@ html[data-theme="dark"] strong {
   display: none;
 }
 
+.page-courses .page__content h2,
+.page-courses .page__content p.course-group-title {
+  margin-top: 32px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ccc;
+}
+
 .page__content p.course-group-title {
-  margin: 1.6em 0 0.35em;
   font-family: var(--font-display);
   font-size: 1.06em;
   font-weight: 700;
@@ -794,11 +801,17 @@ html[data-theme="dark"] strong {
 }
 
 .page__content .course-week-panel > p.course-group-title:first-child {
-  margin-top: 0.22em;
+  margin-top: 4px;
 }
 
 .page__content p.course-group-title + p.course-group-title {
-  margin-top: 0.5em;
+  margin-top: 10px;
+}
+
+.page-courses .page__content p.course-group-title:has(+ p.course-group-title) {
+  margin-bottom: 4px;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .course-discussion {
@@ -821,7 +834,7 @@ html[data-theme="dark"] strong {
   flex-wrap: wrap;
   gap: 0.35em 0;
   list-style: none;
-  margin: 0.15em 0 0.85em;
+  margin: 0 0 0.85em;
   padding: 0;
 }
 
@@ -965,6 +978,11 @@ body.page-lecture .page__content blockquote {
 
 html[data-theme="dark"] .course-group-title {
   color: #e6edf3;
+}
+
+html[data-theme="dark"] .page-courses .page__content h2,
+html[data-theme="dark"] .page-courses .page__content p.course-group-title {
+  border-bottom-color: #5e5e5e;
 }
 
 html[data-theme="dark"] .course-week-tabs {
