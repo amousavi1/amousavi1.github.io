@@ -122,7 +122,7 @@
 <h2>2. What a CNN is doing</h2>
 <p>A filter is a small stack of weights plus an activation (usually ReLU). You place it on a patch, take a dot product, apply ReLU, step, repeat. The output is a <strong>feature map</strong>: where that pattern fired.</p>
 <p><img alt="A filter sliding over an input" src="files/data-641/graphics/CONV.png" /></p>
-<p>On an image the patch is (3 \times 3) pixels. On text the patch is (n) tokens (note <strong>7.2</strong>). The idea is the same: <strong>weight sharing</strong>. The same filter looks at every position, so a pattern can fire anywhere.</p>
+<p>On an image the patch is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn><mo>&#x000D7;</mo><mn>3</mn></mrow></math> pixels. On text the patch is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> tokens (note <strong>7.2</strong>). The idea is the same: <strong>weight sharing</strong>. The same filter looks at every position, so a pattern can fire anywhere.</p>
 <p>CNNs are the default for image classification, faces, and detection. The rest of this week is the same blocks pointed at sentences.</p>
 <hr />
 <h2>3. The blocks</h2>
@@ -152,9 +152,9 @@
 </tr>
 </tbody>
 </table></div>
-<p>A filter is a set of weights, not one number. On images, (3 \times 3) is common; other sizes exist. Each filter is unique. Inside one snapshot the weights are fixed. (z_0 = \max(\sum_i x_i w_i, 0)) is the ReLU picture from lecture.</p>
+<p>A filter is a set of weights, not one number. On images, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn><mo>&#x000D7;</mo><mn>3</mn></mrow></math> is common; other sizes exist. Each filter is unique. Inside one snapshot the weights are fixed. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>z</mi><mn>0</mn></msub><mo>&#x0003D;</mo><mo>max</mo><mo stretchy="false">&#x00028;</mo><msub><mo>&#x02211;</mo><mi>i</mi></msub><msub><mi>x</mi><mi>i</mi></msub><msub><mi>w</mi><mi>i</mi></msub><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> is the ReLU picture from lecture.</p>
 <p><strong>Stride</strong> is how far the window jumps. Stride 1 is the default. It overlaps neighboring patches so a token (or pixel) is seen with its neighbors. A stride as large as the window loses that blur on purpose.</p>
-<p><strong>Padding.</strong> A (3 \times 3) filter that must stay inside a grid produces a smaller map (the right edge never sees a centered filter). <code>padding='valid'</code> accepts the shrink. That <strong>under-samples the edges</strong>. On a 12-megapixel photo you may not care. On a 10-word tweet, the first word is a large fraction of the signal. <strong>Pad</strong> (zeros, or a chosen scheme) so the first real token is treated like a middle one. Padding invents data; that is the tradeoff.</p>
+<p><strong>Padding.</strong> A <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn><mo>&#x000D7;</mo><mn>3</mn></mrow></math> filter that must stay inside a grid produces a smaller map (the right edge never sees a centered filter). <code>padding='valid'</code> accepts the shrink. That <strong>under-samples the edges</strong>. On a 12-megapixel photo you may not care. On a 10-word tweet, the first word is a large fraction of the signal. <strong>Pad</strong> (zeros, or a chosen scheme) so the first real token is treated like a middle one. Padding invents data; that is the tradeoff.</p>
 <hr />
 <h2>4. Pooling and the head</h2>
 <p><strong>Pooling</strong> (max or average) shrinks each map and keeps the strongest response. You lose precise position and gain a smaller tensor and some shift invariance: <em>not good</em> can fire in two different places and still reach the same pooled feature.</p>
@@ -169,7 +169,7 @@
 <li>Pooling compresses; the dense layer decides the class.</li>
 <li>Text will use a <strong>1-D</strong> window over tokens, not a 2-D window over a page. Note <strong>7.2</strong> is that translation.</li>
 </ul>
-<p><strong>Parameter count.</strong> A dense layer on a flattened 28 (\times) 28 image has a weight for every pixel-to-neuron pair. A (3 \times 3) convolution has nine weights per input channel, reused everywhere. That is why CNNs could train on images before we had today’s GPUs, and why a text CNN can look at every trigram without a column per trigram string.</p>
+<p><strong>Parameter count.</strong> A dense layer on a flattened 28 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 28 image has a weight for every pixel-to-neuron pair. A <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn><mo>&#x000D7;</mo><mn>3</mn></mrow></math> convolution has nine weights per input channel, reused everywhere. That is why CNNs could train on images before we had today’s GPUs, and why a text CNN can look at every trigram without a column per trigram string.</p>
 <hr />
 <h2>6. A picture you should be able to redraw</h2>
 <p>Input grid → several filters (each a sliding dot-product + ReLU) → one map per filter → pooling → flatten → dense → class. Loss at the end updates <strong>every</strong> filter. If you can mark stride and padding on that sketch, you are ready for the 1-D version.</p>
@@ -195,7 +195,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

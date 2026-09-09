@@ -42,17 +42,10 @@ ITERATIONS = 210_000
 
 
 def markdown_to_html(text: str) -> str:
-    try:
-        import markdown
-    except ImportError:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "markdown"])
-        import markdown
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    from build_lecture_note import markdown_to_html as convert
 
-    html = markdown.markdown(text, extensions=["tables", "fenced_code", "sane_lists"])
-    html = html.replace("<table>", '<div class="table-wrap"><table>').replace(
-        "</table>", "</table></div>"
-    )
-    return html
+    return convert(text)
 
 
 def encrypt(plaintext: bytes, password: str) -> dict:

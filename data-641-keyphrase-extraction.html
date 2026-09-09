@@ -127,7 +127,7 @@
 <li>Turn candidate words and phrases into <strong>nodes</strong>.</li>
 <li>Put a <strong>weighted edge</strong> between nodes that co-occur (same sentence or a sliding window).</li>
 <li>Score each node by how well connected it is to the rest of the graph (a PageRank-style walk).</li>
-<li>Return the top (N) nodes as keyphrases.</li>
+<li>Return the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> nodes as keyphrases.</li>
 </ol>
 <p>A good keyphrase is <strong>frequent enough</strong> and <strong>tied to different parts of the text</strong>. A word that appears ten times in one paragraph and nowhere else is a local echo, not a theme.</p>
 <p>Algorithms differ in two places: how they pick candidates, and how they score the graph. Two you will see in code:</p>
@@ -166,7 +166,7 @@ textacy.extract.keyterms.sgrank(doc, topn=10)
 <hr />
 <h2>5. Practical advice</h2>
 <p>Graph methods misbehave in predictable ways.</p>
-<p><strong>Document length.</strong> Building every n-gram and a graph for a 50-page PDF is slow and noisy. A common fix is to use the first (M\%) and the last (N\%) of the text. Introductions and conclusions usually state the point.</p>
+<p><strong>Document length.</strong> Building every n-gram and a graph for a 50-page PDF is slow and noisy. A common fix is to use the first <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>M</mi><mi>&#x00025;</mi></mrow></math> and the last <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mi>&#x00025;</mi></mrow></math> of the text. Introductions and conclusions usually state the point.</p>
 <p><strong>Overlap.</strong> Each phrase is ranked on its own, so <em>buy back stock</em> and <em>buy back</em> both survive. Drop near-duplicates with cosine similarity, or use the variant-aggregation helper above.</p>
 <p><strong>Ugly patterns.</strong> A keyphrase that starts with a preposition is rarely what you wanted. Filter those patterns after scoring. That is cheaper than retraining.</p>
 <p><strong>Bad text extraction.</strong> KPE cares about sentence boundaries. A PDF or a scan that glues two columns together will invent phrases that never appeared. Clean the text first; post-process the phrase list second.</p>
@@ -192,7 +192,7 @@ textacy.extract.keyterms.sgrank(doc, topn=10)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

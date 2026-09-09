@@ -111,38 +111,30 @@
                             Training is an optimization problem. Linear regression is the first example.
                         </p>
 <h2>1. Training is optimization</h2>
-<p>A model is a function of <strong>parameters</strong> (\boldsymbol{\theta}). A <strong>cost</strong> (J(\boldsymbol{\theta})) says how well those parameters explain the data. Training is</p>
-<p>[
-\hat{\boldsymbol{\theta}} \in \arg\min_{\boldsymbol{\theta}} J(\boldsymbol{\theta}).
-]</p>
+<p>A model is a function of <strong>parameters</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. A <strong>cost</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> says how well those parameters explain the data. Training is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x02208;</mo><mi>\arg</mi><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Three pictures you will see again:</p>
 <ul>
-<li><strong>Linear regression.</strong> (\boldsymbol{\theta}) are weights. (J) is squared error (or a likelihood).</li>
-<li><strong>Auto-encoders</strong> (Module 6). (\boldsymbol{\theta}) are layer weights. (J) is reconstruction error. The chain rule is how you differentiate through the stack.</li>
-<li><strong>Gaussian mixtures</strong> (Module 5). (\boldsymbol{\theta}) are means, covariances, and mixture weights. (J) is a (negative) likelihood.</li>
+<li><strong>Linear regression.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> are weights. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is squared error (or a likelihood).</li>
+<li><strong>Auto-encoders</strong> (Module 6). <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> are layer weights. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is reconstruction error. The chain rule is how you differentiate through the stack.</li>
+<li><strong>Gaussian mixtures</strong> (Module 5). <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> are means, covariances, and mixture weights. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is a (negative) likelihood.</li>
 </ul>
-<p>If you cannot write (J) and say what (\boldsymbol{\theta}) is, you do not yet have a learning problem.</p>
+<p>If you cannot write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> and say what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> is, you do not yet have a learning problem.</p>
 <hr />
 <h2>2. Linear regression, written so the calculus is visible</h2>
-<p>Training pairs ((y_n, \mathbf{x}_n)), (n=1,\dots,N). Prediction (\hat y_n = \hat{\boldsymbol{\theta}}^\top \mathbf{x}_n). Cost</p>
-<p>[
-J(\boldsymbol{\theta}) = \sum_{n=1}^N \bigl(y_n - \boldsymbol{\theta}^\top \mathbf{x}_n\bigr)^2.
-]</p>
-<p>Set (\nabla J = \mathbf{0}). In matrix form that is the <strong>normal equation</strong></p>
-<p>[
-(\mathbf{X}^\top\mathbf{X})\hat{\boldsymbol{\theta}} = \mathbf{X}^\top\mathbf{y},
-\qquad
-\hat{\boldsymbol{\theta}} = (\mathbf{X}^\top\mathbf{X})^{-1}\mathbf{X}^\top\mathbf{y}
-]</p>
-<p>when (\mathbf{X}^\top\mathbf{X}) is invertible. The inverse existing is a linear-algebra fact (full column rank). The (\nabla J=\mathbf{0}) step is calculus.</p>
-<p>For two weights the surface (J) is a convex bowl. One local minimum, and it is global. Neural nets will not be this kind.</p>
+<p>Training pairs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>n</mi></msub><mo>&#x0002C;</mo><msub><mi>&#x1D431;</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>N</mi></mrow></math>. Prediction <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mi>y</mi><mo>&#x0005E;</mo></mover><mi>n</mi></msub><mo>&#x0003D;</mo><msup><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x022A4;</mo></msup><msub><mi>&#x1D431;</mi><mi>n</mi></msub></mrow></math>. Cost</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>y</mi><mi>n</mi></msub><mo>&#x02212;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mi>&#x1D431;</mi><mi>n</mi></msub><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mn>2</mn></msup><mo>&#x0002E;</mo></mrow></math>
+<p>Set <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. In matrix form that is the <strong>normal equation</strong></p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D417;</mi><mo>&#x022A4;</mo></msup><mi>&#x1D417;</mi><mo stretchy="false">&#x00029;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><msup><mi>&#x1D417;</mi><mo>&#x022A4;</mo></msup><mi>&#x1D432;</mi><mo>&#x0002C;</mo><mspace width="2em" /><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D417;</mi><mo>&#x022A4;</mo></msup><mi>&#x1D417;</mi><msup><mo stretchy="false">&#x00029;</mo><mrow><mo>&#x02212;</mo><mn>1</mn></mrow></msup><msup><mi>&#x1D417;</mi><mo>&#x022A4;</mo></msup><mi>&#x1D432;</mi></mrow></math>
+<p>when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D417;</mi><mo>&#x022A4;</mo></msup><mi>&#x1D417;</mi></mrow></math> is invertible. The inverse existing is a linear-algebra fact (full column rank). The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math> step is calculus.</p>
+<p>For two weights the surface <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is a convex bowl. One local minimum, and it is global. Neural nets will not be this kind.</p>
 <hr />
 <h2>3. What Module 1 still owes you</h2>
-<p>To minimize a smooth (J) you need:</p>
+<p>To minimize a smooth <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> you need:</p>
 <ul>
 <li>a <strong>gradient</strong> (first derivatives) — when to stop, which way is downhill;</li>
 <li>a <strong>Hessian</strong> (second derivatives) — how curved the bowl is;</li>
-<li>later, <strong>constraints</strong> (week 3) when (\boldsymbol{\theta}) is not free in (\mathbb{R}^l).</li>
+<li>later, <strong>constraints</strong> (week 3) when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> is not free in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x0211D;</mi><mi>l</mi></msup></mrow></math>.</li>
 </ul>
 <p>The next two notes are those derivatives. Week 2 turns them into algorithms.</p>
                     </section>
@@ -153,7 +145,7 @@ J(\boldsymbol{\theta}) = \sum_{n=1}^N \bigl(y_n - \boldsymbol{\theta}^\top \math
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

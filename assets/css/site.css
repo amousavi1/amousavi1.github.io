@@ -1133,3 +1133,28 @@ html[data-theme="dark"] .site-cover img {
   border-color: #5e5e5e;
   background: #fff;
 }
+
+.page__content math {
+  font-family: "Cambria Math", "Latin Modern Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 1.05em;
+  text-align: initial;
+  text-justify: auto;
+  hyphens: none;
+}
+
+.page__content math[display="block"] {
+  display: block;
+  margin: 0.9em 0;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.page__content td math,
+.page__content th math {
+  white-space: nowrap;
+}
+
+html[data-theme="dark"] .page__content math {
+  color: inherit;
+}

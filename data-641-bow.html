@@ -116,7 +116,7 @@
 <p>Same toy corpus as notes <strong>4.1–4.2</strong>:</p>
 <p><img alt="Four-document toy corpus" src="files/data-641/graphics/vectorize.png" /></p>
 <p>Ids: dog = 1, bites = 2, man = 3, meat = 4, food = 5, eats = 6.</p>
-<p>Each document becomes one vector of length (|V|). Entry (i) is the number of times word (i) occurs.</p>
+<p>Each document becomes one vector of length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>. Entry <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> is the number of times word <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> occurs.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -127,40 +127,40 @@
 </thead>
 <tbody>
 <tr>
-<td>(D_1)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math></td>
 <td>dog bites man</td>
 <td><code>[1 1 1 0 0 0]</code></td>
 </tr>
 <tr>
-<td>(D_2)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math></td>
 <td>man bites dog</td>
 <td><code>[1 1 1 0 0 0]</code></td>
 </tr>
 <tr>
-<td>(D_3)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>3</mn></msub></mrow></math></td>
 <td>dog eats meat</td>
 <td><code>[1 0 0 1 0 1]</code></td>
 </tr>
 <tr>
-<td>(D_4)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>4</mn></msub></mrow></math></td>
 <td>man eats food</td>
 <td><code>[0 0 1 0 1 1]</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>(D_1) and (D_2) are <strong>identical</strong>. The bite went the other way. BoW cannot see that.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math> are <strong>identical</strong>. The bite went the other way. BoW cannot see that.</p>
 <hr />
 <h2>2. Why people keep using it</h2>
 <p>It is simple. It gives a <strong>fixed-length</strong> vector for a sentence of any length. That is the main upgrade from one-hot sequences.</p>
-<p>Documents that share vocabulary land near each other. Euclidean distance (D_1) to (D_2) is 0. Distance (D_1) to (D_4) is 2. The space is a crude semantic map: similar word sets, similar vectors.</p>
+<p>Documents that share vocabulary land near each other. Euclidean distance <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math> to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math> is 0. Distance <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math> to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>4</mn></msub></mrow></math> is 2. The space is a crude semantic map: similar word sets, similar vectors.</p>
 <p>For topic or spam, “crude” is often enough. A logistic regression or linear SVM on BoW (or TF–IDF, note <strong>4.5</strong>) is still a strong baseline. Build it before you reach for a network.</p>
 <p>In code you will use <code>sklearn.feature_extraction.text.CountVectorizer</code>. Fit on the training corpus only. Transform the test set with the same vocabulary.</p>
 <hr />
 <h2>3. What it cannot do</h2>
-<p><strong>Sparsity grows with (|V|).</strong> A news crawl has hundreds of thousands of types. Most entries in any one document vector are zero. A common fix is to keep only the (n) most frequent words, or words above a document-frequency cutoff.</p>
+<p><strong>Sparsity grows with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>.</strong> A news crawl has hundreds of thousands of types. Most entries in any one document vector are zero. A common fix is to keep only the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> most frequent words, or words above a document-frequency cutoff.</p>
 <p><strong>No notion of synonymy.</strong> “I run”, “I ran”, and “I ate” are equally far apart. <em>run</em> and <em>ran</em> do not share a coordinate.</p>
 <p><strong>OOV.</strong> A word that never appeared in the training corpus has no column. The vectorizer drops it or maps it to an unknown bucket if you built one. The default is to drop it.</p>
-<p><strong>Order is gone.</strong> That is the name. (D_1) and (D_2) collapse. Negation (“not good”) is easy to miss if <em>not</em> and <em>good</em> are just two counts.</p>
+<p><strong>Order is gone.</strong> That is the name. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math> collapse. Negation (“not good”) is easy to miss if <em>not</em> and <em>good</em> are just two counts.</p>
 <hr />
 <h2>4. Practical knobs</h2>
 <div class="table-wrap"><table>
@@ -185,7 +185,7 @@
 </tr>
 <tr>
 <td><code>max_features</code></td>
-<td>Hard cap on (</td>
+<td>Hard cap on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math></td>
 </tr>
 <tr>
 <td>Binary BoW</td>
@@ -196,10 +196,10 @@
 <p>Binary BoW is enough when presence matters more than frequency (short tweets, many function words already removed).</p>
 <p>None of these knobs restore word order. That is note <strong>4.4</strong>.</p>
 <p><strong>Lab habit.</strong> Fit the vectorizer on the training documents only, then <code>transform</code> the validation and test sets. If you <code>fit</code> on everything, rare test words leak into the vocabulary and your score is a lie. The same rule applies to TF–IDF in note <strong>4.5</strong>.</p>
-<p>A sanity check on the toy set: after <code>CountVectorizer</code>, (D_1) and (D_2) must be the same row. If they are not, you accidentally kept order (you built n-grams or you tokenized the two sentences differently).</p>
+<p>A sanity check on the toy set: after <code>CountVectorizer</code>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math> must be the same row. If they are not, you accidentally kept order (you built n-grams or you tokenized the two sentences differently).</p>
 <hr />
 <h2>5. Cosine on the toy set</h2>
-<p>(D_1 = D_2 = [1,1,1,0,0,0]). Cosine is 1. (D_3 = [1,0,0,1,0,1]) shares only <em>dog</em> with (D_1). The two vectors are not opposites; they just overlap in one coordinate. That is all BoW “semantics” is: shared types.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>&#x0003D;</mo><msub><mi>D</mi><mn>2</mn></msub><mo>&#x0003D;</mo><mo stretchy="false">[</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">]</mo></mrow></math>. Cosine is 1. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>3</mn></msub><mo>&#x0003D;</mo><mo stretchy="false">[</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math> shares only <em>dog</em> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math>. The two vectors are not opposites; they just overlap in one coordinate. That is all BoW “semantics” is: shared types.</p>
 <p>If you L2-normalize each row, Euclidean nearest neighbors and cosine nearest neighbors agree. Many sklearn pipelines do that normalize without saying so. Know whether you turned it on.</p>
 <hr />
 <h2>6. Practice</h2>
@@ -222,7 +222,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

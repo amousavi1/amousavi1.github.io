@@ -111,26 +111,26 @@
                         </p>
 <p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
 <h2>1. Two classical classifiers</h2>
-<p>Once the document is a vector (BoW or TF–IDF from Week 4), you can use any supervised model. Lecture walks two that you should be able to explain: <strong>(k)-nearest neighbors</strong> and a <strong>linear SVM</strong>.</p>
+<p>Once the document is a vector (BoW or TF–IDF from Week 4), you can use any supervised model. Lecture walks two that you should be able to explain: <strong><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-nearest neighbors</strong> and a <strong>linear SVM</strong>.</p>
 <p>The rest of the note is how you <strong>choose hyperparameters</strong> and how you <strong>score</strong> the classifier when classes are not 50/50. That part matters more than the algebra.</p>
 <p><em>Practical Natural Language Processing</em> is the course text. The pictures of CV and metrics are standard ML.</p>
 <hr />
-<h2>2. (k)-nearest neighbors</h2>
-<p>Store the training set. To label a new point, find the (k) nearest training vectors (Euclidean or cosine) and take a <strong>majority vote</strong>.</p>
+<h2>2. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-nearest neighbors</h2>
+<p>Store the training set. To label a new point, find the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> nearest training vectors (Euclidean or cosine) and take a <strong>majority vote</strong>.</p>
 <p><img alt="k-NN in the plane" src="files/data-641/graphics/knn.png" /></p>
 <p>There are no weights to learn. The whole training matrix is the model. That is fine for a few thousand short documents and painful for a million.</p>
-<p>(k) is a hyperparameter. Small (k) follows local noise. Large (k) smooths toward the majority class. On TF–IDF, <strong>cosine</strong> is the usual distance.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is a hyperparameter. Small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> follows local noise. Large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> smooths toward the majority class. On TF–IDF, <strong>cosine</strong> is the usual distance.</p>
 <hr />
 <h2>3. Linear SVM</h2>
-<p>Training pairs ((\mathbf{x}_i, y_i)) with (y_i \in {+1, -1}). A linear SVM finds a hyperplane (\mathbf{w}\cdot\mathbf{x} - b = 0) that separates the classes with the <strong>largest margin</strong>.</p>
-<p>You minimize (|\mathbf{w}|) subject to (y_i(\mathbf{w}\cdot\mathbf{x}_i - b) \ge 1).</p>
+<p>Training pairs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x1D431;</mi><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>i</mi></msub><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mo>&#x0002B;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>. A linear SVM finds a hyperplane <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D430;</mi><mo>&#x000B7;</mo><mi>&#x1D431;</mi><mo>&#x02212;</mo><mi>b</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math> that separates the classes with the <strong>largest margin</strong>.</p>
+<p>You minimize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mi>&#x1D430;</mi><mo fence="false" stretchy="false">&#x02016;</mo></mrow></math> subject to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D430;</mi><mo>&#x000B7;</mo><msub><mi>&#x1D431;</mi><mi>i</mi></msub><mo>&#x02212;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><mn>1</mn></mrow></math>.</p>
 <p><img alt="Maximum-margin separator" src="files/data-641/graphics/support_vec.png" /></p>
-<p>In text, (\mathbf{x}) is usually L2-normalized TF–IDF. <code>LinearSVC</code> or <code>SGDClassifier(loss="hinge")</code> is what you call. A kernel SVM on a 50,000-column bag is rarely worth it. The linear version is the baseline to beat.</p>
+<p>In text, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D431;</mi></mrow></math> is usually L2-normalized TF–IDF. <code>LinearSVC</code> or <code>SGDClassifier(loss="hinge")</code> is what you call. A kernel SVM on a 50,000-column bag is rarely worth it. The linear version is the baseline to beat.</p>
 <hr />
 <h2>4. Cross-validation and hyperparameters</h2>
-<p><strong>Parameters</strong> are what the learner sets from data: (\mathbf{w}), the support vectors, the neighbor labels. <strong>Hyperparameters</strong> are what you set: (k), the SVM’s (C), <code>max_features</code>, n-gram range. If you tune (C) on the same fold you report, the score is optimistic.</p>
+<p><strong>Parameters</strong> are what the learner sets from data: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D430;</mi></mrow></math>, the support vectors, the neighbor labels. <strong>Hyperparameters</strong> are what you set: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, the SVM’s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>, <code>max_features</code>, n-gram range. If you tune <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> on the same fold you report, the score is optimistic.</p>
 <p><strong>Hold-out:</strong> train / validation / test. Fit on train, pick hyperparameters on validation, report once on test.</p>
-<p><strong>(K)-fold:</strong> split train into (K) pieces. Each piece is validation once. Average the (K) scores. Use this when the data set is not huge.</p>
+<p><strong><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math>-fold:</strong> split train into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> pieces. Each piece is validation once. Average the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> scores. Use this when the data set is not huge.</p>
 <p><strong>Nested CV:</strong> the inner loop picks hyperparameters; the outer loop estimates generalization. That is the honest number when you need one number for a paper or a client and you already used the data to search.</p>
 <p>If you only remember one rule: the test set is not a tuning knob.</p>
 <hr />
@@ -177,7 +177,7 @@ print(classification_report(y_true, y_pred, target_names=[&quot;class 0&quot;, &
 <p>Training data are 90% ham. A filter that never flags spam has high accuracy. Which metric exposes that it found no spam?</p>
 </li>
 <li>
-<p>You pick (k) by maximizing accuracy on the test set. What is wrong, and what should you use instead?</p>
+<p>You pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> by maximizing accuracy on the test set. What is wrong, and what should you use instead?</p>
 </li>
 <li>
 <p>Why is a <strong>linear</strong> SVM the usual text baseline rather than an RBF kernel SVM?</p>
@@ -191,7 +191,7 @@ print(classification_report(y_true, y_pred, target_names=[&quot;class 0&quot;, &
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

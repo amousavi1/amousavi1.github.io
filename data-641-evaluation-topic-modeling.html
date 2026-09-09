@@ -111,10 +111,10 @@
                         </p>
 <p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
 <h2>1. Why bother measuring topics</h2>
-<p>A topic model always returns (k) word lists. That does not mean the lists are themes.</p>
+<p>A topic model always returns <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> word lists. That does not mean the lists are themes.</p>
 <p>Evaluation is how you:</p>
 <ul>
-<li>reject a bad run (or a bad (k))</li>
+<li>reject a bad run (or a bad <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>)</li>
 <li>compare SVD, NMF, and LDA on <strong>this</strong> corpus</li>
 <li>tune priors, iterations, and preprocessing</li>
 <li>check that a human in the domain can name the topics</li>
@@ -140,7 +140,7 @@
 <td>Lower is better. Can disagree with human quality</td>
 </tr>
 <tr>
-<td><strong>Coherence</strong> (PMI, NPMI, (C_V))</td>
+<td><strong>Coherence</strong> (PMI, NPMI, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>C</mi><mi>V</mi></msub></mrow></math>)</td>
 <td>Do the top words in a topic actually co-occur?</td>
 <td><code>gensim.CoherenceModel</code> is the usual tool</td>
 </tr>
@@ -151,7 +151,7 @@
 </tr>
 <tr>
 <td><strong>Silhouette</strong></td>
-<td>If you treat (\theta) as a clustering, do documents sit in tight groups?</td>
+<td>If you treat <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> as a clustering, do documents sit in tight groups?</td>
 <td>Needs a hard assignment; LDA is a mix</td>
 </tr>
 <tr>
@@ -162,28 +162,28 @@
 </tbody>
 </table></div>
 <p>Perplexity is a language-model number. Deep-learning stacks expose it; classical LDA libraries expose a bound or a held-out likelihood. Use it to compare <strong>the same family</strong> of models, not to declare LDA "better" than NMF.</p>
-<p>Coherence is the metric you will actually plot against (k). If (C_V) peaks at 12 and the word lists at 12 are namable, stop there.</p>
+<p>Coherence is the metric you will actually plot against <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>C</mi><mi>V</mi></msub></mrow></math> peaks at 12 and the word lists at 12 are namable, stop there.</p>
 <hr />
 <h2>3. Human and downstream checks</h2>
 <p><strong>Topic intrusion.</strong> Show a person the top words of a topic plus one <strong>intruder</strong> word from another topic. If they cannot spot the intruder, the topic is a mess. There is no standard library; you can run this on a form or on Mechanical Turk.</p>
-<p><strong>Document clustering.</strong> If you have gold categories (section labels, product lines), treat the model's hard topic or a clustering of (\theta) as a partition. Then use ARI, NMI, or Fowlkes–Mallows (<code>sklearn.metrics</code>). This measures agreement with a known cut, not "beauty" of the words.</p>
+<p><strong>Document clustering.</strong> If you have gold categories (section labels, product lines), treat the model's hard topic or a clustering of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> as a partition. Then use ARI, NMI, or Fowlkes–Mallows (<code>sklearn.metrics</code>). This measures agreement with a known cut, not "beauty" of the words.</p>
 <p><strong>Use the topics.</strong> If the model is a recommender or a browsing UI, measure clicks, not NPMI. Note <strong>recommender-systems</strong> takes that view.</p>
 <hr />
 <h2>4. How to run an evaluation, practically</h2>
 <ol>
-<li>Freeze preprocessing (stops, min count, n-grams). Then sweep (k).</li>
-<li>For each (k), record coherence, diversity, and a quick read of the worst topic.</li>
+<li>Freeze preprocessing (stops, min count, n-grams). Then sweep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</li>
+<li>For each <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, record coherence, diversity, and a quick read of the worst topic.</li>
 <li>Rerun the winner with three seeds. If the names change, do not write a report yet.</li>
 <li>Only then look at perplexity or a clustering score.</li>
 </ol>
 <p>A number without a word list is not a result. A word list without a number is a vibe. You want both.</p>
-<p>LDA, NMF, and LSA are not ranked by one universal winner. They are ranked on your documents, your (k), and whether a person can use the output.</p>
+<p>LDA, NMF, and LSA are not ranked by one universal winner. They are ranked on your documents, your <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, and whether a person can use the output.</p>
 <hr />
 <h2>5. A short scorecard you can reuse</h2>
 <p>Write this down for every run:</p>
 <ul>
 <li>corpus and preprocessing hash (or a one-line description)</li>
-<li>method and (k), seed, iterations</li>
+<li>method and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, seed, iterations</li>
 <li>mean coherence and the worst topic's top 10 words</li>
 <li>a yes/no: could you name every topic in five minutes?</li>
 </ul>
@@ -195,10 +195,10 @@
 <p>Coherence is high and every topic's top words include <em>company</em>, <em>said</em>, <em>year</em>. What is broken, the metric or the preprocessing?</p>
 </li>
 <li>
-<p>Why might the (k) that minimizes perplexity be different from the (k) a journalist can name?</p>
+<p>Why might the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> that minimizes perplexity be different from the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> a journalist can name?</p>
 </li>
 <li>
-<p>You rerun LDA twice with (k=20). Half the topics shuffle. What do you report to a stakeholder, and what do you try next?</p>
+<p>You rerun LDA twice with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math>. Half the topics shuffle. What do you report to a stakeholder, and what do you try next?</p>
 </li>
 </ol>
 <p>Report the instability. Do not average two incompatible name lists and call that the model.</p>
@@ -210,7 +210,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

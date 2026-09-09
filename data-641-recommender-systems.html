@@ -119,7 +119,7 @@
 <p>A production system often mixes both. This note is about the content side, because that is the topic-model and retrieval machinery from this module.</p>
 <hr />
 <h2>2. Topic models as a content engine</h2>
-<p>Take LDA or NMF from Weeks 13–14. Each document gets a topic mix (\theta). Two articles with close (\theta) (cosine, or a small Euclidean distance) are "about the same things."</p>
+<p>Take LDA or NMF from Weeks 13–14. Each document gets a topic mix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math>. Two articles with close <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> (cosine, or a small Euclidean distance) are "about the same things."</p>
 <p>That is a content recommender:</p>
 <ol>
 <li>represent each document (topics, TF–IDF, or an embedding)</li>
@@ -166,15 +166,15 @@
 <h2>4. Pre-processing is part of the ranker</h2>
 <p>Tokenization, lowercasing, and what you strip change the neighbors.</p>
 <p>Decide the <strong>objective</strong> first. If relatedness should ignore author bylines, strip them. If "same city" matters, keep place names. If boilerplate ("Subscribe to our newsletter") is in every file, it will glue unrelated articles together. That is a cleanup bug, not a model bug.</p>
-<p>The same lesson as KPE and summarization: run the cheap filters before you tune (k).</p>
+<p>The same lesson as KPE and summarization: run the cheap filters before you tune <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</p>
 <hr />
 <h2>5. A minimal content stack</h2>
 <p>For a homework-sized news recommender:</p>
 <ol>
 <li>Clean boilerplate.</li>
 <li>Fit TF–IDF or a 20-topic NMF/LDA on the archive.</li>
-<li>For article (i), take the 5 nearest neighbors by cosine.</li>
-<li>Drop near-duplicates (same title, or cosine (\approx 1)).</li>
+<li>For article <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>, take the 5 nearest neighbors by cosine.</li>
+<li>Drop near-duplicates (same title, or cosine <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>1</mn></mrow></math>).</li>
 <li>Measure overlap with a 20-article hand list, then (if you can) clicks.</li>
 </ol>
 <p>That is enough to feel the difference between "same topic" and "same story reprinted." Collaborative filtering can wait until you have a user–item matrix. Evaluation of the topic piece itself is note <strong>14.3</strong>.</p>
@@ -185,7 +185,7 @@
 <p>A brand-new op-ed has zero clicks. Why might collaborative filtering recommend nothing useful, and what do you use instead?</p>
 </li>
 <li>
-<p>Two articles share a high (\theta) on a "subscribe / cookie banner" topic. What do you fix?</p>
+<p>Two articles share a high <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> on a "subscribe / cookie banner" topic. What do you fix?</p>
 </li>
 <li>
 <p>Name two metrics you would put on an A/B test for "related articles," and one metric you would <strong>not</strong> treat as a ship decision by itself.</p>
@@ -200,7 +200,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

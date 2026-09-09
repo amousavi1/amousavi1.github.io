@@ -171,7 +171,7 @@ This/DET is/VB a/DET simple/ADJ sentence/NOUN
 <hr />
 <h2>5. How taggers are built (high level)</h2>
 <p><strong>Rules.</strong> Start with a dictionary of possible tags per word. Assign every possible tag. Write rules that delete the wrong ones until one tag remains (ENGTWOL-style). You need a large lexicon and a patient linguist.</p>
-<p><strong>Probabilistic.</strong> For tokens (w_1,\ldots,w_n), find the tag sequence (t_1,\ldots,t_n) with the highest probability. Hidden Markov models and related sequence models are the classic version.</p>
+<p><strong>Probabilistic.</strong> For tokens <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>w</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>w</mi><mi>n</mi></msub></mrow></math>, find the tag sequence <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>t</mi><mi>n</mi></msub></mrow></math> with the highest probability. Hidden Markov models and related sequence models are the classic version.</p>
 <p><strong>Machine learning / deep learning.</strong> Sequence classifiers and neural taggers. They are strong, but they are not automatically cheaper than a good stochastic tagger. Cost still matters.</p>
 <p>In this course you do <strong>not</strong> train one from scratch. You call a library:</p>
 <pre><code class="language-python">import nltk
@@ -213,7 +213,7 @@ nltk.pos_tag(word_tokenize(text))
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

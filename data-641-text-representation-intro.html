@@ -166,32 +166,32 @@
 </thead>
 <tbody>
 <tr>
-<td>(D_1)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math></td>
 <td>dog bites man</td>
 </tr>
 <tr>
-<td>(D_2)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math></td>
 <td>man bites dog</td>
 </tr>
 <tr>
-<td>(D_3)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>3</mn></msub></mrow></math></td>
 <td>dog eats meat</td>
 </tr>
 <tr>
-<td>(D_4)</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>4</mn></msub></mrow></math></td>
 <td>man eats food</td>
 </tr>
 </tbody>
 </table></div>
-<p>Vocabulary, in first-seen order: <code>[dog, bites, man, eats, meat, food]</code>. Size (|V| = 6).</p>
+<p>Vocabulary, in first-seen order: <code>[dog, bites, man, eats, meat, food]</code>. Size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo><mo>&#x0003D;</mo><mn>6</mn></mrow></math>.</p>
 <p>Keep this table. One-hot, bag of words, n-grams, and TF–IDF are all encodings of these four lines.</p>
 <hr />
 <h2>4. Comparing two documents</h2>
 <p>Once each document is a vector, you need a number that says how alike two vectors are.</p>
 <p><strong>Euclidean distance</strong> is the straight-line length between the two tips. It is the “natural” distance, and it blows up when the vectors have different magnitudes. A long review and a short review about the same product look far apart just because one has more counts.</p>
-<p><strong>Cosine similarity</strong> looks at the <strong>angle</strong> from the origin. (\cos 0 = 1). Two documents that use the same words in the same proportions score high even if one is longer. For count vectors, that is usually what you want.</p>
+<p><strong>Cosine similarity</strong> looks at the <strong>angle</strong> from the origin. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mn>0</mn><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. Two documents that use the same words in the same proportions score high even if one is longer. For count vectors, that is usually what you want.</p>
 <p><img alt="Euclidean distance versus cosine" src="files/data-641/graphics/cosine.png" /></p>
-<p>The formula on the cosine side of that figure is similarity, not distance. If you need a distance, use (1 - \text{cosine similarity}).</p>
+<p>The formula on the cosine side of that figure is similarity, not distance. If you need a distance, use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x02212;</mo><mtext>cosine&#x000A0;similarity</mtext></mrow></math>.</p>
 <p>Rule of thumb for this course: cosine for text counts and embeddings; Euclidean only when length itself is a feature you care about.</p>
 <hr />
 <h2>5. What this week is for</h2>
@@ -211,7 +211,7 @@
 <p>A 2,000-word essay and a 200-word paragraph use the same words in the same proportions. Why can Euclidean distance call them dissimilar while cosine calls them similar?</p>
 </li>
 <li>
-<p>Name one thing a bag of words cannot recover from (D_1) versus (D_2).</p>
+<p>Name one thing a bag of words cannot recover from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>1</mn></msub></mrow></math> versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>2</mn></msub></mrow></math>.</p>
 </li>
 <li>
 <p>Pixel values are already numbers. What extra job does text representation have to do that an image pipeline does not?</p>
@@ -225,7 +225,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

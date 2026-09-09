@@ -122,7 +122,7 @@
 </code></pre>
 <p>Each 5-gram is one training example: the four context words are the input, the middle word is the target.</p>
 <p><img alt="CBOW: context in, center out" src="files/data-641/graphics/CBOW_training.png" /></p>
-<p>You do <strong>not</strong> feed four separate one-hots as a sequence. You add (or average) the one-hots of the context words into one <strong>multi-hot</strong> (or averaged) vector of length (|V|). The label is the one-hot of the center word.</p>
+<p>You do <strong>not</strong> feed four separate one-hots as a sequence. You add (or average) the one-hots of the context words into one <strong>multi-hot</strong> (or averaged) vector of length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>. The label is the one-hot of the center word.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -151,18 +151,18 @@
 <p>Two layers. No hidden nonlinearity that you need to memorize.</p>
 <p><img alt="CBOW network" src="files/data-641/graphics/CBOW_net.png" /></p>
 <ul>
-<li><strong>Input:</strong> multi-hot (or average of one-hots) over the context, size (|V|).</li>
-<li><strong>Hidden:</strong> a dense vector of size (d) (the embedding size, often 100–300). This is (W_{\text{in}}^\top x) if (x) is the averaged context.</li>
-<li><strong>Output:</strong> (|V|) logits, then <strong>softmax</strong>. The target is the center word. Training is cross-entropy.</li>
+<li><strong>Input:</strong> multi-hot (or average of one-hots) over the context, size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>.</li>
+<li><strong>Hidden:</strong> a dense vector of size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> (the embedding size, often 100–300). This is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mi>W</mi><mrow><mtext>in</mtext></mrow><mo>&#x022A4;</mo></msubsup><mi>x</mi></mrow></math> if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> is the averaged context.</li>
+<li><strong>Output:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math> logits, then <strong>softmax</strong>. The target is the center word. Training is cross-entropy.</li>
 </ul>
-<p>The hidden width (d) is the embedding dimension you will keep. The softmax is a (|V|)-way classifier. That is expensive; note <strong>5.5</strong> is how people avoid a full softmax.</p>
-<p>After training, <strong>row (i) of the input weight matrix</strong> is the embedding of word (i). The output weights are a second set of vectors. In practice you take the input rows (or an average of input and output). You do not keep the softmax head.</p>
+<p>The hidden width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> is the embedding dimension you will keep. The softmax is a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>-way classifier. That is expensive; note <strong>5.5</strong> is how people avoid a full softmax.</p>
+<p>After training, <strong>row <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> of the input weight matrix</strong> is the embedding of word <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>. The output weights are a second set of vectors. In practice you take the input rows (or an average of input and output). You do not keep the softmax head.</p>
 <hr />
 <h2>4. What “bag” costs you</h2>
 <p>Because you sum or average the context, CBOW cannot see that <em>Monet</em> came before <em>painted</em>. It only sees “these four words were nearby.” That is enough to learn a usable space, and it is <strong>fast</strong>. Each example updates from a pooled context toward one target.</p>
 <p>Mikolov’s rule of thumb (expanded in note <strong>5.5</strong>): CBOW is better and quicker on <strong>frequent</strong> words. Skip-gram is better on <strong>rare</strong> words and small corpora.</p>
 <p>CBOW is a representation learner, not a product. You train it on a large unlabeled corpus (or load someone else’s vectors), then use the rows as features for classification, retrieval, or as the first layer of a larger net.</p>
-<p><strong>A size check.</strong> Hidden width (d = 100) and (|V| = 10{,}000) means the input matrix is (10{,}000 \times 100). That is the whole embedding table: one million numbers. The softmax matrix is the same size again. On a real crawl, (|V|) is larger and that second matrix is why note <strong>5.5</strong> exists.</p>
+<p><strong>A size check.</strong> Hidden width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>100</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo><mo>&#x0003D;</mo><mn>10</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn></mrow></math> means the input matrix is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn><mo>&#x000D7;</mo><mn>100</mn></mrow></math>. That is the whole embedding table: one million numbers. The softmax matrix is the same size again. On a real crawl, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math> is larger and that second matrix is why note <strong>5.5</strong> exists.</p>
 <p>CBOW’s pooled context also <strong>smooths</strong>. A rare center word is predicted from common neighbors, so its vector gets pulled toward those neighbors. That helps frequent patterns and can wash out a rare word’s own geometry—another reason skip-gram is preferred when the tail of the vocabulary matters.</p>
 <hr />
 <h2>5. What you will run</h2>
@@ -189,7 +189,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

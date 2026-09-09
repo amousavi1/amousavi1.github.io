@@ -110,27 +110,21 @@
                         <p>
                             Lagrange multipliers, the primal, and the dual.
                         </p>
-<h2>1. Extra conditions on (\boldsymbol{\theta})</h2>
-<p>Unconstrained: (\min_{\boldsymbol{\theta}} J(\boldsymbol{\theta})). Constrained: the same min, but (\boldsymbol{\theta}) must sit in</p>
-<p>[
-S={\boldsymbol{\theta}: g_i(\boldsymbol{\theta})=0\text{ or }g_i(\boldsymbol{\theta})\le 0}.
-]</p>
-<p>A box (-1\le\theta_j\le 1) is already a constraint set. The unconstrained min can fall <strong>outside</strong> the box. The constrained min is then on the boundary (the star, not the circle, on the usual contour cartoon).</p>
-<p>Lab 3 is one equality: (4\theta_1+2\theta_2=12), quadratic (J). You will write a Lagrangian and set every partial to zero.</p>
+<h2>1. Extra conditions on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math></h2>
+<p>Unconstrained: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>. Constrained: the same min, but <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> must sit in</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x0007B;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>:</mi><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn><mtext>&#x000A0;or&#x000A0;</mtext><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn><mo stretchy="false">&#x0007D;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>A box <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>1</mn><mo>&#x02264;</mo><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x02264;</mo><mn>1</mn></mrow></math> is already a constraint set. The unconstrained min can fall <strong>outside</strong> the box. The constrained min is then on the boundary (the star, not the circle, on the usual contour cartoon).</p>
+<p>Lab 3 is one equality: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo>&#x0002B;</mo><mn>2</mn><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo>&#x0003D;</mo><mn>12</mn></mrow></math>, quadratic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>. You will write a Lagrangian and set every partial to zero.</p>
 <hr />
 <h2>2. The Lagrangian</h2>
-<p>Turn the constrained problem into an unconstrained one in more variables. For inequalities (g_i(\boldsymbol{\theta})\le 0),</p>
-<p>[
-\mathcal{L}(\boldsymbol{\theta},\boldsymbol{\lambda})
-=
-J(\boldsymbol{\theta})+\boldsymbol{\lambda}^\top\mathbf{g}(\boldsymbol{\theta})
-]</p>
-<p>(sign conventions differ; stay consistent). (\boldsymbol{\lambda}) are <strong>multipliers</strong>. They are the prices of the constraints. If a constraint is slack, its multiplier is zero (KKT complementary slackness). If it is tight, the multiplier says how much (J) would improve if you relaxed it.</p>
+<p>Turn the constrained problem into an unconstrained one in more variables. For inequalities <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D420;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>(sign conventions differ; stay consistent). <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></math> are <strong>multipliers</strong>. They are the prices of the constraints. If a constraint is slack, its multiplier is zero (KKT complementary slackness). If it is tight, the multiplier says how much <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> would improve if you relaxed it.</p>
 <p>Why convert? Most algorithms, and most theory, are written for unconstrained maps. The Lagrangian is the conversion.</p>
 <hr />
 <h2>3. Primal and dual</h2>
-<p>The <strong>primal</strong> is the original problem in (\boldsymbol{\theta}). The <strong>dual</strong> is an optimization in (\boldsymbol{\lambda}), obtained by minimizing (\mathcal{L}) in (\boldsymbol{\theta}) first (when that min is easy). Weak duality: dual objective (\le) primal objective. Strong duality (typical for convex problems that satisfy a constraint qualification): the values match, and the multipliers at the saddle recover the primal (\boldsymbol{\theta}).</p>
-<p>Week 3 notes <strong>3.2</strong> and <strong>3.3</strong> do this for an LP and a QP. The SVM dual in Module 3 is the same move with a quadratic (J).</p>
+<p>The <strong>primal</strong> is the original problem in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. The <strong>dual</strong> is an optimization in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></math>, obtained by minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi></mrow></math> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> first (when that min is easy). Weak duality: dual objective <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02264;</mo></mrow></math> primal objective. Strong duality (typical for convex problems that satisfy a constraint qualification): the values match, and the multipliers at the saddle recover the primal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>.</p>
+<p>Week 3 notes <strong>3.2</strong> and <strong>3.3</strong> do this for an LP and a QP. The SVM dual in Module 3 is the same move with a quadratic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>.</p>
                     </section>
                 </div>
             </article>
@@ -139,7 +133,7 @@ J(\boldsymbol{\theta})+\boldsymbol{\lambda}^\top\mathbf{g}(\boldsymbol{\theta})
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

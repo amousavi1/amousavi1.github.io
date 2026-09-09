@@ -111,26 +111,18 @@
                             Cost functions, local versus global minima, convexity, and first- and second-order tests.
                         </p>
 <h2>1. The problem</h2>
-<p>Pick a set (S) (usually (\mathbb{R}^l)) and a cost (J:S\to\mathbb{R}). Solve</p>
-<p>[
-J(\hat{\boldsymbol{\theta}}) = \min_{\boldsymbol{\theta}\in S} J(\boldsymbol{\theta}).
-]</p>
-<p>Maximizing profit (P) is minimizing (-P). This course always writes a <strong>min</strong>.</p>
-<p>Linear regression is the first example. Model (y=\boldsymbol{\theta}^\top\mathbf{x}+\varepsilon). Average squared error</p>
-<p>[
-J(\boldsymbol{\theta})=\frac{1}{2m}\sum_{i=1}^m\bigl(\boldsymbol{\theta}^\top\mathbf{x}^{(i)}-y^{(i)}\bigr)^2.
-]</p>
+<p>Pick a set <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> (usually <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x0211D;</mi><mi>l</mi></msup></mrow></math>) and a cost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mi>:</mi><mi>S</mi><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math>. Solve</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><mi>S</mi></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Maximizing profit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> is minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>P</mi></mrow></math>. This course always writes a <strong>min</strong>.</p>
+<p>Linear regression is the first example. Model <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D431;</mi><mo>&#x0002B;</mo><mi>&#x003B5;</mi></mrow></math>. Average squared error</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>m</mi></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>y</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mn>2</mn></msup><mo>&#x0002E;</mo></mrow></math>
 <p>Each gradient step is “make the residuals smaller.”</p>
 <hr />
 <h2>2. Local versus global</h2>
-<p>A <strong>local</strong> minimum is lowest in a neighborhood. A <strong>global</strong> minimum is lowest on all of (S).</p>
+<p>A <strong>local</strong> minimum is lowest in a neighborhood. A <strong>global</strong> minimum is lowest on all of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>.</p>
 <p>On a mountain trail, a valley is local. Sea level in the whole range is global.</p>
-<p>If (J) is <strong>convex</strong>,</p>
-<p>[
-J\bigl(t\boldsymbol{\theta}+(1-t)\boldsymbol{\beta}\bigr)
-\le
-t J(\boldsymbol{\theta})+(1-t)J(\boldsymbol{\beta}),
-]</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is <strong>convex</strong>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>t</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x02264;</mo><mi>t</mi><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
 <p>every local min is global. That is the property that makes Module 1 feel safe.</p>
 <div class="table-wrap"><table>
 <thead>
@@ -146,7 +138,7 @@ t J(\boldsymbol{\theta})+(1-t)J(\boldsymbol{\beta}),
 </tr>
 <tr>
 <td>Logistic regression (log loss)</td>
-<td>(k)-means</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-means</td>
 </tr>
 <tr>
 <td>Soft-margin SVM</td>
@@ -156,9 +148,9 @@ t J(\boldsymbol{\theta})+(1-t)J(\boldsymbol{\beta}),
 </table></div>
 <hr />
 <h2>3. First- and second-order tests</h2>
-<p><strong>First-order (necessary).</strong> At a local min of a smooth unconstrained (J), (\nabla J(\hat{\boldsymbol{\theta}})=\mathbf{0}). The slope is flat.</p>
-<p><strong>Second-order (sufficient).</strong> If also (\nabla^2 J(\hat{\boldsymbol{\theta}})) is positive definite, you have a local min.</p>
-<p>A zero gradient is not enough: a saddle is flat and is not a min. The Hessian tells the two cases apart. Week 2’s algorithms either follow (-\nabla J) or invert (\nabla^2 J).</p>
+<p><strong>First-order (necessary).</strong> At a local min of a smooth unconstrained <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. The slope is flat.</p>
+<p><strong>Second-order (sufficient).</strong> If also <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo></mrow></math> is positive definite, you have a local min.</p>
+<p>A zero gradient is not enough: a saddle is flat and is not a min. The Hessian tells the two cases apart. Week 2’s algorithms either follow <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math> or invert <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math>.</p>
                     </section>
                 </div>
             </article>
@@ -167,7 +159,7 @@ t J(\boldsymbol{\theta})+(1-t)J(\boldsymbol{\beta}),
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T21:30:00-04:00">September 8, 2026, 9:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

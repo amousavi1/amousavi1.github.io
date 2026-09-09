@@ -117,36 +117,34 @@
 <p>Sources: <em>Practical Natural Language Processing</em>, <em>Natural Language Processing in Action</em>, and Voita’s notes. StatQuest’s RNN video is a useful watch.</p>
 <hr />
 <h2>2. The cell</h2>
-<p>At step (t) the cell receives</p>
+<p>At step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> the cell receives</p>
 <ul>
-<li>a new input (\mathbf{x}_t) (usually a token embedding), and</li>
-<li>the previous state (\mathbf{h}_{t-1}).</li>
+<li>a new input <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D431;</mi><mi>t</mi></msub></mrow></math> (usually a token embedding), and</li>
+<li>the previous state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math>.</li>
 </ul>
-<p>It emits a new state (\mathbf{h}_t) that is supposed to hold <strong>both</strong>. That state is the input to the next step.</p>
+<p>It emits a new state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mi>t</mi></msub></mrow></math> that is supposed to hold <strong>both</strong>. That state is the input to the next step.</p>
 <p><img alt="RNN cell: input plus previous state" src="files/data-641/graphics/rnn1.png" /></p>
 <p>The state is <strong>reset</strong> between independent sequences (two reviews in a batch). Each review is still one data point. What changed is that the net <strong>loops</strong> inside that data point.</p>
 <p>Unrolled in time, the same weights appear at every step. That is weight sharing along the sequence, analogous to a CNN’s shared filter, but the path is a chain, not a slide.</p>
 <hr />
 <h2>3. Vanilla RNN</h2>
-<p>The simplest cell is a linear mix plus (\tanh):</p>
-<p>[
-\mathbf{h}<em>t = \tanh(\mathbf{h}</em>{t-1} W_h + \mathbf{x}_t W_x)
-]</p>
-<p>(Lecture writes (W_t) for the input map. Same idea.)</p>
+<p>The simplest cell is a linear mix plus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x1D421;</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x1D421;</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><msub><mi>W</mi><mi>h</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x1D431;</mi><mi>t</mi></msub><msub><mi>W</mi><mi>x</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>(Lecture writes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>t</mi></msub></mrow></math> for the input map. Same idea.)</p>
 <p><img alt="Vanilla RNN cell" src="files/data-641/graphics/vanilla_cell.png" /></p>
-<p><strong>Vanishing and exploding gradients.</strong> Backprop through twenty (\tanh) steps multiplies twenty Jacobians. The signal to early tokens dies or blows up. Vanilla cells struggle on long reviews.</p>
+<p><strong>Vanishing and exploding gradients.</strong> Backprop through twenty <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math> steps multiplies twenty Jacobians. The signal to early tokens dies or blows up. Vanilla cells struggle on long reviews.</p>
 <p><strong>LSTM</strong> and <strong>GRU</strong> add <strong>gates</strong>: learned valves that decide what to keep, write, and forget. They do not remove the problem; they make long-range training feasible. This course will treat them as drop-in cells with the same loop around them.</p>
 <hr />
 <h2>4. Runtime, GPUs, and unrolling</h2>
 <p>A tiny RNN is a chain of small matrix multiplies inside a <code>for</code> loop. That chain does <strong>not</strong> parallelize well. On a multicore <strong>CPU</strong> it can beat a GPU. A large recurrent layer can use a GPU.</p>
 <p>In Keras, default <code>LSTM</code> / <code>GRU</code> on GPU call <strong>cuDNN</strong>. Those kernels are fast and rigid. <strong>Recurrent dropout</strong> is not in the default kernel; Keras falls back to a slower TensorFlow implementation with the same math.</p>
-<p>If you cannot use cuDNN, <strong>unrolling</strong> the loop (write the (T) steps into the graph) can help the compiler. It also makes the graph huge. Use it when sequences are short and you have measured a benefit.</p>
+<p>If you cannot use cuDNN, <strong>unrolling</strong> the loop (write the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> steps into the graph) can help the compiler. It also makes the graph huge. Use it when sequences are short and you have measured a benefit.</p>
 <p>None of this changes the math. It changes whether the lab finishes before the session ends.</p>
 <hr />
 <h2>5. What this note is not</h2>
-<p>This is not yet a classifier. You have a sequence of states (\mathbf{h}_1, \ldots, \mathbf{h}_T). Note <strong>8.2</strong> says which state(s) you turn into a document label: last state, stacked layers, or a bidirectional pair.</p>
+<p>This is not yet a classifier. You have a sequence of states <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>&#x1D421;</mi><mi>T</mi></msub></mrow></math>. Note <strong>8.2</strong> says which state(s) you turn into a document label: last state, stacked layers, or a bidirectional pair.</p>
 <p>Do not use a vanilla RNN as your first production model. Use LSTM/GRU, or skip to a transformer later in the course. Do use this note to explain <strong>why</strong> a loop exists.</p>
-<p><strong>Unroll once on paper.</strong> Three tokens (x_1, x_2, x_3), start from (\mathbf{h}_0 = \mathbf{0}). Compute (\mathbf{h}_1), then (\mathbf{h}_2), then (\mathbf{h}_3) with the <strong>same</strong> (W_h, W_x). The classifier in note <strong>8.2</strong> will sit on (\mathbf{h}_3) (or on a bidirectional pair). If you cannot do that by hand for (d=2), the Keras layer will stay a black box.</p>
+<p><strong>Unroll once on paper.</strong> Three tokens <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>x</mi><mn>2</mn></msub><mo>&#x0002C;</mo><msub><mi>x</mi><mn>3</mn></msub></mrow></math>, start from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mn>0</mn></msub><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mn>1</mn></msub></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mn>2</mn></msub></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mn>3</mn></msub></mrow></math> with the <strong>same</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>x</mi></msub></mrow></math>. The classifier in note <strong>8.2</strong> will sit on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D421;</mi><mn>3</mn></msub></mrow></math> (or on a bidirectional pair). If you cannot do that by hand for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, the Keras layer will stay a black box.</p>
 <hr />
 <h2>6. CNN versus RNN, one line</h2>
 <p>A CNN looks at a <strong>fixed</strong> neighborhood at every position, in parallel. An RNN looks at <strong>everything so far</strong>, in order, and cannot be fully parallelized across time. That is the accuracy / speed tradeoff you are choosing.</p>
@@ -157,7 +155,7 @@
 <p>A CNN kernel of size 5 and a vanilla RNN both read a 40-token sentence. Which one can, in principle, mix token 1 with token 40 in a single representation, and how?</p>
 </li>
 <li>
-<p>Why do we reset (\mathbf{h}) between two training documents?</p>
+<p>Why do we reset <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D421;</mi></mrow></math> between two training documents?</p>
 </li>
 <li>
 <p>You add recurrent dropout to an LSTM on a GPU and training becomes much slower. What happened?</p>
@@ -171,7 +169,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

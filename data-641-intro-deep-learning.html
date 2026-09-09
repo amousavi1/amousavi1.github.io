@@ -127,7 +127,7 @@
 <p>You do not need the history on an exam. You do need the reason we switched: when the representation is learned in layers, and you have enough data, the older sparse recipes lose.</p>
 <hr />
 <h2>3. A first network: MNIST</h2>
-<p>The job: 28 (\times) 28 grayscale handwritten digits, ten classes (0–9).</p>
+<p>The job: 28 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 28 grayscale handwritten digits, ten classes (0–9).</p>
 <p><img alt="MNIST digits" src="files/data-641/graphics/MNIST.png" /></p>
 <p>Keras gives you the split already labeled:</p>
 <pre><code class="language-python">from tensorflow.keras.datasets import mnist
@@ -176,7 +176,7 @@ model = keras.Sequential([
               loss=&quot;sparse_categorical_crossentropy&quot;,
               metrics=[&quot;accuracy&quot;])
 </code></pre>
-<p>Pixels arrive as <code>uint8</code> in ([0, 255]). Flatten and scale to ([0, 1]):</p>
+<p>Pixels arrive as <code>uint8</code> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>&#x0002C;</mo><mn>255</mn><mo stretchy="false">]</mo></mrow></math>. Flatten and scale to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>:</p>
 <pre><code class="language-python">train_images = train_images.reshape((60000, 28 * 28)).astype(&quot;float32&quot;) / 255
 test_images  = test_images.reshape((10000, 28 * 28)).astype(&quot;float32&quot;) / 255
 </code></pre>
@@ -214,7 +214,7 @@ test_loss, test_acc = model.evaluate(test_images, test_labels)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import pathlib
 import subprocess
 import sys
+import time
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
@@ -15,8 +16,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-09T02:00:00-04:00"
-LAST_UPDATED_TEXT = "September 9, 2026, 2:00 AM EDT"
+LAST_UPDATED_ISO = "2026-09-09T03:15:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 3:15 AM EDT"
 
 COURSE = "data-642"
 COURSE_TITLE = "DATA 442/642"
@@ -99,7 +100,18 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     </body>
 </html>
 """
-    page_path.write_text(page.replace("\r\n", "\n"), encoding="utf-8", newline="\n")
+    html = page.replace("\r\n", "\n")
+    last_error: OSError | None = None
+    for attempt in range(8):
+        try:
+            page_path.write_text(html, encoding="utf-8", newline="\n")
+            last_error = None
+            break
+        except OSError as exc:
+            last_error = exc
+            time.sleep(0.4 * (attempt + 1))
+    if last_error is not None:
+        raise last_error
     return page_path
 
 
@@ -370,7 +382,10 @@ def build_note(note: dict) -> None:
 
 
 def main() -> None:
-    if "--notes" in sys.argv:
+    flags = {a for a in sys.argv[1:] if a.startswith("--")}
+    html_only = "--html-only" in flags
+    notes_flag = "--notes" in flags
+    if notes_flag or html_only:
         slugs = {a for a in sys.argv[1:] if not a.startswith("--") and not a.isdigit()}
         week = None
         for a in sys.argv[1:]:
@@ -378,15 +393,21 @@ def main() -> None:
                 week = int(a)
                 break
         for note in NOTES:
-            if note.get("slide"):
+            if notes_flag and not html_only and note.get("slide"):
                 continue
             if week is not None and note["week"] != week:
                 continue
             if slugs and note["slug"] not in slugs:
                 continue
-            if not (FILES / f"{note['slug']}.md").exists():
+            md_path = FILES / f"{note['slug']}.md"
+            if not md_path.exists():
                 continue
-            build_note(note)
+            if html_only:
+                body = markdown_to_html(md_path.read_text(encoding="utf-8"))
+                page_path = write_site_page(note, body)
+                print(f"Wrote {page_path.name}")
+            else:
+                build_note(note)
     write_hub()
     print("Wrote data-642.html")
 

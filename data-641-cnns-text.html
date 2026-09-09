@@ -111,15 +111,15 @@
                         </p>
 <p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
 <h2>1. One dimension is the sentence</h2>
-<p>A page of words is not a 2-D image. Line breaks are arbitrary. Vertical neighbors are an accident of wrap. The structure you want is <strong>along the sequence</strong>: token (t) next to token (t+1).</p>
+<p>A page of words is not a 2-D image. Line breaks are arbitrary. Vertical neighbors are an accident of wrap. The structure you want is <strong>along the sequence</strong>: token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> next to token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></math>.</p>
 <p>So the convolution is <strong>1-D</strong>. The filter moves left to right (or top to bottom in a vertical script). It does not slide down the embedding axis.</p>
 <p><img alt="1-D convolution over a sequence" src="files/data-641/graphics/1dconv.png" /></p>
 <p>Japanese written in columns is the same idea on the other axis. You still have one <strong>travel</strong> dimension.</p>
 <p>Figures follow Voita’s NLP course and <em>Natural Language Processing in Action</em>.</p>
 <hr />
 <h2>2. The “image” is an embedding matrix</h2>
-<p>Each token is a (d)-dimensional vector (Word2Vec, GloVe, or a learned embedding layer). A sentence of (T) tokens is a matrix (T \times d). Think of (d) as the “height” of a one-pixel-wide strip.</p>
-<p>A 1-D filter of width (k) covers (k) tokens and the <strong>entire</strong> embedding of each. It does not look at 3 of 300 coordinates. That is why “1-D” can sound wrong: the patch is (k \times d), but it <strong>moves</strong> only along time.</p>
+<p>Each token is a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>-dimensional vector (Word2Vec, GloVe, or a learned embedding layer). A sentence of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> tokens is a matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></math>. Think of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> as the “height” of a one-pixel-wide strip.</p>
+<p>A 1-D filter of width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> covers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> tokens and the <strong>entire</strong> embedding of each. It does not look at 3 of 300 coordinates. That is why “1-D” can sound wrong: the patch is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></math>, but it <strong>moves</strong> only along time.</p>
 <p><img alt="A filter over word embeddings" src="files/data-641/graphics/convolution_linear_layer.png" /></p>
 <p>One filter = one feature (a detector for some local pattern). You want many features, so you use <strong>many filters</strong>. Each reads the same sentence and writes one channel.</p>
 <hr />
@@ -155,10 +155,10 @@
 </tr>
 </tbody>
 </table></div>
-<p><strong>Kernel size 2</strong> is a learned bigram detector. <strong>Kernel size 3–5</strong> sees a short phrase. You will stack several sizes in note <strong>7.3</strong> instead of betting on one (k).</p>
-<p>Stride 1 is the default: every token is a possible start. Stride (&gt; 1) skips starts; you may need padding so the last tokens are still seen.</p>
-<p>Padding appends <strong>zero vectors</strong> (not the string <code>"PAD"</code> as letters). With stride (&gt; 1) you almost always pad.</p>
-<p>Bias is an optional (+b) after the linear map. Many text CNN diagrams omit it.</p>
+<p><strong>Kernel size 2</strong> is a learned bigram detector. <strong>Kernel size 3–5</strong> sees a short phrase. You will stack several sizes in note <strong>7.3</strong> instead of betting on one <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</p>
+<p>Stride 1 is the default: every token is a possible start. Stride <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>1</mn></mrow></math> skips starts; you may need padding so the last tokens are still seen.</p>
+<p>Padding appends <strong>zero vectors</strong> (not the string <code>"PAD"</code> as letters). With stride <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>1</mn></mrow></math> you almost always pad.</p>
+<p>Bias is an optional <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0002B;</mo><mi>b</mi></mrow></math> after the linear map. Many text CNN diagrams omit it.</p>
 <hr />
 <h2>4. Pooling after the filters</h2>
 <p>Each filter writes a sequence of activations, one per window. <strong>Pooling</strong> summarizes a region (or the whole sentence).</p>
@@ -194,7 +194,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

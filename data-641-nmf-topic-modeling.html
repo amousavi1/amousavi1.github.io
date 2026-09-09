@@ -111,25 +111,23 @@
                         </p>
 <p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
 <h2>1. Topics that only add</h2>
-<p>Non-negative matrix factorization (NMF) splits a non-negative matrix ({\bf A}) (counts or TF–IDF) into two non-negative factors:</p>
-<p>[
-{\bf A} \approx {\bf W}{\bf H}.
-]</p>
+<p>Non-negative matrix factorization (NMF) splits a non-negative matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">A</mi></mrow></mrow></math> (counts or TF–IDF) into two non-negative factors:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="bold">A</mi></mrow><mo>&#x02248;</mo><mrow><mi mathvariant="bold">W</mi></mrow><mrow><mi mathvariant="bold">H</mi></mrow><mo>&#x0002E;</mo></mrow></math>
 <p>No minus signs. A document is an <strong>additive</strong> mix of parts. That matches how people talk about topics: this article is some sports plus some politics, not sports <em>minus</em> politics.</p>
 <ul>
-<li>({\bf W}): <strong>basis</strong>. Each column is a topic as a non-negative combination of terms (<em>sports</em>, <em>science</em>, <em>politics</em> as atomic parts).</li>
-<li>({\bf H}): <strong>codes</strong>. Each column says how to mix those parts to rebuild one document (30% sports, 50% science, 20% politics).</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math>: <strong>basis</strong>. Each column is a topic as a non-negative combination of terms (<em>sports</em>, <em>science</em>, <em>politics</em> as atomic parts).</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">H</mi></mrow></mrow></math>: <strong>codes</strong>. Each column says how to mix those parts to rebuild one document (30% sports, 50% science, 20% politics).</li>
 </ul>
 <p><img alt="NMF factorization" src="files/data-641/graphics/nmf.png" /></p>
-<p>If ({\bf A}) is (m) terms by (n) documents and you ask for (k) topics, ({\bf W}) is (m \times k) and ({\bf H}) is (k \times n). Same cartoon as SVD and LDA, different constraints.</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">A</mi></mrow></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> terms by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> documents and you ask for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> topics, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi><mo>&#x000D7;</mo><mi>k</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">H</mi></mrow></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x000D7;</mo><mi>n</mi></mrow></math>. Same cartoon as SVD and LDA, different constraints.</p>
 <hr />
 <h2>2. How it is fit</h2>
 <p>NMF is an optimization loop, not a generative story.</p>
 <ol>
-<li><strong>Initialize</strong> ({\bf W}) and ({\bf H}) with non-negative values (random, nndsvd, or a warm start).</li>
-<li><strong>Alternate.</strong> Fix ({\bf H}), update ({\bf W}) to reduce (|{\bf A}-{\bf WH}|) without going negative. Then fix ({\bf W}) and update ({\bf H}). Gradient steps or multiplicative updates are the usual engines.</li>
+<li><strong>Initialize</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">H</mi></mrow></mrow></math> with non-negative values (random, nndsvd, or a warm start).</li>
+<li><strong>Alternate.</strong> Fix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">H</mi></mrow></mrow></math>, update <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math> to reduce <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold">A</mi></mrow><mo>&#x02212;</mo><mrow><mi mathvariant="bold">W</mi><mi mathvariant="bold">H</mi></mrow><mo fence="false" stretchy="false">&#x02016;</mo></mrow></math> without going negative. Then fix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math> and update <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">H</mi></mrow></mrow></math>. Gradient steps or multiplicative updates are the usual engines.</li>
 <li><strong>Stop</strong> when the reconstruction error flattens or you hit a max iteration count.</li>
-<li><strong>Read</strong> columns of ({\bf W}) as topics and columns of ({\bf H}) as document mixes.</li>
+<li><strong>Read</strong> columns of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math> as topics and columns of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">H</mi></mrow></mrow></math> as document mixes.</li>
 </ol>
 <p>Because the objective is not convex in both factors at once, two random starts can give two different topic lists. Run more than once.</p>
 <hr />
@@ -152,7 +150,7 @@
 </tr>
 <tr>
 <td>Often sparse</td>
-<td>A document uses a few columns of ({\bf W}), not all (k)</td>
+<td>A document uses a few columns of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math>, not all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math></td>
 </tr>
 <tr>
 <td>Broad use</td>
@@ -172,11 +170,11 @@
 </thead>
 <tbody>
 <tr>
-<td>Columns of ({\bf W}) are not orthogonal</td>
+<td>Columns of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">W</mi></mrow></mrow></math> are not orthogonal</td>
 <td>Topics overlap. That can be honest (a "finance" and "politics" share <em>tax</em>) or mush</td>
 </tr>
 <tr>
-<td>You still choose (k)</td>
+<td>You still choose <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math></td>
 <td>Same problem as LDA and truncated SVD</td>
 </tr>
 <tr>
@@ -185,7 +183,7 @@
 </tr>
 <tr>
 <td>Cost</td>
-<td>Wide TF–IDF and large (k) are slow</td>
+<td>Wide TF–IDF and large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> are slow</td>
 </tr>
 <tr>
 <td>Local minima</td>
@@ -198,7 +196,7 @@
 </tbody>
 </table></div>
 <p>Do not pick NMF because a slide said "disadvantages of SVD." Pick it when you want additive, non-negative parts. Use SVD when you want a stable orthogonal basis and can live with signs. Use LDA when you want a generative mix and held-out likelihood.</p>
-<p>scikit-learn's <code>NMF</code> on a TF–IDF matrix is the usual first implementation. Look at <code>reconstruction_err_</code> <strong>and</strong> the top terms of each component. If two components share eight of their ten words, raise the stop list or lower (k), do not add epochs.</p>
+<p>scikit-learn's <code>NMF</code> on a TF–IDF matrix is the usual first implementation. Look at <code>reconstruction_err_</code> <strong>and</strong> the top terms of each component. If two components share eight of their ten words, raise the stop list or lower <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, do not add epochs.</p>
 <hr />
 <h2>5. NMF next to SVD and LDA</h2>
 <div class="table-wrap"><table>
@@ -242,10 +240,10 @@
 <h2>6. Practice</h2>
 <ol>
 <li>
-<p>After NMF, how do you write a one-line name for topic (j)? Which matrix do you sort?</p>
+<p>After NMF, how do you write a one-line name for topic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math>? Which matrix do you sort?</p>
 </li>
 <li>
-<p>Two runs with (k=15) give different top words. What do you change before you change (k)?</p>
+<p>Two runs with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>15</mn></mrow></math> give different top words. What do you change before you change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>?</p>
 </li>
 <li>
 <p>A client asks for "topics that are completely distinct." Why might NMF disappoint them, and what would you try instead or in addition?</p>
@@ -259,7 +257,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

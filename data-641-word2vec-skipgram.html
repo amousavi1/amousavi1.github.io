@@ -122,11 +122,9 @@
 <p>One center word produces <strong>several</strong> training pairs, one per neighbor. That is why skip-gram “sees” more examples than CBOW on the same sentence.</p>
 <hr />
 <h2>3. Softmax</h2>
-<p>The output layer is a classifier over the whole vocabulary. <strong>Softmax</strong> turns raw scores (z) into probabilities that sum to 1:</p>
-<p>[
-\sigma(z)<em>j = \frac{e^{z_j}}{\sum</em>{k=1}^{K} e^{z_k}}
-]</p>
-<p>Entry (j) is “probability that word (j) is a neighbor of the input.” During training you compare that distribution to a one-hot of the true neighbor (cross-entropy). At the end of an update you can pretend the argmax is a one-hot prediction; the useful object is still the <strong>weight matrices</strong>, not those predictions.</p>
+<p>The output layer is a classifier over the whole vocabulary. <strong>Softmax</strong> turns raw scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> into probabilities that sum to 1:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><msub><mo stretchy="false">&#x00029;</mo><mi>j</mi></msub><mo>&#x0003D;</mo><mfrac><mrow><msup><mi>e</mi><mrow><msub><mi>z</mi><mi>j</mi></msub></mrow></msup></mrow><mrow><msubsup><mo>&#x02211;</mo><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>K</mi></mrow></msubsup><msup><mi>e</mi><mrow><msub><mi>z</mi><mi>k</mi></msub></mrow></msup></mrow></mfrac></mrow></math>
+<p>Entry <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math> is “probability that word <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math> is a neighbor of the input.” During training you compare that distribution to a one-hot of the true neighbor (cross-entropy). At the end of an update you can pretend the argmax is a one-hot prediction; the useful object is still the <strong>weight matrices</strong>, not those predictions.</p>
 <p>A full softmax over a 100,000-word vocabulary is slow. Note <strong>5.5</strong> replaces it with negative sampling.</p>
 <hr />
 <h2>4. From a sentence to pairs</h2>
@@ -153,7 +151,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>Input is the <strong>one-hot</strong> of the center (size (|V|)). Hidden layer is size (d). Output is (|V|) softmax units. Four neighbors ⇒ four forward/backward passes with the same input one-hot and four different target one-hots.</p>
+<p>Input is the <strong>one-hot</strong> of the center (size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>). Hidden layer is size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>. Output is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>V</mi><mo stretchy="false">&#x0007C;</mo></mrow></math> softmax units. Four neighbors ⇒ four forward/backward passes with the same input one-hot and four different target one-hots.</p>
 <p>After training, <strong>each row of the input–hidden weight matrix</strong> is a word vector. The softmax head is discarded. Those rows are what you look up at inference.</p>
 <hr />
 <h2>5. CBOW versus skip-gram, in one table</h2>
@@ -188,8 +186,8 @@
 </tr>
 </tbody>
 </table></div>
-<p>Both learn the same kind of object: a (d)-dimensional vector per type. Neither models order inside the window. Neither is a language model you ship. They are <strong>representation</strong> methods.</p>
-<p><strong>Count the pairs.</strong> Ten tokens and window 2 give about (10 \times 4) skip-gram pairs (edges of the sentence have fewer neighbors). CBOW gives about 10 examples. That factor of ~4 is the “more examples” claim, not a different definition of meaning.</p>
+<p>Both learn the same kind of object: a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>-dimensional vector per type. Neither models order inside the window. Neither is a language model you ship. They are <strong>representation</strong> methods.</p>
+<p><strong>Count the pairs.</strong> Ten tokens and window 2 give about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mo>&#x000D7;</mo><mn>4</mn></mrow></math> skip-gram pairs (edges of the sentence have fewer neighbors). CBOW gives about 10 examples. That factor of ~4 is the “more examples” claim, not a different definition of meaning.</p>
 <hr />
 <h2>6. Practice</h2>
 <ol>
@@ -200,7 +198,7 @@
 <p>Why does skip-gram produce more gradient updates per sentence than CBOW?</p>
 </li>
 <li>
-<p>Softmax outputs a distribution over (V). After training, do you use that distribution as the embedding? What do you use instead?</p>
+<p>Softmax outputs a distribution over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi></mrow></math>. After training, do you use that distribution as the embedding? What do you use instead?</p>
 </li>
 </ol>
                     </section>
@@ -211,7 +209,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

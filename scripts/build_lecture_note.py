@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html as html_lib
 import pathlib
 import re
 import subprocess
@@ -469,13 +470,95 @@ blockquote {
   color: #333;
 }
 hr { border: none; border-top: 1px solid #ddd; margin: 1.2em 0; }
+math[display="block"] {
+  display: block;
+  margin: 0.85em 0;
+  text-align: center;
+}
+math {
+  font-family: "Cambria Math", "Latin Modern Math", "STIX Two Math", "Times New Roman", serif;
+}
 """
 
 
+_FENCE_RE = re.compile(r"```[\s\S]*?```")
+_INLINE_CODE_RE = re.compile(r"`[^`]+`")
+_DISPLAY_MATH_RE = re.compile(r"\\\[(.+?)\\\]", re.DOTALL)
+_INLINE_MATH_RE = re.compile(r"\\\((.+?)\\\)", re.DOTALL)
+_DOLLAR_DISPLAY_RE = re.compile(r"\$\$(.+?)\$\$", re.DOTALL)
+
+
+def _latex_to_mathml(tex: str, display: bool) -> str:
+    try:
+        from latex2mathml.converter import convert
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "latex2mathml"])
+        from latex2mathml.converter import convert
+
+    return convert(tex.strip(), display="block" if display else "inline")
+
+
+def _stash_regions(pattern: re.Pattern, text: str, bag: list[str], prefix: str) -> str:
+    def repl(match: re.Match) -> str:
+        token = f"%%{prefix}{len(bag):04d}%%"
+        bag.append(match.group(0) if match.lastindex is None else match.group(1))
+        return token
+
+    return pattern.sub(repl, text)
+
+
 def markdown_to_html(text: str) -> str:
+    fences: list[str] = []
+    inline_code: list[str] = []
+    display_tex: list[str] = []
+    inline_tex: list[str] = []
+
+    def keep_fence(match: re.Match) -> str:
+        token = f"FENCEPLACEHOLDER{len(fences):04d}"
+        fences.append(match.group(0))
+        return token
+
+    def keep_code(match: re.Match) -> str:
+        token = f"CODEPLACEHOLDER{len(inline_code):04d}"
+        inline_code.append(match.group(0))
+        return token
+
+    protected = _FENCE_RE.sub(keep_fence, text)
+    protected = _INLINE_CODE_RE.sub(keep_code, protected)
+    protected = _stash_regions(_DISPLAY_MATH_RE, protected, display_tex, "DISPLAYMATH")
+    protected = _stash_regions(_DOLLAR_DISPLAY_RE, protected, display_tex, "DISPLAYMATH")
+    protected = _stash_regions(_INLINE_MATH_RE, protected, inline_tex, "INLINEMATH")
+
+    for i, chunk in enumerate(inline_code):
+        protected = protected.replace(f"CODEPLACEHOLDER{i:04d}", chunk)
+    for i, chunk in enumerate(fences):
+        protected = protected.replace(f"FENCEPLACEHOLDER{i:04d}", chunk)
+
     html = markdown.markdown(
-        text,
+        protected,
         extensions=["tables", "fenced_code", "sane_lists"],
+    )
+
+    for i, tex in enumerate(display_tex):
+        try:
+            mathml = _latex_to_mathml(tex, display=True)
+        except Exception as exc:
+            print(f"Math conversion failed (display): {tex[:80]!r} ({exc})")
+            mathml = f'<span class="math-source">{html_lib.escape(tex.strip())}</span>'
+        html = html.replace(f"%%DISPLAYMATH{i:04d}%%", mathml)
+
+    for i, tex in enumerate(inline_tex):
+        try:
+            mathml = _latex_to_mathml(tex, display=False)
+        except Exception as exc:
+            print(f"Math conversion failed (inline): {tex[:80]!r} ({exc})")
+            mathml = f'<span class="math-source">{html_lib.escape(tex.strip())}</span>'
+        html = html.replace(f"%%INLINEMATH{i:04d}%%", mathml)
+
+    html = re.sub(
+        r"<p>(<math\b[^>]*display=\"block\"[\s\S]*?</math>)</p>",
+        r"\1",
+        html,
     )
     html = re.sub(r"<table>", '<div class="table-wrap"><table>', html)
     html = re.sub(r"</table>", "</table></div>", html)

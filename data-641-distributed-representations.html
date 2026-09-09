@@ -149,9 +149,7 @@
 <h2>3. What the geometry is for</h2>
 <p>If the map is good, <strong>distance and direction mean something</strong>.</p>
 <p>Mikolov et al. showed that Word2Vec vectors support analogies:</p>
-<p>[
-\overrightarrow{\text{king}} - \overrightarrow{\text{man}} + \overrightarrow{\text{woman}} \approx \overrightarrow{\text{queen}}
-]</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02248;</mo><mover><mrow><mtext>queen</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>
 <p>The same kind of offset shows up for gender, verb tense, and country–capital pairs:</p>
 <p><img alt="Regular offsets in embedding space" src="files/data-641/graphics/wordsimilarities.png" /></p>
 <p>You are not memorizing the picture. You are taking the claim: a useful embedding turns a linguistic relation into a <strong>vector offset</strong> you can add.</p>
@@ -179,7 +177,7 @@
 <p>Why is a 300-dimensional Word2Vec vector less prone to the sparsity problem than a 50,000-dimensional TF–IDF vector?</p>
 </li>
 <li>
-<p>You compute (\overrightarrow{\text{Paris}} - \overrightarrow{\text{France}} + \overrightarrow{\text{Italy}}) and the nearest word is <em>Rome</em>. What did the model learn?</p>
+<p>You compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>Paris</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>France</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>Italy</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math> and the nearest word is <em>Rome</em>. What did the model learn?</p>
 </li>
 </ol>
                     </section>
@@ -190,7 +188,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

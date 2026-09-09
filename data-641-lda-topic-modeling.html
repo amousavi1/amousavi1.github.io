@@ -118,10 +118,10 @@
 <li>A topic is a distribution over words.</li>
 <li>Most documents use only a few topics, and most words in a topic are rare. <strong>Sparse Dirichlet priors</strong> encode that. The point is interpretability: a news piece is "mostly markets, a little politics," not a uniform smear over 50 themes.</li>
 </ul>
-<p>You still pick the number of topics (k). LDA does not discover (k) for you.</p>
+<p>You still pick the number of topics <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. LDA does not discover <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> for you.</p>
 <hr />
 <h2>2. Two matrices you will print</h2>
-<p>LDA is often drawn as a factorization of a (normalized) term–document matrix ({\bf C} \approx {\bf \Phi}\,{\bf \Theta}).</p>
+<p>LDA is often drawn as a factorization of a (normalized) term–document matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">C</mi></mrow><mo>&#x02248;</mo><mrow><mi mathvariant="bold">&#x003A6;</mi></mrow><mspace width="0.167em" /><mrow><mi mathvariant="bold">&#x00398;</mi></mrow></mrow></math>.</p>
 <p><img alt="LDA factors" src="files/data-641/graphics/lda.png" /></p>
 <div class="table-wrap"><table>
 <thead>
@@ -134,25 +134,25 @@
 </thead>
 <tbody>
 <tr>
-<td>({\bf \Phi})</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">&#x003A6;</mi></mrow></mrow></math></td>
 <td>words × topics</td>
-<td>(\phi_{ij} = P(w_i \mid z_j))</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003D5;</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0003D;</mo><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo>&#x02223;</mo><msub><mi>z</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math></td>
 <td>How likely is this word under this topic</td>
 </tr>
 <tr>
-<td>({\bf \Theta})</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">&#x00398;</mi></mrow></mrow></math></td>
 <td>topics × documents</td>
-<td>(\theta_{ij} = P(z_i \mid d_j))</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0003D;</mo><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>z</mi><mi>i</mi></msub><mo>&#x02223;</mo><msub><mi>d</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math></td>
 <td>How much of this document is this topic</td>
 </tr>
 </tbody>
 </table></div>
-<p>To label a topic, sort a column of ({\bf \Phi}) and read the top words. To label a document, sort a column of ({\bf \Theta}).</p>
+<p>To label a topic, sort a column of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">&#x003A6;</mi></mrow></mrow></math> and read the top words. To label a document, sort a column of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">&#x00398;</mi></mrow></mrow></math>.</p>
 <p>Those probabilities are why LDA topics are easier to show a client than SVD factors with minus signs.</p>
 <hr />
 <h2>3. How the algorithm runs</h2>
-<p><strong>Input.</strong> A bag-of-words corpus and a number of topics (k).</p>
-<p><strong>Initialize.</strong> Random (or mildly informed) ({\bf \Theta}) and ({\bf \Phi}).</p>
+<p><strong>Input.</strong> A bag-of-words corpus and a number of topics <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</p>
+<p><strong>Initialize.</strong> Random (or mildly informed) <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">&#x00398;</mi></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold">&#x003A6;</mi></mrow></mrow></math>.</p>
 <p><strong>Iterate.</strong> For each word token in each document, resample its topic using the current document–topic and topic–word estimates. This is the inference loop (collapsed Gibbs, variational Bayes, or a library default). Repeat until the assignments stop moving much.</p>
 <p><strong>Output.</strong></p>
 <ul>
@@ -162,7 +162,7 @@
 <p>You never see the "true" topics. You see the estimates that best explain the counts under the model.</p>
 <hr />
 <h2>4. When LDA is the right tool</h2>
-<p><strong>Use it</strong> when you want readable word lists, you have no document labels, and you want a mix (not a hard cluster) per document. It works across domains and languages if you preprocess honestly. You can run it on successive months and watch a topic's mass move. The (k)-dimensional (\theta) is a usable feature for later classification.</p>
+<p><strong>Use it</strong> when you want readable word lists, you have no document labels, and you want a mix (not a hard cluster) per document. It works across domains and languages if you preprocess honestly. You can run it on successive months and watch a topic's mass move. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-dimensional <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> is a usable feature for later classification.</p>
 <p><strong>Watch out.</strong></p>
 <div class="table-wrap"><table>
 <thead>
@@ -173,7 +173,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Choosing (k)</td>
+<td>Choosing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math></td>
 <td>Try several; use coherence (note <strong>14.3</strong>), not only likelihood</td>
 </tr>
 <tr>
@@ -185,7 +185,7 @@
 <td>Word order is gone. <em>Not happy</em> ≈ <em>happy</em></td>
 </tr>
 <tr>
-<td>Sparse (\Phi) on huge vocabularies</td>
+<td>Sparse <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003A6;</mi></mrow></math> on huge vocabularies</td>
 <td>Aggressive stop lists and min-count cutoffs</td>
 </tr>
 <tr>
@@ -198,18 +198,18 @@
 </tr>
 <tr>
 <td>Priors</td>
-<td>(\alpha) (document–topic) and (\beta) (topic–word) need a sweep</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math> (document–topic) and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi></mrow></math> (topic–word) need a sweep</td>
 </tr>
 </tbody>
 </table></div>
 <p>Libraries (<code>gensim</code>, scikit-learn) hide the sampler. They do not hide the need to read the top words.</p>
-<p>A first lab recipe: 10–20 topics, default priors, print 10 words per topic, drop obvious junk, rerun. Then change (k). Do not start by sweeping five knobs at once.</p>
+<p>A first lab recipe: 10–20 topics, default priors, print 10 words per topic, drop obvious junk, rerun. Then change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. Do not start by sweeping five knobs at once.</p>
 <p>LDA on raw HTML or on a corpus that still contains "click here" will discover a "navigation" topic. That is a cleanup miss, not a reason to drop LDA.</p>
 <hr />
 <h2>5. Practice</h2>
 <ol>
 <li>
-<p>A document has (\theta = (0.7, 0.2, 0.1)). What does that say, and why is that richer than assigning the document to topic 1 only?</p>
+<p>A document has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>0.7</mn><mo>&#x0002C;</mo><mn>0.2</mn><mo>&#x0002C;</mo><mn>0.1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. What does that say, and why is that richer than assigning the document to topic 1 only?</p>
 </li>
 <li>
 <p>Why does a sparse Dirichlet prior help a human who has to name the topics?</p>
@@ -227,7 +227,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 

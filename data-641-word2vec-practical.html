@@ -122,30 +122,26 @@
 <h2>2. Frequent bigrams as single tokens</h2>
 <p>Some pairs are almost one word. <em>Elvis</em> is usually followed by <em>Presley</em>. Predicting <em>Presley</em> from <em>Elvis</em> (or the other way) teaches the model very little. The pair should be one vocabulary item: <code>Elvis_Presley</code>.</p>
 <p>Score candidate bigrams and glue the ones that pass a cutoff:</p>
-<p>[
-\operatorname{score}(w_i, w_j) = \frac{\operatorname{count}(w_i, w_j) - \delta}{\operatorname{count}(w_i)\,\operatorname{count}(w_j)}
-]</p>
-<p>(\delta) is a discount so that a pair that appeared once by chance does not look like a phrase. You can run the same idea on trigrams. gensim’s <code>Phrases</code> is the usual implementation.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>score</mo><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mi>w</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mo>count</mo><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mi>w</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>&#x003B4;</mi></mrow><mrow><mo>count</mo><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mo>count</mo><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></mfrac></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B4;</mi></mrow></math> is a discount so that a pair that appeared once by chance does not look like a phrase. You can run the same idea on trigrams. gensim’s <code>Phrases</code> is the usual implementation.</p>
 <p>After this step the “vocabulary” includes both unigrams and a handful of glued phrases. CBOW and skip-gram then run as before.</p>
 <hr />
 <h2>3. Subsample frequent tokens</h2>
 <p><em>the</em> and <em>a</em> sit next to almost every noun. If you train on every occurrence, the space fills with a false “everything is a little like <em>the</em>.” That is the same problem IDF solves for count vectors.</p>
-<p>Mikolov keeps token (w_i) in a given window with probability that <strong>falls</strong> as frequency rises:</p>
-<p>[
-P(w_i) = 1 - \sqrt{\frac{t}{f(w_i)}}
-]</p>
-<p>(f(w_i)) is the corpus frequency. (t) is a threshold; (10^{-5}) to (10^{-6}) is the usual range. Raise (t) on a small corpus, lower it on a huge one. Tokens rarer than (t) are always kept.</p>
+<p>Mikolov keeps token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>w</mi><mi>i</mi></msub></mrow></math> in a given window with probability that <strong>falls</strong> as frequency rises:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x02212;</mo><msqrt><mrow><mfrac><mrow><mi>t</mi></mrow><mrow><mi>f</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></mfrac></mrow></msqrt></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is the corpus frequency. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> is a threshold; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>5</mn></mrow></msup></mrow></math> to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>6</mn></mrow></msup></mrow></math> is the usual range. Raise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> on a small corpus, lower it on a huge one. Tokens rarer than <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> are always kept.</p>
 <p>The effect is IDF-like: rare content words drive the vectors. Stop words still appear, just less often.</p>
-<p>(The lecture slide writes (f(w_t)) in the square root. Same quantity: frequency of the token you are deciding to keep or drop.)</p>
+<p>(The lecture slide writes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> in the square root. Same quantity: frequency of the token you are deciding to keep or drop.)</p>
 <hr />
 <h2>4. Negative sampling</h2>
 <p>A full softmax updates <strong>every</strong> output weight on every example. With a million types that is a million updates for the pair (<em>painted</em>, <em>Monet</em>). Almost all of those types were not in the window. You do not need their gradients.</p>
-<p><strong>Negative sampling</strong> keeps the positive pair and draws (n) words that were <strong>not</strong> in the window. You update only those (n+1) output rows. The task becomes: the true neighbor should score high; the random draws should score low (logistic / sigmoid, not a full softmax).</p>
+<p><strong>Negative sampling</strong> keeps the positive pair and draws <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> words that were <strong>not</strong> in the window. You update only those <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></math> output rows. The task becomes: the true neighbor should score high; the random draws should score low (logistic / sigmoid, not a full softmax).</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Corpus size</th>
-<th>Typical (n)</th>
+<th>Typical <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math></th>
 </tr>
 </thead>
 <tbody>
@@ -173,7 +169,7 @@ P(w_i) = 1 - \sqrt{\frac{t}{f(w_i)}}
 <p>Why does glueing <em>New</em> + <em>York</em> into one token help skip-gram more than leaving them separate?</p>
 </li>
 <li>
-<p>A token has frequency far above (t). Does equation (section 3) make it more or less likely to appear in a training window?</p>
+<p>A token has frequency far above <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>. Does equation (section 3) make it more or less likely to appear in a training window?</p>
 </li>
 <li>
 <p>You have 2 million types and 5 negatives. How many output embeddings are updated on one skip-gram pair, versus a full softmax?</p>
@@ -187,7 +183,7 @@ P(w_i) = 1 - \sqrt{\frac{t}{f(w_i)}}
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
             </footer>
         </div>
 
