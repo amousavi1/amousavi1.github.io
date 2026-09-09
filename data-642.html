@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>DATA 442/642: Advanced Machine Learning - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/Course">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">DATA 442/642: Advanced Machine Learning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="course-meta">American University</p>
+                        <p>
+                            This is a complementary course hub. Canvas is the official site for this semester.
+                            The weekly notes below are extra files prepared while teaching 442/642.
+                            They follow the six-module schedule (math and optimization, sparsity,
+                            kernels, SVMs, unsupervised learning, then factorization and neural nets).
+                            Questions: <a href="mailto:mousavi@american.edu">mousavi@american.edu</a>.
+                        </p>
+                        <p><a href="courses.html">All courses</a></p>
+
+                        <h2>Syllabus</h2>
+                        <ul class="course-materials">
+                            <li>
+                                <a class="course-material__title" href="files/data-642/syllabus.pdf" target="_blank" rel="noopener">Syllabus</a
+                                ><a class="course-material__pdf" href="files/data-642/syllabus.pdf" target="_blank" rel="noopener">(PDF)</a>
+                            </li>
+                        </ul>
+
+                        <h2>Weekly Materials</h2>
+                        <div class="course-weeks">
+                            <div class="course-week-tabs" role="tablist" aria-label="Course weeks">
+                                <button type="button" role="tab" id="tab-week-1" aria-controls="week-1" aria-selected="true">
+                                    Week 1
+                                </button>
+                                <button type="button" role="tab" id="tab-week-2" aria-controls="week-2" aria-selected="false" tabindex="-1">
+                                    Week 2
+                                </button>
+                                <button type="button" role="tab" id="tab-week-3" aria-controls="week-3" aria-selected="false" tabindex="-1">
+                                    Week 3
+                                </button>
+                                <button type="button" role="tab" id="tab-week-4" aria-controls="week-4" aria-selected="false" tabindex="-1">
+                                    Week 4
+                                </button>
+                                <button type="button" role="tab" id="tab-week-5" aria-controls="week-5" aria-selected="false" tabindex="-1">
+                                    Week 5
+                                </button>
+                                <button type="button" role="tab" id="tab-week-6" aria-controls="week-6" aria-selected="false" tabindex="-1">
+                                    Week 6
+                                </button>
+                                <button type="button" role="tab" id="tab-week-7" aria-controls="week-7" aria-selected="false" tabindex="-1">
+                                    Week 7
+                                </button>
+                                <button type="button" role="tab" id="tab-week-8" aria-controls="week-8" aria-selected="false" tabindex="-1">
+                                    Week 8
+                                </button>
+                                <button type="button" role="tab" id="tab-week-9" aria-controls="week-9" aria-selected="false" tabindex="-1">
+                                    Week 9
+                                </button>
+                                <button type="button" role="tab" id="tab-week-10" aria-controls="week-10" aria-selected="false" tabindex="-1">
+                                    Week 10
+                                </button>
+                                <button type="button" role="tab" id="tab-week-11" aria-controls="week-11" aria-selected="false" tabindex="-1">
+                                    Week 11
+                                </button>
+                                <button type="button" role="tab" id="tab-week-12" aria-controls="week-12" aria-selected="false" tabindex="-1">
+                                    Week 12
+                                </button>
+                                <button type="button" role="tab" id="tab-week-13" aria-controls="week-13" aria-selected="false" tabindex="-1">
+                                    Week 13
+                                </button>
+                                <button type="button" role="tab" id="tab-week-14" aria-controls="week-14" aria-selected="false" tabindex="-1">
+                                    Week 14
+                                </button>
+                                <button type="button" role="tab" id="tab-week-15" aria-controls="week-15" aria-selected="false" tabindex="-1">
+                                    Week 15
+                                </button>
+                            </div>
+                            <div class="course-week-panel" id="week-1" role="tabpanel" aria-labelledby="tab-week-1">
+                                <p class="course-group-title">Module 1 — Linear algebra and loss</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-1-ml-math-basics.pdf" target="_blank" rel="noopener">1. ML math basics</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-1-ml-math-basics.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/linear-regression.pdf" target="_blank" rel="noopener">OLS variance and residuals</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/linear-regression.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/loss-functions.pdf" target="_blank" rel="noopener">Loss functions</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/loss-functions.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-loss-functions.pdf" target="_blank" rel="noopener">Loss functions (course notes)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-loss-functions.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/bias.pdf" target="_blank" rel="noopener">Bias</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/bias.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What does a positive-definite Hessian tell you about a critical point?</li>
+                                    <li>Name one regression loss that is more robust to outliers than squared error, and why.</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-2" role="tabpanel" aria-labelledby="tab-week-2" hidden>
+                                <p class="course-group-title">Module 1 — Eigenpairs and optimization landscape</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-2-eigenpairs-psd.pdf" target="_blank" rel="noopener">2. Eigenpairs and PSD matrices</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-2-eigenpairs-psd.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-optimization-methods.pdf" target="_blank" rel="noopener">Optimization methods</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-optimization-methods.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Why do we care that a covariance matrix is PSD?</li>
+                                    <li>When is a second-order method worth the extra linear algebra?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-3" role="tabpanel" aria-labelledby="tab-week-3" hidden>
+                                <p class="course-group-title">Module 1 — Gradient methods, optimality, duality</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-3-gd-newton.pdf" target="_blank" rel="noopener">3. Gradient descent and Newton</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-3-gd-newton.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-4-optimality.pdf" target="_blank" rel="noopener">4. Necessary and sufficient conditions</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-4-optimality.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-5-dual-theory.pdf" target="_blank" rel="noopener">5. Dual theory</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-5-dual-theory.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/lab-3-lagrange.pdf" target="_blank" rel="noopener">Lab 3: Lagrange multipliers</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/lab-3-lagrange.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Homework / extra credit</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/extra-credit-hw.pdf" target="_blank" rel="noopener">Extra-credit homework (Module 1)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/extra-credit-hw.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/extra-credit-exercises.pdf" target="_blank" rel="noopener">Extra-credit exercises (Module 1)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/extra-credit-exercises.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Write the KKT stationarity condition for a problem you already know (least squares, SVM, …).</li>
+                                    <li>What is a dual variable doing, in one sentence?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-4" role="tabpanel" aria-labelledby="tab-week-4" hidden>
+                                <p class="course-group-title">Module 2 — Constrained and sparsity-aware methods</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/admm-vs-pd.pdf" target="_blank" rel="noopener">ADMM versus primal-dual</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/admm-vs-pd.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/augmented-lagrangian.pdf" target="_blank" rel="noopener">Augmented Lagrangian</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/augmented-lagrangian.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Practice</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-1-solutions.pdf" target="_blank" rel="noopener">Quiz 1 solutions</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-1-solutions.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-1-solutions-alt.pdf" target="_blank" rel="noopener">Module 1 quiz solutions</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-1-solutions-alt.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-1-solution-set.pdf" target="_blank" rel="noopener">Module 1 quiz solution set</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-1-solution-set.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>When would you pick ADMM over a projected gradient step?</li>
+                                    <li>What constraint are you actually enforcing with an augmented Lagrangian penalty?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-5" role="tabpanel" aria-labelledby="tab-week-5" hidden>
+                                <p class="course-group-title">Module 3 — Kernels and RKHS</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-6-kernel-methods.pdf" target="_blank" rel="noopener">6. Kernel methods</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-6-kernel-methods.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What does the kernel trick avoid computing explicitly?</li>
+                                    <li>Give a kernel that is not the linear or RBF kernel and say what similarity it encodes.</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-6" role="tabpanel" aria-labelledby="tab-week-6" hidden>
+                                <p class="course-group-title">Module 4 — Perceptron and SVM</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/svm.pdf" target="_blank" rel="noopener">SVM as a QP</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/svm.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-7-svm.pdf" target="_blank" rel="noopener">7. Support vector machines</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-7-svm.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-16-perceptron.pdf" target="_blank" rel="noopener">16. Perceptron</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-16-perceptron.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Practice</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-2-solutions.pdf" target="_blank" rel="noopener">Module 2 quiz solutions</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-2-solutions.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Hard-margin SVM versus the perceptron: what extra object does the SVM find?</li>
+                                    <li>Where does the kernel enter the SVM dual?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-7" role="tabpanel" aria-labelledby="tab-week-7" hidden>
+                                <p class="course-group-title">Module 4 — SVM variants</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/twin-svm.pdf" target="_blank" rel="noopener">Twin SVM</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/twin-svm.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/one-class-svm.pdf" target="_blank" rel="noopener">One-class SVM</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/one-class-svm.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/svm-tr.pdf" target="_blank" rel="noopener">SVM (technical remarks)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/svm-tr.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What problem is one-class SVM solving that a standard SVM is not?</li>
+                                    <li>Twin SVM fits two hyperplanes. What is each one close to?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-8" role="tabpanel" aria-labelledby="tab-week-8" hidden>
+                                <p class="course-group-title">Module 4 — Ensembles and heuristics</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/ensemble-learning.pdf" target="_blank" rel="noopener">Ensemble learning</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/ensemble-learning.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/heuristics.pdf" target="_blank" rel="noopener">Incorporating heuristics</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/heuristics.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Bagging versus boosting: which one reduces variance, and which one chases residual error?</li>
+                                    <li>When is a hand-written heuristic safer than another learned layer?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-9" role="tabpanel" aria-labelledby="tab-week-9" hidden>
+                                <p class="course-group-title">Midterm (Modules 1–4)</p>
+                                <p class="course-group-title">Practice</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/midterm-sample.pdf" target="_blank" rel="noopener">Midterm sample</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/midterm-sample.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Which derivation still feels thin: KKT, kernels, or the SVM dual?</li>
+                                    <li>Write one exam-style question you would not want to be surprised by.</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-10" role="tabpanel" aria-labelledby="tab-week-10" hidden>
+                                <p class="course-group-title">Module 5 — Clustering</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/clustering.pdf" target="_blank" rel="noopener">Clustering</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/clustering.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Practice</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-5.pdf" target="_blank" rel="noopener">Quiz 5 (clustering, practice)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-5.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-5-solutions.pdf" target="_blank" rel="noopener">Quiz 5 solutions</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-5-solutions.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>k-means assumes spherical clusters. Give a data set where that is the wrong model.</li>
+                                    <li>What do you do when k is not given?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-11" role="tabpanel" aria-labelledby="tab-week-11" hidden>
+                                <p class="course-group-title">Module 5 — GMMs and anomaly detection</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/gmms.pdf" target="_blank" rel="noopener">Gaussian mixture models</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/gmms.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/642-15-gmms.pdf" target="_blank" rel="noopener">15. Gaussian mixture models</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/642-15-gmms.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>A GMM is a soft clustering. What is being mixed?</li>
+                                    <li>How would you turn a GMM density into an anomaly score?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-12" role="tabpanel" aria-labelledby="tab-week-12" hidden>
+                                <p class="course-group-title">Module 6 — PCA and matrix factorization</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/pca.pdf" target="_blank" rel="noopener">PCA</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/pca.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/matrix-factorization.pdf" target="_blank" rel="noopener">Matrix factorization</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/matrix-factorization.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Practice</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/quiz-4.pdf" target="_blank" rel="noopener">Quiz 4 (practice)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/quiz-4.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>PCA versus a regularized matrix factorization for a recommender: what extra term appears?</li>
+                                    <li>What does a negative eigenvalue tell you if someone hands you a “covariance” matrix?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-13" role="tabpanel" aria-labelledby="tab-week-13" hidden>
+                                <p class="course-group-title">Module 6 — ICA, CCA, tensors</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/ica.pdf" target="_blank" rel="noopener">Independent component analysis</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/ica.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/ica-extended.pdf" target="_blank" rel="noopener">ICA (extended notes)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/ica-extended.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/iva.pdf" target="_blank" rel="noopener">Independent vector analysis</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/iva.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/cca.pdf" target="_blank" rel="noopener">Canonical correlation analysis</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/cca.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/tensors.pdf" target="_blank" rel="noopener">Tensors</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/tensors.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>ICA looks for independence, PCA for variance. When do those disagree?</li>
+                                    <li>CCA needs two views of the same objects. Name a pair of views.</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-14" role="tabpanel" aria-labelledby="tab-week-14" hidden>
+                                <p class="course-group-title">Module 6 — Multimodal learning</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/multimodal-learning.pdf" target="_blank" rel="noopener">Multimodal learning</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/multimodal-learning.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/multimodal.pdf" target="_blank" rel="noopener">Multimodal methods</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/multimodal.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/clip.pdf" target="_blank" rel="noopener">CLIP</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/clip.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/embeddings-images.pdf" target="_blank" rel="noopener">Image embeddings</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/embeddings-images.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What is aligned in CLIP, and what loss pulls the alignment?</li>
+                                    <li>When is early fusion the wrong way to combine image and text?</li>
+                                </ul>
+                            </div>
+                            <div class="course-week-panel" id="week-15" role="tabpanel" aria-labelledby="tab-week-15" hidden>
+                                <p class="course-group-title">Module 6 — Neural nets and autoencoders</p>
+                                <p class="course-group-title">Complementary notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/cnns.pdf" target="_blank" rel="noopener">CNNs</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/cnns.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/rnns.pdf" target="_blank" rel="noopener">Recurrent neural networks</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/rnns.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/pretraining.pdf" target="_blank" rel="noopener">Pretraining</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/pretraining.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/fine-tuning.pdf" target="_blank" rel="noopener">Fine-tuning</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/fine-tuning.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/transfer-learning.pdf" target="_blank" rel="noopener">Transfer learning</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/transfer-learning.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/self-supervised.pdf" target="_blank" rel="noopener">Self-supervised learning</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/self-supervised.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/one-shot.pdf" target="_blank" rel="noopener">One-shot learning</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/one-shot.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/neural-nets.pdf" target="_blank" rel="noopener">Neural networks</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/neural-nets.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/backpropagation.pdf" target="_blank" rel="noopener">Back-propagation</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/backpropagation.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/autoencoders.pdf" target="_blank" rel="noopener">Autoencoders</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/autoencoders.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/unet.pdf" target="_blank" rel="noopener">U-Net</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/unet.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/unet-notes.pdf" target="_blank" rel="noopener">U-Net notes</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/unet-notes.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Practice</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/final-sample.pdf" target="_blank" rel="noopener">Final exam sample</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/final-sample.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="files/data-642/extra/final-sample-modules.pdf" target="_blank" rel="noopener">Final exam sample (by module)</a
+                                        ><a class="course-material__pdf" href="files/data-642/extra/final-sample-modules.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What does back-prop actually compute, in one line?</li>
+                                    <li>An autoencoder with a linear hidden layer and squared loss is close to which classical method?</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T20:45:00-04:00">September 8, 2026, 8:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

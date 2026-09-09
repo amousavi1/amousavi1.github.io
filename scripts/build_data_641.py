@@ -11,11 +11,12 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from build_lecture_note import PRINT_CSS, SIDEBAR, markdown_to_html  # noqa: E402
 from data_641_catalog import BY_SLUG, DATA_FILES, NOTES, WEEKS  # noqa: E402
+from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-08T20:15:00-04:00"
-LAST_UPDATED_TEXT = "September 8, 2026, 8:15 PM EDT"
+LAST_UPDATED_ISO = "2026-09-08T21:00:00-04:00"
+LAST_UPDATED_TEXT = "September 8, 2026, 9:00 PM EDT"
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"
@@ -189,6 +190,25 @@ def write_hub() -> pathlib.Path:
                 + "\n".join(items)
                 + "\n                                </ul>"
             )
+        for kind, heading in (
+            ("notes", "Complementary notes"),
+            ("practice", "Practice"),
+            ("homework", "Extra practice"),
+        ):
+            rows = extras_for(COURSE, week, kind)
+            items = []
+            for title, filename in rows:
+                href = f"files/{COURSE}/{filename}"
+                if not (ROOT / "files" / COURSE / filename).exists():
+                    continue
+                items.append(_material_item(title, href, href))
+            if items:
+                chunks.append(
+                    f'                                <p class="course-group-title">{heading}</p>\n'
+                    '                                <ul class="course-materials">\n'
+                    + "\n".join(items)
+                    + "\n                                </ul>"
+                )
         readings = spec.get("readings") or []
         if readings:
             items = []
