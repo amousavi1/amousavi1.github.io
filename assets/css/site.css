@@ -472,6 +472,39 @@ body.page-courses a.course-card:hover .course-card__title {
   color: #5f6368;
 }
 
+.page-courses .course-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.15em 0 1.1em;
+}
+
+.page-courses .course-schedule th,
+.page-courses .course-schedule td {
+  text-align: left;
+  padding: 0.4em 0.7em 0.4em 0;
+  border-bottom: 1px solid #e3e3e3;
+  vertical-align: top;
+}
+
+.page-courses .course-schedule th {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.page-courses .course-due-list {
+  margin: 0.15em 0 1.1em;
+  padding-left: 1.25em;
+}
+
+.page-courses .course-due-list li {
+  margin: 0.35em 0;
+}
+
+html[data-theme="dark"] .page-courses .course-schedule th,
+html[data-theme="dark"] .page-courses .course-schedule td {
+  border-bottom-color: #5e5e5e;
+}
+
 html[data-theme="dark"] ul.course-list > li {
   border-bottom-color: #5e5e5e;
 }
