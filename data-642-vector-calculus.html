@@ -104,33 +104,50 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot;
-                            <a href="files/data-642/vector-calculus.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot; <a href="files/data-642/vector-calculus.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/1.4-vector-calculus.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             Gradients, Jacobians, and Hessians in the notation this course uses.
                         </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Notation follows Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>.</p>
 <h2>1. Gradient</h2>
-<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mi>:</mi><msup><mi>&#x0211D;</mi><mi>l</mi></msup><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math>. Vary one coordinate, hold the others. Those partials, stacked, are the gradient. This course writes it as a <strong>row</strong></p>
+<p>The gradient is the derivative for several variables. Vary one coordinate of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>, hold the others. Those <strong>partial derivatives</strong>, stacked, are the gradient.</p>
+<p>For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mi>:</mi><msup><mi>&#x0211D;</mi><mi>l</mi></msup><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mi>i</mi></msub></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>l</mi><mo>&#x0002E;</mo></mrow></math>
+<p>This course writes the collection as a <strong>row</strong></p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">[</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mrow></mfrac></mstyle><mspace width="0.278em" /><mstyle displaystyle="false" scriptlevel="0"><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mrow></mfrac></mstyle><mspace width="0.278em" /><mo>&#x022EF;</mo><mspace width="0.278em" /><mstyle displaystyle="false" scriptlevel="0"><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mi>l</mi></msub></mrow></mfrac></mstyle><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">]</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>1</mn><mo>&#x000D7;</mo><mi>l</mi></mrow></msup><mo>&#x0002E;</mo></mrow></math>
 <p>Some books write a column. Be consistent inside one derivation. Descent updates look like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02190;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><mi>&#x003B1;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02207;</mo><mi>J</mi><msup><mo stretchy="false">&#x00029;</mo><mo>&#x022A4;</mo></msup></mrow></math> if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math> is a row.</p>
 <hr />
 <h2>2. Chain rule</h2>
-<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo>&#x0003D;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>, then</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mi>&#x00064;</mi><mi>J</mi></mrow><mrow><mi>&#x00064;</mi><mi>t</mi></mrow></mfrac><mo>&#x0003D;</mo><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mrow></mfrac><mfrac><mrow><mi>&#x00064;</mi><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mrow><mrow><mi>&#x00064;</mi><mi>t</mi></mrow></mfrac><mo>&#x0002B;</mo><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mrow></mfrac><mfrac><mrow><mi>&#x00064;</mi><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mrow><mrow><mi>&#x00064;</mi><mi>t</mi></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mi>:</mi><msup><mi>&#x0211D;</mi><mn>2</mn></msup><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math> depend on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. The derivative of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> with respect to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mi>&#x00064;</mi><mi>J</mi></mrow><mrow><mi>&#x00064;</mi><mi>t</mi></mrow></mfrac><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">[</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mrow></mfrac></mstyle><mspace width="0.278em" /><mstyle displaystyle="false" scriptlevel="0"><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mrow></mfrac></mstyle><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">]</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>t</mi></mtd></mtr><mtr><mtd><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>t</mi></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0003D;</mo><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mrow></mfrac><mfrac><mrow><mi>&#x00064;</mi><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mrow><mrow><mi>&#x00064;</mi><mi>t</mi></mrow></mfrac><mo>&#x0002B;</mo><mfrac><mrow><mo>&#x02202;</mo><mi>J</mi></mrow><mrow><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mrow></mfrac><mfrac><mrow><mi>&#x00064;</mi><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mrow><mrow><mi>&#x00064;</mi><mi>t</mi></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
 <p>That is a gradient times a Jacobian. Back-propagation (Module 6) is this rule applied to a long composition. You do not need the neural-net story yet. You do need to be willing to write the product.</p>
 <hr />
 <h2>3. Hessian</h2>
-<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is twice differentiable,</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is twice differentiable, the <strong>Hessian</strong> is</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><msup><mo>&#x02202;</mo><mn>2</mn></msup><mi>J</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><msubsup><mi>&#x003B8;</mi><mn>1</mn><mn>2</mn></msubsup></mtd><mtd><msup><mo>&#x02202;</mo><mn>2</mn></msup><mi>J</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub></mtd></mtr><mtr><mtd><msup><mo>&#x02202;</mo><mn>2</mn></msup><mi>J</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo>&#x02202;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub></mtd><mtd><msup><mo>&#x02202;</mo><mn>2</mn></msup><mi>J</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><msubsup><mi>&#x003B8;</mi><mn>2</mn><mn>2</mn></msubsup></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
-<p>The mixed partials match (Schwarz), so the Hessian is <strong>symmetric</strong>. It measures <strong>curvature</strong>.</p>
+<p>The mixed partials match (Schwarz), so the Hessian is <strong>symmetric</strong>. It measures <strong>curvature</strong> of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> around a point.</p>
 <p>At a critical point <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>:</p>
 <ul>
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math> positive definite <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> local <strong>minimum</strong>;</li>
 <li>negative definite <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> local <strong>maximum</strong>;</li>
 <li>indefinite <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> saddle.</li>
 </ul>
-<p>Newton’s method (week 2) solves a linear system with this matrix every step. Eigenvalues of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math> are why a long thin valley makes steepest descent zigzag.</p>
+<p>Newton’s method (Week 2) solves a linear system with this matrix every step. Eigenvalues of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math> are why a long thin valley makes steepest descent zigzag.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>If a book prints <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math> as a column, how does the descent update <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02190;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><mi>&#x003B1;</mi><mo>&#x02207;</mo><mi>J</mi></mrow></math> change compared with the row convention in these slides?</p>
+</li>
+<li>
+<p>In the chain rule, which factor is “how <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> depends on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>” and which is “how <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> depends on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>”?</p>
+</li>
+<li>
+<p>Why does a symmetric Hessian with one positive and one negative eigenvalue make a critical point a saddle, not a min?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -139,7 +156,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T09:45:00-04:00">September 9, 2026, 9:45 AM EDT</time></div>
             </footer>
         </div>
 

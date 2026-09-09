@@ -104,24 +104,64 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot;
-                            <a href="files/data-642/ml-basics.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot; <a href="files/data-642/ml-basics.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/1.1-ml-basics.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             Supervised, unsupervised, batch versus online, and the usual failure modes.
                         </p>
-<h2>1. Four learning setups</h2>
-<p>This course is advanced machine learning. The algorithms change. The <strong>setup</strong> usually does not.</p>
-<p><strong>Supervised.</strong> The training rows come with answers (labels). Classification puts a row in a bucket (spam / ham). Regression predicts a number (price of a car). Methods you already know still apply: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-NN, linear and logistic regression, SVMs, trees, forests, neural nets. Weeks 5 and 12–15 pick these up again with more math.</p>
-<p><strong>Unsupervised.</strong> No labels. Clustering (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-means, hierarchical), anomaly detection (one-class SVM, later GMMs), and latent-variable models (PCA, kernel PCA, ICA, tensors) are the second half of the semester.</p>
-<p><strong>Semi-supervised.</strong> A little labeled data, a lot of unlabeled. A photo app that clusters faces and then asks you to name each cluster is the usual picture.</p>
-<p><strong>Reinforcement.</strong> An agent takes actions, sees a reward, and updates a policy. We will not live here. Know the words.</p>
-<p>The Géron book is the informal source for this lecture. <em>Mathematics for Machine Learning</em> is the math source for the rest of Module 1.</p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Géron, <em>Hands-On Machine Learning</em>, Ch. 1. <em>Mathematics for Machine Learning</em> is the math source for the rest of Module 1.</p>
+<h2>1. Types of machine learning systems</h2>
+<p>The algorithms in this course change. The <strong>setup</strong> usually does not.</p>
+<p><strong>Supervised.</strong> The training rows come with answers (labels).</p>
+<ul>
+<li><strong>Classification</strong> puts a row in a bucket (spam / ham).</li>
+<li><strong>Regression</strong> predicts a number (price of a car).</li>
+</ul>
+<p>Methods you already know still apply: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-NN, linear and logistic regression, SVMs, trees, forests, neural nets. Weeks 5 and 12–15 pick these up again with more math.</p>
+<p><strong>Unsupervised.</strong> No labels.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Examples in this course</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clustering</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>-means, hierarchical</td>
+</tr>
+<tr>
+<td>Anomaly / novelty</td>
+<td>one-class SVM; later GMMs</td>
+</tr>
+<tr>
+<td>Latent variables</td>
+<td>PCA, kernel PCA, ICA, tensors</td>
+</tr>
+<tr>
+<td>Association rules</td>
+<td>Apriori, Eclat (know the names)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Semi-supervised.</strong> A little labeled data, a lot of unlabeled. A photo app clusters faces, then asks you to name each cluster. One label per person names everyone in the album.</p>
+<p><img alt="Semi-supervised face clustering" src="files/data-642/graphics/ml-semi-supervised.png" /></p>
+<p><strong>Reinforcement.</strong> An <strong>agent</strong> takes actions, sees a reward (or a penalty), and updates a <strong>policy</strong>. We will not live here. Know the words.</p>
+<p><img alt="Reinforcement learning loop" src="files/data-642/graphics/ml-reinforcement.png" /></p>
 <hr />
 <h2>2. Batch versus online</h2>
-<p><strong>Batch (offline).</strong> Fit on the whole training set, then freeze the model. Simple. Expensive if you retrain from scratch every night on a huge matrix. Fine when the world is slow.</p>
-<p><strong>Online.</strong> Update as points arrive. The <strong>learning rate</strong> is how fast you forget the past. High: you track a changing stream and you also chase noise. Low: you are stable and you are late.</p>
-<p>A live system that trains online can be poisoned by one bad sensor. Monitor the inputs. Be ready to switch learning off.</p>
+<p>Another cut: can the system learn from a <strong>stream</strong>, or must it see the whole matrix at once?</p>
+<p><strong>Batch (offline).</strong> Train on all available data, then freeze the model. You can still adapt: collect new data, retrain from scratch, ship a new version. Simple. Slow if the matrix is huge. Fine when the world changes on a daily or weekly clock. Bad for a phone, a rover, or a stock ticker.</p>
+<p><strong>Online.</strong> Update as points arrive.</p>
+<p><img alt="Online learning" src="files/data-642/graphics/ml-online.png" /></p>
+<p>The <strong>learning rate</strong> is how fast you forget the past.</p>
+<ul>
+<li>High: you track a changing stream, and you also chase noise.</li>
+<li>Low: you are stable, and you are late.</li>
+</ul>
+<p>Online learning does not need the whole dataset in RAM. It can also be order-sensitive and poisoned by outliers. A live system that trains online can be wrecked by one bad sensor or by someone stuffing a search ranking. Monitor the inputs. Be ready to switch learning off and roll back.</p>
 <hr />
 <h2>3. Why models fail</h2>
 <div class="table-wrap"><table>
@@ -136,11 +176,11 @@
 <tr>
 <td>Too little data</td>
 <td>High variance, lucky splits</td>
-<td>More data, or a simpler model</td>
+<td>More data, or a simpler model. Medium data is still the usual case here — do not abandon the math.</td>
 </tr>
 <tr>
 <td>Non-representative data</td>
-<td>Sampling bias; the test world is not the train world</td>
+<td>Sampling noise or sampling <strong>bias</strong>; the test world is not the train world</td>
 <td>Fix how you sample</td>
 </tr>
 <tr>
@@ -165,7 +205,20 @@
 </tr>
 </tbody>
 </table></div>
-<p>Data can beat a clever algorithm on a large problem. Medium data is still the usual case in this course. Do not abandon the math.</p>
+<p><img alt="Underfitting versus overfitting" src="files/data-642/graphics/ml-over-under.png" /></p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>Name one supervised and one unsupervised method this course will treat later, and what label each one does or does not see.</p>
+</li>
+<li>
+<p>A spam filter is retrained every night on the last 30 days of mail. Is that batch or online? What breaks if the stream is attacked for one afternoon?</p>
+</li>
+<li>
+<p>Why can a very large training set still fail to represent the world you care about?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -174,7 +227,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T09:45:00-04:00">September 9, 2026, 9:45 AM EDT</time></div>
             </footer>
         </div>
 

@@ -16,8 +16,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-09T03:15:00-04:00"
-LAST_UPDATED_TEXT = "September 9, 2026, 3:15 AM EDT"
+LAST_UPDATED_ISO = "2026-09-09T09:45:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 9:45 AM EDT"
 
 COURSE = "data-642"
 COURSE_TITLE = "DATA 442/642"
@@ -29,7 +29,17 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     slug = note["slug"]
     title = note["title"]
     week = note["week"]
-    pdf_href = f"files/{COURSE}/{slug}.pdf"
+    slide = note.get("slide")
+    slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
+    notes_pdf = f"files/{COURSE}/{slug}.pdf"
+    meta_bits = [
+        f'<a href="{COURSE}.html">{COURSE_TITLE}</a> &middot; Week {week}',
+        f'<a href="{notes_pdf}" target="_blank" rel="noopener">PDF</a>',
+    ]
+    if slide_path and slide_path.exists():
+        meta_bits.append(
+            f'<a href="files/{COURSE}/slides/{slide}.pdf" target="_blank" rel="noopener">Slides</a>'
+        )
     page_path = ROOT / f"{COURSE}-{slug}.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
@@ -76,8 +86,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="{COURSE}.html">{COURSE_TITLE}</a> &middot; Week {week} &middot;
-                            <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
+                            {" &middot; ".join(meta_bits)}
                         </p>
                         <p>
                             {note["lead"]}
@@ -115,11 +124,17 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     return page_path
 
 
-def _material_item(title: str, href: str, pdf_href: str | None = None, note: str | None = None) -> str:
+def _material_item(
+    title: str,
+    href: str,
+    pdf_href: str | None = None,
+    note: str | None = None,
+    extra_label: str = "(PDF)",
+) -> str:
     extra = ""
     if pdf_href:
         extra += (
-            f'<a class="course-material__pdf" href="{pdf_href}" target="_blank" rel="noopener">(PDF)</a>'
+            f'<a class="course-material__pdf" href="{pdf_href}" target="_blank" rel="noopener">{extra_label}</a>'
         )
     if note:
         extra += f'<span class="course-material__note"> {note}</span>'
@@ -153,9 +168,22 @@ def write_hub() -> pathlib.Path:
                 note = BY_SLUG[slug]
                 slide = note.get("slide")
                 slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
-                if slide_path and slide_path.exists():
-                    pdf = f"files/{COURSE}/slides/{slide}.pdf"
-                    items.append(_material_item(note["title"], pdf, pdf))
+                notes_page = ROOT / f"{COURSE}-{slug}.html"
+                notes_md = FILES / f"{slug}.md"
+                slides_href = (
+                    f"files/{COURSE}/slides/{slide}.pdf" if slide_path and slide_path.exists() else None
+                )
+                if notes_md.exists() and notes_page.exists() and slides_href and week == 1:
+                    items.append(
+                        _material_item(
+                            note["title"],
+                            f"{COURSE}-{slug}.html",
+                            slides_href,
+                            extra_label="(slides)",
+                        )
+                    )
+                elif slides_href:
+                    items.append(_material_item(note["title"], slides_href, slides_href))
                 else:
                     items.append(
                         _material_item(
@@ -278,9 +306,8 @@ def write_hub() -> pathlib.Path:
                     <section class="page__content" itemprop="text">
                         <p class="course-meta">American University</p>
                         <p>
-                            Weekly lecture slides, labs, and homework for Advanced Machine Learning.
-                            Canvas is official for due dates and submissions. Notes are the original
-                            course slide decks. Questions:
+                            Weekly lecture notes, labs, and homework for Advanced Machine Learning.
+                            Canvas is official for due dates and submissions. Questions:
                             <a href="mailto:mousavi@american.edu">mousavi@american.edu</a>.
                         </p>
                         <p><a href="courses.html">All courses</a></p>
@@ -334,6 +361,7 @@ def write_print_page(note: dict, md_path: pathlib.Path) -> pathlib.Path:
     print_path = FILES / f"_print-{note['slug']}.html"
     print_body = markdown_to_html(md_path.read_text(encoding="utf-8"))
     print_body = print_body.replace('<div class="table-wrap">', "").replace("</div>", "")
+    print_body = print_body.replace(f"files/{COURSE}/graphics/", "graphics/")
     html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -393,8 +421,6 @@ def main() -> None:
                 week = int(a)
                 break
         for note in NOTES:
-            if notes_flag and not html_only and note.get("slide"):
-                continue
             if week is not None and note["week"] != week:
                 continue
             if slugs and note["slug"] not in slugs:

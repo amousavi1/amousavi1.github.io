@@ -104,29 +104,49 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot;
-                            <a href="files/data-642/derivatives.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 1 &middot; <a href="files/data-642/derivatives.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/1.3-derivatives.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             Gradients point uphill. We walk the other way.
                         </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Chollet, <em>Deep Learning with Python</em>, and Géron.</p>
 <h2>1. A derivative is a slope</h2>
-<p>Take a smooth map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mi>:</mi><mi>&#x0211D;</mi><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math>. A small step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>x</mi></msub></mrow></math> in the input makes a small step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>y</mi></msub></mrow></math> in the output. Near a point <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math>, if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> has no corners,</p>
+<p>Take a smooth map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>y</mi></mrow></math> that sends a number to a number. You can draw it as a curve in the plane.</p>
+<p><img alt="A smooth scalar function" src="files/data-642/graphics/derivative-function.png" /></p>
+<p>Because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is <strong>continuous</strong>, a small change in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> can only make a small change in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math>. Increase <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> by a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>x</mi></msub></mrow></math>; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> moves by a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>y</mi></msub></mrow></math>.</p>
+<p><img alt="A small step in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> makes a small step in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math>" src="files/data-642/graphics/derivative-epsilon.png" /></p>
+<p>Because the curve has no kinks, when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>x</mi></msub></mrow></math> is small enough around a point <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math> you may treat <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> as a line of slope <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math>:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x003B5;</mi><mi>y</mi></msub><mo>&#x02248;</mo><mi>a</mi><mspace width="0.167em" /><msub><mi>&#x003B5;</mi><mi>x</mi></msub><mo>&#x0002E;</mo></mrow></math>
 <p>The number <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0003D;</mo><msup><mi>J</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is the <strong>derivative</strong> at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math>.</p>
 <ul>
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0003C;</mo><mn>0</mn></mrow></math>: a small increase in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> <strong>decreases</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>.</li>
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></math>: a small increase in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> <strong>increases</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>.</li>
-<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>a</mi><mo stretchy="false">&#x0007C;</mo></mrow></math> is how fast that happens.</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>a</mi><mo stretchy="false">&#x0007C;</mo></mrow></math> (the <strong>magnitude</strong>) is how fast that happens.</li>
 </ul>
-<p>To <strong>minimize</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>, walk against the sign of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math>. That one sentence is gradient descent in one dimension.</p>
+<p><img alt="The derivative as the slope of the local line" src="files/data-642/graphics/derivative-slope.png" /></p>
+<p>To <strong>minimize</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>, walk against the sign of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math>. That one sentence is gradient descent in one dimension. Being able to differentiate is the main tool this course uses to find those <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math>.</p>
 <hr />
 <h2>2. Continuity is not enough</h2>
-<p>Continuity says a small input change cannot jump the output. Smoothness says the graph has no kinks, so a linear approximation exists. Optimization algorithms in this course assume at least that much. ReLU networks are allowed later; they are smooth almost everywhere. You still write a gradient.</p>
+<p>Continuity says a small input change cannot jump the output. Smoothness says the graph has no corners, so a linear approximation exists. The algorithms in Module 1 assume at least that much. ReLU networks are allowed later; they are smooth almost everywhere. You still write a gradient.</p>
 <hr />
 <h2>3. Higher dimensions: the gradient</h2>
-<p>A function of two scalars, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>z</mi></mrow></math>, is a surface. The analogue of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> is the <strong>gradient</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math>: a vector of partial derivatives. It points to the direction of <strong>steepest increase</strong>. Descent uses <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math>.</p>
+<p>A map from one scalar to one scalar is a curve. A map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>z</mi></mrow></math> from a pair of scalars to a scalar is a <strong>surface</strong> in 3-space.</p>
+<p>The analogue of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> is the <strong>gradient</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math>: a vector of partial derivatives. It points to the direction of <strong>steepest increase</strong>. Descent uses <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math>.</p>
 <p>Week 1 note <strong>1.4</strong> writes the gradient and the Hessian in the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> notation of the rest of the course. Week 2 uses both.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>At a point where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>J</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, what does a small step in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> do to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>, to first order? Why is that not enough to call <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math> a minimum?</p>
+</li>
+<li>
+<p>Why does a kink (a corner in the graph) break the “local line of slope <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math>” story?</p>
+</li>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math> points uphill, what vector do you add to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> in a descent step, up to a step-size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math>?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -135,7 +155,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T09:45:00-04:00">September 9, 2026, 9:45 AM EDT</time></div>
             </footer>
         </div>
 
