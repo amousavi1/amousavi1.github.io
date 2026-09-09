@@ -786,7 +786,7 @@ html[data-theme="dark"] strong {
 }
 
 .page__content p.course-group-title {
-  margin: 1.25em 0 0.2em;
+  margin: 1.6em 0 0.35em;
   font-family: var(--font-display);
   font-size: 1.06em;
   font-weight: 700;
@@ -794,11 +794,11 @@ html[data-theme="dark"] strong {
 }
 
 .page__content .course-week-panel > p.course-group-title:first-child {
-  margin-top: 0.15em;
+  margin-top: 0.22em;
 }
 
 .page__content p.course-group-title + p.course-group-title {
-  margin-top: 0.35em;
+  margin-top: 0.5em;
 }
 
 .course-discussion {
@@ -813,7 +813,7 @@ html[data-theme="dark"] strong {
 .page__content p.course-group-title + .course-discussion > li:first-child,
 .page__content p.course-group-title + .course-materials > li:first-child {
   margin-top: 0;
-  padding-top: 0.08em;
+  padding-top: 0.16em;
 }
 
 .course-data-list {
