@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. A generative story, not only a factorization
 
 Week 13 factored the document-term matrix with SVD (and previewed NMF). **Latent Dirichlet allocation** (LDA) is a different object: a **generative statistical model**.

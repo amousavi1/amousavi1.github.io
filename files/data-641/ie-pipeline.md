@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. More pipeline than classification
 
 Text classification can live on a bag of words. Information extraction usually cannot. You need to know where sentences end, what the words are, and often how they attach to each other.

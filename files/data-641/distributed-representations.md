@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Why Week 4 is not enough
 
 Basic vectorization (one-hot, BoW, n-grams, TF–IDF) shares three failures:

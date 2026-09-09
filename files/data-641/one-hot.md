@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. The big idea
 
 Give every word in the vocabulary a unique integer id. Represent a document as a stack of \(|V|\)-dimensional binary vectors, one per token.

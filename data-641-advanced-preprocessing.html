@@ -104,12 +104,12 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot;
-                            <a href="files/data-641/slides/2.4-advanced-preprocessing.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-641.html">DATA 441/641</a> &middot; Week 2 &middot; <a href="files/data-641/advanced-preprocessing.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-641/slides/2.4-advanced-preprocessing.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             POS tags, a first look at entities, and why parsing is optional.
                         </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
 <h2>1. When the basic recipe is the wrong tool</h2>
 <p>Notes <strong>2.2</strong>–<strong>2.3</strong> get you a bag of tokens. Some jobs need <em>who did what to whom</em>, or <em>which span is a name</em>.</p>
 <p><strong>Example.</strong> Find person and organization names in a million company documents. Lowercasing and stop-word removal hide the signal. You want <strong>part-of-speech (POS)</strong> tags first: proper nouns are a cheap clue for names. Then you want <strong>named-entity recognition (NER)</strong>. Full <strong>parsing</strong> is the heavier option when you need syntax, not just tags.</p>
@@ -213,7 +213,7 @@ nltk.pos_tag(word_tokenize(text))
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T23:45:00-04:00">September 8, 2026, 11:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

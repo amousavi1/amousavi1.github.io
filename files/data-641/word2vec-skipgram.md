@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Word2Vec as a prediction game
 
 Word2Vec takes a large unlabeled corpus and puts every word in one vector space. The space is defined by **context**: words that show up in the same windows should end up nearby.

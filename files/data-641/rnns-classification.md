@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Read the text, take a state
 
 An RNN (note **8.1**) produces a state after every token. For **document classification** you need one vector per document.

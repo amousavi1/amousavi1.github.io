@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Why bother measuring topics
 
 A topic model always returns \(k\) word lists. That does not mean the lists are themes.

@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Topics are a matrix problem
 
 Topic modeling finds **themes** in a large collection without document labels. A news archive is not 10,000 unrelated files. It is a mix of elections, sports, markets, and weather, and each article is a mix of those themes.

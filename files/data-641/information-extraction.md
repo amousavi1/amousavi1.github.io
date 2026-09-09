@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. What information extraction is
 
 Classification gives a **label** for a whole document. Information extraction (IE) pulls **fields** out of the text: who, what, when, how much, and how those pieces relate.

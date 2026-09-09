@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. When the basic recipe is the wrong tool
 
 Notes **2.2**–**2.3** get you a bag of tokens. Some jobs need *who did what to whom*, or *which span is a name*.

@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Not every word should count the same
 
 One-hot, bag of words, and bag of n-grams treat every token as equally important. *the* and *pneumonia* get the same kind of count. That is a problem. A word that appears in almost every document does not tell you which document you are looking at.

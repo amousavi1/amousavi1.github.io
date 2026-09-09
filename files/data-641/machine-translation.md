@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. The original NLP problem
 
 **Machine translation** (MT) is automatic translation from one language to another. It is one of the oldest research problems in the field. The methods changed. The job did not: map a string in language \(L_1\) to a string in \(L_2\) that a reader of \(L_2\) can use.

@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Pull the words out first
 
 Acquisition gives you a file, a URL, or a scan. That is not yet text a tokenizer can use.

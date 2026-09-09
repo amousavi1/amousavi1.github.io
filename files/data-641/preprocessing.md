@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Canonical form
 
 Cleanup gave you a string. **Pre-processing** turns that string into a sequence you can count, stem, or embed.

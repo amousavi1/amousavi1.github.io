@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Understanding this turn in light of the last ones
 
 The NLU block from note **12.2** has two jobs: **intent** (what act is this?) and **slots** (what values came with it?). Those labels are what you train on.

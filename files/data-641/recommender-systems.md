@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Suggestions, not a class label
 
 A **recommender** ranks items a user has not seen yet. On the web that is a movie, a product, or "related articles." The NLP angle is that many items **are** text, or have text attached (title, body, reviews).

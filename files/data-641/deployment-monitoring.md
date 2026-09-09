@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. The model is a module
 
 In a product, NLP is almost never the whole system. It sits behind a form, a queue, or another service. **Deployment** is plugging that module in: the same pre-processing as training, a defined input and output schema, and enough capacity to survive a busy hour.

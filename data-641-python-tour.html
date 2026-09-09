@@ -173,6 +173,18 @@ my_string.upper()
 my_string.find(&quot;e&quot;)   # -1 if missing
 </code></pre>
 <p>Slices use <code>start:stop</code>. The stop index is <strong>not</strong> included. Negative indices count from the end: <code>my_string[-5:]</code>.</p>
+<p>The <code>string</code> module is the alphabet and punctuation you will filter with:</p>
+<pre><code class="language-python">import string
+string.ascii_lowercase   # a–z
+string.ascii_uppercase
+string.digits
+string.punctuation
+string.whitespace
+</code></pre>
+<p>Useful methods: <code>split</code>, <code>join</code>, <code>strip</code>, <code>replace</code>, <code>lower</code>, <code>isalpha</code>, <code>isnumeric</code>. Format strings with <code>str.format</code>:</p>
+<pre><code class="language-python">&quot;{0}, {1}, {2}&quot;.format(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+&quot;{lat}, {lon}&quot;.format(lat=&quot;37.24N&quot;, lon=&quot;-115.81W&quot;)
+</code></pre>
 <hr />
 <h2>4. Lists, tuples, sets, dictionaries</h2>
 <pre><code class="language-python">my_list = [1, 2, 3, 4]
@@ -208,6 +220,8 @@ del my_dict[&quot;b&quot;]
 my_dict.keys()
 my_dict.values()
 </code></pre>
+<p>Keys must be immutable (strings, numbers, tuples). Values can be anything.</p>
+<p><strong>Casting</strong> changes type: <code>float(1)</code>, <code>set([1, 1, 2, 3])</code> which is <code>{1, 2, 3}</code> because a set drops duplicates. <code>list + list</code> and <code>list * n</code> grow a list; there is no <code>-</code> or <code>/</code> for lists.</p>
 <hr />
 <h2>5. Conditionals and loops</h2>
 <pre><code class="language-python">my_num = 4
@@ -318,7 +332,7 @@ analyzer.analyze_string()
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T02:40:00-04:00">September 9, 2026, 2:40 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:00:00-04:00">September 9, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

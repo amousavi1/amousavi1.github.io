@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. From a sentence to one vector
 
 Note **7.2** gave you 1-D filters over embeddings. Classification needs a **single** vector (or a small stack) that you can pass to a softmax.

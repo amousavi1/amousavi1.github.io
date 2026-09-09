@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. One dimension is the sentence
 
 A page of words is not a 2-D image. Line breaks are arbitrary. Vertical neighbors are an accident of wrap. The structure you want is **along the sequence**: token \(t\) next to token \(t+1\).

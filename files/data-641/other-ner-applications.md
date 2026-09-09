@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. After you have the spans
 
 NER says *Apple* is an organization and *Luca Maestri* is a person. That is not enough for a newsroom graphic that ties stories to **real-world** people and companies. You still need to know *which* Apple, and how two mentions relate.

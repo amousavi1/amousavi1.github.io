@@ -15,11 +15,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-09T02:40:00-04:00"
-LAST_UPDATED_TEXT = "September 9, 2026, 2:40 AM EDT"
-
-# Weeks whose lecture titles open written notes; (slides) still opens the original deck.
-PROSE_NOTE_WEEKS = {1}
+LAST_UPDATED_ISO = "2026-09-09T03:00:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 3:00 AM EDT"
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"
@@ -159,12 +156,7 @@ def write_hub() -> pathlib.Path:
                 notes_page = ROOT / f"{COURSE}-{slug}.html"
                 notes_md = FILES / f"{slug}.md"
                 slides_href = f"files/{COURSE}/slides/{slide}.pdf" if slide_path and slide_path.exists() else None
-                if (
-                    note["week"] in PROSE_NOTE_WEEKS
-                    and notes_md.exists()
-                    and notes_page.exists()
-                    and slides_href
-                ):
+                if notes_md.exists() and notes_page.exists() and slides_href:
                     items.append(
                         _material_item(
                             note["title"],
@@ -457,6 +449,7 @@ def main() -> None:
     flags = {a for a in sys.argv[1:] if a.startswith("--")}
     hub_only = "--hub" in flags
     html_only = "--html-only" in flags
+    lectures_only = "--lectures" in flags
     week = None
     slugs = None
     if args:
@@ -470,6 +463,8 @@ def main() -> None:
                 continue
             if slugs is not None and note["slug"] not in slugs:
                 continue
+            if lectures_only and not note.get("slide") and note["slug"] != "midterm":
+                continue
             if html_only:
                 md_path = FILES / f"{note['slug']}.md"
                 if not md_path.exists():
@@ -480,9 +475,10 @@ def main() -> None:
                 print(f"Wrote {page_path.name}")
             else:
                 build_note(note)
-        for lab_week, slug, lab_n in labs_with_solutions():
-            write_solutions_page(lab_week, slug, lab_n)
-            print(f"Wrote {COURSE}-lab-{lab_n}-solutions.html")
+        if not lectures_only:
+            for lab_week, slug, lab_n in labs_with_solutions():
+                write_solutions_page(lab_week, slug, lab_n)
+                print(f"Wrote {COURSE}-lab-{lab_n}-solutions.html")
     write_hub()
     print("Wrote data-641.html")
 

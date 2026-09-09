@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Why text has to become numbers
 
 A classifier, a ranker, or a neural net does not read English. It reads **vectors**. Week 4 is the map from raw text to those vectors.

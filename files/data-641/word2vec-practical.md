@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. The two recipes, in production
 
 Mikolov’s own guidance, which this course repeats:

@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. What NER is
 
 A user types "Where was Albert Einstein born?" The search engine cannot answer *Ulm, Germany* unless it first sees that **Albert Einstein is a person**. That step is named entity recognition (NER).

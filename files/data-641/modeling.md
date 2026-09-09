@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Start with a rule you can write today
 
 Modeling does not begin with a neural net. It begins with a decision you can ship.

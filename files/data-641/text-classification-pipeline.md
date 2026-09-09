@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Classification is supervised
 
 **Supervised learning** means the training rows come with the answer. Those answers are **labels**.

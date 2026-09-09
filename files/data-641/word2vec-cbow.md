@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Predict the center word
 
 **Continuous bag of words (CBOW)** is one of the two Word2Vec training tasks. Given the words around a position, predict the word **in** that position.

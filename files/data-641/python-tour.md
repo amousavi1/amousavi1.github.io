@@ -39,6 +39,24 @@ my_string.find("e")   # -1 if missing
 
 Slices use `start:stop`. The stop index is **not** included. Negative indices count from the end: `my_string[-5:]`.
 
+The `string` module is the alphabet and punctuation you will filter with:
+
+```python
+import string
+string.ascii_lowercase   # a–z
+string.ascii_uppercase
+string.digits
+string.punctuation
+string.whitespace
+```
+
+Useful methods: `split`, `join`, `strip`, `replace`, `lower`, `isalpha`, `isnumeric`. Format strings with `str.format`:
+
+```python
+"{0}, {1}, {2}".format("a", "b", "c")
+"{lat}, {lon}".format(lat="37.24N", lon="-115.81W")
+```
+
 ---
 
 ## 4. Lists, tuples, sets, dictionaries
@@ -83,6 +101,10 @@ del my_dict["b"]
 my_dict.keys()
 my_dict.values()
 ```
+
+Keys must be immutable (strings, numbers, tuples). Values can be anything.
+
+**Casting** changes type: `float(1)`, `set([1, 1, 2, 3])` which is `{1, 2, 3}` because a set drops duplicates. `list + list` and `list * n` grow a list; there is no `-` or `/` for lists.
 
 ---
 

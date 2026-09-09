@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Shorten the document, keep the point
 
 **Text summarization** turns a long document into a shorter text that a person (or an indexer) can use. The goal is not "as short as possible." It is a coherent piece that still carries the main ideas.

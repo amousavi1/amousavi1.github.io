@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Why this note is here
 
 Week 4 gave you sparse vectors. The rest of the course feeds those (or denser ones) to **neural nets**. This note is a first look at a net, not a survey of NLP architectures.

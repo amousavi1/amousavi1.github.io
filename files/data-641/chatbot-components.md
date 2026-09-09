@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. A pipeline, not a single model
 
 Weeks 6–11 gave you classification and entity detection. A dialog system **uses both**, plus a piece that decides what to say next.

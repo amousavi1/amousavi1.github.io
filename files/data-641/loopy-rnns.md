@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Networks without memory
 
 A dense net and a CNN see an input, emit an output, and forget. Nothing is stored between examples, and (in a plain CNN) nothing is stored between distant tokens except what a fixed window can cover.

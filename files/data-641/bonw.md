@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Keep a little word order
 
 One-hot and bag of words treat each token as an island. There is no phrase, and (in BoW) no order. **Bag of n-grams (BoN)** is the cheap fix: count **contiguous chunks** of \(n\) tokens instead of, or in addition to, single words.

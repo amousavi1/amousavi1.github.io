@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Count the words, drop the order
 
 **Bag of words (BoW)** is the workhorse representation for classical text classification. You treat the document as a **collection** of tokens. Order and syntax go away. What remains is “which words appeared, and how often.”

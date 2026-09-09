@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Topics that only add
 
 Non-negative matrix factorization (NMF) splits a non-negative matrix \({\bf A}\) (counts or TF–IDF) into two non-negative factors:

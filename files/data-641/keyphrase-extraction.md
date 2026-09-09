@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. The job
 
 A product on Amazon can have a hundred reviews. Nobody reads all of them. Amazon's "Read reviews that mention" filter is **keyphrase extraction** (KPE): find short phrases that many reviewers actually used, then let the shopper click one.

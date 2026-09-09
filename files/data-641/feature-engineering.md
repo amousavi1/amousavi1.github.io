@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Text is not a table
 
 A classifier wants a **numeric vector** per document (or per span). **Feature engineering** (also called **feature extraction**) is how you build that vector.

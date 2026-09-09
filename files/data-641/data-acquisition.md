@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. The pipeline this week sits in
 
 An applied NLP system is a loop, not a single model.

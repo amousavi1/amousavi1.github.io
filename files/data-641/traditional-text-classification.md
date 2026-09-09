@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Two classical classifiers
 
 Once the document is a vector (BoW or TF–IDF from Week 4), you can use any supervised model. Lecture walks two that you should be able to explain: **\(k\)-nearest neighbors** and a **linear SVM**.

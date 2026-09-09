@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Topics from a decomposition
 
 Bag-of-words and TF–IDF give you a matrix. If you **factor** that matrix, the factors are often readable as topics.

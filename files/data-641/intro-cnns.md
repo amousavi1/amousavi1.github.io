@@ -1,3 +1,5 @@
+These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
+
 ## 1. Why a convolution for language
 
 Dense nets and the Week 4 bags treat a document as one vector. They do not **slide** over local structure. Language has two kinds of local structure you care about:
