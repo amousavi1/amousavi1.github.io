@@ -1,0 +1,156 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{url}
+
+\title{Advanced Machine Learning\\Project Suggestions }
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Overview}
+Each team may select one of the following projects or propose their own topic, provided it is equally advanced and challenging. For each project below, we list representative medium-size datasets and two recent journal references to guide background reading.
+
+% ===============================
+\section{Multi-Modal Fake News Detection}
+\textbf{Objective:} Build a classification system that leverages both textual and visual information to detect fake news, comparing early/late/cross-attention fusion against strong unimodal baselines.
+
+\textbf{Core Learning Outcomes:}
+\begin{itemize}[leftmargin=2em]
+  \item Multi-modal learning (text + image).
+  \item Deep learning fine-tuning (Transformers, CNNs).
+  \item Rigorous evaluation (ablation on fusion strategies).
+\end{itemize}
+
+\textbf{Technical Approach (sketch):}
+\begin{enumerate}[leftmargin=2em]
+  \item Preprocess text (tokenization) and images (resize/normalize).
+  \item Extract features: pre-trained Transformer for text; pre-trained CNN for images.
+  \item Compare early fusion, late fusion, and cross-attention fusion.
+  \item Evaluate vs. unimodal baselines using Accuracy/F1.
+\end{enumerate}
+
+\textbf{Suggested medium-size datasets:}
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Fakeddit} (millions of multimodal posts; use a balanced medium subset).
+  \item \textbf{Weibo} or \textbf{PHEME} (text + images; rumor/fake labels).
+\end{itemize}
+
+\textbf{Recent references:}
+\begin{itemize}[leftmargin=2em]
+  \item  Mousavi et al., E-CaTCH,
+\url{https://arxiv.org/pdf/2508.11197}
+  \item Shen et al. (2024), \textit{Frontiers in Computer Science}: contrastive/cross-modal fake news detection with optimal transport. \url{https://www.frontiersin.org/journals/computer-science/articles/10.3389/fcomp.2024.1473457/full}
+\end{itemize}
+
+% ===============================
+\section{Unsupervised Anomaly Detection in Financial Time-Series (News + Stocks)}
+\textbf{Objective:} Detect financial anomalies (e.g., volatility spikes) by integrating time-series market data with textual signals (news/tweets).
+
+\textbf{Core Learning Outcomes:}
+\begin{itemize}[leftmargin=2em]
+  \item Unsupervised anomaly detection in temporal data.
+  \item Text–time-series feature fusion (e.g., sentiment + returns).
+  \item Event-based evaluation.
+\end{itemize}
+
+\textbf{Technical Approach (sketch):}
+\begin{enumerate}[leftmargin=2em]
+  \item Build features from prices/volumes and text (bag-of-words/sentiment).
+  \item Compare Isolation Forest, One-Class SVM, predictive LSTM/Transformer (flag anomalies via prediction error).
+  \item Evaluate with PR-AUC and event-based accuracy (e.g., high-volatility days).
+\end{enumerate}
+
+\textbf{Suggested medium-size datasets:}
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{StockNet} (tweets + stock prices; medium-scale).
+  \item \textbf{FiQA} (finance text) aligned with daily OHLCV series for S\&P500 constituents.
+\end{itemize}
+
+
+% ===============================
+\section{Unsupervised Anomaly Detection in Healthcare Time-Series (ICU)}
+\textbf{Objective:} Benchmark unsupervised methods on ICU vital signs/labs; optionally fuse clinical notes to improve detection of deterioration.
+
+\textbf{Core Learning Outcomes:}
+\begin{itemize}[leftmargin=2em]
+  \item Temporal modeling of physiological signals.
+  \item Multi-modal extension with clinical text.
+  \item Case-based clinical evaluation.
+\end{itemize}
+
+\textbf{Technical Approach (sketch):}
+\begin{enumerate}[leftmargin=2em]
+  \item Build time-series windows and optional text features (TF--IDF).
+  \item Compare autoencoder reconstruction vs. predictive LSTM/Transformer errors.
+  \item Evaluate with ROC-AUC/F1 and clinical case analyses (e.g., sepsis onset).
+\end{enumerate}
+
+\textbf{Suggested medium-size datasets:}
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{MIMIC-III} / \textbf{MIMIC-IV} (ICU time-series + notes; large but subsettable to medium cohorts).
+  \item \textbf{eICU-CRD} (multi-hospital ICU data with vitals/notes).
+\end{itemize}
+
+
+% ===============================
+\section{Dimensionality Reduction and Representation Learning}
+\textbf{Objective:} Compare PCA/ICA vs. nonlinear methods (t-SNE/UMAP) and assess impact on downstream classifiers.
+
+\textbf{Core Learning Outcomes:}
+\begin{itemize}[leftmargin=2em]
+  \item Latent representation analysis (interpretability vs. utility).
+  \item Visualization in reduced spaces.
+  \item Impact on learning efficiency/accuracy.
+\end{itemize}
+
+\textbf{Technical Approach (sketch):}
+\begin{enumerate}[leftmargin=2em]
+  \item Compute 2D/3D embeddings (PCA/ICA/t-SNE/UMAP).
+  \item Train simple classifiers on reduced vs. original features.
+  \item Analyze trade-offs in accuracy, runtime, and interpretability.
+\end{enumerate}
+
+\textbf{Suggested medium-size datasets:}
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{CIFAR-10} (50k images), \textbf{Fashion-MNIST} (60k), \textbf{20 Newsgroups} (\(\sim\)18k docs).
+\end{itemize}
+
+\textbf{Recent references:}
+\begin{itemize}[leftmargin=2em]
+  \item Müller et al. (2023), \textit{Analyst (RSC)}: comparative DR study in high-dimensional biomedical imaging.
+  \item Rastogi et al. (2023), \textit{Eng. Proc. (MDPI)}: overview of DR methods and practical issues.
+\end{itemize}
+
+% ===============================
+\section{Context-Aware Music Recommendation with Tensor Factorization}
+\textbf{Objective:} Go beyond matrix factorization by adding contextual dimensions (time-of-day, weekday/weekend, device), and optionally incorporate lyrics features.
+
+\textbf{Core Learning Outcomes:}
+\begin{itemize}[leftmargin=2em]
+  \item Tensor factorization (CP/Tucker) for recommendation.
+  \item Context modeling and ranking evaluation (MAP@k, NDCG@k).
+  \item Optional multi-modal extension via lyrics features.
+\end{itemize}
+
+\textbf{Technical Approach (sketch):}
+\begin{enumerate}[leftmargin=2em]
+  \item Build a tensor [Users \(\times\) Songs \(\times\) Context].
+  \item Baseline: matrix factorization on [Users \(\times\) Songs].
+  \item Advanced: CP or Tucker decomposition; predict user--song--context relevance.
+  \item Extension: add lyrics features (bag-of-words/TF--IDF) as side information.
+\end{enumerate}
+
+\textbf{Suggested medium-size datasets:}
+\begin{itemize}[leftmargin=2em]
+  \item \textbf{Million Song Dataset (MSD)} features + \textbf{MusixMatch} lyrics (hundreds of thousands).
+  \item \textbf{Last.fm 360k} (user--artist play counts + tags; alignable with lyrics).
+\end{itemize}
+
+
+
+\end{document}

@@ -1,0 +1,177 @@
+\documentclass[11pt, a4paper]{article}
+%\usepackage{geometry}
+\usepackage[inner=1.5cm,outer=1.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\pagestyle{empty}
+\usepackage{graphicx}
+\usepackage{fancyhdr, lastpage, bbding, pmboxdraw}
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\usepackage[colorlinks,pagebackref,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{ \fancyplain{}{Statistical Programming in R} }
+%\chead{ \fancyplain{}{} }
+\rhead{ \fancyplain{}{DATA 412/612} }
+%\rfoot{\fancyplain{}{page \thepage\ of \pageref{LastPage}}}
+\fancyfoot[RO, LE] {page \thepage\ of \pageref{LastPage} }
+\thispagestyle{plain}
+
+%%%%%%%%%%%% LISTING %%%
+\usepackage{listings}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\usepackage{verbatim} % used to display code
+\usepackage{fancyvrb}
+\usepackage{acronym}
+\usepackage{amsthm}
+\VerbatimFootnotes % Required, otherwise verbatim does not work in footnotes!
+
+% \usepackage{booktabs}
+\usepackage{tabularx}
+
+
+\newcommand{\custom}[1]{{\color{blue} #1}}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{lightlightgray}{gray}{0.93}
+
+
+
+\lstset{
+%language=bash,                          % Code langugage
+basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, \ttfamily
+keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+commentstyle=\color{gray},              % Comments font
+numbers=left,                           % Line nums position
+numberstyle=\tiny,                      % Line-numbers fonts
+stepnumber=1,                           % Step between two line-numbers
+numbersep=5pt,                          % How far are line-numbers from code
+backgroundcolor=\color{lightlightgray}, % Choose background color
+frame=none,                             % A frame around the code
+tabsize=2,                              % Default tab size
+captionpos=t,                           % Caption-position = bottom
+breaklines=true,                        % Automatic line breaking?
+breakatwhitespace=false,                % Automatic breaks only at whitespace?
+showspaces=false,                       % Dont make spaces visible
+showtabs=false,                         % Dont make tabls visible
+columns=flexible,                       % Column format
+morekeywords={__global__, __device__},  % CUDA specific keywords
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{center}
+{\Large \textsc{\textbf{Final Project}}}
+\\ \textbf{Statistical Programming in R}\\ \textbf{DATA 412/612} \\
+Department of Mathematics and Statistics
+\\
+American University
+\end{center}
+\begin{center}
+Fall 2026
+\end{center}
+\vspace{-0.6cm}
+
+\section*{Description}
+
+For the final project, you will explore a real dataset from a real study, present your results, and write up a report. You will work in teams with at most three members. Work with me to get your dataset approved before you spend a lot of time cleaning it.
+
+Use the tidyverse packages we cover in class. The report is the knitted PDF of your Quarto file (\texttt{.qmd}): \textbf{one column, at most 20 pages}. Everything in that PDF counts toward the page limit.
+
+You may only discuss your project with your own group members (and me, of course). You may not discuss it with other groups or people outside the class.
+
+Your report should be \textbf{well-written} and, hopefully, look like a standard paper. Tell a story with the data (``we thought we would see A, but we actually observed B, and we think we saw this because of C.''). It must be \textbf{reproducible}.
+
+A short companion handout, \emph{A Short Guide to Exploratory Data Analysis}, describes how the analysis should be done. Dates for the initial presentation (5\%), the final presentation (10\%), and the report (10\%) are on the syllabus.
+
+\section*{Dataset}
+
+The data must be \textbf{real} (a public study, government source, open-data portal, etc.). Do not use textbook tables such as \texttt{iris}, \texttt{mtcars}, \texttt{mpg}, \texttt{diamonds}, \texttt{penguins}, or \texttt{nycflights13}.
+
+After a reasonable amount of cleaning, you need:
+\begin{itemize}
+    \item about 1{,}000 or more rows (ask me if you have a good reason to use less; if the file is huge, take a documented sample)
+    \item \textbf{at least three numeric columns} that are real measurements or counts (price, duration, score, \ldots). IDs do not count, and latitude/longitude alone are not enough
+    \item at least two or three categorical variables you can group by
+    \item a date, datetime, or year
+    \item some text that needs cleaning (\texttt{stringr})
+    \item either more than one related table (joins) \emph{or} data that need reshaping (\texttt{tidyr})
+\end{itemize}
+Missing values and messy labels are expected. I will accept other sources if they satisfy the same requirements.
+
+\section*{Tidyverse}
+
+I expect to see the core tidyverse used for a reason, not one extra line in an appendix: \texttt{readr} (or \texttt{readxl}/\texttt{haven}), \texttt{dplyr}, \texttt{tidyr}, \texttt{ggplot2} (more than one kind of plot), \texttt{stringr}, \texttt{forcats}, \texttt{lubridate}, and \texttt{purrr} at least once (several files, or the same pipeline over groups).
+
+\section*{Example datasets}
+
+These are real sources with mixed types. Read the codebook first. You may propose something else.
+
+\begin{itemize}
+    \item Inside Airbnb (Washington, DC): listings, calendar, reviews. Price, ratings, neighborhood, room type, dates, amenities text. Several files to join. \url{https://insideairbnb.com/get-the-data/}
+
+    \item College Scorecard: cost, earnings, completion, SAT, sector, state, institution name. \url{https://collegescorecard.ed.gov/data/}
+
+    \item NOAA Storm Events: injuries, deaths, damage, event type, state, dates, narrative text. Yearly files work well with \texttt{purrr}. \url{https://www.ncei.noaa.gov/stormevents/}
+
+    \item NHANES (CDC): body measures, labs, demographics; several tables joined by ID. \url{https://wwwn.cdc.gov/nchs/nhanes/}
+
+    \item FAA Wildlife Strikes: height, speed, cost, species, airport, date, remarks. \url{https://wildlife.faa.gov/home}
+
+    \item EPA air quality: concentrations, site, pollutant, date; often needs \texttt{pivot\_longer}. \url{https://www.epa.gov/outdoor-air-quality-data}
+
+    \item FARS (NHTSA): age, speed, weather, crash date; accident/vehicle/person files. \url{https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars}
+
+    \item World Bank indicators: GDP, health, education by country and year; often wide. \url{https://data.worldbank.org/}
+
+    \item Open Data DC: fine if your extract still has at least three numeric columns. Crime-only files are usually too categorical. \url{https://opendata.dc.gov/}
+\end{itemize}
+
+TidyTuesday is allowed only if the original source is real and meets the requirements above: \url{https://github.com/rfordatascience/tidytuesday}.
+
+\section*{Report}
+
+The knitted one-column PDF (at most 20 pages) should include:
+
+\begin{enumerate}
+    \item \textbf{Title page}: names of all team members.
+
+    \item \textbf{Introduction}: What is one row? Which variables are numeric, categorical, dates, or text? What are the research questions? A \emph{brief} literature review (at least as many peer-reviewed articles as people on the team; Google Scholar is fine).
+
+    \item \textbf{Initial hypotheses}: Write these before you go hunting for patterns.
+
+    \item \textbf{Exploratory data analysis}: The heart of the project. Numerical and graphical summaries. Do not paste every plot. Write in complete sentences about what each figure shows. You must look carefully at relationships among the numeric variables: scatterplots first, then a smooth or a transformation if the pattern is not a straight line. A single correlation is not an analysis. If a third variable could be mixing groups, facet or split by that variable (see the EDA guide).
+
+    \item \textbf{Data-driven hypotheses}: What did you notice only after looking at the data?
+
+    \item \textbf{Discussion}: How do the results sit next to the literature?
+
+    \item \textbf{References}: APA or MLA.
+
+    \item \textbf{Appendix}: extra code, \texttt{sessionInfo()}.
+\end{enumerate}
+
+\section*{Presentation}
+
+The presentation should cover the same ground as the report (background, hypotheses, explorations, discussion). No R code on the slides unless it is really cool R code. See the syllabus for dates.
+
+\section*{What to upload}
+
+Upload \textbf{one zip file} to Canvas (use your last names in the file name). Inside the zip you must have two folders:
+
+\begin{itemize}
+    \item \texttt{data/} --- the data files you actually used, plus a codebook or a short \texttt{README} that says where the data came from
+    \item \texttt{analysis/} --- the Quarto report (\texttt{.qmd}) \textbf{and} the knitted PDF of that same file
+\end{itemize}
+
+The project must be reproducible: anyone should be able to unzip the file, open the \texttt{.qmd}, and knit the PDF.
+
+\end{document}

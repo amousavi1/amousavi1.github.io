@@ -1,0 +1,219 @@
+\documentclass[11pt, a4paper]{article}
+%\usepackage{geometry}
+\usepackage[inner=1.5cm,outer=1.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\pagestyle{empty}
+\usepackage{graphicx}
+\usepackage{fancyhdr, lastpage, bbding, pmboxdraw}
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\usepackage[colorlinks,pagebackref,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{ \fancyplain{}{Advanced Machine Learning} }
+%\chead{ \fancyplain{}{} }
+\rhead{ \fancyplain{}{DATA 442/642} }
+%\rfoot{\fancyplain{}{page \thepage\ of \pageref{LastPage}}}
+\fancyfoot[RO, LE] {page \thepage\ of \pageref{LastPage} }
+\thispagestyle{plain}
+
+%%%%%%%%%%%% LISTING %%%
+\usepackage{listings}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\usepackage{verbatim} % used to display code
+\usepackage{fancyvrb}
+\usepackage{acronym}
+\usepackage{amsthm}
+\VerbatimFootnotes % Required, otherwise verbatim does not work in footnotes!
+
+
+
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{lightlightgray}{gray}{0.93}
+
+
+
+\lstset{
+%language=bash,                          % Code langugage
+basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, \ttfamily
+keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+commentstyle=\color{gray},              % Comments font
+numbers=left,                           % Line nums position
+numberstyle=\tiny,                      % Line-numbers fonts
+stepnumber=1,                           % Step between two line-numbers
+numbersep=5pt,                          % How far are line-numbers from code
+backgroundcolor=\color{lightlightgray}, % Choose background color
+frame=none,                             % A frame around the code
+tabsize=2,                              % Default tab size
+captionpos=t,                           % Caption-position = bottom
+breaklines=true,                        % Automatic line breaking?
+breakatwhitespace=false,                % Automatic breaks only at whitespace?
+showspaces=false,                       % Dont make spaces visible
+showtabs=false,                         % Dont make tabls visible
+columns=flexible,                       % Column format
+morekeywords={__global__, __device__},  % CUDA specific keywords
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{center}
+{\Large \textsc{\bf Advanced Machine Learning}}\\ DATA 442/642
+\end{center}
+\begin{center}
+Fall 2025
+\end{center}
+\vspace{-1cm}
+\begin{center}
+\rule{6in}{0.4pt}
+\begin{minipage}[t]{.865\textwidth}
+\begin{tabular}{llcccll}
+\textbf{Instructor:} & Ahmad Mousavi & & &  & \textbf{Time:} & Thursdays, 5:30-8:00 PM \\
+\textbf{Email:} &  \href{mailto:mousavi@american.edu}{mousavi@american.edu} & & & & \textbf{Classroom:} & 
+DMTI - 114\\
+\textbf{Office:} &  DMTI - 106J & & & & \textbf{Office Hours:} & Tuesdays, 7:00-8:00 PM \\
+\end{tabular}
+\end{minipage}
+\rule{6in}{0.4pt}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\renewcommand{\arraystretch}{2}
+
+\noindent\textbf{Course description:} Advanced machine learning will be an upper-level machine learning course focusing on recent advances in machine learning such as Tensor/Matrix Factorization Methods, Neural Networks and Deep Learning, multi-modal learning, clustering, and anomaly detection. The course will cover theoretical foundations as well as methods used in the machine learning discipline that have achieved considerable attention and led to a great deal of industrial and academic interest. The course will introduce the mathematical definitions of the relevant machine learning models and derive their associated optimization algorithms. It will cover a range of applications of advanced machine learning in natural language processing, image processing, data fusion, and machine translation. Through this course, students will have the chance to design and build a research project that demonstrates how computational learning algorithms can solve difficult tasks in research areas they are interested in.
+
+\vskip.15in
+\noindent\textbf{Overview of course topics:} We will cover the following topics. 
+\vspace{1mm}\\
+\noindent - A tour of the classics, basic concepts of linear algebra, optimization, and their connection to machine learning. 
+\vspace{1mm}\\
+\noindent - Sparsity-aware learning. 
+\vspace{1mm}\\
+\noindent - Learning in reproducing Hilbert spaces. Hilbert spaces and non-linear techniques, support vector regression, and support vector machines. 
+\vspace{1mm}\\
+\noindent - Unsupervised learning techniques, clustering, Gaussian mixture models, and anomaly detection.
+\vspace{1mm}\\
+\noindent - Dimensionality reduction, latent variable modeling, and multi-modal learning. 
+\vspace{1mm}\\
+\noindent - Neural networks and deep learning.
+
+\vskip.15in
+\noindent\textbf{Learning outcomes (LO) and assessments (AS):} At the end of this course, students will be able to:
+\vspace{1mm}
+
+% \noindent{\bf \small{DATA 642 (Graduate Level)}}
+\vspace{-1mm}
+\begin{itemize}
+	\item [-] LO: Develop tools, select appropriate methods for their research problems, and judge the reasonableness of the obtained research findings. AS: Main project.
+	\vspace{-2mm}
+	\item [-] LO: Communicate both orally and verbally about Machine Learning in a scientifically sound manner and present their research findings. AS: Project proposal and oral presentation.
+	\vspace{-2mm}
+	\item [-] LO: Evaluate theory and critique research within the Machine Learning discipline. AS: Project proposal
+	\vspace{-2mm}
+	\item[-] LO: Select a model to describe a particular type of data and derive the optimization framework for various Machine Learning models. AS: Homework assignments and Exams.
+	\vspace{-2mm}
+	\item[-] LO: Understand the high level ideas of the state-of-the-art Machine Learning advances. AS: Homework assignments and labs.
+	\vspace{-2mm}
+	\item[-] LO: Use Python, and perform advanced computations using TensorFlow. AS: Exams, homework assignments, labs, and class project(s).
+\end{itemize}
+
+\vskip.15in
+\noindent\textbf{Materials:} 
+\vspace{1mm} \\
+% \noindent - {\bf Required}: Laptop computer \\
+\noindent\textbf{Books:} (1) Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow, 2nd Edition, Aurelien Geron, O'Reilly Media, Inc., ISBN: 9781492032649. {\bf (Recommended)} (2) Mathematics For Machine Learning, Deisenroth, Faisal, Ong, Cambridge University Press. {\bf (Recommended)} 
+
+\vskip.15in
+\noindent\textbf{Software:} The main software for this course is Python. If you are not familiar with Python yet, (\url{https://learnpython.org}) and (\url{https://docs.python.org/3/tutorial}) are good places to start.
+
+\vskip.15in
+\noindent\textbf{Pre-requisites:} STAT 427/627 “Statistical Machine Learning” or equivalent.
+
+\vskip.15in	
+\noindent\textbf{Class structure and office hours:} This class will be a blend of lecture, class discussion, and possibly programming demonstrations. I want you all to be involved during class and please do not hesitate to ask questions whenever something is unclear to you.  You are expected to attend all class meetings, as regular attendance contributes significantly to your performance in the course. Understandably, you may have to miss class on a rare occasion. You are responsible for any assignments or papers given out during any missed class. 
+You are encouraged to ask me questions via email. Please schedule a meeting with me if you would like to see or discuss your grade at any point during the semester. If you are having {\bf ANY} trouble with the class, please see me about it as soon as possible. {\bf Do not wait until it is too late!}.
+\\
+\\
+\noindent \textbf{Data scientists must learn to discover solutions for themselves.  You should expect to have to research (using Google, StackOverflow, etc.) to complete your assignments.  All you need to do the assignment will {\bf NOT} have been provided to you in the lectures and course book.  This is an essential part of becoming a data scientist!}
+
+\vskip.15in
+\noindent\textbf{Course Pages:} 
+I will use Canvas (\url{https://american.instructure.com/}) to post any supplementary materials, suggested readings/practice exercises, assignments, and announcements.
+
+\vskip.15in
+\noindent\textbf{Assignments \& Grading:} 
+\vspace{1mm} 
+
+\noindent \underline{Assignments (25\%)}: Homework will be assigned at the end of each module and submitted on Canvas. A steady effort to work out all the assigned problems is essential for learning statistical methods and for successful performance in this course. Homework solutions will be given after the homework is submitted. A typical homework assignment will include a few problems to do by hand, to see how things work, and a few realistic problems to do using Python software. You may receive assistance from other students in the class and me, but your submissions must be composed of your own thoughts, coding, and words. I expect you to get ideas from online resources such as StackOverflow or GitHub when you get stuck. Late homework submission is accepted only if solutions have not been released at the cost of a 10\% deduction for each day. 
+\vspace{1mm} \\
+\noindent \underline{Quizzes (10\%)}: Quizzes will be assigned at the end of each module and will include reading and related questions. 
+\vspace{1mm} \\
+\noindent \underline{Exams (25\%) $=$ Final Exam \color{red}{[\textbf{cumulative}]}} (15\%) $+$ Mid-term Exam (10\%): Exams are meant to gauge your progress and to test your understanding of how to apply the methods (learned in this class) to real-world situations. \\
+\noindent \underline{Labs (10\%)}: Each week, you are expected to submit your lab in a .pdf or .html file on Canvas (this part is subject to change, and grade distribution will change accordingly).
+\vspace{1mm} \\
+% \noindent \underline{{\it Undergraduate students}: (20\% Presentation $+$ 10\% Project Proposal)}: You will have to prepare a project using the tools and methods learned in the class. You are expected to submit a mid-semester research proposal to get your topic approved. The class projects will be presented as an oral presentation. You should prepare slides, and be prepared to give a brief explanation about your work and findings. During presentation day, you will also have an opportunity to see what everyone else did for their projects. You will also need to submit your slides as a PDF on Canvas the day before the presentation. 
+% \vspace{1mm} \\
+\noindent \underline{Final Project (30\%) = Presentation (10\%) $+$ Project Proposal (10\%) $+$ Report (10\%)}: You will have to prepare a project using the tools and methods learned in the class. You are expected to submit a mid-semester research proposal to get your topic approved. The class projects will be presented as an oral presentation. You should prepare slides and be prepared to give a brief explanation about your work and findings. During presentation day, you will also have an opportunity to see what everyone else did for their projects. In addition, you will have to write and submit a 5-page machine learning conference paper. You will also need to submit your slides as a PDF on Canvas the day before the presentation.
+
+\vskip.15in
+\noindent \textbf{Data scientists must learn to discover solutions for themselves.  You should expect to have to research (use Google, StackOverflow, etc) to do your assignments.  All you need to do the assignment will {\bf NOT} have been provided to you in the lectures and course book.  This is an essential part of becoming a data scientist!}
+
+\vskip.15in
+\noindent\textbf{Grading policy:} Students with final percent between 93\%-100\% will receive an A, 90\%-92\% an A$-$, 88\%-89\% a B$+$, 83\%-87\% a B, 80\%-82\% a B$-$, 78\%-79\% a C$+$, 70\%-77\% a C, 60\%-69\% a D, and under 60\% F.
+
+% \begin{table}[ht]
+% \centering
+% \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+% \hline
+% \multicolumn{10}{|c|}{{\textbf{\textit{Grading Policy}}}} \\
+% \hline
+% \bf{Final Percent} &  93-100 & 90-93 & 87-90 & 83-87 & 80-83 & 77-80 & 70-77 
+% & 60-70&  0-60\\
+% \hline
+% \bf{Letter Grade}&   $\mathcal{A}$ & $\mathcal{A-}$ & $\mathcal{B+}$ & $\mathcal{B}$ & $\mathcal{B-}$ & $\mathcal{C+}$ & $\mathcal{C}$
+% & $\mathcal{D}$&$\mathcal{F}$\\
+% \hline
+% \end{tabular}
+% \end{table}
+\noindent{\bf Please schedule a meeting with me if you would like to see or discuss your grade at any point during the semester.}
+
+\vskip.15in
+\noindent\textbf{Academic dishonesty:} Academic dishonesty is a serious offense. As a start, you should read and understand our University's policies \url{https://www.american.edu/academics/integrity/code.cfm}. You may collaborate with other students in this class on your projects, but the work you turn in must be your own. You may use online forums such as GitHub, StackOverflow, etc. At a minimum, honesty consists of presenting your ideas clearly and in your own words, possibly orally. Here are a few typical cases that are relevant to your assignments:\\
+\noindent 1. If you use code for your work on your own, you need not notate it as such.    
+\vspace{1mm} \\
+\noindent 2. If a colleague (or online source) shows you some application or code that you like, please credit that person by name in your write-up. You should expect that I may challenge you to explain your writing in your own words, possibly orally. If you cannot successfully defend your answer, no credit will be awarded to you.
+\vspace{1mm} \\
+\noindent 3. If you write your project in collaboration with others, as part of a group, please credit all members of your group by name in your write-up. You should expect that I may challenge you to explain your writing in your own words, possibly orally. If you cannot successfully defend your answer, no credit will be awarded to you, even if other group members are able to defend the same answer.
+
+\noindent If you have any questions on this matter, you are expected to consult me directly for advice.
+
+\vskip.15in
+\noindent\textbf{Important dates:}
+\begin{center} \begin{minipage}{3.8in}
+		\begin{flushleft}
+			Midterm		     \dotfill ~ October 09, 2025  \\
+			Project Proposal	     \dotfill ~ October 15, 2025  \\
+			Project Presentations	     \dotfill ~ December 11, 2025 \\
+			Report	     \dotfill ~ December 11, 2025\\
+			Final Exam       \dotfill ~ December 11, 2025  \\
+		\end{flushleft}
+	\end{minipage}
+\end{center}
+
+\vskip.15in
+\noindent\textbf{Additional notes:}\\
+\noindent 1. I expect you to be courteous to me and your fellow classmates during the lectures/meetings.   
+\vspace{1mm} \\
+\noindent 2. Please let me know during the first week of classes if you have any special needs that require accommodations.
+\vspace{1mm} \\
+\noindent 3. Please be sure that you are familiar with AU’s Academic Integrity Code, as I am required to report any cases of academic dishonesty to the dean of CAS. For your review: \url{http://www.american.edu/academics/integrity/}.
+%%%%%% THE END 
+\end{document} 

@@ -1,0 +1,213 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[inner=1.5cm,outer=1.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\pagestyle{empty}
+\usepackage{graphicx}
+\usepackage{fancyhdr, lastpage, bbding, pmboxdraw}
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\usepackage[colorlinks,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{ \fancyplain{}{Applied Natural Language Processing} }
+\rhead{ \fancyplain{}{DATA 441/641} }
+\fancyfoot[RO, LE] {page \thepage\ of \pageref{LastPage} }
+\thispagestyle{plain}
+
+\usepackage{listings}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{acronym}
+\usepackage{amsthm}
+\VerbatimFootnotes
+
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{lightlightgray}{gray}{0.93}
+
+\lstset{
+basicstyle=\ttfamily,
+keywordstyle=\color{OliveGreen},
+commentstyle=\color{gray},
+numbers=left,
+numberstyle=\tiny,
+stepnumber=1,
+numbersep=5pt,
+backgroundcolor=\color{lightlightgray},
+frame=none,
+tabsize=2,
+captionpos=t,
+breaklines=true,
+breakatwhitespace=false,
+showspaces=false,
+showtabs=false,
+columns=flexible
+}
+
+\begin{document}
+\begin{center}
+{\Large \textsc{\bf Applied Natural Language Processing}}\\ DATA 441/641
+\end{center}
+\begin{center}
+Spring 2025
+\end{center}
+\vspace{-1cm}
+\begin{center}
+\rule{6in}{0.4pt}
+\begin{minipage}[t]{.865\textwidth}
+\begin{tabular}{llcccll}
+\textbf{Instructor:} & Ahmad Mousavi & & &  & \textbf{Time:} & Thursdays 5:30--8:00 PM \\
+\textbf{Email:} &  \href{mailto:mousavi@american.edu}{mousavi@american.edu} & & & & \textbf{Classroom:} &
+DMTI - 213\\
+\textbf{Office:} &  DMTI - 106J & & & & \textbf{Office Hours:} & Wednesdays 5:00--6:30 PM \\
+\end{tabular}
+\end{minipage}
+\rule{6in}{0.4pt}
+\end{center}
+
+\setlength{\unitlength}{1in}
+\renewcommand{\arraystretch}{2}
+
+\noindent\textbf{Course description:} This course covers fundamental methods for analyzing textual datasets, focusing on applying classical natural language processing (NLP) methods and libraries in Python to interesting corpora. Students will gain familiarity with NLP concepts to facilitate processing of text for textual analysis. Topics will include regular expressions, dictionary methods, and text representation methods. In addition, this course covers NLP tasks such as text classification based on traditional machine learning and deep learning approaches, information extraction, chatbots, and topic modeling including methods such as singular value decomposition, non-negative matrix factorization, and latent Dirichlet allocation.
+
+\vskip.15in
+\noindent\textbf{Overview of course topics:} We will cover the following topics.
+\vspace{1mm}\\
+\noindent - Introduction to Python libraries and tools for NLP: NumPy, NLTK, pandas, Scikit-Learn, seaborn, matplotlib.
+\vspace{1mm}\\
+\noindent - String manipulation. Pre-processing text for analysis. Counting words.
+\vspace{1mm}\\
+\noindent - Dictionary methods. Regular expressions.
+\vspace{1mm}\\
+\noindent - Parts-of-speech tagging. Named entity recognition. Stemming and lemmatization.
+\vspace{1mm}\\
+\noindent - Tokenization, vectorization, and bag-of-word (BoW) methods.
+\vspace{1mm}\\
+\noindent - Latent variable methods for text data and basic topic modeling.
+\vspace{1mm}\\
+\noindent - Text classification using traditional machine learning techniques as well as deep learning techniques such as convolutional neural networks and recurrent neural networks.
+\vspace{1mm}\\
+\noindent - Named entity recognition (NER).
+\vspace{1mm}\\
+\noindent - Chatbots.
+\vspace{1mm}\\
+\noindent - Word embeddings. Advanced document representations, e.g.\ Word2Vec.
+
+\vskip.15in
+\noindent\textbf{Learning outcomes (LO) and assessments (AS):} At the end of this course, students will be able to:
+\vspace{1mm}
+\begin{itemize}
+	\item [-] LO: Develop tools and select appropriate methods for their own research problems and judge the reasonableness of the obtained research findings. AS: Main project.
+	\vspace{-2mm}
+	\item [-] LO: Communicate both orally and verbally about NLP in a scientifically sound manner and present their research findings. AS: Project proposal and poster presentation.
+	\vspace{-2mm}
+	\item [-] LO: Evaluate theory and critique research within the NLP field and identify the ethical questions associated with data collection and analysis. AS: Project proposal, report, and midterm exam.
+	\vspace{-2mm}
+	\item[-] LO: Use graphical tools to visualize and understand textual data. AS: Homework assignments.
+	\vspace{-2mm}
+	\item[-] LO: Import and analyze textual datasets from a variety of sources. AS: Homework assignments.
+	\vspace{-2mm}
+	\item[-] LO: Scrape websites for information, and process/analyze the information. AS: Main project and homework assignments.
+\end{itemize}
+
+\vskip.15in
+\noindent\textbf{Materials:}
+\vspace{1mm} \\
+\noindent - {\bf Required}: Laptop computer \\
+\noindent\textbf{Books:} (1) Natural Language Processing with Python: Analyzing Text with the Natural Language Toolkit, Steven Bird, Ewan Klein, and Edward Loper. {\bf (Recommended)} (2) Practical Natural Language Processing, A Comprehensive Guide to Building Real-World NLP Systems, Sowmya Vajjala, Bodhisattwa P. Majumder, Anuj Gupta, Harshit Surana, O'Reilly Media, 2020. {\bf (Recommended)}
+
+\vskip.15in
+\noindent\textbf{Software:} The main software for this course is Python. If you are not familiar with Python yet, (\url{https://learnpython.org}) and (\url{https://docs.python.org/3/tutorial}) are good places to start.
+
+\vskip.15in
+\noindent\textbf{Pre-requisites:} STAT 415/615, knowledge of basic machine learning concepts, basic knowledge of computer science concepts, and familiarity with the Python programming language.
+
+\vskip.15in
+\noindent\textbf{Class structure and office hours:} This class will be a blend of lecture videos, class discussions, and possibly programming demonstrations. I want you all to be involved during live sessions and please do not hesitate to ask questions whenever something is unclear to you. You are expected to attend all class sessions, as I believe that attending class regularly contributes greatly to your performance in the course. It is understandable that you may have to miss class on a rare occasion. You are responsible for any assignments or papers given out during any missed class. Office hours are listed above, or by appointment. In addition, you are encouraged to ask me questions via email. Please schedule a meeting with me if you would like to see or discuss your grade at any point during the semester. If you are having {\bf ANY} trouble with the class, please see me about it as soon as possible. {\bf Do not wait until it is too late!}
+
+\vskip.15in
+\noindent\textbf{Course Pages:}
+I will use Canvas (\url{https://american.instructure.com/}) to post any supplementary materials, suggested readings/practice exercises, assignments, and announcements.
+
+\vskip.15in
+\noindent\textbf{Assignments \& Grading:}
+\vspace{1mm}
+
+\noindent \underline{Assignments (20\%)}: Homework will be assigned at the end of each module and submitted on Canvas. Steady effort in completing all assigned problems is essential for learning statistical methods and succeeding in this course. A typical homework assignment will include a mix of problems to solve by hand (to understand the mechanics) and realistic problems requiring the use of Python software. You are encouraged to seek assistance from classmates and me, but your submissions must reflect your own understanding, coding, and written explanations. Using online resources such as StackOverflow or GitHub is encouraged when stuck. Late homework submissions will only be accepted if solutions have not been released, with a penalty of 10\% deduction per day.
+\vspace{1mm} \\
+\noindent \underline{Participation (10\%)}: Active engagement in class discussions, activities, and collaborative sessions is crucial. Participation will be assessed based on the quality and consistency of your contributions during live and online sessions. Participation includes asking questions, contributing to discussions, engaging in collaborative activities, and demonstrating preparation for each session.
+\vspace{1mm} \\
+\noindent \underline{Paper Presentations (10\%)}: Each student must select a recent paper (published after 2023) and present it to the class in a 20-minute session. This will be followed by a 10-minute Q\&A session for classmates to ask questions and engage in discussion. Suggested topics include: large language models and efficient fine-tuning, multimodal learning with text and images, few-shot learning for domain-specific tasks, ethics and bias mitigation in NLP models, conversational AI with reinforcement learning, knowledge-augmented text generation, explainability in transformer models, low-resource language processing, text-to-image generation and applications, NLP in healthcare and medical text analysis, knowledge distillation for model optimization, U-Nets and their applications in NLP, and pruning techniques for efficient NLP models.
+\vspace{1mm} \\
+\noindent \underline{Reading Quizzes (10\%)}: Reading quizzes will be assigned at the end of each module to reinforce key concepts and assess your understanding of the material.
+\vspace{1mm} \\
+\noindent \underline{Exams (20\%) $=$ Final Exam (10\%) $+$ Mid-term Exam (10\%)}: Exams are designed to evaluate your understanding of the methods covered in class and your ability to apply them to real-world scenarios.
+\vspace{1mm} \\
+\noindent \underline{Labs (5\%)}: Each week, each student is expected to complete and submit a lab report in \texttt{.pdf} or \texttt{.html} format via Canvas.
+\vspace{1mm} \\
+\noindent \underline{Projects (30\%) $=$ Presentation (10\%) $+$ Project Proposal (10\%) $+$ Report (10\%)}: You will complete a class project using the tools and methods learned during the course. A mid-semester research proposal is required to have your topic approved. The project will include an oral presentation with slides, where you will explain your work and findings. During the presentation day, you will also get the opportunity to view other students' projects. Additionally, you must write and submit a 5-page NLP-style conference paper and upload your presentation slides in PDF format to Canvas the day before your scheduled presentation.
+
+\vskip.15in
+\noindent The total percentage adds up to 105\%, giving you an extra 5\% buffer; therefore, no additional curve will be applied to the final grades!
+
+\vskip.15in
+\noindent \textbf{Data scientists must learn to discover solutions for themselves. You should expect to conduct independent research (e.g., using Google, StackOverflow, etc.) to complete your assignments. All the information you need to complete the assignments may NOT be explicitly provided in lectures or the course materials. This is an essential part of becoming a skilled data scientist!}
+
+\vskip.15in
+\noindent\textbf{Grading scale:} Students with final percent between 93\%--100\% will receive an A, 90\%--92\% an A$-$, 88\%--89\% a B$+$, 83\%--87\% a B, 80\%--82\% a B$-$, 78\%--79\% a C$+$, 73\%--77\% a C, 70\%--72\% a C$-$, 60\%--69\% a D, and under 60\% F.
+
+\noindent{\bf Please schedule a meeting with me if you would like to see or discuss your grade at any point during the semester.}
+
+\vskip.15in
+\noindent\textbf{Academic dishonesty:} Academic dishonesty is a serious offense. As a start, you should read and understand our University's policies \url{https://www.american.edu/academics/integrity/code.cfm}. You may collaborate with other students in this class on your projects, but the work you turn in must be your own. You may use online forums such as GitHub, StackOverflow, etc. At a minimum, honesty consists of presenting your ideas clearly and in your own words, possibly orally. Here are a few typical cases that are relevant for your assignments:\\
+\noindent 1. If you use code for your work on your own, you need not notate it as such.
+\vspace{1mm} \\
+\noindent 2. If a colleague (or online source) shows you some application or code that you like, please credit that person by name in your write-up. You should expect that I may challenge you to explain your writing in your own words, possibly orally. If you cannot successfully defend your answer, no credit will be awarded to you.
+\vspace{1mm} \\
+\noindent 3. If you write your project in collaboration with others, as part of a group, please credit all members of your group by name in your write-up. You should expect that I may challenge you to explain your writing in your own words, possibly orally. If you cannot successfully defend your answer, no credit will be awarded to you, even if other group members are able to defend the same answer.
+
+\noindent If you have any questions on this matter, you are expected to consult me directly for advice.
+
+\vskip.15in
+\noindent\textbf{Important dates:}
+\begin{center} \begin{minipage}{3.8in}
+		\begin{flushleft}
+			Midterm		     \dotfill ~ March 06, 2025  \\
+			Project Proposal	     \dotfill ~ March 22, 2025  \\
+			Project Presentations	     \dotfill ~ April 24, 2025 \\
+			Report (grad students only)	     \dotfill ~ April 30, 2025\\
+			Final Exam       \dotfill ~ TBD  \\
+		\end{flushleft}
+	\end{minipage}
+\end{center}
+
+\vskip.15in
+\noindent\textbf{Emergency preparedness:} In the event of an emergency, students should refer to the AU Web site \url{http://www.american.edu/emergency} and the AU information line at (202) 885-1100 for general university-wide information. In case of a prolonged closure of the University, I send updates to you by email and will post all announcements on Canvas.
+
+\vskip.15in
+\noindent\textbf{Support services:} A wide range of services is available to support you in your efforts to meet the course requirements.
+\vspace{1mm} \\
+\noindent 1. Mathematics \& Statistics Tutoring Lab (Don Myers Building) provides tutoring in Intermediate Mathematics and Statistics. \url{http://www.american.edu/cas/mathstat/tutoring.cfm}
+\vspace{1mm} \\
+\noindent 2. Academic Support and Access Center offers study skills workshops, individual instruction, tutor referrals, Supplemental Instruction, writing support, and technical and practical support and assistance with accommodations for students with physical, medical, or psychological disabilities. Writing support is also available in the Writing Center, Battelle-Tompkins 228.
+\vspace{1mm} \\
+\noindent 3. Center for Diversity \& Inclusion (X3651, MGC 201) is dedicated to enhancing LGBTQ, Multicultural, First Generation, and Women's experiences on campus and to advance AU's commitment to respecting \& valuing diversity by serving as a resource and liaison to students, staff, and faculty on issues of equity through education, outreach, and advocacy.
+\vspace{1mm} \\
+\noindent 4. The Office of Advocacy Services for Interpersonal and Sexual Violence (X7070) provides free and confidential advocacy services for anyone in the campus community who is impacted by sexual violence (sexual assault, dating or domestic violence, and stalking).
+
+\vskip.15in
+\noindent\textbf{Additional notes:}\\
+\noindent 1. I expect you to be courteous to me and your fellow classmates during the lectures/meetings.
+\vspace{1mm} \\
+\noindent 2. Please let me know during the first week of classes if you have any special needs that require accommodations.
+\vspace{1mm} \\
+\noindent 3. Please be sure that you are familiar with AU's Academic Integrity Code, as I am required to report any cases of academic dishonesty to the dean of CAS. For your review: \url{http://www.american.edu/academics/integrity/}.
+\end{document}

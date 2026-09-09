@@ -1,0 +1,177 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[inner=1.5cm,outer=1.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr, lastpage, pmboxdraw}
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\usepackage[colorlinks,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{tabularx}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+
+\newcommand{\custom}[1]{{\color{blue} #1}}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{lightlightgray}{gray}{0.93}
+
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{ \fancyplain{}{Statistical Programming in R} }
+\rhead{ \fancyplain{}{DATA 412/612} }
+\fancyfoot[RO, LE] {page \thepage\ of \pageref{LastPage} }
+\thispagestyle{plain}
+
+\lstset{
+language=R,
+basicstyle=\ttfamily\footnotesize,
+keywordstyle=\color{OliveGreen},
+commentstyle=\color{gray},
+numbers=left,
+numberstyle=\tiny,
+stepnumber=1,
+numbersep=5pt,
+backgroundcolor=\color{lightlightgray},
+frame=none,
+tabsize=2,
+captionpos=t,
+breaklines=true,
+breakatwhitespace=false,
+showspaces=false,
+showtabs=false,
+columns=flexible
+}
+
+\begin{document}
+\begin{center}
+{\Large \textsc{\textbf{A Short Guide to Exploratory Data Analysis}}}
+\\ \textbf{Statistical Programming in R}\\ \textbf{DATA 412/612} \\
+Department of Mathematics and Statistics
+\\
+American University
+\end{center}
+\begin{center}
+Fall 2026
+\end{center}
+
+\section*{What EDA is}
+
+Exploratory data analysis is how you get to know a table: ask a question, look at the data, then ask a better question. It is not a dump of every \texttt{ggplot} you tried, and it is not a final confirmatory study. You are allowed to be surprised.
+
+\emph{R for Data Science} puts it this way: two questions come up over and over.
+\begin{itemize}
+    \item What kind of variation is there \emph{within} a variable?
+    \item What kind of covariation is there \emph{between} variables?
+\end{itemize}
+That is why the project asks for real data with at least three numeric columns, plus categories, dates, and some text.
+
+\section*{A reasonable order}
+
+You will jump backward when a plot shows a cleaning problem. That is normal. For the write-up, try this order.
+
+\begin{enumerate}
+    \item \textbf{One row.} Read the codebook. What is the observational unit?
+    \item \textbf{Import.} \texttt{readr} / \texttt{readxl} / \texttt{haven}, then \texttt{glimpse()} and a few \texttt{count()}s. Fix types (numbers or dates stored as text are common).
+    \item \textbf{Tidy and clean.} Rename, parse dates, recode labels, join or pivot, drop impossible values. Write down what you dropped.
+    \item \textbf{Missingness.} How much, and does it depend on year or group?
+    \item \textbf{One variable at a time.} Histograms or boxplots for numeric variables; bar charts for categories (reorder the levels); counts over time for dates.
+    \item \textbf{Two or three variables.} Scatterplots, boxplots by group, line plots over time. Facet or color for a third variable. If two numeric variables do not line up in a straight cloud, see below.
+    \item \textbf{Odd points.} Outliers, zeros, and codes like 999 are part of the data. See if your pattern still holds without them.
+    \item \textbf{New questions.} The data-driven hypotheses should not be a copy of the initial ones.
+    \item \textbf{A story.} Keep the plots that you can explain. The rest can go in an appendix or be deleted. The knitted PDF is at most 20 pages.
+\end{enumerate}
+
+\section*{Type $\rightarrow$ plot $\rightarrow$ package}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.45in} X >{\raggedright\arraybackslash}p{1.65in}}
+\hline
+\textbf{You have} & \textbf{Look at} & \textbf{Tools} \\
+\hline
+one numeric variable & histogram, boxplot, quantiles & \texttt{ggplot2}, \texttt{summarise} \\
+numeric vs.\ numeric & scatterplot first; smooth / log / bins if it is not a line & \texttt{geom\_point}, \texttt{geom\_smooth} \\
+numeric vs.\ category & boxplots, grouped summaries & \texttt{group\_by}, \texttt{forcats} \\
+category vs.\ category & counts, bar charts of proportions & \texttt{count}, \texttt{geom\_bar} \\
+dates & parse, then counts or means over time & \texttt{lubridate} \\
+text & flags, splits, cleaned labels, then plot & \texttt{stringr} \\
+many files / groups & the same pipeline repeatedly & \texttt{purrr} \\
+related tables or wide data & joins or \texttt{pivot\_longer} & \texttt{dplyr}, \texttt{tidyr} \\
+\hline
+\end{tabularx}
+\end{center}
+
+Reorder factors with \texttt{fct\_reorder()}, lump rare levels with \texttt{fct\_lump()}, and put units on the axes. Captions should say something, not ``Plot 3.''
+
+\section*{When two numeric variables are not a straight line}
+
+Pearson correlation and a fitted straight line only describe a \emph{linear} association. They can be near zero when there is a clear curve, and they can look large when the cloud is just two groups sitting apart. Always start with a scatterplot.
+
+\begin{itemize}
+    \item Add a smooth: \texttt{geom\_smooth()} (loess for smaller $n$; for large $n$ use \texttt{method = "gam"} or bin first). Read the curve as a description of the cloud, not as a causal model.
+    \item Try a log scale on $x$ or $y$ when the pattern bends or the spread grows with the mean. If the plot is closer to a line on that scale, summarize there and say so.
+    \item Cut one variable into bins (\texttt{cut()} or \texttt{ntile()}) and plot the mean or median of the other against the bin. That is a simple check that does not assume a line.
+    \item Spearman correlation is for a monotone pattern (always up, or always down) that is not linear. Report it \emph{with} the plot, not instead of the plot.
+    \item If you fit \texttt{lm()}, look at residuals vs.\ fitted. A curve there means the line missed the relationship.
+    \item Facet or color by a categorical variable. A bend in the pooled scatter can be two groups with different intercepts; a straight pooled cloud can hide opposite slopes.
+\end{itemize}
+
+Do this before you write that two variables are related or that they are not. Overplotting can hide a curve; use \texttt{alpha} or \texttt{geom\_hex()} when $n$ is large. The smooth is still exploratory: say what you see, how large it is, and where it might be an artifact of missingness, outliers, or a third variable.
+
+\section*{A small pipeline}
+
+\begin{lstlisting}
+library(tidyverse)
+library(lubridate)
+
+raw <- read_csv("../data/listings.csv")
+
+clean <- raw %>%
+  mutate(
+    price = parse_number(price),
+    last_review = ymd(last_review),
+    neighborhood = fct_lump(neighborhood, n = 10),
+    has_parking = str_detect(amenities, "parking")
+  ) %>%
+  filter(price > 0, price < 2000)
+
+clean %>%
+  group_by(neighborhood) %>%
+  summarise(n = n(), median_price = median(price, na.rm = TRUE),
+            .groups = "drop") %>%
+  mutate(neighborhood = fct_reorder(neighborhood, median_price)) %>%
+  ggplot(aes(median_price, neighborhood)) +
+  geom_col() +
+  labs(x = "Median nightly price (USD)", y = NULL)
+\end{lstlisting}
+
+Several files of the same shape:
+
+\begin{lstlisting}
+files <- list.files("../data", pattern = "\\.csv$", full.names = TRUE)
+trips <- files %>% map_dfr(read_csv, .id = "source")
+\end{lstlisting}
+
+A nonlinear numeric--numeric plot:
+
+\begin{lstlisting}
+clean %>%
+  ggplot(aes(reviews, price)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(se = FALSE) +
+  scale_x_log10() +
+  facet_wrap(~ room_type) +
+  labs(x = "Number of reviews", y = "Nightly price (USD)")
+\end{lstlisting}
+
+\section*{Writing it up}
+
+For each important figure: one sentence of setup, the figure, then two or three sentences that state the pattern, its size, and a caveat. Connect figures instead of listing them. Do not claim a relationship that the plot does not show, and do not treat a smooth or a correlation as the end of the argument.
+
+A sequence that usually works: structure and missingness; the main numeric variables; the main groups; the relationship you care about (stratified); the same thing over time if you have dates; one surprise.
+
+The EDA chapter in \emph{R for Data Science} is the main reading: \url{https://r4ds.hadley.nz/eda}.
+
+\end{document}

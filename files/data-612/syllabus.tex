@@ -1,0 +1,284 @@
+\documentclass[11pt, a4paper]{article}
+%\usepackage{geometry}
+\usepackage[inner=1.5cm,outer=1.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr, bbding, pmboxdraw}
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\usepackage[colorlinks,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+\usepackage{lastpage}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Statistical Programming in R}
+\rhead{DATA 412/612-002}
+\fancyfoot[R]{page \thepage\ of \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+%%%%%%%%%%%% LISTING %%%
+\usepackage{listings}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\usepackage{verbatim} % used to display code
+\usepackage{fancyvrb}
+\usepackage{acronym}
+\usepackage{amsthm}
+\VerbatimFootnotes % Required, otherwise verbatim does not work in footnotes!
+
+% \usepackage{booktabs}
+\usepackage{tabularx}
+
+
+\newcommand{\custom}[1]{{\color{blue} #1}}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{lightlightgray}{gray}{0.93}
+
+
+
+\lstset{
+%language=bash,                          % Code langugage
+basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, \ttfamily
+keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+commentstyle=\color{gray},              % Comments font
+numbers=left,                           % Line nums position
+numberstyle=\tiny,                      % Line-numbers fonts
+stepnumber=1,                           % Step between two line-numbers
+numbersep=5pt,                          % How far are line-numbers from code
+backgroundcolor=\color{lightlightgray}, % Choose background color
+frame=none,                             % A frame around the code
+tabsize=2,                              % Default tab size
+captionpos=t,                           % Caption-position = bottom
+breaklines=true,                        % Automatic line breaking?
+breakatwhitespace=false,                % Automatic breaks only at whitespace?
+showspaces=false,                       % Dont make spaces visible
+showtabs=false,                         % Dont make tabls visible
+columns=flexible,                       % Column format
+morekeywords={__global__, __device__},  % CUDA specific keywords
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{center}
+{\Large \textsc{\textbf{Statistical Programming in R}}}\\ \textbf{DATA 412/612-002} \\
+Department of Mathematics and Statistics
+\\
+American University
+\end{center}
+\vspace{0.3cm}
+\begin{center}
+Fall 2026
+\end{center}
+\vspace{-1cm}
+\begin{center}
+\rule{6.5in}{0.4pt}
+\begin{minipage}[t]{6.5in}
+{\small
+\begin{tabularx}{6.5in}{@{}>{\raggedright\arraybackslash}p{1.15in}X>{\raggedright\arraybackslash}p{1.2in}X@{}}
+\textbf{Instructor:} & Dr. Ahmad Mousavi & \textbf{Time:} & W 5:30 PM -- 8:00 PM \\
+\textbf{Email:} & \href{mailto:mousavi@american.edu}{mousavi@american.edu} & \textbf{Room:} & Myers Building 114 \\
+\textbf{Office:} & Don Myers 106J & \textbf{Dates:} & 8/31/2026 -- 12/19/2026 \\
+\textbf{TA:} & Roberta Southwood & \textbf{TA Email:} & \href{mailto:rs6133a@american.edu}{rs6133a@american.edu}
+\end{tabularx}
+}
+\end{minipage}
+\rule{6.5in}{0.4pt}
+\end{center}
+\setlength{\unitlength}{1in}
+\renewcommand{\arraystretch}{2}
+
+
+\vskip.15in
+\custom{\noindent\textbf{Learning Objectives:}} 
+% At the end of this course, you are expected to be able to:
+\vspace{1mm}\\
+\noindent - Use R as a powerful calculator.
+\vspace{1mm}\\
+\noindent - Install and use packages for specific applications.
+\vspace{1mm}\\
+\noindent - Write basic R programs.
+\vspace{1mm}\\
+\noindent - Produce reproducible research using R.
+\vspace{1mm}\\
+\noindent - Import data from external sources.
+% \vspace{1mm}\\
+%\noindent - Perform analyses including hypothesis testing and regression.
+\vspace{1mm}\\
+\noindent - Use graphical tools to visualize and understand data.
+\vspace{1mm}\\
+\noindent - Use AI tools responsibly to support statistical programming and data analysis.
+\\
+
+\custom{\noindent\textbf{Office Hours:}} \\My office hours are Tuesdays, 5:00 PM -- 6:00 PM in Don Myers 106J, or after class, or by appointment. The TA, Roberta Southwood, will also hold office hours online on Wednesdays, 2:00 PM -- 2:30 PM. The meeting link will be posted on Canvas. Always feel welcome to come visit us during office hours. You are also encouraged to ask questions online via email. If you are having {\bf ANY} trouble with the class, please come see me about it as soon as possible. {\bf Do not wait until it is too late!}
+
+\vskip.15in
+\custom{\noindent\textbf{Course Page:} }\\
+I will use Canvas (\url{https://american.instructure.com/}) to post any supplementary materials, suggested readings/practice exercises, assignments, and announcements.
+
+\vskip.15in
+\custom{\noindent\textbf{Materials:}}
+\vspace{1mm} \\
+\noindent - R for Data Science by Wickham and Grolemund (O'Reilly) (\url{https://r4ds.had.co.nz/}) or its second edition  by Wickham, Rundel, and Grolemund (O'Reilly) 
+ (\url{https://r4ds.hadley.nz/}) {\bf (Recommended)}\\
+\noindent - Laptop computer {\bf (Required)}
+
+\vskip.15in
+\custom{\noindent\textbf{Course Description:}} \\
+Programming and data analysis using the open-source statistical program R. Explores a data science life cycle including basic programming, basic data structures, data wrangling, data cleaning, data visualization, exploratory data analysis, data import and export, relational datasets, and data presentation. Emphasis is placed on the popular tidyverse suite of packages. Students explore the use of artificial intelligence (AI) tools for supporting statistical programming and data science analysis. Most of the course will use the RStudio IDE (Integrated Development Environment). Crosslist: DATA-412. Prerequisite/Concurrent: STAT-614.
+
+\vskip.15in
+\custom{\noindent\textbf{Class Structure:}}\\
+This class will be a blend of lectures, class discussions, and labs. I want you all to be involved during class and please do not hesitate to ask questions whenever something is unclear to you.  You are expected to attend all class meetings, as I believe that attending class regularly contributes greatly to your performance in the course. It is understandable that you may have to miss class on a rare occasion. You are responsible for any assignments or papers given out during any missed class. Please obtain these materials from a colleague BEFORE the next class meeting.
+\newline
+\newline
+\noindent \textbf{ \textit{
+Data scientists must learn to discover solutions for themselves. You should expect to do some research (use Google, Stack Overflow, etc.) for your assignments.  This is an essential part of becoming a data scientist! All the information required to complete the assignment will {\bf NOT}  be necessarily provided to you in the lectures or course book.}}
+\\
+\\
+\vskip.15in
+\custom{\noindent\textbf{Grading:} }
+\vspace{1mm} \\
+\noindent \underline{Assignments (20\%)}: During the semester I will assign, collect, and grade assignments. There will be approximately 10 formal assignments throughout the semester. You may receive assistance from other students in the class and me, but your submissions must be composed of your own thoughts, coding, and words. I expect you to get ideas from online resources such as Stack Overflow or GitHub when you get stuck.  Please cite your source when you do so and be specific about what you have added to it. \textcolor{red}{\textbf{ I will not accept late assignments and take-home exams and Canvas will be set not to allow any uploads after a deadline!}}
+\vspace{1mm} \\
+\noindent \underline{{Attendance and Labs} (10\%)}: Around 15-minute labs at the end of most of the classes. Each lab covers the lecture material. \textcolor{red}{\bf{You must actively participate in class discussions AND not miss more than 3 classes in the entire semester (unless there are medical or other logical reasons!) to get a full grade on this part!}}
+\vspace{1mm} \\
+\noindent \underline{Quizzes (15\%)}: Three in-class {\bf cumulative} quizzes with each having 5\% of the total grade. 
+\vspace{1mm} \\
+\noindent \underline{Exams (30\%)}: We will have two midterm exams and a final exam. No make-up exams will be given unless you have an extremely compelling excuse such as observance of a religious holiday (in which case you need to let me know in advance) or a documented medical emergency.
+\vspace{1mm} \\
+\noindent \underline{Final Project (25\%) = Initial presentation (5\%) $+$ Final presentation (10\%) $+$ Report (10\%)}: Work in teams of at most three. Work with me to get your dataset approved. You will explore a fairly large \textbf{real} dataset using the tidyverse tools from class (the data must have at least three numeric columns and a mix of other types; see the project handout). The written report is a Quarto (\texttt{.qmd}) file knitted to a \textbf{one-column PDF of at most 20 pages}. Submit one zip file with two folders: \texttt{data} and \texttt{analysis} (the \texttt{.qmd} and the knitted PDF go in \texttt{analysis}). Use relative paths so the project is reproducible. Details are on the project handout.
+
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{10}{|c|}{\large{\textbf{\textit{Grading Policy}}}} \\
+\hline
+\bf{Final Percent} &  93-100 & 90-93 & 87-90 & 83-87 & 80-83 & 77-80 & 70-77 
+& 60-70&  0-60\\
+\hline
+\bf{Letter Grade}&   $\mathcal{A}$ & $\mathcal{A-}$ & $\mathcal{B+}$ & $\mathcal{B}$ & $\mathcal{B-}$ & $\mathcal{C+}$ & $\mathcal{C}$
+& $\mathcal{D}$&$\mathcal{F}$\\
+\hline
+\end{tabular}
+\end{table}
+
+\noindent{\bf Please visit my office hours if you would like to see or discuss your grade at any point during the semester.}
+
+
+\vskip.15in
+\custom{\noindent\textbf{Important Dates:}}
+\begin{center} \begin{minipage}{3.8in}
+\begin{flushleft}
+Quiz	1 (5\%)   \dotfill ~ September 23, 2026  \\
+Midterm	1 (10\%)   \dotfill ~ October 14, 2026  \\
+Quiz	2 (5\%)   \dotfill ~ October 28, 2026  \\
+Midterm	2 (10\%)   \dotfill ~ November 11, 2026  \\
+Initial Project Presentation	(5\%)   \dotfill ~ November 18, 2026  \\
+Quiz	3 (5\%)   \dotfill ~ December 2, 2026  \\
+Final Project Presentations (10\%)     \dotfill ~ December 9, 2026  \\
+Project Report  (10\%)    \dotfill ~ December 14, 2026 \\
+Final Exam  (10\%)    \dotfill ~ December 16, 2026 \\
+\end{flushleft}
+\end{minipage}
+\end{center}
+
+\noindent\textit{Note:} Thanksgiving holiday is November 25--29, 2026 (no class on Wednesday, November 25). Classes end December 11; final examinations are December 14--19. Final exam date may be adjusted to the official university schedule.
+
+\vskip.15in
+\custom{\noindent\textbf{Emergency Preparedness:}} \\
+In the event of an emergency, students should refer to the AU Web site \url{http://www.american.edu/emergency} and the AU information line at (202) 885-1100 for general university-wide information. In case of a prolonged closure of the University, I send updates to you by email and will post all announcements on Canvas.
+
+\vskip.15in
+\custom{\custom{\noindent\textbf{Support Services:}}} \\
+A wide range of services is available to support you in your efforts to meet the course requirements.
+\vspace{1mm} \\
+\noindent 1. Mathematics \& Statistics Tutoring Lab (Don Myers Building) provides tutoring in Intermediate Mathematics and Statistics.  \url{http://www.american.edu/cas/mathstat/tutoring.cfm}
+\vspace{1mm} \\
+\noindent 2. Academic Support and Access Center (MGC 243) offers study skills workshops, individual instruction, tutor referrals, Supplemental Instruction, writing support, and technical and practical support and assistance with accommodations for students with physical, medical, or psychological disabilities. Writing support is also available in the Writing Center, Battelle-Tompkins 228.
+\vspace{1mm} \\
+\noindent 3. Center for Diversity \& Inclusion (X3651, MGC 201) is dedicated to enhancing LGBTQ, Multicultural, First Generation, and Women's experiences on campus and to advancing AU's commitment to respecting \& valuing diversity by serving as a resource and liaison to students, staff, and faculty on issues of equity through education, outreach, and advocacy.
+\vspace{1mm} \\
+\noindent 4. The Office of Advocacy Services for Interpersonal and Sexual Violence (X7070) provides free and confidential advocacy services for anyone in the campus community who is impacted by sexual violence (sexual assault, dating or domestic violence, and stalking).
+
+
+
+\vskip.15in
+\custom{\noindent\textbf{Seeking Assistance Online:}}
+\begin{itemize}
+    \item Utilize online resources to gain insights into questions or solutions but ensure that the implementation is your own. While using these resources is encouraged, avoid directly copying and pasting code into your work. {\color{red}All submissions should be your original work.}
+    
+    \item You are not required to cite the use of these resources for gaining insights or understanding syntax. However, if you must copy code to complete your work, cite the source and explain its function in your comments. Various resources are available, including:
+    
+    \begin{itemize}
+        \item Search engines like Google
+        \item Video platforms such as YouTube
+        \item Help sites, blogs, and forums
+        \item Communities like Posit Community and StackOverflow
+    \end{itemize}
+    
+    \item Be mindful of the dates of the information you find. Answers older than two years may not be accurate or relevant.
+    
+    \item Students can employ generative AI tools like ChatGPT/GPT to aid in understanding problems and potential solutions. Using these tools responsibly involves proper citation of their use, including the prompts used. Students must evaluate the accuracy and usefulness of AI-generated outputs and are accountable for all submitted work.
+    
+    \item Recognize the limitations of these tools, particularly regarding the creation of invented data or sources, which may violate academic integrity policies. Presenting outputs from these models as original work typically violates the terms of service.
+
+
+    \item {\color{red}While software tools can be used to review and refine writing, generating content using software or generative AI is prohibited.} This includes spell checkers, grammar checkers, and thesauruses integrated into applications like MS Word or Google Docs, as well as standalone tools like Grammarly or WordTune. If you use a standalone tool, mention it at the end of your document without detailing individual revisions.
+\end{itemize}
+
+
+
+\vskip.15in
+\custom{\noindent\textbf{Academic Integrity and Collaboration:}}
+\begin{itemize}
+    \item Cases of academic dishonesty are required to be reported to the Dean of the College of Arts and Sciences.
+    
+    \item Familiarize yourself with American University’s \href{https://www.american.edu/academics/integrity/code.cfm}{Academic Integrity Code}, particularly Section II, A.
+    
+    \item While Data Science often involves teamwork, this course emphasizes individual outcomes, except for designated group assignments. Therefore, all work on individual assignments must be solely your own.
+    
+    \item Collaboration among students is encouraged for understanding problems, methods, or techniques.
+    
+    \item However, sharing of work or solutions on individual assignments is strictly prohibited:
+    
+    \begin{itemize}
+        \item Do not share writing, code files, or snippets with each other.
+        \item Do not share screens.
+        \item Do not allow others to type on your computer, including tutors.
+    \end{itemize}
+    
+    \item It is also prohibited to provide, share, distribute, request, borrow, review, purchase, or otherwise use solutions to assignments from other instances of this course.
+    
+    \item You should be capable of explaining any code you write in terms of its functionality and how it yields results. Failure to explain your code indicates a lack of progress toward learning outcomes.
+    
+    \item Similarly, you should be able to elucidate your writing in terms of how references and logic flow to support your findings and recommendations. The inability to explain your work suggests a lack of progress toward learning outcomes.
+    
+    \item If you have any concerns or questions at any point, feel free to ask for clarification.
+\end{itemize}
+\vskip.15in
+\custom{\noindent\textbf{Additional Notes:}}\\
+\noindent 1. I expect you to be courteous to me and your fellow classmates both inside and outside of the classroom. This generally just involves a bit of common sense.  Cell phones need to be silenced and put away during class. Laptops should be out during class time only in-class activities. Please save texting, typing/sending emails, checking Facebook, etc. for outside of class time.  
+\vspace{1mm} \\
+\noindent 2. Please let me know during the first week of classes if you have any special needs that require accommodations.
+\vspace{1mm} \\
+\noindent 3. Please be sure that you are familiar with AU’s Academic Integrity Code, as I am required to report any cases of academic dishonesty to the dean of CAS. For your review, see  \url{http://www.american.edu/academics/integrity/}.
+
+
+
+
+\end{document} 
