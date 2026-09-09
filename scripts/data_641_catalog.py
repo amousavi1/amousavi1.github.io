@@ -50,9 +50,9 @@ NOTES = [
     {"slug": "lda-topic-modeling", "week": 14, "title": "14.1 LDA Topic Modeling", "lead": "A probabilistic mixture of topics for each document.", "slide": "14.1-lda-topic-modeling"},
     {"slug": "nmf-topic-modeling", "week": 14, "title": "14.2 NMF Topic Modeling", "lead": "Non-negative factors as an additive topic model.", "slide": "14.2-nmf-topic-modeling"},
     {"slug": "evaluation-topic-modeling", "week": 14, "title": "14.3 Evaluating Topic Models", "lead": "Coherence, human checks, and what a good topic looks like.", "slide": "14.3-evaluation-topic-modeling"},
-    {"slug": "text-summarization", "week": 14, "title": "14.4 Text Summarization", "lead": "Extractive versus abstractive shortening of a document."},
-    {"slug": "machine-translation", "week": 14, "title": "14.5 Machine Translation", "lead": "Map a sentence in one language to a sentence in another."},
-    {"slug": "recommender-systems", "week": 14, "title": "14.6 Recommender Systems", "lead": "Use text (and other signals) to rank items for a user."},
+    {"slug": "text-summarization", "week": 15, "title": "15.1 Text Summarization", "lead": "Extractive versus abstractive shortening of a document.", "slide": "15.1-text-summarization"},
+    {"slug": "machine-translation", "week": 15, "title": "15.2 Machine Translation", "lead": "Map a sentence in one language to a sentence in another.", "slide": "15.2-machine-translation"},
+    {"slug": "recommender-systems", "week": 15, "title": "15.3 Recommender Systems", "lead": "Use text (and other signals) to rank items for a user.", "slide": "15.3-recommender-systems"},
 ]
 
 BY_SLUG = {n["slug"]: n for n in NOTES}
@@ -215,9 +215,6 @@ WEEKS = {
             "lda-topic-modeling",
             "nmf-topic-modeling",
             "evaluation-topic-modeling",
-            "text-summarization",
-            "machine-translation",
-            "recommender-systems",
         ],
         "readings": [
             ("Blei, Probabilistic topic models", "https://www.cs.columbia.edu/~blei/papers/Blei2012.pdf"),
@@ -226,6 +223,20 @@ WEEKS = {
         "discussion": [
             "LDA versus NMF: what constraint makes the factors look like topics?",
             "How would you tell a good topic model from one that only found frequent words?",
+        ],
+    },
+    15: {
+        "lectures": [
+            "text-summarization",
+            "machine-translation",
+            "recommender-systems",
+        ],
+        "readings": [
+            ("Practical NLP, Ch. 8–10 (summarization, MT, recommenders)", "https://www.oreilly.com/library/view/practical-natural-language/9781492054047/"),
+        ],
+        "discussion": [
+            "When is extractive summarization safer than an abstractive rewrite?",
+            "What signal would you use besides text to rank items for a user?",
         ],
     },
 }

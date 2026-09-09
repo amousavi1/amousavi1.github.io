@@ -106,17 +106,25 @@ def main() -> None:
     work = ROOT / "files" / "_extra-compile"
     work.mkdir(parents=True, exist_ok=True)
     only_missing = "--retry-missing" in sys.argv
+    course_filter = None
+    for arg in sys.argv[1:]:
+        if arg.startswith("--course="):
+            course_filter = arg.split("=", 1)[1]
     ok = 0
     fail = 0
     copied = set()
     for item in ITEMS:
         courses = {c for c, _w in item["assign"]}
+        if course_filter and course_filter not in courses:
+            continue
+        if item["kind"] == "practice":
+            continue
         def dest_dir(course: str) -> pathlib.Path:
             if item["kind"] == "practice":
                 return ROOT / "files" / "_private-assessments" / course
             return ROOT / "files" / course / "extra"
 
-        if only_missing and all((dest_dir(c) / item["pdf"]).exists() for c in courses):
+        if only_missing and all((dest_dir(c) / item["pdf"]).exists() for c in ( {course_filter} if course_filter else courses )):
             ok += 1
             continue
         src = ROOT / item["src"]
@@ -132,6 +140,8 @@ def main() -> None:
         ok += 1
         courses = {c for c, _w in item["assign"]}
         for course in courses:
+            if course_filter and course != course_filter:
+                continue
             if item["kind"] == "practice":
                 out_dir = ROOT / "files" / "_private-assessments" / course
             else:

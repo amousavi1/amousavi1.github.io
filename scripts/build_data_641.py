@@ -15,8 +15,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-08T21:45:00-04:00"
-LAST_UPDATED_TEXT = "September 8, 2026, 9:45 PM EDT"
+LAST_UPDATED_ISO = "2026-09-08T23:45:00-04:00"
+LAST_UPDATED_TEXT = "September 8, 2026, 11:45 PM EDT"
 
 COURSE = "data-641"
 COURSE_TITLE = "DATA 441/641"
@@ -125,7 +125,7 @@ def _material_item(title: str, href: str, pdf_href: str | None = None, note: str
 def write_hub() -> pathlib.Path:
     tab_btns = []
     panels = []
-    for week in range(1, 15):
+    for week in sorted(WEEKS):
         selected = "true" if week == 1 else "false"
         hidden = "" if week == 1 else " hidden"
         tabindex = "" if week == 1 else ' tabindex="-1"'
@@ -143,14 +143,19 @@ def write_hub() -> pathlib.Path:
                 note = BY_SLUG[slug]
                 slide = note.get("slide")
                 slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
-                pdf = (
-                    f"files/{COURSE}/slides/{slide}.pdf"
-                    if slide_path and slide_path.exists()
-                    else f"files/{COURSE}/{slug}.pdf"
-                )
-                items.append(_material_item(note["title"], f"{COURSE}-{slug}.html", pdf))
+                if slide_path and slide_path.exists():
+                    pdf = f"files/{COURSE}/slides/{slide}.pdf"
+                    items.append(_material_item(note["title"], pdf, pdf))
+                else:
+                    items.append(
+                        _material_item(
+                            note["title"],
+                            f"{COURSE}-{slug}.html",
+                            f"files/{COURSE}/{slug}.pdf",
+                        )
+                    )
             chunks.append(
-                '                                <p class="course-group-title">Lectures</p>\n'
+                '                                <p class="course-group-title">Notes</p>\n'
                 '                                <ul class="course-materials">\n'
                 + "\n".join(items)
                 + "\n                                </ul>"
@@ -190,25 +195,20 @@ def write_hub() -> pathlib.Path:
                 + "\n".join(items)
                 + "\n                                </ul>"
             )
-        for kind, heading in (
-            ("notes", "Complementary notes"),
-            ("practice", "Practice"),
-            ("homework", "Extra practice"),
-        ):
-            rows = extras_for(COURSE, week, kind)
-            items = []
-            for title, filename in rows:
+        extra_items = []
+        for kind in ("notes", "homework"):
+            for title, filename in extras_for(COURSE, week, kind):
                 href = f"files/{COURSE}/{filename}"
                 if not (ROOT / "files" / COURSE / filename).exists():
                     continue
-                items.append(_material_item(title, href, href))
-            if items:
-                chunks.append(
-                    f'                                <p class="course-group-title">{heading}</p>\n'
-                    '                                <ul class="course-materials">\n'
-                    + "\n".join(items)
-                    + "\n                                </ul>"
-                )
+                extra_items.append(_material_item(title, href, href))
+        if extra_items:
+            chunks.append(
+                '                                <p class="course-group-title">Additional</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(extra_items)
+                + "\n                                </ul>"
+            )
         readings = spec.get("readings") or []
         if readings:
             items = []
@@ -425,22 +425,36 @@ def build_note(note: dict) -> None:
 
 
 def main() -> None:
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    flags = {a for a in sys.argv[1:] if a.startswith("--")}
+    hub_only = "--hub" in flags
+    html_only = "--html-only" in flags
     week = None
     slugs = None
-    if len(sys.argv) > 1:
-        if sys.argv[1].isdigit():
-            week = int(sys.argv[1])
+    if args:
+        if args[0].isdigit():
+            week = int(args[0])
         else:
-            slugs = set(sys.argv[1:])
-    for note in NOTES:
-        if week is not None and note["week"] != week:
-            continue
-        if slugs is not None and note["slug"] not in slugs:
-            continue
-        build_note(note)
-    for lab_week, slug, lab_n in labs_with_solutions():
-        write_solutions_page(lab_week, slug, lab_n)
-        print(f"Wrote {COURSE}-lab-{lab_n}-solutions.html")
+            slugs = set(args)
+    if not hub_only:
+        for note in NOTES:
+            if week is not None and note["week"] != week:
+                continue
+            if slugs is not None and note["slug"] not in slugs:
+                continue
+            if html_only:
+                md_path = FILES / f"{note['slug']}.md"
+                if not md_path.exists():
+                    print(f"Skip missing {md_path.name}")
+                    continue
+                body = markdown_to_html(md_path.read_text(encoding="utf-8"))
+                page_path = write_site_page(note, body)
+                print(f"Wrote {page_path.name}")
+            else:
+                build_note(note)
+        for lab_week, slug, lab_n in labs_with_solutions():
+            write_solutions_page(lab_week, slug, lab_n)
+            print(f"Wrote {COURSE}-lab-{lab_n}-solutions.html")
     write_hub()
     print("Wrote data-641.html")
 
