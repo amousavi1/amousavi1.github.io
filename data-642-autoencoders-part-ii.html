@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.2 Autoencoders, Part II - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.2 Autoencoders, Part II</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 14 &middot; <a href="files/data-642/autoencoders-part-ii.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/14.2-autoencoders-part-ii.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Deeper autoencoders and what the latent code is for.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; and Theodoridis, <em>Machine Learning: A Bayesian and Optimization Perspective</em>.</p>
+<h2>1. Tying weights</h2>
+<p>On a neatly symmetric autoencoder, <strong>tying weights</strong> copies each decoder matrix from the matching encoder matrix. Half as many weights. Faster training. Less <strong>overfitting</strong>.</p>
+<p>Encoder and decoder then share features instead of learning two unrelated maps. That often reconstructs a wider set of inputs.</p>
+<p>The stack from last time is the symmetric net this trick is built for:</p>
+<p><img alt="Stacked autoencoder, symmetric about the coding layer" src="files/data-642/graphics/14.2-autoencoders-part-ii/stacked_auto.png" /></p>
+<hr />
+<h2>2. Denoising autoencoders</h2>
+<p>A <strong>denoising autoencoder</strong> is trained to reconstruct the <em>clean</em> input from a <em>noisy</em> one. That pressure is what makes the coding useful.</p>
+<p>Implementation: a stacked autoencoder plus noise on the encoder inputs. Use a <code>Dropout</code> layer or a <code>GaussianNoise</code> layer. Both are on only during training.</p>
+<p><img alt="Denoising autoencoder: Gaussian noise (left) or dropout (right)" src="files/data-642/graphics/14.2-autoencoders-part-ii/gauss.png" /></p>
+<hr />
+<h2>3. Sparse autoencoders</h2>
+<p><strong>Sparsity</strong> is another constraint: add a term so that few coding neurons fire.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>L</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>&#x003BB;</mi><mo>&#x000B7;</mo><mi>&#x003A9;</mi><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is reconstruction loss (MSE is the usual example), <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>h</mi></mrow></math> is the coding activations, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003A9;</mi><mo stretchy="false">&#x00028;</mo><mi>h</mi><mo stretchy="false">&#x00029;</mo></mrow></math> measures how dense those activations are, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BB;</mi></mrow></math> is how hard you push sparsity.</p>
+<p>If a neuron may speak only rarely, it had better say something useful.</p>
+<p>A simple recipe: sigmoid on a wide coding layer (values in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>; 300 units is the slide example) and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> on the coding activations. The decoder stays ordinary.</p>
+<hr />
+<h2>4. How activations behave</h2>
+<p>Histograms of the coding layer, before an extra sparsity penalty:</p>
+<ul>
+<li>Left: all activations. Mass near 0 and 1, as a saturating sigmoid would suggest.</li>
+<li>Right: mean activation per neuron. Most means sit near 0.5.</li>
+</ul>
+<p>Each neuron is on or off about half the time. A few fire almost always. That is not sparse enough; you want a penalty that <strong>enforces sparsity</strong>.</p>
+<p><img alt="Coding activations without a sparsity penalty" src="files/data-642/graphics/14.2-autoencoders-part-ii/activations.png" /></p>
+<hr />
+<h2>5. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> penalty</h2>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> pulls codings toward zero. Reconstruction loss pulls the other way: some entries must stay nonzero or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow><mo>&#x0005E;</mo></mover></mrow></math> falls apart.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> keeps the few large coordinates that reconstruct, and drops the rest.</p>
+<p><img alt="Coding activations under an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> penalty" src="files/data-642/graphics/14.2-autoencoders-part-ii/l1_activations.png" /></p>
+<hr />
+<h2>6. KL divergence as a sparsity penalty</h2>
+<p>A stronger recipe: each training step, measure how sparse the coding layer actually is. If that rate is not the target, penalize.</p>
+<p>Compute the mean activation of each coding neuron on the batch. Penalize neurons that are too busy or too quiet. <strong>Kullback–Leibler (KL) divergence</strong> is the usual sparsity loss. Its gradients are much steeper than MSE near the target:</p>
+<p><img alt="KL sparsity loss versus MAE and MSE" src="files/data-642/graphics/14.2-autoencoders-part-ii/KL_fig.png" /></p>
+<p>For discrete <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>D</mi><mrow><mtext>KL</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>P</mi><mo>&#x02225;</mo><mi>Q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mrow><mi>i</mi></mrow></munder><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mi>log</mi><mfrac><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mi>Q</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Here <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math> is the target firing probability of a coding neuron and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi></mrow></math> is the batch-mean activation, so this collapses to a two-point KL:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>D</mi><mrow><mtext>KL</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo>&#x02225;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>p</mi><mi>log</mi><mfrac><mrow><mi>p</mi></mrow><mrow><mi>q</mi></mrow></mfrac><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mi>log</mi><mfrac><mrow><mn>1</mn><mo>&#x02212;</mo><mi>p</mi></mrow><mrow><mn>1</mn><mo>&#x02212;</mo><mi>q</mi></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Sum those terms over coding neurons and add them to the cost, scaled by a sparsity weight.</p>
+<ul>
+<li>Weight too large: you hit the target sparsity and reconstruct poorly.</li>
+<li>Weight too small: you ignore sparsity and learn nothing interesting.</li>
+</ul>
+<p>After KL training, most activations sit near 0 (about 70% below 0.1) and neuron means cluster around 0.1 (about 90% between 0.1 and 0.2):</p>
+<p><img alt="Coding activations under a KL sparsity penalty" src="files/data-642/graphics/14.2-autoencoders-part-ii/KL_activations.png" /></p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>Why does tying decoder weights to the encoder cut the parameter count, and what overfitting risk does that reduce?</p>
+</li>
+<li>
+<p>What does a denoising autoencoder reconstruct, and from what input?</p>
+</li>
+<li>
+<p>In the KL sparsity term, what are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi></mrow></math>?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

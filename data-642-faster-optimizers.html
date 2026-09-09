@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>13.2 Faster Optimizers - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">13.2 Faster Optimizers</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 13 &middot; <a href="files/data-642/faster-optimizers.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/13.2-faster-optimizers.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Momentum, adaptive rates, and related tricks.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; and Theodoridis.</p>
+<h2>1. Why bother</h2>
+<p>Training a large deep net with plain gradient descent is slow. A faster <strong>optimizer</strong> is a large speedup.</p>
+<hr />
+<h2>2. Momentum</h2>
+<p>Polyak, 1964. A bowling ball on a gentle slope: slow at first, then it picks up <strong>momentum</strong> until terminal velocity. Plain gradient descent ignores past gradients. If the local gradient is tiny, it crawls.</p>
+<p>Momentum keeps a velocity <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">m</mi></mrow></mrow></math>. Subtract the local gradient (times the learning rate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math>) from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">m</mi></mrow></mrow></math>; add <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">m</mi></mrow></mrow></math> to the weights:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mi>&#x003B3;</mi><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B3;</mi><mo>&#x0003D;</mo><mn>0.9</mn></mrow></math>, terminal velocity is <strong>ten times</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi><mo>&#x02207;</mo><mi>J</mi></mrow></math>. Plateaus and some local optima are easier to leave. Without batch normalization, upper layers often see badly scaled inputs; momentum helps.</p>
+<p>The ball can overshoot, come back, and <strong>oscillate</strong>. A bit of friction (the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B3;</mi><mo>&#x0003C;</mo><mn>1</mn></mrow></math> decay) damps that. Cost: one more hyperparameter. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B3;</mi><mo>&#x0003D;</mo><mn>0.9</mn></mrow></math> is a usual default and is almost always faster than plain GD.</p>
+<hr />
+<h2>3. Nesterov accelerated gradient</h2>
+<p><strong>NAG</strong> measures the gradient <strong>slightly ahead</strong>, in the direction of the current momentum, not at the current <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mi>&#x003B3;</mi><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><mi>&#x003B3;</mi><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">m</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>The momentum vector usually already points toward the optimum, so the lookahead gradient is a better estimate.</p>
+<p><img alt="Regular momentum versus Nesterov lookahead" src="files/data-642/graphics/13.2-faster-optimizers/regvsnest.png" /></p>
+<hr />
+<h2>4. AdaGrad</h2>
+<p>On a long thin valley, gradient descent dives down the steep walls, then creeps along the floor. AdaGrad <strong>scales down</strong> the gradient on the steep coordinates:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">s</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">s</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x02297;</mo><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mspace width="0.167em" /><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x02298;</mo><msqrt><mrow><msup><mrow><mi mathvariant="bold-italic">s</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><mi>&#x003F5;</mi></mrow></msqrt><mo>&#x0002E;</mo></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02297;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02298;</mo></mrow></math> are elementwise. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow></mrow></math> accumulates squared gradients. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003F5;</mi></mrow></math> (often <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>10</mn></mrow></msup></mrow></math>) avoids division by zero.</p>
+<p>That is an <strong>adaptive learning rate</strong>: steep directions decay faster than gentle ones. Updates point more toward the global optimum, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math> needs less tuning.</p>
+<p>On simple quadratics this works. On deep nets AdaGrad often <strong>stops too early</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow></mrow></math> grows until the effective rate is essentially zero. Do not train a deep net with it. Know it so the later adaptive methods make sense.</p>
+<p><img alt="AdaGrad correcting the path in a long valley" src="files/data-642/graphics/13.2-faster-optimizers/adagrad.png" /></p>
+<hr />
+<h2>5. RMSProp</h2>
+<p>AdaGrad remembers <strong>every</strong> squared gradient. RMSProp remembers a <strong>recent</strong> average, with exponential decay:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">s</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mi>&#x003B3;</mi><msup><mrow><mi mathvariant="bold-italic">s</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>&#x003B3;</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x02297;</mo><mo>&#x02207;</mo><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<p>and the same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> update as AdaGrad. Typical <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B3;</mi><mo>&#x0003D;</mo><mn>0.9</mn></mrow></math>.</p>
+<hr />
+<h2>6. Why not Hessians</h2>
+<p>Everything above uses <strong>first</strong> derivatives (Jacobians). Second-order methods use <strong>Hessians</strong>. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> parameters you store on the order of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>n</mi><mn>2</mn></msup></mrow></math> Hessian entries per output, versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> Jacobian entries. Deep nets have tens of thousands of parameters. The Hessian often will not fit in memory; computing it is too slow even when it does.</p>
+<hr />
+<h2>7. Learning-rate schedules</h2>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math> is too small, you will get there, late.</p>
+<p><img alt="Loss versus iteration for different learning rates" src="files/data-642/graphics/13.2-faster-optimizers/loss.png" /></p>
+<p>One hunt: start large, divide by 3 until training stops diverging. You land near a rate that learns quickly and still converges.</p>
+<p>Other schedules, with iteration <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> and a scale <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Schedule</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Power</strong></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002B;</mo><mi>k</mi><mo>&#x0002F;</mo><mi>s</mi><msup><mo stretchy="false">&#x00029;</mo><mrow><mi>c</mi></mrow></msup></mrow></math></td>
+</tr>
+<tr>
+<td><strong>Exponential</strong></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mspace width="0.167em" /><msup><mn>0.1</mn><mrow><mi>k</mi><mo>&#x0002F;</mo><mi>s</mi></mrow></msup></mrow></math></td>
+</tr>
+<tr>
+<td><strong>Piecewise constant</strong></td>
+<td>e.g. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.1</mn></mrow></math> for five epochs, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.001</mn></mrow></math> for fifty, …</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>Every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> steps, if validation error has stalled, multiply <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BB;</mi></mrow></math> (same idea as early stopping)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>If momentum uses <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B3;</mi><mo>&#x0003D;</mo><mn>0.9</mn></mrow></math>, how does terminal velocity compare to a plain gradient step of the same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math>?</p>
+</li>
+<li>
+<p>AdaGrad and RMSProp share an adaptive <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow></mrow></math>. What does RMSProp change so that training need not freeze?</p>
+</li>
+<li>
+<p>Nesterov evaluates <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math> where, relative to ordinary momentum?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

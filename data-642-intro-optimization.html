@@ -104,30 +104,37 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 2 &middot;
-                            <a href="files/data-642/intro-optimization.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 2 &middot; <a href="files/data-642/intro-optimization.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/2.1-intro-optimization.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             Cost functions, local versus global minima, convexity, and first- and second-order tests.
                         </p>
-<h2>1. The problem</h2>
-<p>Pick a set <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> (usually <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x0211D;</mi><mi>l</mi></msup></mrow></math>) and a cost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mi>:</mi><mi>S</mi><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math>. Solve</p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>.</p>
+<h2>1. Training is optimization</h2>
+<p>Training a model is finding a good <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. <strong>Good</strong> is whatever the <strong>cost</strong> (objective) <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> says it is.</p>
+<p><img alt="Training as optimization" src="files/data-642/graphics/2.1-intro-optimization/flow_chart.png" /></p>
+<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mi>:</mi><mi>S</mi><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math> and solve</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><mi>S</mi></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
-<p>Maximizing profit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> is minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>P</mi></mrow></math>. This course always writes a <strong>min</strong>.</p>
-<p>Linear regression is the first example. Model <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D431;</mi><mo>&#x0002B;</mo><mi>&#x003B5;</mi></mrow></math>. Average squared error</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>m</mi></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>y</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mn>2</mn></msup><mo>&#x0002E;</mo></mrow></math>
-<p>Each gradient step is “make the residuals smaller.”</p>
+<p>Usually <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo>&#x0003D;</mo><msup><mi>&#x0211D;</mi><mi>l</mi></msup></mrow></math>. This course always <strong>minimizes</strong>. Maximizing profit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> is minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>P</mi></mrow></math>.</p>
 <hr />
-<h2>2. Local versus global</h2>
-<p>A <strong>local</strong> minimum is lowest in a neighborhood. A <strong>global</strong> minimum is lowest on all of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>.</p>
-<p>On a mountain trail, a valley is local. Sea level in the whole range is global.</p>
+<h2>2. Linear regression</h2>
+<p>Model <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D431;</mi><mo>&#x0002B;</mo><mi>&#x003B5;</mi></mrow></math>. Fit by minimizing mean squared error on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> training rows:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>m</mi></mrow></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>y</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mn>2</mn></msup><mo>&#x0002E;</mo></mrow></math>
+<p>Each step that lowers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> shrinks residuals. Better <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> on the training set is the hope that predictions on new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D431;</mi></mrow></math> improve too. That hope is generalization; the math this week is the min.</p>
+<hr />
+<h2>3. Local versus global</h2>
+<p>A <strong>local</strong> minimum is lowest in a neighborhood: some <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B5;</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></math> such that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo fence="false" stretchy="false">&#x02016;</mo><mo>&#x0003C;</mo><mi>&#x003B5;</mi></mrow></math> implies <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>. A <strong>global</strong> minimum is lowest on all of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>.</p>
+<p>A valley on a hike is local. The lowest point in the whole range is global. Neural-net costs look like the landscape below. Many valleys. The one you land in need not be the lowest.</p>
+<p><img alt="A nonconvex cost landscape" src="files/data-642/graphics/2.1-intro-optimization/NN_cost_function.jpeg" /></p>
 <p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is <strong>convex</strong>,</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>t</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x02264;</mo><mi>t</mi><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
-<p>every local min is global. That is the property that makes Module 1 feel safe.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>t</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x02264;</mo><mi>t</mi><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>for all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003B2;</mi></mrow><mo>&#x02208;</mo><mi>S</mi></mrow></math> and all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x02208;</mo><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, then every local min is global.</p>
+<p><img alt="Convex versus nonconvex" src="files/data-642/graphics/2.1-intro-optimization/convex_vs_non.png" /></p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Convex costs (this course)</th>
+<th>Convex <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> (this course)</th>
 <th>Not convex</th>
 </tr>
 </thead>
@@ -146,11 +153,25 @@
 </tr>
 </tbody>
 </table></div>
+<p>Convex: gradient descent that reaches a local min has the global min. Nonconvex: you can stop in a valley that is not the bottom.</p>
 <hr />
-<h2>3. First- and second-order tests</h2>
+<h2>4. First- and second-order tests</h2>
 <p><strong>First-order (necessary).</strong> At a local min of a smooth unconstrained <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. The slope is flat.</p>
-<p><strong>Second-order (sufficient).</strong> If also <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo></mrow></math> is positive definite, you have a local min.</p>
-<p>A zero gradient is not enough: a saddle is flat and is not a min. The Hessian tells the two cases apart. Week 2’s algorithms either follow <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math> or invert <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math>.</p>
+<p><strong>Second-order (sufficient).</strong> If that point also has Hessian <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi><mo stretchy="false">&#x00028;</mo><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00029;</mo></mrow></math> <strong>positive definite</strong>, it is a local min.</p>
+<p>A zero gradient is not enough: a saddle is flat and is not a min. Week 2’s algorithms either follow <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math> or invert <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math>.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>When does a local minimum fail to be global?</p>
+</li>
+<li>
+<p>Why does this course write every learning problem as a <strong>min</strong>, even when the story is “maximize likelihood”?</p>
+</li>
+<li>
+<p>At a point with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>, what extra fact about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>&#x02207;</mo><mn>2</mn></msup><mi>J</mi></mrow></math> lets you call it a local min rather than a saddle?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -159,7 +180,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
             </footer>
         </div>
 

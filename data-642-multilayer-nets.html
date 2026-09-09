@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.2 Multilayer Neural Networks - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.2 Multilayer Neural Networks</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 12 &middot; <a href="files/data-642/multilayer-nets.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/12.2-multilayer-nets.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Hidden layers and a composition of linear maps and nonlinearities.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; Theodoridis; and 3blue1brown.</p>
+<h2>1. A multi-layer net</h2>
+<p>A <strong>multi-layer perceptron</strong> stacks dense layers. Below: pixels of a digit flatten to an input vector, then hidden layers, then class scores.</p>
+<p><img alt="Feed-forward net for a handwritten digit" src="files/data-642/graphics/12.2-multilayer-nets/neural_net_Perceptron.png" /></p>
+<hr />
+<h2>2. What the layers are doing</h2>
+<p>Think of a deep net as <strong>multistage distillation</strong>: each layer filters the previous representation; what remains is more useful for the task.</p>
+<p><img alt="Successive layers as a distillation pipeline" src="files/data-642/graphics/12.2-multilayer-nets/deep2.png" /></p>
+<hr />
+<h2>3. Linear-algebra notation</h2>
+<p>Weights, activations, and the next layer line up as matrix–vector products. The picture is the notation you will write.</p>
+<p><img alt="Matrix notation for a layer" src="files/data-642/graphics/12.2-multilayer-nets/notation1.png" /></p>
+<hr />
+<h2>4. Mathematics of a layer</h2>
+<p><strong>Linear map.</strong> Neuron <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>l</mi></mrow></math> does not see raw <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> after the first layer. It sees the previous activations <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">W</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">b</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> is the pre-activation, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">W</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> the weight matrix, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">b</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> the bias.</p>
+<p><strong>Activation.</strong> Elementwise nonlinearity:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mi>&#x003C3;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>, stacked layers collapse to one linear map. The nonlinearity is what a hidden layer is for.</p>
+<hr />
+<h2>5. Activation functions</h2>
+<p>Common choices: <strong>sigmoid</strong>, <strong>tanh</strong>, <strong>ReLU</strong>, <strong>softmax</strong>. Applied elementwise after the linear map (softmax on the output for mutually exclusive classes).</p>
+<p><img alt="Common activation functions" src="files/data-642/graphics/12.2-multilayer-nets/activation_functions.png" /></p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>Write the forward pass of a two-layer net in one line of matrix products.</p>
+</li>
+<li>
+<p>If you drop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> from every hidden layer, what class of functions can the net represent?</p>
+</li>
+<li>
+<p>In <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">W</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">b</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>l</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>, what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

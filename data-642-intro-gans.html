@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>15.1 Introduction to GANs - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">15.1 Introduction to GANs</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 15 &middot; <a href="files/data-642/intro-gans.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/15.1-intro-gans.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            A generator and a discriminator playing a two-player game.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; and Theodoridis, <em>Machine Learning: A Bayesian and Optimization Perspective</em>.</p>
+<h2>1. Generative adversarial networks</h2>
+<p><strong>Generative adversarial networks</strong> (GANs) are from Goodfellow et al., 2014. The idea caught on immediately; stable training took years.</p>
+<p>A GAN is two neural nets.</p>
+<p><img alt="Generator from noise; discriminator guesses fake versus real" src="files/data-642/graphics/15.1-intro-gans/GAN.png" /></p>
+<hr />
+<h2>2. Applications</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Sketch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Image generation and editing</td>
+<td>Faces, objects, landscapes; inpainting missing patches.</td>
+</tr>
+<tr>
+<td>Data augmentation</td>
+<td>Extra synthetic rows when labels are expensive.</td>
+</tr>
+<tr>
+<td>Text-to-image</td>
+<td>A sentence in, a matching scene out.</td>
+</tr>
+<tr>
+<td>Style transfer</td>
+<td>Copy the look of one image onto another.</td>
+</tr>
+<tr>
+<td>Molecular generation</td>
+<td>New drug-like or materials structures.</td>
+</tr>
+<tr>
+<td>Anomaly detection</td>
+<td>Train on normal data; flag points far from that law.</td>
+</tr>
+<tr>
+<td>Domain adaptation</td>
+<td>Map a source domain onto a target domain and keep the meaning.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>3. Generator</h2>
+<p>The <strong>generator</strong> takes a random draw (usually Gaussian) and emits a sample, often an image.</p>
+<p>Treat that draw as a <strong>latent coding</strong>. Functionally this is the decoder of a VAE: Gaussian noise in, a new image out. The training rule is different.</p>
+<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> for the noise and</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0003D;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>for a fake sample with the same dimension as a real observation <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>N</mi></mrow></math>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></math> are the generator weights. Training aims to make the fakes statistically indistinguishable from the reals.</p>
+<hr />
+<h2>4. Discriminator</h2>
+<p>The <strong>discriminator</strong> sees either a fake from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> or a real training image, and guesses which. It is a binary classifier. On input <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> it returns</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>y</mi><mo>&#x0003D;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>the probability that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> is real. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is the probability it is fake. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></math> are the discriminator weights.</p>
+<hr />
+<h2>5. Training</h2>
+<p>Opposite goals. The discriminator wants to tell fakes from reals. The generator wants fakes that fool the discriminator. You cannot train this as one ordinary net. Each iteration has two phases.</p>
+<ol>
+<li><strong>Train the discriminator.</strong> A batch of reals, plus as many fakes from the current generator. Labels: 0 fake, 1 real. One binary-cross-entropy step. Backprop updates <strong>only</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></math>.</li>
+<li><strong>Train the generator.</strong> A fresh batch of fakes. No reals. Every label is 1 (real): you want the discriminator to be <em>wrong</em>. Freeze <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></math>; backprop updates <strong>only</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></math>.</li>
+</ol>
+<hr />
+<h2>6. The cost function</h2>
+<p>A two-player min-max game:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>min</mo><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></msub><msub><mo>max</mo><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mi>&#x1D53C;</mi><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x0007E;</mi><msub><mi>p</mi><mi>r</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><mi>ln</mi><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>&#x0002B;</mo><msub><mi>&#x1D53C;</mi><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>&#x0007E;</mi><msub><mi>p</mi><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><mi>ln</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo stretchy="false">&#x00029;</mo><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>&#x0002E;</mo></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mi>r</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is the real-data law. With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></math> held fixed, the discriminator is trained so that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is large on reals and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo stretchy="false">&#x00029;</mo><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is large on fakes.</p>
+<hr />
+<h2>7. Algorithm</h2>
+<p>Initialize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup></mrow></math>. Minibatch size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math>. Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> be the number of discriminator steps per generator step (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> in the original paper).</p>
+<p>While <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></math> have not converged:</p>
+<ul>
+<li>For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>m</mi></mrow></math>:</li>
+<li>Sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>K</mi></mrow></math>, from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>.</li>
+<li>Sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>K</mi></mrow></math>, from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mrow><mi>r</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>.</li>
+<li>Ascend on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></math> using</li>
+</ul>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>&#x02207;</mo><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub></mrow></msub><mrow><mo stretchy="true" fence="true" form="prefix">&#x0007B;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>K</mi></mrow></mfrac><msubsup><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>K</mi></msubsup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>ln</mi><mi>D</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>ln</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo stretchy="false">&#x00029;</mo><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo stretchy="true" fence="true" form="postfix">&#x0007D;</mo></mrow><mo>&#x0002E;</mo></mrow></math>
+<ul>
+<li>Then sample a new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>K</mi></mrow></math>, from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> and <strong>descend</strong> on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></math> using</li>
+</ul>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>&#x02207;</mo><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></msub><mrow><mo stretchy="true" fence="true" form="prefix">&#x0007B;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>K</mi></mrow></mfrac><msubsup><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>K</mi></msubsup><mi>ln</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo stretchy="false">&#x00029;</mo><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo stretchy="true" fence="true" form="postfix">&#x0007D;</mo></mrow><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>What two networks are playing the GAN game, and what does each want?</p>
+</li>
+<li>
+<p>In the generator step, why are all labels set to 1 (real), and which weights stay frozen?</p>
+</li>
+<li>
+<p>With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub></mrow></math> held fixed, what is the discriminator maximizing on real <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> and on fake <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

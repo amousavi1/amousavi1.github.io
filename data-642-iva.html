@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.3 Independent Vector Analysis - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.3 Independent Vector Analysis</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 7 &middot; <a href="files/data-642/iva.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/7.3-iva.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Independent components that stay aligned across datasets.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow <em>Diversity in Independent Component and Vector Analyses</em> and Anderson, <em>Development of ICA and IVA Algorithms</em>.</p>
+<h2>1. Latent variable methods</h2>
+<p>For matrix factorization, write observations <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>P</mi><mo>&#x000D7;</mo><mi>V</mi></mrow></msup></mrow></math> as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x0003D;</mo><mi>&#x1D401;</mi><mi>&#x1D402;</mi></mrow></math>, with latent matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D402;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>M</mi><mo>&#x000D7;</mo><mi>V</mi></mrow></msup></mrow></math>.</p>
+<p><img alt="Blind source separation as a factorization" src="files/data-642/graphics/7.3-iva/BlindSourceSeparation.png" /></p>
+<p>A typical cost:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>min</mo><mrow><mi>&#x1D401;</mi><mo>&#x0002C;</mo><mi>&#x1D402;</mi></mrow></msub><mo fence="false" stretchy="false">&#x02016;</mo><mi>&#x1D417;</mi><mo>&#x02212;</mo><mi>&#x1D401;</mi><mi>&#x1D402;</mi><msubsup><mo fence="false" stretchy="false">&#x02016;</mo><mi>p</mi><mn>2</mn></msubsup><mo>&#x0002B;</mo><msub><mi>&#x003BB;</mi><mn>1</mn></msub><munderover><mo>&#x02211;</mo><mrow><mi>m</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>M</mi></munderover><mi>h</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x1D41B;</mi><mi>m</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><msub><mi>&#x003BB;</mi><mn>2</mn></msub><munderover><mo>&#x02211;</mo><mrow><mi>v</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>V</mi></munderover><mi>g</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x1D41C;</mi><mi>v</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>2. Independent component analysis (ICA)</h2>
+<p>ICA (1980s–90s) separates a multivariate signal into sources. Hérault and Jutten, 1985.</p>
+<p>The <strong>cocktail party</strong> picture: several people talk at once; several microphones hear mixtures; recover each voice.</p>
+<p><img alt="Cocktail party and ICA" src="files/data-642/graphics/7.3-iva/ICA.png" /></p>
+<p>The model:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D431;</mi><mo>&#x0003D;</mo><mi>&#x1D400;</mi><mi>&#x1D42C;</mi><mo>&#x0002C;</mo></mrow></math>
+<p>with observations <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D431;</mi></mrow></math> and latent sources <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D42C;</mi></mrow></math> mixed by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D400;</mi></mrow></math>.</p>
+<p><img alt="ICA mixing model" src="files/data-642/graphics/7.3-iva/ICA_matrix.png" /></p>
+<p>ICA can identify the sources up to <strong>scale</strong> and <strong>permutation</strong> if the sources are <strong>statistically independent</strong>.</p>
+<hr />
+<h2>3. The ICA objective</h2>
+<p>One ICA objective is <strong>mutual information</strong> among the estimated sources: the KL distance between the joint source density and the product of the marginals. With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mrow><mi>&#x1D42C;</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D416;</mi><mi>&#x1D431;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mi>p</mi><mrow><mi>&#x1D431;</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D431;</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mo stretchy="false">&#x0007C;</mo><mo movablelimits="true">det</mo><mo stretchy="false">&#x00028;</mo><mi>&#x1D416;</mi><mo stretchy="false">&#x00029;</mo><msup><mo stretchy="false">&#x0007C;</mo><mrow><mo>&#x02212;</mo><mn>1</mn></mrow></msup></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><msub><mi>J</mi><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">C</mi><mi mathvariant="normal">A</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D416;</mi><mo stretchy="false">&#x00029;</mo><mi>&</mi><mo>&#x0003D;</mo><mi>&#x1D53C;</mi><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">\{</mo><mo>&#x02212;</mo><mi>log</mi><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">[</mo><mfrac><mrow><msub><mi>p</mi><mrow><msub><mi>s</mi><mn>1</mn></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>p</mi><mrow><msub><mi>s</mi><mn>2</mn></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x022EF;</mo><msub><mi>p</mi><mrow><msub><mi>s</mi><mi>N</mi></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>N</mi></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>p</mi><mrow><msub><mi>s</mi><mn>1</mn></msub><msub><mi>s</mi><mn>2</mn></msub><mo>&#x02026;</mo><msub><mi>s</mi><mi>N</mi></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>y</mi><mn>2</mn></msub><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><msub><mi>y</mi><mi>N</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">]</mo><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">\}</mo><mspace linebreak="newline" /><mi>&</mi><mo>&#x0003D;</mo><mi>&#x1D53C;</mi><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">\{</mo><mo>&#x02212;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mi>log</mi><msub><mi>p</mi><mrow><msub><mi>s</mi><mi>n</mi></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">\}</mo><mo>&#x0002B;</mo><mi>&#x1D53C;</mi><mo stretchy="false">&#x0007B;</mo><mi>log</mi><msub><mi>p</mi><mrow><mi>&#x1D42C;</mi></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D432;</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x0007D;</mo><mspace linebreak="newline" /><mi>&</mi><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mi>H</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>H</mi><mo stretchy="false">&#x00028;</mo><mi>&#x1D432;</mi><mo stretchy="false">&#x00029;</mo><mspace linebreak="newline" /><mi>&</mi><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mi>H</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>log</mi><mo stretchy="false">&#x0007C;</mo><mo movablelimits="true">det</mo><mo stretchy="false">&#x00028;</mo><mi>&#x1D416;</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x0007C;</mo><mo>&#x02212;</mo><mi>H</mi><mo stretchy="false">&#x00028;</mo><mi>&#x1D431;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo stretchy="false">&#x00028;</mo><mi>&#x1D431;</mi><mo stretchy="false">&#x00029;</mo></mrow></math> are the differential entropies of the source estimates and of the mixtures.</p>
+<hr />
+<h2>4. ICA algorithms</h2>
+<p>The <strong>score function</strong> can be estimated in three styles.</p>
+<p><strong>Parametric.</strong> <strong>FastICA</strong>, <strong>EFICA</strong>, <strong>Infomax</strong>. A fixed nonlinearity or a fixed source density. Cheap. Separation suffers when the true sources are far from that model.</p>
+<p><strong>Nonparametric.</strong> <strong>RADICAL</strong> uses entropy estimates. Parameter choices are awkward. Cost grows with sample size.</p>
+<p><strong>Semi-parametric.</strong> <strong>ICA-EBM</strong> and <strong>ICA-EMK</strong>. Flexible density matching via measuring functions from the maximum-entropy principle. Broad PDFs; sometimes expensive.</p>
+<hr />
+<h2>5. Independent vector analysis (IVA)</h2>
+<p>In practice you often have <strong>several</strong> data sets that depend on one another.</p>
+<p><img alt="IVA model across data sets" src="files/data-642/graphics/7.3-iva/IVA_model.png" /></p>
+<p>IVA uses a <strong>source component vector (SCV)</strong>: the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>th source from each of the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> data sets, stacked,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x1D42C;</mi><mi>n</mi></msub><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><msubsup><mi>s</mi><mi>n</mi><mrow><mo stretchy="false">[</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></msubsup><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><msubsup><mi>s</mi><mi>n</mi><mrow><mo stretchy="false">[</mo><mi>K</mi><mo stretchy="false">]</mo></mrow></msubsup><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002C;</mo></mrow></math>
+<p>a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math>-dimensional random vector.</p>
+<p><strong>Goal.</strong> Estimate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> demixing matrices so that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D432;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo>&#x0003D;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup></mrow></math> and each SCV is <strong>maximally independent</strong> of the other SCVs.</p>
+<p>The noiseless model, i.i.d. samples, is ICA repeated <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> times,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo>&#x0003D;</mo><msup><mi>&#x1D400;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo>&#x0002C;</mo><mspace width="2em" /><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo></mrow></math>
+<p>with invertible <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D400;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo>&#x0003D;</mo><mo stretchy="false">[</mo><msubsup><mi>s</mi><mn>1</mn><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msubsup><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><msubsup><mi>s</mi><mi>N</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msubsup><msup><mo stretchy="false">]</mo><mrow><mo>&#x022A4;</mo></mrow></msup></mrow></math>. Within each <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup></mrow></math> the components are <strong>independent</strong>. Across data sets, <strong>corresponding</strong> components of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup></mrow></math> may <strong>depend</strong>.</p>
+<hr />
+<h2>6. The IVA objective</h2>
+<p>Maximum likelihood again, but the parameter is a set of demixing matrices <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></msup><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>K</mi><mo stretchy="false">]</mo></mrow></msup></mrow></math>, packed as a three-way array <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4B2;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi><mo>&#x000D7;</mo><mi>K</mi></mrow></msup></mrow></math>. Mutual information:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>J</mi><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">V</mi><mi mathvariant="normal">A</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D4B2;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mi>H</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x1D432;</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><munderover><mo>&#x02211;</mo><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>K</mi></munderover><mi>log</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">|</mo><mo movablelimits="true">det</mo><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">|</mo><mo>&#x02212;</mo><mi>H</mi><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">[</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></msup><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">[</mo><mi>K</mi><mo stretchy="false">]</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x1D432;</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is the entropy of the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>th SCV. The last term is constant.</p>
+<hr />
+<h2>7. Gradient and updates</h2>
+<p>Differentiating in each demixing matrix, as in ICA,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><msub><mi>J</mi><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">V</mi><mi mathvariant="normal">A</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D4B2;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mo>&#x02202;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup></mrow></mfrac><mo>&#x0003D;</mo><mi>&#x1D53C;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">\{</mo><msup><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D431;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><msup><mo stretchy="false">&#x00029;</mo><mrow><mo>&#x022A4;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">\}</mo><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><msup><mo stretchy="false">&#x00029;</mo><mrow><mo>&#x02212;</mo><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002C;</mo></mrow></math>
+<p>with</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><mo>&#x0003D;</mo><mo>&#x02212;</mo><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">[</mo><mfrac><mrow><mo>&#x02202;</mo><mi>log</mi><msub><mi>p</mi><mrow><msub><mi>s</mi><mn>1</mn></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><mo>&#x02202;</mo><msubsup><mi>y</mi><mn>1</mn><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msubsup></mrow></mfrac><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mfrac><mrow><mo>&#x02202;</mo><mi>log</mi><msub><mi>p</mi><mrow><msub><mi>s</mi><mi>N</mi></msub></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>N</mi></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><mo>&#x02202;</mo><msubsup><mi>y</mi><mi>N</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msubsup></mrow></mfrac><msup><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">]</mo><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>Each of the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> matrices steps by</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><msup><mo stretchy="false">&#x00029;</mo><mrow><mrow><mi mathvariant="normal">n</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">w</mi></mrow></mrow></msup><mo>&#x02190;</mo><mo stretchy="false">&#x00028;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup><msup><mo stretchy="false">&#x00029;</mo><mrow><mrow><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">d</mi></mrow></mrow></msup><mo>&#x02212;</mo><mi>&#x003B3;</mi><mfrac><mrow><mo>&#x02202;</mo><msub><mi>J</mi><mrow><mrow><mi mathvariant="normal">I</mi><mi mathvariant="normal">V</mi><mi mathvariant="normal">A</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>&#x1D4B2;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mo>&#x02202;</mo><msup><mi>&#x1D416;</mi><mrow><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></msup></mrow></mfrac><mo>&#x0002C;</mo></mrow></math>
+<p>with step size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B3;</mi></mrow></math>.</p>
+<hr />
+<h2>8. IVA algorithms</h2>
+<p>Most IVA methods estimate the score <strong>parametrically</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Assumption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IVA-L</strong> (Laplacian)</td>
+<td>Higher-order statistics; Laplacian SCVs</td>
+</tr>
+<tr>
+<td><strong>IVA-G</strong> (Gaussian)</td>
+<td>Linear dependence only, no HOS; Gaussian sources. Gradient simplifies; Hessian positive definite; Newton-type updates become practical</td>
+</tr>
+<tr>
+<td><strong>IVA-GGD</strong> / <strong>IVA-A-GGD</strong></td>
+<td>Second- and higher-order statistics; multivariate generalized Gaussian. Gaussian and Laplacian are special cases</td>
+</tr>
+<tr>
+<td><strong>IVA-M-EMK</strong></td>
+<td>Multivariate entropy maximization with kernels, when the matching multidimensional PDF matters. Can be cheaper as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> grow</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>What extra assumption does IVA add on top of ICA?</p>
+</li>
+<li>
+<p>ICA identifies sources only up to two ambiguities. What are they, and what statistical assumption buys uniqueness?</p>
+</li>
+<li>
+<p>What is a <strong>source component vector</strong>, and what does IVA want of distinct SCVs?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

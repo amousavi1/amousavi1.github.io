@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.3 LASSO - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.3 LASSO</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 4 &middot; <a href="files/data-642/lasso.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/4.3-lasso.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            An L1 penalty that can zero out coordinates.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>, and Theodoridis, <em>Machine Learning: A Bayesian and Optimization Perspective</em>.</p>
+<h2>1. LASSO</h2>
+<p>Ridge’s penalty <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BB;</mi><msub><mo>&#x02211;</mo><mrow><mi>j</mi></mrow></msub><msubsup><mi>&#x003B8;</mi><mi>j</mi><mn>2</mn></msubsup></mrow></math> shrinks every coefficient toward zero but <strong>never sets one exactly to zero</strong>. That is not <strong>sparsity</strong>.</p>
+<p><strong>LASSO</strong> (least absolute shrinkage and selection operator) uses an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> penalty instead:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">(</mo><msub><mi>y</mi><mi>n</mi></msub><mo>&#x02212;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo>&#x02212;</mo><munderover><mo>&#x02211;</mo><mrow><mi>j</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>l</mi></munderover><msub><mi>&#x003B8;</mi><mi>j</mi></msub><msub><mi>x</mi><mi>j</mi></msub><msup><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">)</mo><mn>2</mn></msup><mo>&#x0002B;</mo><mi>&#x003BB;</mi><munderover><mo>&#x02211;</mo><mrow><mi>j</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>l</mi></munderover><mo stretchy="false">&#x0007C;</mo><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo stretchy="false">&#x0007C;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mo>&#x02211;</mo><mrow><mi>j</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>l</mi></msubsup><mo stretchy="false">&#x0007C;</mo><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo stretchy="false">&#x0007C;</mo></mrow></math> is the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math>-norm of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><msub><mi>&#x003B8;</mi><mi>l</mi></msub><msup><mo stretchy="false">&#x00029;</mo><mo>&#x022A4;</mo></msup></mrow></math>.</p>
+<hr />
+<h2>2. Geometry</h2>
+<p><img alt="LASSO geometry: ellipse and diamond" src="files/data-642/graphics/4.3-lasso/lasso.png" /></p>
+<p>The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> constraint is a <strong>diamond</strong>. As <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>l</mi></mrow></math> grows, that diamond has more corners, so some coefficients land on an axis and become <strong>zero</strong>. LASSO therefore shrinks <strong>and</strong> does subset selection.</p>
+<hr />
+<h2>3. The objective</h2>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn><mi>N</mi></mrow></mfrac><mo fence="false" stretchy="false">&#x02016;</mo><mi>&#x1D432;</mi><mo>&#x02212;</mo><mi>&#x1D417;</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><msubsup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn><mn>2</mn></msubsup><mo>&#x0002B;</mo><mi>&#x003BB;</mi><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><msub><mo fence="false" stretchy="false">&#x02016;</mo><mn>1</mn></msub><mo>&#x0002E;</mo></mrow></math>
+<p>Squared error plus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math>. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> term is <strong>not differentiable</strong> at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, so ordinary gradients are not enough.</p>
+<p>A <strong>subgradient</strong> generalizes the gradient. One subgradient of this <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>g</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mi>&#x003BB;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><msup><mi>&#x1D417;</mi><mo>&#x022A4;</mo></msup><mo stretchy="false">&#x00028;</mo><mi>&#x1D432;</mi><mo>&#x02212;</mo><mi>&#x1D417;</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>&#x003BB;</mi><mo>&#x0005B;</mo><mtable><mtr><mtd><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mtd></mtr><mtr><mtd><mo>&#x022EE;</mo></mtd></mtr><mtr><mtd><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>with</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mo stretchy="true" fence="true" form="prefix">&#x0007B;</mo><mtable><mtr><mtd columnalign="left"><mo>&#x02212;</mo><mn>1</mn></mtd><mtd columnalign="left"><mtext>if&#x000A0;</mtext><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x0003C;</mo><mn>0</mn><mo>&#x0002C;</mo></mtd></mtr><mtr><mtd columnalign="left"><mtext>any&#x000A0;value&#x000A0;in&#x000A0;</mtext><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mtd><mtd columnalign="left"><mtext>if&#x000A0;</mtext><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002C;</mo></mtd></mtr><mtr><mtd columnalign="left"><mn>1</mn></mtd><mtd columnalign="left"><mtext>if&#x000A0;</mtext><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x0003E;</mo><mn>0</mn><mo>&#x0002E;</mo></mtd></mtr></mtable></mrow></mrow></math>
+<p>Subgradient descent (or a cousin) iterates until <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> settles.</p>
+<hr />
+<h2>4. Comments</h2>
+<ol>
+<li>LASSO does <strong>variance reduction</strong>, gives accurate predictions, and is built for <strong>variable selection</strong>.</li>
+<li>A little regularization is usually wise. Ridge is a safe default. Prefer LASSO if you believe <strong>only a few</strong> features matter.</li>
+<li>If the columns of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi></mrow></math> are <strong>orthonormal</strong>, LASSO has the closed form</li>
+</ol>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mover accent="true"><mrow><mi>&#x003B8;</mi></mrow><mo>&#x0005E;</mo></mover><mi>j</mi></msub><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mover accent="true"><mrow><mi>&#x003B8;</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">S</mi></mrow></mrow></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mo stretchy="false">&#x0007C;</mo><msub><mover accent="true"><mrow><mi>&#x003B8;</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">S</mi></mrow></mrow></msub><mo stretchy="false">&#x0007C;</mo><mo>&#x02212;</mo><mi>&#x003BB;</mi><mo>&#x0002F;</mo><mn>2</mn><msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002B;</mo></msub><mo>&#x0002E;</mo></mrow></math>
+<p>That is <strong>soft thresholding</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mo>&#x000B7;</mo><msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo></msub></mrow></math> is the positive part (the argument if it is nonnegative, otherwise zero).
+4. In the same orthonormal case, ridge is a uniform shrink: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mi>R</mi></msub><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>1</mn><mo>&#x0002B;</mo><mi>&#x003BB;</mi></mrow></mfrac><msub><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mrow><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">S</mi></mrow></mrow></msub></mrow></math>.</p>
+<hr />
+<h2>5. Computational complexity</h2>
+<p>A closed form exists only in special cases (orthonormal columns). Otherwise use (sub)gradient descent, especially when there are many features or too many rows for memory.</p>
+<p>Soft thresholding is one solver. Another is to approximate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> by a family of smooth quadratics,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>lim</mo><mrow><mi>&#x003F5;</mi><mo>&#x02192;</mo><mn>0</mn></mrow></msub><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>0</mn></mrow><mi>l</mi></munderover><msqrt><mrow><msubsup><mi>&#x003B8;</mi><mi>i</mi><mn>2</mn></msubsup><mo>&#x0002B;</mo><mi>&#x003F5;</mi></mrow></msqrt><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>What does soft thresholding do to a coordinate of the LASSO?</p>
+</li>
+<li>
+<p>Why is the LASSO objective not differentiable at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math>?</p>
+</li>
+<li>
+<p>When would you prefer LASSO to ridge?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

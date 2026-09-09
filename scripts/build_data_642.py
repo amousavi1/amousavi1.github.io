@@ -16,8 +16,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-09T09:45:00-04:00"
-LAST_UPDATED_TEXT = "September 9, 2026, 9:45 AM EDT"
+LAST_UPDATED_ISO = "2026-09-09T10:20:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 10:20 AM EDT"
 
 COURSE = "data-642"
 COURSE_TITLE = "DATA 442/642"
@@ -173,7 +173,7 @@ def write_hub() -> pathlib.Path:
                 slides_href = (
                     f"files/{COURSE}/slides/{slide}.pdf" if slide_path and slide_path.exists() else None
                 )
-                if notes_md.exists() and notes_page.exists() and slides_href and week == 1:
+                if notes_md.exists() and notes_page.exists() and slides_href:
                     items.append(
                         _material_item(
                             note["title"],

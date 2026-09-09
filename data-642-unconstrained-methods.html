@@ -104,34 +104,83 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 2 &middot;
-                            <a href="files/data-642/unconstrained-methods.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 2 &middot; <a href="files/data-642/unconstrained-methods.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/2.2-unconstrained-methods.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             Line search, steepest descent, momentum, and SGD.
                         </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>.</p>
 <h2>1. Line search</h2>
+<p>Draw <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>, predict <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mrow><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi></mrow></mrow></msub></mrow></math>, score the mismatch with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>, take the gradient, and step <strong>against</strong> it.</p>
+<p><img alt="Gradient step" src="files/data-642/graphics/2.2-unconstrained-methods/grad_desc.png" /></p>
 <p>Almost every method in this note is</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002E;</mo></mrow></math>
 <ol>
 <li>Pick a <strong>direction</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>.</li>
-<li>Pick a <strong>step</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> (learning rate) so that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> decreases along that ray.</li>
+<li>Pick a <strong>step</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> (learning rate) that lowers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><mi>&#x003B1;</mi><msup><mi>&#x1D42C;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="false">&#x00029;</mo></mrow></math> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B1;</mi></mrow></math>.</li>
 <li>Take the step.</li>
 </ol>
-<p>A direction is a <strong>descent</strong> direction when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mo>&#x022A4;</mo></msup><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003C;</mo><mn>0</mn></mrow></math>. Steepest descent uses <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D42C;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math>.</p>
+<p>A direction is a <strong>descent</strong> direction when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mo>&#x022A4;</mo></msup><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003C;</mo><mn>0</mn></mrow></math>. <strong>Steepest descent</strong> (gradient descent) uses <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D42C;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math>.</p>
+<p><img alt="Following the negative gradient" src="files/data-642/graphics/2.2-unconstrained-methods/NN_cost_function.jpeg" /></p>
 <hr />
 <h2>2. Why steepest descent zigzags</h2>
-<p>On a quadratic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D410;</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D410;</mi></mrow></math> SPD, the contours are ellipses. The axis ratio is the <strong>condition number</strong> of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D410;</mi></mrow></math> (largest over smallest eigenvalue). A long thin valley makes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math> point into the walls. Exact line search still hops. That is not a bug in your code. It is the geometry.</p>
+<p>Steepest descent can be slow. The step length matters, and the <strong>asymptotic</strong> rate is worse than Newton-type methods. On a long thin valley the problem is <strong>poorly conditioned</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math> points into the walls, almost orthogonal to the short path to the min. Exact line search still hops.</p>
+<p><img alt="Well-conditioned versus poorly conditioned contours" src="files/data-642/graphics/2.2-unconstrained-methods/convergence_conditions.png" /></p>
+<p>See it on a quadratic. Let</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D410;</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><mi>C</mi></mrow></math>
+<p>with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D410;</mi></mrow></math> symmetric positive definite. Diagonalize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D410;</mi><mo>&#x0003D;</mo><mi>&#x1D414;</mi><mrow><mi mathvariant="bold-italic">&#x0039B;</mi></mrow><msup><mi>&#x1D414;</mi><mo>&#x022A4;</mo></msup></mrow></math>. In coordinates <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D433;</mi><mo>&#x0003D;</mo><msup><mi>&#x1D414;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>, minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is the same as minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x02211;</mo><mi>i</mi></msub><msub><mi>&#x003BB;</mi><mi>i</mi></msub><msubsup><mi>z</mi><mi>i</mi><mn>2</mn></msubsup></mrow></math>. In two dimensions the contours are ellipses</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x003BB;</mi><mn>1</mn></msub><msubsup><mi>z</mi><mn>1</mn><mn>2</mn></msubsup><mo>&#x0002B;</mo><msub><mi>&#x003BB;</mi><mn>2</mn></msub><msubsup><mi>z</mi><mn>2</mn><mn>2</mn></msubsup><mo>&#x0003D;</mo><mi>c</mi><mo>&#x0002E;</mo></mrow></math>
+<p>The axis ratio is the <strong>condition number</strong> of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D410;</mi></mrow></math> (largest over smallest eigenvalue). Large condition number: a long thin valley, tiny progress.</p>
+<p><img alt="Slow zigzag on a poorly scaled bowl" src="files/data-642/graphics/2.2-unconstrained-methods/slow_convergence.png" /></p>
 <hr />
 <h2>3. Momentum</h2>
-<p>Remember the last step and refuse to turn on a dime:</p>
+<p>Remember the last step and refuse to turn on a dime (Rumelhart et al., 1986):</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x0002B;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02207;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>&#x003B2;</mi><mi>&#x00394;</mi><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002C;</mo></mrow></math>
-<p>with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi><mo>&#x02208;</mo><mo stretchy="false">[</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>. A heavy ball in a valley: oscillations damp, progress along the floor improves. Noisy gradients (SGD) benefit because the memory averages them.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x00394;</mi><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mi>&#x003B2;</mi><mi>&#x00394;</mi><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02212;</mo><msup><mi>&#x003B1;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x02207;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>k</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi><mo>&#x02208;</mo><mo stretchy="false">[</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>. A <strong>heavy ball</strong> in a valley: oscillations damp, progress along the floor improves. Noisy gradients benefit because the memory averages them. Stochastic approximations of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math> are the usual case, not a special case.</p>
 <hr />
 <h2>4. SGD and mini-batches</h2>
-<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo>&#x0003D;</mo><msub><mo>&#x02211;</mo><mi>i</mi></msub><msub><mi>j</mi><mi>i</mi></msub></mrow></math>, <strong>batch</strong> GD uses <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math> (all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>). <strong>SGD</strong> uses one <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>j</mi><mi>i</mi></msub></mrow></math> (or a random subset). <strong>Mini-batch</strong> sits in between (Lab 2 uses size 20).</p>
-<p>SGD is cheaper per step and noisier. The noise is sometimes useful: it keeps you from sitting in a sharp hole. The path in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>-space looks like a drunk walk toward the bowl, not a straight slide.</p>
-<p>Lab 2 asks you to draw those three paths on linear-looking data and to say which one arrives.</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mo>&#x0003D;</mo><msubsup><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></msubsup><msub><mi>J</mi><mi>n</mi></msub></mrow></math>, <strong>batch</strong> gradient descent uses the full sum. That is expensive when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> is large and there is no closed form for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math>.</p>
+<p><strong>SGD</strong> uses one term (or a random subset) as a noisy stand-in for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math>. With a decaying step size, SGD converges almost surely to a local min under mild assumptions.</p>
+<p><strong>Mini-batch</strong> gradient descent sits in between: a random subset, not one row and not all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>. Still an unbiased estimate of the true gradient. Cheaper than batch, less noisy than one-row SGD.</p>
+<p><img alt="Batch, SGD, and mini-batch paths" src="files/data-642/graphics/2.2-unconstrained-methods/Stochastic_mini_batch.png" /></p>
+<p>Why accept an approximate gradient?</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Mini-batch</th>
+<th>What you buy</th>
+<th>What you pay</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Large</td>
+<td>Accurate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>J</mi></mrow></math>, stable steps, fast matrix kernels</td>
+<td>Each step is expensive; easy to sit in a sharp hole</td>
+</tr>
+<tr>
+<td>Small</td>
+<td>Cheap steps; noise can leave a bad local min; often enough for generalization</td>
+<td>Higher variance in the updates</td>
+</tr>
+</tbody>
+</table></div>
+<p>Memory and wall-clock are the practical reasons. Mini-batch size is a sample size for an empirical mean.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>What does a large condition number do to steepest descent?</p>
+</li>
+<li>
+<p>Write the descent test <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D42C;</mi><mo>&#x022A4;</mo></msup><mo>&#x02207;</mo><mi>J</mi><mo>&#x0003C;</mo><mn>0</mn></mrow></math> in words. Why does <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D42C;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>J</mi></mrow></math> pass it whenever you are not already at a critical point?</p>
+</li>
+<li>
+<p>Name one reason to prefer a small mini-batch over a large one, and one reason for the opposite.</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -140,7 +189,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
             </footer>
         </div>
 

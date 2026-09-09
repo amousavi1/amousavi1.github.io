@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>13.3 Hyperparameters - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">13.3 Hyperparameters</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 13 &middot; <a href="files/data-642/hyperparameters.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/13.3-hyperparameters.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            What you tune, and how you choose it.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; and Theodoridis.</p>
+<h2>1. Number of hidden layers</h2>
+<p>Many problems work with <strong>one or two</strong> hidden layers. MNIST: a few hundred neurons in one hidden layer can pass 97%; two hidden layers with the same total neuron count can pass 98%, in about the same training time.</p>
+<p>For harder tasks, add layers until the training set starts to <strong>overfit</strong>. Large image classification and speech often want dozens of layers (sometimes hundreds), not fully connected, and a lot of data.</p>
+<p>You rarely train those from scratch. <strong>Reuse</strong> part of a pretrained net for a similar task: faster, less data.</p>
+<hr />
+<h2>2. Neurons per hidden layer</h2>
+<p>Input and output sizes are fixed by the task. MNIST: <strong>784</strong> inputs, <strong>10</strong> outputs.</p>
+<p>Hidden widths used to be a <strong>pyramid</strong> (fewer neurons as you go up: many low-level features collapse into fewer high-level ones). That fashion has faded.</p>
+<p>As with depth, grow width until you overfit. You usually get more from <strong>another layer</strong> than from more neurons in the layers you already have. There is still no closed-form “right” width.</p>
+<p>A simpler move: pick <strong>more</strong> layers and neurons than you need, then <strong>early stopping</strong> (and dropout, and other regularizers) to shrink the effective model. <strong>Stretch pants</strong>: do not hunt for a perfect size; start large and let the regularizer take them in.</p>
+<hr />
+<h2>3. Learning rate, batch size, and the rest</h2>
+<p><strong>Learning rate</strong> is the hyperparameter that most often makes or breaks training. A useful target is about <strong>half</strong> the largest rate that still diverges. Hunt: start too large, divide by 3 until divergence stops.</p>
+<p>Use a better optimizer than plain mini-batch GD, and tune <em>its</em> hyperparameters too.</p>
+<p><strong>Batch size</strong> changes both quality and wall time. Typical good sizes are <strong>under 32</strong>. Larger batches give a cleaner gradient, but the landscape is messy enough that this often does not help. Sizes <strong>above 10</strong> use hardware (matrix multiplies) better. <strong>Batch normalization</strong> wants batches not smaller than about 20.</p>
+<p><strong>Activation:</strong> <strong>ReLU</strong> is a sound default for every hidden layer. The output activation depends on the task.</p>
+<p><strong>Number of iterations:</strong> usually do not tune it. Use <strong>early stopping</strong>.</p>
+<hr />
+<h2>4. Searching the combination</h2>
+<p>Try combinations; keep what wins on <strong>validation</strong> (or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>K</mi></mrow></math>-fold).</p>
+<p><strong>Randomized search</strong> is enough for many small problems. When training is slow, you only see a tiny slice of the space. Help it by hand:</p>
+<ol>
+<li>A quick random search on <strong>wide</strong> ranges.</li>
+<li>Another search on <strong>narrower</strong> ranges around the winners.</li>
+<li>Repeat.</li>
+</ol>
+<hr />
+<h2>5. Libraries</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hyperopt</strong></td>
+<td>Search over mixed spaces (rates, depths, …)</td>
+</tr>
+<tr>
+<td><strong>Hyperas</strong>, <strong>kopt</strong>, <strong>Talos</strong></td>
+<td>Keras models (the first two sit on Hyperopt)</td>
+</tr>
+<tr>
+<td><strong>Scikit-Optimize (skopt)</strong></td>
+<td>General; <code>BayesSearchCV</code> is a Bayesian cousin of <code>GridSearchCV</code></td>
+</tr>
+<tr>
+<td><strong>Spearmint</strong></td>
+<td>Bayesian optimization</td>
+</tr>
+<tr>
+<td><strong>Sklearn-Deap</strong></td>
+<td>Evolutionary search, GridSearchCV-like interface</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>What is the “stretch pants” approach to depth and width?</p>
+</li>
+<li>
+<p>You can afford a little more capacity. According to this lecture, do you add a hidden layer or add neurons to the layers you already have?</p>
+</li>
+<li>
+<p>Describe the divide-by-3 hunt for a learning rate.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.3 Tensors and Machine Learning - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.3 Tensors and Machine Learning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 8 &middot; <a href="files/data-642/tensors-ml.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/8.3-tensors-ml.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Where tensor factorizations show up in models.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow <em>Introduction to Tensor Decompositions and their Applications in Machine Learning</em>.</p>
+<h2>1. Tensors and machine learning</h2>
+<p><strong>Data.</strong> Tensors are the natural array for images, video, and time series. Those types are common in ML; a tensor is an efficient way to hold them.</p>
+<p><strong>Parameters.</strong> Neural nets (and others) are parameterized by tensors. Weights and biases are tensors; training and inference are tensor arithmetic.</p>
+<p><strong>Decompositions.</strong> Dimension reduction, feature extraction, interpretation. Lower-dimensional factors can expose latent structure: clustering, anomaly detection, recommenders.</p>
+<p><strong>Tensor algorithms.</strong> Some methods are built for tensor data: collaborative filtering, multi-relational analysis, latent-variable models.</p>
+<hr />
+<h2>2. Temporal data</h2>
+<p>A third mode is a simple way to add <strong>time</strong> to a matrix relation (user preferences, a graph adjacency).</p>
+<p>As SVD and NMF do for matrices, a decomposition of a temporal tensor finds <strong>latent structure</strong>. Typical jobs: discover patterns, predict how they evolve, spot anomalies.</p>
+<p>Tensor methods can take a never-ending stream without needing an infinite time axis.</p>
+<p>Time also <strong>constrains</strong> the array: you cannot permute that mode arbitrarily. Neighboring slices are related.</p>
+<hr />
+<h2>3. Multi-relational data</h2>
+<p>Tensors fit <strong>multi-relational</strong> data (social networks as subject–relation–object triples). A <strong>multilayer network</strong> is the same idea: each slice is one relation.</p>
+<p>Factorization then sees interdependencies on several levels at once. Uses in statistical relational learning: collective classification, word representations, community detection, coherent subgraphs.</p>
+<p><strong>Knowledge graphs</strong> (Google Knowledge Graph, YAGO, Microsoft Academic Graph) are multilayer networks of facts about entities. The analysis problem is to <strong>infer new relations</strong> from existing ones. Tensor decompositions are competitive here on quality and cost. Downstream: question answering, entity resolution.</p>
+<hr />
+<h2>4. Latent variable modeling</h2>
+<p>Over the last decade, tensor decompositions have been used for <strong>inference</strong> in latent-variable models: hidden Markov models, ICA, topic models.</p>
+<p><img alt="Tensor methods for topic modeling" src="files/data-642/graphics/8.3-tensors-ml/topic_modeling.png" /></p>
+<p>A probabilistic model says how hidden variables generate observations. Inference: most probable hiddens given the data. Maximum likelihood is consistent and struggles in high dimension.</p>
+<p>Tensor methods compute <strong>empirical moments</strong> (mean, variance, skewness) and look for latent configurations that reproduce those moments inside the model.</p>
+<hr />
+<h2>5. Current research directions</h2>
+<p>Two main questions at the tensors–ML intersection:</p>
+<p><strong>Formulate ML problems as tensor decompositions.</strong> Some problems already solve this way. Open: whether neural nets and other algorithms benefit too.</p>
+<p><strong>Weaker assumptions.</strong> Uniqueness conditions for decompositions are often weak; <strong>using</strong> them in ML is often strict. Example: GMM estimation may need the number of components <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> no larger than the data dimension <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>.</p>
+<hr />
+<h2>6. Software libraries</h2>
+<p>Most languages have multi-dimensional arrays. Tensor <strong>decompositions</strong> arrived later in applied CS; libraries are still concentrated on Matlab and Python.</p>
+<p>Popular options (as of 2024):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TensorLy</td>
+<td>Python</td>
+</tr>
+<tr>
+<td>N-way Toolbox</td>
+<td>Matlab</td>
+</tr>
+<tr>
+<td>pytensor</td>
+<td>Python</td>
+</tr>
+<tr>
+<td>scikit-tensor</td>
+<td>Python</td>
+</tr>
+<tr>
+<td>SPLATT</td>
+<td>C/C++, Octave, Matlab</td>
+</tr>
+<tr>
+<td>rTensor</td>
+<td>R</td>
+</tr>
+<tr>
+<td>Tensor Toolbox</td>
+<td>Matlab</td>
+</tr>
+<tr>
+<td>Tensorlab</td>
+<td>Matlab</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>Why might a tensor factorization beat flattening the same data into a matrix?</p>
+</li>
+<li>
+<p>In a knowledge graph stored as a tensor, what inference job are the factorizations used for?</p>
+</li>
+<li>
+<p>Instead of maximum likelihood in high dimension, what does a tensor method match when it infers latent variables?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

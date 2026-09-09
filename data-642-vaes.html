@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.3 Variational Autoencoders - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.3 Variational Autoencoders</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 14 &middot; <a href="files/data-642/vaes.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/14.3-vaes.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            A probabilistic latent space and the reparameterization trick.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; and Theodoridis, <em>Machine Learning: A Bayesian and Optimization Perspective</em>.</p>
+<h2>1. Variational autoencoders</h2>
+<p>A <strong>variational autoencoder</strong> (VAE) is a <strong>probabilistic</strong> autoencoder: after training, the output is still partly random. A denoising autoencoder uses noise only while it trains.</p>
+<p>It is also <strong>generative</strong>: you can draw new points that look as if they came from the training set.</p>
+<p><img alt="VAE: encoder to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003C3;</mi></mrow></mrow></math>, sample a coding, decode" src="files/data-642/graphics/14.3-vaes/var_auto.png" /></p>
+<p>The figure builds the coding as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow></mrow></math> plus Gaussian noise times <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003C3;</mi></mrow></mrow></math>. The random draw is an input, not a node you cannot differentiate.</p>
+<hr />
+<h2>2. Applications</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Use</th>
+<th>Sketch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Image generation</td>
+<td>Art, avatars, synthetic frames.</td>
+</tr>
+<tr>
+<td>Anomaly detection</td>
+<td>Odd transactions, factory defects, unusual medical images.</td>
+</tr>
+<tr>
+<td>Data compression</td>
+<td>A short latent vector for storage or transmission.</td>
+</tr>
+<tr>
+<td>Drug discovery</td>
+<td>New molecules with target properties.</td>
+</tr>
+<tr>
+<td>NLP</td>
+<td>Coherent text: chat, translation, copy.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>3. The procedure</h2>
+<p>The encoder does not emit one coding. It emits a mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow></mrow></math> and a standard deviation <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003C3;</mi></mrow></mrow></math>. The coding is then drawn from a Gaussian with that mean and that width. The decoder reconstructs from the draw, as usual.</p>
+<p>Training pushes the cloud of codings toward a Gaussian blob in <strong>latent space</strong>. After that, generation is cheap: sample a coding from the Gaussian, decode it.</p>
+<p><img alt="Input to encoder, Gaussian over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, sample, decoder reconstruction" src="files/data-642/graphics/14.3-vaes/VAEs.png" /></p>
+<hr />
+<h2>4. The cost function</h2>
+<p>Two pieces.</p>
+<ol>
+<li><strong>Reconstruction loss.</strong> Make <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow><mo>&#x0005E;</mo></mover></mrow></math> look like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> (cross-entropy, or the negative log-likelihood of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> under a Gaussian).</li>
+<li><strong>Latent loss.</strong> Make the coding distribution look like a simple Gaussian. That term is the KL divergence between the actual coding law and the target Gaussian.</li>
+</ol>
+<hr />
+<h2>5. ELBO</h2>
+<p>The training objective is the <strong>variational lower bound</strong>, or <strong>evidence lower bound (ELBO)</strong>. It is a tractable stand-in for the true log-likelihood of the data.</p>
+<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> for the observation, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> for the latent, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> for decoder parameters, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow></mrow></math> for encoder parameters. The ELBO is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow><mi>;</mi><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mi>&#x1D53C;</mi><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></msub><mo stretchy="false">[</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mo>&#x02212;</mo><msub><mi>D</mi><mrow><mtext>KL</mtext></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>q</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02225;</mo><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is the likelihood, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is the approximate posterior, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is the prior.</p>
+<p>Maximize it in both parameter blocks:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>max</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow></mrow></msub><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow><mi>;</mi><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>SGD or Adam is the usual optimizer. Reconstruction plus a Gaussian prior on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> is what you are buying: a latent space you can sample.</p>
+<hr />
+<h2>6. Gaussian assumption</h2>
+<p>If the decoder likelihood is Gaussian, the reconstruction term is a weighted squared error plus constants:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x1D53C;</mi><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></msub><mo stretchy="false">[</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><mrow><mo stretchy="true" fence="true" form="prefix">&#x00028;</mo><mfrac><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mi>i</mi></msub><mo>&#x02212;</mo><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mi>i</mi></msub><msup><mo stretchy="false">&#x00029;</mo><mn>2</mn></msup></mrow><mrow><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup></mrow></mfrac><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>2</mn><mi>&#x003C0;</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" form="postfix">&#x00029;</mo></mrow><mo>&#x0002E;</mo></mrow></math>
+<p>Here <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> is the dimension of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup></mrow></math> is the variance on coordinate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>.</p>
+<p>The KL between a diagonal Gaussian posterior and a standard Gaussian prior is closed form:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>D</mi><mrow><mtext>KL</mtext></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>q</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x0007C;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02225;</mo><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><msubsup><mi>&#x003BC;</mi><mi>i</mi><mn>2</mn></msubsup><mo>&#x02212;</mo><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<p>with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BC;</mi><mi>i</mi></msub></mrow></math> the mean of latent coordinate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>.</p>
+<p>Put the two together:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003D5;</mi></mrow><mi>;</mi><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mi>&</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><mrow><mo stretchy="true" fence="true" form="prefix">&#x00028;</mo><mfrac><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mi>i</mi></msub><mo>&#x02212;</mo><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mi>i</mi></msub><msup><mo stretchy="false">&#x00029;</mo><mn>2</mn></msup></mrow><mrow><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup></mrow></mfrac><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>2</mn><mi>&#x003C0;</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" form="postfix">&#x00029;</mo></mrow><mspace linebreak="newline" /><mi>&</mi><mspace width="1em" /><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><msubsup><mi>&#x003BC;</mi><mi>i</mi><mn>2</mn></msubsup><mo>&#x02212;</mo><msubsup><mi>&#x003C3;</mi><mi>i</mi><mn>2</mn></msubsup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></mrow></math>
+<p>That is the ELBO when both the approximate posterior and the prior are Gaussian.</p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>What problem does the reparameterization trick solve?</p>
+</li>
+<li>
+<p>Name the two terms in the VAE cost (the ELBO).</p>
+</li>
+<li>
+<p>After training, how do you generate a new sample without feeding in a real <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

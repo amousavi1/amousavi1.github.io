@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>6.3 Special Considerations for PCA - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">6.3 Special Considerations for PCA</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 6 &middot; <a href="files/data-642/pca-special.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/6.3-pca-special.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Centering, scaling, and how many components to keep.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; Theodoridis; and Géron.</p>
+<h2>1. PCA and singular value decomposition (SVD)</h2>
+<p><strong>Eigendecomposition.</strong> From the covariance <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D412;</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><msubsup><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></msubsup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><msubsup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup></mrow></math>, compute eigenvalues <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mi>i</mi></msub></mrow></math> and eigenvectors <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mi>i</mi></msub></mrow></math>. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mi>i</mi></msub></mrow></math> are the principal components. Each <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mi>i</mi></msub></mrow></math> is the variance along that component.</p>
+<p><strong>SVD.</strong> Factor the centered data matrix: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x0003D;</mo><mi>&#x1D414;</mi><mrow><mi mathvariant="bold-italic">&#x003A3;</mi></mrow><msup><mi>&#x1D415;</mi><mrow><mo>&#x022A4;</mo></mrow></msup></mrow></math>. The <strong>right singular vectors</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D415;</mi></mrow></math> are the principal components. The singular values on the diagonal of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003A3;</mi></mrow></mrow></math> are the square roots of the eigenvalues of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D417;</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mi>&#x1D417;</mi></mrow></math>.</p>
+<p>The two routes agree. That is the link between the maximum-variance view of PCA and the SVD of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi></mrow></math>.</p>
+<hr />
+<h2>2. PCA and low-rank approximations</h2>
+<p>Because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>&#x1D417;</mi></mrow><mo>&#x0005E;</mo></mover></mrow></math> is the best rank-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> approximation of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi></mrow></math> in the <strong>Frobenius</strong> sense,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mover accent="true"><mrow><mi>&#x1D417;</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x02212;</mo><mi>&#x1D417;</mi><msubsup><mo fence="false" stretchy="false">&#x02016;</mo><mi>F</mi><mn>2</mn></msubsup><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><mo fence="false" stretchy="false">&#x02016;</mo><msub><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mi>n</mi></msub><mo>&#x02212;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><msup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msup></mrow></math>
+<p>is minimum.</p>
+<p>So PCA also <strong>minimizes the sum of squared reconstruction errors</strong>. The same components that maximize variance are the ones that keep as much of the original points as an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math>-dimensional picture can.</p>
+<hr />
+<h2>3. Latent variable perspective</h2>
+<p>So far PCA had no probabilistic model: maximum variance and projection only. A probabilistic model would:</p>
+<ul>
+<li>come with a <strong>likelihood</strong>, so noise in the observations is explicit;</li>
+<li>allow Bayesian model comparison via the <strong>marginal likelihood</strong>;</li>
+<li>treat PCA as a <strong>generative</strong> model (simulate new data);</li>
+<li>make connections to related algorithms straightforward;</li>
+<li>handle dimensions <strong>missing at random</strong> by Bayes;</li>
+<li>give a notion of how <strong>novel</strong> a new point is;</li>
+<li>extend cleanly, e.g. to a <strong>mixture</strong> of PCA models;</li>
+<li>recover the PCA of the earlier sections as a special case;</li>
+<li>allow a fully Bayesian treatment by integrating out parameters.</li>
+</ul>
+<hr />
+<h2>4. History of probabilistic PCA</h2>
+<p>A continuous latent <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>M</mi></msup></mrow></math> lets you write PCA as a probabilistic latent-variable model. Tipping and Bishop (1999) called this <strong>probabilistic PCA (PPCA)</strong>. It addresses most of the list above. Ordinary PCA — maximize projected variance, or minimize reconstruction error — is <strong>maximum likelihood</strong> in the noise-free limit.</p>
+<hr />
+<h2>5. The PPCA model</h2>
+<p>Assume a continuous latent <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>M</mi></msup></mrow></math> with standard-normal prior <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002C;</mo><mi>&#x1D408;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>, and a linear map to the observation <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0003D;</mo><mrow><mi mathvariant="bold-italic">B</mi></mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x0002B;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002B;</mo><mi>&#x003F5;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>D</mi></msup><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003F5;</mi><mi>&#x0007E;</mi><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002C;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mi>&#x1D408;</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is Gaussian observation noise, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">B</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>D</mi><mo>&#x000D7;</mo><mi>M</mi></mrow></msup></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>D</mi></msup></mrow></math>. The conditional is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02223;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>;</mi><mrow><mi mathvariant="bold-italic">B</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x1D4A9;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02223;</mo><mrow><mi mathvariant="bold-italic">B</mi></mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x0002B;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><mspace width="0.167em" /><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mi>&#x1D408;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>The generative process:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>n</mi></msub><mi>&#x0007E;</mi><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x02223;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002C;</mo><mi>&#x1D408;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>
+<p>and</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>n</mi></msub><mi>&#x0007E;</mi><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02223;</mo><mrow><mi mathvariant="bold-italic">B</mi></mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><mspace width="0.167em" /><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mi>&#x1D408;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>To draw a typical point, use <strong>ancestral sampling</strong>: first <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>n</mi></msub><mi>&#x0007E;</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mi>&#x0007E;</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>n</mi></msub><mi>;</mi><mrow><mi mathvariant="bold-italic">B</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<p>The joint is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x02223;</mo><mrow><mi mathvariant="bold-italic">B</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02223;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">B</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0002C;</mo><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>6. An illustration of PPCA</h2>
+<p>Blue dots: two-dimensional PCA latents for MNIST digits “8”. Query any <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo>&#x0002A;</mo></mrow></msub></mrow></math> in that plane and generate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow><mo stretchy="false">&#x0007E;</mo></mover><mrow><mo>&#x0002A;</mo></mrow></msub><mo>&#x0003D;</mo><mrow><mi mathvariant="bold-italic">B</mi></mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo>&#x0002A;</mo></mrow></msub></mrow></math> (here <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math> and identity covariance). The image looks like an “8”.</p>
+<p><img alt="PPCA latent space and generated eights" src="files/data-642/graphics/6.3-pca-special/PPCA.png" /></p>
+<p>Eight generated images sit with their latent coordinates. Where you query the latent plane changes shape, rotation, size.</p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>In the SVD view of PCA, which factor of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x0003D;</mo><mi>&#x1D414;</mi><mrow><mi mathvariant="bold-italic">&#x003A3;</mi></mrow><msup><mi>&#x1D415;</mi><mrow><mo>&#x022A4;</mo></mrow></msup></mrow></math> holds the principal components?</p>
+</li>
+<li>
+<p>Besides maximizing variance, what reconstruction quantity does a rank-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> PCA minimize?</p>
+</li>
+<li>
+<p>In PPCA, what extra random object appears that ordinary PCA never named, and what prior does it get?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

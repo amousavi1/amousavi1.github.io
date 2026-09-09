@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>6.1 Introduction to PCA - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">6.1 Introduction to PCA</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 6 &middot; <a href="files/data-642/intro-pca.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/6.1-intro-pca.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Directions of largest variance, and the covariance eigenproblem.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; Theodoridis; and Géron.</p>
+<h2>1. Principal Component Analysis (PCA)</h2>
+<p>PCA is the usual <strong>dimensionality reduction</strong> algorithm. It finds the hyperplane that <strong>maximizes the variance</strong> of the data, then projects onto that hyperplane.</p>
+<p>Pearson (1901) introduced the idea as the <strong>principal axis theorem</strong>. Hotelling (1930s) gave the modern name. It began as a statistics tool for data analysis and dimension reduction.</p>
+<hr />
+<h2>2. Preserving the variance</h2>
+<p>You have to choose the hyperplane <em>before</em> you project.</p>
+<p>A 2D set, three candidate axes (one-dimensional hyperplanes). The right panel is the projection onto each.</p>
+<ul>
+<li>The <strong>solid</strong> line keeps the most variance.</li>
+<li>The <strong>dotted</strong> line keeps almost none.</li>
+<li>The <strong>dashed</strong> line sits in between.</li>
+</ul>
+<p>The axis that preserves maximum variance loses the least information. That is the idea behind PCA.</p>
+<p><img alt="PCA: three axes and the variance each keeps" src="files/data-642/graphics/6.1-intro-pca/PCA.png" /></p>
+<hr />
+<h2>3. Principal components</h2>
+<p>The working assumption, here and in other dimension-reduction methods: the observations come from a process driven by a relatively small number of <strong>latent</strong> (unobserved) variables. The goal is to recover that structure.</p>
+<p>PCA finds the axis of largest variance in the training set (the solid line above). Then a second axis, <strong>orthogonal</strong> to the first, that takes the largest remaining variance. In higher dimension it keeps going: a third orthogonal to both, a fourth, as many axes as the original dimension.</p>
+<p>The <strong>direction</strong> of a PC is not stable. Perturb the training set a little and some new PCs may point the opposite way — still on the same axes. A pair of PCs can rotate or swap; the plane they span usually stays.</p>
+<hr />
+<h2>4. Maximum variance perspective</h2>
+<p>Centered observations <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>1</mn></msub><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>N</mi></msub></mrow></math> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x0211D;</mi><mi>l</mi></msup></mrow></math> (subtract the mean if needed). PCA looks for a subspace of dimension <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi><mo>&#x02264;</mo><mi>l</mi></mrow></math> so that projected variance is maximized. That subspace is spanned by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> mutually orthogonal <strong>principal axes</strong>.</p>
+<p>Start with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn></msub></mrow></math> be the axis. Projected variance is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msubsup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn><mrow><mo>&#x022A4;</mo></mrow></msubsup><mi>&#x1D412;</mi><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn></msub><mo>&#x0002C;</mo></mrow></math>
+<p>where</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D412;</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><msubsup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><mi>&#x1D417;</mi><msup><mi>&#x1D417;</mi><mrow><mo>&#x022A4;</mo></mrow></msup></mrow></math>
+<p>is the biased sample covariance.</p>
+<p>Directions only, so take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">u</mi></mrow></mrow></math> of unit length:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi>&</mi><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><munder><mrow><mo>argmax</mo></mrow><mrow><mrow><mi mathvariant="bold-italic">u</mi></mrow></mrow></munder><mi>&</mi><mi>&</mi><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mi>&#x1D412;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow><mspace linebreak="newline" /><mi>&</mi><mtext>subject&#x000A0;to</mtext><mi>&</mi><mi>&</mi><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002E;</mo></mrow></mrow></math>
+<p>Lagrangian:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0002C;</mo><mi>&#x003BB;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mi>&#x1D412;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x02212;</mo><mi>&#x003BB;</mi><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Set the gradient to zero:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D412;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mi>&#x003BB;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0002E;</mo></mrow></math>
+<p>The principal direction is an <strong>eigenvector</strong> of the sample covariance. Plug <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D412;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mi>&#x003BB;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow></mrow></math> back into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mi>&#x1D412;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mn>1</mn></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mi>&#x1D412;</mi><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mi>&#x003BB;</mi><mo>&#x0002E;</mo></mrow></math>
+<p>Variance is maximized when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn></msub></mrow></math> is the eigenvector for the <strong>largest</strong> eigenvalue <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mn>1</mn></msub></mrow></math>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D412;</mi></mrow></math> is symmetric positive semidefinite, so the eigenvalues are real and nonnegative. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D412;</mi></mrow></math> is invertible (hence <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003E;</mo><mi>l</mi></mrow></math>) they are positive. Assume they are distinct: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mn>1</mn></msub><mo>&#x0003E;</mo><msub><mi>&#x003BB;</mi><mn>2</mn></msub><mo>&#x0003E;</mo><mo>&#x02026;</mo><mo>&#x0003E;</mo><msub><mi>&#x003BB;</mi><mi>l</mi></msub><mo>&#x0003E;</mo><mn>0</mn></mrow></math>.</p>
+<p>The second PC is (a) orthogonal to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">u</mi></mrow><mn>1</mn></msub></mrow></math> and (b) maximizes remaining variance. It is the eigenvector for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mn>2</mn></msub></mrow></math>. Continue until <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> axes: the eigenvectors for the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> largest eigenvalues.</p>
+<hr />
+<h2>5. Practical aspects</h2>
+<p>Eigenvectors show up in other matrix decompositions too.</p>
+<p>You can write eigenvalues as roots of the characteristic polynomial. For matrices larger than <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x000D7;</mo><mn>4</mn></mrow></math> there is no algebraic formula (Abel–Ruffini). Packages use <strong>iterative</strong> methods for eigenvalues and singular values.</p>
+<p>Often you only want the first few eigenvectors. Computing a full eigendecomposition (or SVD) and throwing the rest away is wasteful. Iterative methods that target those few are cheaper. If you only need the first eigenvector, <strong>power iteration</strong> is efficient.</p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>PCA maximizes variance. What matrix’s eigenvectors are you computing?</p>
+</li>
+<li>
+<p>Why constrain <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, and what does the multiplier <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BB;</mi></mrow></math> equal at the solution?</p>
+</li>
+<li>
+<p>If you perturb the training set slightly, what about the principal components can flip, and what usually stays put?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

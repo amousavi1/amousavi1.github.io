@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>8.1 Introduction to Tensors - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">8.1 Introduction to Tensors</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 8 &middot; <a href="files/data-642/intro-tensors.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/8.1-intro-tensors.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Multi-way arrays and why flattening loses structure.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow <em>Introduction to Tensor Decompositions and their Applications in Machine Learning</em>.</p>
+<h2>1. Brief history</h2>
+<p><strong>Tensors</strong> generalize matrices to higher dimensions: multidimensional arrays.</p>
+<p>They and their decompositions appear in 1927, then sit unused in computer science until late in the 20th century. Cheaper compute and better multilinear algebra — especially in the last decade — moved them into statistics, data science, and machine learning.</p>
+<hr />
+<h2>2. Tensor basics</h2>
+<p>A tensor is a multi-way collection of numbers, usually from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x0211D;</mi></mrow></math>. The simplest high-dimensional case is a three-dimensional array: a <strong>data cube</strong>. The same notation extends to more modes.</p>
+<p><img alt="A three-way tensor as a data cube" src="files/data-642/graphics/8.1-intro-tensors/3d_tensor.png" /></p>
+<hr />
+<h2>3. Tensor order</h2>
+<p>The <strong>order</strong> of a tensor is the number of dimensions.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Order</th>
+<th>Notation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Scalar</td>
+<td>0</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x02208;</mo><mi>&#x0211D;</mi></mrow></math></td>
+</tr>
+<tr>
+<td>Vector</td>
+<td>1</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D431;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>I</mi><mn>1</mn></msub></mrow></msup></mrow></math></td>
+</tr>
+<tr>
+<td>Matrix</td>
+<td>2</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>&#x000D7;</mo><msub><mi>I</mi><mn>2</mn></msub></mrow></msup></mrow></math></td>
+</tr>
+<tr>
+<td>Higher-order tensor</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4B3;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>&#x000D7;</mo><msub><mi>I</mi><mn>2</mn></msub><mo>&#x000D7;</mo><mo>&#x022EF;</mo><mo>&#x000D7;</mo><msub><mi>I</mi><mi>N</mi></msub></mrow></msup></mrow></math></td>
+</tr>
+</tbody>
+</table></div>
+<p>Each <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>I</mi></mrow></math> is the length of that mode.</p>
+<p><img alt="Scalars, vectors, matrices, and a 3-way tensor" src="files/data-642/graphics/8.1-intro-tensors/tensors_examples.png" /></p>
+<hr />
+<h2>4. Tensor indexing</h2>
+<p>Fix some indices to get a subarray.</p>
+<ul>
+<li><strong>Fibers:</strong> fix every index but one.</li>
+<li><strong>Slices</strong> (slabs): fix every index but two.</li>
+</ul>
+<p>For a third-order tensor, fibers are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mrow><mi>:</mi><mi>j</mi><mi>k</mi></mrow></msub><mo>&#x0003D;</mo><msub><mi>x</mi><mrow><mi>j</mi><mi>k</mi></mrow></msub></mrow></math> (column), <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mrow><mi>i</mi><mi>:</mi><mi>k</mi></mrow></msub></mrow></math> (row), <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mrow><mi>i</mi><mi>j</mi><mi>:</mi></mrow></msub></mrow></math> (tube). Slices are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D4B3;</mi><mrow><mi>:</mi><mi>:</mi><mi>k</mi></mrow></msub><mo>&#x0003D;</mo><msub><mi>&#x1D4B3;</mi><mi>k</mi></msub></mrow></math> (frontal), <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D4B3;</mi><mrow><mi>:</mi><mi>j</mi><mi>:</mi></mrow></msub></mrow></math> (lateral), <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x1D4B3;</mi><mrow><mi>i</mi><mi>:</mi><mi>:</mi></mrow></msub></mrow></math> (horizontal).</p>
+<p><img alt="Fibers and slices of a 3-way tensor" src="files/data-642/graphics/8.1-intro-tensors/fibers.png" /></p>
+<hr />
+<h2>5. Outer and inner product</h2>
+<p>The vector <strong>outer product</strong> is the product of the entries, written <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0229A;</mo></mrow></math>. For two length-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> vectors <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D41A;</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D41B;</mi></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D417;</mi><mo>&#x0003D;</mo><mi>&#x1D41A;</mi><mo>&#x0229A;</mo><mi>&#x1D41B;</mi><mo>&#x0003D;</mo><mi>&#x1D41A;</mi><msup><mi>&#x1D41B;</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> vectors the same product is a tensor:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D4B3;</mi><mo>&#x0003D;</mo><msup><mi>&#x1D41A;</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0229A;</mo><msup><mi>&#x1D41A;</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0229A;</mo><mo>&#x022EF;</mo><mo>&#x0229A;</mo><msup><mi>&#x1D41A;</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>N</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002C;</mo></mrow></math>
+<p>with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mrow><msub><mi>i</mi><mn>1</mn></msub><msub><mi>i</mi><mn>2</mn></msub><mo>&#x022EF;</mo><msub><mi>i</mi><mi>N</mi></msub></mrow></msub><mo>&#x0003D;</mo><msubsup><mi>a</mi><mrow><msub><mi>i</mi><mn>1</mn></msub></mrow><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><msubsup><mi>a</mi><mrow><msub><mi>i</mi><mn>2</mn></msub></mrow><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x022EF;</mo><msubsup><mi>a</mi><mrow><msub><mi>i</mi><mi>N</mi></msub></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>N</mi><mo stretchy="false">&#x00029;</mo></mrow></msubsup></mrow></math>.</p>
+<p>The <strong>inner product</strong> of two length-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> vectors is a scalar:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>x</mi><mo>&#x0003D;</mo><mi>&#x027E8;</mi><mi>&#x1D41A;</mi><mo>&#x0002C;</mo><mi>&#x1D41B;</mi><mi>&#x027E9;</mi><mo>&#x0003D;</mo><msup><mi>&#x1D41A;</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mi>&#x1D41B;</mi><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>n</mi></mrow></munderover><msub><mi>a</mi><mi>i</mi></msub><msub><mi>b</mi><mi>i</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>6. Rank-1 tensors</h2>
+<p>An <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>-way tensor is <strong>rank-1</strong> if it is exactly the outer product of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> vectors. Adding a mode is a new scaling of a sub-tensor.</p>
+<p>A rank-1 matrix: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x0003D;</mo><mi>&#x1D41A;</mi><mo>&#x0229A;</mo><mi>&#x1D41B;</mi></mrow></math>. A rank-1 3-way tensor: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4B3;</mi><mo>&#x0003D;</mo><mi>&#x1D41A;</mi><mo>&#x0229A;</mo><mi>&#x1D41B;</mi><mo>&#x0229A;</mo><mi>&#x1D41C;</mi></mrow></math>. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>-way form is the product above.</p>
+<p><img alt="Rank-1 tensor as an outer product of vectors" src="files/data-642/graphics/8.1-intro-tensors/mode.png" /></p>
+<hr />
+<h2>7. Tensor rank</h2>
+<p>The <strong>rank</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>rank</mo><mo stretchy="false">&#x00028;</mo><mi>&#x1D4B3;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>R</mi></mrow></math> is the smallest number of rank-1 tensors that sum to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4B3;</mi></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D4B3;</mi><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>r</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>R</mi></mrow></munderover><msub><mi>&#x003BB;</mi><mi>r</mi></msub><mspace width="0.167em" /><msubsup><mi>&#x1D41A;</mi><mi>r</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x0229A;</mo><msubsup><mi>&#x1D41A;</mi><mi>r</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x0229A;</mo><mo>&#x022EF;</mo><mo>&#x0229A;</mo><msubsup><mi>&#x1D41A;</mi><mi>r</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>N</mi><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x0002E;</mo></mrow></math>
+<p>The <strong>factor matrices</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D400;</mi></mrow></math> store those vectors as columns:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D400;</mi><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><msub><mi>&#x1D41A;</mi><mn>1</mn></msub></mtd><mtd><msub><mi>&#x1D41A;</mi><mn>2</mn></msub></mtd><mtd><mo>&#x022EF;</mo></mtd><mtd><msub><mi>&#x1D41A;</mi><mi>R</mi></msub></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>The weights <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mi>r</mi></msub></mrow></math> (with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>R</mi></msup></mrow></math>) often absorb column norms, typically so each column has squared length one.</p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>A matrix is a 2-way array. What is a tensor adding?</p>
+</li>
+<li>
+<p>What is a <strong>fiber</strong>, and what is a <strong>slice</strong>?</p>
+</li>
+<li>
+<p>What does <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>rank</mo><mo stretchy="false">&#x00028;</mo><mi>&#x1D4B3;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>R</mi></mrow></math> mean in terms of rank-1 tensors?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

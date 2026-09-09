@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.1 Multimodal Learning - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.1 Multimodal Learning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 7 &middot; <a href="files/data-642/multimodal-learning.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/7.1-multimodal-learning.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Two or more views of the same objects.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Baltrušaitis, Ahuja, and Morency, <em>Multimodal Machine Learning: A Survey and Taxonomy</em>.</p>
+<h2>1. Why multimodal learning</h2>
+<p>Several <strong>modalities</strong> at once — language, vision, audio — rather than one stream. Complementary signal, and redundant signal. The rest of the note is a taxonomy of the hard parts.</p>
+<p><img alt="Overview of multimodal machine learning" src="files/data-642/graphics/7.1-multimodal-learning/intro_multimodal_learning.png" /></p>
+<hr />
+<h2>2. Challenges in multimodal fusion</h2>
+<p><strong>Representation.</strong> Learn a summary that uses complementarity and redundancy. Heterogeneity makes this hard. Language is symbolic; audio and vision are signals.</p>
+<p><strong>Translation.</strong> Map one modality to another. Heterogeneity again, and the map can be open-ended or subjective. Many correct captions for one image; no single perfect translation.</p>
+<p><strong>Alignment.</strong> Direct relations between <em>elements</em> of different modalities. You need a similarity, long-range dependence, and a way to resolve ambiguity. Example: recipe steps lined up with a cooking video.</p>
+<p><strong>Fusion.</strong> Combine modalities for a prediction. Example: audio-visual speech recognition (lip motion plus the speech signal). Predictive power can differ by modality; noise topology can differ; data can be missing.</p>
+<p><strong>Co-learning.</strong> Transfer knowledge across modalities, representations, and predictors. Co-training, conceptual grounding, zero-shot learning. Useful when one modality is resource-poor (few annotations).</p>
+<hr />
+<h2>3. Multimodal representations</h2>
+<p>A computational model needs a <strong>representation</strong>. Multimodal representation uses information from several entities, each a vector or a tensor.</p>
+<p>Hard parts: combining heterogeneous data, different noise levels, missing data. Representation quality shows up in speech recognition and object classification.</p>
+<p>Wanted properties in general: smoothness, coherence, sparsity, natural clustering. Extra for multimodal: similarity between concepts is reflected, representations are easy to obtain, missing modalities can be handled.</p>
+<p>Two types:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Joint</strong></td>
+<td>Combine modalities into <strong>one</strong> space. A function of the unimodal representations.</td>
+</tr>
+<tr>
+<td><strong>Coordinated</strong></td>
+<td>Process modalities <strong>separately</strong>, then enforce similarity or structure between them.</td>
+</tr>
+</tbody>
+</table></div>
+<p><img alt="Joint versus coordinated multimodal representations" src="files/data-642/graphics/7.1-multimodal-learning/representations.png" /></p>
+<hr />
+<h2>4. Translation</h2>
+<p>Generate text from images, or the reverse.</p>
+<ul>
+<li>
+<p><strong>Example-based.</strong> A dictionary. Retrieval finds the closest match. Combination-based models mix examples. <strong>Generative</strong> models build a map and emit a sequence of symbols — harder.</p>
+</li>
+<li>
+<p><strong>Grammar-based.</strong> Templates and a restricted grammar.</p>
+</li>
+<li>
+<p><strong>Encoder–decoder.</strong> Encode the source modality, decode the target.</p>
+</li>
+<li>
+<p><strong>Continuous generation.</strong> An output at each time step. Natural for sequence-to-sequence.</p>
+</li>
+</ul>
+<p><img alt="Translation between modalities" src="files/data-642/graphics/7.1-multimodal-learning/translation.png" /></p>
+<hr />
+<h2>5. Multimodal alignment</h2>
+<p>Relations between <strong>sub-components</strong> of instances from different modalities.</p>
+<p><strong>Explicit.</strong> Align those sub-components on purpose. Unsupervised: DTW, graphical models. Supervised: labeled pairs. Deep: CNNs, LSTMs.</p>
+<p><strong>Implicit.</strong> Alignment as an intermediate for another task. Early work used graphical models. Modern nets use <strong>attention</strong>.</p>
+<p>Applications: multimedia retrieval, translation, question answering.</p>
+<hr />
+<h2>6. Multimodal fusion</h2>
+<p>Model-agnostic types:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Fusion</th>
+<th>When you combine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Early</strong></td>
+<td>Right after feature extraction</td>
+</tr>
+<tr>
+<td><strong>Late</strong></td>
+<td>After each modality has made a decision</td>
+</tr>
+<tr>
+<td><strong>Hybrid</strong></td>
+<td>Early-fusion output plus unimodal predictors</td>
+</tr>
+</tbody>
+</table></div>
+<p><img alt="Early, late, and hybrid fusion" src="files/data-642/graphics/7.1-multimodal-learning/fusion.png" /></p>
+<hr />
+<h2>7. Co-learning</h2>
+<p>Improve a <strong>resource-poor</strong> modality with a <strong>resource-rich</strong> one (annotations, reliable labels).</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Link between modalities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Parallel</strong></td>
+<td>Directly linked observations</td>
+</tr>
+<tr>
+<td><strong>Non-parallel</strong></td>
+<td>No direct links; often shared categories</td>
+</tr>
+<tr>
+<td><strong>Hybrid</strong></td>
+<td>A shared modality or data set as a bridge</td>
+</tr>
+</tbody>
+</table></div>
+<p>The helper modality is typically used in <strong>training only</strong>, not at test time.</p>
+<p><img alt="Co-learning across modalities" src="files/data-642/graphics/7.1-multimodal-learning/co_learning.png" /></p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>Name the five challenges in the taxonomy, and give one example of <strong>alignment</strong>.</p>
+</li>
+<li>
+<p>What is the difference between a <strong>joint</strong> representation and a <strong>coordinated</strong> one?</p>
+</li>
+<li>
+<p>When would <strong>late</strong> fusion be a better default than <strong>early</strong> fusion?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

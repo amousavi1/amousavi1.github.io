@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>14.1 Autoencoders - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">14.1 Autoencoders</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 14 &middot; <a href="files/data-642/autoencoders-intro.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/14.1-autoencoders-intro.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Encode, decode, and reconstruct.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>Figures and notes follow Géron, <em>Hands-On Machine Learning</em>; Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>; and Theodoridis, <em>Machine Learning: A Bayesian and Optimization Perspective</em>.</p>
+<h2>1. Representation learning</h2>
+<p><strong>Autoencoders</strong> are neural nets that learn a dense <strong>latent representation</strong> (a coding) of unlabeled inputs.</p>
+<p>The coding is usually much smaller than the input, so the same net is a dimensionality-reduction tool. It is also a feature detector, and it can pre-train a deeper net without labels.</p>
+<p>Some autoencoders are <strong>generative</strong>: train on faces, then draw new faces. The net is trying to copy its input. A small coding, or noise, stops it from copying pixel-for-pixel, so the coding has to be an efficient summary. The identity map, under those constraints, is the goal.</p>
+<hr />
+<h2>2. Applications</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Use</th>
+<th>What the coding is doing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dimensionality reduction</td>
+<td>Keep the signal; drop coordinates. Visualization and preprocessing.</td>
+</tr>
+<tr>
+<td>Anomaly detection</td>
+<td>Normal rows reconstruct well. Odd rows do not (fraud, security).</td>
+</tr>
+<tr>
+<td>Feature learning</td>
+<td>The coding is a feature vector for a later classifier or regressor.</td>
+</tr>
+<tr>
+<td>Denoising</td>
+<td>Train on noisy inputs, reconstruct the clean ones.</td>
+</tr>
+<tr>
+<td>Generative modeling</td>
+<td>VAEs and GANs reuse this encoder–decoder shape to draw new samples.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>3. Encoder, decoder, reconstruction</h2>
+<p>An autoencoder maps <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> to a short coding, then maps that coding back to something that should look like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>. Two pieces: an <strong>encoder</strong> and a <strong>decoder</strong>.</p>
+<p><img alt="Encoder to a latent coding, decoder back to a reconstruction" src="files/data-642/graphics/14.1-autoencoders-intro/autoencoder.png" /></p>
+<p>The architecture is a multilayer net with one extra rule: the output layer has the same width as the input. The outputs are <strong>reconstructions</strong>. A reconstruction loss penalizes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow><mo>&#x0005E;</mo></mover></mrow></math> when it is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>.</p>
+<hr />
+<h2>4. Loss functions</h2>
+<p>Which loss you use depends on what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> is.</p>
+<p><strong>Mean squared error</strong> (real-valued reconstructions):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>MSE</mtext><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mi>i</mi></msub><mo>&#x02212;</mo><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mi>i</mi></msub><msup><mo stretchy="false">&#x00029;</mo><mn>2</mn></msup><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mi>i</mi></msub></mrow></math> is the reconstruction.</p>
+<p><strong>Binary cross-entropy</strong> (binary data):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>BCE</mtext><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>x</mi><mi>i</mi></msub><mi>log</mi><mo stretchy="false">&#x00028;</mo><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p><strong>Categorical cross-entropy</strong> (one-hot rows, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> categories):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>CCE</mtext><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><munderover><mo>&#x02211;</mo><mrow><mi>j</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>C</mi></mrow></munderover><msub><mi>x</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>log</mi><mo stretchy="false">&#x00028;</mo><msub><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>5. Linear autoencoders and PCA</h2>
+<p>A <strong>linear</strong> autoencoder has no activation functions. It compresses, then reconstructs. That is the same job as <strong>PCA</strong>: keep a low-dimensional summary that still explains variance.</p>
+<p>PCA’s axes are orthogonal principal components. A linear autoencoder does not force orthogonality; with squared loss it still lands close to PCA. Add activations and it can follow nonlinear structure.</p>
+<p><img alt="3D data projected to a 2D max-variance plane" src="files/data-642/graphics/14.1-autoencoders-intro/dim_red.png" /></p>
+<p>The slide sketch is a 3-to-2 encoder and a 2-to-3 decoder, trained with MSE and SGD. Both PCA and this linear net are unsupervised.</p>
+<hr />
+<h2>6. Stacked autoencoders</h2>
+<p>Give the net several hidden layers and it is a <strong>stacked autoencoder</strong> (a <strong>deep autoencoder</strong>). Extra layers buy more complex codings.</p>
+<p>The usual picture is symmetric about the coding layer: wide, then narrow, then wide again. Deeper layers see more abstract features.</p>
+<p><img alt="Stacked autoencoder, symmetric about a 30-unit coding" src="files/data-642/graphics/14.1-autoencoders-intro/stacked_auto.png" /></p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>A linear autoencoder with squared loss is close to which classical method?</p>
+</li>
+<li>
+<p>Why must the output layer have the same width as the input?</p>
+</li>
+<li>
+<p>Name two uses of an autoencoder besides dimensionality reduction.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>4.1 Motivation for Sparsity-Aware Learning - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">4.1 Motivation for Sparsity-Aware Learning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 4 &middot; <a href="files/data-642/sparsity-motivation.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/4.1-sparsity-motivation.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Why we want models that can set coefficients to zero.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>, and Theodoridis, <em>Machine Learning: A Bayesian and Optimization Perspective</em>.</p>
+<h2>1. Bias-variance trade-off</h2>
+<p>A simple linear model is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>y</mi><mo>&#x0003D;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>1</mn></msub><msub><mi>x</mi><mn>1</mn></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>2</mn></msub><msub><mi>x</mi><mn>2</mn></msub><mo>&#x0002B;</mo><mo>&#x022EF;</mo><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mi>l</mi></msub><msub><mi>x</mi><mi>l</mi></msub><mo>&#x0002B;</mo><mi>&#x003F5;</mi><mo>&#x0002E;</mo></mrow></math>
+<p>Plain least squares is not the only way to estimate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. The goal of this module is better <strong>accuracy</strong> and better <strong>interpretability</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>What least squares does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0226B;</mo><mi>l</mi></mrow></math>, roughly linear</td>
+<td>Low variance, low bias</td>
+</tr>
+<tr>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003E;</mo><mi>l</mi></mrow></math> but not by much</td>
+<td>High variance; a small change in the training rows can swing the coefficients; <strong>overfitting</strong></td>
+</tr>
+<tr>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>l</mi><mo>&#x0003E;</mo><mi>N</mi></mrow></math></td>
+<td>No unique least-squares estimate; variance is “infinite”</td>
+</tr>
+</tbody>
+</table></div>
+<p>As the model gets more flexible, <strong>interpretability</strong> usually falls. Irrelevant columns add complexity. Setting some coefficients <strong>exactly to zero</strong> would drop those variables.</p>
+<p><strong>Solution.</strong> Constrain or <strong>shrink</strong> the coefficients: give up a little bias to cut variance, and predictions improve.</p>
+<hr />
+<h2>2. Compressed sensing</h2>
+<p><strong>Compressed sensing (CS)</strong> tries to acquire as few samples as possible, as long as those samples still encode a compressed representation of the signal.</p>
+<p><img alt="Compressed sensing" src="files/data-642/graphics/4.1-sparsity-motivation/cs.jpg" /></p>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>l</mi></mrow></msup></mrow></math> be a sensing matrix applied to an unknown signal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>l</mi></mrow></msup></mrow></math> to get observations <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">y</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>N</mi></mrow></msup></mrow></math>. Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003A8;</mi></mrow></mrow></math> be a dictionary in which <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow></mrow></math> has a <strong>sparse representation</strong></p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow><mo>&#x0003D;</mo><mrow><mi mathvariant="bold-italic">&#x003A8;</mi></mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002E;</mo></mrow></math>
+<p>From <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">y</mi></mrow><mo>&#x0003D;</mo><mi>&#x1D417;</mi><mrow><mi mathvariant="bold-italic">s</mi></mrow></mrow></math> one gets <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">y</mi></mrow><mo>&#x0003D;</mo><mi>&#x1D417;</mi><mrow><mi mathvariant="bold-italic">&#x003A8;</mi></mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. Given <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003A8;</mi></mrow></mrow></math> (or the product <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D417;</mi><mrow><mi mathvariant="bold-italic">&#x003A8;</mi></mrow></mrow></math>), one can recover <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">s</mi></mrow></mrow><mo>&#x0005E;</mo></mover></mrow></math> by an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> program if at most <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> coordinates of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> are nonzero.</p>
+<p>The linear system is <strong>under-determined</strong>, so it has an <strong>infinite</strong> number of solutions in general. The extra fact is that the true model is <strong>sparse</strong>: only a few coordinates are nonzero.</p>
+<hr />
+<h2>3. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>0</mn></msub></mrow></math>-norm</h2>
+<p>The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>0</mn></msub></mrow></math>-“norm” counts nonzero coordinates. That is the most direct sparsity measure.</p>
+<p><img alt="Comparing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mi>p</mi></msub></mrow></math> norms" src="files/data-642/graphics/4.1-sparsity-motivation/norms.png" /></p>
+<p>It is not usable as a training penalty: it is <strong>not differentiable</strong>, and optimizing it is <strong>NP-hard</strong>. Other <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mi>p</mi></msub></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo>&#x0003C;</mo><mn>1</mn></mrow></math> are <strong>non-convex</strong>, which is also a hard optimization problem. Later notes use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>1</mn></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math> instead.</p>
+<hr />
+<h2>4. Practical examples</h2>
+<ul>
+<li><strong>NLP.</strong> Most words in a document never appear, or appear once. A bag-of-words vector is sparse: one coordinate per vocabulary word, mostly zeros.</li>
+<li><strong>Image processing.</strong> Many pixels are background. Keeping only the useful features or regions gives a sparse representation, which is cheaper to store and to compute with.</li>
+</ul>
+<hr />
+<h2>5. Emerging applications</h2>
+<ul>
+<li><strong>Medical imaging.</strong> Sparse MRI aims to reconstruct from fewer measurements, which shortens scans.</li>
+<li><strong>Signal processing.</strong> Compressive sensing for denoising and reconstruction recovers a sparse signal from undersampled measurements.</li>
+<li><strong>Recommendation.</strong> User–item matrices are sparse. Sparsity-aware methods can still suggest items when the history is thin (the cold-start setting).</li>
+</ul>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>In which regime is the least-squares variance “infinite,” and why?</p>
+</li>
+<li>
+<p>Why is the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>0</mn></msub></mrow></math>-norm a natural sparsity penalty, and why do we not optimize it directly?</p>
+</li>
+<li>
+<p>What extra information lets compressed sensing pick one solution from an under-determined system?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

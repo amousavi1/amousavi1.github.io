@@ -104,27 +104,106 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 3 &middot;
-                            <a href="files/data-642/constrained-optimization.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 3 &middot; <a href="files/data-642/constrained-optimization.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/3.1-constrained-optimization.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             Lagrange multipliers, the primal, and the dual.
                         </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>.</p>
 <h2>1. Extra conditions on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math></h2>
-<p>Unconstrained: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>. Constrained: the same min, but <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> must sit in</p>
+<p>Unconstrained: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi><mi>:</mi><msup><mi>&#x0211D;</mi><mi>l</mi></msup><mo>&#x02192;</mo><mi>&#x0211D;</mi></mrow></math>. Constrained: the same min, plus real-valued <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math> that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> must obey,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mspace width="1em" /><mtext>subject&#x000A0;to</mtext><mspace width="1em" /><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>m</mi><mo>&#x0002E;</mo></mrow></math>
+<p>The feasible set can mix equalities and inequalities:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x0007B;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>:</mi><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn><mtext>&#x000A0;or&#x000A0;</mtext><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn><mo stretchy="false">&#x0007D;</mo><mo>&#x0002E;</mo></mrow></math>
-<p>A box <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>1</mn><mo>&#x02264;</mo><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x02264;</mo><mn>1</mn></mrow></math> is already a constraint set. The unconstrained min can fall <strong>outside</strong> the box. The constrained min is then on the boundary (the star, not the circle, on the usual contour cartoon).</p>
-<p>Lab 3 is one equality: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msub><mi>&#x003B8;</mi><mn>1</mn></msub><mo>&#x0002B;</mo><mn>2</mn><msub><mi>&#x003B8;</mi><mn>2</mn></msub><mo>&#x0003D;</mo><mn>12</mn></mrow></math>, quadratic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>. You will write a Lagrangian and set every partial to zero.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> and the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math> need not be convex. The LP and QP notes take the convex case.</p>
+<p>A box <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>1</mn><mo>&#x02264;</mo><msub><mi>&#x003B8;</mi><mi>j</mi></msub><mo>&#x02264;</mo><mn>1</mn></mrow></math> is already a constraint set. The unconstrained min can fall <strong>outside</strong> the box. The constrained min is then on the boundary (the star, not the circle).</p>
+<p><img alt="Unconstrained min versus a box constraint" src="files/data-642/graphics/3.1-constrained-optimization/constrained_optimization.png" /></p>
 <hr />
-<h2>2. The Lagrangian</h2>
-<p>Turn the constrained problem into an unconstrained one in more variables. For inequalities <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn></mrow></math>,</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D420;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>
-<p>(sign conventions differ; stay consistent). <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></math> are <strong>multipliers</strong>. They are the prices of the constraints. If a constraint is slack, its multiplier is zero (KKT complementary slackness). If it is tight, the multiplier says how much <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> would improve if you relaxed it.</p>
-<p>Why convert? Most algorithms, and most theory, are written for unconstrained maps. The Lagrangian is the conversion.</p>
+<h2>2. The primal</h2>
+<p>The <strong>primal</strong> is the original problem in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>: minimize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> subject to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn></mrow></math>. Its solution is the feasible <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> you actually want, and the optimal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>. Direct search can be ugly once the constraints or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> are messy.</p>
+<p>Why turn it into an unconstrained problem in more variables?</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Simplicity</td>
+<td>Most solvers are written for unconstrained maps</td>
+</tr>
+<tr>
+<td>Algorithms</td>
+<td>You can use methods from Week 2</td>
+</tr>
+<tr>
+<td>Theory</td>
+<td>Stationarity and convergence statements are cleaner</td>
+</tr>
+<tr>
+<td>Hard problems</td>
+<td>Nonlinear / nonconvex constraints become a Lagrangian you can differentiate</td>
+</tr>
+</tbody>
+</table></div>
 <hr />
-<h2>3. Primal and dual</h2>
-<p>The <strong>primal</strong> is the original problem in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. The <strong>dual</strong> is an optimization in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></math>, obtained by minimizing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi></mrow></math> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> first (when that min is easy). Weak duality: dual objective <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02264;</mo></mrow></math> primal objective. Strong duality (typical for convex problems that satisfy a constraint qualification): the values match, and the multipliers at the saddle recover the primal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>.</p>
-<p>Week 3 notes <strong>3.2</strong> and <strong>3.3</strong> do this for an LP and a QP. The SVM dual in Module 3 is the same move with a quadratic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math>.</p>
+<h2>3. The Lagrangian</h2>
+<p>For inequalities <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mn>0</mn></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><munderover><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>m</mi></munderover><msub><mi>&#x003BB;</mi><mi>i</mi></msub><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>J</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D420;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>with multipliers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>m</mi></msup></mrow></math>. (Sign conventions differ across books; stay consistent with the slide that introduced <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math>.)</p>
+<p>Stationarity of the Lagrangian:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>&#x02207;</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002C;</mo><mspace width="2em" /><msub><mo>&#x02207;</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></msub><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002E;</mo></mrow></math>
+<p>A multiplier is the rate of change of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> if you nudge the corresponding constraint. It is the <strong>price</strong> of that constraint.</p>
+<hr />
+<h2>4. The dual</h2>
+<p>Minimize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi></mrow></math> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> first (when that min is easy). What remains is a function of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>;</mi><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>The <strong>Lagrange dual</strong> is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>max</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>m</mi></msup></mrow></msub><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mspace width="1em" /><mtext>subject&#x000A0;to</mtext><mspace width="1em" /><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02265;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002E;</mo></mrow></math>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>What the dual gives you</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A <strong>lower bound</strong> on the primal min</td>
+<td>You can score a candidate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math></td>
+</tr>
+<tr>
+<td>Multipliers as sensitivities</td>
+<td>How much <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> moves if a constraint moves</td>
+</tr>
+<tr>
+<td>Sometimes a cheaper solve</td>
+<td>Dual decomposition, cutting planes; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>l</mi></mrow></math> can flip which problem is small</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>5. SVM as a constrained problem</h2>
+<p>Soft-margin SVM is already in this shape:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>l</mi></msup></mrow></msub><mi>&</mi><mspace width="1em" /><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><msup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msup><mo>&#x0002B;</mo><mi>C</mi><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mspace linebreak="newline" /><mtext>subject&#x000A0;to</mtext><mi>&</mi><mspace width="1em" /><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msubsup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi><mo>&#x022A4;</mo></msubsup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002B;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mo>&#x0002C;</mo><mspace width="1em" /><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mo>&#x02265;</mo><mn>0</mn><mo>&#x0002E;</mo></mrow></mrow></math>
+<p><img alt="Maximum-margin hyperplane" src="files/data-642/graphics/3.1-constrained-optimization/svm.png" /></p>
+<p>Form the Lagrangian, pass to the dual, and the multipliers become the story of which points sit on the margin. Notes <strong>3.2</strong> and <strong>3.3</strong> write the same move for an LP and a QP. Week 5 returns to this primal.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>What does a Lagrange multiplier charge you for?</p>
+</li>
+<li>
+<p>In the box-constraint picture, why can the star (constrained min) differ from the circle (unconstrained min)?</p>
+</li>
+<li>
+<p>Why might you solve the dual instead of the primal, even though the primal is the problem you stated?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -133,7 +212,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
             </footer>
         </div>
 

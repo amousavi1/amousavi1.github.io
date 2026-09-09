@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.3 Support Vector Machines - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.3 Support Vector Machines</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 5 &middot; <a href="files/data-642/svms.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/5.3-svms.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Margins, the dual, and the kernel trick.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>, Theodoridis, and Géron, <em>Hands-On Machine Learning</em>.</p>
+<h2>1. The main idea</h2>
+<p>Think of open and filled circles as houses in two villages. A road between them should be as wide as possible and should demolish as few houses as possible. No sensible engineer picks the dash-dotted path in the figure.</p>
+<p>A classifier should sit between the dense regions of the two classes, in a sparse belt, leaving the <strong>largest possible margin</strong>. That is the usual requirement for <strong>generalization</strong>: small error on points that were not in the training set.</p>
+<p><img alt="Maximum-margin road between two villages" src="files/data-642/graphics/5.3-svms/svm.png" /></p>
+<hr />
+<h2>2. Linearly separable classes</h2>
+<p>If the classes are linearly separable, infinitely many hyperplanes classify the training set with zero error. From that family one can always keep those that satisfy</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><mn>1</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>N</mi><mo>&#x0002E;</mo></mrow></math>
+<p>The SVM picks the one with smallest norm:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><munder><mrow><mtext>minimize</mtext></mrow><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>l</mi></mrow></msup></mrow></munder><mi>&</mi><mspace width="1em" /><mfrac><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><msup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msup></mrow><mrow><mn>2</mn></mrow></mfrac><mspace linebreak="newline" /><mtext>subject&#x000A0;to</mtext><mi>&</mi><mspace width="1em" /><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><mn>1</mn><mo>&#x0002C;</mo><mspace width="1em" /><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02026;</mo><mo>&#x0002C;</mo><mi>N</mi><mo>&#x0002E;</mo></mrow></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo fence="false" stretchy="false">&#x02016;</mo></mrow></math> is tied directly to the <strong>margin</strong>.</p>
+<hr />
+<h2>3. Primal, dual, and support vectors</h2>
+<p>The constrained problem is the <strong>primal</strong>. It has a <strong>dual</strong>. In general the dual only lower-bounds the primal; under convexity (and regularity of the constraints) the values match. SVM meets those conditions, so you may solve either.</p>
+<p>The Lagrangian is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><msup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msup><mo>&#x02212;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>KKT stationarity gives</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>&#x02207;</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></msub><mi>&#x02112;</mi><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mspace width="1em" /><mo>&#x021D2;</mo><mspace width="1em" /><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><msub><mi>y</mi><mi>n</mi></msub><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>and</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>&#x02207;</mo><mrow><msub><mi>&#x003B8;</mi><mn>0</mn></msub></mrow></msub><mi>&#x02112;</mi><mo>&#x0003D;</mo><mn>0</mn><mspace width="1em" /><mo>&#x021D2;</mo><mspace width="1em" /><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><msub><mi>y</mi><mi>n</mi></msub><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002C;</mo><mspace width="1em" /><msub><mi>&#x003BB;</mi><mi>n</mi></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002C;</mo><mspace width="1em" /><msub><mi>&#x003BB;</mi><mi>n</mi></msub><mo>&#x02265;</mo><mn>0</mn><mo>&#x0002E;</mo></mrow></math>
+<p>Plug that expansion into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi></mrow></math> and solve the dual with a <strong>quadratic program</strong>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><munder><mrow><mtext>minimize</mtext></mrow><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></munder><mi>&</mi><mspace width="1em" /><mfrac><mn>1</mn><mn>2</mn></mfrac><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><munderover><mo>&#x02211;</mo><mrow><mi>m</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><msub><mi>&#x003BB;</mi><mi>m</mi></msub><msub><mi>y</mi><mi>n</mi></msub><msub><mi>y</mi><mi>m</mi></msub><msubsup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi><mo>&#x022A4;</mo></msubsup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>m</mi></msub><mo>&#x02212;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><mspace linebreak="newline" /><mtext>subject&#x000A0;to</mtext><mi>&</mi><mspace width="1em" /><msub><mi>&#x003BB;</mi><mi>n</mi></msub><mo>&#x02265;</mo><mn>0</mn><mo>&#x0002C;</mo><mspace width="1em" /><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><msub><mi>y</mi><mi>n</mi></msub><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002E;</mo></mrow></mrow></math>
+<p>With a dual solution <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow><mo>&#x0005E;</mo></mover></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><msub><mi>N</mi><mi>s</mi></msub></mrow></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><msub><mi>y</mi><mi>n</mi></msub><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>N</mi><mi>s</mi></msub></mrow></math> is the number of <strong>nonzero</strong> multipliers. Only points that meet the inequality as an equality, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, have <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BB;</mi><mi>n</mi></msub><mo>&#x02260;</mo><mn>0</mn></mrow></math>. Those points are the <strong>support vectors</strong>. Recover <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mrow><mi>&#x003B8;</mi></mrow><mo>&#x0005E;</mo></mover><mn>0</mn></msub></mrow></math> from any such equality.</p>
+<hr />
+<h2>4. Notes</h2>
+<ul>
+<li>The SVM solution is <strong>unique</strong>: the cost is strictly convex.</li>
+<li>The <strong>dual</strong> is usually faster than the primal.</li>
+<li>The dual is what makes the <strong>kernel trick</strong> possible. In an RKHS the predictor is</li>
+</ul>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover accent="true"><mrow><mi>y</mi></mrow><mo>&#x0005E;</mo></mover><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><msub><mi>N</mi><mi>s</mi></msub></mrow></munderover><msub><mi>&#x003BB;</mi><mi>n</mi></msub><msub><mi>y</mi><mi>n</mi></msub><mi>&#x003BA;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo>&#x0002E;</mo></mrow></math>
+<hr />
+<h2>5. Non-separable classes</h2>
+<p>When the classes overlap, allow slack:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><munder><mrow><mtext>minimize</mtext></mrow><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>l</mi></mrow></msup></mrow></munder><mi>&</mi><mspace width="1em" /><mfrac><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><msup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msup></mrow><mrow><mn>2</mn></mrow></mfrac><mo>&#x0002B;</mo><mi>C</mi><munderover><mo>&#x02211;</mo><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mspace linebreak="newline" /><mtext>subject&#x000A0;to</mtext><mi>&</mi><mspace width="1em" /><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02265;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mo>&#x0002C;</mo><mspace width="1em" /><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mo>&#x02265;</mo><mn>0</mn><mo>&#x0002E;</mo></mrow></mrow></math>
+<p>A <strong>margin error</strong> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>n</mi></msub><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x022A4;</mo></msup><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo>&#x0002B;</mo><msub><mi>&#x003B8;</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003C;</mo><mn>1</mn></mrow></math>, i.e. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mo>&#x0003E;</mo><mn>0</mn></mrow></math>. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BE;</mi><mi>n</mi></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math> that point does not add to the cost. The optimizer tries to drive as many <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003BE;</mi><mi>n</mi></msub></mrow></math> as possible to zero.</p>
+<p>The user parameter <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> trades the two terms. Large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>: a <strong>small</strong> margin, fewer margin errors. Small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>: the opposite.</p>
+<hr />
+<h2>6. Choice of hyper-parameters</h2>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> is almost always chosen by <strong>cross-validation</strong> on held-out data.</p>
+<p>The other choice is the <strong>kernel</strong>. Different kernels, different performance. A Gaussian kernel needs enough training points to fill the input space, because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BA;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> matches <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> to the stored point <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>n</mi></msub></mrow></math>. Training-set size matters.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Kernel</th>
+<th>Formula</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BA;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x022A4;</mo></msup><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup></mrow></math></td>
+<td>Linearly separable data, or many features relative to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math></td>
+</tr>
+<tr>
+<td>Polynomial</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BA;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x022A4;</mo></msup><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><mo>&#x0002B;</mo><mi>c</mi><msup><mo stretchy="false">&#x00029;</mo><mi>d</mi></msup></mrow></math></td>
+<td>Polynomial-shaped boundaries (e.g. some image tasks)</td>
+</tr>
+<tr>
+<td>Gaussian RBF</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BA;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>exp</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mo>&#x02212;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02212;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><msup><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msup><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mn>2</mn><msup><mi>&#x003C3;</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo></mrow></math></td>
+<td>Complex nonlinear relations</td>
+</tr>
+<tr>
+<td>Sigmoid</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003BA;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002C;</mo><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003B1;</mi><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x022A4;</mo></msup><msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x02032;</mi></msup><mo>&#x0002B;</mo><mi>c</mi><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+<td>Periodic or sigmoid-like relations (e.g. some time series)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>7. Practice</h2>
+<ol>
+<li>
+<p>Where do the support vectors appear in the SVM dual?</p>
+</li>
+<li>
+<p>What does a large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> do to the margin and to margin errors?</p>
+</li>
+<li>
+<p>Why does the dual make the kernel trick possible?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

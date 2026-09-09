@@ -104,24 +104,45 @@
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-642.html">DATA 442/642</a> &middot; Week 3 &middot;
-                            <a href="files/data-642/linear-programming.pdf" target="_blank" rel="noopener">PDF</a>
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 3 &middot; <a href="files/data-642/linear-programming.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/3.2-linear-programming.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
                             A linear cost, linear inequalities, and a dual that is also an LP.
                         </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<p>The figures follow Deisenroth, Faisal, and Ong, <em>Mathematics for Machine Learning</em>.</p>
 <h2>1. Linear cost, linear inequalities</h2>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>d</mi></msup></mrow></msub><msup><mi>&#x1D41C;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mspace width="1em" /><mtext>subject&#x000A0;to</mtext><mspace width="1em" /><mi>A</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02264;</mo><mi>&#x1D41B;</mi><mo>&#x0002E;</mo></mrow></math>
-<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> variables, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> constraints. Feasible set: a polyhedron. Level sets of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>&#x1D41C;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>: parallel hyperplanes. The min, if it exists, is at a vertex (or on a face). That is why simplex walks vertices and why interior-point methods hug the interior of the same polyhedron.</p>
-<p>Feature selection and some ranking problems can be written this way. This course uses LP as the <strong>simplest constrained</strong> problem whose dual you can write by hand.</p>
+<p>A <strong>linear program</strong> is the special case where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> and the constraints are linear. In machine learning that is how you optimize a linear model under linear limits, and how you write some feature-selection and dimension-reduction tasks so a solver can hit the feasible set.</p>
+<p>Level sets of a linear cost are parallel hyperplanes. Inequality constraints are half-spaces. The feasible set is a polyhedron (shaded). The min, if it exists, sits at a vertex or on a face.</p>
+<p><img alt="Linear program: level curves and inequality half-spaces" src="files/data-642/graphics/3.2-linear-programming/fig.png" /></p>
 <hr />
-<h2>2. Dual of an LP</h2>
-<p>Lagrangian <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mi>&#x1D41C;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mo stretchy="false">&#x00028;</mo><mi>A</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><mi>&#x1D41B;</mi><mo stretchy="false">&#x00029;</mo></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02265;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. Stationarity in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> forces</p>
+<h2>2. The primal</h2>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>min</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>d</mi></msup></mrow></msub><msup><mi>&#x1D41C;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mspace width="1em" /><mtext>subject&#x000A0;to</mtext><mspace width="1em" /><mi>A</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02264;</mo><mi>&#x1D41B;</mi><mo>&#x0002C;</mo></mrow></math>
+<p>with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>m</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D41B;</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>m</mi></msup></mrow></math>. That is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> variables and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> linear constraints.</p>
+<hr />
+<h2>3. Dual of an LP</h2>
+<p>Lagrangian, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02265;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mi>&#x1D41C;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mo stretchy="false">&#x00028;</mo><mi>A</mi><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><mi>&#x1D41B;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Collect terms in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>&#x1D41C;</mi><mo>&#x0002B;</mo><msup><mi>A</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo>&#x02212;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D41B;</mi><mo>&#x0002E;</mo></mrow></math>
+<p>Stationarity in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> forces</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x1D41C;</mi><mo>&#x0002B;</mo><msup><mi>A</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002E;</mo></mrow></math>
-<p>The dual is then itself an LP,</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>max</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02265;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></msub><mspace width="0.278em" /><mo>&#x02212;</mo><msup><mi>&#x1D41B;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mspace width="1em" /><mtext>subject&#x000A0;to</mtext><mspace width="1em" /><mi>&#x1D41C;</mi><mo>&#x0002B;</mo><msup><mi>A</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002E;</mo></mrow></math>
-<p>The dual has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> variables. If you have few variables and many constraints, solve the primal. The other way around, solve the dual. Same optimal value (when the LP is feasible and bounded).</p>
-<p>Module 1 extra-credit homework asks you to do a tiny LP with KKT. That is this note, not a new topic.</p>
+<p>Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x022A4;</mo></msup><mi>&#x1D41B;</mi></mrow></math>, and the dual is itself an LP with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> variables:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mo>max</mo><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mi>m</mi></msup></mrow></msub><mo>&#x02212;</mo><msup><mi>&#x1D41B;</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mspace width="1em" /><mtext>subject&#x000A0;to</mtext><mspace width="1em" /><mi>&#x1D41C;</mi><mo>&#x0002B;</mo><msup><mi>A</mi><mo>&#x022A4;</mo></msup><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002C;</mo><mspace width="1em" /><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow><mo>&#x02265;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002E;</mo></mrow></math>
+<p>Solve the <strong>primal</strong> if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> is small. Solve the <strong>dual</strong> if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>m</mi></mrow></math> is small. Same optimal value when the LP is feasible and bounded.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>In the figure, why is the minimizer of a feasible bounded LP at a vertex (or on a face), not in the interior of the polyhedron?</p>
+</li>
+<li>
+<p>After forming the Lagrangian, what equation knocks <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math> out and leaves a dual only in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003BB;</mi></mrow></mrow></math>?</p>
+</li>
+<li>
+<p>You have few variables and many constraints. Do you prefer the primal or the dual, and why?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
@@ -130,7 +151,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T03:15:00-04:00">September 9, 2026, 3:15 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
             </footer>
         </div>
 

@@ -1,4 +1,4 @@
-The midterm is **Modules 1–4** (weeks 1–8). Week 9 is review. Canvas has the official time and room.
+Week 9 has no lecture slides; this page is a review checklist. The midterm is **Modules 1–4** (weeks 1–8). Canvas has the official time and room.
 
 What should be in your hands, not in a formula sheet you have never used:
 

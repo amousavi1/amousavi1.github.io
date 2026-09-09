@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>15.3 Evaluating GANs - DATA 442/642 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">15.3 Evaluating GANs</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-642.html">DATA 442/642</a> &middot; Week 15 &middot; <a href="files/data-642/evaluating-gans.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-642/slides/15.3-evaluating-gans.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            How to tell a sample from a training point besides looking at it.
+                        </p>
+<p>These notes walk through the lecture slides. The original deck is unchanged; use <strong>(slides)</strong> on the course hub if you want that PDF.</p>
+<h2>1. Evaluation of GANs</h2>
+<p>A GAN generator has no single training loss you can trust as a score. Watching <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> does not tell you the samples are good. Evaluation is about <strong>quality</strong> and <strong>diversity</strong> of the fakes, with qualitative and quantitative checks.</p>
+<hr />
+<h2>2. Qualitative evaluation</h2>
+<p>Look at the images at several training stages. That is the first method. It does not scale, and it is not a protocol.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Why it bites</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subjectivity</td>
+<td>The reviewer’s taste is the metric.</td>
+</tr>
+<tr>
+<td>Domain expertise</td>
+<td>A dermatologist, not a random rater, has to judge skin lesions.</td>
+</tr>
+<tr>
+<td>Limited scale</td>
+<td>You can eyeball dozens of images, not tens of thousands.</td>
+</tr>
+<tr>
+<td>No standard</td>
+<td>Each application invents its own visual checklist.</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>3. Quantitative evaluation</h2>
+<p>Metrics used while the GAN trains, next to the eyeball test.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fidelity</strong></td>
+<td>How realistic is each fake? Distance to its nearest real.</td>
+</tr>
+<tr>
+<td><strong>Diversity</strong></td>
+<td>Do the fakes cover the real distribution, or a few modes?</td>
+</tr>
+<tr>
+<td><strong>Authenticity / generalizability</strong></td>
+<td>Is the model inventing, or copying training points (overfit)?</td>
+</tr>
+<tr>
+<td><strong>Predictive performance</strong></td>
+<td>Train and test downstream models on synthetic data; does ranking match the real-data ranking?</td>
+</tr>
+</tbody>
+</table></div>
+<p>Latent interpolations are another visual check. <strong>Small perceptual path length</strong> means a short step in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> changes the image a little. <strong>Large PPL</strong> means a short step jumps to an unrelated image.</p>
+<p><img alt="Small versus large perceptual path length in latent space" src="files/data-642/graphics/15.3-evaluating-gans/PPL.png" /></p>
+<hr />
+<h2>4. Fréchet Inception Distance (FID)</h2>
+<p>Pass reals and fakes through a classifier used as a feature extractor (Inception-v3 on ImageNet is the usual choice). Drop the class head. The two clouds of embeddings are treated as multivariate Gaussians. Compare them with the Multivariate Normal Fréchet distance (Wasserstein-2).</p>
+<p>That distance is the squared gap between means, plus a covariance term: the trace of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003A3;</mi></mrow><mi>r</mi></msub><mo>&#x0002B;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003A3;</mi></mrow><mi>g</mi></msub></mrow></math> minus twice the matrix square root of the product.</p>
+<p><strong>Shortcomings.</strong> The features are only as good as Inception. You need a large sample. It is slow, and it uses only mean and covariance.</p>
+<hr />
+<h2>5. Kernel Inception Distance (KID)</h2>
+<p>KID is an alternative to FID. FID is a biased estimator, especially on small sets. KID’s expectation does not move with sample size, so it is the better default on small data. It is also cheaper, more stable, and simpler to code.</p>
+<hr />
+<h2>6. Inception Score</h2>
+<p>Inception Score also aims at diversity and fidelity. A pretrained Inception v3 model predicts class probabilities on each fake. Higher is more realistic and more diverse.</p>
+<p>Two pieces, combined with KL divergence:</p>
+<ul>
+<li><strong>Conditional</strong> probabilities: how confidently the classifier labels each fake.</li>
+<li><strong>Marginal</strong> probabilities: entropy across the batch (higher entropy, more variety).</li>
+</ul>
+<p><strong>Limits.</strong> It never looks at real images. It is capped by Inception and ImageNet. FID often tracks fidelity and diversity more faithfully.</p>
+<hr />
+<h2>7. Precision and recall</h2>
+<p><strong>Precision</strong> is fidelity: overlap of real and fake, relative to the non-realistic fakes. High precision means few junk images.</p>
+<p><img alt="Precision: fake mass inside the real support" src="files/data-642/graphics/15.3-evaluating-gans/precision.png" /></p>
+<p><strong>Recall</strong> is diversity: overlap of real and fake, relative to the reals the generator missed. High recall means better coverage of the real law.</p>
+<p><img alt="Recall: real mass covered by the generator" src="files/data-642/graphics/15.3-evaluating-gans/recall.png" /></p>
+<hr />
+<h2>8. Closing</h2>
+<p>FID, KID, Inception Score, precision, and recall are common, not exhaustive. Other metrics exist for other research goals. New ones appear often; the slides are a starter kit, not a census.</p>
+<hr />
+<h2>Practice</h2>
+<ol>
+<li>
+<p>Name one way to tell a GAN sample from a training point besides looking at it.</p>
+</li>
+<li>
+<p>What does high precision say about a GAN, and what does high recall say?</p>
+</li>
+<li>
+<p>Why is watching the GAN loss not enough to judge sample quality?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-09T10:20:00-04:00">September 9, 2026, 10:20 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
