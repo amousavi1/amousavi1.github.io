@@ -16,8 +16,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-09T10:20:00-04:00"
-LAST_UPDATED_TEXT = "September 9, 2026, 10:20 AM EDT"
+LAST_UPDATED_ISO = "2026-09-09T15:52:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 3:52 PM EDT"
 
 COURSE = "data-642"
 COURSE_TITLE = "DATA 442/642"
@@ -329,6 +329,10 @@ def write_hub() -> pathlib.Path:
                         </ul>
 
                         <h2>Weekly Materials</h2>
+                        <p class="course-weeks-intro">
+                            Each week includes additional readings and a few discussion prompts for the live session.
+                            Canvas remains the official list of required reading.
+                        </p>
                         <div class="course-weeks">
                             <div class="course-week-tabs" role="tablist" aria-label="Course weeks">
 {chr(10).join(tab_btns)}

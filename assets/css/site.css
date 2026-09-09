@@ -772,8 +772,17 @@ html[data-theme="dark"] strong {
 }
 
 /* Course hub: week tabs and material rows (title + PDF). */
+.page-courses .page__content p.course-weeks-intro {
+  /* Theme p margin-bottom is 1.3em; keep 60% of that before the week tabs. */
+  margin-bottom: calc(1.3em * 0.6);
+}
+
 .course-weeks {
   margin: 0.35em 0 0.25em;
+}
+
+.page-courses .page__content p.course-weeks-intro + .course-weeks {
+  margin-top: calc(0.35em * 0.6);
 }
 
 .course-week-tabs {
