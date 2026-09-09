@@ -15,8 +15,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-08T21:45:00-04:00"
-LAST_UPDATED_TEXT = "September 8, 2026, 9:45 PM EDT"
+LAST_UPDATED_ISO = "2026-09-09T02:00:00-04:00"
+LAST_UPDATED_TEXT = "September 9, 2026, 2:00 AM EDT"
 
 COURSE = "data-642"
 COURSE_TITLE = "DATA 442/642"
@@ -139,26 +139,41 @@ def write_hub() -> pathlib.Path:
             items = []
             for slug in lectures:
                 note = BY_SLUG[slug]
-                pdf = f"files/{COURSE}/{slug}.pdf"
-                items.append(_material_item(note["title"], f"{COURSE}-{slug}.html", pdf))
+                slide = note.get("slide")
+                slide_path = FILES / "slides" / f"{slide}.pdf" if slide else None
+                if slide_path and slide_path.exists():
+                    pdf = f"files/{COURSE}/slides/{slide}.pdf"
+                    items.append(_material_item(note["title"], pdf, pdf))
+                else:
+                    items.append(
+                        _material_item(
+                            note["title"],
+                            f"{COURSE}-{slug}.html",
+                            f"files/{COURSE}/{slug}.pdf",
+                        )
+                    )
             chunks.append(
-                '                                <p class="course-group-title">Lectures</p>\n'
+                '                                <p class="course-group-title">Notes</p>\n'
                 '                                <ul class="course-materials">\n'
                 + "\n".join(items)
                 + "\n                                </ul>"
             )
-        labs = spec.get("labs") or []
-        if labs:
-            items = []
-            for slug, _has_solutions in labs:
-                note = BY_SLUG[slug]
-                items.append(
-                    _material_item(note["title"], f"{COURSE}-{slug}.html", f"files/{COURSE}/{slug}.pdf")
-                )
+        lab_items = []
+        for slug, _has_solutions in spec.get("labs") or []:
+            note = BY_SLUG[slug]
+            lab_items.append(
+                _material_item(note["title"], f"{COURSE}-{slug}.html", f"files/{COURSE}/{slug}.pdf")
+            )
+        for title, filename in spec.get("lab_files") or []:
+            href = f"files/{COURSE}/{filename}"
+            if not (ROOT / "files" / COURSE / filename).exists():
+                continue
+            lab_items.append(_material_item(title, href, href))
+        if lab_items:
             chunks.append(
                 '                                <p class="course-group-title">Labs</p>\n'
                 '                                <ul class="course-materials">\n'
-                + "\n".join(items)
+                + "\n".join(lab_items)
                 + "\n                                </ul>"
             )
         homework = spec.get("homework") or []
@@ -176,24 +191,20 @@ def write_hub() -> pathlib.Path:
                     + "\n".join(items)
                     + "\n                                </ul>"
                 )
-        for kind, heading in (
-            ("notes", "Complementary notes"),
-            ("practice", "Practice"),
-            ("homework", "Extra practice"),
-        ):
-            items = []
+        extra_items = []
+        for kind in ("notes", "homework"):
             for title, filename in extras_for(COURSE, week, kind):
                 href = f"files/{COURSE}/{filename}"
                 if not (ROOT / "files" / COURSE / filename).exists():
                     continue
-                items.append(_material_item(title, href, href))
-            if items:
-                chunks.append(
-                    f'                                <p class="course-group-title">{heading}</p>\n'
-                    '                                <ul class="course-materials">\n'
-                    + "\n".join(items)
-                    + "\n                                </ul>"
-                )
+                extra_items.append(_material_item(title, href, href))
+        if extra_items:
+            chunks.append(
+                '                                <p class="course-group-title">Additional</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(extra_items)
+                + "\n                                </ul>"
+            )
         discussion = spec.get("discussion") or []
         if discussion:
             lis = "\n".join(f"                                    <li>{q}</li>" for q in discussion)
@@ -255,9 +266,9 @@ def write_hub() -> pathlib.Path:
                     <section class="page__content" itemprop="text">
                         <p class="course-meta">American University</p>
                         <p>
-                            Weekly notes, labs, and homework for Advanced Machine Learning.
-                            Canvas is official for due dates and submissions. This page is the public
-                            copy of the lecture notes. Questions:
+                            Weekly lecture slides, labs, and homework for Advanced Machine Learning.
+                            Canvas is official for due dates and submissions. Notes are the original
+                            course slide decks. Questions:
                             <a href="mailto:mousavi@american.edu">mousavi@american.edu</a>.
                         </p>
                         <p><a href="courses.html">All courses</a></p>
@@ -359,19 +370,23 @@ def build_note(note: dict) -> None:
 
 
 def main() -> None:
-    week = None
-    slugs = None
-    if len(sys.argv) > 1:
-        if sys.argv[1].isdigit():
-            week = int(sys.argv[1])
-        else:
-            slugs = set(sys.argv[1:])
-    for note in NOTES:
-        if week is not None and note["week"] != week:
-            continue
-        if slugs is not None and note["slug"] not in slugs:
-            continue
-        build_note(note)
+    if "--notes" in sys.argv:
+        slugs = {a for a in sys.argv[1:] if not a.startswith("--") and not a.isdigit()}
+        week = None
+        for a in sys.argv[1:]:
+            if a.isdigit():
+                week = int(a)
+                break
+        for note in NOTES:
+            if note.get("slide"):
+                continue
+            if week is not None and note["week"] != week:
+                continue
+            if slugs and note["slug"] not in slugs:
+                continue
+            if not (FILES / f"{note['slug']}.md").exists():
+                continue
+            build_note(note)
     write_hub()
     print("Wrote data-642.html")
 
