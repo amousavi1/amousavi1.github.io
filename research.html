@@ -234,6 +234,36 @@
 
                         <div class="research-rep">
                             <h4>
+                                <a href="https://arxiv.org/abs/2609.04574" target="_blank" rel="noopener"
+                                    >MURAL: Multimodal Uncertainty-Aware Recommendation via Adaptive Edge Learning</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                A. Mousavi, M. Alikhani (equal contribution), Y.-C. Lee, R. Corizzo, Y. Abdollahinejad.
+                                arXiv:2609.04574, 2026.
+                            </p>
+                            <p>
+                                Multimodal recommenders often freeze an item-item graph from a one-time similarity computation, then
+                                fuse every modality with the same weight. MURAL treats the graph as something to learn: an Adaptive
+                                Edge Learner finds item-item links as preferences change, and Uncertainty-Aware Fusion down-weights
+                                noisy views (a blurry frame, thin text, background audio) so the collaborative signal is not
+                                washed out. The figure is the pipeline: align modalities with behavior, learn edges, fuse with
+                                uncertainty, then recommend.
+                            </p>
+                            <figure class="paper-figure paper-figure--wide">
+                                <img
+                                    src="assets/images/research/mural-architecture.png"
+                                    alt="MURAL pipeline from interaction and modality features through behavior alignment, adaptive edge learning, uncertainty-aware fusion, graph convolution, and the ranking and contrastive losses."
+                                />
+                                <figcaption>
+                                    MURAL: adaptive item-item edges plus uncertainty-aware fusion of text, image, and audio, trained
+                                    with ranking and contrastive losses. Figure from Mousavi, Alikhani, Lee, Corizzo, and
+                                    Abdollahinejad, arXiv:2609.04574.
+                                </figcaption>
+                            </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
                                 <a href="https://ieeexplore.ieee.org/document/11348088" target="_blank" rel="noopener"
                                     >EMO-CARE: EEG Multi-Scale Temporal Modeling with Channel-Aware Feature Attention for Robust
                                     Subject-Independent Emotion Recognition</a>
@@ -265,7 +295,7 @@
 
                         <p>
                             Related projects, also from newest to oldest, include physics-conditioned attention for next-day wildfire
-                            spread prediction, CAM-Soft for soft hate speech detection, MURAL for multimodal recommendation, and an
+                            spread prediction, CAM-Soft for soft hate speech detection, and an
                             IEEE BigData 2024 paper on event-based multimodal fusion for misinformation detection during high-impact
                             events.
                         </p>
@@ -610,7 +640,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-08T15:55:00-04:00">September 8, 2026, 3:55 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-10T13:10:00-04:00">September 10, 2026, 1:10 PM EDT</time></div>
             </footer>
         </div>
 
