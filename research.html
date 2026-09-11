@@ -312,7 +312,8 @@
                             In finance this means portfolios that are sparse (few assets, lower trading cost), volatile enough to be
                             useful, and, when desired, mean-reverting, so prices tend to oscillate around a level rather than wander.
                             The same algorithmic ideas extend to sparse symmetric sets, hybrid quantum-classical compressive sensing,
-                            and low-rank quadratic optimization.
+                            low-rank quadratic optimization, and application-layer protection of quantum optimization jobs that run
+                            on untrusted cloud hardware.
                         </p>
 
                         <div class="research-rep">
@@ -362,6 +363,24 @@
                                     and Ayanzadeh, submitted to AAAI 2027.
                                 </figcaption>
                             </figure>
+                        </div>
+
+                        <div class="research-rep">
+                            <h4>
+                                <a href="https://arxiv.org/abs/2311.13546" target="_blank" rel="noopener"
+                                    >Enigma: Beyond Circuit-Level Security through Application-Layer Obfuscation for Quantum
+                                    Optimization</a>
+                            </h4>
+                            <p class="research-rep__venue">
+                                R. Ayanzadeh, A. Mousavi, A. Basareh, N. Alavisamani, K. Taram. Submitted to EuroSys 2027 Fall.
+                            </p>
+                            <p>
+                                Quantum optimization workloads will run on expensive cloud machines, so the problem instance itself
+                                can leak. Circuit-level protections need large quantum networks or full error correction, which are
+                                not practical yet. Enigma obfuscates the instance at the application layer: it scrambles coefficients,
+                                inserts decoy structure, and prunes variables, then recovers the original solution from the solver
+                                output.
+                            </p>
                         </div>
 
                         <div class="research-rep">
@@ -640,7 +659,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-10T13:10:00-04:00">September 10, 2026, 1:10 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-11T15:10:00-04:00">September 11, 2026, 3:10 PM EDT</time></div>
             </footer>
         </div>
 
