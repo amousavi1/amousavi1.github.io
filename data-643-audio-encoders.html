@@ -116,11 +116,15 @@
 <p>Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note <strong>6.1</strong>). The decoder is causal and <strong>cross-attends</strong> to the encoder, like translation in note <strong>3.3</strong>. The output is text, plus special tokens for language, timestamps, and task (transcribe versus translate).</p>
 <p><img alt="Whisper encoder on audio, decoder on text" src="files/data-643/graphics/6.2-audio-encoders/whisper.png" /></p>
 <p>Pretraining is weakly supervised: a huge pile of audio paired with transcripts from the web, filtered rather than hand-labeled. Multilingual is the point. You do not train this from scratch in the lab; you would load a checkpoint. The architecture is what you need to draw.</p>
+<p>Default front end: 25 ms windows, 10 ms hop, 80 mel bins, <strong>30-second</strong> chunks. Thirty seconds at a 10 ms hop is 3000 frames before patching/conv downsampling. The decoder never sees raw samples; it sees encoder states.</p>
+<p>Draw the two arrows: encoder self-attention over time–frequency tokens, decoder causal self-attention plus <strong>cross-attention</strong> into those states. That is the same picture as translation (note <strong>3.3</strong>), with a spectrogram instead of a source sentence.</p>
 <hr />
 <h2>2. CLAP: CLIP, but the image is sound</h2>
 <p><strong>CLAP</strong> (Contrastive Language–Audio Pretraining) is coordinated, not joint. An audio encoder (CNN or transformer on the spectrogram) and a text encoder emit vectors in one space. InfoNCE on audio–caption pairs. After training you keep both towers.</p>
 <p><img alt="CLAP audio and text towers" src="files/data-643/graphics/6.2-audio-encoders/clap.png" /></p>
 <p>Zero-shot tagging: encode <code>"a dog barking"</code>, rank clips by cosine. Retrieval both ways. It is not a transcriber. If you need words, use Whisper (or a CTC ASR). If you need “find the clip that matches this sentence,” use CLAP.</p>
+<p>The text tower can be bidirectional (BERT-style) because you encode a <strong>whole</strong> caption as one vector. Whisper’s decoder is causal because it <strong>emits</strong> tokens left to right.</p>
+<p>InfoNCE on a batch of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi></mrow></math> pairs is the CLIP loss from note <strong>4.3</strong>: one audio vector per clip, one text vector per caption, a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mo>&#x000D7;</mo><mi>B</mi></mrow></math> cosine matrix, positives on the diagonal. After training you throw away the matrix and keep the two encoders.</p>
 <hr />
 <h2>3. Which one in a project</h2>
 <div class="table-wrap"><table>
@@ -147,7 +151,27 @@
 </table></div>
 <p>Fusing audio with vision or text is next (note <strong>6.3</strong>). Do not concatenate a Whisper hidden state into CLIP and call it a paper; say how you aligned the rates and the losses.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>30–35 minutes</strong> at the board: draw the Whisper encoder–decoder (cross-attention arrows), then the CLAP two-tower picture, then fill the table with a project prompt from the room. Play the Whisper video <strong>in full</strong> (~5 min). This is not Lab 6; the lab stays on a sine STFT and toy fusion.</p>
+<p>Board order: (1) 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> 3000 frames, (2) decoder special tokens, (3) CLAP cosine rank, (4) “which model for this app?” You should leave the hour able to pick Whisper vs CLAP without hedging.</p>
+<p>If someone says “both take spectrograms so they are the same,” stop and point at the head: causal decoder vs a cosine.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Whisper chunk: 30 s, hop 10 ms <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>30</mn><mo>&#x0002F;</mo><mn>0.010</mn><mo>&#x0003D;</mo><mn>3000</mn></mrow></math> mel frames, 80 bands. After a stride-2 conv (as in the paper’s stem), you are on the order of 1500 encoder time-steps, not 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 16 kHz <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>480</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn></mrow></math> waveform samples. That is why the spectrogram exists.</p>
+<p>Decoder: special token <code>&lt;|transcribe|&gt;</code> then English text. The loss is next-token on those text tokens, <strong>conditioned</strong> on the encoder. Timestamp tokens are just more vocabulary; they are not a separate model.</p>
+<p>CLAP retrieval: three clips with audio embeddings <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mn>2</mn></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mn>3</mn></msub></mrow></math> and a query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.11</mn><mo>&#x0002C;</mo><mn>0.72</mn><mo>&#x0002C;</mo><mn>0.40</mn></mrow></math>. Rank is clip 2, then 3, then 1. No decoder ran. If the user wanted a transcript of clip 2, you would call Whisper on the waveform, not on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>a</mi><mn>2</mn></msub></mrow></math>.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Calling CLAP a “speech-to-text model” because both take spectrograms. The head is the task.</li>
+<li>Forgetting Whisper’s decoder is <strong>causal</strong> and CLAP’s text tower need not be.</li>
+<li>Stuffing Whisper encoder states into a CLIP image slot without resampling time. Rates (10 ms frames vs patch tokens) have to be named.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=uFOkMme19Zs">What's AI — OpenAI's Whisper Model Explained</a>. Play <strong>0:00–end</strong> (~5 min). Pause on the encoder–decoder sketch and on the 30-second chunk. CLAP is the board comparison; this clip is Whisper only.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Whisper’s decoder is causal. Why can CLAP’s text tower be bidirectional like BERT?</p>
@@ -158,6 +182,12 @@
 <li>
 <p>Name one special token Whisper uses that CLIP never needed.</p>
 </li>
+<li>
+<p>A 10 s clip, 10 ms hop, 80 mel bins, no extra pooling. How many time frames hit the encoder? If you then cut non-overlapping 2-frame patches along time only, how many patch tokens?</p>
+</li>
+<li>
+<p>Two captions score <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.9</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.1</mn></mrow></math> cosine against one clip. You want words that were actually spoken. Which model, and what does the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.9</mn></mrow></math> number <strong>not</strong> tell you?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -167,7 +197,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

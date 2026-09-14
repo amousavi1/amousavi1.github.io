@@ -118,16 +118,44 @@
 <p><strong>Cross-attention (hybrid):</strong> queries from one stream, keys and values from another. Whisper’s decoder already does this for audio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text. A video LM does it for frames <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> tokens. This is the default when you want alignment, not just a bag of scores.</p>
 <p><img alt="Early, late, and cross-attention fusion" src="files/data-643/graphics/6.3-fusion-scarcity/fusion.png" /></p>
 <p>Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>; add needs a shared dimension and assumes the axes already mean the same thing.</p>
+<p>CLIP-style <strong>two towers</strong> are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. That is the video’s job this hour.</p>
 <hr />
 <h2>2. The data pyramid</h2>
 <p>Plenty of <strong>unpaired</strong> text, plenty of unlabeled audio, fewer <strong>paired</strong> spectrogram–transcript rows, still fewer labeled tasks (emotion, medical, courtroom diarization). Pretrain the towers where the data is thick; fuse or fine-tune where it is thin.</p>
 <p><img alt="More unpaired data than paired, than labeled tasks" src="files/data-643/graphics/6.3-fusion-scarcity/scarcity.png" /></p>
 <p>Co-learning (note <strong>4.1</strong>): the rich modality teaches the poor one. Frozen CLIP or Whisper features plus a small fusion head is a legal project design. Training a new joint stack from 800 paired clips is usually not.</p>
+<p>Write the counts in a report: unpaired hours, paired hours, labeled task rows. “We fused audio and video” without those numbers is incomplete.</p>
+<p>A missing-modality plan is part of fusion, not an afterthought. Early concat with no dropout is a <strong>joint</strong> model that assumes every stream is present. Late towers can abstain: if audio is missing, skip that cosine. Cross-attention can mask a whole key set. Name which of those you trained.</p>
 <hr />
 <h2>3. What to write in a report</h2>
 <p>Name the fusion, the missing-modality plan, and which loss sees both streams. If you only have late fusion, do not claim cross-modal alignment. If paired data is scarce, say so and justify freezing a tower.</p>
+<p>Loss check: InfoNCE on tower outputs sees both streams <strong>as vectors</strong>. A captioning CE loss with cross-attention sees tokens aligned to frames. Averaging two classifiers’ logits sees neither alignment. Use the word that matches the loss.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>30 minutes</strong> at the board: three fusion sketches, concat vs add with dimensions, then the pyramid with made-up counts. Play the CLIP two-tower segment as the <strong>late fusion / coordinated</strong> baseline (~10 min). Lab 6 section 3 is the tiny concat/add; do not turn this lecture into the lab.</p>
+<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>128</mn><mo>&#x0002B;</mo><mn>128</mn><mo>&#x0003D;</mo><mn>256</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>128</mn><mo>&#x0002B;</mo><mn>128</mn></mrow></math> illegal add. If the room cannot say which linear map you need to add a 256-D vision vector into 64-D audio, redo that minute.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Audio encoder emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math>, image encoder emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math>.</p>
+<ul>
+<li><strong>Concat:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>a</mi><mi>;</mi><mi>v</mi><mo stretchy="false">]</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>256</mn></mrow></msup></mrow></math>. A linear head is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>c</mi><mo>&#x000D7;</mo><mn>256</mn></mrow></msup></mrow></math>. If the microphone dies you have no 256-vector unless you trained a missing-audio dropout (replace <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>, or a learned mask token).</li>
+<li><strong>Add:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002B;</mo><mi>v</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math>. Illegal if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>256</mn></mrow></msup></mrow></math>. You would first map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>v</mi></msub><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn><mo>&#x000D7;</mo><mn>256</mn></mrow></msup></mrow></math>.</li>
+<li><strong>Late (CLIP-style):</strong> keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi></mrow></math>, score <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>v</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math> against a text query, average the two scores. Each tower can have been pretrained on its own pairs. You did <strong>not</strong> align a pixel with a spectrogram bin.</li>
+</ul>
+<p>Pyramid: 10,000 h unlabeled audio, 600 h paired transcripts (Whisper-scale is much larger; this is a seminar toy), 400 labeled emotion clips. Pretrain or freeze the audio tower on the 600 h; train the emotion head on 400. Do not train a from-scratch joint net on 400 rows.</p>
+<p>CLIP video as baseline: two towers, InfoNCE, no early concat. That is coordinated fusion with a <strong>late</strong> comparison. Cross-attention would be a decoder querying the other stream’s tokens. Three different pictures; one hour.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Saying “add is like concat” because both “combine.” Shapes and missing-modality behavior differ.</li>
+<li>Calling two-tower cosine <strong>cross-attention</strong>. Cosine is one number; cross-attention is a map over tokens.</li>
+<li>Planning to train early fusion on a tiny paired set because “multimodal needs joint data.” Freeze the thick tower.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher — OpenAI CLIP, Connecting Text and Images</a>. Play the <strong>two-tower</strong> setup (roughly the first 10–15 min). Pause on the image tower and text tower: that is <strong>late / coordinated fusion</strong>, the baseline for this note. Early concat and cross-attention stay on the board.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Your app must work when the microphone fails but the camera works. Early fusion with no dropout, or late fusion? Why?</p>
@@ -138,6 +166,12 @@
 <li>
 <p>Where on the pyramid would you pretrain Whisper, and where would you train a courtroom speaker-ID head?</p>
 </li>
+<li>
+<p>Audio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>a</mi></msub><mo>&#x0003D;</mo><mn>64</mn></mrow></math>, vision <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>v</mi></msub><mo>&#x0003D;</mo><mn>256</mn></mrow></math>. How many parameters is a linear map that <strong>adds</strong> them in 64-D (ignore bias)? How many is a concat then a map to 64-D?</p>
+</li>
+<li>
+<p>You average CLIP-style cosines from audio and from video against one caption. Is that early, late, or cross-attention? What alignment did you <strong>not</strong> learn?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -147,7 +181,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

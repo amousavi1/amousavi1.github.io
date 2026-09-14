@@ -116,16 +116,40 @@
 <p>The SFT (or pretrain) minimum for A is a point in weight space. Fine-tuning on B walks away from it. In an MLP, the same hidden units implemented both functions; XOR then AND in Lab 8 is the cartoon. In an LLM, new instruction data overwrites features that still mattered for coding, or for a language you are not currently sampling.</p>
 <p><img alt="Accuracy on A falling while B is trained" src="files/data-643/graphics/8.2-continual-forgetting/forget.png" /></p>
 <p>Measuring it is part of the method: keep a <strong>held-out A set</strong> and plot it every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> steps of B. If you only report B, you did not look. Instruction SFT is a special case: the “old task” is everything the base model already did (code, languages, refusal style).</p>
+<p>A single shared <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math> cannot be at two distant minima at once unless the tasks agree. XOR and AND disagree on the same four bit-pairs; that is why Lab 8 is small enough to plot. In an LLM the disagreement is softer (new hospital notes vs old coding skill) but the picture is the same walk in weight space.</p>
 <hr />
 <h2>2. Replay and other patches</h2>
 <p><strong>Replay:</strong> mix a buffer of A examples into the B batches so the gradient still has a component that preserves A. The buffer can be real stored rows or <strong>pseudo-replay</strong> (sample the old model). This is the idea you will implement in spirit: do not throw A away.</p>
 <p><img alt="Old examples mixed into the new stream" src="files/data-643/graphics/8.2-continual-forgetting/replay.png" /></p>
 <p>Other knobs: smaller learning rates, freeze early layers, <strong>regularize toward <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">W</mi></mrow><mi>A</mi></msub></mrow></math></strong> (EWC-style penalties), or attach a <strong>task adapter</strong> and leave <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math> frozen (note <strong>8.3</strong>). Adapters are often the cleaner LLM answer: you add B without moving A’s weights.</p>
+<p>A 50/50 mix of A and B in each batch is the simplest replay. If you cannot store A, generate from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>A</mi></msub></mrow></math> and treat those strings as A labels (they are imperfect).</p>
+<p>Replay still <strong>moves</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math>. It only keeps a component of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><msub><mi>L</mi><mi>A</mi></msub></mrow></math> in the batch. LoRA <strong>does not move</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math>. Those are different claims; do not mix them in one sentence of a report.</p>
 <hr />
 <h2>3. Continual setups you will actually run</h2>
 <p>Instruction collections arrive in waves (new tool, new hospital, new semester). A legal design is: freeze the base, train LoRA on B, keep the A LoRA. Merging adapters is a separate, lossy step. If you must update one set of weights, replay A on purpose.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>30 minutes</strong> at the board: XOR-then-AND on a shared hidden layer, a sketch of accuracy-A vs steps-of-B, then “freeze <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math>, train an adapter.” Play LoRA with the pause on <strong>adapter vs overwrite</strong> (frozen <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math>). Lab 8 section 2 is the tiny forget curve.</p>
+<p>Leave a table on the board: method | does <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math> move? | need A data? Replay: yes, yes. Frozen LoRA: no, no (for A). EWC: yes, no (needs a Fisher sketch). Students should be able to fill that without notes.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Two tasks, one hidden layer of width 2. Train XOR to 100% on a four-point set. Then train AND on the same four <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>x</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math> bits, same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math>. AND is linearly separable; XOR is not. After enough AND steps, XOR accuracy typically falls toward chance (2/4). That is forgetting as geometry: the hidden features rotated to serve AND.</p>
+<p>Replay: each batch is 2 XOR rows + 2 AND rows. The XOR loss stays in the gradient. You may not hit 100% on both; you will not usually zero XOR.</p>
+<p>Adapter: freeze <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">W</mi></mrow><mrow><mrow><mi mathvariant="normal">X</mi><mi mathvariant="normal">O</mi><mi mathvariant="normal">R</mi></mrow></mrow></msub></mrow></math>, learn a LoRA (or a second head) for AND. XOR accuracy on the frozen net <strong>cannot</strong> move. That is the thing replay cannot promise: replay still updates the shared weights.</p>
+<p>Plot: x-axis = AND steps <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>50</mn><mo>&#x0002C;</mo><mn>100</mn><mo>&#x0002C;</mo><mn>200</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>, y-axis = XOR held-out accuracy. If the line is missing from a report, the method is incomplete.</p>
+<p>Numbers: XOR chance is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x0002F;</mo><mn>4</mn><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>. If XOR goes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x0002F;</mo><mn>4</mn><mo>&#x02192;</mo><mn>2</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math> while AND goes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x0002F;</mo><mn>4</mn><mo>&#x02192;</mo><mn>4</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math>, you traded tasks. Replay might land at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math>. LoRA-for-AND keeps XOR at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math> on the frozen net.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Reporting only task-B accuracy after a sequential train.</li>
+<li>Calling any accuracy drop “overfitting.” Overfitting is train vs test on <strong>one</strong> task; forgetting is A vs B.</li>
+<li>Mixing replay with LoRA in the writeup. Say which weights moved.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=PXWYUTMt-AU">Umar Jamil — LoRA explained</a>. Play the opening until <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math> is frozen and only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi><mo>&#x0002C;</mo><mi>B</mi></mrow></math> train (first ~10–15 min). Pause on <strong>adapter vs overwrite</strong>: that is this note’s fix. Full LoRA algebra is the next note.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>You fine-tune only on AND after XOR. What should happen to XOR accuracy if the hidden layer is tiny and shared?</p>
@@ -136,6 +160,12 @@
 <li>
 <p>Name one reason LoRA (next note) can avoid forgetting that replay cannot: the base <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math> never moves.</p>
 </li>
+<li>
+<p>Task A had 200 held-out items, 180 correct (90%). After B, 120 correct. What is the forgetting gap in points, and what must you still check on B?</p>
+</li>
+<li>
+<p>Batches of 8. Replay mixes 2 A examples with 6 B. What fraction of the gradient’s data is still A, and why might XOR still die if that fraction is this small?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -145,7 +175,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

@@ -410,6 +410,205 @@ NOTES = [
 
 BY_SLUG = {n["slug"]: n for n in NOTES}
 
+# One primary classroom video per lecture. Title includes a watch cue.
+VIDEOS = {
+    "course-map": (
+        "Karpathy: Intro to Large Language Models (watch 0:00–20:00 in class)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "neurons-activations": (
+        "3Blue1Brown: But what is a neural network? (~19 min)",
+        "https://www.youtube.com/watch?v=aircAruvnKk",
+    ),
+    "gradient-descent": (
+        "3Blue1Brown: Gradient descent, how neural networks learn (~21 min)",
+        "https://www.youtube.com/watch?v=IHZwWFHWa-w",
+    ),
+    "embeddings": (
+        "StatQuest: Word Embedding and Word2Vec, Clearly Explained (~16 min)",
+        "https://www.youtube.com/watch?v=viZrOnJclY0",
+    ),
+    "sequence-rnns": (
+        "StatQuest: Recurrent Neural Networks, Clearly Explained (~21 min)",
+        "https://www.youtube.com/watch?v=AsNTP8Kwu80",
+    ),
+    "vanishing-gradients": (
+        "Stanford CS224N: Simple and LSTM RNNs (watch the vanishing/exploding segment)",
+        "https://www.youtube.com/watch?v=0LixFSa7yts",
+    ),
+    "lstm-gru": (
+        "StatQuest: Long Short-Term Memory (LSTM), Clearly Explained (~21 min)",
+        "https://www.youtube.com/watch?v=YCzL96nL7j0",
+    ),
+    "attention-need": (
+        "3Blue1Brown: But what is a GPT? Visual intro to transformers (~27 min)",
+        "https://www.youtube.com/watch?v=wjZofJX0v4M",
+    ),
+    "self-attention": (
+        "3Blue1Brown: Attention in transformers, step-by-step (~26 min)",
+        "https://www.youtube.com/watch?v=eMlx5fFNoYc",
+    ),
+    "transformer-block": (
+        "Umar Jamil: Transformer explained (architecture + code; watch the block walkthrough)",
+        "https://www.youtube.com/watch?v=bCz4OMemCcA",
+    ),
+    "gpt-bert": (
+        "Karpathy: Let's build GPT (watch through the first attention implementation)",
+        "https://www.youtube.com/watch?v=kCc8FmEb1nY",
+    ),
+    "multimodal-foundations": (
+        "Yannic Kilcher: OpenAI CLIP, Connecting Text and Images (watch the two-tower setup)",
+        "https://www.youtube.com/watch?v=T9XSU0pKX2E",
+    ),
+    "vision-transformers": (
+        "Umar Jamil: Vision Transformer explained (watch the patch embedding section)",
+        "https://www.youtube.com/watch?v=j6kuzuy2ZZo",
+    ),
+    "contrastive-zeroshot": (
+        "Yannic Kilcher: OpenAI CLIP (InfoNCE batch and zero-shot prompts)",
+        "https://www.youtube.com/watch?v=T9XSU0pKX2E",
+    ),
+    "clip": (
+        "Yannic Kilcher: OpenAI CLIP, Connecting Text and Images (full paper)",
+        "https://www.youtube.com/watch?v=T9XSU0pKX2E",
+    ),
+    "blip": (
+        "What's AI: OpenAI's Whisper Model Explained (encoder–decoder analog; pair with the BLIP paper)",
+        "https://www.youtube.com/watch?v=uFOkMme19Zs",
+    ),
+    "retrieval-bias": (
+        "Yannic Kilcher: OpenAI CLIP (prompting, retrieval, and failure modes in the second half)",
+        "https://www.youtube.com/watch?v=T9XSU0pKX2E",
+    ),
+    "audio-spectrograms": (
+        "Valerio Velardo: Short-Time Fourier Transform explained (Sound of AI)",
+        "https://www.youtube.com/watch?v=3gzHR0ZLgGE",
+    ),
+    "audio-encoders": (
+        "What's AI: OpenAI's Whisper Model Explained (~12 min)",
+        "https://www.youtube.com/watch?v=uFOkMme19Zs",
+    ),
+    "fusion-scarcity": (
+        "Yannic Kilcher: OpenAI CLIP (coordinated towers as a fusion baseline)",
+        "https://www.youtube.com/watch?v=T9XSU0pKX2E",
+    ),
+    "scaling-laws": (
+        "Karpathy: Intro to Large Language Models (scaling and pretraining after 20:00)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "mixture-of-experts": (
+        "Karpathy: Deep Dive into LLMs like ChatGPT (internals 20:11–26:01; routing on the board)",
+        "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+    ),
+    "efficiency-deploy": (
+        "Umar Jamil: LoRA explained (small deltas at deploy time; pair with the quantization section)",
+        "https://www.youtube.com/watch?v=PXWYUTMt-AU",
+    ),
+    "sft-instructions": (
+        "Karpathy: Intro to Large Language Models (assistant / SFT, watch 14:14–21:05)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "continual-forgetting": (
+        "Umar Jamil: LoRA explained (why a thin adapter forgets less than full FT)",
+        "https://www.youtube.com/watch?v=PXWYUTMt-AU",
+    ),
+    "lora-adapters": (
+        "Umar Jamil: LoRA, explained visually + PyTorch from scratch",
+        "https://www.youtube.com/watch?v=PXWYUTMt-AU",
+    ),
+    "preference-rewards": (
+        "Karpathy: Intro to Large Language Models (RLHF / preferences, 21:05–25:43)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "rlhf": (
+        "Karpathy: Intro to Large Language Models (RLHF loop, 21:05–25:43)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "dpo": (
+        "Karpathy: Deep Dive into LLMs like ChatGPT (preference / RLHF, 2:48:26–3:09:39)",
+        "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+    ),
+    "red-teaming": (
+        "Karpathy: Intro to Large Language Models (limitations/security, 45:43–58:37)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "editing-unlearning": (
+        "Karpathy: Deep Dive into LLMs (knowledge / hallucination, 1:20:32–1:41:46)",
+        "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+    ),
+    "raft-memory": (
+        "Karpathy: Intro to Large Language Models (tools/retrieval, 27:43–33:32)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "gan-idea": (
+        "Stanford CS231N: Generative models (GAN setup; 2017 lecture 13)",
+        "https://www.youtube.com/watch?v=5WoItGTWV54",
+    ),
+    "gan-training": (
+        "Stanford CS231N: Generative models (training dynamics of G vs D)",
+        "https://www.youtube.com/watch?v=5WoItGTWV54",
+    ),
+    "mode-collapse": (
+        "Stanford CS231N: Generative models (mode collapse / evaluation)",
+        "https://www.youtube.com/watch?v=5WoItGTWV54",
+    ),
+    "diffusion-forward": (
+        "Umar Jamil: How diffusion models work — explanation and code (forward process)",
+        "https://www.youtube.com/watch?v=I1sPXkm2NH4",
+    ),
+    "diffusion-reverse": (
+        "Umar Jamil: How diffusion models work — explanation and code (reverse / loss)",
+        "https://www.youtube.com/watch?v=I1sPXkm2NH4",
+    ),
+    "latent-conditioning": (
+        "Umar Jamil: Coding Stable Diffusion (watch 0:00–45:00: VAE, CLIP, UNet)",
+        "https://www.youtube.com/watch?v=ZBKpAp_6TGI",
+    ),
+    "chain-of-thought": (
+        "Karpathy: Intro to Large Language Models (reasoning / system-2 remarks)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "self-consistency-tot": (
+        "Karpathy: Deep Dive into LLMs like ChatGPT (sampling several traces)",
+        "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+    ),
+    "faithfulness": (
+        "Karpathy: Deep Dive into LLMs like ChatGPT (why a fluent trace can still be wrong)",
+        "https://www.youtube.com/watch?v=7xTGNNLPyMI",
+    ),
+    "rag-pipeline": (
+        "Karpathy: Intro to Large Language Models (retrieval and tools)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "react-tools": (
+        "Karpathy: Intro to Large Language Models (tool-use demo in the second half)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+    "eval-presentations": (
+        "Simon Peyton Jones: How to give a great research talk (watch 0:00–20:00)",
+        "https://www.youtube.com/watch?v=sT_-owjKIbA",
+    ),
+    "exam-review": (
+        "Karpathy: Intro to Large Language Models (full recap of the stack)",
+        "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+    ),
+}
+
+VIDEO_EXTRA = {
+    "gpt-bert": (
+        "CodeEmporium: BERT Neural Network — EXPLAINED!",
+        "https://www.youtube.com/watch?v=xI0HHN5XKDo",
+    ),
+    "gradient-descent": (
+        "3Blue1Brown: What is backpropagation really doing? (~14 min, after class)",
+        "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
+    ),
+    "lstm-gru": (
+        "StatQuest: Gated Recurrent Units (GRU), Clearly Explained",
+        "https://www.youtube.com/watch?v=tOuXgORsXJ4",
+    ),
+}
+
 WEEKS = {
     1: {
         "label": "Module 1 — Neural networks and word embeddings",

@@ -116,6 +116,7 @@
 <p>The pretrained decoder already assigns probability to every continuation. It does not, by default, answer as an assistant, refuse a harmful ask, or stay in a JSON schema. SFT continues maximum-likelihood training, but now each example is a <strong>prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> response</strong> pair and you typically supervise only the response tokens (mask the prompt in the loss).</p>
 <p><img alt="Pretraining then instruction SFT" src="files/data-643/graphics/8.1-sft-instructions/sft.png" /></p>
 <p>InstructGPT’s first stage, Alpaca, Vicuna, and most “chat” checkpoints start here. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution.</p>
+<p>If the concatenated string has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub></mrow></math> prompt tokens and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> response tokens, the SFT loss averages over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> positions, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></math>. Otherwise the model spends gradient on imitating the user.</p>
 <hr />
 <h2>2. What an instruction pair looks like</h2>
 <p>A row is not a Wikipedia paragraph. It is a task plus an answer you are willing to imitate:</p>
@@ -129,8 +130,29 @@
 <hr />
 <h2>3. Prompt design, as method</h2>
 <p>Write the template you used (roles, delimiters, whether you included chain-of-thought). Evaluate with the same template. A project that “just fine-tuned LLaMA” without showing the instruction mix is incomplete. SFT can overfit to a style; it cannot invent a reward for “humans prefer B over A.” That is Week 9.</p>
+<p>Token accounting: if you report “2,000 SFT rows” without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math>, you have not said how much supervision you ran. Ten-token answers and 400-token answers are different datasets. Masking the prompt is also a compute choice: you still <strong>forward</strong> the prompt (the model must condition on it); you just zero those positions in the loss.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>30–35 minutes</strong> at the board: pretrain vs SFT on one toy string, mask the prompt, then a good pair vs a noisy scrape. Play Karpathy <strong>14:14–21:05</strong> (finetuning into an assistant, ~7 min). Lab 8 is LoRA/forgetting, not an instruction dump.</p>
+<p>Chalk the mask as a 0/1 vector under the tokens. If nobody can say why the zeros sit on the user side, replay that minute before the video.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Token ids, cartoon: prompt <code>[user] List two colors.</code> is 6 tokens; response <code>red blue</code> is 3 tokens (including a leading space, say). The causal LM still predicts every next token, but the <strong>loss mask</strong> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn></mrow></math>. Gradient hits only the three response positions.</p>
+<p>Batch of two: one 80-token medical pair (all response tokens clean), one 800-token forum thread with a junk target. Uniform average over tokens <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> the forum dominates 10:1. That is why 80 perfect pairs should lead the first SFT run, and the 80,000 threads should be filtered or down-weighted.</p>
+<p>A pair must include a <strong>prompt that looks like test time</strong> and a <strong>demonstration you would accept</strong>. A pretraining document has neither role.</p>
+<p>If you include chain-of-thought in SFT, the demonstration <strong>is</strong> the trace plus the answer. At eval you must ask for the same format or you are measuring a different target. That is prompt design as method, not a style footnote.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Training on the whole concat equally, so the model learns to mimic the user.</li>
+<li>Equating “more rows” with “better SFT” when most rows are noisy.</li>
+<li>Thinking SFT is RLHF. SFT copies answers; preferences come in Week 9.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — Intro to Large Language Models</a>. Play the <strong>post-training / assistant</strong> section <strong>14:14–21:05</strong>. Pause when he contrasts the base model with the assistant: that is SFT. RLHF in the appendix (<strong>21:05+</strong>) waits for Week 9.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why mask the prompt tokens in the SFT loss instead of training next-token on the whole concatenated string equally?</p>
@@ -141,6 +163,12 @@
 <li>
 <p>Name one thing a good SFT pair must include that a pretraining document does not.</p>
 </li>
+<li>
+<p>Prompt length 40, response length 10, batch 4 sequences (all the same lengths). How many token positions enter the SFT mean? What fraction of the concat is that?</p>
+</li>
+<li>
+<p>You SFT with the template <code>### Instruction:</code> but eval with ChatML roles. Why can the loss look fine while the demo fails?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -150,7 +178,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

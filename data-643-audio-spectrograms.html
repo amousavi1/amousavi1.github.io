@@ -117,17 +117,46 @@
 <p>The <strong>short-time Fourier transform (STFT)</strong> windows the signal (Hann, hop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math>, FFT size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>), then takes a DFT of each frame. The <strong>magnitude spectrogram</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo>&#x0002C;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="false">&#x0007C;</mo><mi>X</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo>&#x0002C;</mo><mi>f</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x0007C;</mo></mrow></math> is what you plot. Phase exists, but most audio encoders drop it and keep magnitudes or a <strong>mel</strong> compression of them (log-mel filterbank).</p>
 <p><img alt="Waveform next to its spectrogram" src="files/data-643/graphics/6.1-audio-spectrograms/wave-spec.png" /></p>
 <p>A tall band that stays put is a steady tone. A sweep that climbs is a chirp. Speech looks like stacked formants that move.</p>
+<p>Frame count, without padding, is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002B;</mo><mrow><mo stretchy="true" fence="true" form="prefix">&#x0230A;</mo><mfrac><mrow><mi>L</mi><mo>&#x02212;</mo><mi>N</mi></mrow><mrow><mi>H</mi></mrow></mfrac><mo stretchy="true" fence="true" form="postfix">&#x0230B;</mo></mrow></mrow></math>
+<p>when the length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x02265;</mo><mi>N</mi></mrow></math>. Hop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math> is the time step; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> is the frequency resolution. You cannot make both arbitrarily fine: small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math> means more frames (and more tokens later); large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> means narrower Hertz bins and a longer window that smears onsets.</p>
 <hr />
 <h2>2. Spectrograms as images, then as tokens</h2>
 <p>Treat <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> as a single-channel image. A CNN can ingest it. A ViT can <strong>patch</strong> it: tiles of time <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> frequency, flatten, linear map to width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>, add positions. Lab 6 does that cut by hand.</p>
 <p><img alt="Spectrogram cut into patch tokens" src="files/data-643/graphics/6.1-audio-spectrograms/spec-patches.png" /></p>
 <p>Time is not quite space. Adjacent frequency bins are related (harmonics); adjacent frames are related (smooth speech). Positions should know which axis is which. Still, “patch then attend” is the default modern front end.</p>
+<p>Non-overlapping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo>&#x000D7;</mo><mi>p</mi></mrow></math> tiles on an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>F</mi><mo>&#x000D7;</mo><mi>T</mi></mrow></math> grid give <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mi>F</mi><mo>&#x0002F;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo>&#x000D7;</mo><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo>&#x0002F;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math> tokens if both axes divide. Remainders are padded or cropped; Lab 6 crops.</p>
 <hr />
 <h2>3. What this is not</h2>
 <p>A spectrogram is not a transcript, a speaker id, or a music tag. Those are <strong>tasks</strong> on top of the tokens. Whisper (note <strong>6.2</strong>) will decode text from this picture. CLAP will embed the picture next to a caption. If your project uses audio, write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>f</mi><mi>s</mi></msub></mrow></math>, window, hop, and whether you used mel or raw STFT. Those choices change the tokens.</p>
 <p>Log-mel is a compressive front end: fewer bands than a linear STFT, spaced the way hearing is. It is still a spectrogram. Do not skip the plot; if the 440 Hz band is missing, the rest of the pipeline is theater.</p>
+<p>Bin <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> of an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>-point FFT sits near <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x000B7;</mo><msub><mi>f</mi><mi>s</mi></msub><mo>&#x0002F;</mo><mi>N</mi></mrow></math> hertz (real FFT: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mi>N</mi><mo>&#x0002F;</mo><mn>2</mn></mrow></math>). That conversion is how you check Lab 6’s two sines.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board in the two-hour week: draw one second of a 440 Hz sine, mark a window of length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> and hop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math>, count frames, then cut a toy mel grid into patches. Play the STFT video (<strong>~10–12 min</strong>; see Video). Lab 6 (sine mixture, STFT, concat vs add) is studio time after notes <strong>6.2–6.3</strong>, not this block.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>One second of speech at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>f</mi><mi>s</mi></msub><mo>&#x0003D;</mo><mn>16</mn><mspace width="0.167em" /><mrow><mi mathvariant="normal">k</mi><mi mathvariant="normal">H</mi><mi mathvariant="normal">z</mi></mrow></mrow></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mn>16000</mn></mrow></math> samples. Take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>400</mn></mrow></math>, hop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x0003D;</mo><mn>160</mn></mrow></math> (10 ms).</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002B;</mo><mrow><mo stretchy="true" fence="true" form="prefix">&#x0230A;</mo><mfrac><mrow><mn>16000</mn><mo>&#x02212;</mo><mn>400</mn></mrow><mrow><mn>160</mn></mrow></mfrac><mo stretchy="true" fence="true" form="postfix">&#x0230B;</mo></mrow><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002B;</mo><mn>97</mn><mo>&#x0003D;</mo><mn>98</mn></mrow></math>
+<p>frames. Each real FFT has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0002F;</mo><mn>2</mn><mo>&#x0002B;</mo><mn>1</mn><mo>&#x0003D;</mo><mn>201</mn></mrow></math> bins. A 440 Hz tone sits near bin <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x02248;</mo><mn>440</mn><mo>&#x000B7;</mo><mn>400</mn><mo>&#x0002F;</mo><mn>16000</mn><mo>&#x0003D;</mo><mn>11</mn></mrow></math>.</p>
+<p>Double the hop to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x0003D;</mo><mn>320</mn></mrow></math> and keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> fixed:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mi>T</mi><mi>&#x02032;</mi></msup><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002B;</mo><mrow><mo stretchy="true" fence="true" form="prefix">&#x0230A;</mo><mfrac><mrow><mn>15600</mn></mrow><mrow><mn>320</mn></mrow></mfrac><mo stretchy="true" fence="true" form="postfix">&#x0230B;</mo></mrow><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002B;</mo><mn>48</mn><mo>&#x0003D;</mo><mn>49</mn><mo>&#x0002E;</mo></mrow></math>
+<p>About half as many frames; each frame is twice as far apart in time (20 ms). Frequency bins did not change, because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> did not.</p>
+<p>Now patch a log-mel grid of shape <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>80</mn><mo>&#x000D7;</mo><mn>400</mn></mrow></math> with non-overlapping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn><mo>&#x000D7;</mo><mn>16</mn></mrow></math> tiles (ignore remainder):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mn>80</mn></mrow><mrow><mn>16</mn></mrow></mfrac><mo>&#x000D7;</mo><mfrac><mrow><mn>400</mn></mrow><mrow><mn>16</mn></mrow></mfrac><mo>&#x0003D;</mo><mn>5</mn><mo>&#x000D7;</mo><mn>25</mn><mo>&#x0003D;</mo><mn>125</mn></mrow></math>
+<p>tokens. That is the number Lab 6 is practicing in miniature, and the number a Whisper-style encoder would attend over.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Counting <strong>samples</strong> as <strong>frames</strong>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0002F;</mo><msub><mi>f</mi><mi>s</mi></msub></mrow></math> is duration in seconds; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> is how many windows you placed.</li>
+<li>Thinking a larger FFT “hears more of the clip.” It hears a <strong>longer window</strong>, so onsets blur; hop still sets the time grid.</li>
+<li>Patching <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>F</mi><mo>&#x000D7;</mo><mi>T</mi></mrow></math> as if it were a square image and forgetting which axis is frequency. Remainders: crop in the lab; do not silently drop a formant band.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=3gzHR0ZLgGE">Valerio Velardo — Short-Time Fourier Transform (Sound of AI)</a>. Play the STFT / spectrogram walkthrough in class (~10–12 min). Pause when the window slides: that hop is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math> in the formula above. If the ID looks off, still use this URL and search <strong>“Valerio Velardo Short-Time Fourier Transform”</strong>. The board hour is the frame count and the patch count, not the complex-phase algebra.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>You double the hop length and keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> fixed. What happens to the number of time frames, and to time resolution?</p>
@@ -138,6 +167,12 @@
 <li>
 <p>Count patch tokens for a mel grid of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>80</mn><mo>&#x000D7;</mo><mn>400</mn></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn><mo>&#x000D7;</mo><mn>16</mn></mrow></math> tiles (ignore remainder).</p>
 </li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>f</mi><mi>s</mi></msub><mo>&#x0003D;</mo><mn>8000</mn></mrow></math>, one second, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>256</mn></mrow></math>, hop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x0003D;</mo><mn>128</mn></mrow></math>. How many STFT frames? What Hertz spacing is one FFT bin (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>f</mi><mi>s</mi></msub><mo>&#x0002F;</mo><mi>N</mi></mrow></math>)?</p>
+</li>
+<li>
+<p>Same clip as (4), but you pad so the last frame is included and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mi>&#x02308;</mi><mi>L</mi><mo>&#x0002F;</mo><mi>H</mi><mi>&#x02309;</mi></mrow></math>. What is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>, and why might a library report that instead of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x0002B;</mo><mi>&#x0230A;</mi><mo stretchy="false">&#x00028;</mo><mi>L</mi><mo>&#x02212;</mo><mi>N</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002F;</mo><mi>H</mi><mi>&#x0230B;</mi></mrow></math>?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -147,7 +182,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

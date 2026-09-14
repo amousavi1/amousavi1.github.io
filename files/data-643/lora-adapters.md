@@ -18,6 +18,8 @@ with \(\boldsymbol{A}\in\mathbb{R}^{r\times k}\), \(\boldsymbol{B}\in\mathbb{R}^
 
 QLoRA quantizes \(\boldsymbol{W}\) to 4-bit and still trains float adapters. Same algebra. Lab 8 uses a \(4\times 4\) frozen \(\boldsymbol{W}\) so you can print \(BA\).
 
+Trainable count for one matrix is \(r(d+k)\), not \(dk\). That is the whole point.
+
 ---
 
 ## 2. Rank, merge, many tasks
@@ -38,10 +40,52 @@ For a project: report \(r\), which modules you adapted, \(\alpha\), and whether 
 
 ---
 
-## 4. Practice
+## 4. Teaching this note
+
+About **35–40 minutes** at the board: write \(r(d+k)\) vs \(dk\), init \(B=0\), merge vs swap. Play the **full** LoRA video as assigned (in class, first 20–25 min if the clip runs long; rest after). Lab 8 section 1 is the \(4\times 4\) printout.
+
+---
+
+## 5. Worked example
+
+One map, \(d=k=4096\), rank \(r=8\):
+
+\[
+r(d+k)=8\cdot(4096+4096)=65{,}536
+\]
+
+trainable numbers. Full \(\boldsymbol{W}\) has \(4096^2=16{,}777{,}216\) entries. Ratio \(65536/16777216\approx 0.0039\) (about **0.39%**). \(\alpha/r\) is a scale; it does not add parameters.
+
+Lab size: \(r=1\), \(d=k=4\). \(A\in\mathbb{R}^{1\times 4}\) (4 numbers), \(B\in\mathbb{R}^{4\times 1}\) (4 numbers), **8** trainable vs **16** in \(\boldsymbol{W}\). At init \(B=0\Rightarrow BA=0\Rightarrow h=Wx\).
+
+Why not init \(A=0\) instead? Either factor zero works for a zero start; the usual recipe is Gaussian \(A\) and **zero \(B\)** so the first step can still move (nonzero \(A\), \(B\) getting a gradient). If both start at 0, the product stays 0 until you break the deadlock (you would not).
+
+Merge: \(\boldsymbol{W}'=\boldsymbol{W}+(\alpha/r)BA\) is \(d\times k\) again. Inference cost matches the base; you lose easy unmerge unless you kept \(A,B\).
+
+---
+
+## 6. Where students get stuck
+
+- Counting LoRA as \(r^2\) or as \(2r\) only. It is \(r(d+k)\) per adapted matrix.
+- Init both factors randomly so the model is not the base at step 0.
+- Shipping a hospital adapter and calling it private. The corpus stayed, but adapters can still leak.
+
+---
+
+## 7. Video
+
+[Umar Jamil — LoRA, explained visually + PyTorch from scratch](https://www.youtube.com/watch?v=PXWYUTMt-AU). Play the **full** video as assigned. In a two-hour class, run **0:00–~25:00** (math + the \(BA\) diagram) and leave the PyTorch walkthrough for after, or play through if time. Pause when \(B\) is zeros: that is Lab 8’s first print.
+
+---
+
+## 8. Practice
 
 1. If \(r=1\) and \(d=k=4\), how many trainable numbers are in \((A,B)\) versus \(\boldsymbol{W}\)?
 
 2. Why initialize \(\boldsymbol{B}=\boldsymbol{0}\) rather than \(\boldsymbol{A}=\boldsymbol{0}\)?
 
 3. A hospital trains a LoRA and sends it to you. What did they *not* send, and what can still leak?
+
+4. \(d=1024\), \(k=4096\), \(r=16\). Compute \(r(d+k)\) and the ratio to \(dk\).
+
+5. You adapt \(q,k,v,o\) projections, each \(d\times d\) with \(d=2048\), \(r=8\). Ignore \(\alpha\). How many trainable parameters is that (four matrices)?

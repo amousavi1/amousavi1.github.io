@@ -11,13 +11,13 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from build_lecture_note import PRINT_CSS, SIDEBAR, markdown_to_html  # noqa: E402
-from data_643_catalog import BY_SLUG, NOTES, WEEKS  # noqa: E402
+from data_643_catalog import BY_SLUG, NOTES, VIDEO_EXTRA, VIDEOS, WEEKS  # noqa: E402
 from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-14T19:20:00-04:00"
-LAST_UPDATED_TEXT = "September 14, 2026, 7:20 PM EDT"
+LAST_UPDATED_ISO = "2026-09-14T18:45:00-04:00"
+LAST_UPDATED_TEXT = "September 14, 2026, 6:45 PM EDT"
 
 COURSE = "data-643"
 COURSE_TITLE = "DATA 443/643"
@@ -215,6 +215,24 @@ def write_hub() -> pathlib.Path:
                 + "\n".join(lab_items)
                 + "\n                                </ul>"
             )
+        video_items = []
+        seen_urls = set()
+        for slug in lectures:
+            for bag in (VIDEOS, VIDEO_EXTRA):
+                if slug not in bag:
+                    continue
+                title, url = bag[slug]
+                if url in seen_urls:
+                    continue
+                seen_urls.add(url)
+                video_items.append(_material_item(title, url))
+        if video_items:
+            chunks.append(
+                '                                <p class="course-group-title">Videos</p>\n'
+                '                                <ul class="course-materials">\n'
+                + "\n".join(video_items)
+                + "\n                                </ul>"
+            )
         extra_items = []
         for kind in ("notes", "homework"):
             for title, filename in extras_for(COURSE, week, kind):
@@ -323,7 +341,10 @@ def write_hub() -> pathlib.Path:
 
                         <h2>Weekly Materials</h2>
                         <p class="course-weeks-intro">
-                            Weeks 1–15 notes, labs, and slides are posted. Canvas remains official for due dates and required reading.
+                            Weeks 1–15 notes, labs, slides, and classroom videos are posted.
+                            A weekly meeting is <strong>two hours</strong>: teach the notes (worked examples at the board),
+                            play about 10–20 minutes of the listed video, then the discussion prompts.
+                            Labs fill remaining studio time or homework. Canvas remains official for due dates.
                         </p>
                         <div class="course-weeks">
                             <div class="course-week-tabs" role="tablist" aria-label="Course weeks">

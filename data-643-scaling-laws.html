@@ -118,16 +118,39 @@
 <p>The irreducible term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>L</mi><mrow><mo>&#x0221E;</mo></mrow></msub></mrow></math> is entropy of the data plus whatever the architecture cannot represent. The interesting bit is the slope <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></math>: extra FLOPs still buy loss, with diminishing returns.</p>
 <p><img alt="Pretraining loss versus compute" src="files/data-643/graphics/7.1-scaling-laws/compute-loss.png" /></p>
 <p>Fix two of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mi>N</mi><mo>&#x0002C;</mo><mi>D</mi><mo>&#x0002C;</mo><mi>C</mi><mo stretchy="false">&#x0007D;</mo></mrow></math> and the third is constrained. Early GPT-3-style runs were <strong>compute-optimal for a short training budget</strong> that underused data: a large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>, not enough tokens.</p>
+<p>Lab 7 will fit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mi>a</mi><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></msup><mo>&#x0002B;</mo><mi>c</mi></mrow></math> on constructed points so you see the algebra, not a GPU cluster.</p>
 <hr />
 <h2>2. Chinchilla: tokens versus parameters</h2>
 <p>Hoffmann et al. (2022), <strong>Chinchilla</strong>: for a fixed FLOP budget, you should scale <strong>tokens and parameters together</strong>, not dump the budget into a huge model that sees the data once. Their fit said, roughly, equal scaling and about <strong>20 tokens per parameter</strong> for the models they trained.</p>
 <p><img alt="Chinchilla: more tokens for the same compute" src="files/data-643/graphics/7.1-scaling-laws/chinchilla.png" /></p>
 <p>A smaller model trained longer can beat a larger undertrained one. That is why later LLaMA-style recipes look “small” next to GPT-3 and still read well: they were fed more tokens.</p>
+<p>A 7B model at 20 tokens/parameter wants about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>7</mn><mo>&#x000D7;</mo><msup><mn>10</mn><mn>9</mn></msup><mo>&#x000D7;</mo><mn>20</mn><mo>&#x0003D;</mo><mn>1.4</mn><mo>&#x000D7;</mo><msup><mn>10</mn><mrow><mn>11</mn></mrow></msup></mrow></math> tokens. If you only have 14B tokens, you are 10<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> short of that rule of thumb—not “we scaled.”</p>
+<p>Kaplan-style runs often <strong>oversize</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> for a short <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>: the compute is spent on a wide net that barely sees <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>. Chinchilla re-spends that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> on more tokens. Same FLOP budget, different <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mi>N</mi><mo>&#x0002C;</mo><mi>D</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. Write both numbers, not only “7B.”</p>
 <hr />
 <h2>3. What a law does not tell you</h2>
-<p>Downstream accuracy is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math>. Alignment (Weeks 8–9), data quality, mixture, and context length all sit off the curve. Inference cost scales with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> even if you already paid for training. For a project: cite the checkpoint size and the token budget if you know them; do not claim “we scaled” because you trained two extra epochs on a toy set. Lab 7 fits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mi>a</mi><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></msup><mo>&#x0002B;</mo><mi>c</mi></mrow></math> on constructed points so you see the algebra.</p>
+<p>Downstream accuracy is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math>. Alignment (Weeks 8–9), data quality, mixture, and context length all sit off the curve. Inference cost scales with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> even if you already paid for training. For a project: cite the checkpoint size and the token budget if you know them; do not claim “we scaled” because you trained two extra epochs on a toy set.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board: write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mi>C</mi><mo stretchy="false">&#x00029;</mo></mrow></math>, mark <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>L</mi><mrow><mo>&#x0221E;</mo></mrow></msub></mrow></math>, then a Chinchilla arithmetic example (tokens vs parameters at fixed FLOPs). Play Karpathy <strong>after 20:00</strong>, especially <strong>25:43–27:43</strong> (scaling laws, ~2 min, plus a little context). The fit in Lab 7 is later in the week.</p>
+<p>Put 20 tokens/parameter on the board as a <strong>rule of thumb from one paper</strong>, not a law of nature. Then do the 7B <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 20 arithmetic so “we trained a 7B” is never a complete sentence.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Suppose <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mn>2</mn><mspace width="0.167em" /><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mn>0.15</mn></mrow></msup><mo>&#x0002B;</mo><mn>1.4</mn></mrow></math>. At <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi><mo>&#x0003D;</mo><msup><mn>10</mn><mn>4</mn></msup></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mo>&#x02248;</mo><mn>2</mn><mo>&#x000B7;</mo><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>0.6</mn></mrow></msup><mo>&#x0002B;</mo><mn>1.4</mn><mo>&#x02248;</mo><mn>2</mn><mo>&#x000B7;</mo><mn>0.251</mn><mo>&#x0002B;</mo><mn>1.4</mn><mo>&#x02248;</mo><mn>1.90</mn><mo>&#x0002E;</mo></mrow></math>
+<p>At <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi><mo>&#x0003D;</mo><msup><mn>10</mn><mn>6</mn></msup></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>0.9</mn></mrow></msup><mo>&#x02248;</mo><mn>0.126</mn></mrow></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x02248;</mo><mn>2</mn><mo>&#x000B7;</mo><mn>0.126</mn><mo>&#x0002B;</mo><mn>1.4</mn><mo>&#x0003D;</mo><mn>1.65</mn></mrow></math>. A 100<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> compute jump bought <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.25</mn></mrow></math> nats, not a new architecture. If your measured loss is already <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1.42</mn></mrow></math>, you are sitting on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>L</mi><mrow><mo>&#x0221E;</mo></mrow></msub></mrow></math>: extra FLOPs buy almost nothing.</p>
+<p>Chinchilla, same FLOPs. Training FLOPs scale roughly as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>6</mn><mi>N</mi><mi>D</mi></mrow></math> (forward+backward). Model A: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn><msub><mi>N</mi><mn>0</mn></msub></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo>&#x0003D;</mo><msub><mi>D</mi><mn>0</mn></msub><mo>&#x0002F;</mo><mn>4</mn></mrow></math>. Model B: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><msub><mi>N</mi><mn>0</mn></msub></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo>&#x0003D;</mo><msub><mi>D</mi><mn>0</mn></msub></mrow></math>. Same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mi>D</mi></mrow></math>. Chinchilla picks the <strong>balanced</strong> pair, not the 4<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math>-larger starved model. If the rule of thumb is 20 tokens/parameter, B matches it when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mn>0</mn></msub><mo>&#x0003D;</mo><mn>20</mn><msub><mi>N</mi><mn>0</mn></msub></mrow></math>; A has only 5 tokens/parameter.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Reading <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math> as “chat quality.” It is pretraining cross-entropy.</li>
+<li>Thinking a bigger <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> always wins at fixed FLOPs. Chinchilla is the counterexample.</li>
+<li>Fitting <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi><mo>&#x0002C;</mo><mi>c</mi></mrow></math> on four noisy toy points and claiming a law. Lab 7 is the algebra; the paper’s range is many orders of magnitude.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — Intro to Large Language Models</a>. Play from <strong>20:00</strong>, and pause on <strong>25:43–27:43</strong> (scaling laws). The first 20 min were Week 1; this hour is the compute curve and why tokens matter as much as parameters.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Two models, same FLOPs. One has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x000D7;</mo></mrow></math> the parameters and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math> the tokens of the other. Who does Chinchilla pick, and why?</p>
@@ -138,6 +161,12 @@
 <li>
 <p>Why can a scaling law look great while a chat eval is flat?</p>
 </li>
+<li>
+<p>Using <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mn>2</mn><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mn>0.15</mn></mrow></msup><mo>&#x0002B;</mo><mn>1.4</mn></mrow></math>, compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math> at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi><mo>&#x0003D;</mo><msup><mn>10</mn><mn>5</mn></msup></mrow></math>. (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>0.75</mn></mrow></msup><mo>&#x02248;</mo><mn>0.178</mn></mrow></math>.)</p>
+</li>
+<li>
+<p>A 1B-parameter model trained on 4B tokens. Using 20 tokens/parameter, is it over- or under-trained on data? By what factor?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -147,7 +176,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

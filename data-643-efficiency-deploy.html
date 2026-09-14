@@ -124,11 +124,33 @@
 <p>Autoregressive decode is serial: one token, then another. <strong>Speculative decoding</strong> runs a cheap <strong>draft</strong> model for several tokens, then the large <strong>target</strong> checks them in one parallel pass. If the target agrees, you accept a block; if not, you roll back at the first mismatch and sample from the target. Expected speedup is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>1</mn><mo>&#x000D7;</mo></mrow></math> when the draft is often right; the <strong>distribution</strong> is still the target’s.</p>
 <p><img alt="Draft tokens verified by the large model" src="files/data-643/graphics/7.3-efficiency-deploy/speculative.png" /></p>
 <p>This is not pruning. It is extra compute on a small net to save steps on a large net.</p>
+<p>If the draft proposes 4 tokens and the target accepts 3, you paid one large forward for 3 tokens instead of 3 large forwards. Token 4 is resampled from the target.</p>
 <hr />
 <h2>3. What to report</h2>
 <p>Name bits, which layers you quantized, whether you distilled, and tokens per second versus a dense fp16 baseline. Quality: the same eval as the uncompressed model, not only perplexity. For a project, a 4-bit laptop demo is a deployment result; it is not a new architecture.</p>
+<p>LoRA (note <strong>8.3</strong>, and this hour’s video) is another deploy move: ship a frozen base plus a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>. Prune / quantize / speculate still belong on this slide even though the clip is LoRA.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board: affine INT8 on a 1-D range, a 4-token speculative accept/reject, then one sentence on prune vs distill. Play LoRA <strong>0:00–~15:00</strong> as “deploy a small delta,” then return to prune/quantize/speculate. Lab 7’s toy quantize is studio, not this block.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Weights in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math> bits, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mn>255</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>. A symmetric affine map:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>s</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>2</mn></mrow><mrow><mn>255</mn></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><mi>z</mi><mo>&#x0003D;</mo><mn>128</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x02212;</mo><mn>128</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>128</mn></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021A6;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>255</mn></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021A6;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x000B7;</mo><mn>127</mn><mo>&#x02248;</mo><mn>0.996</mn></mrow></math>. If you drop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> and only use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mi>q</mi></mrow></math>, you cannot represent negatives.</p>
+<p>Speculative: draft emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>2</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>3</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>4</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. Target, in one forward, assigns probabilities. It agrees on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>2</mn></msub></mrow></math>, rejects <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>3</mn></msub></mrow></math>. You commit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>2</mn></msub></mrow></math>, sample a new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mi>t</mi><mn>3</mn><mi>&#x02032;</mi></msubsup></mrow></math> from the <strong>target</strong>, and throw <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>4</mn></msub></mrow></math> away. Speedup <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>2</mn></mrow></math> large-tokens per large-forward this step, if the draft is that accurate on average.</p>
+<p>Memory cartoon: 7B fp16 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>14</mn></mrow></math> GB. INT4 weights <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>3.5</mn></mrow></math> GB plus overhead. Same architecture, different bits.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Quantizing without a zero-point when the tensor is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02265;</mo><mn>0</mn></mrow></math>.</li>
+<li>Thinking speculative decoding <strong>changes</strong> the target distribution. It must not; rejected drafts are resampled from the target.</li>
+<li>Reporting perplexity only after 4-bit. The project eval is the same downstream number as fp16.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=PXWYUTMt-AU">Umar Jamil — LoRA explained</a>. Play about <strong>0:00–15:00</strong> (frozen <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math>, small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mi>A</mi></mrow></math>). That is the deploy-small-deltas story. <strong>Prune, quantize, and speculative decoding stay on the board</strong>; they are not in this clip. Full LoRA is note <strong>8.3</strong>.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why does a scale-and-zero-point map need <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, not only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>, if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> is not centered at zero?</p>
@@ -139,6 +161,12 @@
 <li>
 <p>Speculative decoding must not change the target distribution. Where does a rejected draft token get replaced?</p>
 </li>
+<li>
+<p>Map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x02208;</mo><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>2</mn><mo stretchy="false">]</mo></mrow></math> to INT8 with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mn>255</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>. Give <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> so that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>2</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>255</mn></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn></mrow></math>.</p>
+</li>
+<li>
+<p>A draft proposes 5 tokens; the target accepts the first 4. How many <strong>target</strong> forwards did you pay for those 4 tokens, and what happens to token 5?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -148,7 +176,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

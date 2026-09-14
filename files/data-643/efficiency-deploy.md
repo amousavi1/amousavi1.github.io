@@ -30,18 +30,62 @@ Autoregressive decode is serial: one token, then another. **Speculative decoding
 
 This is not pruning. It is extra compute on a small net to save steps on a large net.
 
+If the draft proposes 4 tokens and the target accepts 3, you paid one large forward for 3 tokens instead of 3 large forwards. Token 4 is resampled from the target.
+
 ---
 
 ## 3. What to report
 
 Name bits, which layers you quantized, whether you distilled, and tokens per second versus a dense fp16 baseline. Quality: the same eval as the uncompressed model, not only perplexity. For a project, a 4-bit laptop demo is a deployment result; it is not a new architecture.
 
+LoRA (note **8.3**, and this hour’s video) is another deploy move: ship a frozen base plus a small \(\Delta\). Prune / quantize / speculate still belong on this slide even though the clip is LoRA.
+
 ---
 
-## 4. Practice
+## 4. Teaching this note
+
+About **35 minutes** at the board: affine INT8 on a 1-D range, a 4-token speculative accept/reject, then one sentence on prune vs distill. Play LoRA **0:00–~15:00** as “deploy a small delta,” then return to prune/quantize/speculate. Lab 7’s toy quantize is studio, not this block.
+
+---
+
+## 5. Worked example
+
+Weights in \([-1,1]\), \(b=8\) bits, \(q\in\{0,\ldots,255\}\). A symmetric affine map:
+
+\[
+s = \frac{2}{255},\qquad z=128,\qquad x \approx s(q-128).
+\]
+
+\(q=128\) \(\mapsto\) \(0\); \(q=255\) \(\mapsto\) \(s\cdot 127 \approx 0.996\). If you drop \(z\) and only use \(x\approx s q\), you cannot represent negatives.
+
+Speculative: draft emits \((t_1,t_2,t_3,t_4)\). Target, in one forward, assigns probabilities. It agrees on \(t_1,t_2\), rejects \(t_3\). You commit \(t_1,t_2\), sample a new \(t_3'\) from the **target**, and throw \(t_4\) away. Speedup \(\approx 2\) large-tokens per large-forward this step, if the draft is that accurate on average.
+
+Memory cartoon: 7B fp16 \(\approx 14\) GB. INT4 weights \(\approx 3.5\) GB plus overhead. Same architecture, different bits.
+
+---
+
+## 6. Where students get stuck
+
+- Quantizing without a zero-point when the tensor is not \(\ge 0\).
+- Thinking speculative decoding **changes** the target distribution. It must not; rejected drafts are resampled from the target.
+- Reporting perplexity only after 4-bit. The project eval is the same downstream number as fp16.
+
+---
+
+## 7. Video
+
+[Umar Jamil — LoRA explained](https://www.youtube.com/watch?v=PXWYUTMt-AU). Play about **0:00–15:00** (frozen \(W\), small \(BA\)). That is the deploy-small-deltas story. **Prune, quantize, and speculative decoding stay on the board**; they are not in this clip. Full LoRA is note **8.3**.
+
+---
+
+## 8. Practice
 
 1. Why does a scale-and-zero-point map need \(z\), not only \(s\), if \(x\) is not centered at zero?
 
 2. Distillation needs a teacher. What happens if the teacher is already calibrated badly on your domain?
 
 3. Speculative decoding must not change the target distribution. Where does a rejected draft token get replaced?
+
+4. Map \(x\in[-2,2]\) to INT8 with \(q\in\{0,\ldots,255\}\). Give \(s\) and \(z\) so that \(q=0\) is \(-2\) and \(q=255\) is \(2\).
+
+5. A draft proposes 5 tokens; the target accepts the first 4. How many **target** forwards did you pay for those 4 tokens, and what happens to token 5?

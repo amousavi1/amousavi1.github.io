@@ -121,11 +121,40 @@
 <p><strong>Parametric:</strong> the MLP and attention weights. Fast, always on, hard to update (ROME, SFT, forgetting). <strong>Non-parametric:</strong> a datastore, BM25, embeddings, a kNN over hidden states (kNN-LM, RETRO, memorizing transformers). You update a fact by writing a snippet, not by locating a layer.</p>
 <p><img alt="Weights versus an external memory" src="files/data-643/graphics/10.3-raft-memory/memory.png" /></p>
 <p>Hybrids are the product default: parametric priors plus retrieved evidence. Lab 10’s token-overlap retriever is a non-parametric cartoon. Overwriting a dict key is a parametric cartoon.</p>
+<p>Retrieve-then-answer is a <strong>stack</strong>: index <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> SFT loss on the answer. RAFT is the training distribution for that stack (gold + distractors). Vanilla RAG is often the same stack with a frozen reader. Do not mix the words.</p>
 <hr />
 <h2>3. What to choose</h2>
 <p>Need daily-changing policy PDFs? Non-parametric plus a RAFT-style reader. Need style and instruction following? Parametric SFT/LoRA. Need to correct one biography? Try an edit <strong>and</strong> a datastore row; measure both. Hallucination often means the parametric prior won over the snippet. RAFT is how you train that fight.</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> and gold is ranked 3rd, retrieval failed before the reader ran. Raise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, fix chunking, or change overlap. If gold is in the prompt and the answer still recites the pretrain snapshot, that is a <strong>reader</strong> bug: RAFT’s job.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board: retrieve-then-answer on one question with 1 gold + 3 distractors, then parametric vs a PDF you can edit. Play Karpathy <strong>27:43–33:32</strong> (tool use) and mention <strong>40:45</strong> (custom GPTs / files as retrieval). Lab 10 section 2 is token-overlap retrieve.</p>
+<p>Count overlap tokens live for two snippets so retrieval is a number, not a slogan. Then ask: if gold is in the prompt and the answer is still the old salary, whose bug is that?</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Question: “What is the 2026 lab late policy?” Index has four snippets:</p>
+<ol>
+<li>Gold: “Labs submitted after Sunday 11:59 pm lose 10% per day.”</li>
+<li>Distractor: “The <strong>exam</strong> is closed book.”</li>
+<li>Distractor: “Office hours are Tuesday.”</li>
+<li>Old: “Labs were due Friday” (wrong year).</li>
+</ol>
+<p>Retrieve top-3 by token overlap with the question. Suppose scores (shared tokens) are 5, 1, 1, 4. Top-3: snippets 1, 4, 2. A RAFT <strong>training</strong> row is: question + those three texts + target answer that cites snippet 1 and <strong>ignores</strong> 4. If you only ever trained with snippet 1 alone, the model never learned to skip 4.</p>
+<p>At test time the same retrieve-then-answer stack runs. If the reader was frozen SFT with no context, it may still say “Friday” from weights. That failure is not an index bug.</p>
+<p>Overlap count is a toy retriever (Lab 10). Cosine on embeddings is the grown-up version (Week 14). RAFT does not care which retriever you used; it cares that <strong>training rows look like test rows</strong>, distractors included.</p>
+<p>Update a salary in a PDF and re-index: you changed <strong>non-parametric</strong> memory. ROME on “Alice’s salary” would be parametric. Prefer the PDF if the number moves every month.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Training RAG readers on gold-only context, then blaming the index when distractors win.</li>
+<li>Editing weights to fix a fact that should have been a datastore row.</li>
+<li>Calling any retrieve-then-generate “RAFT.” RAFT is <strong>training</strong> the reader on that bundle.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — Intro to Large Language Models</a>. Play <strong>27:43–33:32</strong> (tools: browser, calculator, interpreter — retrieval as a tool) and nod to <strong>40:45</strong> (files / RAG-style customization). Pause when the model looks something up instead of “remembering.” RAFT is how you SFT that habit. Week 14 is the full RAG pipeline.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why add distractor snippets to RAFT training rows?</p>
@@ -136,6 +165,12 @@
 <li>
 <p>Name one failure that retrieval cannot fix if the reader was never trained to look at the context.</p>
 </li>
+<li>
+<p>Four snippets, overlap counts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x0002C;</mo><mn>9</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>7</mn></mrow></math>. You retrieve top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. Which ids go into the prompt? If gold is id 2, did retrieval succeed?</p>
+</li>
+<li>
+<p>A RAFT row has 1 gold and 3 distractors. The target answer quotes the gold. What should the loss do if the model copies a distractor sentence instead? Why is that different from ordinary SFT on Wikipedia?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -145,7 +180,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 
