@@ -12,6 +12,14 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 This is coordinated representation (note **4.1**) with a specific loss. You never fuse pixels and words into one vector during pretraining; you only score pairs.
 
+InfoNCE, one direction, row \(i\):
+
+\[
+-\log \frac{\exp(\mathrm{sim}(\boldsymbol{v}_i,\boldsymbol{t}_i)/\tau)}{\sum_{j=1}^{N}\exp(\mathrm{sim}(\boldsymbol{v}_i,\boldsymbol{t}_j)/\tau)}.
+\]
+
+CLIP uses both directions (image-to-text and text-to-image). Temperature \(\tau\) sharpens the softmax.
+
 ---
 
 ## 2. Zero-shot classification
@@ -30,10 +38,54 @@ The negative set is the rest of the batch. Small batches \(\Rightarrow\) easy ne
 
 ---
 
-## 4. Practice
+## 4. Teaching this note
+
+**30–40 minutes.** Draw the \(N\times N\) grid, mark the diagonal, write InfoNCE for \(N=2\), then swap the text side for class prompts. Play the CLIP video on **zero-shot classifiers** and **contrastive training** (**9:00–22:25**). Pause on the similarity matrix. Lab 4’s tiny InfoNCE is this grid with \(N=4\).
+
+Minute plan: 10 min diagonal vs off-diagonal; 10 min \(N=2\) softmax; 8 min zero-shot prompts; 10 min video. If students ask about negatives in the real paper, the batch was tens of thousands; we will not fake that in lab.
+
+---
+
+## 5. Worked example
+
+Two pairs. Cosine matrix (already normalized):
+
+\[
+S=\begin{bmatrix}0.9&0.1\\0.2&0.8\end{bmatrix},\qquad \tau=1.
+\]
+
+Row 0 softmax: \(e^{0.9}\approx 2.46\), \(e^{0.1}\approx 1.11\), so \([0.69,\,0.31]\). InfoNCE term \(-\log 0.69\approx 0.37\).
+
+If every caption is the same vector, every row of \(S\) is constant, softmax is uniform, and the diagonal is not special: **the loss cannot learn matching**.
+
+Zero-shot: image \(\boldsymbol{v}=\begin{bmatrix}1\\0\end{bmatrix}\), prompts \(\text{dog}=\begin{bmatrix}0.9\\0.1\end{bmatrix}\), \(\text{cat}=\begin{bmatrix}0.1\\0.9\end{bmatrix}\). Cosines \(0.99\) vs \(0.10\). Predict dog.
+
+---
+
+## 6. Where students get stuck
+
+- Treating off-diagonal as “don’t care” instead of **negatives**.
+- Adding a class at test time that the text tower cannot spell (a new visual concept with no words).
+- Using batch size 4 in a real CLIP run and expecting ImageNet-level negatives.
+
+---
+
+## 7. Video
+
+Watch [Yannic Kilcher: OpenAI CLIP, Connecting Text and Images](https://www.youtube.com/watch?v=T9XSU0pKX2E).
+
+Pause on **zero-shot** (**9:00**) — class names as text — and on **InfoNCE / the \(N\times N\) matrix** (**14:40**). That matrix is the whole note.
+
+---
+
+## 8. Practice
 
 1. If every caption in the batch is the word *photo*, what happens to the diagonal?
 
 2. Why is `"a photo of a golden retriever"` often better than `"golden retriever"` for CLIP-style zero-shot?
 
 3. Name one class you **cannot** add at test time by typing it.
+
+4. For \(S=\begin{bmatrix}1&0\\0&1\end{bmatrix}\), \(\tau=1\), write the two InfoNCE row-losses (they should be \(0\)). Now change \(S_{01}\) to \(1\). Recompute row 0’s softmax and \(-\log p_{\text{diag}}\).
+
+5. Three prompts with cosines to one image \(0.2, 0.5, 0.1\). Which class wins zero-shot? If you divide the cosines by \(\tau=0.07\) before softmax, does the **argmax** change?

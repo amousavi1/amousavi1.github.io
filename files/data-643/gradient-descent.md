@@ -12,6 +12,8 @@ Collect all weights and biases into one vector \(\boldsymbol{\theta}\). A loss \
 
 The picture is a cartoon. Real nets live in millions of dimensions. The geometry is still the same idea: the gradient is the direction of steepest increase, so you walk the other way.
 
+Cross-entropy on a next-token distribution is the LLM default. You do not need the full formula today. You do need: **one scalar**, then **one vector of derivatives**.
+
 ---
 
 ## 2. The update
@@ -28,6 +30,8 @@ One step is
 
 **Stochastic** gradient descent (SGD) estimates \(\nabla L\) on a **minibatch**, not the full dataset. That is how you train on Wikipedia-scale text. Adam and related methods rescale coordinates using a running average of gradients; you will use them in PyTorch without deriving them today.
 
+A noisy minibatch gradient is not a bug. It is the only gradient you can afford, and the noise can help you leave sharp spikes. The price is that one step is not guaranteed to decrease \(L\).
+
 ---
 
 ## 3. Forward, loss, backward, update
@@ -43,6 +47,8 @@ One training iteration is four moves:
 
 PyTorch does (3) for you if the forward pass used `nn.Module` and a differentiable loss. Your job is to write (1), pick \(L\), and call `optimizer.step()`.
 
+If you forget `zero_grad()`, gradients **accumulate** across steps. That is a silent \(\eta\) disaster, not a new algorithm.
+
 ---
 
 ## 4. What this has to do with language models
@@ -53,10 +59,56 @@ If the gradient is noise, or \(\eta\) is wrong, or the net is linear, no amount 
 
 ---
 
-## 5. Practice
+## 5. Teaching this note
+
+**30–40 minutes.** Draw a 1-D parabola, write the update, do **two** numeric steps, then the four-box training loop. Play **0:00–12:00** of the gradient-descent video (loss surface and the step). Optional after class: the backprop video. Do not derive every chain-rule line in this block; Lab 1 will show autograd.
+
+---
+
+## 6. Worked example
+
+Let \(L(\theta)=(\theta-3)^{2}\), start at \(\theta_{0}=0\), take \(\eta=0.25\). Then \(\nabla L=2(\theta-3)\).
+
+Step 1:
+
+\[
+\theta_{1}=0-0.25\cdot 2(0-3)=0-0.25\cdot(-6)=1.5.
+\]
+
+Step 2:
+
+\[
+\theta_{2}=1.5-0.25\cdot 2(1.5-3)=1.5-0.5\cdot(-1.5)=2.25.
+\]
+
+The minimum is at \(3\). You moved \(0\to 1.5\to 2.25\). If you instead take \(\eta=2\), step 1 is \(0-2\cdot(-6)=12\), which **overshoots**. Draw both arrows on the same parabola.
+
+---
+
+## 7. Where students get stuck
+
+- Walking **up** the gradient (forgetting the minus sign).
+- Thinking SGD is “wrong GD” rather than the scalable estimator of \(\nabla L\).
+- Dropping activations after the forward pass, then being surprised that backward needs them.
+
+---
+
+## 8. Video
+
+Watch [3Blue1Brown: Gradient descent, how neural networks learn](https://www.youtube.com/watch?v=IHZwWFHWa-w).
+
+Pause when the ball follows \(-\nabla L\), and when a large step jumps the valley. Optional: [3Blue1Brown: What is backpropagation really doing?](https://www.youtube.com/watch?v=Ilg3gGewQ5U) after class (~14 min); pause on the chain-rule diagram, not the code.
+
+---
+
+## 9. Practice
 
 1. You double \(\eta\) and the loss oscillates. What happened geometrically?
 
 2. Why keep \(a^{(1)}\) after you already have \(\hat{y}\)?
 
 3. SGD uses a minibatch. Name one reason that is not “the full gradient is too slow.”
+
+4. For \(L(\theta)=\theta^{2}\), \(\theta_{0}=4\), \(\eta=0.1\), write \(\theta_{1}\) and \(\theta_{2}\). (Use \(\nabla L=2\theta\).)
+
+5. Same \(L\) and \(\theta_{0}=4\), but \(\eta=1.1\). Compute \(\theta_{1}\). Did the step move closer to \(0\) or farther?

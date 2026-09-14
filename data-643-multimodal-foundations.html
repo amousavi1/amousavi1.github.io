@@ -114,19 +114,44 @@
 <hr />
 <h2>1. Why more than one stream</h2>
 <p>A photo of a bottle does not say “flammable.” The label does. A transcript does not show who is speaking; the face does. Complementary signal, and redundant signal (lip motion plus audio). Language models in this course become <strong>conditioned</strong> on other modalities, or retrieve across them.</p>
+<p>If you only train on text, you cannot answer “what is in this photo?” without an image tower or a captioner. That is why Weeks 4–5 exist.</p>
 <hr />
 <h2>2. Joint versus coordinated</h2>
 <p><strong>Joint:</strong> mash the streams into <strong>one</strong> vector (early fusion, a concatenating MLP). Missing a modality at test time hurts.</p>
 <p><strong>Coordinated:</strong> keep a tower per modality, then pull the towers together with a similarity (CLIP is this). You can query with either side.</p>
 <p><img alt="Joint fusion versus coordinated towers" src="files/data-643/graphics/4.1-multimodal-foundations/joint-coord.png" /></p>
+<p>On the board: two arrows that you <strong>add</strong> (joint) vs two arrows that you <strong>dot</strong> (coordinated). CLIP never concatenates pixels with token ids during pretraining; it only scores pairs.</p>
 <hr />
 <h2>3. Alignment and fusion, in slogans</h2>
 <p><strong>Alignment:</strong> which region of the image goes with which phrase. Attention is the default modern tool.</p>
 <p><strong>Fusion:</strong> when you combine. Early (features), late (decisions), or hybrid (cross-attention).</p>
 <p><strong>Translation:</strong> captioning, text-to-image, speech-to-text. Week 5’s BLIP is a translation model with a matching loss.</p>
 <p><strong>Zero-shot / co-learning:</strong> use a rich modality to help a poor one. Week <strong>4.3</strong>.</p>
+<p>A detector that puts a box on “the red mug” is alignment at region level. A single cosine on the whole image vs the whole caption is alignment at instance level. Know which one your project needs.</p>
+<p>Translation is not fusion. Captioning <strong>maps</strong> image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text. CLIP <strong>scores</strong> image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02194;</mo></mrow></math> text. If your demo must output a sentence, you need a decoder (BLIP, Whisper, an LLM). If it must search a gallery, you need two towers and a cosine.</p>
+<p>Co-learning: a rich labeled modality (English captions) can supervise a poorer one (a language with few labels) if they share the image. That slogan is Week 4.3’s zero-shot, not a new architecture.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p><strong>30–40 minutes.</strong> Motivate two streams, then spend the block on joint vs coordinated with the 2-D cosine example. Play Yannic Kilcher CLIP <strong>4:40–14:40</strong> (connecting image and text; two towers as a coordinated space). Zero-shot details wait for 4.3; captioning waits for BLIP.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Image vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Matching caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, other caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x0002B;</mo></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0.8</mn><mo>&#x0002F;</mo><msqrt><mrow><mn>0.68</mn></mrow></msqrt><mo>&#x02248;</mo><mn>0.97</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x02212;</mo></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002E;</mo></mrow></math>
+<p>Coordinated retrieval: rank captions by cosine. Joint fusion: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi></mrow><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">t</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is 4-D; you need <strong>both</strong> at test time, and a typed query with no image has the wrong shape.</p>
+<p>If the image is missing, a joint MLP trained on concatenations cannot score the text alone unless you trained a special “image dropout” path. A coordinated text tower still embeds the query.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Concatenating then calling it CLIP.</li>
+<li>Assuming a joint model can take a text-only query at test time.</li>
+<li>Mixing alignment (what matches what) with fusion (when you mix features).</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
+<p>Play <strong>4:40–14:40</strong>. Pause when the two encoders emit vectors in one space, and when a cosine (not a concatenating MLP) is the interaction. That is coordinated representation.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Your app must search photos with a typed query. Joint or coordinated? Why?</p>
@@ -137,6 +162,12 @@
 <li>
 <p>What breaks if a joint model never saw audio-only examples and you drop the image at test time?</p>
 </li>
+<li>
+<p>Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>4</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. If you fuse by concatenation instead, what is the dimension of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi></mrow><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>?</p>
+</li>
+<li>
+<p>Two images <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mn>2</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> and one query <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">q</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.6</mn></mtd></mtr><mtr><mtd><mn>0.8</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Which image ranks first by cosine?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -146,7 +177,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

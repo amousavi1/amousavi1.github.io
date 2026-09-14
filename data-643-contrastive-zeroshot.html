@@ -116,6 +116,9 @@
 <p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> images and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> captions. Encode both. Cosine similarities form an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix. The loss (InfoNCE) wants the <strong>diagonal</strong> hot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> with caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>, not caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math>.</p>
 <p><img alt="Matched pairs on the diagonal" src="files/data-643/graphics/4.3-contrastive-zeroshot/contrastive.png" /></p>
 <p>This is coordinated representation (note <strong>4.1</strong>) with a specific loss. You never fuse pixels and words into one vector during pretraining; you only score pairs.</p>
+<p>InfoNCE, one direction, row <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>&#x02212;</mo><mi>log</mi><mfrac><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msubsup><mo>&#x02211;</mo><mrow><mi>j</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></msubsup><mi>exp</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>CLIP uses both directions (image-to-text and text-to-image). Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> sharpens the softmax.</p>
 <hr />
 <h2>2. Zero-shot classification</h2>
 <p>At test time, encode the image once. Encode prompts <code>"a photo of a dog"</code>, <code>"a photo of a cat"</code>, … Take the nearest prompt. There is no trained softmax over ImageNet. New classes are new strings.</p>
@@ -125,7 +128,29 @@
 <h2>3. What can go wrong</h2>
 <p>The negative set is the rest of the batch. Small batches <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> easy negatives <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> a weak space. Web pairs are noisy (Week 5: BLIP filters them). Contrastive spaces can still be <strong>biased</strong> (Week 5.3): “doctor” sits nearer to one gender’s photos.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p><strong>30–40 minutes.</strong> Draw the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> grid, mark the diagonal, write InfoNCE for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, then swap the text side for class prompts. Play the CLIP video on <strong>zero-shot classifiers</strong> and <strong>contrastive training</strong> (<strong>9:00–22:25</strong>). Pause on the similarity matrix. Lab 4’s tiny InfoNCE is this grid with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>.</p>
+<p>Minute plan: 10 min diagonal vs off-diagonal; 10 min <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> softmax; 8 min zero-shot prompts; 10 min video. If students ask about negatives in the real paper, the batch was tens of thousands; we will not fake that in lab.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Two pairs. Cosine matrix (already normalized):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.9</mn></mtd><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd><mtd><mn>0.8</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002E;</mo></mrow></math>
+<p>Row 0 softmax: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>e</mi><mrow><mn>0.9</mn></mrow></msup><mo>&#x02248;</mo><mn>2.46</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>e</mi><mrow><mn>0.1</mn></mrow></msup><mo>&#x02248;</mo><mn>1.11</mn></mrow></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mn>0.69</mn><mo>&#x0002C;</mo><mspace width="0.167em" /><mn>0.31</mn><mo stretchy="false">]</mo></mrow></math>. InfoNCE term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mn>0.69</mn><mo>&#x02248;</mo><mn>0.37</mn></mrow></math>.</p>
+<p>If every caption is the same vector, every row of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> is constant, softmax is uniform, and the diagonal is not special: <strong>the loss cannot learn matching</strong>.</p>
+<p>Zero-shot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, prompts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>dog</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.9</mn></mtd></mtr><mtr><mtd><mn>0.1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>cat</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>0.9</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.99</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.10</mn></mrow></math>. Predict dog.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Treating off-diagonal as “don’t care” instead of <strong>negatives</strong>.</li>
+<li>Adding a class at test time that the text tower cannot spell (a new visual concept with no words).</li>
+<li>Using batch size 4 in a real CLIP run and expecting ImageNet-level negatives.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
+<p>Pause on <strong>zero-shot</strong> (<strong>9:00</strong>) — class names as text — and on <strong>InfoNCE / the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix</strong> (<strong>14:40</strong>). That matrix is the whole note.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>If every caption in the batch is the word <em>photo</em>, what happens to the diagonal?</p>
@@ -136,6 +161,12 @@
 <li>
 <p>Name one class you <strong>cannot</strong> add at test time by typing it.</p>
 </li>
+<li>
+<p>For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, write the two InfoNCE row-losses (they should be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>). Now change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>S</mi><mrow><mn>01</mn></mrow></msub></mrow></math> to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>. Recompute row 0’s softmax and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><msub><mi>p</mi><mrow><mtext>diag</mtext></mrow></msub></mrow></math>.</p>
+</li>
+<li>
+<p>Three prompts with cosines to one image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.2</mn><mo>&#x0002C;</mo><mn>0.5</mn><mo>&#x0002C;</mo><mn>0.1</mn></mrow></math>. Which class wins zero-shot? If you divide the cosines by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mn>0.07</mn></mrow></math> before softmax, does the <strong>argmax</strong> change?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -145,7 +176,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

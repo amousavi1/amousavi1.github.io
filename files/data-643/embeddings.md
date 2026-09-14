@@ -14,6 +14,8 @@ A **distributed** representation is short and dense (50–300 dimensions is a cl
 
 **Distributional** is about the data: words that occur in similar contexts mean similar things (Harris). **Distributed** is about the code: a dense vector. An **embedding** is the map from a token id into that vector.
 
+Write those three words on the board as a triangle. Mixing them is the most common exam slip this week.
+
 ---
 
 ## 2. Semantic geometry
@@ -29,6 +31,8 @@ The same offset can look like gender, tense, or capital-of. You measure similari
 ![A parallelogram in embedding space](files/data-643/graphics/1.4-embeddings/semantic-geometry.png)
 
 Nearest neighbors are a debug tool. If *Paris* sits next to *France* and *Rome*, training learned something. If it sits next to punctuation, the corpus or the window is wrong.
+
+Cosine of \(\boldsymbol{u},\boldsymbol{v}\) is \(\boldsymbol{u}^{\top}\boldsymbol{v}/(\lVert\boldsymbol{u}\rVert\lVert\boldsymbol{v}\rVert)\). It ignores length. That is why a frequent word with a long vector can still sit next to a rare synonym.
 
 ---
 
@@ -70,10 +74,52 @@ You will measure this in Lab 1 on a tiny, constructed space, then later on real 
 
 ---
 
-## 6. Practice
+## 6. Teaching this note
+
+**30–40 minutes.** Contrast one-hot vs. dense with two 2-D arrows, then skip-gram’s fake task, then cosine on the worked example. Spend five minutes on the occupation offset so Lab 1’s probe is not a surprise. Play **0:00–12:00** of StatQuest Word2Vec (skip-gram vs. CBOW). Analogies and bias stay on the board, not in the video.
+
+---
+
+## 7. Worked example
+
+Three 2-D vectors:
+
+\[
+\overrightarrow{\text{movie}}=\begin{bmatrix}1\\0\end{bmatrix},\quad
+\overrightarrow{\text{film}}=\begin{bmatrix}0.8\\0.2\end{bmatrix},\quad
+\overrightarrow{\text{pizza}}=\begin{bmatrix}0\\1\end{bmatrix}.
+\]
+
+Cosine(\(\text{movie},\text{film}\)) \(=0.8/\sqrt{0.68}\approx 0.97\). Cosine(\(\text{movie},\text{pizza}\)) \(=0\). One-hot versions of the same three words would all be orthogonal.
+
+Gender offset toy: \(\overrightarrow{\text{she}}-\overrightarrow{\text{he}}=\begin{bmatrix}0\\1\end{bmatrix}\). If \(\overrightarrow{\text{nurse}}=\begin{bmatrix}0.1\\0.8\end{bmatrix}\) and \(\overrightarrow{\text{engineer}}=\begin{bmatrix}0.9\\0.1\end{bmatrix}\), the she-direction inner products are \(0.8\) vs \(0.1\). That is a probe, not a joke.
+
+---
+
+## 8. Where students get stuck
+
+- Using Euclidean distance and then “the frequent word is never nearest.”
+- Calling the one-hot vector an embedding because it is a vector.
+- Treating analogy accuracy as the project metric.
+
+---
+
+## 9. Video
+
+Watch [StatQuest: Word Embedding and Word2Vec, Clearly Explained](https://www.youtube.com/watch?v=viZrOnJclY0).
+
+Pause on skip-gram vs. CBOW, and on the moment the hidden weights become the embedding table. You can skip the neural-net-from-scratch recap if note 1.2 already landed.
+
+---
+
+## 10. Practice
 
 1. In one sentence each: distributional, distributed, embedding.
 
 2. Why is cosine the default similarity?
 
 3. Give one intrinsic and one extrinsic test for a word embedding. Which one would you put in a project report?
+
+4. Compute cosine between \(\boldsymbol{a}=\begin{bmatrix}3\\4\end{bmatrix}\) and \(\boldsymbol{b}=\begin{bmatrix}4\\3\end{bmatrix}\). Then compute \(\boldsymbol{a}^{\top}\boldsymbol{b}\). Which number changed more when you replace \(\boldsymbol{b}\) by \(10\boldsymbol{b}\)?
+
+5. In 2-D, \(\overrightarrow{\text{king}}=\begin{bmatrix}2\\2\end{bmatrix}\), \(\overrightarrow{\text{man}}=\begin{bmatrix}2\\0\end{bmatrix}\), \(\overrightarrow{\text{woman}}=\begin{bmatrix}0\\2\end{bmatrix}\). Compute \(\overrightarrow{\text{king}}-\overrightarrow{\text{man}}+\overrightarrow{\text{woman}}\). What point would you hope \(\overrightarrow{\text{queen}}\) near?

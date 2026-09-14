@@ -115,6 +115,7 @@
 <h2>1. Bootstrap the data</h2>
 <p>Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter keeps the ones that still match the image (ITM: image–text matching). The cleaned pairs retrain the model. That loop is the “bootstrapped pretraining” in the syllabus.</p>
 <p><img alt="Noisy pairs, filter, matching and language losses" src="files/data-643/graphics/5.2-blip/blip-pipeline.png" /></p>
+<p>Alt-text like “IMG_4032” or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.</p>
 <hr />
 <h2>2. Three losses, one backbone</h2>
 <div class="table-wrap"><table>
@@ -140,11 +141,37 @@
 </tbody>
 </table></div>
 <p>The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. <strong>BLIP-2</strong> later freezes a strong image encoder and trains a thin <strong>Q-Former</strong>; you can treat that as “same idea, cheaper.”</p>
+<p>ITC needs a batch of negatives. ITM can use a <strong>hard</strong> negative (a caption that almost matches). LM is why BLIP can caption at all.</p>
+<p>Whisper, which you will watch, is an encoder–decoder for <strong>speech <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>. BLIP is encoder–decoder for <strong>image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>, plus ITC and ITM. That is the analog, not the same paper.</p>
 <hr />
 <h2>3. Captioning versus retrieval</h2>
 <p>Retrieval (CLIP) returns an existing string from a gallery. Captioning (BLIP) <strong>generates</strong> a new string. Evaluation: CIDEr / CLIP-score / human, not just recall@k. Hallucinated objects are the usual failure (“a red bike” when there is none).</p>
+<p>CLIP-score as a caption metric is circular if your captioner was trained to match CLIP. Prefer at least one human or task-specific check. CIDEr rewards n-gram overlap with reference captions; it punishes valid paraphrases. Report both and show two example captions, one good and one hallucinated.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p><strong>30–40 minutes.</strong> CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the <strong>encoder–decoder analog</strong> for captioning (<strong>full ~12 min</strong>, or <strong>0:00–8:00</strong>). Say explicitly: Whisper does not add ITC+ITM; <strong>BLIP does</strong>.</p>
+<p>Minute plan: 8 min retrieve vs generate; 10 min ITC/ITM/LM table; 8 min ITM numbers; 12 min Whisper clip plus the one-sentence BLIP add-on.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>One image, two captions: true “a red mug on a desk,” false “a blue bicycle.”</p>
+<p>ITC (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>): softmax over the batch; the false caption is one negative among many in a real batch.</p>
+<p>ITM: a classifier on the fused <code>[CLS]</code> (or matched vs unmatched pair) with labels <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>. Suppose logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1</mn></mrow></math>. Sigmoid probabilities <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.88</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.27</mn></mrow></math>. Binary cross-entropy on those is the ITM term.</p>
+<p>LM: decode <code>a</code>, <code>red</code>, <code>mug</code>, … with cross-attention into ViT patch tokens. Loss is next-token, like GPT, but the “prefix” includes the image.</p>
+<p>If alt-text was <code>DSC0001.jpg</code>, LM on that string teaches garbage. Filter first, then LM.</p>
+<p>ITC wants a <strong>batch</strong>. ITM can score one pair. LM wants a <strong>token sequence</strong>. If your project only retrieves, stop at ITC (or CLIP). If it must write, you need LM. If web text is junk, you need the filter (ITM).</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Using recall@k as the only captioning metric.</li>
+<li>Thinking ITM and ITC are the same softmax.</li>
+<li>Skipping the filter and training LM on raw alt-text.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Keep the <strong>BLIP paper</strong> as the reading (Li et al., 2022). For a lecture clip, watch <a href="https://www.youtube.com/watch?v=uFOkMme19Zs">OpenAI’s Whisper Model Explained</a> as an <strong>encoder–decoder analog for captioning</strong>: audio encoder, text decoder. Pause on that cross-attention picture.</p>
+<p>Then say: <strong>BLIP adds ITC + ITM + LM</strong> on image–text pairs, and bootstraps noisy web captions. Whisper transcribes; BLIP captions and matches.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why filter generated captions instead of trusting every alt-text on the web?</p>
@@ -155,6 +182,12 @@
 <li>
 <p>Name one metric you would report in a captioning project that CLIP retrieval would not need.</p>
 </li>
+<li>
+<p>ITM logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> for a matched pair. Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>s</mi><mo stretchy="false">&#x00029;</mo></mrow></math> in both cases. Write the binary-CE term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>s</mi><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+</li>
+<li>
+<p>A caption of 6 tokens (including <code>EOS</code>). LM loss is mean token NLL. If five tokens have probability <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn></mrow></math> and <code>EOS</code> has probability <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.25</mn></mrow></math>, what is the mean NLL? (Use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi></mrow></math> base <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>e</mi></mrow></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mn>0.5</mn><mo>&#x02248;</mo><mn>0.69</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mn>0.25</mn><mo>&#x02248;</mo><mn>1.39</mn></mrow></math>.)</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -164,7 +197,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

@@ -118,16 +118,40 @@
 <p>Each factor <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi></mrow></msub><mo>&#x0002F;</mo><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math> contains <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>tanh</mi><mi>&#x02032;</mi></msup></mrow></math>. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0007C;</mo><msup><mi>tanh</mi><mi>&#x02032;</mi></msup><mo>&#x0007C;</mo><mo>&#x02264;</mo><mn>1</mn></mrow></math>, and it is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0226A;</mo><mn>1</mn></mrow></math> unless the pre-activation sits near 0. A product of twenty numbers smaller than 1 is tiny.</p>
 <p><img alt="Gradient scale versus steps back in time" src="files/data-643/graphics/2.2-vanishing-gradients/vanish.png" /></p>
 <p>The gated curve is the slogan for LSTM/GRU: keep a path whose multiplier can stay near 1.</p>
+<p>In 1-D, if each factor is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn></mrow></math>, ten steps give <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.5</mn><mrow><mn>10</mn></mrow></msup><mo>&#x02248;</mo><mn>0.001</mn></mrow></math>. The early token still sits in the forward state as a faint trace, but the <strong>learning signal</strong> is gone.</p>
 <hr />
 <h2>2. Vanishing versus exploding</h2>
 <p>Same product, opposite problem. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02016;</mo><msub><mi>W</mi><mi>h</mi></msub><mo>&#x02016;</mo></mrow></math> is large, the signal blows up, weights become NaNs, and training stops. <strong>Gradient clipping</strong> (rescale if the global norm exceeds a threshold) is the usual bandage for exploding. It does not fix vanishing.</p>
 <p><img alt="Vanishing versus exploding along depth" src="files/data-643/graphics/2.2-vanishing-gradients/vanish-explode.png" /></p>
+<p>Clipping: if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">g</mi></mrow><mo>&#x02016;</mo><mo>&#x0003E;</mo><mi>c</mi></mrow></math>, replace <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">g</mi></mrow></mrow></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi><mspace width="0.167em" /><mrow><mi mathvariant="bold-italic">g</mi></mrow><mo>&#x0002F;</mo><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">g</mi></mrow><mo>&#x02016;</mo></mrow></math>. You shrink a huge vector. A vanished vector is already near <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>; multiplying it by 1 does nothing useful.</p>
 <hr />
 <h2>3. What this means for language</h2>
 <p>A vanilla RNN can learn “the next word looks like the last few.” It struggles with “the negation was at the start of the review.” Transformers side-step the chain: every token attends to every other token in one step (Week 3). Gates (Week 2.3) were the fix <em>inside</em> the recurrent family.</p>
 <p>In a project, if you still train an RNN on long documents, watch the gradient norm. If it is always <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0</mn></mrow></math> on early positions, the net is not using the beginning of the sequence.</p>
+<p>Lab 2 is a copy task: the first bit must survive many steps. Vanilla RNNs fail as the gap grows; that is this product, not a PyTorch bug.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p><strong>30–40 minutes.</strong> Write the product of Jacobians, then the 1-D geometric example (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.5</mn><mrow><mi>T</mi></mrow></msup></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>1.5</mn><mrow><mi>T</mi></mrow></msup></mrow></math>). Draw clipping as a cap on a tall arrow, not a resurrection of a dead one. Play the vanishing/exploding segment of CS224N L6 (about <strong>45:00–58:00</strong>; if chapter marks differ, jump to the Jacobian-product board). LSTM details wait for 2.3.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>Scalar RNN: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><mi>w</mi><msub><mi>h</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mi>h</mi><mi>t</mi><mi>&#x02032;</mi></msubsup><mo stretchy="false">&#x00028;</mo><msub><mi>h</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mi>tanh</mi><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><msub><mi>z</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mi>w</mi></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0007C;</mo><msup><mi>tanh</mi><mi>&#x02032;</mi></msup><mo>&#x0007C;</mo><mo>&#x02264;</mo><mn>1</mn></mrow></math>.</p>
+<p>Take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math> and pretend <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>tanh</mi><mi>&#x02032;</mi></msup><mo>&#x0003D;</mo><mn>1</mn></mrow></math> (best case). The factor per step is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mn>0.5</mn><mrow><mn>5</mn></mrow></msup><mo>&#x0003D;</mo><mn>0.03125</mn><mo>&#x0002C;</mo><mspace width="2em" /><msup><mn>0.5</mn><mrow><mn>10</mn></mrow></msup><mo>&#x02248;</mo><mn>0.0010</mn><mo>&#x0002C;</mo><mspace width="2em" /><msup><mn>0.5</mn><mrow><mn>20</mn></mrow></msup><mo>&#x02248;</mo><mn>9.5</mn><mo>&#x000D7;</mo><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>7</mn></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>Now <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>2</mn><mrow><mn>10</mn></mrow></msup><mo>&#x0003D;</mo><mn>1024</mn></mrow></math>. Same chain, opposite disaster.</p>
+<p>Clipping: gradient <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>, threshold <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi><mo>&#x0003D;</mo><mn>5</mn></mrow></math>. New gradient <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>5</mn></mrow></math>. If instead <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi><mo>&#x0003D;</mo><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>6</mn></mrow></msup></mrow></math>, clipping leaves it at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mrow><mo>&#x02212;</mo><mn>6</mn></mrow></msup></mrow></math>.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Thinking clipping “fixes RNNs,” including vanishing.</li>
+<li>Forgetting <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>tanh</mi><mi>&#x02032;</mi></msup><mo>&#x02264;</mo><mn>1</mn></mrow></math> and blaming only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math>.</li>
+<li>Plotting loss and missing a <strong>per-position</strong> gradient plot in Lab 2.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=0LixFSa7yts">Stanford CS224N Lecture 6 (RNNs / vanishing gradients)</a>.</p>
+<p>Play the vanishing and exploding segment (roughly <strong>45:00–58:00</strong>). Pause on the product of Jacobians and on the plot of gradient size vs. steps back in time. Skip the rest of the lecture hour unless you want n-gram language modeling as optional homework.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>tanh</mi><mi>&#x02032;</mi></msup></mrow></math> a problem when the state saturates at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x000B1;</mi><mn>1</mn></mrow></math>?</p>
@@ -138,6 +162,12 @@
 <li>
 <p>In one sentence: what would you plot in TensorBoard to see this failure in Lab 2?</p>
 </li>
+<li>
+<p>If each Jacobian factor has operator norm <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.8</mn></mrow></math>, the bound on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02016;</mo><mo>&#x02202;</mo><msub><mi>h</mi><mrow><mn>20</mn></mrow></msub><mo>&#x0002F;</mo><mo>&#x02202;</mo><msub><mi>h</mi><mrow><mn>1</mn></mrow></msub><mo>&#x02016;</mo></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.8</mn><mrow><mn>19</mn></mrow></msup></mrow></math>. Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.8</mn><mrow><mn>10</mn></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.8</mn><mrow><mn>19</mn></mrow></msup></mrow></math> (calculator is fine). Is the 19-step bound closer to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.1</mn></mrow></math> or to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.01</mn></mrow></math>?</p>
+</li>
+<li>
+<p>A clip threshold <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> meets a gradient of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>6</mn><mo>&#x0002C;</mo><mn>8</mn><mo stretchy="false">]</mo></mrow></math> (Euclidean norm <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn></mrow></math>). Write the clipped vector.</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -147,7 +177,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 

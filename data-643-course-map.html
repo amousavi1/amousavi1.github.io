@@ -124,11 +124,13 @@
 </ul>
 <p>Software: Python, PyTorch, Hugging Face, Jupyter. Canvas remains official for due dates.</p>
 <p><img alt="Four modules from nets to tools" src="files/data-643/graphics/1.1-course-map/roadmap.png" /></p>
+<p>A two-hour weekly meeting is not four independent mini-classes. You will usually get <strong>one 30–40 minute board note</strong>, a short video clip, discussion, and lab time. The other notes that week are homework or the second board block.</p>
 <hr />
 <h2>2. A language model is a stack</h2>
 <p>An LLM is not one trick. It is layers of ideas. Week 1 is the bottom: a neuron, a training loop, and a vector for a word. Week 3 puts attention on those vectors. Later weeks align, retrieve, and ship.</p>
 <p><img alt="The LLM stack, with Week 1 at the base" src="files/data-643/graphics/1.1-course-map/stack.png" /></p>
 <p>If you already know MLPs and Word2Vec from another class, treat this week as a fast map into the rest of the syllabus. If you do not, this week is the on-ramp.</p>
+<p>When you use a chat product you are standing on the <strong>top</strong> of that stack (decoding, tools, a UI). The weights you never see still came from next-token training. If your project “uses GPT,” name the layer you will actually change: data, a prompt, an adapter, a retriever, or an eval.</p>
 <hr />
 <h2>3. The project starts now</h2>
 <p>Undergraduate teams and graduate students (solo or a small team, as posted on Canvas) will pick a problem in language, multimodal AI, retrieval, or alignment.</p>
@@ -154,7 +156,27 @@
 </ul>
 <p>Notes <strong>1.2–1.4</strong> and Lab 1 do that work.</p>
 <hr />
-<h2>5. Practice</h2>
+<h2>5. Teaching this note</h2>
+<p>This is a <strong>30–40 minute</strong> first-day board block. Draw the four-module roadmap, then the stack, then spend the rest of the time turning a vague “I want to use an LLM” into a measurable project sentence. Play <strong>0:00–20:00</strong> of the Karpathy talk (pause at the two-file Llama picture and at the pretrain vs. assistant split). Lab 1 can wait until notes 1.2–1.4.</p>
+<hr />
+<h2>6. Worked example</h2>
+<p>Karpathy’s running example is Llama 2 <strong>70B</strong>. Each parameter is stored as 2 bytes (float16), so the weights file is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>70</mn><mo>&#x000D7;</mo><msup><mn>10</mn><mrow><mn>9</mn></mrow></msup><mo>&#x000D7;</mo><mn>2</mn><mtext>&#x000A0;</mtext><mtext>bytes</mtext><mo>&#x0003D;</mo><mn>1.4</mn><mo>&#x000D7;</mo><msup><mn>10</mn><mrow><mn>11</mn></mrow></msup><mtext>&#x000A0;</mtext><mtext>bytes</mtext><mo>&#x0003D;</mo><mn>140</mn><mtext>&#x000A0;</mtext><mtext>GB</mtext><mo>&#x0002E;</mo></mrow></math>
+<p>Write two columns on the board: <strong>parameters file</strong> vs <strong>run file</strong>. Then walk ChatGPT down the stack: next-token pretraining (Week 1–3), post-training (Weeks 8–9), retrieval/tools (Week 14). Circle the one layer a student project can actually change.</p>
+<p>Now rewrite a bad topic. Bad: “Use LoRA on news.” Better: “Does a LoRA adapter on local news reduce entity hallucination vs. the base model, measured by exact-match on a 100-item holdout?”</p>
+<hr />
+<h2>7. Where students get stuck</h2>
+<ul>
+<li>Treating the course as “how to prompt ChatGPT” instead of a stack you can measure.</li>
+<li>Picking a method first (“we will fine-tune”) before a question and a dataset.</li>
+<li>Assuming DATA 641/642 is required, then tuning out of Week 1.</li>
+</ul>
+<hr />
+<h2>8. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy: Intro to Large Language Models</a>, <strong>0:00–20:00</strong>.</p>
+<p>Pause at <strong>0:20</strong> (an LLM is two files: weights + a little code), <strong>4:17</strong> (pretraining as next-token compression of the internet), <strong>8:58</strong> (“dreams” / fluent but ungrounded text), and <strong>14:14</strong> (fine-tuning into an assistant). Stop at the <strong>17:52</strong> summary. The rest of the hour is optional homework.</p>
+<hr />
+<h2>9. Practice</h2>
 <ol>
 <li>
 <p>Name one product you use that sits on the top of the stack in the figure. Which lower layer would you have to change to make it safer?</p>
@@ -165,6 +187,12 @@
 <li>
 <p>Write one sentence that could be a project question (not a method). Example: “Can retrieval cut hallucination on AU policy PDFs?” is a question. “Use LoRA” is not.</p>
 </li>
+<li>
+<p>Llama 2 70B stores each parameter as 2 bytes. Compute the weights-file size in GB. If you instead stored the same 70 billion parameters as 1-byte integers, what would the file size be?</p>
+</li>
+<li>
+<p>A two-hour meeting uses 20 minutes of video and 25 minutes to start Lab 1. The remaining time is split equally across notes 1.2, 1.3, and 1.4. How many minutes does each of those notes get?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -174,7 +202,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T17:45:00-04:00">September 14, 2026, 5:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
             </footer>
         </div>
 
