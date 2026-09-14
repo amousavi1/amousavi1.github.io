@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 7: A Scaling Curve and Int8 - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 7: A Scaling Curve and Int8</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 7 &middot; <a href="files/data-643/lab-7-scale-quantize.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Fit a toy power law, then quantize a weight matrix and measure error.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong> and <code>matplotlib</code>. Do notes <strong>7.1–7.3</strong> first. No Hugging Face weights this week.</p>
+<pre><code class="language-python">import torch
+import matplotlib.pyplot as plt
+</code></pre>
+<hr />
+<h2>1. Fit a toy scaling law</h2>
+<p>Construct compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> and loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mi>a</mi><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></msup><mo>&#x0002B;</mo><mi>c</mi></mrow></math> plus a little noise. You will recover <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi><mo>&#x0002C;</mo><mi>c</mi></mrow></math>.</p>
+<pre><code class="language-python">torch.manual_seed(0)
+a_true, b_true, c_true = 2.0, 0.15, 1.4
+C = torch.logspace(2, 6, 16)          # 1e2 .. 1e6
+L = a_true * C.pow(-b_true) + c_true
+L = L + 0.02 * torch.randn_like(L)
+</code></pre>
+<ol>
+<li>
+<p>Scatter <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mi>C</mi></mrow></math> versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math>. Guess whether <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi></mrow></math> is near 1.4 before you fit.</p>
+</li>
+<li>
+<p>Fit with Adam on unconstrained parameters, but keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></math> via softplus:</p>
+</li>
+</ol>
+<pre><code class="language-python">p = torch.nn.Parameter(torch.tensor([1.0, 0.1, 1.0]))  # raw a,b,c
+opt = torch.optim.Adam([p], lr=0.05)
+for _ in range(2000):
+    a, b, c = torch.nn.functional.softplus(p[0]), torch.nn.functional.softplus(p[1]), p[2]
+    pred = a * C.pow(-b) + c
+    loss = ((pred - L) ** 2).mean()
+    opt.zero_grad(); loss.backward(); opt.step()
+</code></pre>
+<p>Print fitted <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi><mo>&#x0002C;</mo><mi>c</mi></mrow></math> versus truth. Overlay <code>pred</code> on the scatter.</p>
+<ol start="3">
+<li>In one sentence: if you only observed the four smallest <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>, would <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi></mrow></math> still be identified?</li>
+</ol>
+<hr />
+<h2>2. Affine int8-ish quantization</h2>
+<pre><code class="language-python">torch.manual_seed(1)
+x = torch.randn(256)
+qmin, qmax = -128, 127
+</code></pre>
+<ol>
+<li>Compute <code>scale = (x.max() - x.min()) / (qmax - qmin)</code> and <code>zp = qmin - x.min() / scale</code>. Quantize with</li>
+</ol>
+<pre><code class="language-python">q = torch.clamp(torch.round(x / scale + zp), qmin, qmax)
+xhat = (q - zp) * scale
+</code></pre>
+<p>Print MSE <code>(x - xhat).pow(2).mean()</code>. It should be small relative to <code>x.var()</code>.</p>
+<ol start="2">
+<li>
+<p>Repeat after replacing <code>x</code> with <code>x.clone(); x[0] = 50.0</code> (one outlier). MSE should jump. Why do activation outliers break naive INT8?</p>
+</li>
+<li>
+<p>Histogram <code>x</code> and <code>xhat</code> on one figure.</p>
+</li>
+</ol>
+<hr />
+<h2>3. Write-up</h2>
+<p>Four sentences: what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></msup></mrow></math> says about diminishing returns, why Chinchilla would not only grow <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math>’s “model” without growing tokens, what scale and zero-point are for, and one reason speculative decoding is not the same as distillation.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

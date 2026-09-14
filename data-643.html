@@ -127,8 +127,7 @@
 
                         <h2>Weekly Materials</h2>
                         <p class="course-weeks-intro">
-                            Week 1–5 notes and labs are posted. Later weeks show the syllabus map until their notes are ready.
-                            Canvas remains the official list of required reading.
+                            Weeks 1–15 notes, labs, and slides are posted. Canvas remains official for due dates and required reading.
                         </p>
                         <div class="course-weeks">
                             <div class="course-week-tabs" role="tablist" aria-label="Course weeks">
@@ -398,43 +397,398 @@
                             </div>
                             <div class="course-week-panel" id="week-6" role="tabpanel" aria-labelledby="tab-week-6" hidden>
                                 <p class="course-group-title">Module 2 — Audio and cross-modal integration</p>
-                                <p>Spectrograms as tokens, fusion, unified embeddings, data scarcity.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-audio-spectrograms.html">6.1 Waveforms, Spectrograms, and Time–Frequency Tokens</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/6.1-audio-spectrograms.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-audio-encoders.html">6.2 Audio Encoders and Speech Models</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/6.2-audio-encoders.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-fusion-scarcity.html">6.3 Fusion, Unified Embeddings, and Data Scarcity</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/6.3-fusion-scarcity.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-6-spectrograms.html">Lab 6: A Spectrogram and a Tiny Fusion</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-6-spectrograms.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2212.04356" target="_blank" rel="noopener">Radford et al., Whisper</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2206.04769" target="_blank" rel="noopener">Elizalde et al., CLAP</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Why is a spectrogram a more natural transformer input than the raw waveform for this course?</li>
+                                    <li>Name one fusion choice you would defend if audio is often missing at test time.</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-7" role="tabpanel" aria-labelledby="tab-week-7" hidden>
                                 <p class="course-group-title">Module 3 — Scaling, efficiency, and deployment</p>
-                                <p>Scaling laws, mixture-of-experts, pruning, quantization, distillation, speculative decoding.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-scaling-laws.html">7.1 Scaling Laws</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/7.1-scaling-laws.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-mixture-of-experts.html">7.2 Mixture of Experts</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/7.2-mixture-of-experts.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-efficiency-deploy.html">7.3 Compression and Deployment</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/7.3-efficiency-deploy.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-7-scale-quantize.html">Lab 7: A Scaling Curve and Int8</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-7-scale-quantize.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2001.08361" target="_blank" rel="noopener">Kaplan et al., Scaling laws for neural language models</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">Hoffmann et al., Chinchilla / training compute-optimal LLMs</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>If you can 10× parameters or 10× tokens but not both, which does Chinchilla push you toward?</li>
+                                    <li>Quantization is not a free lunch. What would you measure besides perplexity?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-8" role="tabpanel" aria-labelledby="tab-week-8" hidden>
                                 <p class="course-group-title">Module 3 — SFT, continual learning, and adapters</p>
-                                <p>Instruction tuning, prompt design, catastrophic forgetting, LoRA, federated updates.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-sft-instructions.html">8.1 Supervised Fine-Tuning and Instruction Data</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/8.1-sft-instructions.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-continual-forgetting.html">8.2 Continual Learning and Forgetting</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/8.2-continual-forgetting.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lora-adapters.html">8.3 LoRA, Adapters, and Federated Updates</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/8.3-lora-adapters.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-8-lora-forget.html">Lab 8: A Low-Rank Update and a Forgetting Demo</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-8-lora-forget.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2109.01652" target="_blank" rel="noopener">Wei et al., Finetuned language models are zero-shot learners (FLAN)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener">Hu et al., LoRA</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Why can a model that next-token-predicts Wikipedia still fail a polite instruction?</li>
+                                    <li>When is LoRA the wrong tool (name one setting)?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-9" role="tabpanel" aria-labelledby="tab-week-9" hidden>
                                 <p class="course-group-title">Module 3 — RLHF and direct preference optimization</p>
-                                <p>Reward models, policy optimization, preference learning, human feedback.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-preference-rewards.html">9.1 Preference Data and Reward Models</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/9.1-preference-rewards.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-rlhf.html">9.2 RLHF</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/9.2-rlhf.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-dpo.html">9.3 Direct Preference Optimization</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/9.3-dpo.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-9-preferences.html">Lab 9: Pairwise Preferences and a Toy DPO Loss</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-9-preferences.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">Ouyang et al., InstructGPT / RLHF</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">Rafailov et al., Direct Preference Optimization</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What can go wrong if the reward model is cheaper to game than the human raters were?</li>
+                                    <li>DPO skips PPO. What assumption on the preference data remains?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-10" role="tabpanel" aria-labelledby="tab-week-10" hidden>
                                 <p class="course-group-title">Module 3 — Safety, editing, and retrieval-augmented training</p>
-                                <p>Red-teaming, unlearning, ROME/MEMIT, RAFT, memory-augmented models.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-red-teaming.html">10.1 Red-Teaming and Safety Evaluation</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/10.1-red-teaming.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-editing-unlearning.html">10.2 Editing and Unlearning</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/10.2-editing-unlearning.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-raft-memory.html">10.3 RAFT and Memory-Augmented Models</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/10.3-raft-memory.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-10-edit-retrieve.html">Lab 10: Edit a Toy Fact, Then Retrieve It</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-10-edit-retrieve.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2202.05262" target="_blank" rel="noopener">Meng et al., ROME / locating and editing factual associations</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2403.10131" target="_blank" rel="noopener">Zhang et al., RAFT</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Editing one fact is not unlearning a behavior. Give an example of each.</li>
+                                    <li>When would you train with retrieved context (RAFT) instead of only retrieving at test time?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-11" role="tabpanel" aria-labelledby="tab-week-11" hidden>
                                 <p class="course-group-title">Module 4 — Generative models I: GANs</p>
-                                <p>Adversarial training, generator–discriminator dynamics, mode collapse.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-gan-idea.html">11.1 Generative Adversarial Nets</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/11.1-gan-idea.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-gan-training.html">11.2 Training Dynamics</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/11.2-gan-training.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-mode-collapse.html">11.3 Mode Collapse and Evaluation</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/11.3-mode-collapse.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-11-toy-gan.html">Lab 11: A One-Dimensional GAN Sketch</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-11-toy-gan.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1406.2661" target="_blank" rel="noopener">Goodfellow et al., Generative adversarial nets</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1606.03498" target="_blank" rel="noopener">Salimans et al., Improved techniques for training GANs</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Why is “the discriminator accuracy is 99%” not proof the generator is good?</li>
+                                    <li>Name one evaluation that would catch mode collapse that a single sample would miss.</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-12" role="tabpanel" aria-labelledby="tab-week-12" hidden>
                                 <p class="course-group-title">Module 4 — Generative models II: diffusion</p>
-                                <p>Forward and reverse processes, latent diffusion, text-to-image conditioning.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-diffusion-forward.html">12.1 The Forward Process</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/12.1-diffusion-forward.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-diffusion-reverse.html">12.2 The Reverse Process</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/12.2-diffusion-reverse.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-latent-conditioning.html">12.3 Latent Diffusion and Text Conditioning</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/12.3-latent-conditioning.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-12-denoise.html">Lab 12: Noise a Point, Then Take One Reverse Step</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-12-denoise.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2006.11239" target="_blank" rel="noopener">Ho et al., Denoising diffusion probabilistic models</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2112.10752" target="_blank" rel="noopener">Rombach et al., Latent diffusion / Stable Diffusion</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What does the network actually predict in a typical DDPM training step?</li>
+                                    <li>Why does latent diffusion help text-to-image more than pixel-space diffusion does?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-13" role="tabpanel" aria-labelledby="tab-week-13" hidden>
                                 <p class="course-group-title">Module 4 — Reasoning and chain-of-thought</p>
-                                <p>Step-by-step reasoning, self-consistency, Tree-of-Thoughts, faithfulness.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-chain-of-thought.html">13.1 Chain-of-Thought</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/13.1-chain-of-thought.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-self-consistency-tot.html">13.2 Self-Consistency and Tree-of-Thoughts</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/13.2-self-consistency-tot.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-faithfulness.html">13.3 Faithfulness of Explanations</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/13.3-faithfulness.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-13-reasoning.html">Lab 13: Direct Answers, Traces, and a Majority Vote</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-13-reasoning.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noopener">Wei et al., Chain-of-thought prompting</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener">Wang et al., Self-consistency</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noopener">Yao et al., Tree of Thoughts</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Self-consistency can raise accuracy without making any one trace more faithful. Why?</li>
+                                    <li>When would you refuse to put a CoT trace in a user-facing product?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-14" role="tabpanel" aria-labelledby="tab-week-14" hidden>
                                 <p class="course-group-title">Module 4 — Tools, RAG, and final presentations</p>
-                                <p>RAG pipelines, ReAct, uncertainty, evaluation of applications. Project talks.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-rag-pipeline.html">14.1 Retrieval-Augmented Generation</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/14.1-rag-pipeline.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-react-tools.html">14.2 ReAct and Tool Use</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/14.2-react-tools.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-eval-presentations.html">14.3 Evaluating Applications and Giving the Talk</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/14.3-eval-presentations.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-14-toy-rag.html">Lab 14: A Five-Document RAG Loop</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-14-toy-rag.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., RAG</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., ReAct</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>What failure does RAG not fix if the retrieved chunk is itself wrong?</li>
+                                    <li>In a project talk, which number belongs on the slide: a demo GIF, or an ablation?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-15" role="tabpanel" aria-labelledby="tab-week-15" hidden>
                                 <p class="course-group-title">Final exam and remaining talks</p>
-                                <p>Cumulative exam. Remaining presentations as posted on Canvas.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-exam-review.html">15.1 Exam Review</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/15.1-exam-review.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643.html">Course hub: weeks 1–14 notes</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>Pick one method from Modules 1–4 and name the measurement you would report, not the architecture.</li>
+                                    <li>Remaining talks: as posted on Canvas. Bring one failure case, not only the best run.</li>
+                                </ul>
                             </div>
                         </div>
                     </section>
@@ -445,7 +799,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
             </footer>
         </div>
 

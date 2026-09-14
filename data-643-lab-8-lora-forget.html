@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 8: A Low-Rank Update and a Forgetting Demo - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 8: A Low-Rank Update and a Forgetting Demo</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 8 &middot; <a href="files/data-643/lab-8-lora-forget.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Factor a 4×4 update, then train XOR then AND and watch the first task drop.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>8.1–8.3</strong> first. CPU is enough. No pretrained LLMs.</p>
+<pre><code class="language-python">import torch
+from torch import nn
+import torch.nn.functional as F
+</code></pre>
+<hr />
+<h2>1. Frozen <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math>, low-rank <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mi>A</mi></mrow></math></h2>
+<pre><code class="language-python">torch.manual_seed(0)
+W = torch.randn(4, 4)
+A = nn.Parameter(torch.randn(1, 4) * 0.1)   # r = 1
+B = nn.Parameter(torch.zeros(4, 1))
+x = torch.randn(4)
+</code></pre>
+<p>Treat <code>W</code> as <strong>frozen</strong> (no <code>requires_grad</code> on a buffer).</p>
+<ol>
+<li>
+<p>Print <code>W @ x</code> and <code>(W + B @ A) @ x</code>. They must match at init because <code>B</code> is zero.</p>
+</li>
+<li>
+<p>Target <code>y = torch.tensor([1.0, -1.0, 0.5, 0.0])</code>. Train <strong>only</strong> <code>A,B</code> for 400 Adam steps, <code>lr=5e-2</code>, MSE on <code>(W + B @ A) @ x</code> versus <code>y</code>. Print the residual <code>B @ A</code> and its rank (<code>torch.linalg.matrix_rank</code>). Rank should be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02264;</mo><mn>1</mn></mrow></math>.</p>
+</li>
+<li>
+<p>Freeze <code>A,B</code> and try to fit the same <code>y</code> by training a copy of <code>W</code> (optional). The point of (2) is: a rank-1 bump can move the output without touching <code>W</code>.</p>
+</li>
+</ol>
+<hr />
+<h2>2. Sequential XOR, then AND (forgetting)</h2>
+<p>Two-bit inputs, labels XOR, then the <strong>same</strong> net trained on AND.</p>
+<pre><code class="language-python">bits = torch.tensor([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+xor = torch.tensor([[0.], [1.], [1.], [0.]])
+and_ = torch.tensor([[0.], [0.], [0.], [1.]])
+
+class Tiny(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(nn.Linear(2, 8), nn.Tanh(), nn.Linear(8, 1))
+    def forward(self, z):
+        return self.net(z)
+</code></pre>
+<ol>
+<li>
+<p>Train <code>Tiny</code> on XOR to mean accuracy 1.0 (<code>BCEWithLogitsLoss</code>, a few hundred steps). Print predictions.</p>
+</li>
+<li>
+<p>Continue training the <strong>same</strong> weights on AND until AND accuracy is 1.0. Re-evaluate XOR. It should collapse toward chance or toward AND’s pattern. That is catastrophic forgetting.</p>
+</li>
+<li>
+<p><strong>Replay:</strong> from a fresh XOR-trained net, train on batches that are 50% AND rows and 50% XOR rows. Report XOR and AND accuracies. XOR should survive better than in (2).</p>
+</li>
+</ol>
+<hr />
+<h2>3. Write-up</h2>
+<p>Four sentences: why <code>B=0</code> keeps the base map, what rank <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> cannot represent, what forgetting looked like on XOR, and why a per-task LoRA would not have required replay in (2).</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

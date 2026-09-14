@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 9: Pairwise Preferences and a Toy DPO Loss - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 9: Pairwise Preferences and a Toy DPO Loss</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 9 &middot; <a href="files/data-643/lab-9-preferences.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Rank two completions, train a tiny reward head, then a DPO-style logistic on logits.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong> and <code>numpy</code>. Do notes <strong>9.1–9.3</strong> first. Optional file: <a href="files/data-643/toy_prefs.csv">toy_prefs.csv</a> (<code>prompt</code>, <code>chosen</code>, <code>rejected</code>).</p>
+<pre><code class="language-python">import torch
+import torch.nn.functional as F
+import numpy as np
+</code></pre>
+<hr />
+<h2>1. Two completions, a logistic RM</h2>
+<p>You will not download an LLM. Invent scalar features for each reply (length, a fake “keyword” score).</p>
+<pre><code class="language-python">torch.manual_seed(0)
+# rows: [length, keyword_hit] for chosen then rejected, three prompts
+chosen = torch.tensor([[12., 1.], [8., 1.], [20., 0.]])
+rejected = torch.tensor([[40., 0.], [9., 0.], [6., 1.]])
+</code></pre>
+<ol>
+<li>
+<p>A linear reward <code>r = w · h + b</code> with <code>w</code> of length 2. Loss for one pair is <code>-log σ(r_w - r_l)</code> (note <strong>9.1</strong>). Implement it with <code>F.binary_cross_entropy_with_logits(r_w - r_l, torch.ones(n))</code>.</p>
+</li>
+<li>
+<p>Train <code>w,b</code> for a few hundred Adam steps. Print rewards. Chosen should outscore rejected on most rows.</p>
+</li>
+<li>
+<p>If you loaded the CSV, tokenize naively with <code>.split()</code> and use <code>[len(tokens), float("paris" in text.lower())]</code> or a similar two-D feature. Same loss. Do not need pandas: <code>open</code> and <code>line.split(",", 2)</code> is enough if you are careful with commas, or just stay on the tensors above.</p>
+</li>
+</ol>
+<hr />
+<h2>2. DPO-style loss on toy logits</h2>
+<p>Treat log-probs as given scalars (as if you already ran a forward pass).</p>
+<pre><code class="language-python"># log πθ and log πref for (winner, loser) on one prompt
+logp_w, logp_l = torch.tensor(0.0, requires_grad=True), torch.tensor(-1.0, requires_grad=True)
+logp_ref_w, logp_ref_l = torch.tensor(-0.2), torch.tensor(-0.4)
+beta = 0.1
+</code></pre>
+<ol>
+<li>DPO logit:</li>
+</ol>
+<pre><code class="language-python">delta = beta * ((logp_w - logp_ref_w) - (logp_l - logp_ref_l))
+loss = -F.logsigmoid(delta)
+</code></pre>
+<p>Print <code>loss</code>. Then set <code>logp_w = logp_ref_w</code> and <code>logp_l = logp_ref_l</code> (no grad needed). Loss should be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>log</mi><mn>2</mn></mrow></math>.</p>
+<ol start="2">
+<li>Take one Adam step on <code>logp_w, logp_l</code> only (freeze the reference). After a few steps, <code>logp_w - logp_l</code> should grow. That is “prefer the chosen completion.”</li>
+</ol>
+<hr />
+<h2>3. Write-up</h2>
+<p>Four sentences: what the RM logistic compares, why a rejected fluent answer is still useful, what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi></mrow></math> does in DPO, and why this lab’s scalars are not a language model (no tokens, no KL over a vocabulary).</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

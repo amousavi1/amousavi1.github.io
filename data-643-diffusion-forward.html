@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.1 The Forward Process - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.1 The Forward Process</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 12 &middot; <a href="files/data-643/diffusion-forward.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/12.1-diffusion-forward.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Add a little Gaussian noise for T steps until the sample is almost prior noise.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>A <strong>diffusion</strong> model learns to denoise. The forward process is not learned. You add Gaussian noise on a schedule until the sample is almost prior noise. Training later asks a net to predict that noise.</p>
+<hr />
+<h2>1. Destroy the sample on purpose</h2>
+<p>Start from data <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub></mrow></math>. A variance schedule <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn><mo>&#x0003C;</mo><msub><mi>&#x003B2;</mi><mi>t</mi></msub><mo>&#x0003C;</mo><mn>1</mn></mrow></math> (small at first, larger later) defines</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x003B1;</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mi>&#x003B2;</mi><mi>t</mi></msub><mo>&#x0002C;</mo><mspace width="2em" /><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub><mo>&#x0003D;</mo><munderover><mo>&#x0220F;</mo><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>t</mi></mrow></munderover><msub><mi>&#x003B1;</mi><mi>s</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>The Markov step is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mi>;</mi><msqrt><mrow><msub><mi>&#x003B1;</mi><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002C;</mo><msub><mi>&#x003B2;</mi><mi>t</mi></msub><mi>&#x1D408;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. You do not have to simulate every hop. The marginal is closed form:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x1D4A9;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mi>;</mi><mspace width="0.167em" /><msqrt><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub><mo>&#x0002C;</mo><mspace width="0.167em" /><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mi>&#x1D408;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>In code: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x0003D;</mo><msqrt><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub><mo>&#x0002B;</mo><msqrt><mrow><mn>1</mn><mo>&#x02212;</mo><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow><mi>&#x0007E;</mi><mi>&#x1D4A9;</mi><mo stretchy="false">&#x00028;</mo><mrow><mn mathvariant="bold">0</mn></mrow><mo>&#x0002C;</mo><mi>&#x1D408;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<p><img alt="A clean point becoming isotropic noise over t" src="files/data-643/graphics/12.1-diffusion-forward/forward.png" /></p>
+<hr />
+<h2>2. What the schedule is doing</h2>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></math> starts near 1 (the point is still itself) and falls toward 0 (the point is almost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow></mrow></math>). Linear, cosine, and learned <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B2;</mi><mi>t</mi></msub></mrow></math> are all ways to spend more steps where structure dies. Too fast a schedule and early <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> is already junk; too slow and you waste capacity on near-copies of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub></mrow></math>.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> (often 1000 in image papers) is a discretization. Lab 12 uses a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> in 2-D so you can plot the path.</p>
+<hr />
+<h2>3. Why this is nicer than a GAN to train</h2>
+<p>The forward kernel is <strong>fixed</strong>. There is no discriminator to race. The training signal at each <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> is a denoising regression against a known <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow></mrow></math>. You still have to pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><msub><mi>&#x003B2;</mi><mi>t</mi></msub><mo stretchy="false">&#x0007D;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>. Sampling will be a reverse chain (note <strong>12.2</strong>), which is slower than one GAN forward pass.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub></mrow></math>? If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub></mrow></math>?</p>
+</li>
+<li>
+<p>Why can you sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub></mrow></math> in one line instead of looping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> steps of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>s</mi></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mrow><mi>s</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>?</p>
+</li>
+<li>
+<p>A classmate sets every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B2;</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mn>0.9</mn></mrow></math>. What goes wrong in the first few <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

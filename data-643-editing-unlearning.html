@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>10.2 Editing and Unlearning - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">10.2 Editing and Unlearning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 10 &middot; <a href="files/data-643/editing-unlearning.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/10.2-editing-unlearning.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            ROME/MEMIT locate a fact and rewrite it. Unlearning tries to forget a set, not one key.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>Weights store facts as distributed circuitry. <strong>Editing</strong> tries to change <strong>one</strong> association. <strong>Unlearning</strong> tries to remove a <strong>set</strong> of examples or a topic so they are no longer easy to recover. Both are approximate; neither is a legal delete button.</p>
+<hr />
+<h2>1. ROME: locate, then write</h2>
+<p>Meng et al., <strong>ROME</strong> (Rank-One Model Editing). Empirically, many “subject <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> attribute” facts (Paris, capital of, France) concentrate in a mid-layer MLP on the last token of the subject. <strong>Locate</strong> that layer with causal traces; <strong>write</strong> a rank-one update so the same key maps to a new value.</p>
+<p><img alt="Locate a fact in an MLP, write a new value" src="files/data-643/graphics/10.2-editing-unlearning/rome.png" /></p>
+<p><strong>MEMIT</strong> extends the write across several layers for many facts at once. The algebra is a constrained least-squares update of the MLP down-projection, not a full fine-tune. Side effects: neighborhood facts can move; paraphrases may still leak the old value.</p>
+<hr />
+<h2>2. Unlearn a set versus edit a key</h2>
+<p><strong>Edit a key:</strong> one prompt, one new completion (<code>The capital of France is Berlin</code> as a toy). Success is that prompt (and close paraphrases) flipping, while unrelated geography stays put.</p>
+<p><strong>Unlearn a set:</strong> a corpus you want gone (a book, personal data, a toxic cluster). Methods: gradient ascent on those rows, influence-style downweighting, relabel-and-SFT, or extra DPO against the bad completions. You must check <strong>utility</strong> on a retain set, not only forget accuracy. Models memorize by many routes; one loss spike does not erase a concept.</p>
+<p><img alt="Forgetting a set while keeping a retain set" src="files/data-643/graphics/10.2-editing-unlearning/unlearn.png" /></p>
+<p>Lab 10 will overwrite a dictionary key—that is editing as data structure, not as ROME. The analogy: a key–value store is parametric memory you can assign; an LLM is not.</p>
+<hr />
+<h2>3. What to report</h2>
+<p>Specificity (did neighbors survive?), generalization (paraphrase, multilingual), and a retain metric. If your project needs “remove this,” say which operational definition you used (extractive QA accuracy, membership inference, verbatim string match). Verbatim drop can hide latent knowledge.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>ROME writes a rank-one bump in one MLP. Why might a paraphrase still produce the old fact?</p>
+</li>
+<li>
+<p>You unlearn a 200-document set and only measure those 200 prompts. What did you fail to measure?</p>
+</li>
+<li>
+<p>Editing <code>Paris → Berlin</code> is a key rewrite. Unlearning “all EU capitals” is a set. Which one should you <em>not</em> expect ROME’s single write to do well?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 11: A One-Dimensional GAN Sketch - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 11: A One-Dimensional GAN Sketch</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 11 &middot; <a href="files/data-643/lab-11-toy-gan.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Two Gaussians as data. Watch a tiny generator miss a mode.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>11.1–11.3</strong> first. CPU is enough; keep the nets tiny and stop around a few hundred steps.</p>
+<pre><code class="language-python">import torch
+from torch import nn
+import matplotlib.pyplot as plt
+
+torch.manual_seed(0)
+
+MEANS = torch.tensor([[-2.0, 0.0], [2.0, 0.0]])
+
+def real_batch(n=64):
+    m = torch.randint(0, 2, (n,))
+    return MEANS[m] + 0.25 * torch.randn(n, 2)
+</code></pre>
+<p>Two well-separated 2-D Gaussians. That is the whole dataset. You are checking whether <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> covers <strong>both</strong> modes, not whether it paints faces.</p>
+<hr />
+<h2>1. Tiny MLP <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math></h2>
+<pre><code class="language-python">G = nn.Sequential(nn.Linear(8, 32), nn.ReLU(), nn.Linear(32, 2))
+D = nn.Sequential(nn.Linear(2, 32), nn.ReLU(), nn.Linear(32, 1))
+optG = torch.optim.Adam(G.parameters(), lr=1e-3)
+optD = torch.optim.Adam(D.parameters(), lr=1e-3)
+bce = nn.BCEWithLogitsLoss()
+ones = lambda n: torch.ones(n, 1)
+zeros = lambda n: torch.zeros(n, 1)
+</code></pre>
+<ol>
+<li>
+<p>Confirm <code>real_batch(512)</code> really has two clouds: scatter-plot it. Mark the means.</p>
+</li>
+<li>
+<p>Draw <code>z = torch.randn(512, 8)</code>, plot <code>G(z)</code> <strong>before</strong> training. It should look like a blob at the origin, not like the data.</p>
+</li>
+</ol>
+<hr />
+<h2>2. A short adversarial loop</h2>
+<p>For 400 steps (you may stop at 200 if the plot already moves):</p>
+<pre><code class="language-python">n = 64
+for step in range(400):
+    real = real_batch(n)
+    fake = G(torch.randn(n, 8)).detach()
+    lossD = bce(D(real), ones(n)) + bce(D(fake), zeros(n))
+    optD.zero_grad(); lossD.backward(); optD.step()
+
+    fake = G(torch.randn(n, 8))
+    lossG = bce(D(fake), ones(n))
+    optG.zero_grad(); lossG.backward(); optG.step()
+</code></pre>
+<p>Print <code>lossD</code> and <code>lossG</code> every 100 steps. Do not treat them as quality.</p>
+<p>After training, scatter 512 reals and 512 fakes on one plot (two colors).</p>
+<hr />
+<h2>3. Did you miss a mode?</h2>
+<p>Assign each fake to the nearest of the two means. Report the fraction in each bin.</p>
+<ol>
+<li>
+<p>If either bin is under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mi>&#x00025;</mi></mrow></math> of the fakes, write <strong>collapse</strong> (or heavy imbalance). If both sit near <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>50</mn><mi>&#x00025;</mi></mrow></math>, write <strong>covered</strong>.</p>
+</li>
+<li>
+<p>Train once more from a new seed, or with 800 steps, only if the first run is a pancake on one mean. One extra run is enough. This lab is allowed to collapse; reporting it is the point.</p>
+</li>
+<li>
+<p>Four sentences: what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> each wanted, why a low generator loss is not coverage, which mode (if any) you missed, and one change you would try (noise dim, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> steps, or more training) without claiming it is a cure.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

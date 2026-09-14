@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 14: A Five-Document RAG Loop - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 14: A Five-Document RAG Loop</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/lab-14-toy-rag.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Embed toy snippets, retrieve for a query, then write an answer that cites a chunk id.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>NumPy</strong> and <strong>pandas</strong>. Do notes <strong>14.1–14.2</strong> first. Offline only. Download <a href="files/data-643/toy_docs.csv">toy_docs.csv</a>.</p>
+<pre><code class="language-python">import re
+import numpy as np
+import pandas as pd
+from pathlib import Path
+
+df = pd.read_csv(Path(&quot;toy_docs.csv&quot;))  # columns: id, text
+</code></pre>
+<p>The rows are invented AU-toy campus snippets. They are for ranking practice, not real hours or policy.</p>
+<hr />
+<h2>1. Bag-of-words cosine</h2>
+<pre><code class="language-python">def toks(s):
+    return re.findall(r&quot;[a-z0-9]+&quot;, s.lower())
+
+vocab = sorted({w for t in df.text for w in toks(t)})
+word_i = {w: i for i, w in enumerate(vocab)}
+
+def bow(s):
+    v = np.zeros(len(vocab), float)
+    for w in toks(s):
+        if w in word_i:
+            v[word_i[w]] += 1.0
+    return v
+
+def cosine(a, b):
+    na, nb = np.linalg.norm(a), np.linalg.norm(b)
+    return float(np.dot(a, b) / (na * nb)) if na and nb else 0.0
+
+X = np.stack([bow(t) for t in df.text])
+ids = list(df.id)
+</code></pre>
+<p>Query <code>q = "What time does Bender Library close on a weekday?"</code></p>
+<ol>
+<li>
+<p>Rank all rows by cosine of <code>bow(q)</code> with <code>X</code>. Print id, score, and a 60-character snippet.</p>
+</li>
+<li>
+<p>Take <strong><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math></strong>. Write a two-sentence answer that cites chunk ids (for example <code>[d1]</code>). If the second chunk is off-topic, say so in the answer.</p>
+</li>
+<li>
+<p>Repeat for <code>"Where do I meet Clawdia?"</code>. Did <code>d3</code> win?</p>
+</li>
+</ol>
+<hr />
+<h2>2. A dummy calculator in a ReAct loop</h2>
+<pre><code class="language-python">def calc(expr):
+    expr = expr.strip()
+    if not re.fullmatch(r&quot;[0-9+\s*/]+&quot;, expr):
+        return &quot;ERR&quot;
+    return str(eval(expr, {&quot;__builtins__&quot;: {}}, {}))
+
+def react_library_minutes():
+    log = []
+    log.append((&quot;Thought&quot;, &quot;Weekday close is 23:00; convert 23 hours to minutes after midnight.&quot;))
+    log.append((&quot;Action&quot;, &quot;calc[23*60]&quot;))
+    obs = calc(&quot;23*60&quot;)
+    log.append((&quot;Observation&quot;, obs))
+    log.append((&quot;Thought&quot;, &quot;Use the observation, not a new multiply.&quot;))
+    log.append((&quot;Answer&quot;, f&quot;Bender Library closes at 23:00, which is {obs} minutes after midnight [d1].&quot;))
+    return log
+</code></pre>
+<ol>
+<li>
+<p>Run <code>react_library_minutes()</code> and print the log. Confirm the observation is <code>1380</code>.</p>
+</li>
+<li>
+<p>Write a second log by hand (same five roles) for <code>"12 minute shuttle loops, how many in 1 hour?"</code> with <code>calc[60/12]</code>. The observation should be <code>5.0</code>. Cite <code>[d2]</code> in the Answer.</p>
+</li>
+</ol>
+<hr />
+<h2>3. Write-up</h2>
+<p>Four sentences: which ids you cited for the library query, one retrieval miss you saw, why cosine on counts is not CLIP, and what the observation is for in ReAct.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

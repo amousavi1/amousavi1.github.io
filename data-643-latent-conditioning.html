@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>12.3 Latent Diffusion and Text Conditioning - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">12.3 Latent Diffusion and Text Conditioning</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 12 &middot; <a href="files/data-643/latent-conditioning.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/12.3-latent-conditioning.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Diffuse in a VAE latent. Condition on a text embedding (often CLIP from Week 5).
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>Pixel-space diffusion on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>256</mn><mo>&#x000D7;</mo><mn>256</mn></mrow></math> RGB is expensive. <strong>Latent diffusion</strong> (Rombach et al.) denoises in a compressed space. <strong>Text</strong> enters as a condition, usually from a frozen CLIP text tower (Week 5).</p>
+<hr />
+<h2>1. Diffuse in latent space</h2>
+<p>A pretrained encoder <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> maps an image to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mn>0</mn></msub><mo>&#x0003D;</mo><mi>E</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>. You run the forward process of note <strong>12.1</strong> on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math>, not on pixels. A decoder <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>D</mi><mrow><mrow><mi mathvariant="normal">V</mi><mi mathvariant="normal">A</mi><mi mathvariant="normal">E</mi></mrow></mrow></msub></mrow></math> turns the final latent back into an image. Training the U-Net on latents is cheaper; the VAE already threw away some high-frequency detail.</p>
+<p><img alt="Encode, denoise a latent, decode; text as a side input" src="files/data-643/graphics/12.3-latent-conditioning/ldm.png" /></p>
+<p>Stable Diffusion is this picture plus a big text-conditioned U-Net. The idea is the same at homework scale: compress, denoise, decode.</p>
+<hr />
+<h2>2. Conditioning with CLIP text</h2>
+<p>You want <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x02223;</mo><mtext>caption</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>, not an unconditional generator. Encode the caption with CLIP’s <strong>text</strong> tower (note <strong>5.1</strong>). Inject that vector by:</p>
+<ul>
+<li>concatenating it to the U-Net’s timestep embedding, or</li>
+<li><strong>cross-attention</strong>: image (or latent) tokens query the text tokens.</li>
+</ul>
+<p>Classifier-free guidance trains with and without the text, then at sample time does</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover accent="true"><mrow><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>t</mi></msub><mo>&#x0002C;</mo><mi>t</mi><mo>&#x0002C;</mo><mo>&#x02205;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mi>s</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>t</mi></msub><mo>&#x0002C;</mo><mi>t</mi><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">c</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><msub><mrow><mi mathvariant="bold-italic">&#x003B5;</mi></mrow><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>t</mi></msub><mo>&#x0002C;</mo><mi>t</mi><mo>&#x0002C;</mo><mo>&#x02205;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Scale <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x0003E;</mo><mn>1</mn></mrow></math> sharpens adherence to the prompt and can wash out diversity. Report <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>.</p>
+<p>CLIP scores pairs; it does not decode a caption (note <strong>5.2</strong>). Here you only need the text embedding as a handle.</p>
+<hr />
+<h2>3. What to measure</h2>
+<p>Text-to-image is not “the picture looks nice.” Report a prompt-alignment score (CLIP cosine of image vs text), a coverage or diversity check, and a failure case (wrong count, wrong object, reading text in the image). Conditioning does not remove Week 5’s bias story: the same CLIP geometry is in the loop.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>Why denoise latents instead of pixels if you already have a VAE?</p>
+</li>
+<li>
+<p>CLIP’s image tower is optional at sample time for text-to-image. Which CLIP tower is not?</p>
+</li>
+<li>
+<p>Guidance scale <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>12</mn></mrow></math>: what do you expect to happen to prompt match and to variety?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

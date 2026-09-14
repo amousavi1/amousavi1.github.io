@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 10: Edit a Toy Fact, Then Retrieve It - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 10: Edit a Toy Fact, Then Retrieve It</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 10 &middot; <a href="files/data-643/lab-10-edit-retrieve.pdf" target="_blank" rel="noopener">PDF</a>
+                        </p>
+                        <p>
+                            Overwrite one key in a lookup table, then compare parametric recall to a retrieved snippet.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>Python</strong> (stdlib is enough; <code>numpy</code> optional). Do notes <strong>10.2–10.3</strong> first. Optional file: <a href="files/data-643/toy_facts.csv">toy_facts.csv</a>.</p>
+<pre><code class="language-python">from pathlib import Path
+</code></pre>
+<hr />
+<h2>1. A dict of facts, then one overwrite</h2>
+<p>Parametric memory as a key–value map.</p>
+<pre><code class="language-python">facts = {
+    &quot;paris&quot;: &quot;capital of France&quot;,
+    &quot;berlin&quot;: &quot;capital of Germany&quot;,
+    &quot;rome&quot;: &quot;capital of Italy&quot;,
+    &quot;othello&quot;: &quot;play by Shakespeare&quot;,
+}
+</code></pre>
+<ol>
+<li>
+<p>Print <code>facts["paris"]</code>. Then <strong>edit the key</strong>: <code>facts["paris"] = "capital of Germany"</code>. Print again. Unrelated keys must be unchanged. That is ROME’s <em>goal</em>, as a dictionary.</p>
+</li>
+<li>
+<p><strong>Unlearn a set:</strong> <code>del</code> every key whose value contains <code>"capital"</code>. What is left? Compare to (1): one assignment versus deleting a category.</p>
+</li>
+<li>
+<p>If you load the CSV (<code>subject,relation,object</code> rows), build the dict from <code>subject</code>, then overwrite one subject. Print a retain list of subjects you did not touch.</p>
+</li>
+</ol>
+<hr />
+<h2>2. Retrieve by token overlap</h2>
+<p>Non-parametric memory: a list of snippets, score by overlap with a query.</p>
+<pre><code class="language-python">snippets = [
+    &quot;Paris is the capital of France.&quot;,
+    &quot;Berlin is the capital of Germany.&quot;,
+    &quot;Rome is the capital of Italy.&quot;,
+    &quot;Othello is a tragedy by Shakespeare.&quot;,
+    &quot;The Seine flows through Paris.&quot;,
+]
+
+def toks(s):
+    return set(s.lower().replace(&quot;.&quot;, &quot;&quot;).split())
+
+def retrieve(query, k=2):
+    q = toks(query)
+    scored = [(len(q &amp; toks(s)), s) for s in snippets]
+    scored.sort(reverse=True)
+    return scored[:k]
+</code></pre>
+<ol>
+<li>
+<p>Query <code>"capital of France"</code>. Is the Paris snippet first? Query <code>"Seine"</code>. Did geography beat Shakespeare?</p>
+</li>
+<li>
+<p>After the dict overwrite in (1), retrieval still returns France for Paris if the <strong>snippets</strong> were not updated. Print both answers. That is parametric versus non-parametric drift.</p>
+</li>
+<li>
+<p>Add a distractor snippet <code>"Paris is a city in Texas."</code> and query <code>"Paris capital"</code>. Report both top-2. A RAFT-style reader would have to ignore the Texas row; your overlap score will not.</p>
+</li>
+</ol>
+<hr />
+<h2>3. Write-up</h2>
+<p>Four sentences: what overwriting a key did not do (paraphrases, other languages), why deleting a set is a different API than ROME, what token overlap misses that embeddings would catch, and why training with distractors (RAFT) is about the reader, not the index.</p>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

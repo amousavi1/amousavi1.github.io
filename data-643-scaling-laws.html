@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.1 Scaling Laws - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.1 Scaling Laws</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 7 &middot; <a href="files/data-643/scaling-laws.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/7.1-scaling-laws.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Loss falls as a power of compute, data, and parameters — until you starve one of them.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>Bigger models, trained on more data with more compute, tend to get better at next-token prediction. <strong>Scaling laws</strong> make that trend a curve you can fit, not a slogan. They do not promise a better chatbot; they promise a lower <strong>pretraining loss</strong> if the recipe stays the same.</p>
+<hr />
+<h2>1. Kaplan: loss as a power of compute</h2>
+<p>Kaplan et al. (2020) fit language-model cross-entropy against compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> (and against parameters <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>, dataset size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>) and saw smooth <strong>power laws</strong> over many orders of magnitude:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mi>C</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mi>a</mi><mspace width="0.167em" /><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></msup><mo>&#x0002B;</mo><msub><mi>L</mi><mrow><mo>&#x0221E;</mo></mrow></msub><mo>&#x0002E;</mo></mrow></math>
+<p>The irreducible term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>L</mi><mrow><mo>&#x0221E;</mo></mrow></msub></mrow></math> is entropy of the data plus whatever the architecture cannot represent. The interesting bit is the slope <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></math>: extra FLOPs still buy loss, with diminishing returns.</p>
+<p><img alt="Pretraining loss versus compute" src="files/data-643/graphics/7.1-scaling-laws/compute-loss.png" /></p>
+<p>Fix two of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mi>N</mi><mo>&#x0002C;</mo><mi>D</mi><mo>&#x0002C;</mo><mi>C</mi><mo stretchy="false">&#x0007D;</mo></mrow></math> and the third is constrained. Early GPT-3-style runs were <strong>compute-optimal for a short training budget</strong> that underused data: a large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math>, not enough tokens.</p>
+<hr />
+<h2>2. Chinchilla: tokens versus parameters</h2>
+<p>Hoffmann et al. (2022), <strong>Chinchilla</strong>: for a fixed FLOP budget, you should scale <strong>tokens and parameters together</strong>, not dump the budget into a huge model that sees the data once. Their fit said, roughly, equal scaling and about <strong>20 tokens per parameter</strong> for the models they trained.</p>
+<p><img alt="Chinchilla: more tokens for the same compute" src="files/data-643/graphics/7.1-scaling-laws/chinchilla.png" /></p>
+<p>A smaller model trained longer can beat a larger undertrained one. That is why later LLaMA-style recipes look “small” next to GPT-3 and still read well: they were fed more tokens.</p>
+<hr />
+<h2>3. What a law does not tell you</h2>
+<p>Downstream accuracy is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math>. Alignment (Weeks 8–9), data quality, mixture, and context length all sit off the curve. Inference cost scales with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> even if you already paid for training. For a project: cite the checkpoint size and the token budget if you know them; do not claim “we scaled” because you trained two extra epochs on a toy set. Lab 7 fits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mi>a</mi><msup><mi>C</mi><mrow><mo>&#x02212;</mo><mi>b</mi></mrow></msup><mo>&#x0002B;</mo><mi>c</mi></mrow></math> on constructed points so you see the algebra.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>Two models, same FLOPs. One has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x000D7;</mo></mrow></math> the parameters and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x0002F;</mo><mn>4</mn></mrow></math> the tokens of the other. Who does Chinchilla pick, and why?</p>
+</li>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>L</mi><mrow><mo>&#x0221E;</mo></mrow></msub></mrow></math> is already almost your measured loss, what does extra compute buy?</p>
+</li>
+<li>
+<p>Why can a scaling law look great while a chat eval is flat?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T19:20:00-04:00">September 14, 2026, 7:20 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
