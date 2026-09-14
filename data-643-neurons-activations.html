@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.2 Neurons, Activations, and Feedforward Nets - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.2 Neurons, Activations, and Feedforward Nets</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 1 &middot; <a href="files/data-643/neurons-activations.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/1.2-neurons-activations.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            A weighted sum, a nonlinearity, and why stacking linear layers is not enough.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>A transformer is a large neural net. Before attention, you need one unit, a nonlinearity, and a stack of layers. That is this note.</p>
+<hr />
+<h2>1. One neuron</h2>
+<p>A neuron takes a vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>, forms a weighted sum plus a bias, then applies a scalar nonlinearity <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>z</mi><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">w</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002B;</mo><mi>b</mi><mo>&#x0002C;</mo><mspace width="2em" /><mi>a</mi><mo>&#x0003D;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> is the <strong>pre-activation</strong>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> is the <strong>activation</strong>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">w</mi></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi></mrow></math> are the parameters you will train.</p>
+<p><img alt="One neuron: weighted sum, then a nonlinearity" src="files/data-643/graphics/1.2-neurons-activations/neuron.png" /></p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> is a step function, this is a 1950s perceptron. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> is a sigmoid, it is logistic regression in one unit. Modern nets mostly use <strong>ReLU</strong> in hidden layers, <strong>tanh</strong> or GELU in some transformer blocks, and <strong>softmax</strong> on mutually exclusive class scores.</p>
+<hr />
+<h2>2. Why the nonlinearity is not optional</h2>
+<p>A layer without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> is an affine map. Two affine maps compose to one affine map:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>W</mi><mn>2</mn></msub><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mn>1</mn></msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002B;</mo><msub><mrow><mi mathvariant="bold-italic">b</mi></mrow><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><msub><mrow><mi mathvariant="bold-italic">b</mi></mrow><mn>2</mn></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mn>2</mn></msub><msub><mi>W</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002B;</mo><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mn>2</mn></msub><msub><mrow><mi mathvariant="bold-italic">b</mi></mrow><mn>1</mn></msub><mo>&#x0002B;</mo><msub><mrow><mi mathvariant="bold-italic">b</mi></mrow><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Stack as many linear layers as you want: you still have a linear classifier. The bend is the point of the hidden layer.</p>
+<p><img alt="Common activations and their derivatives" src="files/data-643/graphics/1.2-neurons-activations/activations.png" /></p>
+<p>ReLU is cheap and sparse (negative pre-activations become 0). Sigmoid saturates: its derivative is near 0 for large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>z</mi><mo stretchy="false">&#x0007C;</mo></mrow></math>, which will matter when we talk about vanishing gradients in Week 2.</p>
+<hr />
+<h2>3. A feedforward net</h2>
+<p>A <strong>multi-layer perceptron (MLP)</strong> is a stack of dense layers. Layer <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02113;</mi></mrow></math> sees the previous activations, not the raw input (except <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02113;</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><msup><mi>W</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002B;</mo><msup><mrow><mi mathvariant="bold-italic">b</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002C;</mo><mspace width="2em" /><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mi>&#x003C3;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msup><mrow><mi mathvariant="bold-italic">z</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo stretchy="false">&#x00029;</mo></mrow></msup><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo><mspace width="2em" /><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0003D;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002E;</mo></mrow></math>
+<p><img alt="A small feedforward net" src="files/data-643/graphics/1.2-neurons-activations/feedforward.png" /></p>
+<p>Every arrow in that picture is one entry of some <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>W</mi><mrow><mo stretchy="false">&#x00028;</mo><mi>&#x02113;</mi><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math>. A “fully connected” layer means every unit in layer <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02113;</mi><mo>&#x02212;</mo><mn>1</mn></mrow></math> talks to every unit in layer <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02113;</mi></mrow></math>.</p>
+<hr />
+<h2>4. What a hidden layer buys you</h2>
+<p>A single linear unit cannot separate XOR: the positive class is not on one side of a line. Two hidden units, then a linear output, can fold the space so the classes become linearly separable.</p>
+<p><img alt="XOR needs a nonlinear hidden layer" src="files/data-643/graphics/1.2-neurons-activations/xor.png" /></p>
+<p>That is the whole argument for depth, in miniature. Language models stack many such nonlinear maps (and, from Week 3, attention) so that “cat sat on the mat” and “the mat sat on the cat” do not look like the same vector.</p>
+<hr />
+<h2>5. Practice</h2>
+<ol>
+<li>
+<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>a</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> for a two-hidden-layer net as a nested formula in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>W</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002C;</mo><msup><mi>W</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></msup><mo>&#x0002C;</mo><msup><mi>W</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>3</mn><mo stretchy="false">&#x00029;</mo></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>.</p>
+</li>
+<li>
+<p>Drop every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>. What class of functions remains?</p>
+</li>
+<li>
+<p>Why is ReLU’s derivative 0 on the negative half-line a feature <em>and</em> a failure mode?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T17:45:00-04:00">September 14, 2026, 5:45 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

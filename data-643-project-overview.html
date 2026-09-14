@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Courses - Ahmad Mousavi</title>
+        <title>Project Overview - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single page-courses">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -97,38 +97,93 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Courses</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Project Overview</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            Course pages with syllabus, lectures, and assignments as they are posted.
-                            These pages supplement Canvas; they do not replace it.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 1 &middot; <a href="files/data-643/project-overview.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
-                        <ul class="course-list">
-                            <li>
-                                <a class="course-card" href="data-612.html">
-                                    <span class="course-card__title">DATA 412/612: Statistical Programming in R</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="course-card" href="data-641.html">
-                                    <span class="course-card__title">DATA 441/641: Applied Natural Language Processing</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="course-card" href="data-642.html">
-                                    <span class="course-card__title">DATA 442/642: Advanced Machine Learning</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="course-card" href="data-643.html">
-                                    <span class="course-card__title">DATA 443/643: Advanced Concepts in Large Language Models</span>
-                                </a>
-                            </li>
-                        </ul>
+                        <p>
+                            The semester is a measured system plus, for graduate students, a short paper reproduction.
+                        </p>
+<p>These notes are the project contract for DATA 443/643. Canvas dates win if they disagree. The course is built around this project: lectures and labs exist so the report has methods you can defend.</p>
+<hr />
+<h2>1. What you are building</h2>
+<p>A <strong>measured</strong> system in language, multimodal AI, retrieval, alignment, or a close neighbor from the syllabus. Not a literature survey, and not a demo with no numbers.</p>
+<p>Minimum shape:</p>
+<ol>
+<li>a question</li>
+<li>data with a license you can cite</li>
+<li>a baseline</li>
+<li>one change the course justifies (architecture, objective, retrieval, alignment, or efficiency)</li>
+<li>an ablation or error analysis</li>
+<li>a limitation you actually looked for (bias, hallucination, compute, leakage)</li>
+</ol>
+<p>Undergraduate: group project, 10-page IEEE-style report, talk. Graduate: independent (or a smaller team if Canvas allows), same report shape, plus a <strong>mini-project</strong> on a recent paper.</p>
+<hr />
+<h2>2. Timeline (Fall 2026; exact days on Canvas)</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Typical window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Topic seed (Lab 1, ungraded)</td>
+<td>Week 1</td>
+</tr>
+<tr>
+<td>Project proposal</td>
+<td>October</td>
+</tr>
+<tr>
+<td>Graduate mini-project proposal</td>
+<td>October</td>
+</tr>
+<tr>
+<td>Talks</td>
+<td>December</td>
+</tr>
+<tr>
+<td>Report</td>
+<td>December</td>
+</tr>
+</tbody>
+</table></div>
+<p>Start reading data docs in Weeks 2–3. Do not wait for transformers (Week 3) to pick a domain.</p>
+<hr />
+<h2>3. Proposal</h2>
+<p>Two to three pages. Include:</p>
+<ul>
+<li>question and why it is not already solved by calling an API with the default prompt</li>
+<li>dataset, split, and label definition</li>
+<li>baseline and the one change</li>
+<li>compute budget (laptop GPU, Colab, AU, or CPU-only)</li>
+<li>success metric and a failure case you will inspect</li>
+<li>ethics: whose text, whose faces, what the ranking does to people</li>
+</ul>
+<p>Graduate mini-project: name the paper (2024–2026), the experiment you will rerun or extend, and the resource you will use (open weights, not a closed API as the only method).</p>
+<hr />
+<h2>4. Report and talk</h2>
+<p>Report: IEEE-style, about 10 pages (mini-project: about 3). Figures of the system and of errors beat screenshots of a notebook.</p>
+<p>Talk: undergraduate group and graduate main project as posted; graduate mini-project about 10 minutes plus questions.</p>
+<p>Code: a notebook or repo that reruns the tables from a seed. If a closed model is involved, still include an open baseline.</p>
+<hr />
+<h2>5. Topic seeds (not a closed list)</h2>
+<ul>
+<li>Retrieval-augmented answering over a documented corpus (policies, papers, manuals), with a hallucination check</li>
+<li>Instruction tuning or LoRA on a small open model for a narrow task, versus the base model</li>
+<li>CLIP-style retrieval or captioning, with a bias probe on occupations or geography</li>
+<li>Safety: a red-team set and a refusal metric you can compute</li>
+<li>Knowledge editing or unlearning on a factual slice, with a side-effect check</li>
+<li>Diffusion or GAN <em>conditioning on text</em> only if you already have GPU time; language-only projects are enough</li>
+</ul>
+<p>If you took 641 or 642, do not resubmit that project. Reuse data only if the <strong>question</strong> is new (for example, the 641 classifier becomes a retrieval or alignment study).</p>
                     </section>
                 </div>
             </article>

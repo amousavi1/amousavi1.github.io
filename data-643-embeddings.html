@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Courses - Ahmad Mousavi</title>
+        <title>1.4 Word Embeddings and Semantic Geometry - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single page-courses">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -97,38 +97,65 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Courses</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.4 Word Embeddings and Semantic Geometry</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            Course pages with syllabus, lectures, and assignments as they are posted.
-                            These pages supplement Canvas; they do not replace it.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 1 &middot; <a href="files/data-643/embeddings.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/1.4-embeddings.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
-                        <ul class="course-list">
-                            <li>
-                                <a class="course-card" href="data-612.html">
-                                    <span class="course-card__title">DATA 412/612: Statistical Programming in R</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="course-card" href="data-641.html">
-                                    <span class="course-card__title">DATA 441/641: Applied Natural Language Processing</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="course-card" href="data-642.html">
-                                    <span class="course-card__title">DATA 442/642: Advanced Machine Learning</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="course-card" href="data-643.html">
-                                    <span class="course-card__title">DATA 443/643: Advanced Concepts in Large Language Models</span>
-                                </a>
-                            </li>
-                        </ul>
+                        <p>
+                            Dense vectors, skip-gram, analogies, and why geometry can encode bias.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>A language model does not read characters as characters. It reads <strong>vectors</strong>. This week those vectors are word embeddings. From Week 3 they are token embeddings inside a transformer. The geometry is the same idea.</p>
+<hr />
+<h2>1. One-hot is a bad geometry</h2>
+<p>Give each word its own coordinate. <em>film</em> and <em>movie</em> are then orthogonal: inner product 0. The vector is sparse, as long as the vocabulary, and a new word has no coordinate at all.</p>
+<p>A <strong>distributed</strong> representation is short and dense (50–300 dimensions is a classical size; transformer hidden sizes are larger). Meaning is spread across coordinates. Similar usage → similar vectors.</p>
+<p><img alt="One-hot rows versus dense embedding rows" src="files/data-643/graphics/1.4-embeddings/onehot-vs-embed.png" /></p>
+<p><strong>Distributional</strong> is about the data: words that occur in similar contexts mean similar things (Harris). <strong>Distributed</strong> is about the code: a dense vector. An <strong>embedding</strong> is the map from a token id into that vector.</p>
+<hr />
+<h2>2. Semantic geometry</h2>
+<p>If the map is good, <strong>direction means something</strong>. The Mikolov analogy is the slogan:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02248;</mo><mover><mrow><mtext>queen</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002E;</mo></mrow></math>
+<p>The same offset can look like gender, tense, or capital-of. You measure similarity with <strong>cosine</strong>, not Euclidean distance (length is partly frequency).</p>
+<p><img alt="A parallelogram in embedding space" src="files/data-643/graphics/1.4-embeddings/semantic-geometry.png" /></p>
+<p>Nearest neighbors are a debug tool. If <em>Paris</em> sits next to <em>France</em> and <em>Rome</em>, training learned something. If it sits next to punctuation, the corpus or the window is wrong.</p>
+<hr />
+<h2>3. How Word2Vec learns the map</h2>
+<p>You do not build a huge co-occurrence matrix and then factor it (that is LSA / GloVe). <strong>Word2Vec</strong> trains a small two-layer net on a fake task.</p>
+<p><strong>Skip-gram:</strong> from the center word, predict each neighbor in a window. <strong>CBOW:</strong> from the neighbors, predict the center.</p>
+<p><img alt="A skip-gram window around sat" src="files/data-643/graphics/1.4-embeddings/skipgram-window.png" /></p>
+<p>Input is a one-hot (or an id lookup, which is the same map). The hidden layer has width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>. After training you <strong>throw away the softmax</strong> and keep the hidden weights. Those rows are the embeddings.</p>
+<p>A full softmax over 100,000 words is slow. Negative sampling (a later trick) replaces it. You do not need that trick for Lab 1.</p>
+<p>A transformer does not throw the rest of the net away: it <em>keeps</em> transforming those vectors. Word2Vec is the geometry without the rest of the stack.</p>
+<hr />
+<h2>4. Intrinsic versus extrinsic evaluation</h2>
+<p><strong>Intrinsic:</strong> does the space look right on its own? Analogies, word similarity datasets, clustering of synsets.</p>
+<p><strong>Extrinsic:</strong> plug the vectors into a downstream model (sentiment, retrieval, NER). If the task score moves, the embedding helped that task.</p>
+<p><img alt="Intrinsic versus extrinsic evaluation" src="files/data-643/graphics/1.4-embeddings/intrinsic-extrinsic.png" /></p>
+<p>They need not agree. A space that wins analogies can still be a weak feature for your classifier. For a project, extrinsic is the number that matters. Intrinsic is how you debug.</p>
+<hr />
+<h2>5. Bias is also geometry</h2>
+<p>The same offsets that encode “capital of” can encode stereotypes. Occupation words often sit along a she/he direction in older embeddings. That is not a bug in cosine; it is a property of the training text.</p>
+<p><img alt="Occupation words shifted along a gender offset" src="files/data-643/graphics/1.4-embeddings/bias-geometry.png" /></p>
+<p>You will measure this in Lab 1 on a tiny, constructed space, then later on real models. Debiasing is incomplete; reporting the probe is part of the project writeup when your system ranks people, jobs, or medical outcomes.</p>
+<hr />
+<h2>6. Practice</h2>
+<ol>
+<li>
+<p>In one sentence each: distributional, distributed, embedding.</p>
+</li>
+<li>
+<p>Why is cosine the default similarity?</p>
+</li>
+<li>
+<p>Give one intrinsic and one extrinsic test for a word embedding. Which one would you put in a project report?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>
