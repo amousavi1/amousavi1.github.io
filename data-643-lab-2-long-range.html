@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Teaching - Ahmad Mousavi</title>
+        <title>Lab 2: Long-Range Memory - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -22,8 +22,8 @@
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
-                        <li class="masthead__menu-item"><a href="teaching.html" class="active">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,54 +97,71 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Teaching</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 2: Long-Range Memory</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            I teach data science, machine learning, and applied mathematics with a focus on mathematical foundations,
-                            computation, and current AI topics. Students derive algorithms from optimization principles and implement
-                            models in R or Python. Coursework includes fairness, interpretability, and related responsible-AI topics,
-                            and several class projects have continued as practicum or independent research.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 2 &middot; <a href="files/data-643/lab-2-long-range.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
-                        <h2>Teaching Experience</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-641.html">DATA 441/641: Applied Natural Language Processing</a></strong
-                                >, Spring 2025.
-                            </li>
-                            <li>
-                                <strong
-                                    ><a href="data-642.html">DATA 442/642: Advanced Machine Learning</a></strong
-                                >, Fall 2024; Fall 2025 (two sections).
-                            </li>
-                            <li>
-                                <strong>STAT/DATA 427/627: Statistical Machine Learning</strong>, Spring 2024, Fall 2024, Spring 2025, Summer
-                                2025.
-                            </li>
-                            <li>
-                                <strong>DATA 412/612: Statistical Programming in R</strong>, Fall 2023, Spring 2024; Fall 2026
-                                (two sections: section 2 in person, section 4 asynchronous).
-                            </li>
-                            <li>
-                                <strong>MATH 225: Introduction to Differential Equations</strong>, Summer and Winter 2018, and Winter 2019
-                                (University of Maryland, Baltimore County).
-                            </li>
-                        </ul>
-                        <h2>Course Development</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-643.html">DATA 443/643: Advanced Concepts in Large Language Models</a></strong
-                                >
-                                (in preparation). A self-contained, project-based treatment of transformers, alignment, multimodal
-                                systems, retrieval-augmented generation, and related topics, with labs in Python, PyTorch, and Hugging
-                                Face. DATA 441/641 and DATA 442/642 are not required.
-                            </li>
-                        </ul>
+                        <p>
+                            Copy the first bit of a long sequence: vanilla RNN versus LSTM.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>2.1–2.3</strong> first. CPU is enough.</p>
+<p>Upload HTML to Canvas when done.</p>
+<p>The task is <strong>copy the first bit at the end of a long sequence</strong>. A vanilla RNN should fail as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> grows; an LSTM should keep the bit.</p>
+<pre><code class="language-python">import torch
+from torch import nn
+from torch.nn.utils import clip_grad_norm_
+
+def batch(T, n=64):
+    x = torch.randint(0, 2, (n, T, 1)).float()
+    y = x[:, 0, :]          # label = first bit
+    return x, y
+</code></pre>
+<hr />
+<h2>1. A linear baseline (no memory)</h2>
+<ol>
+<li>
+<p>Build <code>nn.Linear(1, 1)</code> and train it on <code>x[:, -1, :]</code> (the <strong>last</strong> bit) to predict <code>y</code>. Accuracy should be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0.5</mn></mrow></math>. Why?</p>
+</li>
+<li>
+<p>In one sentence: this model has no path from position 0 to the output except through whatever you fed it.</p>
+</li>
+</ol>
+<hr />
+<h2>2. Vanilla RNN versus LSTM</h2>
+<p>Use <code>T = 25</code> first.</p>
+<pre><code class="language-python">class SeqModel(nn.Module):
+    def __init__(self, kind=&quot;rnn&quot;):
+        super().__init__()
+        if kind == &quot;rnn&quot;:
+            self.rnn = nn.RNN(1, 16, batch_first=True)
+        else:
+            self.rnn = nn.LSTM(1, 16, batch_first=True)
+        self.out = nn.Linear(16, 1)
+
+    def forward(self, x):
+        h, _ = self.rnn(x)
+        return self.out(h[:, -1, :])
+</code></pre>
+<ol>
+<li>
+<p>Train each model 400 steps, Adam <code>lr=1e-2</code>, <code>BCEWithLogitsLoss</code>. Print accuracy on a fresh batch.</p>
+</li>
+<li>
+<p>Repeat for <code>T = 5, 15, 40</code>. Make a table: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> versus RNN accuracy versus LSTM accuracy.</p>
+</li>
+<li>
+<p>For the vanilla RNN at <code>T=40</code>, print <code>clip_grad_norm_(model.parameters(), 1e9)</code> once after a backward pass (no clip). Is the norm tiny or huge?</p>
+</li>
+</ol>
+<hr />
+<h2>3. What you should see</h2>
+<p>Short <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>: both work. Long <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>: RNN near chance, LSTM above chance. If both fail, train longer or widen the hidden size to 32. If the LSTM is also chance at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>40</mn></mrow></math>, you likely used the last input as the label by accident.</p>
+<p>Write four sentences: what the hidden state had to store, why <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math> along the chain hurts, what the forget gate is for, and why Week 3 will stop using this loop.</p>
                     </section>
                 </div>
             </article>

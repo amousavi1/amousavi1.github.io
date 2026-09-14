@@ -127,7 +127,7 @@
 
                         <h2>Weekly Materials</h2>
                         <p class="course-weeks-intro">
-                            Week 1 is posted. Later weeks show the syllabus map until their notes are ready.
+                            Week 1–5 notes and labs are posted. Later weeks show the syllabus map until their notes are ready.
                             Canvas remains the official list of required reading.
                         </p>
                         <div class="course-weeks">
@@ -230,28 +230,171 @@
                             </div>
                             <div class="course-week-panel" id="week-2" role="tabpanel" aria-labelledby="tab-week-2" hidden>
                                 <p class="course-group-title">Module 1 — Sequence models: RNNs, LSTMs, and GRUs</p>
-                                <p>Sequential modeling, vanishing and exploding gradients, gating, hidden-state dynamics.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-sequence-rnns.html">2.1 Sequential Models and RNNs</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/2.1-sequence-rnns.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-vanishing-gradients.html">2.2 Vanishing and Exploding Gradients</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/2.2-vanishing-gradients.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lstm-gru.html">2.3 LSTMs and GRUs</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/2.3-lstm-gru.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-2-long-range.html">Lab 2: Long-Range Memory</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-2-long-range.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM networks (Olah)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1808.03314" target="_blank" rel="noopener">Sherstinsky, Fundamentals of RNN and LSTM</a
+                                        >
+                                    </li>
+                                </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
                                     <li>What does the hidden state have to carry across a long sentence?</li>
-                                    <li>Why do we move from recurrence to attention in Week 3?</li>
+                                    <li>Why do vanishing gradients push us toward gates, then toward attention in Week 3?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-3" role="tabpanel" aria-labelledby="tab-week-3" hidden>
                                 <p class="course-group-title">Module 1 — Attention and transformers</p>
-                                <p>Self-attention (Q/K/V), positional encoding, encoder–decoder, GPT and BERT as systems.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-attention-need.html">3.1 From Recurrence to Attention</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/3.1-attention-need.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-self-attention.html">3.2 Self-Attention (Q, K, V)</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/3.2-self-attention.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-transformer-block.html">3.3 The Transformer Block</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/3.3-transformer-block.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-gpt-bert.html">3.4 GPT and BERT</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/3.4-gpt-bert.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-3-self-attention.html">Lab 3: Self-Attention by Hand</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-3-self-attention.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., Attention is all you need</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Illustrated transformer (Alammar)</a
+                                        >
+                                    </li>
+                                </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
                                     <li>What does a query attend to that an RNN state cannot see in one step?</li>
+                                    <li>GPT versus BERT: which mask, and which project would pick which?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-4" role="tabpanel" aria-labelledby="tab-week-4" hidden>
                                 <p class="course-group-title">Module 2 — Multimodal foundations and vision transformers</p>
-                                <p>Image patches as tokens, contrastive learning, modality alignment, zero-shot transfer.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-multimodal-foundations.html">4.1 Multimodal Foundations</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/4.1-multimodal-foundations.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-vision-transformers.html">4.2 Vision Transformers</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/4.2-vision-transformers.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-contrastive-zeroshot.html">4.3 Contrastive Learning and Zero-Shot Transfer</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/4.3-contrastive-zeroshot.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-4-patches-contrastive.html">Lab 4: Patches and a Tiny Contrastive Loss</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-4-patches-contrastive.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2010.11929" target="_blank" rel="noopener">Dosovitskiy et al., An image is worth 16x16 words</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1705.09406" target="_blank" rel="noopener">Baltrušaitis et al., Multimodal machine learning survey</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>When would you keep two towers instead of concatenating image and text features?</li>
+                                    <li>Why do ViT patches still need positional encodings?</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-5" role="tabpanel" aria-labelledby="tab-week-5" hidden>
                                 <p class="course-group-title">Module 2 — Vision–language models (CLIP and BLIP)</p>
-                                <p>Cross-modal retrieval, captioning, bootstrapped pretraining, bias and robustness.</p>
+                                <p class="course-group-title">Notes</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-clip.html">5.1 CLIP</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/5.1-clip.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-blip.html">5.2 BLIP and Captioning</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/5.2-blip.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-643-retrieval-bias.html">5.3 Retrieval, Bias, and Robustness</a
+                                        ><a class="course-material__pdf" href="files/data-643/slides/5.3-retrieval-bias.pdf" target="_blank" rel="noopener">(slides)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-643-lab-5-toy-clip.html">Lab 5: Retrieval in a Toy CLIP Space</a
+                                        ><a class="course-material__pdf" href="files/data-643/lab-5-toy-clip.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2103.00020" target="_blank" rel="noopener">Radford et al., CLIP</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2201.12086" target="_blank" rel="noopener">Li et al., BLIP</a
+                                        >
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>CLIP retrieves; BLIP can write. Which one belongs in a captioning project?</li>
+                                    <li>Name one retrieval probe you would run before ranking people or jobs.</li>
+                                </ul>
                             </div>
                             <div class="course-week-panel" id="week-6" role="tabpanel" aria-labelledby="tab-week-6" hidden>
                                 <p class="course-group-title">Module 2 — Audio and cross-modal integration</p>
@@ -302,7 +445,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T17:45:00-04:00">September 14, 2026, 5:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
             </footer>
         </div>
 

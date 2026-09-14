@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Teaching - Ahmad Mousavi</title>
+        <title>Lab 3: Self-Attention by Hand - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -22,8 +22,8 @@
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
-                        <li class="masthead__menu-item"><a href="teaching.html" class="active">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,54 +97,66 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Teaching</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 3: Self-Attention by Hand</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            I teach data science, machine learning, and applied mathematics with a focus on mathematical foundations,
-                            computation, and current AI topics. Students derive algorithms from optimization principles and implement
-                            models in R or Python. Coursework includes fairness, interpretability, and related responsible-AI topics,
-                            and several class projects have continued as practicum or independent research.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 3 &middot; <a href="files/data-643/lab-3-self-attention.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
-                        <h2>Teaching Experience</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-641.html">DATA 441/641: Applied Natural Language Processing</a></strong
-                                >, Spring 2025.
-                            </li>
-                            <li>
-                                <strong
-                                    ><a href="data-642.html">DATA 442/642: Advanced Machine Learning</a></strong
-                                >, Fall 2024; Fall 2025 (two sections).
-                            </li>
-                            <li>
-                                <strong>STAT/DATA 427/627: Statistical Machine Learning</strong>, Spring 2024, Fall 2024, Spring 2025, Summer
-                                2025.
-                            </li>
-                            <li>
-                                <strong>DATA 412/612: Statistical Programming in R</strong>, Fall 2023, Spring 2024; Fall 2026
-                                (two sections: section 2 in person, section 4 asynchronous).
-                            </li>
-                            <li>
-                                <strong>MATH 225: Introduction to Differential Equations</strong>, Summer and Winter 2018, and Winter 2019
-                                (University of Maryland, Baltimore County).
-                            </li>
-                        </ul>
-                        <h2>Course Development</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-643.html">DATA 443/643: Advanced Concepts in Large Language Models</a></strong
-                                >
-                                (in preparation). A self-contained, project-based treatment of transformers, alignment, multimodal
-                                systems, retrieval-augmented generation, and related topics, with labs in Python, PyTorch, and Hugging
-                                Face. DATA 441/641 and DATA 442/642 are not required.
-                            </li>
-                        </ul>
+                        <p>
+                            Q, K, V, a heatmap, then a causal mask on four tokens.
+                        </p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>3.1–3.4</strong> first.</p>
+<pre><code class="language-python">import torch
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
+</code></pre>
+<hr />
+<h2>1. One head, by hand</h2>
+<p>Four tokens, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. You will compute attention without <code>nn.MultiheadAttention</code>.</p>
+<pre><code class="language-python">torch.manual_seed(0)
+X = torch.tensor([
+    [1.0, 0.0],   # The
+    [0.0, 1.0],   # cat
+    [1.0, 1.0],   # sat
+    [0.5, 0.2],   # on
+])
+Wq = torch.eye(2)
+Wk = torch.eye(2)
+Wv = torch.eye(2)
+</code></pre>
+<ol>
+<li>
+<p>Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>V</mi></mrow></math>. With these weights they equal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>.</p>
+</li>
+<li>
+<p>Scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo>&#x0003D;</mo><mi>Q</mi><msup><mi>K</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002F;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></math>. Print <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>.</p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002C;</mo><mi>dim</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. Rows must sum to 1. Heatmap <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math> with token names <code>The, cat, sat, on</code>.</p>
+</li>
+<li>
+<p>Output <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Y</mi><mo>&#x0003D;</mo><mi>A</mi><mi>V</mi></mrow></math>. Which token’s output is closest (cosine) to <code>cat</code>? Guess before you compute.</p>
+</li>
+</ol>
+<hr />
+<h2>2. A causal mask</h2>
+<ol>
+<li>
+<p>Build a mask <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>M</mi></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> on and below the diagonal and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math> strictly above. Add it to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> before softmax. Print the new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math>. The last token may see everyone; the first token may see only itself.</p>
+</li>
+<li>
+<p>In one sentence: why would a GPT-style model be cheating without this mask?</p>
+</li>
+</ol>
+<hr />
+<h2>3. Library check</h2>
+<pre><code class="language-python">attn = torch.nn.MultiheadAttention(embed_dim=2, num_heads=1, batch_first=True)
+</code></pre>
+<p>You do not need to train it. Copy <code>attn.in_proj_weight</code> is optional. The point of (1)–(2) is the algebra. Write three sentences: query vs key vs value, what a row of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math> is, and why Week 2’s hidden state is no longer the only memory.</p>
                     </section>
                 </div>
             </article>

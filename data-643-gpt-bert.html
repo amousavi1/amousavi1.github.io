@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Teaching - Ahmad Mousavi</title>
+        <title>3.4 GPT and BERT - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -22,8 +22,8 @@
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
-                        <li class="masthead__menu-item"><a href="teaching.html" class="active">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,54 +97,76 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Teaching</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.4 GPT and BERT</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            I teach data science, machine learning, and applied mathematics with a focus on mathematical foundations,
-                            computation, and current AI topics. Students derive algorithms from optimization principles and implement
-                            models in R or Python. Coursework includes fairness, interpretability, and related responsible-AI topics,
-                            and several class projects have continued as practicum or independent research.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 3 &middot; <a href="files/data-643/gpt-bert.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/3.4-gpt-bert.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
-                        <h2>Teaching Experience</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-641.html">DATA 441/641: Applied Natural Language Processing</a></strong
-                                >, Spring 2025.
-                            </li>
-                            <li>
-                                <strong
-                                    ><a href="data-642.html">DATA 442/642: Advanced Machine Learning</a></strong
-                                >, Fall 2024; Fall 2025 (two sections).
-                            </li>
-                            <li>
-                                <strong>STAT/DATA 427/627: Statistical Machine Learning</strong>, Spring 2024, Fall 2024, Spring 2025, Summer
-                                2025.
-                            </li>
-                            <li>
-                                <strong>DATA 412/612: Statistical Programming in R</strong>, Fall 2023, Spring 2024; Fall 2026
-                                (two sections: section 2 in person, section 4 asynchronous).
-                            </li>
-                            <li>
-                                <strong>MATH 225: Introduction to Differential Equations</strong>, Summer and Winter 2018, and Winter 2019
-                                (University of Maryland, Baltimore County).
-                            </li>
-                        </ul>
-                        <h2>Course Development</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-643.html">DATA 443/643: Advanced Concepts in Large Language Models</a></strong
-                                >
-                                (in preparation). A self-contained, project-based treatment of transformers, alignment, multimodal
-                                systems, retrieval-augmented generation, and related topics, with labs in Python, PyTorch, and Hugging
-                                Face. DATA 441/641 and DATA 442/642 are not required.
-                            </li>
-                        </ul>
+                        <p>
+                            Same block, different mask and objective: next-token versus masked tokens.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>GPT and BERT are the same block with different <strong>masks</strong> and <strong>objectives</strong>. That choice is the difference between a generator and a bidirectional encoder.</p>
+<hr />
+<h2>1. Two attention patterns</h2>
+<p><strong>GPT</strong> (decoder-only): each token may attend to itself and the past. The pretraining job is <strong>next-token</strong> prediction. Sampling is ancestral: emit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>, then condition on it.</p>
+<p><strong>BERT</strong> (encoder-only): every token may attend to every token. The pretraining job is <strong>masked language modeling</strong> (and originally next-sentence prediction). You cannot sample a paragraph left-to-right without extra machinery.</p>
+<p><img alt="Causal versus bidirectional attention" src="files/data-643/graphics/3.4-gpt-bert/gpt-bert.png" /></p>
+<hr />
+<h2>2. Objectives, in one table</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>GPT</th>
+<th>BERT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mask</td>
+<td>causal</td>
+<td>none (random tokens hidden)</td>
+</tr>
+<tr>
+<td>Loss</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>x</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mrow><mtext>masked</mtext></mrow></msub><mo>&#x02223;</mo><msub><mi>x</mi><mrow><mtext>rest</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+</tr>
+<tr>
+<td>Default use</td>
+<td>generate, chat, complete</td>
+<td>classify, tag, embed a span</td>
+</tr>
+<tr>
+<td>Peek at the future?</td>
+<td>no</td>
+<td>yes, by design</td>
+</tr>
+</tbody>
+</table></div>
+<p>Modern “BERT-like” encoders (RoBERTa, T5’s encoder, embedding models) keep the bidirectional idea. Modern LLMs are GPT-style stacks, often with extra alignment (Weeks 8–9).</p>
+<hr />
+<h2>3. Scaling, briefly</h2>
+<p>The same block, bigger: more layers, wider <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>, more heads, more data. Week 7 is scaling laws and efficiency. This week: if the mask is causal, you have a language model; if not, you have a contextual encoder. Do not fine-tune BERT as if it were GPT.</p>
+<p>For the project: generation, RAG, and tool-use sit on a decoder. Classification into a small label set can still use an encoder, or a decoder with a prompt.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>Why is BERT the wrong pretrained model if your demo must stream tokens?</p>
+</li>
+<li>
+<p>A sentiment classifier: encoder or decoder? Give one reason for each.</p>
+</li>
+<li>
+<p>What does a causal mask set the illegal scores to before the softmax, and why not zero?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>

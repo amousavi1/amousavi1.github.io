@@ -16,8 +16,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-14T17:45:00-04:00"
-LAST_UPDATED_TEXT = "September 14, 2026, 5:45 PM EDT"
+LAST_UPDATED_ISO = "2026-09-14T18:00:00-04:00"
+LAST_UPDATED_TEXT = "September 14, 2026, 6:00 PM EDT"
 
 COURSE = "data-643"
 COURSE_TITLE = "DATA 443/643"
@@ -323,7 +323,7 @@ def write_hub() -> pathlib.Path:
 
                         <h2>Weekly Materials</h2>
                         <p class="course-weeks-intro">
-                            Week 1 is posted. Later weeks show the syllabus map until their notes are ready.
+                            Week 1–5 notes and labs are posted. Later weeks show the syllabus map until their notes are ready.
                             Canvas remains the official list of required reading.
                         </p>
                         <div class="course-weeks">
@@ -411,14 +411,10 @@ def main() -> None:
     html_only = "--html-only" in flags
     notes_flag = "--notes" in flags
     if notes_flag or html_only:
+        weeks = {int(a) for a in sys.argv[1:] if a.isdigit()}
         slugs = {a for a in sys.argv[1:] if not a.startswith("--") and not a.isdigit()}
-        week = None
-        for a in sys.argv[1:]:
-            if a.isdigit():
-                week = int(a)
-                break
         for note in NOTES:
-            if week is not None and note["week"] != week:
+            if weeks and note["week"] not in weeks:
                 continue
             if slugs and note["slug"] not in slugs:
                 continue

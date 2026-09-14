@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Teaching - Ahmad Mousavi</title>
+        <title>2.2 Vanishing and Exploding Gradients - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -22,8 +22,8 @@
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
-                        <li class="masthead__menu-item"><a href="teaching.html" class="active">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,54 +97,48 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Teaching</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.2 Vanishing and Exploding Gradients</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            I teach data science, machine learning, and applied mathematics with a focus on mathematical foundations,
-                            computation, and current AI topics. Students derive algorithms from optimization principles and implement
-                            models in R or Python. Coursework includes fairness, interpretability, and related responsible-AI topics,
-                            and several class projects have continued as practicum or independent research.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 2 &middot; <a href="files/data-643/vanishing-gradients.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/2.2-vanishing-gradients.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
-                        <h2>Teaching Experience</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-641.html">DATA 441/641: Applied Natural Language Processing</a></strong
-                                >, Spring 2025.
-                            </li>
-                            <li>
-                                <strong
-                                    ><a href="data-642.html">DATA 442/642: Advanced Machine Learning</a></strong
-                                >, Fall 2024; Fall 2025 (two sections).
-                            </li>
-                            <li>
-                                <strong>STAT/DATA 427/627: Statistical Machine Learning</strong>, Spring 2024, Fall 2024, Spring 2025, Summer
-                                2025.
-                            </li>
-                            <li>
-                                <strong>DATA 412/612: Statistical Programming in R</strong>, Fall 2023, Spring 2024; Fall 2026
-                                (two sections: section 2 in person, section 4 asynchronous).
-                            </li>
-                            <li>
-                                <strong>MATH 225: Introduction to Differential Equations</strong>, Summer and Winter 2018, and Winter 2019
-                                (University of Maryland, Baltimore County).
-                            </li>
-                        </ul>
-                        <h2>Course Development</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-643.html">DATA 443/643: Advanced Concepts in Large Language Models</a></strong
-                                >
-                                (in preparation). A self-contained, project-based treatment of transformers, alignment, multimodal
-                                systems, retrieval-augmented generation, and related topics, with labs in Python, PyTorch, and Hugging
-                                Face. DATA 441/641 and DATA 442/642 are not required.
-                            </li>
-                        </ul>
+                        <p>
+                            Backprop through time is a product of Jacobians. Long-range signal dies or blows up.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>Backprop through an unrolled RNN multiplies one Jacobian per time step. If those matrices shrink, the early-token gradient <strong>vanishes</strong>. If they grow, it <strong>explodes</strong>. Either way, long-range learning dies.</p>
+<hr />
+<h2>1. A product along the chain</h2>
+<p>The loss at the last token, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>T</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>, depends on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>1</mn></msub></mrow></math> through</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>L</mi></mrow><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>1</mn></msub></mrow></mfrac><mo>&#x0003D;</mo><mfrac><mrow><mo>&#x02202;</mo><mi>L</mi></mrow><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>T</mi></msub></mrow></mfrac><mfrac><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>T</mi></msub></mrow><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>T</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></mfrac><mo>&#x022EF;</mo><mfrac><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>2</mn></msub></mrow><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>1</mn></msub></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Each factor <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi></mrow></msub><mo>&#x0002F;</mo><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math> contains <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>tanh</mi><mi>&#x02032;</mi></msup></mrow></math>. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0007C;</mo><msup><mi>tanh</mi><mi>&#x02032;</mi></msup><mo>&#x0007C;</mo><mo>&#x02264;</mo><mn>1</mn></mrow></math>, and it is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0226A;</mo><mn>1</mn></mrow></math> unless the pre-activation sits near 0. A product of twenty numbers smaller than 1 is tiny.</p>
+<p><img alt="Gradient scale versus steps back in time" src="files/data-643/graphics/2.2-vanishing-gradients/vanish.png" /></p>
+<p>The gated curve is the slogan for LSTM/GRU: keep a path whose multiplier can stay near 1.</p>
+<hr />
+<h2>2. Vanishing versus exploding</h2>
+<p>Same product, opposite problem. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02016;</mo><msub><mi>W</mi><mi>h</mi></msub><mo>&#x02016;</mo></mrow></math> is large, the signal blows up, weights become NaNs, and training stops. <strong>Gradient clipping</strong> (rescale if the global norm exceeds a threshold) is the usual bandage for exploding. It does not fix vanishing.</p>
+<p><img alt="Vanishing versus exploding along depth" src="files/data-643/graphics/2.2-vanishing-gradients/vanish-explode.png" /></p>
+<hr />
+<h2>3. What this means for language</h2>
+<p>A vanilla RNN can learn “the next word looks like the last few.” It struggles with “the negation was at the start of the review.” Transformers side-step the chain: every token attends to every other token in one step (Week 3). Gates (Week 2.3) were the fix <em>inside</em> the recurrent family.</p>
+<p>In a project, if you still train an RNN on long documents, watch the gradient norm. If it is always <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0</mn></mrow></math> on early positions, the net is not using the beginning of the sequence.</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>Why is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>tanh</mi><mi>&#x02032;</mi></msup></mrow></math> a problem when the state saturates at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x000B1;</mi><mn>1</mn></mrow></math>?</p>
+</li>
+<li>
+<p>Clipping stops explosions. Why does it not restore a vanished signal?</p>
+</li>
+<li>
+<p>In one sentence: what would you plot in TensorBoard to see this failure in Lab 2?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>

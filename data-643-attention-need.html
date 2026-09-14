@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Teaching - Ahmad Mousavi</title>
+        <title>3.1 From Recurrence to Attention - DATA 443/643 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="assets/css/site.css" />
         <link rel="stylesheet" href="assets/css/academicons.css" />
     </head>
-    <body class="layout--single">
+    <body class="layout--single page-courses page-lecture">
         <nav class="skip-links">
             <a href="#main" class="screen-reader-shortcut">Skip to content</a>
         </nav>
@@ -22,8 +22,8 @@
                         <li class="masthead__menu-item"><a href="news.html">News</a></li>
                         <li class="masthead__menu-item"><a href="research.html">Research</a></li>
                         <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
-                        <li class="masthead__menu-item"><a href="teaching.html" class="active">Teaching</a></li>
-                        <li class="masthead__menu-item"><a href="courses.html">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
                         <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
                     </ul>
                     <button id="theme-toggle" type="button" aria-label="Toggle theme">
@@ -97,54 +97,67 @@
                 </div>
             </div>
 
-            <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
                 <div class="page__inner-wrap">
                     <header>
-                        <h1 id="page-title" class="page__title" itemprop="headline">Teaching</h1>
+                        <h1 id="page-title" class="page__title" itemprop="name">3.1 From Recurrence to Attention</h1>
                     </header>
                     <section class="page__content" itemprop="text">
-                        <p>
-                            I teach data science, machine learning, and applied mathematics with a focus on mathematical foundations,
-                            computation, and current AI topics. Students derive algorithms from optimization principles and implement
-                            models in R or Python. Coursework includes fairness, interpretability, and related responsible-AI topics,
-                            and several class projects have continued as practicum or independent research.
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 3 &middot; <a href="files/data-643/attention-need.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/3.1-attention-need.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
-                        <h2>Teaching Experience</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-641.html">DATA 441/641: Applied Natural Language Processing</a></strong
-                                >, Spring 2025.
-                            </li>
-                            <li>
-                                <strong
-                                    ><a href="data-642.html">DATA 442/642: Advanced Machine Learning</a></strong
-                                >, Fall 2024; Fall 2025 (two sections).
-                            </li>
-                            <li>
-                                <strong>STAT/DATA 427/627: Statistical Machine Learning</strong>, Spring 2024, Fall 2024, Spring 2025, Summer
-                                2025.
-                            </li>
-                            <li>
-                                <strong>DATA 412/612: Statistical Programming in R</strong>, Fall 2023, Spring 2024; Fall 2026
-                                (two sections: section 2 in person, section 4 asynchronous).
-                            </li>
-                            <li>
-                                <strong>MATH 225: Introduction to Differential Equations</strong>, Summer and Winter 2018, and Winter 2019
-                                (University of Maryland, Baltimore County).
-                            </li>
-                        </ul>
-                        <h2>Course Development</h2>
-                        <ul>
-                            <li>
-                                <strong
-                                    ><a href="data-643.html">DATA 443/643: Advanced Concepts in Large Language Models</a></strong
-                                >
-                                (in preparation). A self-contained, project-based treatment of transformers, alignment, multimodal
-                                systems, retrieval-augmented generation, and related topics, with labs in Python, PyTorch, and Hugging
-                                Face. DATA 441/641 and DATA 442/642 are not required.
-                            </li>
-                        </ul>
+                        <p>
+                            A chain of states is a bottleneck. Attention gives every token a path of length one.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>An RNN compresses the whole past into one vector. Token 1 can affect token 40 only by surviving 39 overwrites. <strong>Attention</strong> lets every token look at every other token in one step. That is the move from this week’s recurrences to the rest of the course.</p>
+<hr />
+<h2>1. The bottleneck</h2>
+<p>To answer “what does <em>it</em> refer to?” the model needs a path from <em>it</em> to a name that may be far left (or right). In an RNN that path is a chain. In attention it is one matrix of scores.</p>
+<p><img alt="A chain versus all-pairs links" src="files/data-643/graphics/3.1-attention-need/rnn-vs-attention.png" /></p>
+<p>Bahdanau et al. (2015) added attention on top of an encoder–decoder RNN so the decoder could reread the source. Vaswani et al. (2017) dropped the recurrence: <strong>self-attention</strong> is the layer.</p>
+<hr />
+<h2>2. What you gain and what you pay</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>RNN</th>
+<th>Self-attention</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path length, token 1 to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math></td>
+</tr>
+<tr>
+<td>Parallel over time</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>Cost in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><msup><mi>T</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo></mrow></math> memory/time for full attention</td>
+</tr>
+</tbody>
+</table></div>
+<p>Long documents (Week 7: efficiency) will force approximations. For this course’s default, full attention is the model.</p>
+<hr />
+<h2>3. Practice</h2>
+<ol>
+<li>
+<p>Why can a transformer GPU-batch a whole sentence’s updates at once, while an LSTM cannot?</p>
+</li>
+<li>
+<p>A 4k-token policy PDF: what is the quadratic cost complaining about?</p>
+</li>
+<li>
+<p>In one sentence, what information did <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math> have to store that an attention row can fetch instead?</p>
+</li>
+</ol>
                     </section>
                 </div>
             </article>

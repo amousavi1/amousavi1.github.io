@@ -1,0 +1,15 @@
+name,kind,x,y
+cat,image,3.80,0.15
+cat,text,4.00,0.00
+dog,image,0.15,3.80
+dog,text,0.00,4.00
+nurse,image,2.10,-1.85
+nurse,text,2.00,-2.00
+ceo,image,-1.85,2.10
+ceo,text,-2.00,2.00
+man,image,-2.05,2.15
+man,text,-2.20,2.20
+woman,image,2.15,-2.05
+woman,text,2.20,-2.20
+car,image,-3.20,-3.10
+car,text,-3.00,-3.00

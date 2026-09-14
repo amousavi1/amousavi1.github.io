@@ -5,6 +5,7 @@ from __future__ import annotations
 import html as html_lib
 import pathlib
 import subprocess
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FILES = ROOT / "files" / "data-643"
@@ -211,6 +212,256 @@ DECKS = [
             },
         ],
     },
+    {
+        "stem": "2.1-sequence-rnns",
+        "title": "2.1 Sequential Models and RNNs",
+        "slides": [
+            {
+                "title": "A cell with memory",
+                "bullets": [
+                    r"Each step: \(x_t\) and \(h_{t-1}\) become \(h_t\).",
+                    "The same weights at every token.",
+                    "Reset the state between unrelated documents.",
+                ],
+                "image": "graphics/2.1-sequence-rnns/rnn-cell.png",
+            },
+            {
+                "title": "Unrolled in time",
+                "bullets": [
+                    "The loop is a chain. That chain is the long-range path.",
+                    "A CNN is parallel with a fixed window. An RNN is sequential with the whole past.",
+                ],
+                "image": "graphics/2.1-sequence-rnns/rnn-unroll.png",
+            },
+        ],
+    },
+    {
+        "stem": "2.2-vanishing-gradients",
+        "title": "2.2 Vanishing and Exploding Gradients",
+        "slides": [
+            {
+                "title": "A product of many Jacobians",
+                "bullets": [
+                    r"\(\partial L / \partial h_1\) multiplies one factor per step.",
+                    r"\(\tanh'\) is at most 1, and usually much smaller.",
+                    "Gates keep a path whose multiplier can stay near 1.",
+                ],
+                "image": "graphics/2.2-vanishing-gradients/vanish.png",
+            },
+            {
+                "title": "Two failure modes",
+                "bullets": [
+                    "Vanishing: early tokens do not train.",
+                    "Exploding: NaNs. Clipping helps explosions, not vanishing.",
+                ],
+                "image": "graphics/2.2-vanishing-gradients/vanish-explode.png",
+            },
+        ],
+    },
+    {
+        "stem": "2.3-lstm-gru",
+        "title": "2.3 LSTMs and GRUs",
+        "slides": [
+            {
+                "title": "LSTM: a highway plus three gates",
+                "bullets": [
+                    "Forget, input, output. The cell can copy.",
+                    r"If \(f_t \approx 1\) and \(i_t \approx 0\), memory persists.",
+                ],
+                "image": "graphics/2.3-lstm-gru/lstm-gates.png",
+            },
+            {
+                "title": "GRU: two gates",
+                "bullets": [
+                    "Reset and update. The hidden state is the memory.",
+                    "Still a loop: better than vanilla, worse than attention at long range.",
+                ],
+                "image": "graphics/2.3-lstm-gru/gru-gates.png",
+            },
+        ],
+    },
+    {
+        "stem": "3.1-attention-need",
+        "title": "3.1 From Recurrence to Attention",
+        "slides": [
+            {
+                "title": "The bottleneck",
+                "bullets": [
+                    "An RNN compresses the past into one vector.",
+                    "Attention: every token looks at every token in one step.",
+                    r"Cost: \(O(T^2)\). Path length: 1.",
+                ],
+                "image": "graphics/3.1-attention-need/rnn-vs-attention.png",
+            },
+        ],
+    },
+    {
+        "stem": "3.2-self-attention",
+        "title": "3.2 Self-Attention (Q, K, V)",
+        "slides": [
+            {
+                "title": "Query, key, value",
+                "bullets": [
+                    "Query asks. Key is asked. Value is mixed in.",
+                    r"Weights: softmax of \(QK^\top / \sqrt{d}\).",
+                ],
+                "image": "graphics/3.2-self-attention/qkv.png",
+            },
+            {
+                "title": "A row is a distribution",
+                "bullets": [
+                    "Large mass on a name: this pronoun just looked there.",
+                    "Several heads in parallel, then concatenate.",
+                ],
+                "image": "graphics/3.2-self-attention/attn-heatmap.png",
+            },
+        ],
+    },
+    {
+        "stem": "3.3-transformer-block",
+        "title": "3.3 The Transformer Block",
+        "slides": [
+            {
+                "title": "Attention has no order",
+                "bullets": [
+                    "Add sinusoidal or learned positions.",
+                    "Later models use relative or rotary positions.",
+                ],
+                "image": "graphics/3.3-transformer-block/positional.png",
+            },
+            {
+                "title": "One block",
+                "bullets": [
+                    "Attention mixes across positions. The MLP mixes across channels.",
+                    "Residuals are the cousin of the LSTM highway.",
+                ],
+                "image": "graphics/3.3-transformer-block/block.png",
+            },
+        ],
+    },
+    {
+        "stem": "3.4-gpt-bert",
+        "title": "3.4 GPT and BERT",
+        "slides": [
+            {
+                "title": "Same block, different mask",
+                "bullets": [
+                    "GPT: causal, next-token, generate.",
+                    "BERT: bidirectional, masked tokens, encode.",
+                    "Do not fine-tune BERT as if it were GPT.",
+                ],
+                "image": "graphics/3.4-gpt-bert/gpt-bert.png",
+            },
+        ],
+    },
+    {
+        "stem": "4.1-multimodal-foundations",
+        "title": "4.1 Multimodal Foundations",
+        "slides": [
+            {
+                "title": "Joint versus coordinated",
+                "bullets": [
+                    "Joint: one fused vector. Missing a stream hurts.",
+                    "Coordinated: two towers and a similarity. CLIP is this.",
+                ],
+                "image": "graphics/4.1-multimodal-foundations/joint-coord.png",
+            },
+        ],
+    },
+    {
+        "stem": "4.2-vision-transformers",
+        "title": "4.2 Vision Transformers",
+        "slides": [
+            {
+                "title": "Patches as tokens",
+                "bullets": [
+                    "Flatten each patch, map to width d, add positions.",
+                    "A 224 image with patch 16 is 196 tokens: a short paragraph.",
+                ],
+                "image": "graphics/4.2-vision-transformers/patches.png",
+            },
+            {
+                "title": "The same stack as language",
+                "bullets": [
+                    "[CLS] + positions + transformer.",
+                    "In this course, start from a pretrained ViT, not from scratch.",
+                ],
+                "image": "graphics/4.2-vision-transformers/vit.png",
+            },
+        ],
+    },
+    {
+        "stem": "4.3-contrastive-zeroshot",
+        "title": "4.3 Contrastive Learning and Zero-Shot Transfer",
+        "slides": [
+            {
+                "title": "Matched pairs on the diagonal",
+                "bullets": [
+                    "InfoNCE wants image i with caption i.",
+                    "Small batches mean easy negatives.",
+                ],
+                "image": "graphics/4.3-contrastive-zeroshot/contrastive.png",
+            },
+            {
+                "title": "Zero-shot is nearest text",
+                "bullets": [
+                    "Class names are prompts, not a trained softmax.",
+                    "Wording matters. Unseen phrases do not magically work.",
+                ],
+                "image": "graphics/4.3-contrastive-zeroshot/zeroshot.png",
+            },
+        ],
+    },
+    {
+        "stem": "5.1-clip",
+        "title": "5.1 CLIP",
+        "slides": [
+            {
+                "title": "Two towers, one cosine",
+                "bullets": [
+                    "Image encoder and text encoder, web-scale pairs.",
+                    "Good at retrieval and zero-shot. Not a captioner.",
+                ],
+                "image": "graphics/5.1-clip/clip-towers.png",
+            },
+        ],
+    },
+    {
+        "stem": "5.2-blip",
+        "title": "5.2 BLIP and Captioning",
+        "slides": [
+            {
+                "title": "Clean, match, and write",
+                "bullets": [
+                    "Bootstrap captions, filter with image–text matching.",
+                    "ITC + ITM + a language-model loss.",
+                ],
+                "image": "graphics/5.2-blip/blip-pipeline.png",
+            },
+        ],
+    },
+    {
+        "stem": "5.3-retrieval-bias",
+        "title": "5.3 Retrieval, Bias, and Robustness",
+        "slides": [
+            {
+                "title": "Two retrieval directions",
+                "bullets": [
+                    "Text to image, and image to text.",
+                    "Report recall@k and a few failure cases.",
+                ],
+                "image": "graphics/5.3-retrieval-bias/retrieval.png",
+            },
+            {
+                "title": "Geometry encodes the web",
+                "bullets": [
+                    "Occupation and gender probes belong in the report.",
+                    "High ImageNet zero-shot does not certify your domain.",
+                ],
+                "image": "graphics/5.3-retrieval-bias/vlm-bias.png",
+            },
+        ],
+    },
 ]
 
 
@@ -291,7 +542,11 @@ def print_pdf(html_path: pathlib.Path, pdf_path: pathlib.Path) -> None:
 
 
 def main() -> None:
+    weeks = {int(a) for a in sys.argv[1:] if a.isdigit()}
     for deck in DECKS:
+        week = int(deck["stem"].split(".", 1)[0])
+        if weeks and week not in weeks:
+            continue
         html_path = write_deck(deck)
         pdf_path = OUT / f"{deck['stem']}.pdf"
         print_pdf(html_path, pdf_path)

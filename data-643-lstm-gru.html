@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>2.3 LSTMs and GRUs - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">2.3 LSTMs and GRUs</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; Week 2 &middot; <a href="files/data-643/lstm-gru.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/2.3-lstm-gru.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Gates keep a near-1 path through time. LSTM has a cell; GRU does not.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>Gates are learned valves. They let a recurrent cell <strong>keep</strong> a bit of memory for many steps instead of overwriting it every time. LSTM and GRU are the two you will meet. They do not remove vanishing gradients; they make a near-1 path available.</p>
+<hr />
+<h2>1. LSTM: a highway plus three gates</h2>
+<p>Hochreiter and Schmidhuber (1997). A <strong>cell state</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mi>t</mi></msub></mrow></math> moves down the chain with mostly multiplies and adds, not a stack of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>s. Three sigmoid gates, each in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Forget <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">f</mi></mrow><mi>t</mi></msub></mrow></math></td>
+<td>How much of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math> to keep</td>
+</tr>
+<tr>
+<td>Input <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">i</mi></mrow><mi>t</mi></msub></mrow></math></td>
+<td>How much new candidate to write</td>
+</tr>
+<tr>
+<td>Output <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">o</mi></mrow><mi>t</mi></msub></mrow></math></td>
+<td>How much of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> becomes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math></td>
+</tr>
+</tbody>
+</table></div>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mi>t</mi></msub><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="bold-italic">f</mi></mrow><mi>t</mi></msub><mo>&#x02299;</mo><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><msub><mrow><mi mathvariant="bold-italic">i</mi></mrow><mi>t</mi></msub><mo>&#x02299;</mo><msub><mover><mrow><mrow><mi mathvariant="bold-italic">c</mi></mrow></mrow><mo stretchy="false">&#x0007E;</mo></mover><mi>t</mi></msub><mo>&#x0002C;</mo><mspace width="2em" /><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="bold-italic">o</mi></mrow><mi>t</mi></msub><mo>&#x02299;</mo><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">f</mi></mrow><mi>t</mi></msub><mo>&#x02248;</mo><mrow><mn mathvariant="bold">1</mn></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">i</mi></mrow><mi>t</mi></msub><mo>&#x02248;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>, the cell copies. That is the long-range path.</p>
+<p><img alt="LSTM gates around a cell highway" src="files/data-643/graphics/2.3-lstm-gru/lstm-gates.png" /></p>
+<hr />
+<h2>2. GRU: two gates, no extra cell</h2>
+<p>Cho et al. (2014). Reset <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">r</mi></mrow><mi>t</mi></msub></mrow></math> and update <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>t</mi></msub></mrow></math>. The hidden state <em>is</em> the memory.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02299;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><msub><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>t</mi></msub><mo>&#x02299;</mo><msub><mover><mrow><mrow><mi mathvariant="bold-italic">h</mi></mrow></mrow><mo stretchy="false">&#x0007E;</mo></mover><mi>t</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>Fewer parameters, often similar quality on medium sequences. Use LSTM when you want an explicit cell; use GRU when you want a smaller default.</p>
+<p><img alt="GRU reset and update" src="files/data-643/graphics/2.3-lstm-gru/gru-gates.png" /></p>
+<hr />
+<h2>3. What gates do not buy you</h2>
+<p>The loop is still sequential. You still cannot fill a GPU the way a transformer can. Long context is better than vanilla, worse than attention. For this course, gates are the reason we can talk about “memory” before Week 3, and a baseline in speech/time-series projects.</p>
+<p>Bidirectional LSTM: run one net forward and one backward, concatenate. Fine for classification. Illegal for next-token generation (you would peek at the future).</p>
+<hr />
+<h2>4. Practice</h2>
+<ol>
+<li>
+<p>If the forget gate is stuck at 0, what happens to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mi>t</mi></msub></mrow></math>?</p>
+</li>
+<li>
+<p>Why is a bidirectional LSTM the wrong cell for a language model that must emit token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></math>?</p>
+</li>
+<li>
+<p>Name one reason you might still pick a GRU over a transformer in a project.</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:00:00-04:00">September 14, 2026, 6:00 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
