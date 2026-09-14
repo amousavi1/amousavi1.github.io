@@ -148,16 +148,164 @@
 <p><img alt="Map of the four modules into the exam" src="files/data-643/graphics/15.1-exam-review/map.png" /></p>
 <hr />
 <h2>2. How to study</h2>
-<p>Rework the labs on CPU: XOR and embeddings, long-range gates, one attention head, toy CLIP retrieval, 2-D GAN coverage, one reverse diffusion step, vote-and-flag traces, bag-of-words RAG. Redo each note’s three practice questions out loud. For every named method, write one sentence of the form “I would change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>; I would report <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Y</mi></mrow></math> on split <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Z</mi></mrow></math>.”</p>
-<p>Formulas worth being able to write: a neuron, InfoNCE’s diagonal story, attention softmax, GAN min-max, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>, one reverse mean, cosine for retrieval. You do not need to memorize paper years.</p>
+<p>Rework the labs on CPU: XOR and embeddings, long-range gates, one attention head, toy CLIP retrieval, 2-D GAN coverage, one reverse diffusion step, vote-and-flag traces, bag-of-words RAG. Redo each note’s practice questions out loud. For every named method, write one sentence of the form “I would change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>; I would report <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Y</mi></mrow></math> on split <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Z</mi></mrow></math>.”</p>
+<p>Formulas worth being able to write:</p>
+<ul>
+<li>neuron: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0003D;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><msup><mi>w</mi><mo>&#x022A4;</mo></msup><mi>x</mi><mo>&#x0002B;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo></mrow></math></li>
+<li>attention: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>Q</mi><msup><mi>K</mi><mo>&#x022A4;</mo></msup><mo>&#x0002F;</mo><msqrt><mrow><mi>d</mi></mrow></msqrt><mo stretchy="false">&#x00029;</mo><mi>V</mi></mrow></math></li>
+<li>GAN: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>min</mo><mi>G</mi></msub><msub><mo>max</mo><mi>D</mi></msub><mi>&#x1D53C;</mi><mo stretchy="false">[</mo><mi>log</mi><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mo>&#x0002B;</mo><mi>&#x1D53C;</mi><mo stretchy="false">[</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math></li>
+<li>diffusion jump: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mi>t</mi></msub><mo>&#x0003D;</mo><msqrt><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><msub><mi>x</mi><mn>0</mn></msub><mo>&#x0002B;</mo><msqrt><mrow><mn>1</mn><mo>&#x02212;</mo><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><mi>&#x003B5;</mi></mrow></math></li>
+<li>CFG: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>&#x003B5;</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><msub><mi>&#x003B5;</mi><mo>&#x02205;</mo></msub><mo>&#x0002B;</mo><mi>s</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B5;</mi><mi>c</mi></msub><mo>&#x02212;</mo><msub><mi>&#x003B5;</mi><mo>&#x02205;</mo></msub><mo stretchy="false">&#x00029;</mo></mrow></math></li>
+<li>cosine: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>a</mi><mo>&#x022A4;</mo></msup><mi>b</mi><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>a</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>b</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math></li>
+<li>DPO-shaped check: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mn>2</mn></mrow></math> when the two log-ratio terms match</li>
+</ul>
+<p>You do not need to memorize paper years. You do need to say <strong>what you would plot</strong> after you write the formula.</p>
+<p>A compact board checklist:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Failure you see</th>
+<th>Method that was in play</th>
+<th>Number that would have caught it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All fakes look like one face</td>
+<td>GAN</td>
+<td>coverage / mode bins, not <code>lossG</code></td>
+</tr>
+<tr>
+<td>Pretty pictures, missed prompt</td>
+<td>latent diffusion + CFG</td>
+<td>CLIP image–text cosine and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math></td>
+</tr>
+<tr>
+<td>Right box, wrong algebra</td>
+<td>CoT</td>
+<td>faithfulness rate among correct boxes</td>
+</tr>
+<tr>
+<td>Vote of a popular wrong number</td>
+<td>self-consistency</td>
+<td>shared-bug check; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> vs accuracy plot</td>
+</tr>
+<tr>
+<td>Cite <code>[d5]</code>, fact only in <code>[d1]</code></td>
+<td>RAG</td>
+<td>attribution + recall@k</td>
+</tr>
+<tr>
+<td>Calc returned <code>408</code>, answer <code>428</code></td>
+<td>ReAct</td>
+<td>observation used? parse log</td>
+</tr>
+</tbody>
+</table></div>
 <hr />
 <h2>3. What the exam asks</h2>
 <p>Typical item: given a failure (collapsed modes, ignored chunk, lucky CoT answer, biased CLIP hit), <strong>name the method that was in play</strong> and <strong>the measurement</strong> that would have caught it. Another item: pick GPT versus BERT, CLIP versus BLIP, GAN versus diffusion, CoT versus ReAct, and justify with the task plus the metric.</p>
+<p>Lab → exam shortcuts: Lab 11 bins = coverage; Lab 12 oracle reverse step = you know <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mn>0</mn></msub></mrow></math>; Lab 13 last-integer vs box = faithfulness; Lab 14 cosine rank + <code>calc</code> log = RAG + ReAct. If you can redo those four on paper, Module 4 is in shape.</p>
 <p>Project language belongs here: baseline, one justified change, ablation, failure case. That is the same spine as note <strong>14.3</strong>.</p>
 <h3>Remaining talks</h3>
 <p><strong>Canvas is official</strong> for who speaks when. If you still owe a presentation, bring a <strong>failure case</strong> (input, output, what broke), not only a demo that worked. Upload what Canvas asks. Time limits on the hub still apply.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>This is a <strong>review map</strong>, not a new method. About <strong>40 minutes</strong> at the board walking the four-module table and the failure→metric grid, then <strong>~15 minutes</strong> of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks.</p>
+<p>Board order:</p>
+<ul>
+<li><strong>0–12 min.</strong> Modules 1–2: neuron, embedding, attention, CLIP cosine. One picture each.</li>
+<li><strong>12–24 min.</strong> Modules 3–4: SFT/RLHF/DPO in one sentence each; GAN vs diffusion; CoT vs RAG vs ReAct.</li>
+<li><strong>24–40 min.</strong> Failure table. Worked exam-style item (GAN collapse; unfaithful CoT; RAG citation).</li>
+</ul>
+<p>Then play the Karpathy minutes below. <strong>GANs and diffusion are not in that talk</strong>; restudy notes <strong>11.1–12.3</strong> and the CS231N / Umar Jamil clips from those weeks.</p>
+<p>Bring one page of handwritten formulas and one page of “failure → metric” rows. That beats rereading every HTML slide the night before.</p>
+<hr />
+<h2>5. Worked example (one exam-style item)</h2>
+<p>Prompt: “Fakes are sharp. Every fake is the same face. Generator loss is low. What do you measure?”</p>
+<p>Answer in the form the exam wants:</p>
+<ul>
+<li><strong>Method:</strong> GAN (Week 11). Implicit sampler; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> can be fooled by one mode.</li>
+<li><strong>Not a measurement:</strong> <code>lossG</code> (it can fall because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> collapsed).</li>
+<li><strong>Measurement:</strong> coverage — fraction of fakes nearest each real mode (Lab 11), or precision/recall in a feature space. Report both bins, not a mean.</li>
+</ul>
+<p>A second item: “CoT accuracy 90%; a calculator disagrees with half the traces.”</p>
+<ul>
+<li><strong>Method:</strong> chain-of-thought; the bug is <strong>unfaithful</strong> traces (Week 13; Lab 13 already scored it).</li>
+<li><strong>Measurement:</strong> among correct boxes, fraction whose parsed steps match the box. Self-consistency may still vote the lucky number.</li>
+</ul>
+<p>A third item: “Top-2 cosine missed the gold chunk; the answer still cites it.”</p>
+<ul>
+<li><strong>Method:</strong> RAG. Retrieval recall@2 is 0 on that item.</li>
+<li><strong>Check:</strong> attribution against the stuffed context, not against the whole corpus. Citing an id that was never retrieved is a fail.</li>
+</ul>
+<p>Keep the answers short. The exam is not a blog post.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Memorizing paper titles and then blanking on the metric.</li>
+<li>Mixing CoT / self-consistency / ToT / ReAct as one name.</li>
+<li>Using Karpathy as a substitute for Weeks 11–12. That video does not teach <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>x</mi><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej Karpathy, Intro to Large Language Models</a> as a <strong>recap of the stack</strong>. Map weeks to minutes; do not try to play the whole hour in class.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Minutes</th>
+<th>What he is doing</th>
+<th>Course weeks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0:20–11:22</strong></td>
+<td>Inference, then training on internet text</td>
+<td>1–3 (net, tokens, next-token)</td>
+</tr>
+<tr>
+<td><strong>11:22–17:52</strong></td>
+<td>How they work; finetune into an assistant</td>
+<td>1–3 architecture; 8 SFT</td>
+</tr>
+<tr>
+<td><strong>21:05–27:43</strong></td>
+<td>Comparisons, labels, RLHF; then scaling laws</td>
+<td>7 scaling; 9 RLHF / DPO</td>
+</tr>
+<tr>
+<td><strong>27:43–33:32</strong></td>
+<td>Tool use: browser, calculator, interpreter</td>
+<td>14 RAG (browser as retrieve) and ReAct</td>
+</tr>
+<tr>
+<td><strong>33:32–35:00</strong></td>
+<td>Multimodality</td>
+<td>4–6 CLIP / vision / audio</td>
+</tr>
+<tr>
+<td><strong>35:00–38:02</strong></td>
+<td>Thinking, System 1/2</td>
+<td>13 CoT / extra tokens</td>
+</tr>
+<tr>
+<td><strong>40:45–42:15</strong></td>
+<td>Custom GPTs, files</td>
+<td>14 RAG as a private index</td>
+</tr>
+<tr>
+<td><strong>45:43–59:23</strong></td>
+<td>Security (high level)</td>
+<td>10 red-teaming <em>as evaluation</em>, not as a cookbook</td>
+</tr>
+</tbody>
+</table></div>
+<p>In class, play <strong>11:22–17:52</strong> and <strong>27:43–38:02</strong> (~17 min) if you only have one pass. Students who missed Week 7–9 should add <strong>21:05–27:43</strong>. Students who missed Week 13–14 should add <strong>35:00–42:15</strong>.</p>
+<p>Same URL as notes <strong>13.1</strong>, <strong>14.1</strong>, and <strong>14.2</strong>. Deep Dive chapters from <strong>13.2–13.3</strong> are optional extra, not a replacement for the formula sheet.</p>
+<p>Week 11–12 video recap (not Karpathy): CS231N lecture 13 from <strong>46:45</strong> (<a href="https://www.youtube.com/watch?v=5WoItGTWV54">setup / train / collapse</a>); Umar Jamil diffusion <a href="https://www.youtube.com/watch?v=I1sPXkm2NH4">I1sPXkm2NH4</a> from <strong>7:35</strong>; Stable Diffusion <a href="https://www.youtube.com/watch?v=ZBKpAp_6TGI">ZBKpAp_6TGI</a> <strong>0:00–45:00</strong>. Talk craft: Peyton Jones <a href="https://www.youtube.com/watch?v=sT_-owjKIbA">sT_-owjKIbA</a> <strong>0:00–20:00</strong>.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>A GAN’s fakes look sharp and every one is the same face. What do you measure besides looking?</p>
@@ -168,6 +316,12 @@
 <li>
 <p>CoT accuracy is high; a calculator disagrees with half the traces. What exam idea is that, and which week’s lab already scored it?</p>
 </li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub><mo>&#x0003D;</mo><mn>0.64</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B5;</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mi>t</mi></msub></mrow></math>. Which week is this, and is it a GAN step?</p>
+</li>
+<li>
+<p>Three CoT answers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>408</mn><mo>&#x0002C;</mo><mn>238</mn><mo>&#x0002C;</mo><mn>408</mn></mrow></math>. Majority? If all three traces compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>20</mn><mo>&#x0003D;</mo><mn>340</mn></mrow></math> and still box those numbers, what does the vote fail to catch?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -177,7 +331,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T20:20:00-04:00">September 14, 2026, 8:20 PM EDT</time></div>
             </footer>
         </div>
 

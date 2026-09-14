@@ -115,18 +115,75 @@
 <h2>1. The generator</h2>
 <p>Noise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> (usually isotropic Gaussian) in; a sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0003D;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>g</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> out, same shape as a real observation. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is a decoder without an encoder: it does not reconstruct a particular training point. It maps latent draws into data space.</p>
 <p><img alt="Generator from noise; discriminator scores real versus fake" src="files/data-643/graphics/11.1-gan-idea/players.png" /></p>
-<p>The job of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is to make the <strong>distribution</strong> of fakes look like the distribution of reals. One pretty sample is not a trained generator.</p>
+<p>The job of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is to make the <strong>distribution</strong> of fakes look like the distribution of reals. One pretty sample is not a trained generator. If every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> maps to the same pretty point, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> has failed, even if that point fools a human.</p>
+<p>In this course <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is a tiny MLP (Lab 11: 8-D noise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> 2-D point). The same picture is a CNN or a transformer decoder when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> is an image or a spectrogram. The algebra does not change: sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math>, push it through <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>, hand the fake to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>.</p>
 <hr />
 <h2>2. The discriminator</h2>
 <p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math> is a binary classifier: the probability that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> is real. On a real batch it should sit near 1; on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> it should sit near 0. It never sees <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math>. It only sees the sample.</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>y</mi><mo>&#x0003D;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>;</mi><msub><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mi>d</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02208;</mo><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is the probability it calls the point fake.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> is ordinary supervised learning on a moving dataset: reals with label 1, fakes with label 0. The catch is that the fake distribution changes every time you update <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>. You never have a fixed classification problem.</p>
 <hr />
 <h2>3. Why two players</h2>
 <p>If you trained only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> against a frozen <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> would overfit whatever <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> currently likes. If you trained only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>, it would become a perfect detector of yesterday’s fakes and give <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> a useless (flat) gradient. The pair has to stay in tension. Note <strong>11.2</strong> writes that as a min-max game; note <strong>11.3</strong> is what happens when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> finds one easy fake and stops covering the rest.</p>
 <p>For this course, GANs are the first <strong>implicit</strong> generator you meet. Diffusion (Week 12) will give you an explicit noise schedule instead of an adversary. Text-to-image later in the module still needs a way to <strong>condition</strong> (Week 5’s CLIP is one).</p>
+<p>Draw the figure on the board and leave it up: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x02192;</mo><mi>G</mi><mo>&#x02192;</mo></mrow></math> fake into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>, real <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>. Everything later in Week 11 is a comment on that picture.</p>
+<p>Name what you cannot do: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo>&#x02223;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math>, a test log-likelihood. Name what you can do: draw fakes in one forward pass. That pair of sentences is the exam answer for “why a GAN vs why a diffusion model.”</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. This is the first of three GAN notes in a two-hour class; Lab 11 uses the rest of the block.</p>
+<ul>
+<li><strong>0–12 min.</strong> Implicit vs explicit. You cannot write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> for a GAN. You can sample. Sketch the two-player diagram.</li>
+<li><strong>12–24 min.</strong> What <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> each see. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> never sees a real <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> on its own update. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> never sees <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math>.</li>
+<li><strong>24–34 min.</strong> Worked 1-D two-mode example. Leave the numbers on the board; note <strong>11.3</strong> will reuse them.</li>
+<li><strong>Then</strong> play CS231N <strong>46:45–54:00</strong> (GAN setup: give up on density, noise through a generator). Pause when the two-player cartoon appears.</li>
+</ul>
+<hr />
+<h2>5. Worked example</h2>
+<p>Reals are two spikes in 1-D: half the mass at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2</mn></mrow></math>, half at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mo>&#x0002B;</mo><mn>2</mn></mrow></math>. (Lab 11 is the same idea in 2-D, means <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>.)</p>
+<p>Suppose an untrained <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> ignores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> and always emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x0002B;</mo><mn>2</mn></mrow></math>.</p>
+<p>A Bayes-optimal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> then scores:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>location</th>
+<th>what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> sees</th>
+<th><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mo>&#x0002B;</mo><mn>2</mn></mrow></math></td>
+<td>half real, half fake</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn></mrow></math></td>
+</tr>
+<tr>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2</mn></mrow></math></td>
+<td>only reals</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math></td>
+</tr>
+<tr>
+<td>anywhere else</td>
+<td>only fakes, if any</td>
+<td>near <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math></td>
+</tr>
+</tbody>
+</table></div>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is “winning” at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0002B;</mo><mn>2</mn></mrow></math> in the sense that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>, a coin flip. It is losing as a <strong>distribution</strong>: the left mode has zero fake mass. One sample at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0002B;</mo><mn>2</mn></mrow></math> looks perfect. The generator is not trained.</p>
+<p>If you now let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> move and it jumps all mass to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>2</mn></mrow></math>, the table flips: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mo>&#x0002B;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. That oscillation is the seed of note <strong>11.3</strong>.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Treating one pretty fake as success. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is a distribution, not a Photoshop filter.</li>
+<li>Thinking <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is trained by comparing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo></mrow></math> to the nearest real (an autoencoder). It is not. The only teacher is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>’s scalar.</li>
+<li>Forgetting that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>’s data distribution moves. A <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> that was perfect last step is scoring a different <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> this step.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=5WoItGTWV54">Stanford CS231N 2017 lecture 13, Generative Models</a>, <strong>46:45–54:00</strong>.</p>
+<p>Pause at the two-player setup: noise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> through a generator, no explicit density. Skip PixelCNN/VAE (the first 45 minutes) in class; those are not this note. Notes <strong>11.2</strong> and <strong>11.3</strong> reuse the same URL at later pause points.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> never sees a real image on its own update (only through <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>’s scores). How can it learn the data distribution?</p>
@@ -137,6 +194,12 @@
 <li>
 <p>Name one task where a GAN is a natural fit and one where an explicit likelihood model would be easier to evaluate.</p>
 </li>
+<li>
+<p>In the 1-D example, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x0002B;</mo><mn>2</mn></mrow></math> always and reals are equal spikes at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x000B1;</mi><mn>2</mn></mrow></math>. What is the Bayes-optimal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mo>&#x0002B;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></math>? What is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></math>?</p>
+</li>
+<li>
+<p>You draw 10 fakes and all 10 equal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0002B;</mo><mn>2</mn></mrow></math>. A classmate says “<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> is 0.5 there, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is done.” Write one sentence that disagrees, using coverage.</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -146,7 +209,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T20:20:00-04:00">September 14, 2026, 8:20 PM EDT</time></div>
             </footer>
         </div>
 

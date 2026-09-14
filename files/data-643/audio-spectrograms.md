@@ -90,7 +90,7 @@ tokens. That is the number Lab 6 is practicing in miniature, and the number a Wh
 
 ## 7. Video
 
-[Valerio Velardo — Short-Time Fourier Transform (Sound of AI)](https://www.youtube.com/watch?v=3gzHR0ZLgGE). Play the STFT / spectrogram walkthrough in class (~10–12 min). Pause when the window slides: that hop is \(H\) in the formula above. If the ID looks off, still use this URL and search **“Valerio Velardo Short-Time Fourier Transform”**. The board hour is the frame count and the patch count, not the complex-phase algebra.
+[Valerio Velardo — Short-Time Fourier Transform Explained Easily](https://www.youtube.com/watch?v=-Yxj3yfvY-4). Play the STFT / spectrogram walkthrough in class (~10–12 min). Pause when the window slides: that hop is \(H\) in the formula above. Search **“Valerio Velardo Short-Time Fourier Transform”** if you need the rest of the Sound of AI series. The board hour is the frame count and the patch count, not the complex-phase algebra.
 
 ---
 

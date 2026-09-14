@@ -120,15 +120,74 @@
 </ol>
 <p><img alt="Index documents, retrieve chunks, then generate with citations" src="files/data-643/graphics/14.1-rag-pipeline/rag.png" /></p>
 <p>The generator is still a next-token model. RAG changes its <strong>conditioning</strong>, not its architecture. A wrong index cannot be saved by a prettier prompt. Dense embeddings (Week 1, Week 5) are one index; keyword overlap is another. Lab 14 uses counts so the ranking is something you can print.</p>
+<p>Karpathy’s browser demo is the same loop with the web as the index: emit a search, read hits, then write. Custom GPTs that file your PDFs are the same loop with a private index.</p>
 <hr />
 <h2>2. What can fail</h2>
 <p>Retrieval misses the supporting chunk (recall@k). Retrieval returns a near-miss that the model then over-trusts. The model <strong>ignores</strong> a good chunk and hallucinates. Citations that do not match the used sentences are the RAG version of unfaithful CoT (note <strong>13.3</strong>).</p>
-<p>Chunk size, overlap, embedding choice, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> are method. Lab 14 uses bag-of-words cosine so you can see the ranking without a GPU. ReAct (note <strong>14.2</strong>) can treat retrieve as one action among others, including a calculator.</p>
+<p>Chunk size, overlap, embedding choice, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> are method. Lab 14 uses bag-of-words cosine so you can see the ranking without a GPU. ReAct (note <strong>14.2</strong>) can treat retrieve as one tool among others, including a calculator.</p>
+<p>A no-retrieval baseline is the parametric model on the same questions. If RAG does not beat it, the index or the prompt is the story, not “we added RAG.”</p>
 <hr />
 <h2>3. Measurement</h2>
 <p>Report retrieval recall@k on a labeled set of (question, gold chunk ids), then answer accuracy with an attribution check: does the cited id actually contain the claim? Always include a no-retrieval baseline. “We used RAG” is not a result.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video.</p>
+<ul>
+<li><strong>0–12 min.</strong> Index / retrieve / generate. Cosine as the ranker. What lives in the index besides the vector.</li>
+<li><strong>12–22 min.</strong> Failure modes: miss, near-miss, ignore, unfaithful citation.</li>
+<li><strong>22–33 min.</strong> Worked cosine on three toy docs.</li>
+<li><strong>Then</strong> play Karpathy intro <strong>27:43–33:32</strong> (tool use: browser as retrieve-then-read) and mention <strong>40:45–42:15</strong> (custom GPTs / files as a private index). Pause when the model emits a search and reads the hits.</li>
+</ul>
+<hr />
+<h2>5. Worked example</h2>
+<p>Three chunks, vocab <code>{library, close, shuttle}</code>, bag-of-words counts:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>id</th>
+<th>text (toy)</th>
+<th>vector</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>d1</td>
+<td>library close</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+</tr>
+<tr>
+<td>d2</td>
+<td>shuttle loop</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+</tr>
+<tr>
+<td>d3</td>
+<td>library hours</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math></td>
+</tr>
+</tbody>
+</table></div>
+<p>Query <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mtext>“library&#x000A0;close”</mtext></mrow></math>, vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. Cosine <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mi>a</mi><mo>&#x022A4;</mo></msup><mi>b</mi><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>a</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>b</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<ul>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>2</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><msqrt><mrow><mn>2</mn></mrow></msqrt><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn></mrow></math></li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn></mrow></math></li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><mo>&#x000B7;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.707</mn></mrow></math></li>
+</ul>
+<p>Rank: d1, d3, d2. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> you stuff only d1 (right chunk for a closing-time question). For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> you also stuff d3: recall can rise, but the generator now sees a near-miss about “hours” that may not include 23:00. Raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is not free.</p>
+<p>If the model then cites <code>[d2]</code> while using the 23:00 fact from d1, that is unfaithful attribution: same bug class as CoT steps that do not match the box.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Measuring only answer accuracy. You need recall@k <strong>and</strong> a citation check.</li>
+<li>Stuffing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math> and wondering why the model ignores the gold chunk.</li>
+<li>Putting only vectors in the index and dropping the raw text / id, so you cannot cite.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej Karpathy, Intro to Large Language Models</a>, second half: <strong>27:43–33:32</strong> (browser / retrieval) and <strong>40:45–42:15</strong> (customization with files).</p>
+<p>Pause on emit-search → read hits → write with sources. Same URL as notes <strong>13.1</strong>, <strong>14.2</strong>, and <strong>15.1</strong>. This note is the retrieve-then-generate picture; <strong>14.2</strong> is the tool loop.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why can raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> hurt the answer even if it raises recall?</p>
@@ -139,6 +198,12 @@
 <li>
 <p>What belongs in the index besides the embedding vector?</p>
 </li>
+<li>
+<p>Using the three vectors above, compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo></mrow></math> exactly as a fraction, and write the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> id list.</p>
+</li>
+<li>
+<p>Gold chunk is d1. Retrieved top-2 are d3, d2. Recall@2 for this item? Answer cites <code>[d1]</code>. Attribution pass or fail?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -148,7 +213,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T20:20:00-04:00">September 14, 2026, 8:20 PM EDT</time></div>
             </footer>
         </div>
 

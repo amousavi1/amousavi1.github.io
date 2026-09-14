@@ -121,11 +121,65 @@
 <h2>2. Search, not just i.i.d. samples</h2>
 <p>ToT treats a “thought” as a node: a subgoal, a candidate equation, a next move in a game. You expand a few children, <strong>score</strong> them (a prompt, a heuristic, or a checker), and keep a beam or run BFS/DFS. That is search with an LM as the proposal distribution. Greedy CoT is a tree of depth equal to one chain and width 1. ToT buys width.</p>
 <p>ReAct (Week 14) is a different control loop: the node can be a <strong>tool call</strong>, not only more text. Do not mix the names in the report. Vote versus tree versus tools are three knobs.</p>
+<p>A cheap ToT scorer you can actually run in this course: last integer equals a known subgoal, a unit test, or <code>calc</code> from Week 14. An unconstrained “does this thought look good?” prompt is another noisy LM, not a checker.</p>
 <hr />
 <h2>3. What to measure</h2>
 <p>Accuracy versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is the self-consistency plot. For ToT, accuracy versus expansion budget (nodes scored). Always include a greedy CoT baseline at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. Cost belongs in the table: tokens, or wall time on the hardware you used.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video.</p>
+<ul>
+<li><strong>0–12 min.</strong> Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces, vote on the parsed answer. Tie-break rule.</li>
+<li><strong>12–22 min.</strong> ToT as width: expand, score, keep a beam. Contrast with ReAct (tools).</li>
+<li><strong>22–33 min.</strong> Worked majority vote on three traces (Lab 13 numbers).</li>
+<li><strong>Then</strong> play Karpathy Deep Dive <strong>1:46:56–2:01:11</strong> (models need tokens to think). Pause on distributing hard work across tokens; then say: self-consistency is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> of those traces, ToT is a tree of them.</li>
+</ul>
+<hr />
+<h2>5. Worked example</h2>
+<p>Problem: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>23</mn><mo>&#x0002B;</mo><mn>19</mn></mrow></math>, gold <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math>. Three traces, answers only (Lab 13 style):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>trace</th>
+<th>parsed answer</th>
+<th>steps (sketch)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>20</mn><mo>&#x0002B;</mo><mn>19</mn><mo>&#x0003D;</mo><mn>39</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>39</mn><mo>&#x0002B;</mo><mn>3</mn><mo>&#x0003D;</mo><mn>42</mn></mrow></math></td>
+</tr>
+<tr>
+<td>B</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>32</mn></mrow></math></td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>23</mn><mo>&#x0002B;</mo><mn>19</mn><mo>&#x0003D;</mo><mn>32</mn></mrow></math> (digit bug)</td>
+</tr>
+<tr>
+<td>C</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math></td>
+<td>carry arithmetic to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math></td>
+</tr>
+</tbody>
+</table></div>
+<p>Vote on <strong>answers</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn><mo>&#x0002C;</mo><mn>32</mn><mo>&#x0002C;</mo><mn>42</mn></mrow></math>. Majority is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math> (2 of 3). <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> using only B would have scored 32 and missed. Self-consistency caught the disagreement.</p>
+<p>Tie example: answers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn><mo>&#x0002C;</mo><mn>32</mn><mo>&#x0002C;</mo><mn>32</mn></mrow></math>. Majority is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>32</mn></mrow></math>, which is <strong>wrong</strong>. Voting is not a proof; it is a noise reducer when errors are <strong>diverse</strong>.</p>
+<p>Shared-bug example: all three use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>23</mn><mo>&#x0002B;</mo><mn>19</mn><mo>&#x0003D;</mo><mn>32</mn></mrow></math>. Vote is 32. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> does not help. A checker (note <strong>13.3</strong>, or a calc tool in Week 14) would.</p>
+<p>ToT cartoon for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>6</mn><mo>&#x000D7;</mo><mn>7</mn><mo>&#x0002B;</mo><mn>5</mn></mrow></math>: nodes “do multiply first” vs “do add first.” A cheap scorer (PEMDAS, or <code>eval</code>) kills the add-first branch before you decode a full wrong chain.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Sampling at temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> and wondering why all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces match. You need diversity for a vote.</li>
+<li>Voting on the <strong>wording</strong> of the steps. Parse an answer; majority on that.</li>
+<li>Calling ToT “just CoT with more words.” ToT scores <strong>partial</strong> nodes and prunes.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Andrej Karpathy, Deep Dive into LLMs like ChatGPT</a>, <strong>1:46:56–2:01:11</strong>.</p>
+<p>Pause on “models need tokens to think”: extra tokens are extra compute. This course’s self-consistency is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> independent traces plus a vote; ToT is search over partial thoughts. Optional: <strong>2:14:42–2:27:47</strong> (RL that explores many solutions) if you want a later-week bridge. Note <strong>13.3</strong> uses a different chapter of the same URL.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Why does self-consistency need temperature greater than 0?</p>
@@ -136,6 +190,12 @@
 <li>
 <p>ToT scores partial thoughts. Why is a cheap checker (arithmetic, a unit test) a better scorer than another unconstrained prompt, when you have one?</p>
 </li>
+<li>
+<p>Traces vote <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>47</mn><mo>&#x0002C;</mo><mn>65</mn><mo>&#x0002C;</mo><mn>47</mn><mo>&#x0002C;</mo><mn>47</mn></mrow></math>. What is the majority, and what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>? Gold is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>47</mn></mrow></math>. Did vote beat a first-trace-only policy if the first trace was <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>65</mn></mrow></math>?</p>
+</li>
+<li>
+<p>Answers <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>408</mn><mo>&#x0002C;</mo><mn>408</mn><mo>&#x0002C;</mo><mn>238</mn></mrow></math> for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>. Write the vote. If you instead vote on full step strings (all different wording), what goes wrong?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -145,7 +205,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T20:20:00-04:00">September 14, 2026, 8:20 PM EDT</time></div>
             </footer>
         </div>
 

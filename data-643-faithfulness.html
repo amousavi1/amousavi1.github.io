@@ -116,6 +116,7 @@
 <p>The decoder can jump to a familiar number, then invent arithmetic that pretends to justify it. Or it can compute 52 in the scratch work and still emit 42 because 42 was in the few-shot pattern. Final-answer accuracy will score both as wins. You should not.</p>
 <p><img alt="Steps that do not support the boxed answer" src="files/data-643/graphics/13.3-faithfulness/unfaithful.png" /></p>
 <p><strong>Faithful</strong> here is a check you can run: do the written steps compute the stated answer, and are those steps valid for the problem? It is not a claim about inner states. We do not read the residual stream in this course. Fluency of the prose is not the check. A tidy paragraph can still fail the algebra.</p>
+<p>Lab 13’s last <code>p1</code> trace: steps compute 52, box is 42. Last <code>p2</code> trace: steps compute 48, box is 47. Those are lucky wins if the box matches gold.</p>
 <hr />
 <h2>2. How to flag it</h2>
 <p>On constructed traces (Lab 13) you can parse the last computed value from the steps and compare it to the answer field. Mismatch <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> unfaithful. On free-form LM output you need a checker: unit tests, a calculator, a second model, or a human rubric. CoT plus self-consistency can still vote up an unfaithful majority if the lucky answer is popular.</p>
@@ -123,8 +124,42 @@
 <hr />
 <h2>3. What belongs in a project</h2>
 <p>If you advertise “the model shows its work,” add a faithfulness number: fraction of traces whose checked steps match the answer, among items with a correct box. Report a failure case where the box is right and the algebra is not. That is more useful than another leaderboard screenshot.</p>
+<p>Do not call that number “reasoning accuracy.” Call it a <strong>checker pass rate</strong>. Inner states are out of scope.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>30 minutes</strong> at the board, then <strong>~12 minutes</strong> of video. Then start Lab 13 if the vote note is already done.</p>
+<ul>
+<li><strong>0–10 min.</strong> Define unfaithful: last step value <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02260;</mo></mrow></math> box, or steps invalid.</li>
+<li><strong>10–20 min.</strong> Lucky win vs honest miss. Why accuracy is not enough.</li>
+<li><strong>20–30 min.</strong> Worked Lab 13 row: 52 in the steps, 42 in the box. Design the parser.</li>
+<li><strong>Then</strong> play Karpathy Deep Dive <strong>1:20:32–1:41:46</strong> (hallucinations, tool use, working memory). Pause on confident wrong answers; name that <strong>unfaithful</strong> when it happens <em>inside</em> a CoT trace, not only in a final sentence.</li>
+</ul>
+<hr />
+<h2>5. Worked example</h2>
+<p>Trace (Lab 13, <code>p1</code> last row):</p>
+<ul>
+<li>steps: <code>"23 + 10 = 33"</code>, <code>"33 + 9 = 52"</code></li>
+<li><code>answer</code>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math></li>
+<li>gold: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math></li>
+</ul>
+<p>Parse the last integer in the steps: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>52</mn></mrow></math>. Compare to <code>answer</code>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>52</mn><mo>&#x02260;</mo><mn>42</mn></mrow></math>. <strong>Unfaithful.</strong> Compare <code>answer</code> to gold: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn><mo>&#x0003D;</mo><mn>42</mn></mrow></math>. <strong>Lucky win.</strong> Accuracy +1, faithfulness 0 on this row.</p>
+<p>Faithfulness rate in a report, among correct boxes:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>correct&#x000A0;box&#x000A0;and&#x000A0;steps&#x000A0;match&#x000A0;box</mtext><mo stretchy="false">&#x0007D;</mo></mrow><mrow><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>correct&#x000A0;box</mtext><mo stretchy="false">&#x0007D;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>If 10 items have the right box and 4 of those have matching steps, the rate is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.4</mn></mrow></math>. Say that. Do not say “the model reasoned on 90% of items” because accuracy was 90%.</p>
+<p>A checker for <code>23+19</code> traces stored as lists of strings: <code>last_int(" ".join(steps))</code> vs <code>answer</code>. That is Lab 13. Fluency of <code>"so 42"</code> in the prose would not pass this check if the last computed integer was 52.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Scoring fluency (“the steps read nicely”) as faithfulness.</li>
+<li>Dropping unfaithful traces only when the box is <strong>wrong</strong>. Lucky wins are the ones that hide.</li>
+<li>Assuming a majority vote of 42 is faithful. Three unfaithful traces can still vote 42.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Andrej Karpathy, Deep Dive into LLMs like ChatGPT</a>, <strong>1:20:32–1:41:46</strong>.</p>
+<p>Pause on hallucinations and on tools as working memory: a calculator observation is a check the trace can ignore (Week 14) or use. Same URL as note <strong>13.2</strong>; different chapter. Do not treat this segment as a jailbreak lesson.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Accuracy is 90% and 40% of those wins have invalid steps. What is the faithfulness problem in one sentence?</p>
@@ -135,6 +170,12 @@
 <li>
 <p>Design a tiny checker for <code>23+19</code> traces stored as lists of strings. What would you parse?</p>
 </li>
+<li>
+<p>Steps last-integer <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>52</mn></mrow></math>, box <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math>, gold <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math>. Fill in: faithful? correct box? lucky win?</p>
+</li>
+<li>
+<p>Four traces, boxes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn><mo>&#x0002C;</mo><mn>42</mn><mo>&#x0002C;</mo><mn>32</mn><mo>&#x0002C;</mo><mn>42</mn></mrow></math>. Two of the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math>s are unfaithful. Majority vote on boxes? Faithful-only majority if you drop unfaithful traces first?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -144,7 +185,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T20:20:00-04:00">September 14, 2026, 8:20 PM EDT</time></div>
             </footer>
         </div>
 

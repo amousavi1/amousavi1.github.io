@@ -482,7 +482,7 @@ VIDEOS = {
     ),
     "audio-spectrograms": (
         "Valerio Velardo: Short-Time Fourier Transform explained (Sound of AI)",
-        "https://www.youtube.com/watch?v=3gzHR0ZLgGE",
+        "https://www.youtube.com/watch?v=-Yxj3yfvY-4",
     ),
     "audio-encoders": (
         "What's AI: OpenAI's Whisper Model Explained (~12 min)",

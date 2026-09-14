@@ -116,6 +116,7 @@
 <p>Pick the number that would change your mind. Retrieval: recall@k plus an answer score. Generation: a task metric plus a human or checklist on a slice. Alignment: a refusal or preference rate you can recompute. Do not lead with loss curves.</p>
 <p><img alt="A talk slide: metric, ablation, one failure" src="files/data-643/graphics/14.3-eval-presentations/talk.png" /></p>
 <p>State the split, the baseline, and the seed. If a closed API is in the loop, still report an open baseline (project note). Uncertainty belongs next to the number: a range over seeds, or at least “<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo></mrow></math> this many test items.”</p>
+<p>Write the claim as a sentence a skeptic could falsify: “RAG raises exact-match on weekday hours by more than seed noise, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, bag-of-words cosine, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>.” If you cannot say the knob, you do not have a result yet.</p>
 <hr />
 <h2>2. Ablation and a failure case</h2>
 <p>An ablation turns one knob off (no retrieval, no CoT, no LoRA, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>5</mn></mrow></math>) and shows the metric move. If it does not move, say so.</p>
@@ -124,8 +125,37 @@
 <h2>3. The talk</h2>
 <p>Time is short. Suggested spine: question (30 s), system picture (1 min), main table (1 min), ablation (30 s), failure case (1 min), limit and next step (30 s). Graduate mini-project: one experiment from the paper, what you reran, what differed.</p>
 <p>Slides: few words, readable axes, ids on chunks if you do RAG. Canvas holds the slot and the upload. Week 15’s remaining talks follow that same spine. Practice the failure-case minute; that is usually what people remember.</p>
+<p>What not to do: a twelve-slide architecture tour, a live notebook that might fail, or a metric you cannot recompute from the appendix. If the number is from a closed API, still show an open baseline on the same split. Graduate mini-project: name the paper experiment, what you reran, and one way your number differed—without a story about a venue.</p>
 <hr />
-<h2>4. Practice</h2>
+<h2>4. Teaching this note</h2>
+<p>About <strong>30 minutes</strong> at the board (and a dry-run of one failure-case minute), then <strong>20 minutes</strong> of video.</p>
+<ul>
+<li><strong>0–10 min.</strong> Metric matches the question. Baseline, split, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>, uncertainty.</li>
+<li><strong>10–20 min.</strong> Ablation that could falsify the claim. Fake ablations.</li>
+<li><strong>20–30 min.</strong> Worked 2-point “gain” that is smaller than seed noise. Talk spine on the board.</li>
+<li><strong>Then</strong> play Peyton Jones <strong>0:00–20:00</strong>. Pause on “start with the problem” and on not drowning the audience in mechanism.</li>
+</ul>
+<p>If the class still has remaining talks, use the last 30 minutes of the two-hour block for them, not for extra architecture slides. The note is done when every team can name their metric, ablation, and failure in one breath.</p>
+<hr />
+<h2>5. Worked example</h2>
+<p>You ran two seeds. Accuracy with RAG: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.82</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.78</mn></mrow></math> (mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.80</mn></mrow></math>). No-retrieval baseline: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.80</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.76</mn></mrow></math> (mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.78</mn></mrow></math>). Test set <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>.</p>
+<p>The mean lift is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.02</mn></mrow></math>. The spread across seeds is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.04</mn></mrow></math>. A 2-point gain with 3–4 points of seed jitter and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math> is <strong>not</strong> a result you lead with. In the talk you say: “point estimate +2 points; seeds move by about that much; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>.” Then you show a <strong>failure case</strong> that RAG actually changed: e.g. query about library hours, baseline hallucinated 21:00, RAG cited <code>[d1]</code> with 23:00—or RAG retrieved <code>[d2]</code> and the model ignored <code>[d1]</code>.</p>
+<p>Fake ablation: you claim “LoRA on attention is why we beat the baseline,” but the ablation turns off dropout instead of the adapter. That knob was not the claim.</p>
+<p>Time budget for a 5-minute slot: 30 s question, 1 min picture, 1 min table, 30 s ablation, 1 min failure, 30 s limit. If you have one minute left, drop a second architecture slide, not the failure.</p>
+<p>Checklist before you upload slides: one question on slide 1, one table with a baseline, one ablation that matches the claim, one failure with ids or a trace, font large enough for the back row, no unreadable notebook dump.</p>
+<hr />
+<h2>6. Where students get stuck</h2>
+<ul>
+<li>Leading with architecture diagrams and loss curves. The audience cannot grade those.</li>
+<li>Calling a 2-point bump a win when seed std is 3 points.</li>
+<li>Demoing only a cherry-picked success. The failure case is the scientific slide.</li>
+</ul>
+<hr />
+<h2>7. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=sT_-owjKIbA">Simon Peyton Jones, How to give a great research talk</a>, <strong>0:00–20:00</strong>.</p>
+<p>Pause when he insists on motivation before mechanism, and on slides the back row can read. The rest of that talk is optional after class. This is the presentation craft for Week 14–15; it is not a methods paper.</p>
+<hr />
+<h2>8. Practice</h2>
 <ol>
 <li>
 <p>Your accuracy rose 2 points and the variance across seeds is 3 points. What do you say in the talk?</p>
@@ -136,6 +166,12 @@
 <li>
 <p>You have one minute left. Which is more useful: another architecture diagram, or one failure with the retrieved ids?</p>
 </li>
+<li>
+<p>Baseline <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.70</mn></mrow></math>, method <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.74</mn></mrow></math>, three seeds of the method <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.71</mn><mo>&#x0002C;</mo><mn>0.74</mn><mo>&#x0002C;</mo><mn>0.77</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>40</mn></mrow></math>. Write one spoken sentence that is honest.</p>
+</li>
+<li>
+<p>You claim RAG helps closing-time questions. What ablation belongs on the slide, and what one row would you show as a failure if retrieval returned the shuttle chunk?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -145,7 +181,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T20:20:00-04:00">September 14, 2026, 8:20 PM EDT</time></div>
             </footer>
         </div>
 

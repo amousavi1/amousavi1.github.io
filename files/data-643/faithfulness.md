@@ -12,6 +12,8 @@ The decoder can jump to a familiar number, then invent arithmetic that pretends 
 
 **Faithful** here is a check you can run: do the written steps compute the stated answer, and are those steps valid for the problem? It is not a claim about inner states. We do not read the residual stream in this course. Fluency of the prose is not the check. A tidy paragraph can still fail the algebra.
 
+Lab 13’s last `p1` trace: steps compute 52, box is 42. Last `p2` trace: steps compute 48, box is 47. Those are lucky wins if the box matches gold.
+
 ---
 
 ## 2. How to flag it
@@ -26,12 +28,67 @@ Related failure: **post-hoc** explanations in RAG (Week 14). Citing a chunk you 
 
 If you advertise “the model shows its work,” add a faithfulness number: fraction of traces whose checked steps match the answer, among items with a correct box. Report a failure case where the box is right and the algebra is not. That is more useful than another leaderboard screenshot.
 
+Do not call that number “reasoning accuracy.” Call it a **checker pass rate**. Inner states are out of scope.
+
 ---
 
-## 4. Practice
+## 4. Teaching this note
+
+About **30 minutes** at the board, then **~12 minutes** of video. Then start Lab 13 if the vote note is already done.
+
+- **0–10 min.** Define unfaithful: last step value \(\neq\) box, or steps invalid.
+- **10–20 min.** Lucky win vs honest miss. Why accuracy is not enough.
+- **20–30 min.** Worked Lab 13 row: 52 in the steps, 42 in the box. Design the parser.
+- **Then** play Karpathy Deep Dive **1:20:32–1:41:46** (hallucinations, tool use, working memory). Pause on confident wrong answers; name that **unfaithful** when it happens *inside* a CoT trace, not only in a final sentence.
+
+---
+
+## 5. Worked example
+
+Trace (Lab 13, `p1` last row):
+
+- steps: `"23 + 10 = 33"`, `"33 + 9 = 52"`
+- `answer`: \(42\)
+- gold: \(42\)
+
+Parse the last integer in the steps: \(52\). Compare to `answer`: \(52\neq 42\). **Unfaithful.** Compare `answer` to gold: \(42=42\). **Lucky win.** Accuracy +1, faithfulness 0 on this row.
+
+Faithfulness rate in a report, among correct boxes:
+
+\[
+\frac{\#\{\text{correct box and steps match box}\}}{\#\{\text{correct box}\}}.
+\]
+
+If 10 items have the right box and 4 of those have matching steps, the rate is \(0.4\). Say that. Do not say “the model reasoned on 90% of items” because accuracy was 90%.
+
+A checker for `23+19` traces stored as lists of strings: `last_int(" ".join(steps))` vs `answer`. That is Lab 13. Fluency of `"so 42"` in the prose would not pass this check if the last computed integer was 52.
+
+---
+
+## 6. Where students get stuck
+
+- Scoring fluency (“the steps read nicely”) as faithfulness.
+- Dropping unfaithful traces only when the box is **wrong**. Lucky wins are the ones that hide.
+- Assuming a majority vote of 42 is faithful. Three unfaithful traces can still vote 42.
+
+---
+
+## 7. Video
+
+Watch [Andrej Karpathy, Deep Dive into LLMs like ChatGPT](https://www.youtube.com/watch?v=7xTGNNLPyMI), **1:20:32–1:41:46**.
+
+Pause on hallucinations and on tools as working memory: a calculator observation is a check the trace can ignore (Week 14) or use. Same URL as note **13.2**; different chapter. Do not treat this segment as a jailbreak lesson.
+
+---
+
+## 8. Practice
 
 1. Accuracy is 90% and 40% of those wins have invalid steps. What is the faithfulness problem in one sentence?
 
 2. Why is “the steps look fluent” a weak faithfulness metric?
 
 3. Design a tiny checker for `23+19` traces stored as lists of strings. What would you parse?
+
+4. Steps last-integer \(52\), box \(42\), gold \(42\). Fill in: faithful? correct box? lucky win?
+
+5. Four traces, boxes \(42,42,32,42\). Two of the \(42\)s are unfaithful. Majority vote on boxes? Faithful-only majority if you drop unfaithful traces first?
