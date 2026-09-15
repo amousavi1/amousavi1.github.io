@@ -430,6 +430,64 @@ def bias_offset():
     _save(fig, "1.4-embeddings/bias-geometry.png")
 
 
+def xor_table():
+    fig, ax = plt.subplots(figsize=(8.4, 3.4))
+    ax.axis("off")
+    cols = [r"$(x_1,x_2)$", r"$a_1=\mathrm{ReLU}(x_1+x_2)$", r"$a_2=\mathrm{ReLU}(x_1+x_2-1)$", r"$\hat{y}=a_1-2a_2$"]
+    rows = [
+        ["(0, 0)", "0", "0", "0"],
+        ["(0, 1)", "1", "0", "1"],
+        ["(1, 0)", "1", "0", "1"],
+        ["(1, 1)", "2", "1", "0"],
+    ]
+    table = ax.table(cellText=rows, colLabels=cols, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(11)
+    table.scale(1.15, 1.7)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.get_text().set_color(NAVY)
+        elif c == 3:
+            cell.set_facecolor(FILL2)
+    ax.set_title("XOR with two ReLUs: OR, AND, then subtract (Goodfellow 6.1)", loc="left", color=NAVY)
+    _save(fig, "1.2-neurons-activations/xor-table.png")
+
+
+def softmax_bars():
+    z = np.array([1.0, 0.5, 0.0])
+    p = np.exp(z) / np.exp(z).sum()
+    fig, ax = plt.subplots(figsize=(7.2, 3.6))
+    names = ["cat", "mat", "sat"]
+    ax.bar(names, p, color=[TEAL, GOLD, CORAL], edgecolor=NAVY, linewidth=1.2)
+    ax.set_ylim(0, 0.65)
+    ax.set_ylabel("softmax probability")
+    for i, v in enumerate(p):
+        ax.text(i, v + 0.02, f"{v:.2f}", ha="center", color=NAVY)
+    ax.set_title(r"Skip-gram toy: $P(w\mid v_c)$ for $V=3$, scores $u^\top v_c=(1,0.5,0)$", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    _save(fig, "1.4-embeddings/skipgram-softmax.png")
+
+
+def backprop_gates():
+    fig, ax = plt.subplots(figsize=(10.2, 3.2))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 3.4)
+    ax.axis("off")
+    _box(ax, (0.2, 1.1), 2.0, 1.2, r"$x$", FILL3, fontsize=13)
+    _box(ax, (2.8, 1.1), 2.2, 1.2, r"$z=w^\top x+b$", FILL, fontsize=11)
+    _box(ax, (5.6, 1.1), 2.2, 1.2, r"$a=\mathrm{ReLU}(z)$", FILL2, fontsize=11)
+    _box(ax, (8.4, 1.1), 3.2, 1.2, r"$L=\frac{1}{2}(a-y)^2$", FILL, fontsize=12)
+    _arrow(ax, (2.25, 1.7), (2.75, 1.7), CORAL)
+    _arrow(ax, (5.05, 1.7), (5.55, 1.7), TEAL)
+    _arrow(ax, (7.85, 1.7), (8.35, 1.7), NAVY)
+    ax.text(6.0, 0.35, r"backward: $(a-y)\cdot 1_{z>0}\cdot x$  (CS231N: local $\times$ upstream)", fontsize=11, color=SLATE)
+    ax.set_title("One ReLU unit: cache $x$ and $z$; autograd is this chain", loc="left", color=NAVY)
+    _save(fig, "1.3-gradient-descent/one-unit-backprop.png")
+
+
 def main():
     _setup()
     roadmap()
@@ -438,12 +496,15 @@ def main():
     activations()
     feedforward()
     xor_sep()
+    xor_table()
     loss_surface()
     gd_1d()
     train_loop()
+    backprop_gates()
     onehot_vs_embed()
     semantic_geometry()
     skipgram()
+    softmax_bars()
     eval_two_ways()
     bias_offset()
     print("done")

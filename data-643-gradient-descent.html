@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 1 &middot; <a href="files/data-643/gradient-descent.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/1.3-gradient-descent.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Forward, loss, backward, update. That loop is pretraining and fine-tuning.
+                            Forward, loss, backward, update, and one ReLU unit’s chain rule. That loop is pretraining.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Training a net is an optimization problem: pick weights so a <strong>loss</strong> is small on training batches, then check a held-out set. Gradient descent is the default way to move the weights.</p>
@@ -116,7 +116,12 @@
 <p>Collect all weights and biases into one vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. A loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is a scalar. For classification it is often <strong>cross-entropy</strong>; for a regression toy it is squared error. In two dimensions you can draw the contours. Gradient descent follows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>L</mi></mrow></math>.</p>
 <p><img alt="Gradient descent on a bowl-shaped loss" src="files/data-643/graphics/1.3-gradient-descent/loss-surface.png" /></p>
 <p>The picture is a cartoon. Real nets live in millions of dimensions. The geometry is still the same idea: the gradient is the direction of steepest increase, so you walk the other way.</p>
-<p>Cross-entropy on a next-token distribution is the LLM default. You do not need the full formula today. You do need: <strong>one scalar</strong>, then <strong>one vector of derivatives</strong>.</p>
+<p>Cross-entropy on a next-token distribution is the LLM default. For one token with predicted probability <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math> on the correct class,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo>&#x0002E;</mo></mrow></math>
+<p>Lab 1 uses binary cross-entropy on <strong>logits</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, not on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. PyTorch’s <code>BCEWithLogitsLoss</code> is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mo>&#x0003D;</mo><mo>max</mo><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>z</mi><mspace width="0.167em" /><mi>y</mi><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002B;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mo>&#x0007C;</mo><mi>z</mi><mo>&#x0007C;</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>which is numerically stable BCE. The extra line you need: <strong>pass <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, never <code>sigmoid(z)</code>, into that loss.</strong> If you sigmoid first, you squash twice.</p>
+<p>You need: <strong>one scalar</strong>, then <strong>one vector of derivatives</strong>. Nielsen calls this the <strong>cost</strong>; CS231N calls it the <strong>loss</strong>; a statistician calls it <strong>empirical risk</strong>. Same object.</p>
 <hr />
 <h2>2. The update</h2>
 <p>One step is</p>
@@ -138,33 +143,48 @@
 <p>PyTorch does (3) for you if the forward pass used <code>nn.Module</code> and a differentiable loss. Your job is to write (1), pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math>, and call <code>optimizer.step()</code>.</p>
 <p>If you forget <code>zero_grad()</code>, gradients <strong>accumulate</strong> across steps. That is a silent <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi></mrow></math> disaster, not a new algorithm.</p>
 <hr />
-<h2>4. What this has to do with language models</h2>
+<h2>4. One ReLU unit, by hand</h2>
+<p>CS231N treats each operation as a <strong>gate</strong> with a local derivative. Autograd is that picture. For squared error on one ReLU neuron,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>z</mi><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">w</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002B;</mo><mi>b</mi><mo>&#x0002C;</mo><mspace width="2em" /><mi>a</mi><mo>&#x0003D;</mo><mo>ReLU</mo><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>L</mi><mo>&#x0003D;</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x02212;</mo><mi>y</mi><msup><mo stretchy="false">&#x00029;</mo><mrow><mn>2</mn></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>Chain rule, using <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>ReLU</mo><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mrow><mn mathvariant="bold">1</mn></mrow><mrow><mi>z</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></msub></mrow></math> from note 1.2:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>L</mi></mrow><mrow><mo>&#x02202;</mo><mi>w</mi></mrow></mfrac><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x02212;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msup><mo>ReLU</mo><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mi>x</mi><mo>&#x0002E;</mo></mrow></math>
+<p>Same pattern for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi></mrow></math>, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> replaced by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x02264;</mo><mn>0</mn></mrow></math>, the local derivative is 0 and that example does not move <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi></mrow></math>. That is a dead ReLU on this point, not a PyTorch bug.</p>
+<p><img alt="One ReLU unit as a chain of gates" src="files/data-643/graphics/1.3-gradient-descent/one-unit-backprop.png" /></p>
+<p>CMU 11-711 writes the softmax/cross-entropy cousin <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo>&#x02212;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mi>x</mi></mrow></math>. Same “upstream error times input” shape. We do not need Adam’s derivation this week.</p>
+<hr />
+<h2>5. What this has to do with language models</h2>
 <p>Pretraining an LLM is this loop on a next-token loss, at huge batch and data scale. Fine-tuning (Week 8) is the same loop on a smaller, more specific dataset. RLHF (Week 9) changes what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math> is, not the fact that you are differentiating a scalar with respect to weights.</p>
 <p>If the gradient is noise, or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi></mrow></math> is wrong, or the net is linear, no amount of later “prompt engineering” will save the representation. Get this loop right on a tiny problem in Lab 1 before you touch Hugging Face.</p>
 <hr />
-<h2>5. Teaching this note</h2>
-<p><strong>30–40 minutes.</strong> Draw a 1-D parabola, write the update, do <strong>two</strong> numeric steps, then the four-box training loop. Play <strong>0:00–12:00</strong> of the gradient-descent video (loss surface and the step). Optional after class: the backprop video. Do not derive every chain-rule line in this block; Lab 1 will show autograd.</p>
+<h2>6. Teaching this note</h2>
+<p><strong>~18 minutes.</strong> Draw a 1-D parabola, write the update, do <strong>two</strong> numeric steps plus the overshoot, then the four-box loop and <code>zero_grad</code>. Spend four minutes on the one-ReLU chain rule and the <code>BCEWithLogitsLoss</code> warning. 3Blue1Brown gradient descent (<strong>0:00–12:00</strong>) and the backprop follow-up are <strong>homework</strong>. Do not derive a softmax Jacobian in this block.</p>
 <hr />
-<h2>6. Worked example</h2>
+<h2>7. Worked example</h2>
 <p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo>&#x02212;</mo><mn>3</mn><msup><mo stretchy="false">&#x00029;</mo><mrow><mn>2</mn></mrow></msup></mrow></math>, start at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mn>0</mn></mrow></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi><mo>&#x0003D;</mo><mn>0.25</mn></mrow></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>L</mi><mo>&#x0003D;</mo><mn>2</mn><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo>&#x02212;</mo><mn>3</mn><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
 <p>Step 1:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x003B8;</mi><mrow><mn>1</mn></mrow></msub><mo>&#x0003D;</mo><mn>0</mn><mo>&#x02212;</mo><mn>0.25</mn><mo>&#x000B7;</mo><mn>2</mn><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x02212;</mo><mn>3</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn><mo>&#x02212;</mo><mn>0.25</mn><mo>&#x000B7;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>6</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1.5</mn><mo>&#x0002E;</mo></mrow></math>
 <p>Step 2:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x003B8;</mi><mrow><mn>2</mn></mrow></msub><mo>&#x0003D;</mo><mn>1.5</mn><mo>&#x02212;</mo><mn>0.25</mn><mo>&#x000B7;</mo><mn>2</mn><mo stretchy="false">&#x00028;</mo><mn>1.5</mn><mo>&#x02212;</mo><mn>3</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1.5</mn><mo>&#x02212;</mo><mn>0.5</mn><mo>&#x000B7;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1.5</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>2.25</mn><mo>&#x0002E;</mo></mrow></math>
 <p>The minimum is at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>3</mn></mrow></math>. You moved <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn><mo>&#x02192;</mo><mn>1.5</mn><mo>&#x02192;</mo><mn>2.25</mn></mrow></math>. If you instead take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, step 1 is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn><mo>&#x02212;</mo><mn>2</mn><mo>&#x000B7;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>6</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>12</mn></mrow></math>, which <strong>overshoots</strong>. Draw both arrows on the same parabola.</p>
+<p>One-unit check: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0003D;</mo><mo>ReLU</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math>. Change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x02212;</mo><mi>y</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>ReLU</mo><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x000B7;</mo><mn>1</mn><mo>&#x000B7;</mo><mn>2</mn><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. One SGD step with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi><mo>&#x0003D;</mo><mn>0.1</mn></mrow></math> sends <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi><mo>&#x02190;</mo><mn>0.5</mn><mo>&#x02212;</mo><mn>0.1</mn><mo>&#x000B7;</mo><mn>2</mn><mo>&#x0003D;</mo><mn>0.3</mn></mrow></math>.</p>
 <hr />
-<h2>7. Where students get stuck</h2>
+<h2>8. Where students get stuck</h2>
 <ul>
 <li>Walking <strong>up</strong> the gradient (forgetting the minus sign).</li>
 <li>Thinking SGD is “wrong GD” rather than the scalable estimator of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>L</mi></mrow></math>.</li>
-<li>Dropping activations after the forward pass, then being surprised that backward needs them.</li>
+<li>
+<p>Dropping activations after the forward pass, then being surprised that backward needs them.</p>
+</li>
+<li>
+<p>Passing <code>sigmoid(z)</code> into <code>BCEWithLogitsLoss</code> (the loss already includes the sigmoid).</p>
+</li>
 </ul>
 <hr />
-<h2>8. Video</h2>
+<h2>9. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=IHZwWFHWa-w">3Blue1Brown: Gradient descent, how neural networks learn</a>.</p>
 <p>Pause when the ball follows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>L</mi></mrow></math>, and when a large step jumps the valley. Optional: <a href="https://www.youtube.com/watch?v=Ilg3gGewQ5U">3Blue1Brown: What is backpropagation really doing?</a> after class (~14 min); pause on the chain-rule diagram, not the code.</p>
 <hr />
-<h2>9. Practice</h2>
+<h2>10. Practice</h2>
 <ol>
 <li>
 <p>You double <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi></mrow></math> and the loss oscillates. What happened geometrically?</p>
@@ -181,6 +201,9 @@
 <li>
 <p>Same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mn>0</mn></mrow></msub><mo>&#x0003D;</mo><mn>4</mn></mrow></math>, but <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi><mo>&#x0003D;</mo><mn>1.1</mn></mrow></math>. Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B8;</mi><mrow><mn>1</mn></mrow></msub></mrow></math>. Did the step move closer to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> or farther?</p>
 </li>
+<li>
+<p>For the one-ReLU unit with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math>, write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi></mrow></math>. Then take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi><mo>&#x0003D;</mo><mn>0.1</mn></mrow></math> and the new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi></mrow></math>.</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -190,7 +213,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-14T18:45:00-04:00">September 14, 2026, 6:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T01:50:00-04:00">September 15, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

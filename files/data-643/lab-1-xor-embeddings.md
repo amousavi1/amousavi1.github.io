@@ -38,13 +38,15 @@ X = torch.tensor([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]])
 y = torch.tensor([[0.0], [1.0], [1.0], [0.0]])
 ```
 
-1. Fit a **linear** model `nn.Linear(2, 1)` with `BCEWithLogitsLoss` for 400 steps, `lr=0.5`. Print the predictions after a sigmoid. They should be stuck near 0.5.
+1. Fit a **linear** model `nn.Linear(2, 1)` with `BCEWithLogitsLoss` for 400 steps, `lr=0.5`. Print the predictions after a sigmoid. They should be stuck near 0.5. Count parameters first: this model has **3**.
 
-2. Fit an MLP: `Linear(2, 8)` → `ReLU` → `Linear(8, 1)`. Same loss, 2000 steps, `lr=0.1`. Print predictions. They should be near 0, 1, 1, 0.
+   `BCEWithLogitsLoss` is applied to the raw output \(z\) (logits), not to `sigmoid(z)`. If you wrap the linear layer in a sigmoid and then use this loss, you squash twice.
+
+2. Fit an MLP: `Linear(2, 8)` → `ReLU` → `Linear(8, 1)`. Same loss, 2000 steps, `lr=0.1`. Print predictions. They should be near 0, 1, 1, 0. This model has **33** parameters: \(2\cdot 8+8\) plus \(8\cdot 1+1\).
 
 3. Plot the 2-D decision boundary of the MLP (a coarse grid is enough). Mark the four XOR points.
 
-4. In two sentences: why did the linear model fail, and what did ReLU add?
+4. In two sentences: why did the linear model fail, and what did ReLU add? Optional: on paper, check Goodfellow’s two-ReLU XOR table from note **1.2** for \(\boldsymbol{x}=(1,1)\).
 
 ---
 

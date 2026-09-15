@@ -60,6 +60,15 @@ DECKS = [
         "title": "1.1 Course Map and the Semester Project",
         "slides": [
             {
+                "title": "Learning goals for this block",
+                "bullets": [
+                    "Place Week 1 at the base of an LLM stack.",
+                    "Write the next-token product and its negative log-likelihood.",
+                    "Compute the Llama 2 70B weights-file size (140 GB at float16).",
+                    "Turn “use an LLM” into a question plus a metric.",
+                ],
+            },
+            {
                 "title": "A self-contained LLM course",
                 "bullets": [
                     "DATA 441/641 and 442/642 are not prerequisites.",
@@ -75,15 +84,44 @@ DECKS = [
                     "Week 1 is the bottom: neurons, training, word vectors.",
                     "Week 3 puts attention on those vectors.",
                     "Later weeks align, retrieve, generate, and use tools.",
+                    "If your project “uses GPT,” name the layer you will change.",
                 ],
                 "image": "graphics/1.1-course-map/stack.png",
+            },
+            {
+                "title": "Pretraining minimizes next-token NLL",
+                "bullets": [
+                    r"\(P(w_1,\ldots,w_T)=\prod_t P(w_t\mid w_{<t})\).",
+                    r"\(L=-\sum_t\log P(w_t\mid w_{<t})\). Loss = empirical risk = cost.",
+                    r"If \(P(\mathrm{mat}\mid \text{the cat sat on the})=0.70\), NLL \(\approx 0.357\).",
+                    "XOR and skip-gram this week are the same kind of scalar, small.",
+                ],
+            },
+            {
+                "title": "Llama 2 70B is a 140 GB file",
+                "bullets": [
+                    r"\(70\times 10^9\) parameters \(\times\) 2 bytes (float16) = 140 GB.",
+                    "Parameters file vs run file: running needs extra memory.",
+                    "Karpathy: an LLM is weights plus a little code.",
+                    "In class: 0:00–8:00. Finish 0:00–20:00 as homework.",
+                ],
             },
             {
                 "title": "The project starts this week",
                 "bullets": [
                     "A question you can measure, a public dataset, a baseline, one justified change.",
+                    "Bad: “Use LoRA on news.” Better: a metric on a 100-item holdout.",
                     "Undergraduate: group report and talk. Graduate: main project plus a paper mini-project.",
                     "Lab 1 ends with a five-line topic seed. You may change it.",
+                ],
+            },
+            {
+                "title": "Today’s two-hour meeting",
+                "bullets": [
+                    "1.1 stack + project + short Karpathy (~26 min).",
+                    "1.2 neuron / XOR (~16). 1.3 GD + one chain-rule (~18).",
+                    "1.4 cosine + skip-gram softmax + bias (~18). Lab 1 start (~32).",
+                    "Books: Goodfellow 6.1, Nielsen Ch. 1, Jurafsky Ch. 5 (Aug 2026 draft), Mikolov §§1–3.",
                 ],
             },
         ],
@@ -93,28 +131,47 @@ DECKS = [
         "title": "1.2 Neurons, Activations, and Feedforward Nets",
         "slides": [
             {
+                "title": "Learning goals for this block",
+                "bullets": [
+                    r"Write \(z=w^\top x+b\) then \(a=\sigma(z)\) as two boxes.",
+                    "State sigmoid, ReLU, ReLU derivative, and softmax.",
+                    "Show that two affine maps collapse to one.",
+                    "Fill Goodfellow’s two-ReLU XOR table; count 3 vs 33 parameters.",
+                ],
+            },
+            {
                 "title": "One neuron",
                 "bullets": [
                     r"Pre-activation \(z = w^\top x + b\), then \(a = \sigma(z)\).",
                     r"\(w\) and \(b\) are the parameters you train.",
-                    "ReLU in hidden layers; softmax when classes compete.",
+                    r"If you skip \(z\), you cannot take derivatives next note.",
                 ],
                 "image": "graphics/1.2-neurons-activations/neuron.png",
             },
             {
-                "title": "The nonlinearity is the point",
+                "title": "Four formulas, no Jacobian",
                 "bullets": [
-                    "Two affine maps compose to one affine map.",
-                    r"Without \(\sigma\), depth does not add power.",
-                    "Sigmoid saturates. ReLU is cheap and sparse.",
+                    r"Sigmoid: \(\sigma(z)=1/(1+e^{-z})\).",
+                    r"ReLU: \(\max(0,z)\). Derivative: \(\mathrm{ReLU}'(z)=\mathbf{1}_{z>0}\).",
+                    r"Softmax: \(\mathrm{softmax}(z)_i=e^{z_i}/\sum_j e^{z_j}\).",
+                    "ReLU in hidden layers; softmax when classes compete. GELU waits.",
                 ],
                 "image": "graphics/1.2-neurons-activations/activations.png",
+            },
+            {
+                "title": "The nonlinearity is the point",
+                "bullets": [
+                    r"\(W_2(W_1 x+b_1)+b_2=(W_2 W_1)x+(W_2 b_1+b_2)\).",
+                    r"Without \(\sigma\), depth does not add power.",
+                    "Sigmoid saturates. ReLU is cheap and sparse (and can die).",
+                ],
             },
             {
                 "title": "A feedforward net",
                 "bullets": [
                     r"Layer \(\ell\): \(a^{(\ell)} = \sigma(W^{(\ell)} a^{(\ell-1)} + b^{(\ell)})\).",
                     r"\(a^{(0)} = x\). Every arrow is one weight.",
+                    "A transformer block still contains this MLP, per position.",
                 ],
                 "image": "graphics/1.2-neurons-activations/feedforward.png",
             },
@@ -127,6 +184,24 @@ DECKS = [
                 ],
                 "image": "graphics/1.2-neurons-activations/xor.png",
             },
+            {
+                "title": "Goodfellow §6.1: an explicit XOR net",
+                "bullets": [
+                    r"\(a_1=\mathrm{ReLU}(x_1+x_2)\) (OR).",
+                    r"\(a_2=\mathrm{ReLU}(x_1+x_2-1)\) (AND).",
+                    r"\(\hat y=a_1-2a_2\) yields 0, 1, 1, 0.",
+                ],
+                "image": "graphics/1.2-neurons-activations/xor-table.png",
+            },
+            {
+                "title": "Lab 1 parameter count",
+                "bullets": [
+                    r"Linear classifier \(\mathrm{Linear}(2,1)\): \(2+1=3\) parameters.",
+                    r"MLP \(\mathrm{Linear}(2,8)\to\mathrm{ReLU}\to\mathrm{Linear}(8,1)\): 33 parameters.",
+                    "The table already solves XOR. Extra units make training easier, not magic.",
+                    "Classical name: multi-layer perceptron. Modern name: the FFN in a block.",
+                ],
+            },
         ],
     },
     {
@@ -134,9 +209,19 @@ DECKS = [
         "title": "1.3 Gradient Descent",
         "slides": [
             {
+                "title": "Learning goals for this block",
+                "bullets": [
+                    r"Write \(\theta\leftarrow\theta-\eta\nabla L\) and take two numeric steps.",
+                    "Name the four boxes: forward, loss, backward, update.",
+                    r"Derive \(\partial L/\partial w=(a-y)\,\mathrm{ReLU}'(z)\,x\) for one unit.",
+                    r"Pass logits \(z\) into BCEWithLogitsLoss, not sigmoid(\(z\)).",
+                ],
+            },
+            {
                 "title": "Training is walking downhill",
                 "bullets": [
                     r"Pack weights into \(\theta\). Loss \(L(\theta)\) is a scalar.",
+                    "Classical names: loss = cost = empirical risk.",
                     "The gradient points uphill. We step the other way.",
                 ],
                 "image": "graphics/1.3-gradient-descent/loss-surface.png",
@@ -146,18 +231,54 @@ DECKS = [
                 "bullets": [
                     r"\(\theta \leftarrow \theta - \eta \nabla L(\theta)\).",
                     "Too small: crawl. Too large: overshoot.",
-                    "SGD estimates the gradient on a minibatch.",
+                    "SGD estimates the gradient on a minibatch. Adam waits.",
+                    "Nielsen Ch. 1: this picture, then stop before long MNIST.",
                 ],
                 "image": "graphics/1.3-gradient-descent/gd-1d.png",
+            },
+            {
+                "title": "Two steps, then overshoot",
+                "bullets": [
+                    r"\(L(\theta)=(\theta-3)^2\), \(\theta_0=0\), \(\eta=0.25\).",
+                    r"\(\theta_1=1.5\), \(\theta_2=2.25\). Minimum is at 3.",
+                    r"\(\eta=2\) sends \(\theta_1=12\): overshoot, not a new algorithm.",
+                ],
             },
             {
                 "title": "Forward, loss, backward, update",
                 "bullets": [
                     "Keep activations: the backward pass needs them.",
-                    "Backprop is the chain rule. PyTorch does it if the graph is differentiable.",
+                    "Backprop is the chain rule. Autograd is backprop.",
+                    r"Forget `zero_grad()`: gradients accumulate. Silent \(\eta\) disaster.",
                     r"Pretraining and fine-tuning are this loop with different data and \(L\).",
                 ],
                 "image": "graphics/1.3-gradient-descent/train-loop.png",
+            },
+            {
+                "title": "One ReLU unit as gates",
+                "bullets": [
+                    "CS231N: each op is a gate. Local derivative times upstream.",
+                    r"\(z=w^\top x+b\), \(a=\mathrm{ReLU}(z)\), \(L=\frac12(a-y)^2\).",
+                    r"If \(z\le 0\), this example does not move \(w\).",
+                ],
+                "image": "graphics/1.3-gradient-descent/one-unit-backprop.png",
+            },
+            {
+                "title": "The chain rule you must write",
+                "bullets": [
+                    r"\(\partial L/\partial w=(a-y)\,\mathrm{ReLU}'(z)\,x\).",
+                    r"CMU 11-711 cousin for softmax+CE: \(\partial L/\partial w=(p-y)x\).",
+                    r"Numeric: \(x=2\), \(w=0.5\), \(y=0\) gives \(\partial L/\partial w=2\); \(\eta=0.1\) sends \(w\leftarrow 0.3\).",
+                ],
+            },
+            {
+                "title": "Lab 1 loss takes logits",
+                "bullets": [
+                    r"BCEWithLogitsLoss is binary cross-entropy on \(z\), not on \(\sigma(z)\).",
+                    "If you sigmoid first, you squash twice.",
+                    "Next-token NLL (note 1.1) is the same loop at vocabulary scale.",
+                    "3Blue1Brown GD + backprop videos: homework, not this block.",
+                ],
             },
         ],
     },
@@ -165,6 +286,15 @@ DECKS = [
         "stem": "1.4-embeddings",
         "title": "1.4 Word Embeddings and Semantic Geometry",
         "slides": [
+            {
+                "title": "Learning goals for this block",
+                "bullets": [
+                    "Separate distributional, distributed, and embedding.",
+                    r"Write skip-gram \(P(w_o\mid w_c)\) and a \(V=3\) softmax.",
+                    "Use cosine; run the Lab 1 signed-projection bias probe.",
+                    "Report extrinsic numbers in a project; use intrinsic to debug.",
+                ],
+            },
             {
                 "title": "One-hot is a bad geometry",
                 "bullets": [
@@ -175,11 +305,20 @@ DECKS = [
                 "image": "graphics/1.4-embeddings/onehot-vs-embed.png",
             },
             {
+                "title": "Three words that are not synonyms",
+                "bullets": [
+                    "Distributional: similar contexts, similar meaning (Harris; Jurafsky Ch. 5).",
+                    "Distributed: the code is a dense vector, not a one-hot.",
+                    r"Embedding: the lookup, `nn.Embedding`, row of a \(V\times d\) table.",
+                    "Mixing these three is the most common exam slip this week.",
+                ],
+            },
+            {
                 "title": "Direction can mean something",
                 "bullets": [
                     r"king − man + woman ≈ queen.",
-                    "Cosine, not Euclidean length (length tracks frequency).",
-                    "Nearest neighbors are a debug tool.",
+                    r"Cosine: \(u^\top v/(\|u\|\|v\|)\). Length tracks frequency.",
+                    "Nearest neighbors are a debug tool, not a project metric.",
                 ],
                 "image": "graphics/1.4-embeddings/semantic-geometry.png",
             },
@@ -187,10 +326,36 @@ DECKS = [
                 "title": "Skip-gram learns the map",
                 "bullets": [
                     "Fake task: from the center, predict each neighbor.",
-                    "Keep the hidden weights. Throw away the softmax.",
-                    "A transformer keeps transforming those vectors instead.",
+                    "CBOW: from the neighbors, predict the center.",
+                    r"Logits are \(z_w=u_w^\top v_c\). Softmax over the vocabulary.",
                 ],
                 "image": "graphics/1.4-embeddings/skipgram-window.png",
+            },
+            {
+                "title": "Skip-gram softmax, V = 3",
+                "bullets": [
+                    r"\(P(w_o\mid w_c)=\exp(u_o^\top v_c)/\sum_w\exp(u_w^\top v_c)\).",
+                    r"Scores \((1, 0.5, 0)\) for cat, mat, sat \(\Rightarrow\) \(p\approx(0.51, 0.31, 0.19)\).",
+                    "Mikolov 2013a §§1–3. Negative sampling is cited, not derived.",
+                ],
+                "image": "graphics/1.4-embeddings/skipgram-softmax.png",
+            },
+            {
+                "title": "Keep the lookup; throw the softmax",
+                "bullets": [
+                    r"`nn.Embedding(V, d)` is a table. One-hot \(\times\) matrix is the same map.",
+                    r"Word2Vec keeps \(v_w\). It throws away the output softmax.",
+                    "A transformer keeps transforming those vectors instead.",
+                ],
+            },
+            {
+                "title": "Counting vs. predicting",
+                "bullets": [
+                    "Classical vector semantics can start from a co-occurrence matrix.",
+                    "Skip-gram predicts context instead of counting it.",
+                    "Both are distributional. We use the predictive story because it is the LLM loop.",
+                    "No GloVe SVD homework this week. Optional later: CS224N A1.",
+                ],
             },
             {
                 "title": "Intrinsic vs. extrinsic",
@@ -204,9 +369,10 @@ DECKS = [
             {
                 "title": "Bias is also geometry",
                 "bullets": [
-                    "The same offsets can encode stereotypes.",
-                    "Probe occupations along a she/he direction.",
-                    "Lab 1 does this on a constructed 2-D space first.",
+                    r"Offset \(o=\overrightarrow{\mathrm{he}}-\overrightarrow{\mathrm{she}}\).",
+                    r"Score \(v^\top o/\|o\|\). Larger sits closer to he.",
+                    "Lab 1: constructed 2-D CSV first, then the same probe on a real model later.",
+                    "Debiasing is incomplete. Report the probe when you rank people or jobs.",
                 ],
                 "image": "graphics/1.4-embeddings/bias-geometry.png",
             },

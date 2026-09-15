@@ -5,28 +5,28 @@ NOTES = [
         "slug": "course-map",
         "week": 1,
         "title": "1.1 Course Map and the Semester Project",
-        "lead": "A self-contained LLM course. Week 1 is the base of the stack; the project starts now.",
+        "lead": "A self-contained LLM course. Week 1 is the base of the stack; next-token NLL is the cost; the project starts now.",
         "slide": "1.1-course-map",
     },
     {
         "slug": "neurons-activations",
         "week": 1,
         "title": "1.2 Neurons, Activations, and Feedforward Nets",
-        "lead": "A weighted sum, a nonlinearity, and why stacking linear layers is not enough.",
+        "lead": "A weighted sum, a nonlinearity, softmax, and an explicit two-ReLU XOR table.",
         "slide": "1.2-neurons-activations",
     },
     {
         "slug": "gradient-descent",
         "week": 1,
         "title": "1.3 Gradient Descent",
-        "lead": "Forward, loss, backward, update. That loop is pretraining and fine-tuning.",
+        "lead": "Forward, loss, backward, update, and one ReLU unit’s chain rule. That loop is pretraining.",
         "slide": "1.3-gradient-descent",
     },
     {
         "slug": "embeddings",
         "week": 1,
         "title": "1.4 Word Embeddings and Semantic Geometry",
-        "lead": "Dense vectors, skip-gram, analogies, and why geometry can encode bias.",
+        "lead": "Dense vectors, skip-gram softmax on a tiny vocab, analogies, and a signed-projection bias probe.",
         "slide": "1.4-embeddings",
     },
     {
@@ -413,7 +413,7 @@ BY_SLUG = {n["slug"]: n for n in NOTES}
 # One primary classroom video per lecture. Title includes a watch cue.
 VIDEOS = {
     "course-map": (
-        "Karpathy: Intro to Large Language Models (watch 0:00–20:00 in class)",
+        "Karpathy: Intro to Large Language Models (0:00–8:00 in class; finish 0:00–20:00 as homework)",
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "neurons-activations": (
@@ -595,6 +595,10 @@ VIDEOS = {
 }
 
 VIDEO_EXTRA = {
+    "course-map": (
+        "MIT 6.S191 Lecture 1: perceptron through loss and gradient descent (homework, ~17:20–44:22)",
+        "https://www.youtube.com/watch?v=ErnWZxJovaM",
+    ),
     "gpt-bert": (
         "CodeEmporium: BERT Neural Network — EXPLAINED!",
         "https://www.youtube.com/watch?v=xI0HHN5XKDo",
@@ -615,14 +619,18 @@ WEEKS = {
         "lectures": ["course-map", "neurons-activations", "gradient-descent", "embeddings"],
         "labs": [("lab-1-xor-embeddings", False)],
         "readings": [
-            ("Goodfellow, Bengio, Courville: Deep feedforward networks (Ch. 6)", "https://www.deeplearningbook.org/contents/mlp.html"),
-            ("Mikolov et al., Efficient estimation of word representations", "https://arxiv.org/abs/1301.3781"),
-            ("Jurafsky & Martin, Vector semantics and embeddings", "https://web.stanford.edu/~jurafsky/slp3/6.pdf"),
+            ("Goodfellow, Bengio, Courville: Deep feedforward networks, Ch. 6 opening and §6.1 XOR", "https://www.deeplearningbook.org/contents/mlp.html"),
+            ("Nielsen, Neural Networks and Deep Learning, Ch. 1 (gradient descent; stop before long MNIST)", "http://neuralnetworksanddeeplearning.com/chap1.html"),
+            ("Jurafsky & Martin, Speech and Language Processing, Ch. 5 Embeddings (draft of 19 Aug 2026)", "https://web.stanford.edu/~jurafsky/slp3/5.pdf"),
+            ("Mikolov et al. 2013, Efficient estimation of word representations, §§1–3", "https://arxiv.org/abs/1301.3781"),
+            ("Stanford CS224N: word vectors and neural nets (copy intuitions; skip the skip-gram Jacobian)", "https://stanford.edu/class/cs224n/"),
+            ("CS231N notes: neuron, backprop as gates, SGD", "https://cs231n.github.io/neural-networks-1/"),
         ],
         "discussion": [
             "Intrinsic vs. extrinsic evaluation of embeddings: which number belongs in a project report, and which one is for debugging?",
-            "Name one way embedding geometry can encode a stereotype. What would you measure?",
+            "Name one way embedding geometry can encode a stereotype. What would you measure with the Lab 1 projection?",
             "Why can this course skip DATA 641 and 642 and still start from neurons this week?",
+            "Goodfellow’s two-ReLU XOR vs. Lab 1’s 33-parameter MLP: what did the extra units buy you that the table already showed?",
         ],
     },
     2: {
