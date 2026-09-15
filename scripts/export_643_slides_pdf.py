@@ -135,22 +135,16 @@ li { margin: 0.16em 0; }
 .agenda { list-style: none; padding: 0; margin: 0.1in 0 0; }
 .agenda li {
   display: grid;
-  grid-template-columns: 0.42in 1fr 1.35in;
+  grid-template-columns: 0.5in 1fr;
   gap: 0.18in;
   align-items: center;
-  padding: 0.13in 0;
+  padding: 0.16in 0;
   border-bottom: 1px solid #e4eaee;
-  font-size: 20pt;
+  font-size: 22pt;
 }
 .agenda .n {
   color: #0b6e99;
   font-weight: 700;
-}
-.agenda .t {
-  color: #8c1515;
-  font-size: 15pt;
-  text-align: right;
-  font-weight: 600;
 }
 .cards {
   flex: 1;
@@ -230,11 +224,11 @@ DECKS = [
                 "layout": "agenda",
                 "title": "Lecture plan",
                 "agenda": [
-                    ("1", "Where this course sits, and why it is self-contained", "4 min"),
-                    ("2", "An LLM is a stack; Week 1 is the base", "6 min"),
-                    ("3", "What pretraining actually minimizes", "6 min"),
-                    ("4", "The 140 GB weights file", "4 min"),
-                    ("5", "Turn a method into a project question", "6 min"),
+                    ("1", "Where this course sits, and why it is self-contained"),
+                    ("2", "An LLM is a stack; Week 1 is the base"),
+                    ("3", "What pretraining actually minimizes"),
+                    ("4", "The 140 GB weights file"),
+                    ("5", "Turn a method into a project question"),
                 ],
                 "takeaway": "Key goal: leave with a stack picture, a next-token loss, and one measurable project sentence.",
             },
@@ -290,9 +284,9 @@ DECKS = [
                 "layout": "cards",
                 "title": "Today’s two-hour meeting",
                 "cards": [
-                    ("1.1  ~26 min", "Stack, NLL, 140 GB, project sentence. Karpathy 0:00–8:00."),
-                    ("1.2–1.4  ~52 min", "Neuron / XOR, then GD + one chain-rule, then skip-gram softmax + bias."),
-                    ("Lab 1  ~32 min", "XOR vs linear, then the constructed 2-D embedding probe."),
+                    ("1.1 Course map", "Stack, next-token NLL, 140 GB, project sentence. Short Karpathy clip."),
+                    ("1.2–1.4 Board notes", "Neuron and XOR, then gradient descent, then skip-gram and bias."),
+                    ("Lab 1", "Linear vs MLP on XOR, then the constructed 2-D embedding probe."),
                 ],
                 "takeaway": "Pedagogy drawn from Stanford CS224N (plan + one formula), CS231N (footer, one idea), MIT 6.S191 (diagram + numbers). Original slides; those courses are not copied.",
             },
@@ -312,10 +306,10 @@ DECKS = [
                 "layout": "agenda",
                 "title": "Lecture plan",
                 "agenda": [
-                    ("1", "One neuron: z, then a", "3 min"),
-                    ("2", "Four formulas you will write", "3 min"),
-                    ("3", "Why two linear layers collapse", "3 min"),
-                    ("4", "XOR, Goodfellow’s table, 3 vs 33", "7 min"),
+                    ("1", "One neuron: z, then a"),
+                    ("2", "Four formulas you will write"),
+                    ("3", "Why two linear layers collapse"),
+                    ("4", "XOR, Goodfellow’s table, 3 vs 33"),
                 ],
             },
             {
@@ -397,10 +391,10 @@ DECKS = [
                 "layout": "agenda",
                 "title": "Lecture plan",
                 "agenda": [
-                    ("1", "Loss as a surface", "3 min"),
-                    ("2", "The update, two steps, overshoot", "5 min"),
-                    ("3", "Forward, loss, backward, update", "4 min"),
-                    ("4", "One ReLU unit as gates", "6 min"),
+                    ("1", "Loss as a surface"),
+                    ("2", "The update, two steps, overshoot"),
+                    ("3", "Forward, loss, backward, update"),
+                    ("4", "One ReLU unit as gates"),
                 ],
             },
             {
@@ -484,12 +478,12 @@ DECKS = [
                 "layout": "agenda",
                 "title": "Lecture plan",
                 "agenda": [
-                    ("1", "One-hot is a bad geometry", "3 min"),
-                    ("2", "Distributional / distributed / embedding", "3 min"),
-                    ("3", "Skip-gram: window, softmax, lookup", "7 min"),
-                    ("4", "Intrinsic vs extrinsic, then bias as geometry", "5 min"),
+                    ("1", "One-hot is a bad geometry"),
+                    ("2", "How a corpus becomes a distributional vector"),
+                    ("3", "Skip-gram softmax, then what you keep"),
+                    ("4", "Analogies, evaluation, and bias as geometry"),
                 ],
-                "takeaway": "Key goal (CS224N): a word can be a dense vector; you can write P(o given c); projects report extrinsic numbers.",
+                "takeaway": "Key goal: a word can be a dense vector learned from its neighbors; you can write P(o given c); projects report extrinsic numbers.",
             },
             {
                 "layout": "split",
@@ -511,14 +505,11 @@ DECKS = [
                 ],
             },
             {
-                "layout": "split",
-                "title": "Direction can mean something",
-                "bullets": [
-                    r"king − man + woman ≈ queen.",
-                    r"Cosine: \(u^\top v/(\|u\|\|v\|)\).",
-                    "Nearest neighbors debug. They are not a project metric.",
-                ],
-                "image": "graphics/1.4-embeddings/semantic-geometry.png",
+                "layout": "figure",
+                "title": "How a distributional embedding is obtained",
+                "image": "graphics/1.4-embeddings/how-obtained.png",
+                "caption": "Corpus, then a window, then a fake prediction task. Words that shared neighbors sit nearby. Those rows are the embeddings.",
+                "takeaway": "Firth: you shall know a word by the company it keeps. Word2Vec is one algorithm for that. A thesaurus is not.",
             },
             {
                 "layout": "split",
@@ -566,6 +557,16 @@ DECKS = [
             },
             {
                 "layout": "split",
+                "title": "Direction can mean something",
+                "bullets": [
+                    r"king − man + woman ≈ queen.",
+                    r"Cosine: \(u^\top v/(\|u\|\|v\|)\). Length tracks frequency.",
+                    "Nearest neighbors debug. They are not a project metric.",
+                ],
+                "image": "graphics/1.4-embeddings/semantic-geometry.png",
+            },
+            {
+                "layout": "split",
                 "title": "How to evaluate word vectors",
                 "bullets": [
                     "Intrinsic: analogies, similarity, clustering.",
@@ -583,6 +584,15 @@ DECKS = [
                     "Lab 1: constructed 2-D first, then the same probe on a real model later.",
                 ],
                 "image": "graphics/1.4-embeddings/bias-geometry.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Write it", "Skip-gram softmax from the center vector. Keep those rows; throw the classifier."),
+                    ("Report it", "Intrinsic numbers debug the space. Extrinsic numbers go in the project."),
+                    ("Probe it", "The same geometry can encode a stereotype. Lab 1 measures that on purpose."),
+                ],
             },
         ],
     },
@@ -1406,11 +1416,11 @@ def _body(slide: dict) -> str:
         return f"<h1>{title}</h1><p class='subtitle'>{sub}</p><p class='meta'>{meta}</p>"
     if layout == "agenda":
         rows = []
-        for n, text, time in slide.get("agenda") or []:
+        for row in slide.get("agenda") or []:
+            n, text = row[0], row[1]
             rows.append(
-                f"<li><span class='n'>{html_lib.escape(n)}</span>"
-                f"<span>{_tex_to_html(text)}</span>"
-                f"<span class='t'>{html_lib.escape(time)}</span></li>"
+                f"<li><span class='n'>{html_lib.escape(str(n))}</span>"
+                f"<span>{_tex_to_html(text)}</span></li>"
             )
         return heading + f"<ol class='agenda'>{''.join(rows)}</ol>" + _takeaway(slide)
     if layout == "equation":

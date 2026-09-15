@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 1 &middot; <a href="files/data-643/embeddings.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/1.4-embeddings.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Dense vectors, skip-gram softmax on a tiny vocab, analogies, and a signed-projection bias probe.
+                            Dense vectors from a corpus window, skip-gram softmax, analogies, and a signed-projection bias probe.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A language model does not read characters as characters. It reads <strong>vectors</strong>. This week those vectors are word embeddings. From Week 3 they are token embeddings inside a transformer. The geometry is the same idea.</p>
@@ -119,7 +119,19 @@
 <p><strong>Distributional</strong> is about the data: words that occur in similar contexts mean similar things (Harris). <strong>Distributed</strong> is about the code: a dense vector. An <strong>embedding</strong> is the map from a token id into that vector.</p>
 <p>Write those three words on the board as a triangle. Mixing them is the most common exam slip this week.</p>
 <hr />
-<h2>2. Semantic geometry</h2>
+<h2>2. How a distributional embedding is obtained</h2>
+<p>You do not type a definition. You <strong>count or predict company</strong>.</p>
+<ol>
+<li>Take a corpus of running text.</li>
+<li>At each position, treat one word as the <strong>center</strong> and the nearby words as <strong>context</strong> (a window).</li>
+<li>Train a fake task: from the center, predict a neighbor (skip-gram), or the reverse (CBOW). Words that appear in similar windows get similar vectors.</li>
+<li>After training, <strong>keep the center rows</strong>. Those rows are the embeddings. Throw away the softmax classifier.</li>
+</ol>
+<p>That is why <em>cat</em> sits near <em>dog</em>: they kept similar neighbors, not because someone labeled them as animals.</p>
+<p><img alt="From a corpus window to a vector" src="files/data-643/graphics/1.4-embeddings/how-obtained.png" /></p>
+<p>Firth: you shall know a word by the company it keeps. Word2Vec (next section) is one algorithm for that. Counting co-occurrences and then factoring the matrix is another. Both are distributional. This course uses the predictive story because it is the same training loop as an LLM.</p>
+<hr />
+<h2>3. Semantic geometry</h2>
 <p>If the map is good, <strong>direction means something</strong>. The Mikolov analogy is the slogan:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02248;</mo><mover><mrow><mtext>queen</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002E;</mo></mrow></math>
 <p>The same offset can look like gender, tense, or capital-of. You measure similarity with <strong>cosine</strong>, not Euclidean distance (length is partly frequency).</p>
@@ -127,7 +139,7 @@
 <p>Nearest neighbors are a debug tool. If <em>Paris</em> sits next to <em>France</em> and <em>Rome</em>, training learned something. If it sits next to punctuation, the corpus or the window is wrong.</p>
 <p>Cosine of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow></mrow></math> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x02016;</mo><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. It ignores length. That is why a frequent word with a long vector can still sit next to a rare synonym.</p>
 <hr />
-<h2>3. How Word2Vec learns the map</h2>
+<h2>4. How Word2Vec learns the map</h2>
 <p>You do not build a huge co-occurrence matrix and then factor it (that is LSA / GloVe; we do not assign SVD this week). <strong>Word2Vec</strong> trains a small two-layer net on a fake task.</p>
 <p><strong>Skip-gram:</strong> from the center word, predict each neighbor in a window. <strong>CBOW:</strong> from the neighbors, predict the center.</p>
 <p><img alt="A skip-gram window around sat" src="files/data-643/graphics/1.4-embeddings/skipgram-window.png" /></p>
@@ -142,23 +154,23 @@
 <p>A transformer does not throw the rest of the net away: it <em>keeps</em> transforming those vectors. Word2Vec is the geometry without the rest of the stack.</p>
 <p><strong>Counting vs. predicting.</strong> Classical vector semantics (Jurafsky Ch. 5) can start from a co-occurrence matrix. Skip-gram <em>predicts</em> context instead of counting it. Both are distributional. This course uses the predictive story because it is the same training loop as an LLM.</p>
 <hr />
-<h2>4. Intrinsic versus extrinsic evaluation</h2>
+<h2>5. Intrinsic versus extrinsic evaluation</h2>
 <p><strong>Intrinsic:</strong> does the space look right on its own? Analogies, word similarity datasets, clustering of synsets.</p>
 <p><strong>Extrinsic:</strong> plug the vectors into a downstream model (sentiment, retrieval, NER). If the task score moves, the embedding helped that task.</p>
 <p><img alt="Intrinsic versus extrinsic evaluation" src="files/data-643/graphics/1.4-embeddings/intrinsic-extrinsic.png" /></p>
 <p>They need not agree. A space that wins analogies can still be a weak feature for your classifier. For a project, extrinsic is the number that matters. Intrinsic is how you debug.</p>
 <hr />
-<h2>5. Bias is also geometry</h2>
+<h2>6. Bias is also geometry</h2>
 <p>The same offsets that encode “capital of” can encode stereotypes. Occupation words often sit along a she/he direction in older embeddings. That is not a bug in cosine; it is a property of the training text.</p>
 <p><img alt="Occupation words shifted along a gender offset" src="files/data-643/graphics/1.4-embeddings/bias-geometry.png" /></p>
 <p>Lab 1’s probe is the signed projection onto <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x0003D;</mo><mover><mrow><mtext>he</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>she</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>score</mo><mo stretchy="false">&#x00028;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><msup><mi>v</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">o</mi></mrow></mrow><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
 <p>A larger score sits closer to <em>he</em> in this constructed space. That is not a bug in cosine; it is a property of the (here, invented) geometry. Debiasing is incomplete; reporting the probe is part of the project writeup when your system ranks people, jobs, or medical outcomes.</p>
 <hr />
-<h2>6. Teaching this note</h2>
-<p><strong>~18 minutes.</strong> Contrast one-hot vs. dense with two 2-D arrows, write the distributional / distributed / embedding triangle, then skip-gram’s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>c</mi><mo stretchy="false">&#x00029;</mo></mrow></math> on the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is <strong>homework</strong> (<strong>0:00–12:00</strong>, skip-gram vs. CBOW). Analogies and bias stay on the board. Do not play CS224N Lecture 2 in class.</p>
+<h2>7. Teaching this note</h2>
+<p><strong>~18 minutes.</strong> One-hot vs dense, then the four-box pipeline (corpus → window → fake task → keep the rows), then skip-gram’s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>c</mi><mo stretchy="false">&#x00029;</mo></mrow></math> on the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is <strong>homework</strong> (<strong>0:00–12:00</strong>, skip-gram vs. CBOW). Do not play CS224N Lecture 2 in class.</p>
 <hr />
-<h2>7. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Three 2-D vectors:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mrow><mtext>movie</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="1em" /><mover><mrow><mtext>film</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="1em" /><mover><mrow><mtext>pizza</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Cosine(<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>movie</mtext><mo>&#x0002C;</mo><mtext>film</mtext></mrow></math>) <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>0.8</mn><mo>&#x0002F;</mo><msqrt><mrow><mn>0.68</mn></mrow></msqrt><mo>&#x02248;</mo><mn>0.97</mn></mrow></math>. Cosine(<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>movie</mtext><mo>&#x0002C;</mo><mtext>pizza</mtext></mrow></math>) <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>0</mn></mrow></math>. One-hot versions of the same three words would all be orthogonal.</p>
@@ -166,18 +178,19 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>score</mo><mo stretchy="false">&#x00028;</mo><mtext>engineer</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>0.9</mn><mo>&#x02212;</mo><mn>0.1</mn></mrow><mrow><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></mfrac><mo>&#x02248;</mo><mn>0.57</mn><mo>&#x0002C;</mo><mspace width="2em" /><mo>score</mo><mo stretchy="false">&#x00028;</mo><mtext>nurse</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>0.1</mn><mo>&#x02212;</mo><mn>0.8</mn></mrow><mrow><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></mfrac><mo>&#x02248;</mo><mo>&#x02212;</mo><mn>0.49</mn><mo>&#x0002E;</mo></mrow></math>
 <p>Engineer sits toward <em>he</em>; nurse sits toward <em>she</em>. The CSV in Lab 1 was built to make that split visible. On a real model you report the same probe, not this cartoon.</p>
 <hr />
-<h2>8. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Using Euclidean distance and then “the frequent word is never nearest.”</li>
 <li>Calling the one-hot vector an embedding because it is a vector.</li>
 <li>Treating analogy accuracy as the project metric.</li>
+<li>Thinking an embedding file appeared without a corpus: skip the four-box pipeline.</li>
 </ul>
 <hr />
-<h2>9. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=viZrOnJclY0">StatQuest: Word Embedding and Word2Vec, Clearly Explained</a>.</p>
 <p>Pause on skip-gram vs. CBOW, and on the moment the hidden weights become the embedding table. You can skip the neural-net-from-scratch recap if note 1.2 already landed.</p>
 <hr />
-<h2>10. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>In one sentence each: distributional, distributed, embedding.</p>
@@ -197,6 +210,9 @@
 <li>
 <p>With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>v</mi><mi>c</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> and scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>u</mi><mrow><mo>&#x022A4;</mo></mrow></msup><msub><mi>v</mi><mi>c</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0.5</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> for cat, mat, sat, which word does skip-gram call most likely? Write the three softmax probabilities to two decimals.</p>
 </li>
+<li>
+<p>In four short lines: how is a distributional embedding obtained from a corpus? (Corpus, window, fake task, what you keep.)</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -206,7 +222,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T02:40:00-04:00">September 15, 2026, 2:40 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:05:00-04:00">September 15, 2026, 3:05 AM EDT</time></div>
             </footer>
         </div>
 

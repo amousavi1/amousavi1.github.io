@@ -26,7 +26,7 @@ NOTES = [
         "slug": "embeddings",
         "week": 1,
         "title": "1.4 Word Embeddings and Semantic Geometry",
-        "lead": "Dense vectors, skip-gram softmax on a tiny vocab, analogies, and a signed-projection bias probe.",
+        "lead": "Dense vectors from a corpus window, skip-gram softmax, analogies, and a signed-projection bias probe.",
         "slide": "1.4-embeddings",
     },
     {

@@ -458,6 +458,25 @@ def skipgram_uv():
     _save(fig, "1.4-embeddings/skipgram-uv.png")
 
 
+def how_obtained():
+    fig, ax = plt.subplots(figsize=(12.2, 4.6))
+    ax.set_xlim(0, 13.2)
+    ax.set_ylim(0, 4.4)
+    ax.axis("off")
+    steps = [
+        (0.25, "1. Corpus", "the cat sat\non the mat\n… the dog sat …", FILL),
+        (3.45, "2. Window", "center: sat\ncontext: cat, on", FILL2),
+        (6.65, "3. Fake task", "raise P(cat | sat)\nby moving vectors", FILL3),
+        (9.85, "4. Keep the rows", "cat near dog\nbecause they\nshared neighbors", FILL),
+    ]
+    for x, title, body, fill in steps:
+        _box(ax, (x, 0.85), 2.85, 2.85, f"{title}\n\n{body}", fill, fontsize=12)
+    for x in (3.15, 6.35, 9.55):
+        _arrow(ax, (x, 2.25), (x + 0.25, 2.25), CORAL)
+    ax.set_title("Distributional embeddings are obtained from running text, not from a thesaurus", loc="left", color=NAVY)
+    _save(fig, "1.4-embeddings/how-obtained.png")
+
+
 def perceptron_numeric():
     fig, axes = plt.subplots(1, 2, figsize=(11.4, 4.8), gridspec_kw={"width_ratios": [1.15, 1]})
     ax = axes[0]
@@ -574,6 +593,7 @@ def main():
     semantic_geometry()
     skipgram()
     skipgram_uv()
+    how_obtained()
     softmax_bars()
     eval_two_ways()
     bias_offset()

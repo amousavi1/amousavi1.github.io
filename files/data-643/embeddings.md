@@ -18,7 +18,24 @@ Write those three words on the board as a triangle. Mixing them is the most comm
 
 ---
 
-## 2. Semantic geometry
+## 2. How a distributional embedding is obtained
+
+You do not type a definition. You **count or predict company**.
+
+1. Take a corpus of running text.
+2. At each position, treat one word as the **center** and the nearby words as **context** (a window).
+3. Train a fake task: from the center, predict a neighbor (skip-gram), or the reverse (CBOW). Words that appear in similar windows get similar vectors.
+4. After training, **keep the center rows**. Those rows are the embeddings. Throw away the softmax classifier.
+
+That is why *cat* sits near *dog*: they kept similar neighbors, not because someone labeled them as animals.
+
+![From a corpus window to a vector](files/data-643/graphics/1.4-embeddings/how-obtained.png)
+
+Firth: you shall know a word by the company it keeps. Word2Vec (next section) is one algorithm for that. Counting co-occurrences and then factoring the matrix is another. Both are distributional. This course uses the predictive story because it is the same training loop as an LLM.
+
+---
+
+## 3. Semantic geometry
 
 If the map is good, **direction means something**. The Mikolov analogy is the slogan:
 
@@ -36,7 +53,7 @@ Cosine of \(\boldsymbol{u},\boldsymbol{v}\) is \(\boldsymbol{u}^{\top}\boldsymbo
 
 ---
 
-## 3. How Word2Vec learns the map
+## 4. How Word2Vec learns the map
 
 You do not build a huge co-occurrence matrix and then factor it (that is LSA / GloVe; we do not assign SVD this week). **Word2Vec** trains a small two-layer net on a fake task.
 
@@ -71,7 +88,7 @@ A transformer does not throw the rest of the net away: it *keeps* transforming t
 
 ---
 
-## 4. Intrinsic versus extrinsic evaluation
+## 5. Intrinsic versus extrinsic evaluation
 
 **Intrinsic:** does the space look right on its own? Analogies, word similarity datasets, clustering of synsets.
 
@@ -83,7 +100,7 @@ They need not agree. A space that wins analogies can still be a weak feature for
 
 ---
 
-## 5. Bias is also geometry
+## 6. Bias is also geometry
 
 The same offsets that encode “capital of” can encode stereotypes. Occupation words often sit along a she/he direction in older embeddings. That is not a bug in cosine; it is a property of the training text.
 
@@ -99,13 +116,13 @@ A larger score sits closer to *he* in this constructed space. That is not a bug 
 
 ---
 
-## 6. Teaching this note
+## 7. Teaching this note
 
-**~18 minutes.** Contrast one-hot vs. dense with two 2-D arrows, write the distributional / distributed / embedding triangle, then skip-gram’s \(P(o\mid c)\) on the \(V=3\) softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is **homework** (**0:00–12:00**, skip-gram vs. CBOW). Analogies and bias stay on the board. Do not play CS224N Lecture 2 in class.
+**~18 minutes.** One-hot vs dense, then the four-box pipeline (corpus → window → fake task → keep the rows), then skip-gram’s \(P(o\mid c)\) on the \(V=3\) softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is **homework** (**0:00–12:00**, skip-gram vs. CBOW). Do not play CS224N Lecture 2 in class.
 
 ---
 
-## 7. Worked example
+## 8. Worked example
 
 Three 2-D vectors:
 
@@ -128,15 +145,16 @@ Engineer sits toward *he*; nurse sits toward *she*. The CSV in Lab 1 was built t
 
 ---
 
-## 8. Where students get stuck
+## 9. Where students get stuck
 
 - Using Euclidean distance and then “the frequent word is never nearest.”
 - Calling the one-hot vector an embedding because it is a vector.
 - Treating analogy accuracy as the project metric.
+- Thinking an embedding file appeared without a corpus: skip the four-box pipeline.
 
 ---
 
-## 9. Video
+## 10. Video
 
 Watch [StatQuest: Word Embedding and Word2Vec, Clearly Explained](https://www.youtube.com/watch?v=viZrOnJclY0).
 
@@ -144,7 +162,7 @@ Pause on skip-gram vs. CBOW, and on the moment the hidden weights become the emb
 
 ---
 
-## 10. Practice
+## 11. Practice
 
 1. In one sentence each: distributional, distributed, embedding.
 
@@ -157,3 +175,5 @@ Pause on skip-gram vs. CBOW, and on the moment the hidden weights become the emb
 5. In 2-D, \(\overrightarrow{\text{king}}=\begin{bmatrix}2\\2\end{bmatrix}\), \(\overrightarrow{\text{man}}=\begin{bmatrix}2\\0\end{bmatrix}\), \(\overrightarrow{\text{woman}}=\begin{bmatrix}0\\2\end{bmatrix}\). Compute \(\overrightarrow{\text{king}}-\overrightarrow{\text{man}}+\overrightarrow{\text{woman}}\). What point would you hope \(\overrightarrow{\text{queen}}\) near?
 
 6. With \(v_c=(1,0)\) and scores \(u^{\top}v_c=(1, 0.5, 0)\) for cat, mat, sat, which word does skip-gram call most likely? Write the three softmax probabilities to two decimals.
+
+7. In four short lines: how is a distributional embedding obtained from a corpus? (Corpus, window, fake task, what you keep.)
