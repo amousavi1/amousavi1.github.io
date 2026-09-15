@@ -107,31 +107,34 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 3 &middot; <a href="files/data-643/transformer-block.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/3.3-transformer-block.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Positions, multi-head attention, residuals, layer norm, and a token-wise MLP.
+                            Positions, residual highways, a token-wise MLP, encoder versus decoder.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>A transformer <strong>block</strong> is attention, a residual add, layer norm, then a token-wise MLP, another residual and norm. Stack <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> of those. Attention mixes across positions; the MLP mixes across channels at one position.</p>
+<p>A transformer <strong>block</strong> is attention, a residual add, layer norm, then a token-wise MLP, another residual and norm. Stack <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> of those. Attention mixes across positions; the MLP mixes across channels at one position. That is Princeton COS 484’s assembly order.</p>
 <hr />
 <h2>1. Positions have to be added</h2>
-<p>Attention is a set operation: permute the tokens, the weights permute with them. Language is ordered. <strong>Positional encodings</strong> (sinusoids in the original paper, or learned vectors) are added to token embeddings before the first block.</p>
+<p>Attention is a <strong>set</strong> operation: permute the tokens, the weights permute with them. Language is ordered. <strong>Positional encodings</strong> (sinusoids in the original paper, or learned vectors) are added to token embeddings before the first block.</p>
 <p><img alt="Sinusoidal position channels" src="files/data-643/graphics/3.3-transformer-block/positional.png" /></p>
-<p>Relative or rotary positions (RoPE) appear in later LLMs. The idea is the same: put order into the vectors because the mixing layer will not.</p>
+<p>Relative or rotary positions (RoPE) appear in later LLMs. The idea is the same: put order into the vectors because the mixing layer will not. We do not derive RoPE this week.</p>
 <p>Without positions, <code>dog bites man</code> and <code>man bites dog</code> can produce the same bag of contextual vectors up to permutation. That is fatal for language.</p>
 <hr />
 <h2>2. The block</h2>
 <p><img alt="One transformer block, bottom to top" src="files/data-643/graphics/3.3-transformer-block/block.png" /></p>
 <p><strong>Residual:</strong> add the input of the sublayer to its output. That is another highway, like the LSTM cell, so gradients can skip a messy attention map.</p>
-<p><strong>Layer norm:</strong> normalize across features of one token. Pre-norm versus post-norm is an implementation detail you will meet in Hugging Face configs.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>x</mi><mo>&#x02190;</mo><mi>x</mi><mo>&#x0002B;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p><strong>Layer norm:</strong> normalize across features of <strong>one token</strong>. Pre-norm (layer-norm, then sublayer, then residual) is the usual modern default; it trains more stably at depth. Post-norm (sublayer, residual, then norm) is the 2017 paper. You will see <code>pre_norm</code> in Hugging Face configs. Do not swap them casually and call it an ablation of “the architecture.”</p>
 <p><strong>MLP:</strong> usually two linear maps with a GELU, hidden width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mi>d</mi></mrow></math>. Most of the parameters live here, not in attention.</p>
 <p>Count, roughly: attention’s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>Q</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>K</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>V</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>O</mi></msub></mrow></math> are four <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></math> maps <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>4</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math>. MLP is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x000D7;</mo><mn>4</mn><mi>d</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mi>d</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>8</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math>. The MLP is heavier. Stack <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> blocks; GPT-2 small is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>12</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>768</mn></mrow></math>.</p>
-<p>Pre-norm (layer-norm, then sublayer, then residual) is the usual modern default; it trains more stably at depth. Post-norm (sublayer, residual, then norm) is the 2017 paper. You will see <code>pre_norm</code> in configs. Do not swap them casually and call it an ablation of “the architecture.”</p>
+<p><img alt="Residual add, numerically" src="files/data-643/graphics/3.3-transformer-block/residual.png" /></p>
 <hr />
-<h2>3. Encoder–decoder</h2>
-<p>The original transformer has an <strong>encoder</strong> (bidirectional self-attention on the source) and a <strong>decoder</strong> (causal self-attention plus <strong>cross-attention</strong> into the encoder). Translation is the picture. GPT keeps only a decoder. BERT keeps only an encoder. You do not need both unless the task is sequence-to-sequence.</p>
-<p>Cross-attention: queries from the decoder, keys/values from the encoder. Captioning (BLIP) uses that pattern with <strong>image</strong> tokens as the encoder side.</p>
+<h2>3. Encoder versus decoder</h2>
+<p>The original transformer has an <strong>encoder</strong> (bidirectional self-attention on the source) and a <strong>decoder</strong> (causal self-attention plus <strong>cross-attention</strong> into the encoder). Translation is the picture.</p>
+<p><img alt="Encoder two sublayers, decoder three" src="files/data-643/graphics/3.3-transformer-block/enc-dec.png" /></p>
+<p>GPT keeps only a decoder (and drops cross-attention: there is no separate encoder). BERT keeps only an encoder. T5 and BART keep both; you do not need both unless the task is sequence-to-sequence.</p>
+<p>Cross-attention: queries from the decoder, keys/values from the encoder. Captioning (BLIP, Week 5) uses that pattern with <strong>image</strong> tokens as the encoder side.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p><strong>30–40 minutes.</strong> Positions first (one counterexample sentence), then walk the block bottom-to-top with residuals as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0002B;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. Do the numeric residual add. Play Umar Jamil’s <strong>block walkthrough</strong> (about <strong>10:00–25:00</strong>: embeddings, positions, one encoder layer). Skip the long from-scratch coding if this is a board day.</p>
+<p><strong>~16 minutes.</strong> Positions first (one counterexample sentence), then walk the block with residuals as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0002B;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">b</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">y</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math>, then the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math> count, then encoder vs decoder as a two-column picture. Play Umar Jamil’s <strong>block walkthrough</strong> (about <strong>10:00–25:00</strong>). Skip the long from-scratch coding if this is a board day.</p>
 <hr />
 <h2>5. Worked example</h2>
 <p>Token vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Attention sublayer emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">a</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.3</mn></mtd></mtr><mtr><mtd><mo>&#x02212;</mo><mn>0.1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Residual:</p>
@@ -139,17 +142,20 @@
 <p>If attention were zero (uniform mix that cancels, or a dead head), you still pass <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math> through. That is the highway.</p>
 <p>Parameter sketch: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>. Attention <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>4</mn><mo>&#x000B7;</mo><mn>16</mn><mo>&#x0003D;</mo><mn>64</mn></mrow></math> weights (ignoring biases). MLP <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>8</mn><mo>&#x000B7;</mo><mn>16</mn><mo>&#x0003D;</mo><mn>128</mn></mrow></math>. The MLP has twice as many.</p>
 <p>Positions: add <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">p</mi></mrow><mn>0</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> to token A and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">p</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> to token B <strong>before</strong> the first block. Swapping tokens now swaps different vectors, not identical ones.</p>
+<p>Layer-norm of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>: mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn></mrow></math>, population std <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
 <hr />
 <h2>6. Where students get stuck</h2>
 <ul>
 <li>Dropping positions and then being shocked that order vanished.</li>
 <li>Thinking attention holds most of the parameters.</li>
 <li>Residual as “replace <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math>” instead of “add to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math>.”</li>
+<li>Drawing a GPT with encoder cross-attention “because Vaswani had it.”</li>
 </ul>
 <hr />
 <h2>7. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=bCz4OMemCcA">Umar Jamil: Transformer Neural Network — architecture and PyTorch</a>.</p>
 <p>Play the architecture / block walkthrough (roughly <strong>10:00–25:00</strong>). Pause on positional encodings and on the residual+norm sandwich. The hour of typing <code>nn.Linear</code> is optional homework, not this meeting.</p>
+<p>The matching university lectures are Princeton COS 484 L8–L9 (encoder vs decoder stack) and CMU 11-711 (residual + layer norm + feed-forward as the remaining transformer parts). We do not copy those slides.</p>
 <hr />
 <h2>8. Practice</h2>
 <ol>
@@ -160,13 +166,19 @@
 <p>Residual connections help training. Which earlier idea in Week 2 is the cousin of that?</p>
 </li>
 <li>
-<p>Where do most of the weights sit: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>Q</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>K</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>V</mi></msub></mrow></math> or the MLP?</p>
+<p>Where do most of the weights sit: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>Q</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>K</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>V</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>O</mi></msub></mrow></math> or the MLP?</p>
 </li>
 <li>
-<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math>. Using the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math> sketch, how many attention weights vs MLP weights (ignore biases and the extra <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>O</mi></msub></mrow></math> if you already folded it into the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math>)? What is the ratio MLP / attention?</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math>. Using the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><msup><mi>d</mi><mrow><mn>2</mn></mrow></msup></mrow></math> sketch, how many attention weights vs MLP weights (ignore biases)? What is the ratio MLP / attention?</p>
 </li>
 <li>
 <p>Layer-norm a 2-D vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> by subtracting the mean and dividing by the standard deviation of its two coordinates (population std, no <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B5;</mi></mrow></math>). Write the normalized vector.</p>
+</li>
+<li>
+<p>Name the three sublayers of a Vaswani <strong>decoder</strong> block. Which one does GPT drop?</p>
+</li>
+<li>
+<p>Pre-norm versus post-norm: which one is the 2017 paper, and which one do modern LLMs usually ship?</p>
 </li>
 </ol>
                     </section>
@@ -177,7 +189,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:20:00-04:00">September 15, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T14:20:00-04:00">September 15, 2026, 2:20 PM EDT</time></div>
             </footer>
         </div>
 

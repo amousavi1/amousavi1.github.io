@@ -464,6 +464,207 @@ def gpt_bert():
     _save(fig, "3.4-gpt-bert/gpt-bert.png")
 
 
+def bottleneck():
+    fig, axes = plt.subplots(1, 2, figsize=(10.4, 3.6))
+    for ax in axes:
+        ax.set_xlim(0, 6.4)
+        ax.set_ylim(0, 4.2)
+        ax.axis("off")
+    xs = [0.55, 1.75, 2.95, 4.15]
+    for i, x in enumerate(xs):
+        _box(axes[0], (x, 0.35), 0.95, 0.7, rf"$x_{i+1}$", FILL3, CORAL, 10)
+        _box(axes[0], (x, 1.55), 0.95, 0.7, "enc", FILL2, TEAL, 9)
+        _arrow(axes[0], (x + 0.48, 1.08), (x + 0.48, 1.5), CORAL)
+        if i < 3:
+            _arrow(axes[0], (x + 1.0, 1.9), (xs[i + 1], 1.9))
+    _box(axes[0], (4.05, 2.85), 1.2, 0.75, "one vector", FILL4, GOLD, 9)
+    _arrow(axes[0], (4.62, 2.3), (4.62, 2.8), GOLD)
+    axes[0].set_title("Seq2seq bottleneck: the source is one vector")
+    for i, x in enumerate(xs):
+        _box(axes[1], (x, 0.35), 0.95, 0.7, rf"$x_{i+1}$", FILL3, CORAL, 10)
+        _box(axes[1], (x, 1.2), 0.95, 0.65, rf"$h_{i+1}$", FILL2, TEAL, 9)
+        axes[1].plot([3.32, x + 0.48], [2.65, 1.88], color=TEAL, lw=1.1)
+    _box(axes[1], (2.85, 2.7), 0.95, 0.7, r"$q_t$", FILL, NAVY, 11)
+    axes[1].set_title("Attention: the decoder rereads the source")
+    fig.tight_layout()
+    _save(fig, "3.1-attention-need/bottleneck.png")
+
+
+def path_cost():
+    fig, axes = plt.subplots(1, 2, figsize=(9.6, 3.5))
+    axes[0].bar([0, 1], [40, 1], color=[CORAL, TEAL], width=0.55)
+    axes[0].set_xticks([0, 1], ["RNN path", "attention path"])
+    axes[0].set_ylabel("steps, token 1 to token 40")
+    axes[0].spines["top"].set_visible(False)
+    axes[0].spines["right"].set_visible(False)
+    axes[0].set_title("Path length")
+    t = np.array([8, 32, 128, 512])
+    axes[1].plot(t, t, color=CORAL, lw=2.2, marker="o", label=r"RNN  $O(T)$")
+    axes[1].plot(t, t**2 / 32, color=NAVY, lw=2.2, marker="o", label=r"attention  $O(T^2)$ (scaled)")
+    axes[1].set_xlabel("length $T$")
+    axes[1].set_ylabel("relative cost")
+    axes[1].legend(frameon=False)
+    axes[1].spines["top"].set_visible(False)
+    axes[1].spines["right"].set_visible(False)
+    axes[1].set_title("Compute / memory")
+    fig.tight_layout()
+    _save(fig, "3.1-attention-need/path-cost.png")
+
+
+def qkv_numeric():
+    fig, ax = plt.subplots(figsize=(9.4, 3.5))
+    ax.axis("off")
+    cols = [r"row", r"scaled scores", r"softmax $A$", r"mix of $V=I$"]
+    rows = [
+        ["1", r"$[1.41,\ 0]$", r"$[0.80,\ 0.20]$", r"$[0.80,\ 0.20]$"],
+        ["2", r"$[0,\ 1.41]$", r"$[0.20,\ 0.80]$", r"$[0.20,\ 0.80]$"],
+    ]
+    table = ax.table(cellText=rows, colLabels=cols, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.2, 1.85)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY, fontweight="medium")
+        else:
+            cell.set_facecolor("white")
+    ax.set_title(r"$S=\mathrm{diag}(2,2)$, $d_k=2$. Scale, softmax, mix values.", loc="left", color=NAVY, pad=12)
+    _save(fig, "3.2-self-attention/qkv-numeric.png")
+
+
+def multihead():
+    fig, ax = plt.subplots(figsize=(10.4, 3.5))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 3.8)
+    ax.axis("off")
+    _box(ax, (0.25, 1.2), 1.9, 1.3, r"$X$", FILL, NAVY, 13)
+    _box(ax, (2.7, 2.35), 2.1, 0.9, "head 1", FILL2, TEAL, 11)
+    _box(ax, (2.7, 0.55), 2.1, 0.9, "head 2", FILL3, CORAL, 11)
+    _box(ax, (5.5, 1.2), 2.4, 1.3, "concat", FILL4, GOLD, 12)
+    _box(ax, (8.5, 1.2), 3.1, 1.3, r"$W_O$" + "\nproject back", FILL, NAVY, 11)
+    _arrow(ax, (2.2, 1.85), (2.65, 2.75), TEAL)
+    _arrow(ax, (2.2, 1.85), (2.65, 1.0), CORAL)
+    _arrow(ax, (4.85, 2.75), (5.45, 2.0), TEAL)
+    _arrow(ax, (4.85, 1.0), (5.45, 1.7), CORAL)
+    _arrow(ax, (7.95, 1.85), (8.45, 1.85))
+    ax.set_title("Multi-head: several small attentions, then one linear map", loc="left", color=NAVY)
+    _save(fig, "3.2-self-attention/multihead.png")
+
+
+def causal_mask():
+    fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.8))
+    words = ["The", "cat", "sat"]
+    full = np.array([[0.5, 0.3, 0.2], [0.2, 0.5, 0.3], [0.2, 0.3, 0.5]])
+    causal = np.array([[1.0, 0.0, 0.0], [0.4, 0.6, 0.0], [0.2, 0.3, 0.5]])
+    for ax, M, title in (
+        (axes[0], full, "No mask: token 1 sees sat"),
+        (axes[1], causal, "Causal: future is probability 0"),
+    ):
+        im = ax.imshow(M, cmap="YlGnBu", vmin=0, vmax=1)
+        ax.set_xticks(range(3), words)
+        ax.set_yticks(range(3), words)
+        ax.set_xlabel("key")
+        ax.set_ylabel("query")
+        ax.set_title(title)
+        for i in range(3):
+            for j in range(3):
+                ax.text(j, i, f"{M[i, j]:.1f}", ha="center", va="center", color="black", fontsize=11)
+    fig.tight_layout()
+    _save(fig, "3.2-self-attention/causal-mask.png")
+
+
+def residual():
+    fig, ax = plt.subplots(figsize=(10.0, 3.4))
+    ax.set_xlim(0, 11.5)
+    ax.set_ylim(0, 3.6)
+    ax.axis("off")
+    _box(ax, (0.3, 1.15), 2.1, 1.2, r"$x=[1,2]$", FILL, NAVY, 12)
+    _box(ax, (3.1, 1.15), 2.5, 1.2, "attention" + "\n" + r"$a=[0.3,-0.1]$", FILL2, TEAL, 11)
+    _box(ax, (6.3, 1.15), 2.2, 1.2, r"$x+a$", FILL3, CORAL, 13)
+    _box(ax, (9.1, 1.15), 2.1, 1.2, r"$[1.3,1.9]$", FILL4, GOLD, 12)
+    _arrow(ax, (2.45, 1.75), (3.05, 1.75))
+    _arrow(ax, (5.65, 1.75), (6.25, 1.75), TEAL)
+    _arrow(ax, (8.55, 1.75), (9.05, 1.75), CORAL)
+    ax.annotate("", xy=(6.4, 0.7), xytext=(1.35, 0.7),
+                arrowprops=dict(arrowstyle="-|>", color=SLATE, lw=1.4, connectionstyle="arc3,rad=-0.25"))
+    ax.text(3.7, 0.28, "residual: still pass x through", color=SLATE, fontsize=11)
+    ax.set_title("Add, do not replace. Same idea as the LSTM highway.", loc="left", color=NAVY)
+    _save(fig, "3.3-transformer-block/residual.png")
+
+
+def enc_dec():
+    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.8))
+    for ax in axes:
+        ax.set_xlim(0, 5.2)
+        ax.set_ylim(0, 5.2)
+        ax.axis("off")
+    for y, text, fill, edge in (
+        (0.3, "embed + positions", FILL, NAVY),
+        (1.4, "self-attention", FILL2, TEAL),
+        (2.5, "token-wise MLP", FILL3, CORAL),
+        (3.6, "stack N times", FILL4, GOLD),
+    ):
+        _box(axes[0], (0.45, y), 4.3, 0.9, text, fill, edge, 11)
+    axes[0].set_title("Encoder (BERT)")
+    for y, text, fill, edge in (
+        (0.15, "embed + positions", FILL, NAVY),
+        (1.1, "causal self-attention", FILL2, TEAL),
+        (2.05, "cross-attention (if seq2seq)", FILL4, GOLD),
+        (3.0, "token-wise MLP", FILL3, CORAL),
+        (3.95, "stack N times", FILL, NAVY),
+    ):
+        _box(axes[1], (0.35, y), 4.5, 0.82, text, fill, edge, 10)
+    axes[1].set_title("Decoder (GPT drops cross-attention)")
+    fig.tight_layout()
+    _save(fig, "3.3-transformer-block/enc-dec.png")
+
+
+def contextual():
+    fig, ax = plt.subplots(figsize=(9.8, 3.6))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 4)
+    ax.axis("off")
+    _box(ax, (0.3, 2.35), 2.6, 1.1, "bank" + "\n(static, Week 1)", FILL, NAVY, 11)
+    _box(ax, (4.0, 2.55), 2.5, 0.9, "river bank", FILL2, TEAL, 12)
+    _box(ax, (4.0, 0.55), 2.5, 0.9, "money bank", FILL3, CORAL, 12)
+    _box(ax, (7.4, 2.55), 2.3, 0.9, r"$h_{\mathrm{river}}$", FILL2, TEAL, 12)
+    _box(ax, (7.4, 0.55), 2.3, 0.9, r"$h_{\mathrm{money}}$", FILL3, CORAL, 12)
+    _arrow(ax, (2.95, 2.85), (3.95, 2.95), TEAL)
+    _arrow(ax, (2.95, 2.55), (3.95, 1.05), CORAL)
+    _arrow(ax, (6.55, 3.0), (7.35, 3.0), TEAL)
+    _arrow(ax, (6.55, 1.0), (7.35, 1.0), CORAL)
+    ax.set_title("A transformer embedding is contextual: the same type, two vectors", loc="left", color=NAVY)
+    _save(fig, "3.4-gpt-bert/contextual.png")
+
+
+def mlm_clm():
+    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.4))
+    for ax in axes:
+        ax.set_xlim(0, 6.2)
+        ax.set_ylim(0, 3.4)
+        ax.axis("off")
+    for i, (lab, fill) in enumerate(
+        (("The", FILL), ("cat", FILL2), ("sat", FILL3), ("on", FILL4))
+    ):
+        _box(axes[0], (0.25 + 1.5 * i, 1.7), 1.3, 0.85, lab, fill, NAVY, 11)
+    axes[0].annotate("", xy=(3.4, 1.55), xytext=(3.4, 0.55),
+                     arrowprops=dict(arrowstyle="-|>", color=CORAL, lw=1.8))
+    axes[0].text(3.4, 0.28, r"predict sat  (next token)", ha="center", color=CORAL, fontsize=11)
+    axes[0].set_title("GPT: causal language model")
+    for i, (lab, fill) in enumerate(
+        (("The", FILL), ("[MASK]", FILL3), ("sat", FILL2), ("on", FILL4))
+    ):
+        _box(axes[1], (0.25 + 1.5 * i, 1.7), 1.3, 0.85, lab, fill, CORAL if lab.startswith("[") else NAVY, 11)
+    axes[1].annotate("", xy=(1.9, 1.55), xytext=(1.9, 0.55),
+                     arrowprops=dict(arrowstyle="-|>", color=TEAL, lw=1.8))
+    axes[1].text(1.9, 0.28, r"predict cat  (from both sides)", ha="center", color=TEAL, fontsize=11)
+    axes[1].set_title("BERT: masked language model")
+    fig.tight_layout()
+    _save(fig, "3.4-gpt-bert/mlm-clm.png")
+
+
 def joint_coord():
     fig, axes = plt.subplots(1, 2, figsize=(10.0, 3.8))
     for ax in axes:
@@ -649,11 +850,20 @@ def main():
     gru_gates()
     copy_regime()
     rnn_vs_attention()
+    bottleneck()
+    path_cost()
     qkv()
     attn_heatmap()
+    qkv_numeric()
+    multihead()
+    causal_mask()
     positions()
     transformer_block()
+    residual()
+    enc_dec()
     gpt_bert()
+    contextual()
+    mlm_clm()
     joint_coord()
     patches()
     vit()

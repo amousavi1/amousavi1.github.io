@@ -16,8 +16,8 @@ from extra_materials_catalog import extras_for  # noqa: E402
 
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-15T03:20:00-04:00"
-LAST_UPDATED_TEXT = "September 15, 2026, 3:20 AM EDT"
+LAST_UPDATED_ISO = "2026-09-15T14:20:00-04:00"
+LAST_UPDATED_TEXT = "September 15, 2026, 2:20 PM EDT"
 
 COURSE = "data-643"
 COURSE_TITLE = "DATA 443/643"

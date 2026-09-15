@@ -107,18 +107,19 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 3 &middot; <a href="files/data-643/attention-need.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/3.1-attention-need.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            A chain of states is a bottleneck. Attention gives every token a path of length one.
+                            The seq2seq bottleneck, then a path of length one at cost T squared.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>An RNN compresses the whole past into one vector. Token 1 can affect token 40 only by surviving 39 overwrites. <strong>Attention</strong> lets every token look at every other token in one step. That is the move from this week’s recurrences to the rest of the course.</p>
+<p>An RNN compresses the whole past into one vector. Token 1 can affect token 40 only by surviving 39 overwrites. <strong>Attention</strong> lets every token look at every other token in one step. That is the move from Week 2’s recurrences to the rest of the course.</p>
 <hr />
 <h2>1. The bottleneck</h2>
-<p>To answer “what does <em>it</em> refer to?” the model needs a path from <em>it</em> to a name that may be far left (or right). In an RNN that path is a chain. In attention it is one matrix of scores.</p>
-<p><img alt="A chain versus all-pairs links" src="files/data-643/graphics/3.1-attention-need/rnn-vs-attention.png" /></p>
-<p>Bahdanau et al. (2015) added attention on top of an encoder–decoder RNN so the decoder could reread the source. Vaswani et al. (2017) dropped the recurrence: <strong>self-attention</strong> is the layer.</p>
+<p>A seq2seq RNN encodes the source into <strong>one</strong> vector, then the decoder must generate from that vector. Long source, same-size bottle. CS224N’s slogan: attention is a <strong>direct connection</strong> from the decoder to the encoder states, so the model can reread instead of remember.</p>
+<p><img alt="One vector versus rereading the source" src="files/data-643/graphics/3.1-attention-need/bottleneck.png" /></p>
+<p>Bahdanau et al. (2015) added that reread <strong>on top of</strong> an RNN. Queries come from the decoder; keys and values come from the encoder. Vaswani et al. (2017) dropped the recurrence: <strong>self-attention</strong> is the layer, and every token in the <strong>same</strong> sequence plays all three roles.</p>
 <p>Draw <em>The cat … it</em> with 40 dots. RNN: 39 arrows in a line. Attention: one arrow from <em>it</em> to <em>cat</em>, plus arrows to everyone else, with <strong>weights</strong>. Note 3.2 turns those weights into softmax.</p>
 <hr />
-<h2>2. What you gain and what you pay</h2>
+<h2>2. Path length 1 is not cost 1</h2>
+<p><img alt="Path versus quadratic cost" src="files/data-643/graphics/3.1-attention-need/path-cost.png" /></p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -145,23 +146,21 @@
 </tr>
 </tbody>
 </table></div>
-<p>Long documents (Week 7: efficiency) will force approximations. For this course’s default, full attention is the model.</p>
-<p>Parallel over time means: given all embeddings <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>, you can form <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>V</mi></mrow></math> with matrix multiplies that a GPU loves. An LSTM must finish step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></math> before step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>. That, more than “transformers are magic,” is why pretraining scaled.</p>
-<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> on the board for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>32</mn><mo>&#x0002C;</mo><mn>512</mn><mo>&#x0002C;</mo><mn>4096</mn></mrow></math>. The path-length win is real; so is the memory bill. Sparse or sliding-window attention (Week 7) is what you do when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> no longer fits. You still teach full attention first.</p>
-<p>Bahdanau attention is a decoder looking at encoder states: still recurrent, but the decoder is no longer forced to pack the source into one vector. Self-attention goes further: every token in the <strong>same</strong> sequence looks at every other token. That is the Week 3 default.</p>
+<p>The path-length win is why Week 2’s Jacobian product stops being the story. The <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> bill is why Week 7 exists. For this course’s default, <strong>full attention</strong> is the model.</p>
+<p>Parallel over time: given all embeddings <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>, you form <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>V</mi></mrow></math> with matrix multiplies a GPU likes. An LSTM must finish step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></math> before step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>. That, more than “transformers are magic,” is why pretraining scaled.</p>
+<p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>32</mn><mo>&#x0002C;</mo><mn>512</mn><mo>&#x0002C;</mo><mn>4096</mn></mrow></math>. Sparse or sliding-window attention is what you do when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> no longer fits. You still teach full attention first.</p>
+<p>FlashAttention changes the <strong>implementation</strong>, not the fact that every pair can interact. Decoder-only GPT still pays <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup><mo stretchy="false">&#x00029;</mo></mrow></math> in training. At decode time, caching keys and values makes each new token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo stretchy="false">&#x00029;</mo></mrow></math> against the past. That is inference, not the training flop count.</p>
+<p>Keep the slogan: <strong>RNN path <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>, attention path <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>, attention cost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math></strong>.</p>
 <hr />
 <h2>3. Teaching this note</h2>
-<p><strong>30–40 minutes.</strong> Bottleneck picture, path-length table, then the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>40</mn></mrow></math> cost arithmetic. Play <strong>0:00–12:00</strong> of 3Blue1Brown’s GPT visual intro (next-token prediction and the first glimpse of attention). Do <strong>not</strong> derive QKV here; that is note 3.2.</p>
-<p>Minute plan: 8 min chain vs all-pairs; 10 min table and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> arithmetic; 8 min worked example; 10–12 min video. If you overrun, drop the Bahdanau history sentence, not the cost calculation.</p>
+<p><strong>~16 minutes.</strong> Bottleneck picture, Bahdanau vs self-attention in one sentence, then the path-length table and the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>4096</mn></mrow></math> arithmetic. Play <strong>0:00–12:00</strong> of 3Blue1Brown’s GPT visual intro (next-token prediction and the first all-to-all cartoon). Do <strong>not</strong> derive QKV here; that is note 3.2.</p>
 <hr />
 <h2>4. Worked example</h2>
 <p>Sentence length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math> tokens: <code>cat</code>, <code>sat</code>, <code>on</code>, <code>it</code>.</p>
 <p>RNN path from <code>cat</code> to <code>it</code>: 3 steps. Attention path: <strong>1</strong> score in the last row of a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x000D7;</mo><mn>4</mn></mrow></math> matrix.</p>
 <p>Full attention stores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup><mo>&#x0003D;</mo><mn>16</mn></mrow></math> scores. For a 4k-token PDF, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>4096</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup><mo>&#x02248;</mo><mn>1.68</mn><mo>&#x000D7;</mo><msup><mn>10</mn><mrow><mn>7</mn></mrow></msup></mrow></math> scores <strong>per head per layer</strong>. If one score is 4 bytes, that is about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>67</mn></mrow></math> MB for <strong>one</strong> map, before batching and before stacking layers. That is the quadratic complaint.</p>
 <p>GPU parallel: four tokens’ queries can be dotted with keys in one matmul. LSTM: four sequential cell calls.</p>
-<p>Self-attention is still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup><mi>d</mi><mo stretchy="false">&#x00029;</mo></mrow></math> for the scores if you materialize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi><msup><mi>K</mi><mrow><mo>&#x022A4;</mo></mrow></msup></mrow></math>. FlashAttention changes the <strong>implementation</strong>, not the fact that every pair can interact. For this course, write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math> on the exam; mention fused kernels only as a footnote.</p>
-<p>Decoder-only GPT still pays <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup><mo stretchy="false">&#x00029;</mo></mrow></math> in training. At decode time, caching keys and values makes each new token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo stretchy="false">&#x00029;</mo></mrow></math> against the past, not a full <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x000D7;</mo><mi>T</mi></mrow></math> from scratch. That is inference, not the training flop count.</p>
-<p>Keep the slogan: <strong>RNN path <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>, attention path <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>, attention cost <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>T</mi><mrow><mn>2</mn></mrow></msup></mrow></math></strong>. If a student remembers only that, the week succeeded.</p>
+<p>If each RNN Jacobian factor is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.9</mn></mrow></math>, the product over 39 steps is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.9</mn><mrow><mn>39</mn></mrow></msup><mo>&#x02248;</mo><mn>0.017</mn></mrow></math>. Attention’s hop is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>. That is Week 2 meeting Week 3.</p>
 <hr />
 <h2>5. Where students get stuck</h2>
 <ul>
@@ -172,7 +171,8 @@
 <hr />
 <h2>6. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=wjZofJX0v4M">3Blue1Brown: But what is a GPT? Visual intro to transformers</a>.</p>
-<p>Pause when next-token prediction is a stack of vectors, and at the first all-to-all attention cartoon. Stop before the full QKV derivation if you are teaching 3.2 next; that math has its own video.</p>
+<p>Pause when next-token prediction is a stack of vectors, and at the first all-to-all attention cartoon. Stop before the full QKV derivation if you are teaching 3.2 next.</p>
+<p>The matching university lecture for <em>form</em> is Stanford CS224N W26 Lecture 5 (attention and transformers): bottleneck, then Bahdanau, then self-attention. We do not copy those slides. The transformer block waits for 3.3.</p>
 <hr />
 <h2>7. Practice</h2>
 <ol>
@@ -191,6 +191,12 @@
 <li>
 <p>An RNN of length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math> has path length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>49</mn></mrow></math> from token 1 to token 50. Write the attention path length. If each RNN Jacobian factor is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.9</mn></mrow></math>, bound the RNN product <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>0.9</mn><mrow><mn>49</mn></mrow></msup></mrow></math> vs attention’s single hop of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>.</p>
 </li>
+<li>
+<p>Bahdanau versus Vaswani, in one sentence each: where do the queries come from?</p>
+</li>
+<li>
+<p>Caching keys and values at decode time makes each new token cheaper. Does that change the <strong>training</strong> cost of a full attention map? Why or why not?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -200,7 +206,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:20:00-04:00">September 15, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T14:20:00-04:00">September 15, 2026, 2:20 PM EDT</time></div>
             </footer>
         </div>
 

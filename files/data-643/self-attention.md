@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Self-attention is a weighted sum of **values**, with weights from a comparison of **queries** to **keys**. Every token plays all three roles.
+Self-attention is a weighted sum of **values**, with weights from a comparison of **queries** to **keys**. Every token plays all three roles. That is CMU 11-711’s calculation, and Lab 3.
 
 ---
 
@@ -20,13 +20,15 @@ A = \mathrm{softmax}\left(\frac{Q K^{\top}}{\sqrt{d_k}}\right),
 \mathrm{Attention}(Q,K,V) = A V.
 \]
 
-The \(\sqrt{d_k}\) keeps the dots from saturating the softmax when \(d_k\) is large.
-
 ![Query, key, value, then a mix of values](files/data-643/graphics/3.2-self-attention/qkv.png)
 
 **Query:** what this token is looking for. **Key:** what another token looks like to be found. **Value:** what you actually add into the representation.
 
 Row \(t\) of \(QK^{\top}\) is “how much token \(t\) wants each position.” Softmax makes that a distribution. Then you mix **values**, not keys. Mixing keys is a common lab bug.
+
+**Why \(\sqrt{d_k}\).** If the coordinates of \(q\) and \(k\) are roughly independent with variance 1, the dot product has variance \(d_k\). Large \(d_k\) pushes softmax toward a one-hot. Dividing by \(\sqrt{d_k}\) puts the logits back in a range where softmax still mixes. Skipping the scale, or dividing by \(d_k\) instead, is the other common exam slip.
+
+**Self** versus **cross.** Self-attention: \(Q,K,V\) all from the same sequence. Cross-attention (encoder–decoder, later BLIP): queries from one sequence, keys and values from another. Same formula.
 
 ---
 
@@ -36,27 +38,37 @@ Row \(t\) of \(A\) is a distribution over the sequence. Large mass on a name is 
 
 ![Attention weights for one head](files/data-643/graphics/3.2-self-attention/attn-heatmap.png)
 
-**Multi-head:** several \((W_Q,W_K,W_V)\) in parallel, concatenate, project. Different heads can track syntax, a name, or a comma. Lab 3 will compute one head by hand.
-
 If two keys are equal, the softmax splits mass equally between them (given the same query). That is not a tie-break bug; it is the definition.
 
 ---
 
-## 3. Masks
+## 3. Multi-head
 
-For next-token prediction you **mask** future keys (set scores to \(-\infty\) before softmax). Otherwise the model cheats. BERT does not mask the future; it masks random tokens and reconstructs them (note **3.4**).
+Several \((W_Q,W_K,W_V)\) in parallel, each on a slice of the channels (head dimension \(d_k=d/h\)). Concatenate the head outputs, then a linear \(W_O\). Different heads can track syntax, a name, or a comma.
 
-Zero is the wrong mask fill-in: \(\mathrm{softmax}([1,0])\) still puts mass on the “zero.” \(-\infty\) becomes probability \(0\).
+![Two heads, concatenate, project](files/data-643/graphics/3.2-self-attention/multihead.png)
 
----
-
-## 4. Teaching this note
-
-**30–40 minutes.** Define Q, K, V in one sentence each, write \(A=\mathrm{softmax}(QK^{\top}/\sqrt{d_k})\), then grind the \(2\times 2\) worked example on the board (including \(\sqrt{d_k}\)). Play **the QKV and softmax stretch** of 3Blue1Brown attention (about **4:00–16:00**). Lab 3 is \(T=4\); do not start that notebook until this arithmetic is done once by hand.
+Lab 3 computes **one** head by hand. You do not need eight heads on the board. You need: concat is not a residual, and \(W_O\) is part of attention’s parameter count in note 3.3.
 
 ---
 
-## 5. Worked example
+## 4. Masks
+
+For next-token prediction you **mask** future keys (set scores to \(-\infty\) before softmax). Otherwise the model cheats. BERT does not mask the future; it masks random **tokens** and reconstructs them (note **3.4**). Those are two different uses of the word *mask*.
+
+Zero is the wrong fill-in: \(\mathrm{softmax}([1,0])\) still puts mass on the “zero.” \(-\infty\) becomes probability \(0\).
+
+![Causal mask zeros out the future](files/data-643/graphics/3.2-self-attention/causal-mask.png)
+
+---
+
+## 5. Teaching this note
+
+**~18 minutes.** Define Q, K, V in one sentence each, write the scaled-dot formula, grind the \(2\times 2\) table (including \(\sqrt{d_k}\)), then the causal mask. Play **the QKV and softmax stretch** of 3Blue1Brown attention (about **4:00–16:00**). Lab 3 is \(T=4\); do not start that notebook until this arithmetic is done once by hand.
+
+---
+
+## 6. Worked example
 
 \(T=2\), \(d_k=2\), skip \(W_Q\) and take scores \(S=QK^{\top}\) already:
 
@@ -69,29 +81,36 @@ Row 1 softmax: \(e^{1.41}\approx 4.10\), \(e^{0}=1\), so \([4.10,1]/5.10\approx 
 
 Row 2 is the same on the diagonal: \(A\approx\begin{bmatrix}0.80&0.20\\0.20&0.80\end{bmatrix}\).
 
-If \(V=\begin{bmatrix}1&0\\0&1\end{bmatrix}\), then \(AV\approx A\). Each output is 80% “self” and 20% “the other token.”
+![Scaled scores to a mix of values](files/data-643/graphics/3.2-self-attention/qkv-numeric.png)
+
+If \(V=I\), then \(AV=A\). Each output is 80% “self” and 20% “the other token.”
 
 Causal mask on row 1: set the future score to \(-\infty\). Then row 1 softmax is \([1,0]\): token 1 cannot look at token 2.
 
+Without the \(\sqrt{2}\), row 1 would be \(\mathrm{softmax}([2,0])\approx [0.88,0.12]\): more peaked. That is the scale’s job.
+
 ---
 
-## 6. Where students get stuck
+## 7. Where students get stuck
 
 - Softmax over the wrong axis (columns instead of keys / last dim).
 - Dividing by \(d_k\) instead of \(\sqrt{d_k}\), or skipping the scale.
 - Masking with \(0\) instead of \(-\infty\).
+- Mixing keys instead of values.
 
 ---
 
-## 7. Video
+## 8. Video
 
 Watch [3Blue1Brown: Attention in transformers, visually explained](https://www.youtube.com/watch?v=eMlx5fFNoYc).
 
 Pause when queries and keys meet as a grid of dots, when softmax turns a row into a distribution, and when values are mixed. That grid is Lab 3’s heatmap.
 
+The matching university lecture is CMU 11-711 (Neubig): scaled dot-product, multi-head, then the causal mask for LM training. We do not copy those slides.
+
 ---
 
-## 8. Practice
+## 9. Practice
 
 1. If two tokens have identical keys, what does the softmax do to their weights?
 
@@ -102,3 +121,7 @@ Pause when queries and keys meet as a grid of dots, when softmax turns a row int
 4. Softmax the row \([0, 2]\). Then softmax \([0, 2]/\sqrt{2}\). Did the larger entry gain or lose probability after scaling?
 
 5. Scores \(\begin{bmatrix}1& 3\\ 0& 1\end{bmatrix}\), causal mask (upper triangle \(-\infty\)). Write the masked score matrix, then \(A\) (row-wise softmax).
+
+6. Self-attention versus cross-attention: which matrices come from which sequence?
+
+7. Two heads each emit a 2-D vector. After concat, what width does \(W_O\) map back to if the model width is \(d=4\)?

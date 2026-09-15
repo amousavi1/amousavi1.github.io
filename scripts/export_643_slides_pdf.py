@@ -886,13 +886,78 @@ DECKS = [
         "title": "3.1 From Recurrence to Attention",
         "slides": [
             {
-                "title": "The bottleneck",
+                "layout": "title",
+                "title": "From Recurrence to Attention",
+                "subtitle": "DATA 443/643  ·  Week 3, note 3.1",
+                "meta": "After Stanford CS224N W26 L5: the bottleneck, then a direct look at the source.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "The seq2seq bottleneck"),
+                    ("2", "Bahdanau rereads; Vaswani drops the loop"),
+                    ("3", "Path length 1 is not cost 1"),
+                    ("4", "Why a GPU likes attention"),
+                ],
+                "takeaway": "Key goal: leave with RNN path T, attention path 1, attention cost T squared.",
+            },
+            {
+                "layout": "split",
+                "title": "One vector is not a memory",
                 "bullets": [
-                    "An RNN compresses the past into one vector.",
-                    "Attention: every token looks at every token in one step.",
-                    r"Cost: \(O(T^2)\). Path length: 1.",
+                    "An encoder–decoder RNN packs the source into h_T.",
+                    "Long source, same-size bottle.",
+                    "Attention is a direct look at the encoder states.",
+                ],
+                "image": "graphics/3.1-attention-need/bottleneck.png",
+            },
+            {
+                "layout": "split",
+                "title": "A chain versus all-pairs",
+                "bullets": [
+                    "RNN: token 1 reaches token 40 through 39 overwrites.",
+                    "Attention: one score in a T by T map.",
+                    "Week 2's Jacobian product is no longer the story.",
                 ],
                 "image": "graphics/3.1-attention-need/rnn-vs-attention.png",
+            },
+            {
+                "layout": "compare",
+                "title": "Two different inventions",
+                "left_title": "Bahdanau 2015",
+                "left": "Attention on an RNN. Queries from the decoder; keys from the encoder.",
+                "right_title": "Vaswani 2017",
+                "right": "Attention instead of an RNN. Self-attention: Q, K, V from the same sequence.",
+            },
+            {
+                "layout": "split",
+                "title": "Path length 1, cost T squared",
+                "bullets": [
+                    "The short path is why we left recurrence.",
+                    "The quadratic bill is why Week 7 exists.",
+                    "Full attention is this course's default.",
+                ],
+                "image": "graphics/3.1-attention-need/path-cost.png",
+            },
+            {
+                "layout": "equation",
+                "title": "A 4k-token PDF",
+                "equation": r"T=4096,\quad T^{2}\approx 1.68\times 10^{7}",
+                "notes": [
+                    "Scores per head per layer, before batching.",
+                    "Four bytes each is about 67 MB for one map.",
+                    "FlashAttention is an implementation, not a new model.",
+                ],
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Reread", "Do not pack the source into one vector."),
+                    ("Path 1", "Token 1 can touch token T in one hop."),
+                    ("Pay T squared", "Lab 3 is T=4. A project PDF is not."),
+                ],
             },
         ],
     },
@@ -901,20 +966,89 @@ DECKS = [
         "title": "3.2 Self-Attention (Q, K, V)",
         "slides": [
             {
+                "layout": "title",
+                "title": "Self-Attention (Q, K, V)",
+                "subtitle": "DATA 443/643  ·  Week 3, note 3.2",
+                "meta": "After CMU 11-711: scaled dots, mix values, then a causal mask.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Query asks, key is asked, value is mixed"),
+                    ("2", "Scale by sqrt of d_k, then softmax"),
+                    ("3", "Multi-head: concat, then W_O"),
+                    ("4", "Causal mask: minus infinity, not zero"),
+                ],
+            },
+            {
+                "layout": "split",
                 "title": "Query, key, value",
                 "bullets": [
-                    "Query asks. Key is asked. Value is mixed in.",
-                    r"Weights: softmax of \(QK^\top / \sqrt{d}\).",
+                    "Q, K, V are three linear maps of X.",
+                    "A row of QK transpose: how much this token wants each position.",
+                    "Then mix values. Mixing keys is the lab bug.",
                 ],
                 "image": "graphics/3.2-self-attention/qkv.png",
             },
             {
+                "layout": "equation",
+                "title": "Scaled dot-product attention",
+                "equation": r"A=\mathrm{softmax}\bigl(QK^{\top}/\sqrt{d_k}\bigr),\quad \mathrm{out}=AV",
+                "notes": [
+                    "Variance of a dot product grows with d_k.",
+                    "The scale keeps softmax from becoming one-hot.",
+                    "Softmax over keys (last dim), not over queries.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "A 2 by 2 you will write",
+                "bullets": [
+                    r"S = diag(2, 2), d_k = 2.",
+                    r"Row 1 softmax is about [0.80, 0.20].",
+                    r"If V = I, the output is A.",
+                ],
+                "image": "graphics/3.2-self-attention/qkv-numeric.png",
+            },
+            {
+                "layout": "split",
                 "title": "A row is a distribution",
                 "bullets": [
                     "Large mass on a name: this pronoun just looked there.",
-                    "Several heads in parallel, then concatenate.",
+                    "Equal keys split mass equally.",
+                    "Lab 3 heatmaps this for T = 4.",
                 ],
                 "image": "graphics/3.2-self-attention/attn-heatmap.png",
+            },
+            {
+                "layout": "split",
+                "title": "Multi-head",
+                "bullets": [
+                    "Several small attentions in parallel.",
+                    "Concatenate, then one linear W_O.",
+                    "Heads can specialize. You still compute one by hand.",
+                ],
+                "image": "graphics/3.2-self-attention/multihead.png",
+            },
+            {
+                "layout": "split",
+                "title": "Causal mask",
+                "bullets": [
+                    "Illegal future scores become minus infinity.",
+                    "Softmax of a zero is not probability zero.",
+                    "This mask is GPT. BERT hides tokens instead.",
+                ],
+                "image": "graphics/3.2-self-attention/causal-mask.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Write it", "A = softmax(QK^T / sqrt(d_k)), then A V."),
+                    ("Scale it", "Skip the square root and the row becomes too peaked."),
+                    ("Mask it", "Lab 3: first bidirectional, then GPT-style."),
+                ],
             },
         ],
     },
@@ -923,20 +1057,79 @@ DECKS = [
         "title": "3.3 The Transformer Block",
         "slides": [
             {
-                "title": "Attention has no order",
+                "layout": "title",
+                "title": "The Transformer Block",
+                "subtitle": "DATA 443/643  ·  Week 3, note 3.3",
+                "meta": "After Princeton COS 484 L8–L9: positions, residual, MLP, encoder vs decoder.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Attention is a set; language is ordered"),
+                    ("2", "Add the residual; do not replace x"),
+                    ("3", "The MLP holds most of the weights"),
+                    ("4", "Encoder two sublayers; decoder three"),
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Positions have to be added",
                 "bullets": [
-                    "Add sinusoidal or learned positions.",
-                    "Later models use relative or rotary positions.",
+                    "Permute the tokens, attention permutes with them.",
+                    "Sinusoids or learned vectors, added to embeddings.",
+                    "Without them, dog bites man equals man bites dog.",
                 ],
                 "image": "graphics/3.3-transformer-block/positional.png",
             },
             {
+                "layout": "split",
                 "title": "One block",
                 "bullets": [
-                    "Attention mixes across positions. The MLP mixes across channels.",
-                    "Residuals are the cousin of the LSTM highway.",
+                    "Attention mixes across positions.",
+                    "The MLP mixes across channels at one position.",
+                    "Layer-norm one token at a time.",
                 ],
                 "image": "graphics/3.3-transformer-block/block.png",
+            },
+            {
+                "layout": "split",
+                "title": "Residual: add, do not replace",
+                "bullets": [
+                    r"x becomes x + sublayer(x).",
+                    "Cousin of the LSTM highway in Week 2.",
+                    "A dead head still passes x through.",
+                ],
+                "image": "graphics/3.3-transformer-block/residual.png",
+            },
+            {
+                "layout": "equation",
+                "title": "Most weights are not attention",
+                "equation": r"4d^{2}\ \text{(attention)} \quad\text{vs}\quad 8d^{2}\ \text{(MLP)}",
+                "notes": [
+                    r"W_Q, W_K, W_V, W_O versus d to 4d and back.",
+                    r"GPT-2 small: N=12, d=768.",
+                    "Pre-norm is the modern default; post-norm is 2017.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Encoder versus decoder",
+                "bullets": [
+                    "BERT: encoder only, bidirectional.",
+                    "GPT: decoder only, no cross-attention.",
+                    "T5 / BART keep both. Captioning will too.",
+                ],
+                "image": "graphics/3.3-transformer-block/enc-dec.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Order it", "Positions are not optional for language."),
+                    ("Add it", "Residual is x plus the sublayer, like a gated cell."),
+                    ("Count it", "If you only plot attention heads, you missed the MLP."),
+                ],
             },
         ],
     },
@@ -945,13 +1138,77 @@ DECKS = [
         "title": "3.4 GPT and BERT",
         "slides": [
             {
+                "layout": "title",
+                "title": "GPT and BERT",
+                "subtitle": "DATA 443/643  ·  Week 3, note 3.4",
+                "meta": "After Princeton COS 484 L10: contextual vectors, then two pretraining jobs.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Static table versus contextual vector"),
+                    ("2", "Causal next-token versus masked tokens"),
+                    ("3", "Same width, different mask and loss"),
+                    ("4", "What a project is allowed to stream"),
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "The same type, two vectors",
+                "bullets": [
+                    "Week 1: bank is one row.",
+                    "A transformer: river bank is not money bank.",
+                    "Pretrain once, fine-tune many times.",
+                ],
+                "image": "graphics/3.4-gpt-bert/contextual.png",
+            },
+            {
+                "layout": "split",
                 "title": "Same block, different mask",
                 "bullets": [
-                    "GPT: causal, next-token, generate.",
-                    "BERT: bidirectional, masked tokens, encode.",
-                    "Do not fine-tune BERT as if it were GPT.",
+                    "GPT: look left, predict the next token.",
+                    "BERT: look both ways, fill [MASK].",
+                    "Those are two different uses of the word mask.",
                 ],
                 "image": "graphics/3.4-gpt-bert/gpt-bert.png",
+            },
+            {
+                "layout": "split",
+                "title": "Two objectives",
+                "bullets": [
+                    r"GPT: \(p(x_t\mid x_{1:t-1})\).",
+                    "BERT: p(masked token given the rest).",
+                    "Do not fine-tune BERT as if it were GPT.",
+                ],
+                "image": "graphics/3.4-gpt-bert/mlm-clm.png",
+            },
+            {
+                "layout": "compare",
+                "title": "What you can ship",
+                "left_title": "Decoder (GPT-style)",
+                "left": "Generate, chat, RAG, tools. The default stack for this course.",
+                "right_title": "Encoder (BERT-style)",
+                "right": "Classify, tag, embed a span. Cannot stream a paragraph.",
+            },
+            {
+                "layout": "equation",
+                "title": "A causal 2 by 2",
+                "equation": r"S_{\mathrm{GPT}}=\begin{bmatrix}1&-\infty\\3&4\end{bmatrix}",
+                "notes": [
+                    "Row 1 softmax is [1, 0]. Token 1 cannot see token 2.",
+                    r"Row 2 is softmax([3, 4]) about [0.27, 0.73].",
+                    "BERT softmaxes the unmasked S. Token 1 does look ahead.",
+                ],
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Context", "Embeddings are now a function of the sentence."),
+                    ("Fork", "Causal LM versus MLM. Same d, different job."),
+                    ("Project", "If it must stream tokens, it is not BERT."),
+                ],
             },
         ],
     },

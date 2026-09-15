@@ -107,13 +107,14 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 3 &middot; <a href="files/data-643/lab-3-self-attention.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Q, K, V, a heatmap, then a causal mask on four tokens.
+                            One head by hand, a heatmap, then a causal mask — and why zero is the wrong fill.
                         </p>
 <p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>3.1–3.4</strong> first.</p>
 <pre><code class="language-python">import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 </code></pre>
+<p>The algebra is note 3.2. The causal mask is the GPT fork in note 3.4.</p>
 <hr />
 <h2>1. One head, by hand</h2>
 <p>Four tokens, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. You will compute attention without <code>nn.MultiheadAttention</code>.</p>
@@ -133,13 +134,13 @@ Wv = torch.eye(2)
 <p>Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>V</mi></mrow></math>. With these weights they equal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>.</p>
 </li>
 <li>
-<p>Scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo>&#x0003D;</mo><mi>Q</mi><msup><mi>K</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002F;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></math>. Print <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>.</p>
+<p>Scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo>&#x0003D;</mo><mi>Q</mi><msup><mi>K</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002F;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></math>. Print <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>. Why <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></math>, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn></mrow></math>?</p>
 </li>
 <li>
 <p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>S</mi><mo>&#x0002C;</mo><mi>dim</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. Rows must sum to 1. Heatmap <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math> with token names <code>The, cat, sat, on</code>.</p>
 </li>
 <li>
-<p>Output <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Y</mi><mo>&#x0003D;</mo><mi>A</mi><mi>V</mi></mrow></math>. Which token’s output is closest (cosine) to <code>cat</code>? Guess before you compute.</p>
+<p>Output <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Y</mi><mo>&#x0003D;</mo><mi>A</mi><mi>V</mi></mrow></math>. Which token’s output is closest (cosine) to <code>cat</code>? Guess before you compute. Confirm you mixed <strong>values</strong>, not keys.</p>
 </li>
 </ol>
 <hr />
@@ -149,6 +150,9 @@ Wv = torch.eye(2)
 <p>Build a mask <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>M</mi></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> on and below the diagonal and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math> strictly above. Add it to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> before softmax. Print the new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math>. The last token may see everyone; the first token may see only itself.</p>
 </li>
 <li>
+<p>Briefly: replace <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> and softmax again. Why is that the wrong mask?</p>
+</li>
+<li>
 <p>In one sentence: why would a GPT-style model be cheating without this mask?</p>
 </li>
 </ol>
@@ -156,7 +160,7 @@ Wv = torch.eye(2)
 <h2>3. Library check</h2>
 <pre><code class="language-python">attn = torch.nn.MultiheadAttention(embed_dim=2, num_heads=1, batch_first=True)
 </code></pre>
-<p>You do not need to train it. Copy <code>attn.in_proj_weight</code> is optional. The point of (1)–(2) is the algebra. Write three sentences: query vs key vs value, what a row of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math> is, and why Week 2’s hidden state is no longer the only memory.</p>
+<p>You do not need to train it. Copy <code>attn.in_proj_weight</code> is optional. The point of (1)–(2) is the algebra. Write four sentences: query vs key vs value, what a row of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>A</mi></mrow></math> is, why Week 2’s hidden state is no longer the only memory, and whether this four-token map is GPT-style or BERT-style before you add the mask.</p>
                     </section>
                 </div>
             </article>
@@ -165,7 +169,7 @@ Wv = torch.eye(2)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:20:00-04:00">September 15, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T14:20:00-04:00">September 15, 2026, 2:20 PM EDT</time></div>
             </footer>
         </div>
 

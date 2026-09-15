@@ -406,18 +406,44 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., Attention is all you need</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">Vaswani et al., Attention is all you need (architecture; skip the appendix training tricks)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Illustrated transformer (Alammar)</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1409.0473" target="_blank" rel="noopener">Bahdanau, Cho, Bengio 2015: Neural machine translation by jointly learning to align (cite the reread)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/~jurafsky/slp3/9.pdf" target="_blank" rel="noopener">Jurafsky & Martin, Speech and Language Processing, Ch. 9 The Transformer (SLP3 draft)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/~jurafsky/slp3/10.pdf" target="_blank" rel="noopener">Jurafsky & Martin, Ch. 10 Masked and Generative Language Models (SLP3 draft)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture05-transformers.pdf" target="_blank" rel="noopener">Stanford CS224N W26 L5: attention and transformers (copy the bottleneck; skip NMT training)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://cmu-l3.github.io/anlp-spring2025/static_files/anlp-s2025-05-attention-transformers.pdf" target="_blank" rel="noopener">CMU 11-711: attention and transformers (copy scaled dots, multi-head, the causal mask)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://princeton-nlp.github.io/cos484/lectures/L8_sp26.pdf" target="_blank" rel="noopener">Princeton COS 484 L8 and L10: encoder vs decoder, then GPT vs BERT</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">Illustrated transformer (Alammar), after 3.3</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>What does a query attend to that an RNN state cannot see in one step?</li>
-                                    <li>GPT versus BERT: which mask, and which project would pick which?</li>
+                                    <li>Path length 1 versus cost T squared: which one is the reason we left RNNs, and which one is the reason Week 7 exists?</li>
+                                    <li>Why mix values rather than keys? What goes wrong in Lab 3 if you softmax over the wrong axis?</li>
+                                    <li>GPT versus BERT: which mask, which loss, and which one would you pick if the demo must stream tokens?</li>
+                                    <li>If you drop positional encodings, which two sentences become the same set? Why is that fatal for language?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-4" role="tabpanel" aria-labelledby="tab-week-4" hidden>
@@ -1038,7 +1064,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:20:00-04:00">September 15, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T14:20:00-04:00">September 15, 2026, 2:20 PM EDT</time></div>
             </footer>
         </div>
 
