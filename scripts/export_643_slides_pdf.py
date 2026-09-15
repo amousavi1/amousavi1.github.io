@@ -1217,12 +1217,68 @@ DECKS = [
         "title": "4.1 Multimodal Foundations",
         "slides": [
             {
+                "layout": "title",
+                "title": "Multimodal Foundations",
+                "subtitle": "DATA 443/643  ·  Week 4, note 4.1",
+                "meta": "After CMU 11-777: five jobs, then joint versus coordinated.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Why more than one stream"),
+                    ("2", "Five jobs: represent, align, fuse, translate, co-learn"),
+                    ("3", "Joint concat versus two towers and a cosine"),
+                    ("4", "A 2-D retrieval numeric"),
+                ],
+                "takeaway": "Key goal: leave knowing CLIP scores pairs; it does not fuse pixels with token ids.",
+            },
+            {
+                "layout": "split",
+                "title": "Five jobs, not one architecture",
+                "bullets": [
+                    "Represent: one vector, or two towers?",
+                    "Align, fuse, translate, co-learn are different verbs.",
+                    "Captioning maps. CLIP scores.",
+                ],
+                "image": "graphics/4.1-multimodal-foundations/five-challenges.png",
+            },
+            {
+                "layout": "split",
                 "title": "Joint versus coordinated",
                 "bullets": [
-                    "Joint: one fused vector. Missing a stream hurts.",
-                    "Coordinated: two towers and a similarity. CLIP is this.",
+                    "Joint: mash streams into one vector.",
+                    "Coordinated: a tower each, then a similarity.",
+                    "Missing a stream hurts the joint model.",
                 ],
                 "image": "graphics/4.1-multimodal-foundations/joint-coord.png",
+            },
+            {
+                "layout": "compare",
+                "title": "What your demo is allowed to do",
+                "left_title": "Typed search over photos",
+                "left": "Coordinated. Embed the query alone. Rank by cosine.",
+                "right_title": "Must output a sentence",
+                "right": "Translation. You need a decoder (BLIP, an LLM). Cosine is not a caption.",
+            },
+            {
+                "layout": "split",
+                "title": "Rank by cosine",
+                "bullets": [
+                    r"Match \(v=[1,0]\), \(t=[0.8,0.2]\) is about 0.97.",
+                    "Mismatch with [0, 1] is 0.",
+                    "Concat of those two vectors is 4-D and needs both.",
+                ],
+                "image": "graphics/4.1-multimodal-foundations/cosine-numeric.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Do not concat and call it CLIP", "CLIP never concatenates pixels with token ids in pretraining."),
+                    ("Name the job", "Search, caption, or detect a region? Different boxes on the five-job strip."),
+                    ("Week 4.3", "The coordination loss is InfoNCE. Zero-shot is a text prompt."),
+                ],
             },
         ],
     },
@@ -1231,20 +1287,69 @@ DECKS = [
         "title": "4.2 Vision Transformers",
         "slides": [
             {
+                "layout": "title",
+                "title": "Vision Transformers",
+                "subtitle": "DATA 443/643  ·  Week 4, note 4.2",
+                "meta": "After Stanford CS231N 2025 L8: patches, a linear map, positions, no causal mask.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Tile the image; do not use overlapping windows"),
+                    ("2", "Flatten, then a linear map to width d"),
+                    ("3", "Add positions; every patch may look"),
+                    ("4", "Start from a pretrained tower"),
+                ],
+            },
+            {
+                "layout": "split",
                 "title": "Patches as tokens",
                 "bullets": [
-                    "Flatten each patch, map to width d, add positions.",
-                    "A 224 image with patch 16 is 196 tokens: a short paragraph.",
+                    r"\(N = HW / P^{2}\) non-overlapping tiles.",
+                    r"A 16 by 16 RGB patch is 768 numbers.",
+                    "That linear map is a conv with kernel P, stride P.",
                 ],
                 "image": "graphics/4.2-vision-transformers/patches.png",
             },
             {
+                "layout": "split",
+                "title": "Flatten one tile",
+                "bullets": [
+                    r"A 2 by 2 of 1,2,3,4 becomes [1, 2, 3, 4].",
+                    "Then W maps to width d.",
+                    "Lab 4 does this on a 32 by 32 RGB crop.",
+                ],
+                "image": "graphics/4.2-vision-transformers/patch-numeric.png",
+            },
+            {
+                "layout": "split",
+                "title": "A 224 image is a short paragraph",
+                "bullets": [
+                    r"P = 16 gives N = 196, plus [CLS] is 197.",
+                    r"Attention map: \(197^{2}\) scores per head.",
+                    "No GPT mask: there is no future patch.",
+                ],
+                "image": "graphics/4.2-vision-transformers/vit-count.png",
+            },
+            {
+                "layout": "split",
                 "title": "The same stack as language",
                 "bullets": [
-                    "[CLS] + positions + transformer.",
-                    "In this course, start from a pretrained ViT, not from scratch.",
+                    "Positions are not optional. Top is not bottom.",
+                    "[CLS] or mean-pool, then a head.",
+                    "From scratch on 800 scans is the wrong default.",
                 ],
                 "image": "graphics/4.2-vision-transformers/vit.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Count it", "N = HW / P squared. Tiles, not CNN windows."),
+                    ("Reuse Week 3", "Transformer block, bidirectional, add positions."),
+                    ("Freeze a tower", "CLIP's image encoder is often this ViT, already trained."),
+                ],
             },
         ],
     },
@@ -1253,20 +1358,79 @@ DECKS = [
         "title": "4.3 Contrastive Learning and Zero-Shot Transfer",
         "slides": [
             {
+                "layout": "title",
+                "title": "Contrastive Learning and Zero-Shot Transfer",
+                "subtitle": "DATA 443/643  ·  Week 4, note 4.3",
+                "meta": "After CS231N 2025 L16: InfoNCE on the diagonal, then class names as prompts.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "An N by N grid; the diagonal is the match"),
+                    ("2", "InfoNCE; the rest of the batch are negatives"),
+                    ("3", "Zero-shot: nearest prompt, not a C-way softmax"),
+                    ("4", "Linear probe versus zero-shot"),
+                ],
+            },
+            {
+                "layout": "split",
                 "title": "Matched pairs on the diagonal",
                 "bullets": [
-                    "InfoNCE wants image i with caption i.",
-                    "Small batches mean easy negatives.",
+                    "Encode N images and N captions.",
+                    "Image i should sit with caption i.",
+                    "This is 4.1's coordinated space, with a loss.",
                 ],
                 "image": "graphics/4.3-contrastive-zeroshot/contrastive.png",
             },
             {
+                "layout": "equation",
+                "title": "InfoNCE, one row",
+                "equation": r"-\log\frac{\exp(\mathrm{sim}(v_i,t_i)/\tau)}{\sum_j\exp(\mathrm{sim}(v_i,t_j)/\tau)}",
+                "notes": [
+                    "CLIP trains this both ways: image-to-text and text-to-image.",
+                    "Small tau sharpens. Argmax of a row does not flip.",
+                    "N=4 in lab is to see the matrix, not to match ImageNet.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "A 2 by 2 you will write",
+                "bullets": [
+                    r"Scores [0.9, 0.1], tau = 1, gives about [0.69, 0.31].",
+                    r"Loss is -log 0.69 about 0.37.",
+                    "Identical captions: uniform softmax, no learning.",
+                ],
+                "image": "graphics/4.3-contrastive-zeroshot/infonce-numeric.png",
+            },
+            {
+                "layout": "split",
                 "title": "Zero-shot is nearest text",
                 "bullets": [
-                    "Class names are prompts, not a trained softmax.",
-                    "Wording matters. Unseen phrases do not magically work.",
+                    'Encode "a photo of a dog", not the token dog.',
+                    "New classes are new strings.",
+                    "Unseen phrases do not magically work.",
                 ],
                 "image": "graphics/4.3-contrastive-zeroshot/zeroshot.png",
+            },
+            {
+                "layout": "split",
+                "title": "Two ways to transfer",
+                "bullets": [
+                    "Linear probe: freeze the image tower, train C classes.",
+                    "Zero-shot: the classifier is the text tower.",
+                    "Captioning and LLaVA wait. This week is the score.",
+                ],
+                "image": "graphics/4.3-contrastive-zeroshot/probe-vs-zeroshot.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Off-diagonal is a negative", "Not a don't-care. Shuffle in Lab 4 and the loss should rise."),
+                    ("Prompt it", "A photo of beats the raw label. Ensemble is optional."),
+                    ("Week 5", "CLIP's data, retrieval, and the bias that comes with the geometry."),
+                ],
             },
         ],
     },

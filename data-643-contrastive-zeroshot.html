@@ -107,48 +107,57 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 4 &middot; <a href="files/data-643/contrastive-zeroshot.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/4.3-contrastive-zeroshot.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Matched pairs on the diagonal. Class names as text embeddings.
+                            InfoNCE wants the diagonal. Zero-shot is nearest prompt, not a trained C-way head.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>Contrastive learning</strong> pulls matched pairs together and pushes unmatched pairs apart, in a shared space. <strong>Zero-shot</strong> transfer is what you get when one side of the pair can be a class name written as text.</p>
+<p><strong>Contrastive learning</strong> pulls matched pairs together and pushes unmatched pairs apart, in a shared space. <strong>Zero-shot</strong> transfer is what you get when one side of the pair can be a class name written as text. Stanford CS231N 2025 L16 is the matching vision–language hour; CMU 11-777 already called this a <strong>coordination</strong> loss.</p>
+<p>Week 5 will put CLIP’s data and retrieval on the table. This note is the loss and the zero-shot trick.</p>
 <hr />
 <h2>1. A batch of matches</h2>
-<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> images and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> captions. Encode both. Cosine similarities form an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix. The loss (InfoNCE) wants the <strong>diagonal</strong> hot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> with caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>, not caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math>.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> images and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> captions. Encode both. Cosine similarities form an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix. The loss (InfoNCE; Oord et al. 2018) wants the <strong>diagonal</strong> hot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> with caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>, not caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math>.</p>
 <p><img alt="Matched pairs on the diagonal" src="files/data-643/graphics/4.3-contrastive-zeroshot/contrastive.png" /></p>
-<p>This is coordinated representation (note <strong>4.1</strong>) with a specific loss. You never fuse pixels and words into one vector during pretraining; you only score pairs.</p>
+<p>This is coordinated representation (note <strong>4.1</strong>) with a specific loss. You never fuse pixels and words into one vector during pretraining; you only score pairs. SimCLR is the vision-only cousin (two crops of the same image). We cite it; we do not assign it.</p>
 <p>InfoNCE, one direction, row <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>&#x02212;</mo><mi>log</mi><mfrac><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mi>i</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msubsup><mo>&#x02211;</mo><mrow><mi>j</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>N</mi></mrow></msubsup><mi>exp</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">m</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
-<p>CLIP uses both directions (image-to-text and text-to-image). Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> sharpens the softmax.</p>
+<p>CLIP uses <strong>both</strong> directions (image-to-text and text-to-image). Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> sharpens the softmax. Small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> makes the diagonal even more peaked, but the <strong>argmax</strong> of a row does not change if you only rescale that row.</p>
+<p>The negative set is the rest of the batch. Small batches <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> easy negatives <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> a weak space. CLIP’s real batch was tens of thousands. Lab 4 is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math> so you can see the matrix, not so you can match ImageNet.</p>
 <hr />
 <h2>2. Zero-shot classification</h2>
 <p>At test time, encode the image once. Encode prompts <code>"a photo of a dog"</code>, <code>"a photo of a cat"</code>, … Take the nearest prompt. There is no trained softmax over ImageNet. New classes are new strings.</p>
 <p><img alt="Class names as text embeddings" src="files/data-643/graphics/4.3-contrastive-zeroshot/zeroshot.png" /></p>
-<p>Prompt wording matters (<code>a photo of</code> vs the raw label). So does language: a class that the text tower never saw as a phrase will not magically appear.</p>
+<p>CLIP was trained on <strong>phrases</strong>. CS231N’s warning: the raw label <code>"dog"</code> often loses to <code>"a photo of a dog"</code>. Prompt <strong>ensembling</strong> (average several phrasings) is a test-time trick, not a new model. We mention it; Lab 4 does not require it.</p>
+<p>A class the text tower never saw as a phrase will not magically appear. Open-vocabulary is not infinite-vocabulary.</p>
 <hr />
-<h2>3. What can go wrong</h2>
-<p>The negative set is the rest of the batch. Small batches <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> easy negatives <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> a weak space. Web pairs are noisy (Week 5: BLIP filters them). Contrastive spaces can still be <strong>biased</strong> (Week 5.3): “doctor” sits nearer to one gender’s photos.</p>
+<h2>3. Linear probe versus zero-shot</h2>
+<p><img alt="A trained C-way head versus nearest prompt" src="files/data-643/graphics/4.3-contrastive-zeroshot/probe-vs-zeroshot.png" /></p>
+<p><strong>Linear probe:</strong> freeze the image encoder, train a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>-way softmax on labeled images. Needs a training set for those <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> classes.</p>
+<p><strong>Zero-shot:</strong> no extra weights. The classifier is the text tower. Adding a class is adding a string.</p>
+<p>Both are transfer. Zero-shot is what makes CLIP a <strong>foundation</strong> model in CS231N L16. Captioning, LLaVA, and Flamingo wait for later weeks.</p>
+<p>Web pairs are noisy (Week 5: BLIP filters them). Contrastive spaces can still be <strong>biased</strong> (Week 5.3).</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p><strong>30–40 minutes.</strong> Draw the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> grid, mark the diagonal, write InfoNCE for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, then swap the text side for class prompts. Play the CLIP video on <strong>zero-shot classifiers</strong> and <strong>contrastive training</strong> (<strong>9:00–22:25</strong>). Pause on the similarity matrix. Lab 4’s tiny InfoNCE is this grid with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>.</p>
-<p>Minute plan: 10 min diagonal vs off-diagonal; 10 min <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> softmax; 8 min zero-shot prompts; 10 min video. If students ask about negatives in the real paper, the batch was tens of thousands; we will not fake that in lab.</p>
+<p><strong>~18 minutes.</strong> Draw the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> grid, mark the diagonal, write InfoNCE for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, then swap the text side for class prompts, then probe vs zero-shot. Play the CLIP video on <strong>zero-shot</strong> and <strong>the similarity matrix</strong> (<strong>9:00–22:25</strong>). Lab 4’s tiny InfoNCE is this grid with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>.</p>
 <hr />
 <h2>5. Worked example</h2>
 <p>Two pairs. Cosine matrix (already normalized):</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.9</mn></mtd><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd><mtd><mn>0.8</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002E;</mo></mrow></math>
 <p>Row 0 softmax: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>e</mi><mrow><mn>0.9</mn></mrow></msup><mo>&#x02248;</mo><mn>2.46</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>e</mi><mrow><mn>0.1</mn></mrow></msup><mo>&#x02248;</mo><mn>1.11</mn></mrow></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mn>0.69</mn><mo>&#x0002C;</mo><mspace width="0.167em" /><mn>0.31</mn><mo stretchy="false">]</mo></mrow></math>. InfoNCE term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mn>0.69</mn><mo>&#x02248;</mo><mn>0.37</mn></mrow></math>.</p>
+<p><img alt="Two-row InfoNCE" src="files/data-643/graphics/4.3-contrastive-zeroshot/infonce-numeric.png" /></p>
 <p>If every caption is the same vector, every row of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> is constant, softmax is uniform, and the diagonal is not special: <strong>the loss cannot learn matching</strong>.</p>
-<p>Zero-shot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, prompts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>dog</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.9</mn></mtd></mtr><mtr><mtd><mn>0.1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>cat</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>0.9</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.99</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.10</mn></mrow></math>. Predict dog.</p>
+<p>Zero-shot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, prompts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>dog</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.9</mn></mtd></mtr><mtr><mtd><mn>0.1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>cat</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>0.9</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.99</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.10</mn></mrow></math>. Predict dog. Dividing by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mn>0.07</mn></mrow></math> before softmax does <strong>not</strong> change that argmax.</p>
 <hr />
 <h2>6. Where students get stuck</h2>
 <ul>
 <li>Treating off-diagonal as “don’t care” instead of <strong>negatives</strong>.</li>
-<li>Adding a class at test time that the text tower cannot spell (a new visual concept with no words).</li>
+<li>Adding a class at test time that the text tower cannot spell.</li>
 <li>Using batch size 4 in a real CLIP run and expecting ImageNet-level negatives.</li>
+<li>Calling zero-shot a trained ImageNet head.</li>
 </ul>
 <hr />
 <h2>7. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
 <p>Pause on <strong>zero-shot</strong> (<strong>9:00</strong>) — class names as text — and on <strong>InfoNCE / the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix</strong> (<strong>14:40</strong>). That matrix is the whole note.</p>
+<p>The matching university lecture is Stanford <strong>CS231N 2025 L16</strong> (CLIP contrastive objective, “a photo of”, zero-shot vs linear probe). CMU 11-777 L3.2 is the coordination/InfoNCE slogan from 4.1. We do not copy those slides. LLaVA waits.</p>
 <hr />
 <h2>8. Practice</h2>
 <ol>
@@ -167,6 +176,12 @@
 <li>
 <p>Three prompts with cosines to one image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.2</mn><mo>&#x0002C;</mo><mn>0.5</mn><mo>&#x0002C;</mo><mn>0.1</mn></mrow></math>. Which class wins zero-shot? If you divide the cosines by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi><mo>&#x0003D;</mo><mn>0.07</mn></mrow></math> before softmax, does the <strong>argmax</strong> change?</p>
 </li>
+<li>
+<p>Linear probe versus zero-shot: which one needs a labeled training set for the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> classes?</p>
+</li>
+<li>
+<p>CLIP uses both image-to-text and text-to-image InfoNCE. Why is one direction not enough if you also want to retrieve images from a caption?</p>
+</li>
 </ol>
                     </section>
                 </div>
@@ -176,7 +191,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T14:20:00-04:00">September 15, 2026, 2:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
             </footer>
         </div>
 

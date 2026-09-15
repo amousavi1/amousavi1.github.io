@@ -761,6 +761,129 @@ def zeroshot():
     _save(fig, "4.3-contrastive-zeroshot/zeroshot.png")
 
 
+def five_challenges():
+    fig, ax = plt.subplots(figsize=(10.6, 3.2))
+    ax.set_xlim(0, 12.2)
+    ax.set_ylim(0, 3.0)
+    ax.axis("off")
+    items = [
+        (0.2, "represent", FILL, NAVY),
+        (2.55, "align", FILL2, TEAL),
+        (4.9, "fuse", FILL3, CORAL),
+        (7.25, "translate", FILL4, GOLD),
+        (9.6, "co-learn", FILL, NAVY),
+    ]
+    for x, text, fill, edge in items:
+        _box(ax, (x, 0.85), 2.15, 1.35, text, fill, edge, 12)
+    ax.set_title("Five jobs. CLIP scores; captioning translates; concat fuses.", loc="left", color=NAVY)
+    _save(fig, "4.1-multimodal-foundations/five-challenges.png")
+
+
+def cosine_numeric():
+    fig, ax = plt.subplots(figsize=(9.2, 3.4))
+    ax.axis("off")
+    cols = ["pair", "vectors", "cosine"]
+    rows = [
+        [r"match", r"$v=[1,0],\ t=[0.8,0.2]$", r"$0.97$"],
+        [r"mismatch", r"$v=[1,0],\ t=[0,1]$", r"$0$"],
+    ]
+    table = ax.table(cellText=rows, colLabels=cols, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.25, 1.9)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY, fontweight="medium")
+        else:
+            cell.set_facecolor("white")
+    ax.set_title("Coordinated retrieval ranks by cosine. Joint concat needs both streams.", loc="left", color=NAVY, pad=12)
+    _save(fig, "4.1-multimodal-foundations/cosine-numeric.png")
+
+
+def patch_numeric():
+    fig, axes = plt.subplots(1, 2, figsize=(9.8, 3.4), gridspec_kw={"width_ratios": [1, 1.15]})
+    ax = axes[0]
+    ax.set_xlim(-0.2, 2.4)
+    ax.set_ylim(-0.2, 2.4)
+    ax.set_aspect("equal")
+    vals = np.array([[1, 2], [3, 4]])
+    ax.imshow(vals, cmap="Blues", vmin=0, vmax=5, extent=(0, 2, 0, 2), origin="upper")
+    for i in range(2):
+        for j in range(2):
+            ax.text(j + 0.5, 1.5 - i, str(vals[i, j]), ha="center", va="center", fontsize=16, color=NAVY)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title(r"$2\times 2$ patch")
+    ax = axes[1]
+    ax.axis("off")
+    ax.set_xlim(0, 6)
+    ax.set_ylim(0, 3)
+    _box(ax, (0.2, 1.05), 5.5, 1.2, r"flatten $[1,\ 2,\ 3,\ 4]$", FILL2, TEAL, 14)
+    ax.set_title("Then a linear map to width $d$")
+    fig.tight_layout()
+    _save(fig, "4.2-vision-transformers/patch-numeric.png")
+
+
+def vit_count():
+    fig, ax = plt.subplots(figsize=(10.2, 3.3))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 3.4)
+    ax.axis("off")
+    _box(ax, (0.2, 1.0), 2.5, 1.4, r"$224\times 224$" + "\nRGB", FILL3, CORAL, 12)
+    _box(ax, (3.3, 1.0), 2.5, 1.4, r"$P=16$" + "\nnon-overlap", FILL2, TEAL, 12)
+    _box(ax, (6.4, 1.0), 2.5, 1.4, r"$N=196$" + "\npatches", FILL, NAVY, 12)
+    _box(ax, (9.5, 1.0), 2.3, 1.4, r"+ [CLS]" + "\n$=197$", FILL4, GOLD, 12)
+    for x in (2.75, 5.85, 8.95):
+        _arrow(ax, (x, 1.7), (x + 0.5, 1.7))
+    ax.set_title("A 224 image is a short paragraph. No causal mask: every patch may look.", loc="left", color=NAVY)
+    _save(fig, "4.2-vision-transformers/vit-count.png")
+
+
+def infonce_numeric():
+    fig, ax = plt.subplots(figsize=(9.4, 3.5))
+    ax.axis("off")
+    cols = [r"row 0 scores", r"softmax", r"$-\log p_{\mathrm{diag}}$"]
+    rows = [
+        [r"$[0.9,\ 0.1]$, $\tau=1$", r"$[0.69,\ 0.31]$", r"$0.37$"],
+        [r"identical captions", "uniform", "cannot learn"],
+    ]
+    table = ax.table(cellText=rows, colLabels=cols, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.2, 1.85)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY, fontweight="medium")
+        else:
+            cell.set_facecolor("white")
+    ax.set_title("InfoNCE: the rest of the batch are negatives. The diagonal must be special.", loc="left", color=NAVY, pad=12)
+    _save(fig, "4.3-contrastive-zeroshot/infonce-numeric.png")
+
+
+def probe_vs_zeroshot():
+    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.4))
+    for ax in axes:
+        ax.set_xlim(0, 6.2)
+        ax.set_ylim(0, 3.6)
+        ax.axis("off")
+    _box(axes[0], (0.3, 1.2), 2.2, 1.2, "frozen" + "\nimage encoder", FILL3, CORAL, 11)
+    _box(axes[0], (3.3, 1.2), 2.5, 1.2, "linear head" + "\nC classes", FILL, NAVY, 11)
+    _arrow(axes[0], (2.55, 1.8), (3.25, 1.8))
+    axes[0].set_title("Linear probe: train a softmax")
+    _box(axes[1], (0.25, 2.15), 2.0, 0.9, "image", FILL3, CORAL, 11)
+    _box(axes[1], (0.25, 0.55), 2.0, 0.9, "class names", FILL2, TEAL, 11)
+    _box(axes[1], (3.1, 1.2), 2.7, 1.2, "nearest prompt", FILL4, GOLD, 12)
+    _arrow(axes[1], (2.3, 2.5), (3.05, 1.9), CORAL)
+    _arrow(axes[1], (2.3, 1.0), (3.05, 1.55), TEAL)
+    axes[1].set_title("Zero-shot: no trained C-way head")
+    fig.tight_layout()
+    _save(fig, "4.3-contrastive-zeroshot/probe-vs-zeroshot.png")
+
+
 def clip_towers():
     fig, ax = plt.subplots(figsize=(9.8, 4.0))
     ax.set_xlim(0, 11)
@@ -865,10 +988,16 @@ def main():
     contextual()
     mlm_clm()
     joint_coord()
+    five_challenges()
+    cosine_numeric()
     patches()
     vit()
+    patch_numeric()
+    vit_count()
     contrastive()
     zeroshot()
+    infonce_numeric()
+    probe_vs_zeroshot()
     clip_towers()
     blip()
     retrieval()

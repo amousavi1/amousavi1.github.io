@@ -107,9 +107,9 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 4 &middot; <a href="files/data-643/lab-4-patches-contrastive.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Flatten image patches, then InfoNCE on four constructed pairs.
+                            Flatten non-overlapping patches, then InfoNCE on four pairs, both as a heatmap.
                         </p>
-<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong> and <code>matplotlib</code>. No pretrained CLIP weights this week: the point is the geometry.</p>
+<p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong> and <code>matplotlib</code>. No pretrained CLIP weights this week: the point is the geometry. Do notes <strong>4.1–4.3</strong> first.</p>
 <pre><code class="language-python">import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
@@ -122,10 +122,13 @@ import numpy as np
 <p>Make a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>32</mn><mo>&#x000D7;</mo><mn>32</mn></mrow></math> RGB tensor (noise or a simple gradient is fine). Plot one channel.</p>
 </li>
 <li>
-<p>Split it into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><mo>&#x000D7;</mo><mn>8</mn></mrow></math> patches. How many tokens? Flatten each patch to a vector of length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><mo>&#x000B7;</mo><mn>8</mn><mo>&#x000B7;</mo><mn>3</mn></mrow></math>.</p>
+<p>Split it into <strong>non-overlapping</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><mo>&#x000D7;</mo><mn>8</mn></mrow></math> patches. How many tokens? Flatten each patch to a vector of length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>8</mn><mo>&#x000B7;</mo><mn>8</mn><mo>&#x000B7;</mo><mn>3</mn></mrow></math>.</p>
 </li>
 <li>
 <p>Map patches with <code>nn.Linear(192, 16)</code> to a fake embedding width. Print the resulting shape <code>(N, 16)</code>.</p>
+</li>
+<li>
+<p>In one sentence: why would a real ViT still add a position vector to each of those <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> rows?</p>
 </li>
 </ol>
 <hr />
@@ -148,7 +151,12 @@ txt[1] = torch.tensor([0.1, 0.9])
 </code></pre>
 <p>Print <code>loss</code>. Then replace <code>txt</code> with shuffled rows and print the new loss. It should rise.</p>
 <ol start="3">
-<li>Zero-shot toy: treat <code>txt</code> as class prompts. For <code>img[0]</code>, which row of <code>txt</code> is nearest? Did shuffling break it?</li>
+<li>
+<p>Optional: also print <code>F.cross_entropy(S.T / 0.07, torch.arange(4))</code> (text-to-image). CLIP trains both.</p>
+</li>
+<li>
+<p>Zero-shot toy: treat <code>txt</code> as class prompts. For <code>img[0]</code>, which row of <code>txt</code> is nearest? Did shuffling break it? In one sentence: why would a real CLIP prompt be <code>"a photo of …"</code> rather than a single token?</p>
+</li>
 </ol>
 <hr />
 <h2>3. Write-up</h2>
@@ -161,7 +169,7 @@ txt[1] = torch.tensor([0.1, 0.9])
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T14:20:00-04:00">September 15, 2026, 2:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
             </footer>
         </div>
 
