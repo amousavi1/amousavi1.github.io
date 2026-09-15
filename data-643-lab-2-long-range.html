@@ -107,11 +107,11 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 2 &middot; <a href="files/data-643/lab-2-long-range.pdf" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
-                            Copy the first bit of a long sequence: vanilla RNN versus LSTM.
+                            Copy the first bit at the end: RNN versus LSTM, plus a gradient-norm check.
                         </p>
 <p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>2.1–2.3</strong> first. CPU is enough.</p>
 <p>Upload HTML to Canvas when done.</p>
-<p>The task is <strong>copy the first bit at the end of a long sequence</strong>. A vanilla RNN should fail as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> grows; an LSTM should keep the bit.</p>
+<p>The task is <strong>copy the first bit at the end of a long sequence</strong>. A vanilla RNN should fail as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> grows; an LSTM should keep the bit. That is the Jacobian product from note 2.2, then the copy regime from note 2.3.</p>
 <pre><code class="language-python">import torch
 from torch import nn
 from torch.nn.utils import clip_grad_norm_
@@ -149,13 +149,16 @@ def batch(T, n=64):
 </code></pre>
 <ol>
 <li>
-<p>Train each model 400 steps, Adam <code>lr=1e-2</code>, <code>BCEWithLogitsLoss</code>. Print accuracy on a fresh batch.</p>
+<p>Train each model 400 steps, Adam <code>lr=1e-2</code>, <code>BCEWithLogitsLoss</code>. Print accuracy on a fresh batch. Pass <strong>logits</strong> into that loss, as in Lab 1.</p>
 </li>
 <li>
 <p>Repeat for <code>T = 5, 15, 40</code>. Make a table: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> versus RNN accuracy versus LSTM accuracy.</p>
 </li>
 <li>
-<p>For the vanilla RNN at <code>T=40</code>, print <code>clip_grad_norm_(model.parameters(), 1e9)</code> once after a backward pass (no clip). Is the norm tiny or huge?</p>
+<p>For the vanilla RNN at <code>T=40</code>, after one backward pass print <code>clip_grad_norm_(model.parameters(), 1e9)</code> (a huge threshold, so this is “measure, don’t clip”). Is the global norm tiny or huge?</p>
+</li>
+<li>
+<p>Optional: on the LSTM at <code>T=40</code>, print the mean forget-gate value on a batch if you extract it (or just write in words what you would hope: closer to 1 than to 0 on a solved run).</p>
 </li>
 </ol>
 <hr />
@@ -170,7 +173,7 @@ def batch(T, n=64):
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:05:00-04:00">September 15, 2026, 3:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:20:00-04:00">September 15, 2026, 3:20 AM EDT</time></div>
             </footer>
         </div>
 

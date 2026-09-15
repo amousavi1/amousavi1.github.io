@@ -316,18 +316,40 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM networks (Olah)</a
+                                        <a class="course-material__title" href="https://www.deeplearningbook.org/contents/rnn.html" target="_blank" rel="noopener">Goodfellow, Bengio, Courville: Sequence Modeling, Ch. 10 opening (vanilla RNN; stop before recursive nets)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/1808.03314" target="_blank" rel="noopener">Sherstinsky, Fundamentals of RNN and LSTM</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/1211.5063" target="_blank" rel="noopener">Pascanu, Mikolov, Bengio 2013: On the difficulty of training recurrent neural networks (clipping)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://www.bioinf.jku.at/publications/older/2604.pdf" target="_blank" rel="noopener">Hochreiter and Schmidhuber 1997: Long short-term memory (cite, do not assign the whole paper)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture04-rnnlm.pdf" target="_blank" rel="noopener">Stanford CS224N W26 L4: language models and RNNs (copy intuitions; skip NMT)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://cs231n.stanford.edu/slides/2025/lecture_7.pdf" target="_blank" rel="noopener">Stanford CS231N 2025 L7: RNNs, BPTT, singular values (copy the computational-graph form)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://deeplearning.cs.cmu.edu/F24/document/slides/lec14.recurrent.pdf" target="_blank" rel="noopener">CMU 11-785 L14: stability, memory, and the LSTM cell (copy the eigenvalue slogan)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM networks (Olah), after 2.3</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>What does the hidden state have to carry across a long sentence?</li>
-                                    <li>Why do vanishing gradients push us toward gates, then toward attention in Week 3?</li>
+                                    <li>Why is a shared recurrent cell a better default than a wider n-gram table or a fixed-window MLP?</li>
+                                    <li>Clipping and truncated BPTT both appear in RNN papers. Which problem does each one actually address?</li>
+                                    <li>If the forget gate is 1 and the input gate is 0, what happens to the cell, and to the gradient along that path? Why does that not mean LSTMs solved vanishing gradients?</li>
+                                    <li>Lab 2 copies the first bit. What would a vanished gradient look like in your table as T grows, and what would you report in a project?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-3" role="tabpanel" aria-labelledby="tab-week-3" hidden>
@@ -1016,7 +1038,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:05:00-04:00">September 15, 2026, 3:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T03:20:00-04:00">September 15, 2026, 3:20 AM EDT</time></div>
             </footer>
         </div>
 

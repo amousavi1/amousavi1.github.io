@@ -2,7 +2,7 @@ Work in a **Jupyter** notebook with **PyTorch**. Do notes **2.1–2.3** first. C
 
 Upload HTML to Canvas when done.
 
-The task is **copy the first bit at the end of a long sequence**. A vanilla RNN should fail as \(T\) grows; an LSTM should keep the bit.
+The task is **copy the first bit at the end of a long sequence**. A vanilla RNN should fail as \(T\) grows; an LSTM should keep the bit. That is the Jacobian product from note 2.2, then the copy regime from note 2.3.
 
 ```python
 import torch
@@ -44,11 +44,13 @@ class SeqModel(nn.Module):
         return self.out(h[:, -1, :])
 ```
 
-1. Train each model 400 steps, Adam `lr=1e-2`, `BCEWithLogitsLoss`. Print accuracy on a fresh batch.
+1. Train each model 400 steps, Adam `lr=1e-2`, `BCEWithLogitsLoss`. Print accuracy on a fresh batch. Pass **logits** into that loss, as in Lab 1.
 
 2. Repeat for `T = 5, 15, 40`. Make a table: \(T\) versus RNN accuracy versus LSTM accuracy.
 
-3. For the vanilla RNN at `T=40`, print `clip_grad_norm_(model.parameters(), 1e9)` once after a backward pass (no clip). Is the norm tiny or huge?
+3. For the vanilla RNN at `T=40`, after one backward pass print `clip_grad_norm_(model.parameters(), 1e9)` (a huge threshold, so this is “measure, don’t clip”). Is the global norm tiny or huge?
+
+4. Optional: on the LSTM at `T=40`, print the mean forget-gate value on a batch if you extract it (or just write in words what you would hope: closer to 1 than to 0 on a solved run).
 
 ---
 

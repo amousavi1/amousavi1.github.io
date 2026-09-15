@@ -1,12 +1,20 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Gates are learned valves. They let a recurrent cell **keep** a bit of memory for many steps instead of overwriting it every time. LSTM and GRU are the two you will meet. They do not remove vanishing gradients; they make a near-1 path available.
+Gates are learned valves. They let a recurrent cell **keep** a bit of memory for many steps instead of overwriting it every time. LSTM and GRU are the two you will meet. They do not remove vanishing gradients; they make a near-1 path **available**.
 
 ---
 
-## 1. LSTM: a highway plus three gates
+## 1. The problem gates are for
 
-Hochreiter and Schmidhuber (1997). A **cell state** \(\boldsymbol{c}_t\) moves down the chain with mostly multiplies and adds, not a stack of \(\tanh\)s. Three sigmoid gates, each in \((0,1)\):
+In a vanilla RNN the hidden state is **constantly rewritten** by \(\tanh(W_h h_{t-1}+\cdots)\). CMU 11-785’s stability lecture: unless \(W_h\) is essentially a wire (eigenvalues on the unit circle and no saturating \(\tanh\)), memory is short. You cannot ask SGD to discover a unitary \(W_h\) and a linear activation at once.
+
+What you want instead: a **cell** that can copy, plus **input-dependent switches** that say when to write, when to erase, and when to report. That is an LSTM (Hochreiter and Schmidhuber 1997; forget gate from Gers et al. 2000).
+
+---
+
+## 2. LSTM: a highway plus three gates
+
+A **cell state** \(\boldsymbol{c}_t\) moves down the chain with mostly multiplies and adds, not a stack of \(\tanh\)s. Three sigmoid gates, each in \((0,1)\):
 
 | Gate | Role |
 | ---- | ---- |
@@ -14,55 +22,35 @@ Hochreiter and Schmidhuber (1997). A **cell state** \(\boldsymbol{c}_t\) moves d
 | Input \(\boldsymbol{i}_t\) | How much new candidate to write |
 | Output \(\boldsymbol{o}_t\) | How much of \(\tanh(\boldsymbol{c}_t)\) becomes \(\boldsymbol{h}_t\) |
 
+Each gate is a sigmoid of a linear mix of \(\boldsymbol{x}_t\) and \(\boldsymbol{h}_{t-1}\) (plus a bias). You do not need every matrix name on the first pass. You need the cell update:
+
 \[
 \boldsymbol{c}_t = \boldsymbol{f}_t \odot \boldsymbol{c}_{t-1} + \boldsymbol{i}_t \odot \tilde{\boldsymbol{c}}_t,
 \qquad
 \boldsymbol{h}_t = \boldsymbol{o}_t \odot \tanh(\boldsymbol{c}_t).
 \]
 
-If \(\boldsymbol{f}_t \approx \boldsymbol{1}\) and \(\boldsymbol{i}_t \approx \boldsymbol{0}\), the cell copies. That is the long-range path.
+The candidate \(\tilde{\boldsymbol{c}}_t\) is a \(\tanh\) of a linear mix of \(\boldsymbol{x}_t\) and \(\boldsymbol{h}_{t-1}\).
 
 ![LSTM gates around a cell highway](files/data-643/graphics/2.3-lstm-gru/lstm-gates.png)
 
-The candidate \(\tilde{\boldsymbol{c}}_t\) is a \(\tanh\) of a linear mix of \(\boldsymbol{x}_t\) and \(\boldsymbol{h}_{t-1}\). You do not need every matrix name on the first pass. You need: **forget \(\times\) old, plus input \(\times\) new**.
-
-If \(\boldsymbol{f}_t=\boldsymbol{1}\) for many steps, \(\partial \boldsymbol{c}_t / \partial \boldsymbol{c}_{t-1}\) can stay near 1 along that coordinate. That is why the vanishing plot in 2.2 had a gated curve.
-
----
-
-## 2. GRU: two gates, no extra cell
-
-Cho et al. (2014). Reset \(\boldsymbol{r}_t\) and update \(\boldsymbol{z}_t\). The hidden state *is* the memory.
+If \(\boldsymbol{f}_t \approx \boldsymbol{1}\) and \(\boldsymbol{i}_t \approx \boldsymbol{0}\), the cell **copies**. That is the long-range path. Along that coordinate,
 
 \[
-\boldsymbol{h}_t = (1-\boldsymbol{z}_t)\odot \boldsymbol{h}_{t-1} + \boldsymbol{z}_t \odot \tilde{\boldsymbol{h}}_t.
+\frac{\partial \boldsymbol{c}_t}{\partial \boldsymbol{c}_{t-1}} = \boldsymbol{f}_t,
 \]
 
-Fewer parameters, often similar quality on medium sequences. Use LSTM when you want an explicit cell; use GRU when you want a smaller default.
+which can stay near 1. That is why the vanishing plot in 2.2 had a gated curve. CS231N’s warning, which we keep: **LSTM does not guarantee** that every coordinate copies. It makes a copy path *learnable*. In practice you get on the order of \(10^2\) steps rather than \(\approx 7\), not infinite context.
 
-![GRU reset and update](files/data-643/graphics/2.3-lstm-gru/gru-gates.png)
-
-Read \(\boldsymbol{z}_t\) as “how much to replace.” If \(\boldsymbol{z}_t\approx\boldsymbol{0}\), you copy \(\boldsymbol{h}_{t-1}\). Reset \(\boldsymbol{r}_t\) controls how much past goes into the candidate \(\tilde{\boldsymbol{h}}_t\).
+Peephole connections (cell into the gates) exist in some papers. We do not use them. `nn.LSTM` is the three-gate cell above.
 
 ---
 
-## 3. What gates do not buy you
+## 3. The copy regime, in numbers
 
-The loop is still sequential. You still cannot fill a GPU the way a transformer can. Long context is better than vanilla, worse than attention. For this course, gates are the reason we can talk about “memory” before Week 3, and a baseline in speech/time-series projects.
+![Forget open, input closed](files/data-643/graphics/2.3-lstm-gru/copy-regime.png)
 
-Bidirectional LSTM: run one net forward and one backward, concatenate. Fine for classification. Illegal for next-token generation (you would peek at the future).
-
----
-
-## 4. Teaching this note
-
-**30–40 minutes.** Table of three LSTM gates, then the copy regime \(\boldsymbol{f}\approx 1,\boldsymbol{i}\approx 0\), then the numeric cell update. GRU as “two knobs, hidden state is the memory.” Play StatQuest LSTM **0:00–12:00** (forget/input intuition). Assign the GRU video as a 10-minute clip after class, or play **0:00–8:00** if the room is still with you.
-
----
-
-## 5. Worked example
-
-Scalar LSTM cell (drop the output gate for a minute). Suppose \(c_{t-1}=2\), \(f_t=0.9\), \(i_t=0.1\), \(\tilde{c}_t=5\):
+Scalar cell (drop the output gate for a minute). Suppose \(c_{t-1}=2\), \(f_t=0.9\), \(i_t=0.1\), \(\tilde{c}_t=5\):
 
 \[
 c_t = 0.9\cdot 2 + 0.1\cdot 5 = 1.8+0.5=2.3.
@@ -72,27 +60,85 @@ Most of the old memory survived; a little new content landed. If instead \(f_t=0
 
 Copy regime: \(f_t=1\), \(i_t=0\) \(\Rightarrow\) \(c_t=c_{t-1}\). Ten such steps: \(c_{t+10}=c_t\). Gradient along that path is \(1^{10}=1\).
 
-GRU: \(h_{t-1}=4\), \(z_t=0.25\), \(\tilde{h}_t=0\) gives \(h_t=(1-0.25)\cdot 4 + 0.25\cdot 0=3\). You kept 75% of the past.
+That is Lab 2’s hope: the first bit sits in \(\boldsymbol{c}\) and the forget gate learns to leave it there until the last step.
 
 ---
 
-## 6. Where students get stuck
+## 4. GRU: two gates, no extra cell
+
+Cho et al. (2014). Reset \(\boldsymbol{r}_t\) and update \(\boldsymbol{z}_t\). The hidden state *is* the memory.
+
+\[
+\boldsymbol{h}_t = (1-\boldsymbol{z}_t)\odot \boldsymbol{h}_{t-1} + \boldsymbol{z}_t \odot \tilde{\boldsymbol{h}}_t.
+\]
+
+Read \(\boldsymbol{z}_t\) as “how much to replace.” If \(\boldsymbol{z}_t\approx\boldsymbol{0}\), you copy \(\boldsymbol{h}_{t-1}\). Reset \(\boldsymbol{r}_t\) controls how much past goes into the candidate \(\tilde{\boldsymbol{h}}_t\).
+
+![GRU reset and update](files/data-643/graphics/2.3-lstm-gru/gru-gates.png)
+
+Fewer parameters, often similar quality on medium sequences. Use LSTM when you want an explicit cell; use GRU when you want a smaller default. Both are still **sequential**. You still cannot fill a GPU the way a transformer can. Long context is better than vanilla, worse than attention.
+
+For this course, gates are the reason we can talk about “memory” before Week 3, and a baseline in speech/time-series projects.
+
+---
+
+## 5. Bidirectional and stacked
+
+**Bidirectional** LSTM: run one net forward and one backward, concatenate. Fine for classification when the whole sentence is allowed. **Illegal** for next-token generation (you would peek at the future).
+
+**Stacked** LSTM: \(\boldsymbol{h}_t\) of layer \(\ell\) is the input to layer \(\ell+1\). Deeper mixing, still a loop. Do not stack four layers in Lab 2.
+
+---
+
+## 6. Teaching this note
+
+**~16 minutes.** Table of three LSTM gates, then the copy regime \(\boldsymbol{f}\approx 1,\boldsymbol{i}\approx 0\), then the numeric cell update. GRU as “two knobs, hidden state is the memory.” One sentence on bidirectional-is-illegal-for-LMs. Play StatQuest LSTM **0:00–12:00** (forget/input intuition). Assign the GRU video as a 10-minute clip after class, or play **0:00–8:00** if the room is still with you.
+
+---
+
+## 7. Worked example
+
+Already in §3 for the LSTM cell. GRU: \(h_{t-1}=4\), \(z_t=0.25\), \(\tilde{h}_t=0\) gives
+
+\[
+h_t=(1-0.25)\cdot 4 + 0.25\cdot 0=3.
+\]
+
+You kept 75% of the past.
+
+Vector GRU with \(\boldsymbol{h}_{t-1}=\begin{bmatrix}2\\5\end{bmatrix}\), \(\boldsymbol{z}_t=\begin{bmatrix}1\\0\end{bmatrix}\), \(\tilde{\boldsymbol{h}}_t=\begin{bmatrix}0\\3\end{bmatrix}\):
+
+\[
+\boldsymbol{h}_t=(1-\boldsymbol{z}_t)\odot\boldsymbol{h}_{t-1}+\boldsymbol{z}_t\odot\tilde{\boldsymbol{h}}_t
+=\begin{bmatrix}0\\1\end{bmatrix}\odot\begin{bmatrix}2\\5\end{bmatrix}
++\begin{bmatrix}1\\0\end{bmatrix}\odot\begin{bmatrix}0\\3\end{bmatrix}
+=\begin{bmatrix}0\\5\end{bmatrix}.
+\]
+
+Coordinate 1 replaced (\(z=1\)); coordinate 2 copied (\(z=0\)).
+
+---
+
+## 8. Where students get stuck
 
 - Mixing up forget vs. input (zeroing \(f\) when they meant “write nothing new”).
 - Claiming LSTMs “solved vanishing gradients” in every coordinate, always.
 - Using a bidirectional LSTM for a generator that must not see \(t+1\).
+- Drawing a new forget-gate matrix at each time step (gates share weights too).
 
 ---
 
-## 7. Video
+## 9. Video
 
 Watch [StatQuest: Long Short-Term Memory (LSTM), Clearly Explained](https://www.youtube.com/watch?v=YCzL96nL7j0).
 
 Pause when the forget gate is a number in \((0,1)\) multiplying the cell, and when the cell is drawn as a highway. Then [StatQuest: Gated Recurrent Units (GRU), Clearly Explained](https://www.youtube.com/watch?v=tOuXgORsXJ4) — play the update-gate mix; skip if time is gone.
 
+The matching university lecture is CMU 11-785 Lecture 14 (stability and memory, then the LSTM as a constant-error carousel). Stanford CS224N’s LSTM hour (older “fancy RNN” lecture) is the copy-regime slogan we use on the board. We do not copy either deck.
+
 ---
 
-## 8. Practice
+## 10. Practice
 
 1. If the forget gate is stuck at 0, what happens to \(\boldsymbol{c}_t\)?
 
@@ -102,4 +148,8 @@ Pause when the forget gate is a number in \((0,1)\) multiplying the cell, and wh
 
 4. Compute \(c_t\) for \(c_{t-1}=1\), \(f_t=0.5\), \(i_t=0.5\), \(\tilde{c}_t=-1\). Then compute \(h_t\) if \(o_t=1\) and \(h_t=o_t\tanh(c_t)\).
 
-5. GRU with \(h_{t-1}=\begin{bmatrix}2\\0\end{bmatrix}\), \(z_t=\begin{bmatrix}1\\0\end{bmatrix}\), \(\tilde{h}_t=\begin{bmatrix}0\\3\end{bmatrix}\). Compute \(\boldsymbol{h}_t\). Which coordinate copied, and which replaced?
+5. GRU with \(\boldsymbol{h}_{t-1}=\begin{bmatrix}2\\5\end{bmatrix}\), \(\boldsymbol{z}_t=\begin{bmatrix}1\\0\end{bmatrix}\), \(\tilde{\boldsymbol{h}}_t=\begin{bmatrix}0\\3\end{bmatrix}\). Compute \(\boldsymbol{h}_t\). Which coordinate copied, and which replaced?
+
+6. In one line: why can \(\partial c_t/\partial c_{t-1}\) stay near 1 when a vanilla \(\partial h_t/\partial h_{t-1}\) usually cannot?
+
+7. Does an LSTM *guarantee* that the first token of a 500-word review still trains? What would you measure in Lab 2 to check?

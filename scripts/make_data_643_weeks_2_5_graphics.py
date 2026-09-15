@@ -182,6 +182,157 @@ def gru_gates():
     _save(fig, "2.3-lstm-gru/gru-gates.png")
 
 
+def arch_zoo():
+    fig, axes = plt.subplots(1, 3, figsize=(11.2, 3.4))
+    titles = [
+        "Many-to-one\n(sentiment)",
+        "Many-to-many\n(tagging / LM)",
+        "Encoder then decode\n(leave for Week 3)",
+    ]
+    for ax, title in zip(axes, titles):
+        ax.set_xlim(0, 6.2)
+        ax.set_ylim(0, 4.2)
+        ax.axis("off")
+        ax.set_title(title, color=NAVY, fontsize=11, pad=2)
+        xs = [0.55, 1.85, 3.15, 4.45]
+        for i, x in enumerate(xs):
+            _box(ax, (x, 0.35), 0.95, 0.7, rf"$x_{i+1}$", FILL3, CORAL, 10)
+            _box(ax, (x, 1.55), 0.95, 0.75, "cell", FILL2, TEAL, 9)
+            _arrow(ax, (x + 0.48, 1.08), (x + 0.48, 1.5), CORAL)
+            if i < 3:
+                _arrow(ax, (x + 1.0, 1.92), (xs[i + 1], 1.92))
+        if title.startswith("Many-to-one"):
+            _box(ax, (4.35, 2.85), 1.15, 0.7, r"$\hat y$", FILL, NAVY, 11)
+            _arrow(ax, (4.92, 2.35), (4.92, 2.8), TEAL)
+        elif title.startswith("Many-to-many"):
+            for i, x in enumerate(xs):
+                _box(ax, (x, 2.85), 0.95, 0.7, rf"$y_{i+1}$", FILL, NAVY, 10)
+                _arrow(ax, (x + 0.48, 2.35), (x + 0.48, 2.8), TEAL)
+        else:
+            _box(ax, (4.25, 2.85), 1.35, 0.7, "bottleneck", FILL4, GOLD, 9)
+            _arrow(ax, (4.92, 2.35), (4.92, 2.8), GOLD)
+    fig.tight_layout()
+    _save(fig, "2.1-sequence-rnns/arch-zoo.png")
+
+
+def rnn_lm():
+    fig, ax = plt.subplots(figsize=(10.6, 3.7))
+    ax.set_xlim(0, 12.2)
+    ax.set_ylim(0, 4.0)
+    ax.axis("off")
+    steps = [
+        (0.25, r"$x_t$" + "\nid", FILL3, CORAL),
+        (2.55, "lookup\nembed", FILL, NAVY),
+        (4.85, r"cell" + "\n" + r"$h_t$", FILL2, TEAL),
+        (7.15, "linear", FILL4, GOLD),
+        (9.45, "softmax\nnext token", FILL, NAVY),
+    ]
+    for x, text, fill, edge in steps:
+        _box(ax, (x, 1.25), 2.05, 1.55, text, fill, edge, 11)
+    for x in (2.3, 4.6, 6.9, 9.2):
+        _arrow(ax, (x, 2.0), (x + 0.25, 2.0))
+    ax.text(5.85, 3.35, r"same $W_h, W_x$ at every $t$", ha="center", color=SLATE, fontsize=11)
+    ax.text(5.85, 0.45, r"loss at $t$: $-\log P(x_{t+1}\mid h_t)$", ha="center", color=NAVY, fontsize=12)
+    ax.set_title("An RNN language model is next-token softmax from the hidden state", loc="left", color=NAVY)
+    _save(fig, "2.1-sequence-rnns/rnn-lm.png")
+
+
+def rnn_numeric():
+    fig, ax = plt.subplots(figsize=(9.6, 3.6))
+    ax.axis("off")
+    cols = [r"step", r"$x_t$", r"$W_h h_{t-1}+W_x x_t$", r"$h_t=\tanh(\cdot)$"]
+    rows = [
+        [r"$t=1$", r"$[1,0]$", r"$[1,0]$", r"$[0.76, 0]$"],
+        [r"$t=2$", r"$[0,1]$", r"$[0.38, 1]$", r"$[0.36, 0.76]$"],
+    ]
+    table = ax.table(cellText=rows, colLabels=cols, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.2, 1.85)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY, fontweight="medium")
+        else:
+            cell.set_facecolor("white")
+    ax.set_title(r"$W_h=0.5 I$, $W_x=I$, $h_0=0$. Token 1 shrinks in $h_2$.", loc="left", color=NAVY, pad=12)
+    _save(fig, "2.1-sequence-rnns/rnn-numeric.png")
+
+
+def bptt():
+    fig, ax = plt.subplots(figsize=(10.4, 3.9))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 4.3)
+    ax.axis("off")
+    xs = [0.5, 3.4, 6.3]
+    for i, x in enumerate(xs):
+        _box(ax, (x, 2.35), 2.0, 0.95, rf"copy of $W_h$" + "\n" + rf"at $t={i+1}$", FILL2, TEAL, 10)
+        _box(ax, (x, 0.45), 2.0, 0.8, rf"$L_{i+1}$", FILL3, CORAL, 11)
+        _arrow(ax, (x + 1.0, 1.3), (x + 1.0, 2.3), CORAL)
+        if i < 2:
+            _arrow(ax, (x + 2.05, 2.8), (xs[i + 1], 2.8))
+    _box(ax, (9.15, 2.25), 2.45, 1.15, r"one $W_h$" + "\n" + r"$\nabla=$ sum", FILL, NAVY, 11)
+    _arrow(ax, (8.35, 2.85), (9.1, 2.85), GOLD)
+    ax.text(6.0, 3.95, "BPTT: the shared matrix gets every copy's gradient", ha="center", color=NAVY, fontsize=12)
+    _save(fig, "2.2-vanishing-gradients/bptt.png")
+
+
+def eigen_scale():
+    t = np.arange(0, 21)
+    fig, ax = plt.subplots(figsize=(8.4, 3.8))
+    ax.semilogy(t, 0.9 ** t, color=CORAL, lw=2.2, label=r"$|\lambda_{\max}|=0.9$  (vanishes)")
+    ax.semilogy(t, 1.1 ** t, color=NAVY, lw=2.2, label=r"$|\lambda_{\max}|=1.1$  (explodes)")
+    ax.axhline(1.0, color=SLATE, lw=0.8, ls="--")
+    ax.set_xlabel("steps $t$")
+    ax.set_ylabel(r"$|\lambda_{\max}|^t$  (log)")
+    ax.legend(frameon=False)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_title("Linear recurrence: long-run scale is the largest |eigenvalue| of $W_h$")
+    _save(fig, "2.2-vanishing-gradients/eigen-scale.png")
+
+
+def clipping():
+    fig, axes = plt.subplots(1, 2, figsize=(9.6, 3.5))
+    axes[0].annotate("", xy=(3.2, 0.9), xytext=(0.3, 0.3),
+                     arrowprops=dict(arrowstyle="-|>", color=CORAL, lw=2.4, mutation_scale=16))
+    axes[0].annotate("", xy=(1.55, 0.55), xytext=(0.3, 0.3),
+                     arrowprops=dict(arrowstyle="-|>", color=TEAL, lw=2.6, mutation_scale=16))
+    axes[0].text(2.15, 1.15, r"$\|g\|=10$", color=CORAL, fontsize=12)
+    axes[0].text(1.65, 0.15, r"clip to $c=5$", color=TEAL, fontsize=12)
+    axes[0].set_title("Exploding: same direction, shorter step")
+    axes[1].annotate("", xy=(0.55, 0.38), xytext=(0.3, 0.3),
+                     arrowprops=dict(arrowstyle="-|>", color=CORAL, lw=2.0, mutation_scale=10))
+    axes[1].text(0.75, 0.55, r"$\|g\|=10^{-6}$", color=CORAL, fontsize=12)
+    axes[1].text(0.75, 0.15, "clipping leaves it dead", color=SLATE, fontsize=11)
+    axes[1].set_title("Vanishing: there is nothing to rescale")
+    for ax in axes:
+        ax.set_xlim(0, 3.6)
+        ax.set_ylim(0, 1.6)
+        ax.axis("off")
+    fig.tight_layout()
+    _save(fig, "2.2-vanishing-gradients/clipping.png")
+
+
+def copy_regime():
+    fig, ax = plt.subplots(figsize=(10.0, 3.6))
+    ax.set_xlim(0, 11.5)
+    ax.set_ylim(0, 4.0)
+    ax.axis("off")
+    _box(ax, (0.3, 1.35), 2.2, 1.3, r"$c_{t-1}=2$", FILL, NAVY, 13)
+    _box(ax, (3.2, 2.45), 2.3, 0.9, r"$f_t=1$", FILL2, TEAL, 12)
+    _box(ax, (3.2, 0.65), 2.3, 0.9, r"$i_t=0$", FILL3, CORAL, 12)
+    _box(ax, (6.3, 1.35), 2.4, 1.3, r"$c_t=2$", FILL, NAVY, 13)
+    _box(ax, (9.15, 1.35), 2.05, 1.3, r"$\partial c_t/\partial c_{t-1}=1$", FILL4, GOLD, 10)
+    _arrow(ax, (2.55, 2.0), (3.15, 2.85), TEAL)
+    _arrow(ax, (2.55, 2.0), (3.15, 1.1), CORAL)
+    _arrow(ax, (5.55, 2.0), (6.25, 2.0))
+    _arrow(ax, (8.75, 2.0), (9.1, 2.0), GOLD)
+    ax.set_title("Copy regime: forget open, input closed. The cell is a wire.", loc="left", color=NAVY)
+    _save(fig, "2.3-lstm-gru/copy-regime.png")
+
+
 def rnn_vs_attention():
     fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.8))
     for ax in axes:
@@ -486,10 +637,17 @@ def main():
     _setup()
     rnn_cell()
     rnn_unroll()
+    arch_zoo()
+    rnn_lm()
+    rnn_numeric()
     vanishing()
     explode_vs_vanish()
+    bptt()
+    eigen_scale()
+    clipping()
     lstm_gates()
     gru_gates()
+    copy_regime()
     rnn_vs_attention()
     qkv()
     attn_heatmap()
