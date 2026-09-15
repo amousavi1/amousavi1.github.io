@@ -95,6 +95,8 @@ This is a **~26 minute** first-day block, including a short Karpathy clip. Draw 
 
 **Agreed two-hour plan (one meeting):** 1.1 stack + project + short Karpathy (~26 min) → 1.2 neuron / XOR (~16 min) → 1.3 GD + one chain-rule (~18 min) → 1.4 cosine + skip-gram softmax + bias (~18 min) → Lab 1 start (~32 min). Remaining videos are homework, not in-class playback.
 
+The lecture PDFs are **16:9**, with a timed plan, one large formula, and a diagram that fills the frame. That form is taken from Stanford CS224N Winter 2026 Lecture 2, CS231N 2024 Lecture 4, and MIT 6.S191 2025 Lecture 1. Those decks are **not** copied; the algebra is this course’s.
+
 Do **not** play a full Stanford CS224N lecture in this room. The 25-minute skip-gram Jacobian and the GloVe SVD assignment stay out of Week 1.
 
 ---

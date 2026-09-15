@@ -430,6 +430,74 @@ def bias_offset():
     _save(fig, "1.4-embeddings/bias-geometry.png")
 
 
+def skipgram_uv():
+    fig, ax = plt.subplots(figsize=(11.2, 5.2))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 5.4)
+    ax.axis("off")
+
+    def matrix(x, y, rows, cols, label, sub):
+        w, h = 0.22 * cols + 0.15, 0.22 * rows + 0.15
+        ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="square,pad=0", linewidth=1.8, edgecolor=NAVY, facecolor="white"))
+        rng = np.random.default_rng(3)
+        for i in range(rows):
+            for j in range(cols):
+                ax.add_patch(Circle((x + 0.18 + 0.22 * j, y + h - 0.22 - 0.22 * i), 0.055, facecolor=NAVY, edgecolor="none", alpha=0.55 + 0.4 * rng.random()))
+        ax.text(x + w / 2, y - 0.28, label, ha="center", fontsize=14, color=NAVY, fontstyle="italic")
+        ax.text(x + w / 2, y - 0.62, sub, ha="center", fontsize=11, color=SLATE)
+
+    matrix(0.5, 1.4, 8, 5, r"$U$", "outside / output")
+    matrix(2.9, 1.4, 8, 5, r"$V$", "center / input")
+    ax.annotate("", xy=(6.15, 2.7), xytext=(4.55, 2.7), arrowprops=dict(arrowstyle="-|>", color=CORAL, lw=2))
+    ax.text(5.35, 3.05, r"$U v_c$", ha="center", color=CORAL, fontsize=13)
+    matrix(6.3, 1.55, 8, 1, r"$z$", "scores")
+    ax.annotate("", xy=(9.15, 2.7), xytext=(7.55, 2.7), arrowprops=dict(arrowstyle="-|>", color=TEAL, lw=2))
+    ax.text(8.35, 3.05, "softmax", ha="center", color=TEAL, fontsize=13)
+    matrix(9.4, 1.55, 8, 1, r"$p$", "over $V$ words")
+    ax.set_title("Skip-gram is a lookup, a dot product, then a softmax — not a mysterious net", loc="left", color=NAVY)
+    _save(fig, "1.4-embeddings/skipgram-uv.png")
+
+
+def perceptron_numeric():
+    fig, axes = plt.subplots(1, 2, figsize=(11.4, 4.8), gridspec_kw={"width_ratios": [1.15, 1]})
+    ax = axes[0]
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 6)
+    ax.axis("off")
+    for y, lab, wlab in ((4.6, r"$x_1{=}1$", r"$0.5$"), (3.0, r"$x_2{=}-2$", r"$0.5$"), (1.4, r"bias", r"$+1$")):
+        ax.add_patch(Circle((1.3, y), 0.48, facecolor=FILL, edgecolor=NAVY, linewidth=1.6))
+        ax.text(1.3, y, lab, ha="center", va="center", fontsize=11, color=NAVY)
+        ax.annotate("", xy=(4.35, 3.0), xytext=(1.85, y), arrowprops=dict(arrowstyle="-|>", color=TEAL, lw=1.6))
+        ax.text(2.55, (y + 3.0) / 2 + 0.16, wlab, color=CORAL, fontsize=12)
+    ax.add_patch(Circle((5.1, 3.0), 0.62, facecolor=FILL2, edgecolor=TEAL, linewidth=1.8))
+    ax.text(5.1, 3.0, r"$\sum$", ha="center", va="center", fontsize=16, color=TEAL)
+    ax.annotate("", xy=(7.05, 3.0), xytext=(5.78, 3.0), arrowprops=dict(arrowstyle="-|>", color=CORAL, lw=1.8))
+    ax.add_patch(Circle((7.7, 3.0), 0.55, facecolor=FILL3, edgecolor=CORAL, linewidth=1.8))
+    ax.text(7.7, 3.0, r"$\sigma$", ha="center", va="center", fontsize=16, color=CORAL)
+    ax.text(5.1, 0.45, r"$z=0.5\cdot 1+0.5\cdot(-2)+1=0.5$", ha="center", fontsize=12, color=NAVY)
+    ax.text(5.1, 0.05, r"$\mathrm{ReLU}(0.5)=0.5$", ha="center", fontsize=12, color=NAVY)
+    ax.set_title("Plug in the numbers", loc="left", color=NAVY)
+
+    ax = axes[1]
+    ax.set_xlim(-1.2, 3.2)
+    ax.set_ylim(-3.2, 1.6)
+    ax.axhline(0, color=SLATE, lw=0.8)
+    ax.axvline(0, color=SLATE, lw=0.8)
+    xs = np.linspace(-1.2, 3.2, 80)
+    ax.plot(xs, 1 - xs, color=NAVY, lw=2.0, ls="--")
+    ax.scatter([1], [-2], s=90, c=CORAL, zorder=5)
+    ax.annotate(r"$(1,-2)$  on", xy=(1, -2), xytext=(1.45, -0.6),
+                arrowprops=dict(arrowstyle="->", color=CORAL), color=CORAL, fontsize=11)
+    ax.text(1.7, 0.85, r"$x_1+x_2=0$", color=NAVY, fontsize=12)
+    ax.set_xlabel(r"$x_1$")
+    ax.set_ylabel(r"$x_2$")
+    ax.set_title("Same numbers as a line", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "1.2-neurons-activations/perceptron-numeric.png")
+
+
 def xor_table():
     fig, ax = plt.subplots(figsize=(8.4, 3.4))
     ax.axis("off")
@@ -497,6 +565,7 @@ def main():
     feedforward()
     xor_sep()
     xor_table()
+    perceptron_numeric()
     loss_surface()
     gd_1d()
     train_loop()
@@ -504,6 +573,7 @@ def main():
     onehot_vs_embed()
     semantic_geometry()
     skipgram()
+    skipgram_uv()
     softmax_bars()
     eval_two_ways()
     bias_offset()

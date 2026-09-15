@@ -16,30 +16,81 @@ EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.e
 COURSE = "DATA 443/643"
 
 SLIDE_CSS = """
-@page { size: letter landscape; margin: 0.42in; }
-html, body { margin: 0; padding: 0; }
+@page { size: 13.333in 7.5in; margin: 0; }
+html, body { margin: 0; padding: 0; background: #fff; }
 body {
   font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #1a1a1a;
+  color: #1c1c1c;
 }
 .slide {
   page-break-after: always;
-  height: 7.15in;
+  width: 13.333in;
+  height: 7.5in;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  background: #fff;
 }
 .slide:last-child { page-break-after: auto; }
-.kicker { margin: 0; color: #5f6368; font-size: 12pt; }
-h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 26pt;
-  line-height: 1.2;
-  margin: 0.12em 0 0.35em;
-  color: #1f4e79;
+.slide-body {
+  flex: 1;
+  min-height: 0;
+  padding: 0.38in 0.58in 0.22in;
+  display: flex;
+  flex-direction: column;
 }
-ul { margin: 0.15em 0 0.4em; padding-left: 1.2em; font-size: 16pt; line-height: 1.35; }
-li { margin: 0.18em 0; }
+.slide.title-slide .slide-body {
+  justify-content: center;
+  padding-left: 0.9in;
+  padding-right: 0.9in;
+}
+.kicker {
+  margin: 0 0 0.12in;
+  color: #5f6b73;
+  font-size: 12.5pt;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+h1 {
+  font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 32pt;
+  font-weight: 650;
+  line-height: 1.15;
+  margin: 0 0 0.22in;
+  color: #0b6e99;
+}
+.title-slide h1 {
+  font-size: 44pt;
+  color: #0b6e99;
+  margin-bottom: 0.18in;
+}
+.title-slide .subtitle {
+  font-size: 20pt;
+  color: #333;
+  margin: 0 0 0.45in;
+}
+.title-slide .meta {
+  font-size: 16pt;
+  color: #5f6b73;
+  line-height: 1.45;
+}
+ul {
+  margin: 0.05em 0 0.15em;
+  padding-left: 1.15em;
+  font-size: 20pt;
+  line-height: 1.38;
+}
+li { margin: 0.16em 0; }
+.split {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 0.42fr 0.58fr;
+  gap: 0.38in;
+  min-height: 0;
+  align-items: center;
+}
+.split.wide-text { grid-template-columns: 0.5fr 0.5fr; }
+.split .copy { min-width: 0; }
 .fig {
   flex: 1;
   display: flex;
@@ -49,9 +100,119 @@ li { margin: 0.18em 0; }
 }
 .fig img {
   max-width: 100%;
-  max-height: 4.55in;
+  max-height: 5.55in;
   object-fit: contain;
 }
+.split .fig img { max-height: 5.35in; }
+.eq {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 0;
+}
+.eq math {
+  font-size: 1.85em;
+}
+.eq-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.22in;
+  margin-top: 0.32in;
+  width: 100%;
+}
+.eq-notes div, .callout {
+  background: #f4f8fb;
+  border-left: 5px solid #0b6e99;
+  padding: 0.16in 0.18in;
+  font-size: 14.5pt;
+  line-height: 1.3;
+  color: #24343c;
+  text-align: left;
+}
+.agenda { list-style: none; padding: 0; margin: 0.1in 0 0; }
+.agenda li {
+  display: grid;
+  grid-template-columns: 0.42in 1fr 1.35in;
+  gap: 0.18in;
+  align-items: center;
+  padding: 0.13in 0;
+  border-bottom: 1px solid #e4eaee;
+  font-size: 20pt;
+}
+.agenda .n {
+  color: #0b6e99;
+  font-weight: 700;
+}
+.agenda .t {
+  color: #8c1515;
+  font-size: 15pt;
+  text-align: right;
+  font-weight: 600;
+}
+.cards {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.28in;
+  align-content: center;
+}
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+.card {
+  background: #f7fafc;
+  border: 1px solid #d7e2ea;
+  border-radius: 10px;
+  padding: 0.22in 0.24in;
+  min-height: 2.2in;
+}
+.card h2 {
+  margin: 0 0 0.12in;
+  font-size: 18pt;
+  color: #0b6e99;
+}
+.card p { font-size: 15.5pt; line-height: 1.35; margin: 0.08em 0; }
+.compare {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3in;
+  align-items: stretch;
+}
+.compare .col {
+  border-radius: 10px;
+  padding: 0.24in;
+}
+.compare .bad { background: #f8eee8; border: 1px solid #e7c7b4; }
+.compare .good { background: #e6f4f1; border: 1px solid #b7ddd6; }
+.compare h2 { margin: 0 0 0.14in; font-size: 18pt; }
+.compare p { font-size: 16pt; line-height: 1.4; margin: 0; }
+.takeaway {
+  margin-top: auto;
+  background: #fff7e8;
+  border-left: 6px solid #c9a227;
+  padding: 0.16in 0.22in;
+  font-size: 16.5pt;
+  line-height: 1.35;
+}
+.caption { margin: 0.08in 0 0; color: #5f6b73; font-size: 13.5pt; }
+.bar {
+  height: 0.42in;
+  background: #8c1515;
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 0.45in;
+  font-size: 11.5pt;
+  letter-spacing: 0.01em;
+}
+.bar .left { justify-self: start; }
+.bar .mid { justify-self: center; }
+.bar .right { justify-self: end; }
+.title-slide .bar { background: #1f4e79; }
+.rule { height: 4px; background: #c9a227; }
 """
 
 DECKS = [
@@ -60,69 +221,80 @@ DECKS = [
         "title": "1.1 Course Map and the Semester Project",
         "slides": [
             {
-                "title": "Learning goals for this block",
-                "bullets": [
-                    "Place Week 1 at the base of an LLM stack.",
-                    "Write the next-token product and its negative log-likelihood.",
-                    "Compute the Llama 2 70B weights-file size (140 GB at float16).",
-                    "Turn “use an LLM” into a question plus a metric.",
-                ],
+                "layout": "title",
+                "title": "Course Map and the Semester Project",
+                "subtitle": "DATA 443/643  ·  Advanced Concepts in Large Language Models",
+                "meta": "Week 1  ·  American University  ·  Ahmad Mousavi",
             },
             {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Where this course sits, and why it is self-contained", "4 min"),
+                    ("2", "An LLM is a stack; Week 1 is the base", "6 min"),
+                    ("3", "What pretraining actually minimizes", "6 min"),
+                    ("4", "The 140 GB weights file", "4 min"),
+                    ("5", "Turn a method into a project question", "6 min"),
+                ],
+                "takeaway": "Key goal: leave with a stack picture, a next-token loss, and one measurable project sentence.",
+            },
+            {
+                "layout": "split",
                 "title": "A self-contained LLM course",
                 "bullets": [
-                    "DATA 441/641 and 442/642 are not prerequisites.",
                     "Listed prereq: DATA 427/627.",
-                    "Overlap with those courses is intentional: more people can take this.",
-                    "The semester is a project. Lectures exist so that project has a backbone.",
+                    "DATA 641 and 642 are not required.",
+                    "Overlap is intentional so more people can finish a project.",
                 ],
                 "image": "graphics/1.1-course-map/roadmap.png",
             },
             {
+                "layout": "split",
                 "title": "A language model is a stack",
                 "bullets": [
-                    "Week 1 is the bottom: neurons, training, word vectors.",
-                    "Week 3 puts attention on those vectors.",
-                    "Later weeks align, retrieve, generate, and use tools.",
-                    "If your project “uses GPT,” name the layer you will change.",
+                    "Chat products sit at the top.",
+                    "The weights still came from next-token training.",
+                    "Name the layer you will change: data, prompt, adapter, retriever, or eval.",
                 ],
                 "image": "graphics/1.1-course-map/stack.png",
             },
             {
+                "layout": "equation",
                 "title": "Pretraining minimizes next-token NLL",
-                "bullets": [
-                    r"\(P(w_1,\ldots,w_T)=\prod_t P(w_t\mid w_{<t})\).",
-                    r"\(L=-\sum_t\log P(w_t\mid w_{<t})\). Loss = empirical risk = cost.",
-                    r"If \(P(\mathrm{mat}\mid \text{the cat sat on the})=0.70\), NLL \(\approx 0.357\).",
-                    "XOR and skip-gram this week are the same kind of scalar, small.",
+                "equation": r"P(w_1,\ldots,w_T)=\prod_{t=1}^{T} P(w_t\mid w_{1:t-1})",
+                "notes": [
+                    "Each factor is a softmax over the vocabulary.",
+                    "The training loss is the negative log of those probabilities.",
+                    "If the model assigns 0.70, NLL is about 0.36. If 0.10, NLL is about 2.30.",
                 ],
             },
             {
+                "layout": "equation",
                 "title": "Llama 2 70B is a 140 GB file",
-                "bullets": [
-                    r"\(70\times 10^9\) parameters \(\times\) 2 bytes (float16) = 140 GB.",
+                "equation": r"70\times 10^{9}\times 2~\mathrm{bytes}=140~\mathrm{GB}",
+                "notes": [
+                    "Each parameter stored as float16 (2 bytes).",
                     "Parameters file vs run file: running needs extra memory.",
                     "Karpathy: an LLM is weights plus a little code.",
-                    "In class: 0:00–8:00. Finish 0:00–20:00 as homework.",
                 ],
             },
             {
-                "title": "The project starts this week",
-                "bullets": [
-                    "A question you can measure, a public dataset, a baseline, one justified change.",
-                    "Bad: “Use LoRA on news.” Better: a metric on a 100-item holdout.",
-                    "Undergraduate: group report and talk. Graduate: main project plus a paper mini-project.",
-                    "Lab 1 ends with a five-line topic seed. You may change it.",
-                ],
+                "layout": "compare",
+                "title": "The project starts with a question",
+                "left_title": "Not a project",
+                "left": "Use LoRA on news.",
+                "right_title": "A project",
+                "right": "Does a LoRA adapter on local news reduce entity hallucination vs. the base model, measured by exact-match on a 100-item holdout?",
             },
             {
+                "layout": "cards",
                 "title": "Today’s two-hour meeting",
-                "bullets": [
-                    "1.1 stack + project + short Karpathy (~26 min).",
-                    "1.2 neuron / XOR (~16). 1.3 GD + one chain-rule (~18).",
-                    "1.4 cosine + skip-gram softmax + bias (~18). Lab 1 start (~32).",
-                    "Books: Goodfellow 6.1, Nielsen Ch. 1, Jurafsky Ch. 5 (Aug 2026 draft), Mikolov §§1–3.",
+                "cards": [
+                    ("1.1  ~26 min", "Stack, NLL, 140 GB, project sentence. Karpathy 0:00–8:00."),
+                    ("1.2–1.4  ~52 min", "Neuron / XOR, then GD + one chain-rule, then skip-gram softmax + bias."),
+                    ("Lab 1  ~32 min", "XOR vs linear, then the constructed 2-D embedding probe."),
                 ],
+                "takeaway": "Pedagogy drawn from Stanford CS224N (plan + one formula), CS231N (footer, one idea), MIT 6.S191 (diagram + numbers). Original slides; those courses are not copied.",
             },
         ],
     },
@@ -131,76 +303,83 @@ DECKS = [
         "title": "1.2 Neurons, Activations, and Feedforward Nets",
         "slides": [
             {
-                "title": "Learning goals for this block",
-                "bullets": [
-                    r"Write \(z=w^\top x+b\) then \(a=\sigma(z)\) as two boxes.",
-                    "State sigmoid, ReLU, ReLU derivative, and softmax.",
-                    "Show that two affine maps collapse to one.",
-                    "Fill Goodfellow’s two-ReLU XOR table; count 3 vs 33 parameters.",
+                "layout": "title",
+                "title": "Neurons, Activations, and Feedforward Nets",
+                "subtitle": "DATA 443/643  ·  Week 1, note 1.2",
+                "meta": "After MIT 6.S191 L1 and CS231N L4: one unit, then why depth needs a bend.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "One neuron: z, then a", "3 min"),
+                    ("2", "Four formulas you will write", "3 min"),
+                    ("3", "Why two linear layers collapse", "3 min"),
+                    ("4", "XOR, Goodfellow’s table, 3 vs 33", "7 min"),
                 ],
             },
             {
+                "layout": "split",
                 "title": "One neuron",
                 "bullets": [
-                    r"Pre-activation \(z = w^\top x + b\), then \(a = \sigma(z)\).",
-                    r"\(w\) and \(b\) are the parameters you train.",
+                    r"Pre-activation \(z=w^\top x+b\).",
+                    r"Activation \(a=\sigma(z)\).",
                     r"If you skip \(z\), you cannot take derivatives next note.",
                 ],
                 "image": "graphics/1.2-neurons-activations/neuron.png",
             },
             {
-                "title": "Four formulas, no Jacobian",
-                "bullets": [
-                    r"Sigmoid: \(\sigma(z)=1/(1+e^{-z})\).",
-                    r"ReLU: \(\max(0,z)\). Derivative: \(\mathrm{ReLU}'(z)=\mathbf{1}_{z>0}\).",
-                    r"Softmax: \(\mathrm{softmax}(z)_i=e^{z_i}/\sum_j e^{z_j}\).",
-                    "ReLU in hidden layers; softmax when classes compete. GELU waits.",
-                ],
-                "image": "graphics/1.2-neurons-activations/activations.png",
+                "layout": "figure",
+                "title": "The perceptron: plug in the numbers",
+                "image": "graphics/1.2-neurons-activations/perceptron-numeric.png",
+                "caption": "MIT 6.S191 style: same example as a diagram and as a line. Ours uses ReLU, not sigmoid.",
             },
             {
+                "layout": "equation",
+                "title": "Four formulas. No Jacobian today.",
+                "equation": r"\sigma(z)=\frac{1}{1+e^{-z}}\qquad \mathrm{ReLU}(z)=\max(0,z)",
+                "notes": [
+                    r"\(\mathrm{ReLU}'(z)=\mathbf{1}_{z>0}\). At 0, PyTorch uses 0.",
+                    r"\(\mathrm{softmax}(z)_i=e^{z_i}/\sum_j e^{z_j}\).",
+                    "ReLU in hidden layers. Softmax when classes compete.",
+                ],
+            },
+            {
+                "layout": "split",
                 "title": "The nonlinearity is the point",
                 "bullets": [
-                    r"\(W_2(W_1 x+b_1)+b_2=(W_2 W_1)x+(W_2 b_1+b_2)\).",
-                    r"Without \(\sigma\), depth does not add power.",
-                    "Sigmoid saturates. ReLU is cheap and sparse (and can die).",
+                    "Two affine maps compose to one affine map.",
+                    "Without a bend, depth adds no power.",
+                    "CS231N: you get a linear classifier again.",
                 ],
+                "image": "graphics/1.2-neurons-activations/activations.png",
+                "takeaway": r"\(W_2(W_1 x+b_1)+b_2=(W_2 W_1)x+(W_2 b_1+b_2)\).",
             },
             {
+                "layout": "split",
                 "title": "A feedforward net",
                 "bullets": [
-                    r"Layer \(\ell\): \(a^{(\ell)} = \sigma(W^{(\ell)} a^{(\ell-1)} + b^{(\ell)})\).",
-                    r"\(a^{(0)} = x\). Every arrow is one weight.",
-                    "A transformer block still contains this MLP, per position.",
+                    r"Layer \(\ell\): \(a^{(\ell)}=\sigma(W^{(\ell)}a^{(\ell-1)}+b^{(\ell)})\).",
+                    r"\(a^{(0)}=x\). Every arrow is one weight.",
+                    "A transformer block still contains this MLP.",
                 ],
                 "image": "graphics/1.2-neurons-activations/feedforward.png",
             },
             {
+                "layout": "split",
                 "title": "XOR: why a hidden layer exists",
                 "bullets": [
                     "One linear unit cannot separate XOR.",
-                    "A small MLP can fold the space so the classes split.",
-                    "Language models stack many such nonlinear maps.",
+                    "A hidden layer folds the square.",
+                    "Language models stack many such maps.",
                 ],
                 "image": "graphics/1.2-neurons-activations/xor.png",
             },
             {
+                "layout": "figure",
                 "title": "Goodfellow §6.1: an explicit XOR net",
-                "bullets": [
-                    r"\(a_1=\mathrm{ReLU}(x_1+x_2)\) (OR).",
-                    r"\(a_2=\mathrm{ReLU}(x_1+x_2-1)\) (AND).",
-                    r"\(\hat y=a_1-2a_2\) yields 0, 1, 1, 0.",
-                ],
                 "image": "graphics/1.2-neurons-activations/xor-table.png",
-            },
-            {
-                "title": "Lab 1 parameter count",
-                "bullets": [
-                    r"Linear classifier \(\mathrm{Linear}(2,1)\): \(2+1=3\) parameters.",
-                    r"MLP \(\mathrm{Linear}(2,8)\to\mathrm{ReLU}\to\mathrm{Linear}(8,1)\): 33 parameters.",
-                    "The table already solves XOR. Extra units make training easier, not magic.",
-                    "Classical name: multi-layer perceptron. Modern name: the FFN in a block.",
-                ],
+                "takeaway": r"Lab 1 MLP is 33 parameters, not this hand-chosen net. Linear(2,1) is 3 parameters and cannot do this table.",
             },
         ],
     },
@@ -209,76 +388,85 @@ DECKS = [
         "title": "1.3 Gradient Descent",
         "slides": [
             {
-                "title": "Learning goals for this block",
-                "bullets": [
-                    r"Write \(\theta\leftarrow\theta-\eta\nabla L\) and take two numeric steps.",
-                    "Name the four boxes: forward, loss, backward, update.",
-                    r"Derive \(\partial L/\partial w=(a-y)\,\mathrm{ReLU}'(z)\,x\) for one unit.",
-                    r"Pass logits \(z\) into BCEWithLogitsLoss, not sigmoid(\(z\)).",
+                "layout": "title",
+                "title": "Gradient Descent",
+                "subtitle": "DATA 443/643  ·  Week 1, note 1.3",
+                "meta": "After CS231N L3–L4 and Nielsen Ch. 1: walk downhill, then one computational graph.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Loss as a surface", "3 min"),
+                    ("2", "The update, two steps, overshoot", "5 min"),
+                    ("3", "Forward, loss, backward, update", "4 min"),
+                    ("4", "One ReLU unit as gates", "6 min"),
                 ],
             },
             {
+                "layout": "split",
                 "title": "Training is walking downhill",
                 "bullets": [
-                    r"Pack weights into \(\theta\). Loss \(L(\theta)\) is a scalar.",
-                    "Classical names: loss = cost = empirical risk.",
-                    "The gradient points uphill. We step the other way.",
+                    r"Pack weights into \(\theta\). \(L(\theta)\) is a scalar.",
+                    "Loss = cost = empirical risk.",
+                    "The gradient points uphill. Step the other way.",
                 ],
                 "image": "graphics/1.3-gradient-descent/loss-surface.png",
             },
             {
-                "title": "The update and the learning rate",
+                "layout": "equation",
+                "title": "The update",
+                "equation": r"\theta \leftarrow \theta - \eta \nabla L(\theta)",
+                "notes": [
+                    r"\(\eta\) too small: crawl. Too large: overshoot.",
+                    "SGD estimates the gradient on a minibatch.",
+                    "Adam waits. Nielsen Ch. 1 is enough for today.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Two steps, then overshoot",
                 "bullets": [
-                    r"\(\theta \leftarrow \theta - \eta \nabla L(\theta)\).",
-                    "Too small: crawl. Too large: overshoot.",
-                    "SGD estimates the gradient on a minibatch. Adam waits.",
-                    "Nielsen Ch. 1: this picture, then stop before long MNIST.",
+                    r"\(L(\theta)=(\theta-3)^2\), \(\theta_0=0\), \(\eta=0.25\).",
+                    r"\(\theta_1=1.5\), \(\theta_2=2.25\). Minimum at 3.",
+                    r"\(\eta=2\) sends \(\theta_1=12\): overshoot.",
                 ],
                 "image": "graphics/1.3-gradient-descent/gd-1d.png",
             },
             {
-                "title": "Two steps, then overshoot",
-                "bullets": [
-                    r"\(L(\theta)=(\theta-3)^2\), \(\theta_0=0\), \(\eta=0.25\).",
-                    r"\(\theta_1=1.5\), \(\theta_2=2.25\). Minimum is at 3.",
-                    r"\(\eta=2\) sends \(\theta_1=12\): overshoot, not a new algorithm.",
-                ],
-            },
-            {
+                "layout": "split",
                 "title": "Forward, loss, backward, update",
                 "bullets": [
-                    "Keep activations: the backward pass needs them.",
-                    "Backprop is the chain rule. Autograd is backprop.",
-                    r"Forget `zero_grad()`: gradients accumulate. Silent \(\eta\) disaster.",
-                    r"Pretraining and fine-tuning are this loop with different data and \(L\).",
+                    "Keep activations. Backward needs them.",
+                    "Autograd is backprop: the chain rule.",
+                    r"Forget `zero_grad()`: gradients accumulate.",
                 ],
                 "image": "graphics/1.3-gradient-descent/train-loop.png",
             },
             {
-                "title": "One ReLU unit as gates",
-                "bullets": [
-                    "CS231N: each op is a gate. Local derivative times upstream.",
-                    r"\(z=w^\top x+b\), \(a=\mathrm{ReLU}(z)\), \(L=\frac12(a-y)^2\).",
-                    r"If \(z\le 0\), this example does not move \(w\).",
-                ],
+                "layout": "figure",
+                "title": "One ReLU unit as a computational graph",
                 "image": "graphics/1.3-gradient-descent/one-unit-backprop.png",
+                "caption": "CS231N: each op is a gate. Local derivative times upstream.",
             },
             {
+                "layout": "equation",
                 "title": "The chain rule you must write",
-                "bullets": [
-                    r"\(\partial L/\partial w=(a-y)\,\mathrm{ReLU}'(z)\,x\).",
-                    r"CMU 11-711 cousin for softmax+CE: \(\partial L/\partial w=(p-y)x\).",
-                    r"Numeric: \(x=2\), \(w=0.5\), \(y=0\) gives \(\partial L/\partial w=2\); \(\eta=0.1\) sends \(w\leftarrow 0.3\).",
+                "equation": r"\frac{\partial L}{\partial w}=(a-y)\,\mathrm{ReLU}'(z)\,x",
+                "notes": [
+                    r"Squared error on one ReLU neuron.",
+                    r"CMU 11-711 cousin: \(\partial L/\partial w=(p-y)x\).",
+                    r"\(x=2,w=0.5,y=0\): gradient \(2\), then \(w\leftarrow 0.3\) at \(\eta=0.1\).",
                 ],
             },
             {
+                "layout": "compare",
                 "title": "Lab 1 loss takes logits",
-                "bullets": [
-                    r"BCEWithLogitsLoss is binary cross-entropy on \(z\), not on \(\sigma(z)\).",
-                    "If you sigmoid first, you squash twice.",
-                    "Next-token NLL (note 1.1) is the same loop at vocabulary scale.",
-                    "3Blue1Brown GD + backprop videos: homework, not this block.",
-                ],
+                "left_title": "Wrong",
+                "left": "sigmoid(z), then BCEWithLogitsLoss. You squash twice.",
+                "right_title": "Right",
+                "right": "Pass z into BCEWithLogitsLoss. The sigmoid is inside the loss.",
+                "takeaway": "Next-token NLL is this same loop at vocabulary scale.",
             },
         ],
     },
@@ -287,92 +475,112 @@ DECKS = [
         "title": "1.4 Word Embeddings and Semantic Geometry",
         "slides": [
             {
-                "title": "Learning goals for this block",
-                "bullets": [
-                    "Separate distributional, distributed, and embedding.",
-                    r"Write skip-gram \(P(w_o\mid w_c)\) and a \(V=3\) softmax.",
-                    "Use cosine; run the Lab 1 signed-projection bias probe.",
-                    "Report extrinsic numbers in a project; use intrinsic to debug.",
-                ],
+                "layout": "title",
+                "title": "Word Embeddings and Semantic Geometry",
+                "subtitle": "DATA 443/643  ·  Week 1, note 1.4",
+                "meta": "After Stanford CS224N Lecture 2: distributional meaning, skip-gram softmax, then evaluation.",
             },
             {
-                "title": "One-hot is a bad geometry",
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "One-hot is a bad geometry", "3 min"),
+                    ("2", "Distributional / distributed / embedding", "3 min"),
+                    ("3", "Skip-gram: window, softmax, lookup", "7 min"),
+                    ("4", "Intrinsic vs extrinsic, then bias as geometry", "5 min"),
+                ],
+                "takeaway": "Key goal (CS224N): a word can be a dense vector; you can write P(o given c); projects report extrinsic numbers.",
+            },
+            {
+                "layout": "split",
+                "title": "Problem with words as discrete symbols",
                 "bullets": [
-                    "film and movie are orthogonal. New words have no coordinate.",
-                    "Distributed = short, dense. Similar usage → similar vectors.",
-                    "An embedding is the map from a token id into that space.",
+                    "film and movie are orthogonal.",
+                    "No natural similarity for one-hot vectors.",
+                    "A new word has no coordinate.",
                 ],
                 "image": "graphics/1.4-embeddings/onehot-vs-embed.png",
             },
             {
+                "layout": "cards",
                 "title": "Three words that are not synonyms",
-                "bullets": [
-                    "Distributional: similar contexts, similar meaning (Harris; Jurafsky Ch. 5).",
-                    "Distributed: the code is a dense vector, not a one-hot.",
-                    r"Embedding: the lookup, `nn.Embedding`, row of a \(V\times d\) table.",
-                    "Mixing these three is the most common exam slip this week.",
+                "cards": [
+                    ("Distributional", "Similar contexts, similar meaning. Harris; Firth; Jurafsky Ch. 5."),
+                    ("Distributed", "The code is a dense vector, not a one-hot."),
+                    ("Embedding", "The lookup: nn.Embedding, a row of a V by d table."),
                 ],
             },
             {
+                "layout": "split",
                 "title": "Direction can mean something",
                 "bullets": [
                     r"king − man + woman ≈ queen.",
-                    r"Cosine: \(u^\top v/(\|u\|\|v\|)\). Length tracks frequency.",
-                    "Nearest neighbors are a debug tool, not a project metric.",
+                    r"Cosine: \(u^\top v/(\|u\|\|v\|)\).",
+                    "Nearest neighbors debug. They are not a project metric.",
                 ],
                 "image": "graphics/1.4-embeddings/semantic-geometry.png",
             },
             {
-                "title": "Skip-gram learns the map",
+                "layout": "split",
+                "title": "Skip-gram: from the center, predict a neighbor",
                 "bullets": [
-                    "Fake task: from the center, predict each neighbor.",
-                    "CBOW: from the neighbors, predict the center.",
-                    r"Logits are \(z_w=u_w^\top v_c\). Softmax over the vocabulary.",
+                    "Fake task on a window.",
+                    "CBOW: from neighbors, predict the center.",
+                    r"Logits \(z_w=u_w^\top v_c\).",
                 ],
                 "image": "graphics/1.4-embeddings/skipgram-window.png",
             },
             {
-                "title": "Skip-gram softmax, V = 3",
+                "layout": "equation",
+                "title": "Word2Vec prediction function",
+                "equation": r"P(w_o\mid w_c)=\frac{\exp(u_o^{\top} v_c)}{\sum_{w}\exp(u_w^{\top} v_c)}",
+                "notes": [
+                    "1. Dot product scores similarity of o and c.",
+                    "2. Exp makes every score positive.",
+                    "3. Normalize over the vocabulary. That is softmax.",
+                ],
+            },
+            {
+                "layout": "figure",
+                "title": "Skip-gram is a table, a product, then a softmax",
+                "image": "graphics/1.4-embeddings/skipgram-uv.png",
+                "caption": "Keep V (center rows). Throw away the softmax. A transformer keeps transforming those vectors.",
+            },
+            {
+                "layout": "split",
+                "title": "A three-word softmax you can finish by hand",
                 "bullets": [
-                    r"\(P(w_o\mid w_c)=\exp(u_o^\top v_c)/\sum_w\exp(u_w^\top v_c)\).",
-                    r"Scores \((1, 0.5, 0)\) for cat, mat, sat \(\Rightarrow\) \(p\approx(0.51, 0.31, 0.19)\).",
+                    r"Scores \((1, 0.5, 0)\) for cat, mat, sat.",
+                    r"\(p\approx(0.51, 0.31, 0.19)\).",
                     "Mikolov 2013a §§1–3. Negative sampling is cited, not derived.",
                 ],
                 "image": "graphics/1.4-embeddings/skipgram-softmax.png",
             },
             {
-                "title": "Keep the lookup; throw the softmax",
-                "bullets": [
-                    r"`nn.Embedding(V, d)` is a table. One-hot \(\times\) matrix is the same map.",
-                    r"Word2Vec keeps \(v_w\). It throws away the output softmax.",
-                    "A transformer keeps transforming those vectors instead.",
-                ],
-            },
-            {
+                "layout": "compare",
                 "title": "Counting vs. predicting",
-                "bullets": [
-                    "Classical vector semantics can start from a co-occurrence matrix.",
-                    "Skip-gram predicts context instead of counting it.",
-                    "Both are distributional. We use the predictive story because it is the LLM loop.",
-                    "No GloVe SVD homework this week. Optional later: CS224N A1.",
-                ],
+                "left_title": "Count",
+                "left": "Build a co-occurrence matrix, then factor it (LSA / GloVe). Classical vector semantics can start here.",
+                "right_title": "Predict",
+                "right": "Skip-gram predicts context. Same distributional idea; same training loop as an LLM. No SVD homework this week.",
             },
             {
-                "title": "Intrinsic vs. extrinsic",
+                "layout": "split",
+                "title": "How to evaluate word vectors",
                 "bullets": [
-                    "Intrinsic: analogies, similarity, clustering of the space.",
+                    "Intrinsic: analogies, similarity, clustering.",
                     "Extrinsic: does a downstream model improve?",
                     "They need not agree. Projects report extrinsic.",
                 ],
                 "image": "graphics/1.4-embeddings/intrinsic-extrinsic.png",
             },
             {
+                "layout": "split",
                 "title": "Bias is also geometry",
                 "bullets": [
                     r"Offset \(o=\overrightarrow{\mathrm{he}}-\overrightarrow{\mathrm{she}}\).",
-                    r"Score \(v^\top o/\|o\|\). Larger sits closer to he.",
-                    "Lab 1: constructed 2-D CSV first, then the same probe on a real model later.",
-                    "Debiasing is incomplete. Report the probe when you rank people or jobs.",
+                    r"Score \(v^{\top}o/\|o\|\). Larger sits closer to he.",
+                    "Lab 1: constructed 2-D first, then the same probe on a real model later.",
                 ],
                 "image": "graphics/1.4-embeddings/bias-geometry.png",
             },
@@ -1111,24 +1319,39 @@ DECKS = [
 ]
 
 
+def _math(src: str, display: str = "inline") -> str:
+    try:
+        from latex2mathml.converter import convert
+
+        return convert(src.strip(), display=display)
+    except Exception:
+        return html_lib.escape(src)
+
+
 def _tex_to_html(text: str) -> str:
     out = []
     i = 0
-    while i < len(text):
+    n = len(text)
+    while i < n:
+        if text.startswith("\\[", i):
+            j = text.find("\\]", i + 2)
+            if j == -1:
+                out.append(html_lib.escape(text[i:]))
+                break
+            out.append(_math(text[i + 2 : j], display="block"))
+            i = j + 2
+            continue
         if text.startswith("\\(", i):
             j = text.find("\\)", i + 2)
             if j == -1:
                 out.append(html_lib.escape(text[i:]))
                 break
-            try:
-                from latex2mathml.converter import convert
-
-                out.append(convert(text[i + 2 : j].strip(), display="inline"))
-            except Exception:
-                out.append(html_lib.escape(text[i : j + 2]))
+            out.append(_math(text[i + 2 : j], display="inline"))
             i = j + 2
             continue
-        nxt = text.find("\\(", i)
+        nxt_inline = text.find("\\(", i)
+        nxt_disp = text.find("\\[", i)
+        nxt = min([x for x in (nxt_inline, nxt_disp) if x != -1], default=-1)
         chunk = text[i:] if nxt == -1 else text[i:nxt]
         out.append(html_lib.escape(chunk))
         if nxt == -1:
@@ -1137,23 +1360,121 @@ def _tex_to_html(text: str) -> str:
     return "".join(out)
 
 
+def _img(rel: str) -> str:
+    src = (FILES / rel).resolve().as_uri()
+    return f'<div class="fig"><img src="{src}" alt="" /></div>'
+
+
+def _ul(items: list[str]) -> str:
+    if not items:
+        return ""
+    return "<ul>" + "".join(f"<li>{_tex_to_html(b)}</li>" for b in items) + "</ul>"
+
+
+def _takeaway(slide: dict) -> str:
+    text = slide.get("takeaway")
+    if not text:
+        return ""
+    return f'<div class="takeaway">{_tex_to_html(text)}</div>'
+
+
+def _infer_layout(slide: dict) -> str:
+    if slide.get("layout"):
+        return slide["layout"]
+    if slide.get("agenda"):
+        return "agenda"
+    if slide.get("equation"):
+        return "equation"
+    if slide.get("cards"):
+        return "cards"
+    if slide.get("left") or slide.get("compare"):
+        return "compare"
+    if slide.get("image") and slide.get("bullets"):
+        return "split"
+    if slide.get("image"):
+        return "figure"
+    return "bullets"
+
+
+def _body(slide: dict) -> str:
+    layout = _infer_layout(slide)
+    title = html_lib.escape(slide.get("title") or "")
+    heading = f"<h1>{title}</h1>" if title else ""
+    if layout == "title":
+        sub = html_lib.escape(slide.get("subtitle") or "")
+        meta = html_lib.escape(slide.get("meta") or "").replace("  ·  ", "<br/>")
+        return f"<h1>{title}</h1><p class='subtitle'>{sub}</p><p class='meta'>{meta}</p>"
+    if layout == "agenda":
+        rows = []
+        for n, text, time in slide.get("agenda") or []:
+            rows.append(
+                f"<li><span class='n'>{html_lib.escape(n)}</span>"
+                f"<span>{_tex_to_html(text)}</span>"
+                f"<span class='t'>{html_lib.escape(time)}</span></li>"
+            )
+        return heading + f"<ol class='agenda'>{''.join(rows)}</ol>" + _takeaway(slide)
+    if layout == "equation":
+        notes = slide.get("notes") or []
+        note_html = ""
+        if notes:
+            cols = "".join(f"<div>{_tex_to_html(n)}</div>" for n in notes)
+            note_html = f"<div class='eq-notes'>{cols}</div>"
+        return (
+            heading
+            + f"<div class='eq'>{_math(slide.get('equation') or '', display='block')}{note_html}</div>"
+            + _takeaway(slide)
+        )
+    if layout == "cards":
+        cards = []
+        for ht, body in slide.get("cards") or []:
+            cards.append(f"<div class='card'><h2>{html_lib.escape(ht)}</h2><p>{_tex_to_html(body)}</p></div>")
+        klass = "cards three" if len(slide.get("cards") or []) == 3 else "cards"
+        return heading + f"<div class='{klass}'>{''.join(cards)}</div>" + _takeaway(slide)
+    if layout == "compare":
+        left_t = html_lib.escape(slide.get("left_title") or "Before")
+        right_t = html_lib.escape(slide.get("right_title") or "After")
+        return (
+            heading
+            + "<div class='compare'>"
+            + f"<div class='col bad'><h2>{left_t}</h2><p>{_tex_to_html(slide.get('left') or '')}</p></div>"
+            + f"<div class='col good'><h2>{right_t}</h2><p>{_tex_to_html(slide.get('right') or '')}</p></div>"
+            + "</div>"
+            + _takeaway(slide)
+        )
+    if layout == "figure":
+        cap = slide.get("caption")
+        cap_html = f"<p class='caption'>{_tex_to_html(cap)}</p>" if cap else ""
+        return heading + _img(slide["image"]) + cap_html + _takeaway(slide)
+    if layout == "split":
+        return (
+            heading
+            + "<div class='split'>"
+            + f"<div class='copy'>{_ul(slide.get('bullets') or [])}{_takeaway(slide)}</div>"
+            + _img(slide["image"])
+            + "</div>"
+        )
+    fig = _img(slide["image"]) if slide.get("image") else ""
+    return heading + _ul(slide.get("bullets") or []) + fig + _takeaway(slide)
+
+
 def write_deck(deck: dict) -> pathlib.Path:
     WORK.mkdir(parents=True, exist_ok=True)
+    n = len(deck["slides"])
     slides_html = []
-    for slide in deck["slides"]:
-        bullets = "".join(f"<li>{_tex_to_html(b)}</li>" for b in slide.get("bullets") or [])
-        fig = ""
-        image = slide.get("image")
-        if image:
-            src = (FILES / image).resolve().as_uri()
-            fig = f'<div class="fig"><img src="{src}" alt="" /></div>'
+    for i, slide in enumerate(deck["slides"], start=1):
+        layout = _infer_layout(slide)
+        klass = "slide title-slide" if layout == "title" else "slide"
+        kicker = ""
+        if layout not in {"title"}:
+            kicker = f"<p class='kicker'>{html_lib.escape(COURSE)} · lecture {html_lib.escape(deck['stem'].split('-', 1)[0])}</p>"
+        bar = (
+            "<div class='rule'></div>"
+            f"<footer class='bar'><span class='left'>Ahmad Mousavi</span>"
+            f"<span class='mid'>{html_lib.escape(deck['title'])}</span>"
+            f"<span class='right'>{i} / {n}</span></footer>"
+        )
         slides_html.append(
-            f"""<section class="slide">
-  <p class="kicker">{COURSE} &middot; {html_lib.escape(deck["title"])}</p>
-  <h1>{html_lib.escape(slide["title"])}</h1>
-  <ul>{bullets}</ul>
-  {fig}
-</section>"""
+            f"<section class='{klass}'><div class='slide-body'>{kicker}{_body(slide)}</div>{bar}</section>"
         )
     html = f"""<!doctype html>
 <html lang="en">
