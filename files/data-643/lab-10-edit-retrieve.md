@@ -1,7 +1,5 @@
 Work in a **Jupyter** notebook with **Python** (stdlib is enough; `numpy` optional). Do notes **10.2–10.3** first. Optional file: [toy_facts.csv](files/data-643/toy_facts.csv).
 
-**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
-
 ```python
 from pathlib import Path
 ```

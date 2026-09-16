@@ -1,29 +1,38 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-GPT and BERT are the same block with different **masks** and **objectives**. That choice is the difference between a generator and a bidirectional encoder. The fork is the objective: causal language modeling versus masked language modeling.
+GPT and BERT are the same block with different **masks** and **objectives**. That choice is the difference between a generator and a bidirectional encoder. The fork is the objective: causal language modeling versus masked language modeling. By the end you should be able to fill the objective table, mask a \(2\times 2\) score matrix, and say why BERT cannot stream tokens.
 
 ---
 
-> **First time this method appears.** **GPT** and **BERT** are two uses of the same block.
->
-> **What.** GPT: causal next-token (left to right). BERT: masked tokens, bidirectional context. Both produce **contextual** vectors, not a static table (Week 1).
-> **Why.** Language modeling (GPT) is the pretrain that later becomes ChatGPT. BERT-style MLM is a bidirectional encoder for classification and span tasks.
-> **Architecture.** Same transformer block. GPT masks the future. BERT masks random token ids and reconstructs them. Heads differ (LM vs CLS/span).
-> **How.** Train on unlabeled text. After pretrain, GPT generates; BERT is usually fine-tuned with a small head.
-> **Formula.** GPT: \(\prod_t p(w_t\mid w_{<t})\). BERT: reconstruct masked positions, not a full joint factorization of the sentence.
-> **Tradeoffs.** + Contextual geometry. − GPT cannot see the future inside a prompt token; BERT is not a natural generator. “Transformer” is the block; GPT/BERT is the **objective**.
->
-## 1. Static versus contextual
+## 1. What GPT and BERT are
+
+**GPT** and **BERT** are two uses of the same transformer block. GPT: causal next-token (left to right). BERT: masked tokens, bidirectional context. Both produce **contextual** vectors, not a static table (Week 1).
 
 Week 1’s embedding table gave *bank* **one** vector. A transformer gives *bank* a vector that depends on the sentence: river bank versus money bank. That is a **contextual** representation. ELMo did this with LSTMs; GPT and BERT do it with the Week 3 block.
 
 ![The same type, two contexts](files/data-643/graphics/3.4-gpt-bert/contextual.png)
 
-Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. **Pretrain once, fine-tune many times.**
+“Transformer” is the block. GPT/BERT is the **objective**. Calling every transformer “a GPT” erases that fork.
 
 ---
 
-## 2. Two attention patterns
+## 2. Why we use it
+
+Language modeling (GPT) is the pretrain that later becomes ChatGPT. BERT-style MLM is a bidirectional encoder for classification and span tasks.
+
+Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. **Pretrain once, fine-tune many times.**
+
+The same block, bigger: more layers, wider \(d\), more heads, more data. Week 7 is scaling laws and efficiency. This week: if the mask is causal, you have a language model; if not, you have a contextual encoder.
+
+For the project: generation, RAG, and tool-use sit on a decoder. Classification into a small label set can still use an encoder, or a decoder with a prompt.
+
+Do not fine-tune BERT as if it were GPT. A `[MASK]` model is not a chat decoder. You *can* classify with a decoder via a prompt; you cannot stream tokens from BERT without a separate head.
+
+---
+
+## 3. Architecture
+
+Same transformer block as note 3.3. GPT masks the future. BERT masks random token ids and reconstructs them. Heads differ (LM versus CLS/span).
 
 **GPT** (decoder-only): each token may attend to itself and the past. The pretraining job is **next-token** (causal language modeling). Sampling is ancestral: emit \(t\), then condition on it.
 
@@ -35,10 +44,6 @@ Causal mask: a lower-triangular pattern of legal scores. BERT’s “mask” is 
 
 ![Next-token versus `[MASK]`](files/data-643/graphics/3.4-gpt-bert/mlm-clm.png)
 
----
-
-## 3. Objectives, in one table
-
 | | GPT | BERT |
 | - | --- | ---- |
 | Stack | decoder | encoder |
@@ -49,27 +54,80 @@ Causal mask: a lower-triangular pattern of legal scores. BERT’s “mask” is 
 
 Modern “BERT-like” encoders (RoBERTa, embedding models) keep the bidirectional idea. Modern LLMs are GPT-style stacks, often with extra alignment (Weeks 8–9). Encoder–decoder models (T5, BART) exist; they are the original transformer, not a third mystery architecture.
 
-Do not fine-tune BERT as if it were GPT. A `[MASK]` model is not a chat decoder. You *can* classify with a decoder via a prompt; you cannot stream tokens from BERT without a separate head.
-
 BERT-base, one line: \(N=12\), \(d=768\), 12 heads, about 110M parameters. GPT-1 was the same size on a decoder. The fork is the mask and the loss, not the width.
 
 ---
 
-## 4. Scaling, briefly
+## 4. How it works, step by step
 
-The same block, bigger: more layers, wider \(d\), more heads, more data. Week 7 is scaling laws and efficiency. This week: if the mask is causal, you have a language model; if not, you have a contextual encoder.
+Train on unlabeled text. After pretrain, GPT generates; BERT is usually fine-tuned with a small head.
 
-For the project: generation, RAG, and tool-use sit on a decoder. Classification into a small label set can still use an encoder, or a decoder with a prompt.
+**GPT path.**
+
+1. Embed tokens and add positions. Apply a causal mask so token \(t\) cannot see \(t+1,\ldots,T\).
+2. The loss is next-token NLL: \(-\log p(x_t\mid x_{<t})\) at each position (teacher forcing, as in the RNN-LM).
+3. At generation time, sample \(\hat x_t\), append it, and continue. That is ancestral sampling.
+
+**BERT path.**
+
+1. Hide a random subset of token ids (classically about 15%) by replacing them with `[MASK]` (and some random / keep-id noise in the original recipe).
+2. Every token may attend to every token. There is no future-key mask.
+3. The loss reconstructs the **masked** positions, \(-\log p(x_{\text{masked}}\mid x_{\text{rest}})\), not a full joint factorization of the sentence.
+4. Downstream, add a small head on `[CLS]` or on token states and fine-tune.
+
+Masking GPT scores with \(0\) instead of \(-\infty\) is the same bug as Lab 3: softmax still puts mass on the illegal key.
 
 ---
 
-## 5. Teaching this note
+## 5. Mathematical formulas
+
+GPT factorizes the sentence left to right:
+
+\[
+p(x)=\prod_t p(w_t\mid w_{<t}).
+\]
+
+BERT reconstructs masked positions, not a full joint factorization:
+
+\[
+p(x_{\text{masked}}\mid x_{\text{rest}}).
+\]
+
+A causal mask sets illegal future scores to \(-\infty\) before the softmax, so those probabilities are 0. BERT has no such triangular mask; its `[MASK]` is an input token.
+
+Worked \(2\times 2\) scores live in the example below; the algebra is row-wise softmax on the (possibly masked) score matrix.
+
+---
+
+## 6. Positive points and negative points
+
+**Positive.**
+
+- Contextual geometry: *bank* in “river bank” is not the same vector as *bank* in “money bank.”
+- One block, two objectives: you reuse note 3.3 and only change the mask and the loss.
+- GPT is the default stack for generation, RAG, and tool-use in this course.
+- BERT-style encoders remain a strong default for classify / tag / embed-a-span when you do not need to stream tokens.
+- Pretrain once, fine-tune many times, on unlabeled text then a small labeled head.
+
+**Negative.**
+
+- GPT cannot see the future inside a prompt token; a bidirectional encoder can, by design.
+- BERT is not a natural generator. You cannot stream tokens from it without a separate head.
+- `[MASK]` is not the same object as a causal key mask; mixing those words lasts all semester.
+- Calling every transformer “a GPT” hides the objective fork.
+- Masking GPT scores with \(0\) instead of \(-\infty\) lets probability leak to the future.
+
+**When not to.** If the demo must **stream** tokens, BERT is the wrong pretrained model. If you only need a small label set and full-sentence context, a decoder is optional, not mandatory.
+
+---
+
+## 7. Teaching this note
 
 **~16 minutes.** Static vs contextual *bank*, then the two attention triangles, then the objective table, then the \(2\times 2\) causal-softmax example. Play Karpathy **Let’s build GPT** **0:00–12:00** (tokens in, next token out). Then **0:00–8:00** of CodeEmporium BERT (MLM / `[MASK]`). If you only have one clip, keep Karpathy and assign BERT.
 
 ---
 
-## 6. Worked example
+## 8. Worked example
 
 Two tokens, raw scores \(S=\begin{bmatrix}1&2\\3&4\end{bmatrix}\).
 
@@ -87,7 +145,7 @@ Objective contrast: GPT loss on this pair is \(-\log p(x_2\mid x_1)\). BERT, if 
 
 ---
 
-## 7. Where students get stuck
+## 9. Where students get stuck
 
 - Using BERT when the demo must **stream** tokens.
 - Masking GPT scores with \(0\) instead of \(-\infty\).
@@ -96,7 +154,7 @@ Objective contrast: GPT loss on this pair is \(-\log p(x_2\mid x_1)\). BERT, if 
 
 ---
 
-## 8. Video
+## 10. Video
 
 Watch [Karpathy: Let’s build GPT](https://www.youtube.com/watch?v=kCc8FmEb1nY) through the first attention / causal-mask implementation (start **0:00–12:00** in class; the attention code is later if you assign homework).
 
@@ -104,7 +162,7 @@ Also [CodeEmporium: BERT Neural Network — EXPLAINED!](https://www.youtube.com/
 
 ---
 
-## 9. Practice
+## 11. Practice
 
 1. Why is BERT the wrong pretrained model if your demo must stream tokens?
 

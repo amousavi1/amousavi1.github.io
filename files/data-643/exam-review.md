@@ -2,17 +2,10 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 The exam is cumulative. It asks you to **name a method** and **say what you would measure**. Trivia without a metric is not the point of DATA 443/643.
 
----
+Write the same story the lectures taught. Name the method, say why it exists, sketch the boxes, write the formula, and name a number that would have caught the failure. Fluency is not a check: RAG without recall@k, a GAN without coverage, and CoT without faithfulness are incomplete answers.
 
-> **First time the exam format appears.** Every first-time method this semester had a what / why / architecture / how / formula / tradeoffs block. The exam uses that.
->
-> **What.** Four modules. You name the method, then the number that would have caught the failure.
-> **Why.** Fluency is not a check. RAG without recall@k, GANs without coverage, CoT without faithfulness are incomplete.
-> **Architecture.** Closed-book written exam plus remaining talks. Formula sheet is what you can write, not trivia.
-> **How.** Practice: “same face, low \(\mathrm{loss}_G\)” → mode bins. “Cite [d5], fact in [d1]” → attribution + recall@k.
-> **Formula.** Write the method’s equation, then the measurement (ASR, recall@k, \(D^*=1/2\), \(\sigma(0)=1/2\), …).
-> **Tradeoffs.** + Cumulative and fair if you studied the first-time blocks. − Naming a paper without a metric scores poorly.
->
+The sitting is a closed-book written exam plus the remaining talks. The formula sheet is what you can write, not a trivia list. Practice in that shape: “same face, low \(\mathrm{loss}_G\)” wants mode bins; “cite [d5], fact in [d1]” wants attribution plus recall@k. Naming a paper without a metric scores poorly.
+
 ## 1. Four modules
 
 | Module | Weeks | Spine |

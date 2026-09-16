@@ -201,7 +201,7 @@ NOTES = [
         "slug": "efficiency-deploy",
         "week": 7,
         "title": "7.3 Compression and Deployment",
-        "lead": "First time: prune, quantize, distill, speculate — what each is, why, formulas, tradeoffs.",
+        "lead": "Prune, quantize, distill, or speculate: what each is, why, the formulas, and the costs.",
         "slide": "7.3-efficiency-deploy",
     },
     {
@@ -275,7 +275,7 @@ NOTES = [
         "slug": "editing-unlearning",
         "week": 10,
         "title": "10.2 Editing and Unlearning",
-        "lead": "First time: what editing vs unlearning are, locate-then-write, rank-one W plus uv transpose, three probes.",
+        "lead": "Editing versus unlearning: locate-then-write, a rank-one update, and three probes.",
         "slide": "10.2-editing-unlearning",
     },
     {
@@ -376,14 +376,14 @@ NOTES = [
         "slug": "rag-pipeline",
         "week": 14,
         "title": "14.1 Retrieval-Augmented Generation",
-        "lead": "First time: what RAG is, why, architecture, cosine and Lewis’s sum, then the three-doc ranking.",
+        "lead": "What RAG is, why it exists, the retrieve-then-generate stack, cosine and Lewis’s sum, then the three-doc ranking.",
         "slide": "14.1-rag-pipeline",
     },
     {
         "slug": "react-tools",
         "week": 14,
         "title": "14.2 ReAct and Tool Use",
-        "lead": "First time: what ReAct is, why CoT is not enough, the tool loop, then calc[17*24]=408.",
+        "lead": "What ReAct is, why a chain of thought is not enough, the tool loop, then calc[17*24]=408.",
         "slide": "14.2-react-tools",
     },
     {

@@ -110,7 +110,6 @@
                             Copy the first bit at the end: RNN versus LSTM, plus a gradient-norm check.
                         </p>
 <p>Work in a <strong>Jupyter</strong> notebook with <strong>PyTorch</strong>. Do notes <strong>2.1–2.3</strong> first. CPU is enough.</p>
-<p><strong>First time you implement this.</strong> The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you <strong>compute</strong> it, not the first definition.</p>
 <p>Upload HTML to Canvas when done.</p>
 <p>The task is <strong>copy the first bit at the end of a long sequence</strong>. A vanilla RNN should fail as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> grows; an LSTM should keep the bit. That is the Jacobian product from note 2.2, then the copy regime from note 2.3.</p>
 <pre><code class="language-python">import torch
@@ -174,7 +173,7 @@ def batch(T, n=64):
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

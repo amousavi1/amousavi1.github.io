@@ -107,10 +107,10 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/rag-pipeline.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.1-rag-pipeline.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            First time: what RAG is, why, architecture, cosine and Lewis’s sum, then the three-doc ranking.
+                            What RAG is, why it exists, the retrieve-then-generate stack, cosine and Lewis’s sum, then the three-doc ranking.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>This is the first full lecture on <strong>retrieval-augmented generation (RAG)</strong>. Treat the method as new. Week <strong>10.3</strong> only named it so RAFT would make sense. Today you should be able to say what RAG is, why anyone bothers, how the boxes connect, which formulas you write, and what it is good and bad at.</p>
+<p>Week <strong>10.3</strong> named RAG so <strong>RAFT</strong> would make sense. This note is the method itself: look up passages from a collection you control, put them in the prompt, and generate from that context. By the end you should be able to draw the pipeline, write the cosine, and name a failure that retrieval cannot fix.</p>
 <hr />
 <h2>1. What RAG is</h2>
 <p>A frozen language model answers from <strong>weights</strong>. Those weights were trained on a snapshot of the web. They do not contain this semester's syllabus, a private PDF, or a fact that changed last week. When the model is unsure, it still produces fluent text. That fluent guess is a <strong>hallucination</strong>.</p>
@@ -216,7 +216,7 @@
 <p>Report <strong>retrieval recall@k</strong> on a labeled set of (question, gold chunk ids), then <strong>answer accuracy</strong> with an <strong>attribution check</strong>: does the cited id actually contain the claim? Always include a no-retrieval baseline. “We used RAG” is not a result.</p>
 <hr />
 <h2>9. Teaching this note</h2>
-<p>About <strong>50 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Students have not seen RAG as a method before. Do not start from cosine.</p>
+<p>About <strong>50 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Do not start from cosine.</p>
 <ul>
 <li><strong>0–10 min.</strong> What / why: frozen weights vs an editable library; RAG vs fine-tune vs dumping the corpus.</li>
 <li><strong>10–22 min.</strong> Architecture: offline index (vector + text + id) and the online path. Write the cosine and top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> formulas.</li>
@@ -309,7 +309,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

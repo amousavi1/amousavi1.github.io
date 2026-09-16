@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-This is the first full lecture on **model editing** and **unlearning**. Treat both as new. Weights store facts as distributed circuitry. Neither method is a legal delete button.
+Weights store facts as distributed circuitry. **Editing** tries to change one association. **Unlearning** tries to bury a set of examples or a topic. Neither method is a legal delete button.
 
 ---
 

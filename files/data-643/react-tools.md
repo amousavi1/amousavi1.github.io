@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-This is the first full lecture on **ReAct** (Yao et al.: *Reason + Act*). Treat the method as new. Note **14.1** just taught RAG as retrieve-then-stuff. Today the model can **call a tool**, read what comes back, and only then continue writing.
+**ReAct** (Yao et al.: *Reason + Act*) is the control pattern after retrieve-then-stuff. Note **14.1** taught RAG as one lookup, then generate. Here the model can **call a tool**, read what comes back, and only then continue writing.
 
 ---
 

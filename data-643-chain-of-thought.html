@@ -110,35 +110,65 @@
                             CoT is extra tokens, not a new net. 17×24 → 408 on the tape.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>Chain-of-thought</strong> (CoT) is the habit of writing <strong>steps</strong> before the answer. You are not changing the weights. You are changing what the decoder is asked to emit.</p>
+<p><strong>Chain-of-thought</strong> (CoT) is the habit of writing <strong>steps</strong> before the answer. You are not changing the weights. You are changing what the decoder is asked to emit. By the end you should be able to write a direct prompt and a CoT prompt for the same item, say when extra steps help, and name one number besides final-answer accuracy.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>Chain-of-thought (CoT)</strong> is writing <strong>steps</strong> before the answer. It is a prompt / decoding choice, not a new net.</p>
-<p><strong>What.</strong> Direct: “What is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>?” CoT: “Show your work, then the number.” Few-shot: paste worked traces. Zero-shot: <em>Let’s think step by step.</em>
-<strong>Why.</strong> Extra tokens are extra test-time compute. Multi-hop arithmetic can use the tape. Weights do not change.
-<strong>Architecture.</strong> Same LM. Longer generation. Parse a final boxed answer separately from the trace (note 13.3).
-<strong>How.</strong> Freeze the instruction and decoding settings. Temperature 0 is one greedy chain, not a vote (13.2).
-<strong>Formula.</strong> Still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x0220F;</mo><mi>t</mi></msub><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>prompt</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>; the prompt asks for steps. No new parameters.
-<strong>Tradeoffs.</strong> + Helps multi-hop. − Hurts one-hop lookup; latency/cost; fluent wrong algebra (faithfulness next). Not retrieval or tools.
-</p>
-</blockquote>
-<h2>1. Steps are part of the string</h2>
-<p>A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context; zero-shot CoT is often the sentence <em>Let’s think step by step.</em></p>
-<p>This is a <strong>prompt / decoding</strong> choice, not a new architecture. Extra tokens are extra <strong>test-time compute</strong>. The weights do not change.</p>
-<p><img alt="Scratch work, then a boxed answer" src="files/data-643/graphics/13.1-chain-of-thought/cot.png" /></p>
-<p>The model still predicts tokens. Intermediate tokens can allocate compute: they store partial products, units, or a plan. That helps <strong>multi-step</strong> arithmetic, symbolic puzzles, and some school-science items. It does not magically add retrieval (Week 14) or tools. A longer string is not “thinking” in the everyday sense; it is extra decoding you can inspect.</p>
+<h2>1. What chain-of-thought is</h2>
+<p><strong>Chain-of-thought (CoT)</strong> is writing <strong>steps</strong> before the answer. A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context. Zero-shot CoT is often the sentence <em>Let’s think step by step.</em></p>
+<p>This is a <strong>prompt / decoding</strong> choice, not a new architecture and not a fine-tune (unless you later trained on traces). The model still predicts tokens. Extra tokens are extra <strong>test-time compute</strong>. The weights do not change.</p>
+<p>Intermediate tokens can allocate compute: they store partial products, units, or a plan. That helps <strong>multi-step</strong> arithmetic, symbolic puzzles, and some school-science items. It does not magically add retrieval (Week 14) or tools. A longer string is not “thinking” in the everyday sense; it is extra decoding you can inspect.</p>
 <p>Karpathy’s phrase is System 2 as more tokens. Same idea: each token is a fixed-size compute step, so a hard problem needs a longer tape.</p>
 <p>Zero-shot vs few-shot is a method choice. Few-shot CoT is only as good as the traces you paste: same task, same answer format, same units. A mismatch is not “the model cannot reason”; it is a context that points at the wrong procedure.</p>
 <hr />
-<h2>2. When it helps, when it does not</h2>
-<p>CoT tends to help when the gold answer needs several dependent hops. It can hurt on tasks that are a single lookup: extra steps are extra chances to wander. Longer traces cost latency and dollars. For a project, CoT is a <strong>method knob</strong>, not a personality.</p>
-<p>You still need a metric on the <strong>answer</strong>, and a separate look at the trace (note <strong>13.3</strong>). A correct box after a wrong derivation is not the same system as a correct derivation. Self-consistency (note <strong>13.2</strong>) is what you do when one chain is too noisy to trust.</p>
+<h2>2. Why we use it</h2>
+<p>Multi-hop arithmetic can use the tape. A four-hop word problem has intermediate quantities that need a place to sit. Direct decode might jump to a familiar number (400, 408, 428) with no check. CoT gives the model room to write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mo>&#x000D7;</mo><mn>24</mn><mo>&#x0003D;</mo><mn>240</mn></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>7</mn><mo>&#x000D7;</mo><mn>24</mn><mo>&#x0003D;</mo><mn>168</mn></mrow></math>, then add.</p>
+<p>It can <strong>hurt</strong> on tasks that are a single lookup: extra steps are extra chances to wander. “Capital of France?” does not need hops. A CoT prompt can invent a story (“Lyon was the capital in…”) and then still say Paris—or wander to Lyon.</p>
+<p>Longer traces cost latency and dollars. For a project, CoT is a <strong>method knob</strong>, not a personality. You still need a metric on the <strong>answer</strong>, and a separate look at the trace (note <strong>13.3</strong>). A correct box after a wrong derivation is not the same system as a correct derivation. Self-consistency (note <strong>13.2</strong>) is what you do when one chain is too noisy to trust.</p>
 <hr />
-<h2>3. How to write it in a report</h2>
-<p>Say whether the prompt was zero-shot or few-shot, paste the exact instruction, and freeze decoding settings (temperature, max tokens). Do not claim the model “reasoned” unless you have a check on the steps. Lab 13 will grade traces as strings, with no API.</p>
-<p>Temperature 0 is a single greedy chain: useful as a baseline, not as a vote (note <strong>13.2</strong>). If you raise temperature to get diverse traces, you must still parse a final answer the same way every time.</p>
+<h2>3. Architecture</h2>
+<p>The architecture is the <strong>same language model</strong>. What changes is the prompt and the length of the generation. You parse a final boxed answer separately from the trace (note <strong>13.3</strong>). There is no new layer, no extra head, and no tool in this note.</p>
+<p><img alt="Scratch work, then a boxed answer" src="files/data-643/graphics/13.1-chain-of-thought/cot.png" /></p>
+<p>Freeze the instruction and the decoding settings (temperature, max tokens) when you report a number. Temperature 0 is one greedy chain, not a vote (note <strong>13.2</strong>). If you raise temperature to get diverse traces, you must still parse a final answer the same way every time.</p>
+<p>Lab 13 grades traces as strings, with no API. The lab’s <code>23+19</code> items are the same algebra as the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math> cartoon with smaller numbers.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>4. How it works, step by step</h2>
+<p>Take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>.</p>
+<ol>
+<li><strong>Direct prompt.</strong> “What is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>?” Decode a short answer. The model may jump to a familiar number with no check.</li>
+<li><strong>CoT prompt.</strong> “Show your work, then the number,” or paste few-shot traces, or write <em>Let’s think step by step.</em></li>
+<li><strong>Generate</strong> a longer string. The model still samples <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>prompt</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>. The prompt asked for steps, so the string contains them.</li>
+<li><strong>Parse</strong> a final boxed answer separately from the trace. Gold for this item is 408. Lab 13’s <code>23+19</code> traces are the same idea.</li>
+<li><strong>Score two things.</strong> Answer accuracy on the box, and a trace check (note <strong>13.3</strong>). Do not claim the model “reasoned” unless you have a check on the steps.</li>
+</ol>
+<p>A CoT string that actually computes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math> writes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mo>&#x000D7;</mo><mn>24</mn><mo>&#x0003D;</mo><mn>240</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>7</mn><mo>&#x000D7;</mo><mn>24</mn><mo>&#x0003D;</mo><mn>168</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>240</mn><mo>&#x0002B;</mo><mn>168</mn><mo>&#x0003D;</mo><mn>408</mn></mrow></math>. Three intermediate lines hold partial products. That trace is also <strong>faithful</strong> (note <strong>13.3</strong>): the last computed value matches the box. A CoT-shaped line that computes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>20</mn><mo>&#x0003D;</mo><mn>340</mn></mrow></math> and then boxes 408 is the unfaithful cousin.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>The model is still next-token prediction. Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> be the CoT prompt (instruction, optional few-shot traces, and the question). The joint string of steps and answer is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munder><mo>&#x0220F;</mo><mrow><mi>t</mi></mrow></munder><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>There are no new parameters. CoT changed <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> and the length of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math>, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math>.</p>
+<p>Temperature 0 is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>\arg</mi><mo>max</mo></mrow></math> at each step: one greedy chain. That is a baseline, not self-consistency.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Extra tokens are extra test-time compute, which can hold partial products on multi-hop items.</li>
+<li>You can inspect the tape; Lab 13 grades traces as strings without an API.</li>
+<li>Zero-shot and few-shot are cheap knobs compared with training a new net.</li>
+<li>A correct, faithful trace (last computed value matches the box) is something you can show.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Extra steps can hurt one-hop lookup: more tokens are more chances to wander.</li>
+<li>Latency and cost scale with trace length.</li>
+<li>Fluent wrong algebra still looks like work; faithfulness is the next note.</li>
+<li>CoT is not retrieval and not tools. A longer string does not fetch a PDF or run a calculator.</li>
+<li>Few-shot traces from the wrong task point at the wrong procedure.</li>
+</ul>
+<p><strong>When not to.</strong> A single-hop fact lookup. A task that needs a document (Week 14 RAG) or an exact product (a calc tool), not more prose.</p>
+<hr />
+<h2>7. How to write it in a report</h2>
+<p>Say whether the prompt was zero-shot or few-shot, paste the exact instruction, and freeze decoding settings (temperature, max tokens). Do not claim the model “reasoned” unless you have a check on the steps. Temperature 0 is a single greedy chain: useful as a baseline, not as a vote (note <strong>13.2</strong>).</p>
+<hr />
+<h2>8. Teaching this note</h2>
 <p>About <strong>30 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API.</p>
 <ul>
 <li><strong>0–10 min.</strong> Direct vs CoT prompt. Tokens as scratch paper.</li>
@@ -147,7 +177,7 @@
 <li><strong>Then</strong> play Karpathy intro <strong>35:00–38:02</strong> (Thinking, System 1/2). Pause on “models need tokens to think.”</li>
 </ul>
 <hr />
-<h2>5. Worked example</h2>
+<h2>9. Worked example</h2>
 <p>Prompt: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>. Direct decode might jump to a familiar number (400, 408, 428) with no check.</p>
 <p>A CoT string that actually computes:</p>
 <ol>
@@ -160,18 +190,18 @@
 <p>A one-hop item, “Capital of France?”, does not need hops. A CoT prompt can invent a story (“Lyon was the capital in…”) and then still say Paris—or wander to Lyon. Extra decode is extra risk. That is why you report <strong>answer accuracy</strong> and, separately, a trace check, not a vibe that the model “showed work.”</p>
 <p>Lab 13’s <code>23+19</code> traces are the same algebra with smaller numbers.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>10. Where students get stuck</h2>
 <ul>
 <li>Calling CoT a fine-tune. It is a <strong>prompt / decoding</strong> choice unless you trained on traces.</li>
 <li>Scoring only the box. Wrong steps plus a lucky 408 will look like a win until note <strong>13.3</strong>.</li>
 <li>Pasting few-shot examples from a different task (math shots, then a policy question) and blaming the model.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>11. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej Karpathy, Intro to Large Language Models</a>, <strong>35:00–38:02</strong>.</p>
 <p>Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. That is extra test-time compute in classroom language. Optional nearby: <strong>38:02–40:45</strong> (self-improvement) is not required for this note. Notes <strong>14.1–14.2</strong> and <strong>15.1</strong> reuse this same URL at other minutes.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>12. Practice</h2>
 <ol>
 <li>
 <p>Why might CoT raise accuracy on a four-hop word problem and lower it on “What is the capital of France?”</p>
@@ -197,7 +227,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

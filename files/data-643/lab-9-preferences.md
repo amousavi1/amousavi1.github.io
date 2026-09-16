@@ -1,7 +1,5 @@
 Work in a **Jupyter** notebook with **PyTorch** and `numpy`. Do notes **9.1–9.3** first. Optional file: [toy_prefs.csv](files/data-643/toy_prefs.csv) (`prompt`, `chosen`, `rejected`).
 
-**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
-
 ```python
 import torch
 import torch.nn.functional as F

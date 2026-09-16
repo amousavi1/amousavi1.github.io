@@ -1,7 +1,5 @@
 Work in a **Jupyter** notebook. This lab uses a **constructed** CLIP-like space, not OpenAI weights, so it runs offline. Download [toy_clip.csv](files/data-643/toy_clip.csv).
 
-**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
-
 ```python
 import numpy as np
 import pandas as pd

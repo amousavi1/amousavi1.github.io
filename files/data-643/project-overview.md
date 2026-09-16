@@ -1,16 +1,9 @@
 These notes are the project contract for DATA 443/643. Canvas dates win if they disagree. The course is built around this project: lectures and labs exist so the report has methods you can defend.
 
----
+You are building a **measured system**, not a demo. The shape is a question, licensed data, a baseline, one course-justified change, and an ablation or error analysis. A literature survey is not the project. The report should read intro, method, results table, ablation, failure cases, with code in an appendix or a repo.
 
-> **First time the project appears.** You are building a **measured system**, not a demo.
->
-> **What.** A question + licensed data + baseline + one course-justified change + ablation or error analysis.
-> **Why.** Lectures exist so the report can name a method and a number. A literature survey is not the project.
-> **Architecture.** Report: intro, method, results table, ablation, failure cases. Code in an appendix or repo.
-> **How.** Pick the knob this week (architecture, objective, retrieval, alignment, or efficiency). Freeze the split.
-> **Formula.** A claim a skeptic can falsify: “method \(M\) raises metric \(U\) by more than seed noise on \(n=\)… vs baseline \(B\).”
-> **Tradeoffs.** + Defensible. − Scope: one change, not five. Graduate students add a short paper reproduction.
->
+Pick the knob this week (architecture, objective, retrieval, alignment, or efficiency) and freeze the split. A claim a skeptic can falsify looks like: “method \(M\) raises metric \(U\) by more than seed noise on \(n=\)… versus baseline \(B\).” One change, not five. Graduate students add a short paper reproduction.
+
 ## 1. What you are building
 
 A **measured** system in language, multimodal AI, retrieval, alignment, or a close neighbor from the syllabus. Not a literature survey, and not a demo with no numbers.

@@ -1,21 +1,58 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-The two nets have opposite goals. You cannot treat a GAN as one ordinary loss. Each step is a small fight: first improve \(D\), then improve \(G\), and try not to let either win too hard.
+The two nets have opposite goals. You cannot treat a GAN as one ordinary loss. Each step is a small fight: first improve \(D\), then improve \(G\), and try not to let either win too hard. By the end you should be able to write \(J\), run the two-phase loop, and say why a 99% discriminator is a problem, not a trophy.
 
 ---
 
-> **First time this training loop appears.** GAN **training** is a min-max game with two phases per iteration.
->
-> **What.** \(D\) climbs to tell real from fake. \(G\) climbs to fool \(D\). The original saturating loss for \(G\) is weak; people use \(-\log D(G(z))\).
-> **Why.** If you only train \(D\) to 99%, \(G\) gets no gradient. If you only train \(G\), \(D\) is stale.
-> **Architecture.** Same two nets. Alternate (or simultaneous) SGD steps. No KL term here; that is RLHF.
-> **How.** Phase D: maximize log \(D\) on reals + log \((1-D)\) on fakes. Phase G: non-saturating \(-\log D(G(z))\).
-> **Formula.** \(J(D,G)=\mathbb{E}_{x}[\log D(x)]+\mathbb{E}_{z}[\log(1-D(G(z)))]\). \(G\) minimizes a surrogate, not always this \(J\).
-> **Tradeoffs.** + When balanced, samples improve. − Oscillation, vanishing gradients for \(G\), sensitivity to step sizes; next note is collapse.
->
-## 1. The min-max game
+## 1. What GAN training is
 
-Goodfellow et al. write a two-player objective
+GAN **training** is a min-max game, not a single supervised loss. \(D\) wants to tell real from fake. \(G\) wants to fool \(D\). Goodfellow et al. write that as \(\min_{\boldsymbol{\theta}_g}\max_{\boldsymbol{\theta}_d} J(\boldsymbol{\theta}_g,\boldsymbol{\theta}_d)\). A Nash point you *hope* for is that \(G\) matches the real distribution and \(D\) is a coin flip. Training does not guarantee you land there.
+
+Each iteration has two phases. First you improve \(D\) on a batch of reals and fakes. Then you improve \(G\) on fresh noise. The original saturating loss for \(G\) is weak when \(D\) is already sharp, so people use a **non-saturating** surrogate \(-\log D(G(z))\) instead of minimizing \(\log(1-D(G(z)))\).
+
+You are not adding a KL term. That is RLHF, a different week. Here the only fight is \(J\), plus the surrogate \(G\) actually climbs.
+
+---
+
+## 2. Why we use it
+
+If you only train \(D\) to 99%, \(G\) gets no gradient: fakes are so obviously fake that \(\log(1-D(G(z)))\) sits near 0 and the slope with respect to \(G\) vanishes. If you only train \(G\), \(D\) is stale and becomes a noisy, lying teacher. The two parameter vectors have to stay in tension.
+
+Watching \(J\) is not evaluation. A falling generator loss can mean better fakes *or* a collapsing \(D\). You still have to look at samples and at **coverage** (note **11.3**). Lab 11 is a 2-D version of this fight on purpose: you will see the tension in a scatter plot, not in a single scalar.
+
+Learning rates, how many \(D\) steps per \(G\) step, and batch size all move that balance. The two nets can **oscillate**: losses look fine, then the samples jump.
+
+---
+
+## 3. Architecture
+
+The architecture is the same two nets as note **11.1**. What is new is the **update rule**: alternate (or simultaneous) SGD steps, with a freeze on the net you are not training.
+
+1. **Train \(D\).** A batch of reals (label 1) and fakes from the current \(G\) (label 0). Binary cross-entropy. Update **only** \(\boldsymbol{\theta}_d\). Detach the fakes so the \(D\) step does not also move \(G\).
+2. **Train \(G\).** Fresh noise, fresh fakes. Labels are all 1: you want \(D\) to be *wrong*. Freeze \(\boldsymbol{\theta}_d\); update **only** \(\boldsymbol{\theta}_g\).
+
+![Generator and discriminator losses pulling in opposite directions](files/data-643/graphics/11.2-gan-training/dynamics.png)
+
+Lab 11’s loop is exactly this, with `BCEWithLogitsLoss`: one \(D\) step, one \(G\) step, 400 iterations. Print both losses. Do not rank checkpoints by the smaller number.
+
+---
+
+## 4. How it works, step by step
+
+Read the two terms of \(J\) out loud. First term: on reals, \(\log D(\boldsymbol{x})\) is large when \(D\approx 1\). Second term: on fakes, \(\log(1-D(G(z)))\) is large when \(D\approx 0\). \(G\) only appears in the second term, and it wants that term small, i.e. \(D(G(z))\) near 1.
+
+1. Sample a real batch and a noise batch. Form fakes \(G(z)\) with the current generator.
+2. **Phase D.** Maximize \(\log D\) on reals plus \(\log(1-D)\) on fakes. Update only \(\boldsymbol{\theta}_d\).
+3. **Phase G.** Draw **fresh** noise. In code you often maximize \(\log D(G(\boldsymbol{z}))\) instead of minimizing \(\log(1-D(G(\boldsymbol{z})))\). Early in training \(D\) is too good and the second form saturates: if \(D(G(z))\approx 0\), then \(\log(1-D)\approx 0\) and the slope with respect to \(G\) is tiny. \(-\log D(G(z))\) still has slope.
+4. Repeat. If \(D\) is too weak, \(G\) gets a noisy teacher. If \(D\) is too strong, \(G\)’s gradient vanishes.
+
+Lab 11 feeds **ones** into the generator’s BCE: that is the non-saturating form. A 99% discriminator is the saturating regime, not a trophy.
+
+---
+
+## 5. Mathematical formulas
+
+The two-player objective is
 
 \[
 \min_{\boldsymbol{\theta}_g}\max_{\boldsymbol{\theta}_d} J(\boldsymbol{\theta}_g,\boldsymbol{\theta}_d),
@@ -29,34 +66,40 @@ J
 \mathbb{E}_{\boldsymbol{z}\sim p_z}\bigl[\log\bigl(1-D(G(\boldsymbol{z}))\bigr)\bigr].
 \]
 
-\(D\) wants \(J\) large (correct labels). \(G\) wants \(J\) small (fakes that look real). A Nash point you *hope* for: \(G\) matches \(p_r\), and \(D\) is a coin flip. Training does not guarantee you land there.
+\(D\) wants \(J\) large (correct labels). \(G\) wants \(J\) small (fakes that look real). \(G\) only appears in the second expectation.
 
-![Generator and discriminator losses pulling in opposite directions](files/data-643/graphics/11.2-gan-training/dynamics.png)
+The saturating generator loss is the second term of \(J\). The non-saturating surrogate that Lab 11 actually uses is
 
-Read the two terms out loud. First term: on reals, \(\log D(\boldsymbol{x})\) is large when \(D\approx 1\). Second term: on fakes, \(\log(1-D(G(z)))\) is large when \(D\approx 0\). \(G\) only appears in the second term, and it wants that term small, i.e. \(D(G(z))\) near 1.
+\[
+\max_{\boldsymbol{\theta}_g}\;\mathbb{E}_{\boldsymbol{z}}\bigl[\log D(G(\boldsymbol{z}))\bigr],
+\]
 
----
-
-## 2. Two phases per iteration
-
-1. **Train \(D\).** A batch of reals (label 1) and fakes from the current \(G\) (label 0). Binary cross-entropy. Update **only** \(\boldsymbol{\theta}_d\).
-2. **Train \(G\).** Fresh noise, fresh fakes. Labels are all 1: you want \(D\) to be *wrong*. Freeze \(\boldsymbol{\theta}_d\); update **only** \(\boldsymbol{\theta}_g\).
-
-In code you often maximize \(\log D(G(\boldsymbol{z}))\) instead of minimizing \(\log(1-D(G(\boldsymbol{z})))\). Early in training \(D\) is too good and the second form saturates: if \(D(G(z))\approx 0\), then \(\log(1-D)\approx 0\) and the slope w.r.t. \(G\) is tiny. \(-\log D(G(z))\) still has slope.
-
-Lab 11’s loop is exactly this, with `BCEWithLogitsLoss`: one \(D\) step, one \(G\) step, 400 iterations. Print both losses. Do not rank checkpoints by the smaller number.
+equivalently minimizing \(-\log D(G(z))\). \(G\) minimizes a surrogate, not always this \(J\).
 
 ---
 
-## 3. The tension
+## 6. Positive points and negative points
 
-If \(D\) is too weak, \(G\) gets a noisy, lying teacher. If \(D\) is too strong, \(G\)’s gradient vanishes. The two parameter vectors can **oscillate**: losses look fine, then the samples jump. Learning rates, how many \(D\) steps per \(G\) step, and batch size all move that balance.
+**Positive.**
 
-Watching \(J\) is not evaluation. A falling generator loss can mean better fakes *or* a collapsing \(D\). You still have to look at samples and at **coverage** (note **11.3**). Lab 11 is a 2-D version of this fight on purpose: you will see the tension in a scatter plot, not in a single scalar.
+- When the two nets stay balanced, samples improve without writing a likelihood.
+- The two-phase loop is ordinary SGD plus a freeze: Lab 11 can print both losses and a scatter plot.
+- The non-saturating surrogate keeps a slope for \(G\) after \(D\) has already become sharp.
+- You can diagnose the fight from the two losses *and* the samples, instead of from one scalar.
+
+**Negative.**
+
+- Oscillation is normal: losses can look fine while the samples jump.
+- A too-strong \(D\) starves \(G\) of gradient; a too-weak \(D\) lies.
+- A falling generator loss can mean \(D\) got worse, not that the pictures got better.
+- Step sizes, how many \(D\) steps per \(G\) step, and batch size are all load-bearing knobs.
+- The next note is collapse: even a healthy-looking \(J\) does not measure coverage.
+
+**When not to.** If you need a stable regression target instead of a moving adversary, that is diffusion (Week 12), not a different GAN learning rate.
 
 ---
 
-## 4. Teaching this note
+## 7. Teaching this note
 
 About **35 minutes** at the board, then **~10 minutes** of video.
 
@@ -67,7 +110,7 @@ About **35 minutes** at the board, then **~10 minutes** of video.
 
 ---
 
-## 5. Worked example
+## 8. Worked example
 
 One real \(x\) with \(D(x)=0.9\), one fake with \(D(G(z))=0.2\). Use natural log, \(\log 0.9\approx -0.105\), \(\log 0.8\approx -0.223\), \(\log 0.2\approx -1.609\).
 
@@ -96,7 +139,7 @@ The practical loop is the same minimax: update \(D\), then \(G\). A 99% discrimi
 
 ---
 
-## 6. Where students get stuck
+## 9. Where students get stuck
 
 - Updating both nets in one `loss.backward()` on a shared graph. Detach the fakes on the \(D\) step; freeze \(D\) on the \(G\) step.
 - Reading a falling \(G\) loss as “better pictures.” It can mean \(D\) got worse.
@@ -104,7 +147,7 @@ The practical loop is the same minimax: update \(D\), then \(G\). A 99% discrimi
 
 ---
 
-## 7. Video
+## 10. Video
 
 Watch [Generative models: training \(G\) and \(D\)](https://www.youtube.com/watch?v=5WoItGTWV54), **54:00–64:00**.
 
@@ -112,7 +155,7 @@ Pause on the minimax \(J\) and on the practical loop (alternate \(D\) and \(G\))
 
 ---
 
-## 8. Practice
+## 11. Practice
 
 1. In phase 2 the fake labels are 1. Who is being lied to, and why is that the generator’s loss?
 

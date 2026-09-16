@@ -107,10 +107,10 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/react-tools.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.2-react-tools.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            First time: what ReAct is, why CoT is not enough, the tool loop, then calc[17*24]=408.
+                            What ReAct is, why a chain of thought is not enough, the tool loop, then calc[17*24]=408.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>This is the first full lecture on <strong>ReAct</strong> (Yao et al.: <em>Reason + Act</em>). Treat the method as new. Note <strong>14.1</strong> just taught RAG as retrieve-then-stuff. Today the model can <strong>call a tool</strong>, read what comes back, and only then continue writing.</p>
+<p><strong>ReAct</strong> (Yao et al.: <em>Reason + Act</em>) is the control pattern after retrieve-then-stuff. Note <strong>14.1</strong> taught RAG as one lookup, then generate. Here the model can <strong>call a tool</strong>, read what comes back, and only then continue writing.</p>
 <hr />
 <h2>1. What ReAct is</h2>
 <p>A <strong>chain of thought (CoT)</strong> is extra tokens the model writes before the answer (Week 13). Those tokens are still guesses. If the thought says “<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn><mo>&#x0003D;</mo><mn>428</mn></mrow></math>”, the algebra can be wrong and the prose still looks careful.</p>
@@ -275,7 +275,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

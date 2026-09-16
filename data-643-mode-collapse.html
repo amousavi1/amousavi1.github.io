@@ -110,26 +110,23 @@
                             92/8 is collapse. 47/53 is covered. G’s loss has no missing-mode term.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>A GAN has no likelihood you can read as “this model covers the data.” The usual failure is not blur. It is <strong>mode collapse</strong>: the generator finds one (or a few) fakes that fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> and repeats them.</p>
+<p>A GAN has no likelihood you can read as “this model covers the data.” The usual failure is not blur. It is <strong>mode collapse</strong>: the generator finds one (or a few) fakes that fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> and repeats them. By the end you should be able to tell fidelity from coverage, apply Lab 11’s binning rule, and explain why a healthy <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> loss does not rescue a missing mode.</p>
 <hr />
-<blockquote>
-<p><strong>First time this failure appears.</strong> <strong>Mode collapse</strong> is when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> parks on a few modes and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> is still happy.</p>
-<p><strong>What.</strong> One pretty sample is not a trained <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>. Coverage: 92/8 on two Gaussians is collapse; 47/53 is covered.
-<strong>Why.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> only scores “is this fake?” It does not have a missing-mode term. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> can fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> with one spike.
-<strong>Architecture.</strong> Same GAN. Evaluation needs <strong>bins / modes</strong>, not only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi></mrow><mi>G</mi></msub></mrow></math>.
-<strong>How.</strong> Lab 11: two 1-D Gaussians. Count mass per mode. Fixes (brief): more diverse <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, unrolled/regularized <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>, or switch to diffusion (Week 12).
-<strong>Formula.</strong> There is no extra loss term in vanilla <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> that says “visit mode 2.” That is the bug.
-<strong>Tradeoffs.</strong> + Easy to demo. − Image metrics (FID) are imperfect coverage proxies; fixing collapse is still research-level.
-</p>
-</blockquote>
-<h2>1. One mode is enough to fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math></h2>
+<h2>1. What mode collapse is</h2>
+<p><strong>Mode collapse</strong> is when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> parks on a few modes and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> is still happy. Each fake can look fine. The set of fakes does not. One pretty sample is not a trained <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>.</p>
 <p>Suppose the reals are two well-separated clusters. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> parks all of its mass on cluster A, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> learns “cluster A might be fake; cluster B is real.” <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> then jumps to B. You cycle. Or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> never leaves A, and every sample looks plausible while half the world is missing.</p>
-<p><img alt="All fakes piled on one of two real modes" src="files/data-643/graphics/11.3-mode-collapse/collapse.png" /></p>
-<p>Collapse is a <strong>coverage</strong> failure. Each fake can look fine. The set of fakes does not.</p>
-<p>This is the 1-D spike example from note <strong>11.1</strong> with motion. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> only needs to be wrong on the support of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>. Modes that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> never visits do not appear in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>’s loss at all.</p>
+<p>This is the 1-D spike example from note <strong>11.1</strong> with motion. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> only needs to be wrong on the support of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>. Modes that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> never visits do not appear in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>’s loss at all. There is no extra term in vanilla <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> that says “visit mode 2.” That is the bug.</p>
+<p>On Lab 11’s two Gaussians, <strong>92/8</strong> is collapse (or heavy imbalance). <strong>47/53</strong> is covered. Same architecture, different outcome. That is why you report the bin fractions, not only <code>lossG</code>.</p>
 <hr />
-<h2>2. Quality is not coverage</h2>
-<p>Eyeballing a grid of images checks <strong>fidelity</strong> (does this one look real?). It does not check whether you missed a mode. Two numbers you want in a report:</p>
+<h2>2. Why we use it</h2>
+<p>You study collapse because it is the evaluation lesson of Week 11, not a rare pathology. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> only scores “is this fake?” It does not have a missing-mode term. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> can fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> with one spike, collect a small generator loss, and still miss half the data.</p>
+<p>Eyeballing a grid of images checks <strong>fidelity</strong> (does this one look real?). It does not check whether you missed a mode. GANs stay useful for fast sampling. Diffusion (Week 12) is slower and usually covers better, which is why text-to-image moved there. The evaluation lesson does not move: always measure the mode you might have dropped.</p>
+<p>For a project, write the coverage check <em>before</em> you train. “The pictures look nice” is not a metric.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>The architecture is the same GAN as notes <strong>11.1</strong> and <strong>11.2</strong>. What changes is <strong>what you measure</strong>. Evaluation needs <strong>bins / modes</strong>, not only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi></mrow><mi>G</mi></msub></mrow></math>.</p>
+<p><img alt="All fakes piled on one of two real modes" src="files/data-643/graphics/11.3-mode-collapse/collapse.png" /></p>
+<p>Two numbers belong in a report:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -149,14 +146,46 @@
 </tbody>
 </table></div>
 <p>On images, people cite FID or precision–recall in Inception space. Those are proxies. They need a large sample, and they inherit the classifier’s biases. On Lab 11 you can skip Inception: count how many fakes fall near each Gaussian mean.</p>
-<p>Latent interpolations are a third check. A short step in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> should change the sample a little. A jump from “shoe” to “face” is a symptom of a broken map, not a feature.</p>
 <p>A coverage statistic for two modes: assign each fake to the nearest mean, report the two fractions. Lab 11 calls it collapse if either bin is under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mi>&#x00025;</mi></mrow></math>. Write both percentages in the report even when they look like <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>48</mn><mo>&#x0002F;</mo><mn>52</mn></mrow></math>: that is the evidence, not a screenshot of two clouds.</p>
+<p>Latent interpolations are a third check. A short step in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> should change the sample a little. A jump from “shoe” to “face” is a symptom of a broken map, not a feature. You will not train StyleGAN here; you will print two bin fractions.</p>
 <hr />
-<h2>3. What you do about it</h2>
-<p>There is no single switch. Practical habits: do not let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> become perfect; try more noise dimensions; unrolled or Wasserstein losses in a later paper; <strong>mixture data</strong> in the lab so collapse is visible. For a project, write the coverage check <em>before</em> you train. “The pictures look nice” is not a metric.</p>
-<p>GANs stay useful for fast sampling. Diffusion (Week 12) is slower and usually covers better, which is why text-to-image moved there. The evaluation lesson does not move: always measure the mode you might have dropped.</p>
+<h2>4. How it works, step by step</h2>
+<p>Lab 11 is two 1-D Gaussians in 2-D clothing: means <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mi>A</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mi>B</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. Collapse is visible because the mixture is simple.</p>
+<ol>
+<li>Train the GAN as in note <strong>11.2</strong>. Do not stop when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi></mrow><mi>G</mi></msub></mrow></math> looks small.</li>
+<li>Draw a large batch of fakes (the worked example uses 100).</li>
+<li>Assign each fake to the nearest mean by Euclidean distance.</li>
+<li>Report the two fractions. If either bin is under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mi>&#x00025;</mi></mrow></math>, write <strong>collapse</strong> (or heavy imbalance) by the lab rule.</li>
+<li>Read <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> on the parked mode versus the missing mode. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.5</mn></mrow></math> on A and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi><mo>&#x02248;</mo><mn>0.99</mn></mrow></math> on B, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is paid for staying on A. Nothing in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> pulls it toward B.</li>
+</ol>
+<p>Fixes are habits, not a single switch: do not let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> become perfect; try more noise dimensions; unrolled or Wasserstein losses in a later paper; <strong>mixture data</strong> in the lab so collapse is visible. Switching to diffusion (Week 12) is a different family with better typical coverage, not a GAN hyperparameter.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>Vanilla <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> is still</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>J</mi><mo>&#x0003D;</mo><msub><mi>&#x1D53C;</mi><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>&#x0007E;</mi><msub><mi>p</mi><mi>r</mi></msub></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><mi>log</mi><mi>D</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>&#x0002B;</mo><msub><mi>&#x1D53C;</mi><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow><mi>&#x0007E;</mi><msub><mi>p</mi><mi>z</mi></msub></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">[</mo><mi>log</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">z</mi></mrow><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">]</mo><mo>&#x0002E;</mo></mrow></math>
+<p>There is no extra loss term that says “visit mode 2.” If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mi>G</mi></msub></mrow></math> puts no mass on a real cluster, that cluster never appears in the second expectation, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is not penalized for missing it.</p>
+<p>For two modes, the coverage fractions after nearest-mean assignment of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> fakes are</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mover accent="true"><mrow><mi>&#x003C0;</mi></mrow><mo>&#x0005E;</mo></mover><mi>A</mi></msub><mo>&#x0003D;</mo><mfrac><mrow><msub><mi>n</mi><mi>A</mi></msub></mrow><mrow><mi>N</mi></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><msub><mover accent="true"><mrow><mi>&#x003C0;</mi></mrow><mo>&#x0005E;</mo></mover><mi>B</mi></msub><mo>&#x0003D;</mo><mfrac><mrow><msub><mi>n</mi><mi>B</mi></msub></mrow><mrow><mi>N</mi></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Lab 11 flags collapse when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>min</mo><mo stretchy="false">&#x00028;</mo><msub><mover accent="true"><mrow><mi>&#x003C0;</mi></mrow><mo>&#x0005E;</mo></mover><mi>A</mi></msub><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>&#x003C0;</mi></mrow><mo>&#x0005E;</mo></mover><mi>B</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003C;</mo><mn>0.10</mn></mrow></math>.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Collapse is easy to demo on two Gaussians: you can count, you do not need Inception.</li>
+<li>The fidelity-versus-coverage split is the right report structure for any implicit generator, including later diffusion samples.</li>
+<li>Lab 11’s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mi>&#x00025;</mi></mrow></math> rule gives a yes/no you can write next to the two fractions.</li>
+<li>Interpolation in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">z</mi></mrow></mrow></math> is a cheap extra check that the map is not a bag of disconnected spikes.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Image metrics (FID) are imperfect coverage proxies: they need a large sample and inherit a classifier’s biases.</li>
+<li>Fixing collapse is still research-level; there is no single switch in this course.</li>
+<li>Generator loss can look healthy while half the clusters have no fakes.</li>
+<li>Averaging FID (or a 2-D MSE to the origin) across a collapsed cloud can look like a pass.</li>
+</ul>
+<p><strong>When not to treat collapse as “the pictures are bad.”</strong> Sharp and identical is collapse. Sharp and diverse is the goal. Diffusion if you need coverage more than one-pass speed.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p>About <strong>30 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Lab 11 should start in this same class meeting.</p>
 <ul>
 <li><strong>0–10 min.</strong> Replay the two-spike cartoon. Collapse vs oscillation.</li>
@@ -165,7 +194,7 @@
 <li><strong>Then</strong> play <strong>64:00–74:00</strong> of the assigned video (training is unstable; you do not have <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math>; samples can look good anyway). Pause on the summary and name that gap <strong>coverage</strong>.</li>
 </ul>
 <hr />
-<h2>5. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Lab 11 means: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mi>A</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mi>B</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. You sample 100 fakes. Euclidean nearest-mean assignment:</p>
 <ul>
 <li>92 fakes closer to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">&#x003BC;</mi></mrow><mi>A</mi></msub></mrow></math></li>
@@ -178,18 +207,18 @@
 <p><img alt="92/8 collapse versus 47/53 covered" src="files/data-643/graphics/11.3-mode-collapse/coverage-bins.png" /></p>
 <p>You can interpolate in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> when the map is healthy (StyleGAN made that famous). A jump from “shoe” to “face” is a broken map. You will not train StyleGAN here; you will print two bin fractions.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Equating “sharp samples” with a trained GAN. Sharp and identical is collapse.</li>
 <li>Using <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>’s loss as a coverage metric. It has no term for missing modes.</li>
 <li>Averaging FID (or a 2-D MSE to the origin) across a collapsed cloud and calling it a pass.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=5WoItGTWV54">Generative models: coverage and collapse</a>, <strong>64:00–74:00</strong>.</p>
 <p>Pause on instability and the recap that GANs do not give you <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> or inference queries. The lecture’s word is “unstable”; your word in this course is <strong>mode collapse / coverage</strong>. Same URL as <strong>11.1</strong> and <strong>11.2</strong>.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Why can a generator loss look healthy while half the training clusters have no fakes?</p>
@@ -215,7 +244,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

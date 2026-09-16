@@ -1,7 +1,5 @@
 Work in a **Jupyter** notebook with **NumPy** (PyTorch is optional). Do notes **12.1–12.2** first. No U-Net and no pretrained weights.
 
-**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
-
 ```python
 import numpy as np
 import matplotlib.pyplot as plt

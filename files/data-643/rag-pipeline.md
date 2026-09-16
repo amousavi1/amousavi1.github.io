@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-This is the first full lecture on **retrieval-augmented generation (RAG)**. Treat the method as new. Week **10.3** only named it so RAFT would make sense. Today you should be able to say what RAG is, why anyone bothers, how the boxes connect, which formulas you write, and what it is good and bad at.
+Week **10.3** named RAG so **RAFT** would make sense. This note is the method itself: look up passages from a collection you control, put them in the prompt, and generate from that context. By the end you should be able to draw the pipeline, write the cosine, and name a failure that retrieval cannot fix.
 
 ---
 
@@ -163,7 +163,7 @@ Report **retrieval recall@k** on a labeled set of (question, gold chunk ids), th
 
 ## 9. Teaching this note
 
-About **50 minutes** at the board, then **~10 minutes** of video. Students have not seen RAG as a method before. Do not start from cosine.
+About **50 minutes** at the board, then **~10 minutes** of video. Do not start from cosine.
 
 - **0–10 min.** What / why: frozen weights vs an editable library; RAG vs fine-tune vs dumping the corpus.
 - **10–22 min.** Architecture: offline index (vector + text + id) and the online path. Write the cosine and top-\(k\) formulas.

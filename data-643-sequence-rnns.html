@@ -110,47 +110,29 @@
                             A shared cell, then an RNN-LM: next-token softmax from the hidden state.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>An MLP sees a vector and forgets. Language is a <strong>sequence</strong>: the meaning of <em>not</em> depends on what came before. A recurrent net keeps a <strong>state</strong> and updates it at every token, with the <strong>same weights</strong>.</p>
-<p>This week is the historical path to transformers. You still need it: LSTMs show up in speech and time series, and the failure mode (a chain of Jacobians) is why Week 3 exists.</p>
+<p>An MLP sees a vector and forgets. Language is a <strong>sequence</strong>: the meaning of <em>not</em> depends on what came before, so a recurrent net keeps a <strong>state</strong> and updates it at every token with the <strong>same weights</strong>. This week is the historical path to transformers: LSTMs still show up in speech and time series, and the failure mode (a chain of Jacobians) is why Week 3 exists.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> An <strong>RNN</strong> is a net that shares one cell across time.</p>
-<p><strong>What.</strong> Hidden state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow></math> is a function of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math> and the new token. An RNN-LM predicts the next token from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow></math>.
-<strong>Why.</strong> A fixed window (n-gram / bag) cannot count “the verb agrees with the noun 40 tokens back” without growing width.
-<strong>Architecture.</strong> Shared cell <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mrow><mi>h</mi><mi>h</mi></mrow></msub><msub><mi>h</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><msub><mi>W</mi><mrow><mi>x</mi><mi>h</mi></mrow></msub><msub><mi>x</mi><mi>t</mi></msub><mo>&#x0002B;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo></mrow></math>, then softmax on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow></math>. Unroll in time for training (BPTT).
-<strong>How.</strong> Read left to right. The same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math> at every step. Lab 2 copies the first bit at the end.
-<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>softmax</mo><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mi>o</mi></msub><msub><mi>h</mi><mi>t</mi></msub><msub><mo stretchy="false">&#x00029;</mo><mi>w</mi></msub></mrow></math>.
-<strong>Tradeoffs.</strong> + Variable length, parameter sharing. − Sequential (hard to parallelize), vanishing/exploding gradients (next note).
-</p>
-</blockquote>
-<h2>1. Why a fixed window is not enough</h2>
-<p>A language model predicts the next token. Week 1 already wrote</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>w</mi><mi>T</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munderover><mo>&#x0220F;</mo><mrow><mi>t</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>T</mi></mrow></munderover><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mn>1</mn><mi>:</mi><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
-<p>An <strong>n-gram</strong> approximates the history by the last <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x02212;</mo><mn>1</mn></mrow></math> words and <strong>counts</strong>. Raise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> and the table is sparse; most strings never occurred. A <strong>fixed-window MLP</strong> concatenates the last <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> embeddings and is dense, but <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is still a hard cutoff and each position in the window has its own weights.</p>
-<p>You need a map that (i) accepts <strong>any length</strong>, (ii) <strong>shares</strong> weights across time, and (iii) can, in principle, use the beginning of the sentence. That map is a recurrent cell.</p>
-<p>Do not build an n-gram this week. The counting story is only here so the cell has a job.</p>
-<hr />
-<h2>2. The cell</h2>
-<p>At step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> the cell takes</p>
-<ul>
-<li>the new token embedding <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub></mrow></math>, and</li>
-<li>the previous hidden state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math>.</li>
-</ul>
-<p>It emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math>, which is supposed to hold <strong>both</strong>. That vector is the memory.</p>
+<h2>1. What an RNN is</h2>
+<p>An <strong>RNN</strong> is a net that shares one cell across time. At step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> the cell takes the new token embedding <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub></mrow></math> and the previous hidden state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math>, and emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math>, which is supposed to hold <strong>both</strong>. That vector is the memory.</p>
 <p><img alt="RNN cell: previous state and current input" src="files/data-643/graphics/2.1-sequence-rnns/rnn-cell.png" /></p>
 <p>The vanilla (Elman) recurrence is</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>W</mi><mi>h</mi></msub><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><msub><mi>W</mi><mi>x</mi></msub><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x0002B;</mo><mrow><mi mathvariant="bold-italic">b</mi></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
-<p>The same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>x</mi></msub><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math> are used at every step. That is weight sharing along time, the sequence analogue of a CNN’s shared filter.</p>
+<p>The same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub><mo>&#x0002C;</mo><msub><mi>W</mi><mi>x</mi></msub><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math> are used at every step. That is weight sharing along time, the sequence analogue of a CNN’s shared filter. An RNN language model then predicts the next token from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math> with a linear map and a softmax.</p>
 <p>Between two independent sequences (two reviews in a batch) you <strong>reset</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>0</mn></msub><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. The loop lives <em>inside</em> one sequence. If you do not reset, review 2 starts with leftover sentiment from review 1. That is leakage, not transfer learning.</p>
 <hr />
-<h2>3. Unrolled in time</h2>
+<h2>2. Why we use it</h2>
+<p>A language model predicts the next token. Week 1 already wrote</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>w</mi><mi>T</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munderover><mo>&#x0220F;</mo><mrow><mi>t</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>T</mi></mrow></munderover><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mn>1</mn><mi>:</mi><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>An <strong>n-gram</strong> approximates the history by the last <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x02212;</mo><mn>1</mn></mrow></math> words and <strong>counts</strong>. Raise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> and the table is sparse; most strings never occurred. A <strong>fixed-window MLP</strong> concatenates the last <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> embeddings and is dense, but <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is still a hard cutoff and each position in the window has its own weights. A bag of words cannot count “the verb agrees with the noun 40 tokens back” without growing width.</p>
+<p>You need a map that (i) accepts <strong>any length</strong>, (ii) <strong>shares</strong> weights across time, and (iii) can, in principle, use the beginning of the sentence. That map is a recurrent cell.</p>
+<p>Do not build an n-gram this week. The counting story is only here so the cell has a job.</p>
+<hr />
+<h2>3. Architecture</h2>
 <p>Write the loop as a chain. Four tokens, one set of weights:</p>
 <p><img alt="The same cell copied along the sentence" src="files/data-643/graphics/2.1-sequence-rnns/rnn-unroll.png" /></p>
 <p>A CNN looks at a <strong>fixed</strong> neighborhood, in parallel. An RNN looks at <strong>everything so far</strong>, in order, and cannot fully parallelize across time. That is the accuracy / speed tradeoff.</p>
 <p>Unrolling is how you backprop (note 2.2). The picture is one graph with <strong>copies</strong> of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math>. There are not four different matrices named <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mi>W</mi><mi>h</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x0002C;</mo><msubsup><mi>W</mi><mi>h</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x0002C;</mo><msubsup><mi>W</mi><mi>h</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>3</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup><mo>&#x0002C;</mo><msubsup><mi>W</mi><mi>h</mi><mrow><mo stretchy="false">&#x00028;</mo><mn>4</mn><mo stretchy="false">&#x00029;</mo></mrow></msubsup></mrow></math>.</p>
 <p>If the first word is the subject of a verb twenty tokens later, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math> must still contain that subject. The cell is a lossy compressor: every step overwrites. Week <strong>2.2</strong> is what happens to the gradient on that long path. Week <strong>2.3</strong> adds gates so the cell can choose what to keep.</p>
-<hr />
-<h2>4. What you can wire</h2>
 <p>The same cell, different wiring:</p>
 <p><img alt="Many-to-one, many-to-many, and a bottleneck" src="files/data-643/graphics/2.1-sequence-rnns/arch-zoo.png" /></p>
 <ul>
@@ -158,19 +140,55 @@
 <li><strong>Many-to-many, aligned</strong> (tagging, language modeling): emit at every <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>.</li>
 <li><strong>Encoder then decode</strong>: compress the source into one vector, then generate. That bottleneck is why Week 3 exists. Do not train seq2seq this week.</li>
 </ul>
-<hr />
-<h2>5. An RNN language model</h2>
-<p>Lookup the token id, run the cell, then a linear map plus <strong>softmax</strong> over the vocabulary. The loss at step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> is the same next-token NLL as Week 1:</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>L</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
-<p>Average over tokens in the <strong>sentence</strong> (or a small batch of sentences). That is teacher forcing: the true previous token is the next input, not the model’s sample.</p>
+<p>An RNN language model looks up the token id, runs the cell, then a linear map plus <strong>softmax</strong> over the vocabulary.</p>
 <p><img alt="Embedding, cell, softmax" src="files/data-643/graphics/2.1-sequence-rnns/rnn-lm.png" /></p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>Read left to right. The same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math> at every step.</p>
+<ol>
+<li>Reset <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>0</mn></msub><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math> at the start of the sequence.</li>
+<li>Lookup <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub></mrow></math>, mix it with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></math> through the shared cell, apply <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>, get <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math>.</li>
+<li>For language modeling, map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math> to vocabulary logits and take a softmax. The loss at step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> is the same next-token NLL as Week 1:</li>
+</ol>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>L</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<ol start="4">
+<li>Average over tokens in the <strong>sentence</strong> (or a small batch of sentences). That is teacher forcing: the true previous token is the next input, not the model’s sample.</li>
+</ol>
 <p><strong>Perplexity</strong> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><mtext>mean&#x000A0;NLL</mtext><mo stretchy="false">&#x00029;</mo></mrow></math> in nats, or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>2</mn><mrow><mtext>mean&#x000A0;NLL</mtext></mrow></msup></mrow></math> if you used log base 2. Lower is better. You will not chase a Wikipedia perplexity number this week. You will chase whether Lab 2’s first bit is still in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>T</mi></msub></mrow></math>.</p>
 <p>Generation (optional picture): sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mi>x</mi><mo>&#x0005E;</mo></mover><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub></mrow></math> from the softmax, feed it back as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub></mrow></math>. Training does not do that.</p>
+<p>A numeric two-step unroll is in the worked example. The teaser you should already see: token 1’s footprint in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>2</mn></msub></mrow></math> shrinks. That shrinkage is vanishing gradients, next note.</p>
 <hr />
-<h2>6. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>The cell:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>W</mi><mi>h</mi></msub><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><msub><mi>W</mi><mi>x</mi></msub><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x0002B;</mo><mrow><mi mathvariant="bold-italic">b</mi></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>The joint factorization of a sequence, which the RNN-LM approximates by conditioning on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub></mrow></math> instead of the raw history:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>w</mi><mi>T</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munderover><mo>&#x0220F;</mo><mrow><mi>t</mi><mo>&#x0003D;</mo><mn>1</mn></mrow><mrow><mi>T</mi></mrow></munderover><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mn>1</mn><mi>:</mi><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>softmax</mo><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mi>o</mi></msub><msub><mi>h</mi><mi>t</mi></msub><msub><mo stretchy="false">&#x00029;</mo><mi>w</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>Next-token loss at step <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>L</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Perplexity is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><mtext>mean&#x000A0;NLL</mtext><mo stretchy="false">&#x00029;</mo></mrow></math> in nats (or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>2</mn><mrow><mtext>mean&#x000A0;NLL</mtext></mrow></msup></mrow></math> in bits). Lower is better.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Variable length: one cell, any <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>, without growing a new table of n-grams.</li>
+<li>Parameter sharing across time is the sequence analogue of a CNN’s shared filter.</li>
+<li>In principle the state can carry the beginning of the sentence, which a fixed window cannot.</li>
+<li>The same cell wires as many-to-one (Lab 2) or many-to-many (language modeling).</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Sequential: you cannot fully parallelize across time, unlike a transformer.</li>
+<li>The cell is a lossy compressor. Every step overwrites, so early tokens shrink in later states.</li>
+<li>Vanishing and exploding gradients on the unrolled chain (next note) kill long-range learning.</li>
+<li>Forgetting to reset <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">h</mi></mrow></mrow></math> between batch items leaks one document into the next.</li>
+<li>Training uses teacher forcing; sampling during training is not the RNN-LM loss.</li>
+</ul>
+<p><strong>When not to.</strong> If you need every token to see every other token in one hop, this is the wrong mixing layer. That is Week 3. This week you need the recurrent picture so the Jacobian product has somewhere to live.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p><strong>~18 minutes.</strong> Why a window is not enough, then the cell, then unroll three tokens with <strong>shared</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math>, then the 2-D numeric table, then the RNN-LM diagram so next-token NLL has a hidden state. Play <strong>0:00–12:00</strong> of StatQuest RNNs (the loop and the unroll). Save vanishing gradients for note 2.2 even if the video teases them.</p>
 <hr />
-<h2>7. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>0</mn></msub><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>,</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>W</mi><mi>h</mi></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.5</mn></mtd><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd><mtd><mn>0.5</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="2em" /><msub><mi>W</mi><mi>x</mi></msub><mo>&#x0003D;</mo><mi>I</mi><mo>&#x0002C;</mo><mspace width="2em" /><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="2em" /><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>2</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Step 1: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>0</mn></msub><mo>&#x0002B;</mo><msub><mi>W</mi><mi>x</mi></msub><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>1</mn></msub></mrow></math>, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.76</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> because <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.76</mn></mrow></math>.</p>
@@ -178,7 +196,7 @@
 <p><img alt="Two-step numeric unroll" src="files/data-643/graphics/2.1-sequence-rnns/rnn-numeric.png" /></p>
 <p>The same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> was used twice. Token 1 still has a <strong>shrunk</strong> footprint in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>2</mn></msub></mrow></math> (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.76</mn><mo>&#x02192;</mo><mn>0.36</mn></mrow></math>). That shrinkage is the teaser for vanishing gradients.</p>
 <hr />
-<h2>8. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Drawing a new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> at each time step (no sharing).</li>
 <li>Feeding the whole sentence as one concatenated vector “to make it an MLP.”</li>
@@ -186,11 +204,11 @@
 <li>Thinking an RNN-LM samples during training. It uses the true previous token.</li>
 </ul>
 <hr />
-<h2>9. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=AsNTP8Kwu80">StatQuest: Recurrent Neural Networks, Clearly Explained</a>.</p>
 <p>Pause on the first unroll (same weights copied) and on the moment the hidden state is described as memory. Skip any long software demo; the board math is the point.</p>
 <hr />
-<h2>10. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Unroll three tokens on paper with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">h</mi></mrow><mn>0</mn></msub><mo>&#x0003D;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>. Which matrices are reused?</p>
@@ -222,7 +240,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

@@ -110,31 +110,28 @@
                             Same block. Causal next-token versus masked tokens. Contextual, not a static table.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>GPT and BERT are the same block with different <strong>masks</strong> and <strong>objectives</strong>. That choice is the difference between a generator and a bidirectional encoder. The fork is the objective: causal language modeling versus masked language modeling.</p>
+<p>GPT and BERT are the same block with different <strong>masks</strong> and <strong>objectives</strong>. That choice is the difference between a generator and a bidirectional encoder. The fork is the objective: causal language modeling versus masked language modeling. By the end you should be able to fill the objective table, mask a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>2</mn></mrow></math> score matrix, and say why BERT cannot stream tokens.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>GPT</strong> and <strong>BERT</strong> are two uses of the same block.</p>
-<p><strong>What.</strong> GPT: causal next-token (left to right). BERT: masked tokens, bidirectional context. Both produce <strong>contextual</strong> vectors, not a static table (Week 1).
-<strong>Why.</strong> Language modeling (GPT) is the pretrain that later becomes ChatGPT. BERT-style MLM is a bidirectional encoder for classification and span tasks.
-<strong>Architecture.</strong> Same transformer block. GPT masks the future. BERT masks random token ids and reconstructs them. Heads differ (LM vs CLS/span).
-<strong>How.</strong> Train on unlabeled text. After pretrain, GPT generates; BERT is usually fine-tuned with a small head.
-<strong>Formula.</strong> GPT: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x0220F;</mo><mi>t</mi></msub><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. BERT: reconstruct masked positions, not a full joint factorization of the sentence.
-<strong>Tradeoffs.</strong> + Contextual geometry. − GPT cannot see the future inside a prompt token; BERT is not a natural generator. “Transformer” is the block; GPT/BERT is the <strong>objective</strong>.
-</p>
-</blockquote>
-<h2>1. Static versus contextual</h2>
+<h2>1. What GPT and BERT are</h2>
+<p><strong>GPT</strong> and <strong>BERT</strong> are two uses of the same transformer block. GPT: causal next-token (left to right). BERT: masked tokens, bidirectional context. Both produce <strong>contextual</strong> vectors, not a static table (Week 1).</p>
 <p>Week 1’s embedding table gave <em>bank</em> <strong>one</strong> vector. A transformer gives <em>bank</em> a vector that depends on the sentence: river bank versus money bank. That is a <strong>contextual</strong> representation. ELMo did this with LSTMs; GPT and BERT do it with the Week 3 block.</p>
 <p><img alt="The same type, two contexts" src="files/data-643/graphics/3.4-gpt-bert/contextual.png" /></p>
-<p>Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. <strong>Pretrain once, fine-tune many times.</strong></p>
+<p>“Transformer” is the block. GPT/BERT is the <strong>objective</strong>. Calling every transformer “a GPT” erases that fork.</p>
 <hr />
-<h2>2. Two attention patterns</h2>
+<h2>2. Why we use it</h2>
+<p>Language modeling (GPT) is the pretrain that later becomes ChatGPT. BERT-style MLM is a bidirectional encoder for classification and span tasks.</p>
+<p>Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. <strong>Pretrain once, fine-tune many times.</strong></p>
+<p>The same block, bigger: more layers, wider <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>, more heads, more data. Week 7 is scaling laws and efficiency. This week: if the mask is causal, you have a language model; if not, you have a contextual encoder.</p>
+<p>For the project: generation, RAG, and tool-use sit on a decoder. Classification into a small label set can still use an encoder, or a decoder with a prompt.</p>
+<p>Do not fine-tune BERT as if it were GPT. A <code>[MASK]</code> model is not a chat decoder. You <em>can</em> classify with a decoder via a prompt; you cannot stream tokens from BERT without a separate head.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Same transformer block as note 3.3. GPT masks the future. BERT masks random token ids and reconstructs them. Heads differ (LM versus CLS/span).</p>
 <p><strong>GPT</strong> (decoder-only): each token may attend to itself and the past. The pretraining job is <strong>next-token</strong> (causal language modeling). Sampling is ancestral: emit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>, then condition on it.</p>
 <p><strong>BERT</strong> (encoder-only): every token may attend to every token. The pretraining job is <strong>masked language modeling</strong> (and originally next-sentence prediction; later work often drops NSP). You cannot sample a paragraph left-to-right without extra machinery.</p>
 <p><img alt="Causal versus bidirectional attention" src="files/data-643/graphics/3.4-gpt-bert/gpt-bert.png" /></p>
 <p>Causal mask: a lower-triangular pattern of legal scores. BERT’s “mask” is a <strong>token</strong> <code>[MASK]</code> in the input, not a future-key mask. Those two uses of the word confuse people all semester.</p>
 <p><img alt="Next-token versus [MASK]" src="files/data-643/graphics/3.4-gpt-bert/mlm-clm.png" /></p>
-<hr />
-<h2>3. Objectives, in one table</h2>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -172,17 +169,56 @@
 </tbody>
 </table></div>
 <p>Modern “BERT-like” encoders (RoBERTa, embedding models) keep the bidirectional idea. Modern LLMs are GPT-style stacks, often with extra alignment (Weeks 8–9). Encoder–decoder models (T5, BART) exist; they are the original transformer, not a third mystery architecture.</p>
-<p>Do not fine-tune BERT as if it were GPT. A <code>[MASK]</code> model is not a chat decoder. You <em>can</em> classify with a decoder via a prompt; you cannot stream tokens from BERT without a separate head.</p>
 <p>BERT-base, one line: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>12</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>768</mn></mrow></math>, 12 heads, about 110M parameters. GPT-1 was the same size on a decoder. The fork is the mask and the loss, not the width.</p>
 <hr />
-<h2>4. Scaling, briefly</h2>
-<p>The same block, bigger: more layers, wider <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>, more heads, more data. Week 7 is scaling laws and efficiency. This week: if the mask is causal, you have a language model; if not, you have a contextual encoder.</p>
-<p>For the project: generation, RAG, and tool-use sit on a decoder. Classification into a small label set can still use an encoder, or a decoder with a prompt.</p>
+<h2>4. How it works, step by step</h2>
+<p>Train on unlabeled text. After pretrain, GPT generates; BERT is usually fine-tuned with a small head.</p>
+<p><strong>GPT path.</strong></p>
+<ol>
+<li>Embed tokens and add positions. Apply a causal mask so token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> cannot see <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mi>T</mi></mrow></math>.</li>
+<li>The loss is next-token NLL: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>x</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math> at each position (teacher forcing, as in the RNN-LM).</li>
+<li>At generation time, sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mi>x</mi><mo>&#x0005E;</mo></mover><mi>t</mi></msub></mrow></math>, append it, and continue. That is ancestral sampling.</li>
+</ol>
+<p><strong>BERT path.</strong></p>
+<ol>
+<li>Hide a random subset of token ids (classically about 15%) by replacing them with <code>[MASK]</code> (and some random / keep-id noise in the original recipe).</li>
+<li>Every token may attend to every token. There is no future-key mask.</li>
+<li>The loss reconstructs the <strong>masked</strong> positions, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mrow><mtext>masked</mtext></mrow></msub><mo>&#x02223;</mo><msub><mi>x</mi><mrow><mtext>rest</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>, not a full joint factorization of the sentence.</li>
+<li>Downstream, add a small head on <code>[CLS]</code> or on token states and fine-tune.</li>
+</ol>
+<p>Masking GPT scores with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> instead of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math> is the same bug as Lab 3: softmax still puts mass on the illegal key.</p>
 <hr />
-<h2>5. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>GPT factorizes the sentence left to right:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munder><mo>&#x0220F;</mo><mi>t</mi></munder><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>BERT reconstructs masked positions, not a full joint factorization:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mrow><mtext>masked</mtext></mrow></msub><mo>&#x02223;</mo><msub><mi>x</mi><mrow><mtext>rest</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>A causal mask sets illegal future scores to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math> before the softmax, so those probabilities are 0. BERT has no such triangular mask; its <code>[MASK]</code> is an input token.</p>
+<p>Worked <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>2</mn></mrow></math> scores live in the example below; the algebra is row-wise softmax on the (possibly masked) score matrix.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Contextual geometry: <em>bank</em> in “river bank” is not the same vector as <em>bank</em> in “money bank.”</li>
+<li>One block, two objectives: you reuse note 3.3 and only change the mask and the loss.</li>
+<li>GPT is the default stack for generation, RAG, and tool-use in this course.</li>
+<li>BERT-style encoders remain a strong default for classify / tag / embed-a-span when you do not need to stream tokens.</li>
+<li>Pretrain once, fine-tune many times, on unlabeled text then a small labeled head.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>GPT cannot see the future inside a prompt token; a bidirectional encoder can, by design.</li>
+<li>BERT is not a natural generator. You cannot stream tokens from it without a separate head.</li>
+<li><code>[MASK]</code> is not the same object as a causal key mask; mixing those words lasts all semester.</li>
+<li>Calling every transformer “a GPT” hides the objective fork.</li>
+<li>Masking GPT scores with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> instead of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math> lets probability leak to the future.</li>
+</ul>
+<p><strong>When not to.</strong> If the demo must <strong>stream</strong> tokens, BERT is the wrong pretrained model. If you only need a small label set and full-sentence context, a decoder is optional, not mandatory.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p><strong>~16 minutes.</strong> Static vs contextual <em>bank</em>, then the two attention triangles, then the objective table, then the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>2</mn></mrow></math> causal-softmax example. Play Karpathy <strong>Let’s build GPT</strong> <strong>0:00–12:00</strong> (tokens in, next token out). Then <strong>0:00–8:00</strong> of CodeEmporium BERT (MLM / <code>[MASK]</code>). If you only have one clip, keep Karpathy and assign BERT.</p>
 <hr />
-<h2>6. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Two tokens, raw scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>.</p>
 <p>GPT (causal): illegal future is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>S</mi><mrow><mn>12</mn></mrow></msub></mrow></math>. Set it to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math>:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>S</mi><mrow><mtext>GPT</mtext></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mo>&#x02212;</mo><mo>&#x0221E;</mo></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
@@ -190,7 +226,7 @@
 <p>BERT (bidirectional): softmax both rows of the original <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>. Row 1: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false">&#x00028;</mo><mo stretchy="false">[</mo><mn>1</mn><mo>&#x0002C;</mo><mn>2</mn><mo stretchy="false">]</mo><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mo stretchy="false">[</mo><mn>0.27</mn><mo>&#x0002C;</mo><mspace width="0.167em" /><mn>0.73</mn><mo stretchy="false">]</mo></mrow></math>. Token 1 <strong>does</strong> look at token 2.</p>
 <p>Objective contrast: GPT loss on this pair is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mn>2</mn></msub><mo>&#x02223;</mo><msub><mi>x</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. BERT, if token 1 is <code>[MASK]</code>, is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>x</mi><mn>1</mn></msub><mo>&#x02223;</mo><msub><mi>x</mi><mn>2</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math> (and any other masked sites).</p>
 <hr />
-<h2>7. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Using BERT when the demo must <strong>stream</strong> tokens.</li>
 <li>Masking GPT scores with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math> instead of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math>.</li>
@@ -198,11 +234,11 @@
 <li>Thinking <code>[MASK]</code> is the same object as a causal key mask.</li>
 </ul>
 <hr />
-<h2>8. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">Karpathy: Let’s build GPT</a> through the first attention / causal-mask implementation (start <strong>0:00–12:00</strong> in class; the attention code is later if you assign homework).</p>
 <p>Also <a href="https://www.youtube.com/watch?v=xI0HHN5XKDo">CodeEmporium: BERT Neural Network — EXPLAINED!</a>. Pause on masked language modeling and next-sentence prediction. You do not need to train BERT today.</p>
 <hr />
-<h2>9. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Why is BERT the wrong pretrained model if your demo must stream tokens?</p>
@@ -234,7 +270,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:30:00-04:00">September 16, 2026, 5:30 AM EDT</time></div>
             </footer>
         </div>
 

@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-This is the first full lecture on **shipping** a model that is too big for the box you have. Scaling (note **7.1**) made the net. **Efficiency** is prune, quantize, distill, or speculate. Treat each as a new method. They are not LoRA (note **8.3**).
+Scaling (note **7.1**) made the net. This note is how you **ship** a model that is too big for the box you have: prune, quantize, distill, or speculate. They are not LoRA (note **8.3**).
 
 ---
 

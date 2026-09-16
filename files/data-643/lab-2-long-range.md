@@ -1,7 +1,5 @@
 Work in a **Jupyter** notebook with **PyTorch**. Do notes **2.1–2.3** first. CPU is enough.
 
-**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
-
 Upload HTML to Canvas when done.
 
 The task is **copy the first bit at the end of a long sequence**. A vanilla RNN should fail as \(T\) grows; an LSTM should keep the bit. That is the Jacobian product from note 2.2, then the copy regime from note 2.3.
