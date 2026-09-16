@@ -94,6 +94,10 @@ The reverse mean lands on \(x_0\). That is the oracle: if you predict the true n
 
 If \(\varepsilon_\theta=0\) (the net refuses to denoise), the subtracted term vanishes and you mostly rescale \(x_t\), which is not a sample from the data.
 
+![Oracle reverse mean: \(2.0\) peels back to \(1.0\)](files/data-643/graphics/12.2-diffusion-reverse/reverse-mean.png)
+
+CS231N L14: sampling is an **iterative** procedure. You pay \(T\) network calls (or fewer with DDIM). A GAN still samples in one pass and fights collapse instead.
+
 ---
 
 ## 6. Where students get stuck

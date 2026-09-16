@@ -14,6 +14,12 @@ Stable Diffusion is this picture plus a big text-conditioned U-Net. The idea is 
 
 Typical sizes to say out loud: an image \(512\times 512\times 3\) becomes a latent like \(64\times 64\times 4\). You pay diffusion steps on the small tensor.
 
+Stanford CS231N 2025 L14’s classroom setting is \(D=8\), \(C=16\): \(256\times 256\times 3=196{,}608\) numbers versus \(32\times 32\times 16=16{,}384\) (about \(12\times\) fewer). Stable Diffusion’s public \(64\times 64\times 4\) on \(512^2\) is about \(48\times\). Same slogan: denoise the small tensor.
+
+![Pixel cells versus CS231N’s latent cells](files/data-643/graphics/12.3-latent-conditioning/latent-count.png)
+
+The same lecture notes that modern LDM pipelines stack a VAE, a GAN (for the decoder), and diffusion. DiT exists. This hour is the VAE-latent picture, not a transformer-block homework.
+
 ---
 
 ## 2. Conditioning with CLIP text
@@ -81,6 +87,10 @@ About **35 minutes** at the board, then **~12 minutes** of selected video from t
 | \(7.5\) | \(-3.7\) | very sharp prompt match; variety usually drops |
 
 \(s=1\) is “use the text-conditioned prediction.” \(s>1\) **extrapolates** away from the unconditioned guess. That is why a huge \(s\) can look like a poster of the prompt and still miss modes (Week 11’s coverage lesson, now in prompt space).
+
+![CFG scale \(s=1,3,7.5\) on a scalar pair](files/data-643/graphics/12.3-latent-conditioning/cfg-scale.png)
+
+CS231N L14: randomly **drop** the text in training so one net is both conditional and unconditional. Two forwards at sample time, then mix with \(s\).
 
 ---
 

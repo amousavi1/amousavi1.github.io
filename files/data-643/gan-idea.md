@@ -38,6 +38,8 @@ For this course, GANs are the first **implicit** generator you meet. Diffusion (
 
 Draw the figure on the board and leave it up: \(z\to G\to\) fake into \(D\), real \(x\) into \(D\). Everything later in Week 11 is a comment on that picture.
 
+Stanford CS231N 2025 L13: a GAN is an **implicit** density and a **direct** sample. You give up on \(p(\boldsymbol{x})\) and keep a one-forward-pass sampler. Diffusion (Week 12) is the other implicit family: iterative, not one shot.
+
 Name what you cannot do: \(p(\boldsymbol{x})\), \(p(\boldsymbol{z}\mid\boldsymbol{x})\), a test log-likelihood. Name what you can do: draw fakes in one forward pass. That pair of sentences is the exam answer for “why a GAN vs why a diffusion model.”
 
 ---
@@ -70,6 +72,10 @@ A Bayes-optimal \(D\) then scores:
 \(G\) is “winning” at \(+2\) in the sense that \(D(G(z))=0.5\), a coin flip. It is losing as a **distribution**: the left mode has zero fake mass. One sample at \(+2\) looks perfect. The generator is not trained.
 
 If you now let \(G\) move and it jumps all mass to \(-2\), the table flips: \(D(-2)=0.5\), \(D(+2)=1\). That oscillation is the seed of note **11.3**.
+
+![Bayes \(D\) when \(G\) parks on \(+2\)](files/data-643/graphics/11.1-gan-idea/d-bayes.png)
+
+The optimal discriminator (Goodfellow / CS231N) is \(D^*(x)=p_r(x)/(p_r(x)+p_g(x))\). Where \(G\) never goes, \(p_g=0\) and \(D^*=1\). \(G\)’s loss never sees that location.
 
 ---
 

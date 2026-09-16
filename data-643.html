@@ -934,6 +934,10 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
+                                        <a class="course-material__title" href="https://cs231n.stanford.edu/slides/2025/lecture_13.pdf" target="_blank" rel="noopener">Stanford CS231N 2025 L13: GANs give up on p(x) and sample in one pass</a
+                                        >
+                                    </li>
+                                    <li>
                                         <a class="course-material__title" href="https://arxiv.org/abs/1406.2661" target="_blank" rel="noopener">Goodfellow et al., Generative adversarial nets</a
                                         >
                                     </li>
@@ -944,8 +948,10 @@
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>Why is “the discriminator accuracy is 99%” not proof the generator is good?</li>
-                                    <li>Name one evaluation that would catch mode collapse that a single sample would miss.</li>
+                                    <li>G(z)=+2 always. What is Bayes D(+2) and D(−2) on equal spikes at ±2?</li>
+                                    <li>Why is a 99% discriminator often a dead generator?</li>
+                                    <li>92 fakes on A and 8 on B: which lab rule fires, and why can lossG still look small?</li>
+                                    <li>Name one query a GAN cannot answer that an explicit likelihood model can.</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-12" role="tabpanel" aria-labelledby="tab-week-12" hidden>
@@ -986,6 +992,10 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
+                                        <a class="course-material__title" href="https://cs231n.stanford.edu/slides/2025/lecture_14.pdf" target="_blank" rel="noopener">Stanford CS231N 2025 L14: diffusion, LDM (D=8, C=16), classifier-free guidance</a
+                                        >
+                                    </li>
+                                    <li>
                                         <a class="course-material__title" href="https://arxiv.org/abs/2006.11239" target="_blank" rel="noopener">Ho et al., Denoising diffusion probabilistic models</a
                                         >
                                     </li>
@@ -996,8 +1006,10 @@
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>What does the network actually predict in a typical DDPM training step?</li>
-                                    <li>Why does latent diffusion help text-to-image more than pixel-space diffusion does?</li>
+                                    <li>Why sample x_t from q(x_t | x_0) instead of walking t Markov steps in the loss?</li>
+                                    <li>If ε_θ equals the true ε, what should one reverse mean do in the 12.1 cartoon?</li>
+                                    <li>s=1 versus s=12: which is “no text,” and what happens to variety?</li>
+                                    <li>256×256×3 versus 32×32×16: whose bug is a slow sampler if you still denoise pixels?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-13" role="tabpanel" aria-labelledby="tab-week-13" hidden>
@@ -1146,7 +1158,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T23:45:00-04:00">September 15, 2026, 11:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
             </footer>
         </div>
 

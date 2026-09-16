@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 11 &middot; <a href="files/data-643/mode-collapse.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/11.3-mode-collapse.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            The generator can cover one mode and still fool a weak discriminator.
+                            92/8 is collapse. 47/53 is covered. G’s loss has no missing-mode term.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A GAN has no likelihood you can read as “this model covers the data.” The usual failure is not blur. It is <strong>mode collapse</strong>: the generator finds one (or a few) fakes that fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> and repeats them.</p>
@@ -165,6 +165,8 @@
 <p>A human looking at the 92 points near A says they look like reals. Fidelity is high on A. Recall of the mixture is not.</p>
 <p>Generator loss can still be small: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> only fights A, so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> on A drifts toward <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> is paid for staying there. The 8 points on B are not a rescue; they are leftover jitter.</p>
 <p>If a second seed gives 47 / 53, write <strong>covered</strong>. Same architecture, different outcome. That is why you report the bin fractions, not only <code>lossG</code>.</p>
+<p><img alt="92/8 collapse versus 47/53 covered" src="files/data-643/graphics/11.3-mode-collapse/coverage-bins.png" /></p>
+<p>CS231N’s GAN recap: you can interpolate in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> when the map is healthy (StyleGAN made that famous). A jump from “shoe” to “face” is a broken map. You will not train StyleGAN here; you will print two bin fractions.</p>
 <hr />
 <h2>6. Where students get stuck</h2>
 <ul>
@@ -203,7 +205,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T23:45:00-04:00">September 15, 2026, 11:45 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
             </footer>
         </div>
 

@@ -67,6 +67,10 @@ Generator loss can still be small: \(D\) only fights A, so \(D\) on A drifts tow
 
 If a second seed gives 47 / 53, write **covered**. Same architecture, different outcome. That is why you report the bin fractions, not only `lossG`.
 
+![92/8 collapse versus 47/53 covered](files/data-643/graphics/11.3-mode-collapse/coverage-bins.png)
+
+CS231N’s GAN recap: you can interpolate in \(z\) when the map is healthy (StyleGAN made that famous). A jump from “shoe” to “face” is a broken map. You will not train StyleGAN here; you will print two bin fractions.
+
 ---
 
 ## 6. Where students get stuck

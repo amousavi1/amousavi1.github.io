@@ -81,6 +81,10 @@ Saturating generator loss (the \(J\) term \(G\) minimizes):
 
 If instead \(D(G(z))=0.01\), that becomes \(\log 0.99\approx -0.010\): almost flat. The non-saturating surrogate is \(-\log D(G(z))\). At \(D=0.2\) that is \(-\log 0.2\approx 1.609\); at \(D=0.01\) it is \(-\log 0.01\approx 4.605\). Still a slope. That is why Lab 11 feeds **ones** into the generator’s BCE: it is the non-saturating form.
 
+![A sample of \(J\), then a flat saturating \(G\) loss](files/data-643/graphics/11.2-gan-training/j-numeric.png)
+
+Stanford CS231N 2025 L13 writes the same minimax and the practical loop: update \(D\), then \(G\). A 99% discriminator is the saturating regime, not a trophy.
+
 ---
 
 ## 6. Where students get stuck

@@ -893,6 +893,98 @@ def latent_ldm():
     _save(fig, "12.3-latent-conditioning/ldm.png")
 
 
+def d_bayes():
+    _numeric_table(
+        "11.1-gan-idea/d-bayes.png",
+        r"G parked on $+2$. Bayes $D(+2)=1/2$; the left mode is uncontested.",
+        ["location", "what D sees", r"$D(x)$"],
+        [[r"$x=+2$", "half real, half fake", "0.5"], [r"$x=-2$", "only reals", "1"], ["elsewhere", "only fakes, if any", r"$\approx 0$"]],
+    )
+
+
+def j_numeric():
+    _numeric_table(
+        "11.2-gan-training/j-numeric.png",
+        r"$D(G(z))=0.01$: saturating $G$ loss is flat; $-\log D$ still has slope.",
+        ["quantity", "value"],
+        [
+            [r"$J$ sample ($D_x=0.9$, $D_g=0.2$)", r"$-0.328$"],
+            [r"$\log(1-D)$ at $0.01$", r"$-0.010$"],
+            [r"$-\log D$ at $0.01$", "4.605"],
+        ],
+    )
+
+
+def coverage_bins():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["seed A\n92 / 8", "seed B\n47 / 53"]
+    left = [92, 47]
+    right = [8, 53]
+    x = np.arange(2)
+    ax.bar(x - 0.18, left, 0.36, color=CORAL, edgecolor=NAVY, label="mode A")
+    ax.bar(x + 0.18, right, 0.36, color=TEAL, edgecolor=NAVY, label="mode B")
+    ax.axhline(10, color=SLATE, ls="--", lw=1)
+    ax.set_xticks(x)
+    ax.set_xticklabels(names)
+    ax.set_ylabel("fakes / 100")
+    ax.set_ylim(0, 110)
+    ax.legend(frameon=False)
+    ax.set_title("Lab 11: a bin under 10% is collapse. Same net, two seeds.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "11.3-mode-collapse/coverage-bins.png")
+
+
+def alphabar_table():
+    _numeric_table(
+        "12.1-diffusion-forward/alphabar.png",
+        r"$x_0=1$, $\varepsilon=2$. At $\bar\alpha=0.64$ you already sit at 2.0.",
+        [r"$\bar\alpha_t$", r"$\sqrt{\bar\alpha}\,x_0$", r"$x_t$"],
+        [["1", "1.0", "1.0"], ["0.64", "0.8", "2.0"], ["0", "0", "2.0"]],
+    )
+
+
+def reverse_mean():
+    _numeric_table(
+        "12.2-diffusion-reverse/reverse-mean.png",
+        r"Oracle $\varepsilon_\theta=\varepsilon=2$: one reverse mean lands on $x_0=1$.",
+        ["piece", "value"],
+        [
+            [r"$x_t$", "2.0"],
+            [r"$(1-\alpha_t)/\sqrt{1-\bar\alpha_t}\cdot\varepsilon$", "1.2"],
+            [r"$x_{t-1}$ mean", "1.0"],
+        ],
+    )
+
+
+def latent_count():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["pixels\n256×256×3", "CS231N latent\n32×32×16"]
+    vals = [256 * 256 * 3 / 1000, 32 * 32 * 16 / 1000]
+    ax.bar(names, vals, color=[CORAL, TEAL], edgecolor=NAVY)
+    ax.set_ylabel("thousands of numbers")
+    ax.set_title("CS231N L14: D=8, C=16. Denoise 12× fewer cells.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "12.3-latent-conditioning/latent-count.png")
+
+
+def cfg_scale():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    s = np.array([1, 3, 7.5])
+    hat = 0.8 - 0.6 * s
+    ax.bar([r"$s=1$", r"$s=3$", r"$s=7.5$"], hat, color=[TEAL, GOLD, CORAL], edgecolor=NAVY)
+    ax.axhline(0.2, color=SLATE, ls="--", lw=1)
+    ax.set_ylabel(r"$\hat\varepsilon$")
+    ax.set_title(r"$\varepsilon_\varnothing=0.8$, $\varepsilon_c=0.2$. $s=1$ is still conditional.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "12.3-latent-conditioning/cfg-scale.png")
+
+
 def cot_vs_direct():
     fig, axes = plt.subplots(1, 2, figsize=(9.8, 3.6))
     for ax in axes:
@@ -1066,6 +1158,13 @@ def main():
     forward_noise()
     reverse_denoise()
     latent_ldm()
+    d_bayes()
+    j_numeric()
+    coverage_bins()
+    alphabar_table()
+    reverse_mean()
+    latent_count()
+    cfg_scale()
     cot_vs_direct()
     tot_tree()
     faithfulness()
