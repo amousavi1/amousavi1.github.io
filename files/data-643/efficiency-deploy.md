@@ -1,90 +1,130 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Scaling (note **7.1**) makes a model that may not fit on the box you have. **Efficiency** is how you ship it: fewer weights, fatter arithmetic, a smaller student, or fewer expensive forward passes at decode time.
+This is the first full lecture on **shipping** a model that is too big for the box you have. Scaling (note **7.1**) made the net. **Efficiency** is prune, quantize, distill, or speculate. Treat each as a new method. They are not LoRA (note **8.3**).
 
 ---
 
-## 1. Shrink the weights
+## 1. What these methods are
 
-**Prune:** set small weights to zero (unstructured) or drop heads, neurons, or layers (structured). You need a pass of recovery training or the quality drop is ugly.
+Four different jobs, one hour.
 
-**Quantize:** store weights (and sometimes activations) in fewer bits. INT8 and 4-bit GPTQ/AWQ are the ones you will see in Hugging Face. Affine quantization uses a **scale** and **zero-point**:
+- **Pruning:** set some weights to zero (unstructured) or drop heads, neurons, or layers (structured). The graph gets smaller or sparser.
+- **Quantization:** store the **same** architecture in fewer bits (INT8, 4-bit). The count of weights does not change; the bytes do.
+- **Distillation:** a frozen **teacher** produces logits (or hidden states); a smaller **student** matches them, plus labels. You buy a cheaper net, not a new capability.
+- **Speculative decoding:** a cheap **draft** model proposes several tokens; the large **target** checks them in one parallel pass. The **distribution** stays the target’s.
+
+---
+
+## 2. Why we use them
+
+A 7B fp16 file is about 14 GB. Laptops, phones, and batch servers do not all hold that. Retraining a tiny model from scratch may be worse than compressing a good large one. Decode is serial: one token per large forward. Speculation tries to pay one large forward for several tokens when the draft is often right.
+
+---
+
+## 3. Architecture
+
+**Prune / quantize / distill** change what you **store** or **train**. **Speculative decoding** changes only the **sampler** at serve time: draft model + target model + accept/reject. You still have the original transformer; you wrap it.
+
+![Prune, quantize, distill](files/data-643/graphics/7.3-efficiency-deploy/compress.png)
+
+![Draft tokens verified by the large model](files/data-643/graphics/7.3-efficiency-deploy/speculative.png)
+
+Stanford CS224N 2025 L11 puts pruning next to LoRA (fewer weights vs a small \(\Delta\)). Distill and speculate stay on this board.
+
+---
+
+## 4. How each one works
+
+**Prune.** Score weights (magnitude, or a more careful criterion). Zero the small ones, or drop a structure. Then a short recovery train, or quality falls off a cliff.
+
+**Quantize.** Map a real tensor to integers with a **scale** \(s\) and **zero-point** \(z\). Lab 7 does this on a toy tensor and reports MSE. Outliers in activations break naive INT8.
+
+**Distill.** Run the teacher on your batches. Train the student so its logits match (KL or MSE) and so labels are still right. If the teacher is already wrong on your domain, the student copies that.
+
+**Speculate.** Draft emits \((t_1,\ldots,t_n)\). Target, in one forward, scores them. Accept the prefix the target agrees with; at the first mismatch, sample from the **target** and drop the rest of the draft.
+
+---
+
+## 5. Mathematical formulas
+
+Affine quantization:
 
 \[
 x \approx s\,(q - z), \qquad q \in \{0,\ldots,2^b-1\}.
 \]
 
-Lab 7 does this on a toy tensor and reports MSE. The curve is not free: outliers in activations break naive INT8.
-
-**Distill:** a frozen **teacher** produces logits or hidden states; a smaller **student** matches them (plus the usual labels). You buy a model that is cheaper to run, not a new capability.
-
-![Prune, quantize, distill](files/data-643/graphics/7.3-efficiency-deploy/compress.png)
-
 ![INT8 with a zero-point](files/data-643/graphics/7.3-efficiency-deploy/int8-numeric.png)
 
----
+Symmetric INT8 on \([-1,1]\): \(s=2/255\), \(z=128\). Dropping \(z\) cannot represent negatives.
 
-## 2. Speculative decoding
-
-Autoregressive decode is serial: one token, then another. **Speculative decoding** runs a cheap **draft** model for several tokens, then the large **target** checks them in one parallel pass. If the target agrees, you accept a block; if not, you roll back at the first mismatch and sample from the target. Expected speedup is \(>1\times\) when the draft is often right; the **distribution** is still the target’s.
-
-![Draft tokens verified by the large model](files/data-643/graphics/7.3-efficiency-deploy/speculative.png)
-
-This is not pruning. It is extra compute on a small net to save steps on a large net.
-
-If the draft proposes 4 tokens and the target accepts 3, you paid one large forward for 3 tokens instead of 3 large forwards. Token 4 is resampled from the target.
+Speculative accept: if the target’s next-token distribution assigns the draft token enough mass (exact rule: sample from target; accept if it matches the draft’s proposal in the standard algorithm), you keep it. Teaching form: **agree \(\Rightarrow\) keep; disagree \(\Rightarrow\) resample from the target.** Expected tokens per large forward \(>1\) when the draft is accurate. The law of the output is still \(p_{\mathrm{target}}\).
 
 ---
 
-## 3. What to report
+## 6. Positive points and negative points
 
-Name bits, which layers you quantized, whether you distilled, and tokens per second versus a dense fp16 baseline. Quality: the same eval as the uncompressed model, not only perplexity. For a project, a 4-bit laptop demo is a deployment result; it is not a new architecture.
+**Positive.** INT4 can drop a 7B from ~14 GB toward ~3.5 GB plus overhead. Distill gives a small student you can actually run. Speculation can raise tokens/s without changing answers in distribution. Pruning can cut FLOPs if structured.
 
-Stanford CS224N 2025 L11 puts **pruning** and **LoRA** in the same PEFT hour: fewer weights, or a small \(\Delta\) on a frozen \(W\). Distill and speculative decoding stay on this board; they are not LoRA. Note **8.3** owns the \(BA\) algebra.
+**Negative.** Quality drop if you skip recovery (prune) or ignore outliers (INT8). Distill cannot exceed a bad teacher. Speculation adds a draft model and can slow you down if the draft is often wrong. Reporting only perplexity hides downstream damage. None of these is a new architecture for the project write-up.
 
----
-
-## 4. Teaching this note
-
-About **35 minutes** at the board: affine INT8 on a 1-D range, a 4-token speculative accept/reject, then one sentence on prune vs distill. Play LoRA **0:00–~15:00** as “deploy a small delta,” then return to prune/quantize/speculate. Lab 7’s toy quantize is studio, not this block.
+**When not to.** If the model already fits and latency is fine, leave it in fp16. If you need a new skill, train (SFT/LoRA); do not only quantize.
 
 ---
 
-## 5. Worked example
+## 7. What to report
 
-Weights in \([-1,1]\), \(b=8\) bits, \(q\in\{0,\ldots,255\}\). A symmetric affine map:
+Bits, which layers you quantized, whether you distilled, tokens per second versus fp16, and the **same** downstream eval as the uncompressed model.
+
+---
+
+## 8. Teaching this note
+
+About **45 minutes**. Name all four methods before INT8 arithmetic.
+
+- **0–10 min.** What / why: four jobs, not one slogan.
+- **10–25 min.** Affine INT8. Zero-point. Lab 7 tensor.
+- **25–38 min.** Speculative accept/reject. Then one sentence each on prune and distill.
+- **38–45 min.** Pros / cons. LoRA is next week.
+- Play LoRA video **0:00–~15:00** as “deploy a small delta,” then return to this board.
+
+---
+
+## 9. Worked example
+
+Weights in \([-1,1]\), \(b=8\), \(q\in\{0,\ldots,255\}\):
 
 \[
 s = \frac{2}{255},\qquad z=128,\qquad x \approx s(q-128).
 \]
 
-\(q=128\) \(\mapsto\) \(0\); \(q=255\) \(\mapsto\) \(s\cdot 127 \approx 0.996\). If you drop \(z\) and only use \(x\approx s q\), you cannot represent negatives.
+\(q=128\mapsto 0\); \(q=255\mapsto s\cdot 127\approx 0.996\).
 
-Speculative: draft emits \((t_1,t_2,t_3,t_4)\). Target, in one forward, assigns probabilities. It agrees on \(t_1,t_2\), rejects \(t_3\). You commit \(t_1,t_2\), sample a new \(t_3'\) from the **target**, and throw \(t_4\) away. Speedup \(\approx 2\) large-tokens per large-forward this step, if the draft is that accurate on average.
+Speculative: draft emits four tokens. Target agrees on the first two, rejects the third. Commit two, sample a new third from the **target**, throw the fourth away.
 
-Memory cartoon: 7B fp16 \(\approx 14\) GB. INT4 weights \(\approx 3.5\) GB plus overhead. Same architecture, different bits.
+Memory: 7B fp16 \(\approx 14\) GB. INT4 weights \(\approx 3.5\) GB plus overhead.
 
 ---
 
-## 6. Where students get stuck
+## 10. Where students get stuck
 
 - Quantizing without a zero-point when the tensor is not \(\ge 0\).
-- Thinking speculative decoding **changes** the target distribution. It must not; rejected drafts are resampled from the target.
-- Reporting perplexity only after 4-bit. The project eval is the same downstream number as fp16.
+- Thinking speculation **changes** the target distribution.
+- Reporting perplexity only after 4-bit.
+- Calling all four methods “LoRA.”
 
 ---
 
-## 7. Video
+## 11. Video
 
-[Umar Jamil — LoRA explained](https://www.youtube.com/watch?v=PXWYUTMt-AU). Play about **0:00–15:00** (frozen \(W\), small \(BA\)). That is the deploy-small-deltas story. **Prune, quantize, and speculative decoding stay on the board**; they are not in this clip. Full LoRA is note **8.3**.
+[Umar Jamil — LoRA explained](https://www.youtube.com/watch?v=PXWYUTMt-AU). Play about **0:00–15:00**. **Prune, quantize, and speculative decoding stay on the board.** Full LoRA is note **8.3**.
 
 ---
 
-## 8. Practice
+## 12. Practice
 
-1. Why does a scale-and-zero-point map need \(z\), not only \(s\), if \(x\) is not centered at zero?
+1. In one sentence each: prune vs quantize vs distill vs speculate.
 
-2. Distillation needs a teacher. What happens if the teacher is already calibrated badly on your domain?
+2. Why does a scale-and-zero-point map need \(z\), not only \(s\), if \(x\) is not centered at zero?
 
 3. Speculative decoding must not change the target distribution. Where does a rejected draft token get replaced?
 

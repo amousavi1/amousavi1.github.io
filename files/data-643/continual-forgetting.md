@@ -4,6 +4,15 @@ Train on task B after task A and **task A’s accuracy falls**. That drop is **c
 
 ---
 
+> **First time this method appears.** **Catastrophic forgetting** is: train on task B and task A slips.
+>
+> **What.** Sequential training without replay overwrites the weights that did A. Continual learning tries to add B without burying A.
+> **Why.** You will fine-tune. XOR-then-AND in Lab 8 is the cartoon. Production: new policy PDFs every month.
+> **Architecture.** Same net. Mitigations: **replay** (mix old batches), freeze layers, **LoRA** (isolate \(\Delta\) in \(BA\)), or a regularizer toward old \(\theta\) (EWC cartoon: penalty on important weights).
+> **How.** Measure A **after** B. If you only plot B, you hid the bug. Replay is the first lever; LoRA is the isolator next note.
+> **Formula.** Cartoon EWC: \(\mathcal{L}_B(\theta)+\frac{\lambda}{2}\sum_i F_i(\theta_i-\theta_i^A)^2\). You do not compute a full Fisher in this class; you need the idea.
+> **Tradeoffs.** + Replay is simple. − Replay needs stored data; freeze can block B; LoRA still forgets if you merge carelessly; EWC is extra knobs.
+>
 ## 1. Why the old skill dies
 
 The SFT (or pretrain) minimum for A is a point in weight space. Fine-tuning on B walks away from it. In an MLP, the same hidden units implemented both functions; XOR then AND in Lab 8 is the cartoon. In an LLM, new instruction data overwrites features that still mattered for coding, or for a language you are not currently sampling.

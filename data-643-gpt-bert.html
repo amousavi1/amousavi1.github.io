@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>GPT and BERT are the same block with different <strong>masks</strong> and <strong>objectives</strong>. That choice is the difference between a generator and a bidirectional encoder. Princeton COS 484 L10 is the matching pretraining hour; CS224N’s pretraining lecture is the same fork.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>GPT</strong> and <strong>BERT</strong> are two uses of the same block.</p>
+<p><strong>What.</strong> GPT: causal next-token (left to right). BERT: masked tokens, bidirectional context. Both produce <strong>contextual</strong> vectors, not a static table (Week 1).
+<strong>Why.</strong> Language modeling (GPT) is the pretrain that later becomes ChatGPT. BERT-style MLM is a bidirectional encoder for classification and span tasks.
+<strong>Architecture.</strong> Same transformer block. GPT masks the future. BERT masks random token ids and reconstructs them. Heads differ (LM vs CLS/span).
+<strong>How.</strong> Train on unlabeled text. After pretrain, GPT generates; BERT is usually fine-tuned with a small head.
+<strong>Formula.</strong> GPT: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x0220F;</mo><mi>t</mi></msub><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. BERT: reconstruct masked positions, not a full joint factorization of the sentence.
+<strong>Tradeoffs.</strong> + Contextual geometry. − GPT cannot see the future inside a prompt token; BERT is not a natural generator. “Transformer” is the block; GPT/BERT is the <strong>objective</strong>.
+</p>
+</blockquote>
 <h2>1. Static versus contextual</h2>
 <p>Week 1’s embedding table gave <em>bank</em> <strong>one</strong> vector. A transformer gives <em>bank</em> a vector that depends on the sentence: river bank versus money bank. That is a <strong>contextual</strong> representation. ELMo did this with LSTMs; GPT and BERT do it with the Week 3 block.</p>
 <p><img alt="The same type, two contexts" src="files/data-643/graphics/3.4-gpt-bert/contextual.png" /></p>
@@ -225,7 +235,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

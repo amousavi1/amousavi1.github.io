@@ -4,6 +4,15 @@ Generation walks the forward process **backward**. You start from \(\boldsymbol{
 
 ---
 
+> **First time the reverse process appears.** The **reverse** is: predict the noise you added, take a step toward \(x_0\), repeat \(T\) times.
+>
+> **What.** A net \(\varepsilon_\theta(x_t,t)\) predicts \(\varepsilon\). Training is MSE on that noise. Sampling starts from \(x_T\sim\mathcal{N}(0,I)\) and denoises.
+> **Why.** You cannot write the true reverse in closed form for images. Predicting \(\varepsilon\) is equivalent (under the usual parameterization) to predicting the posterior mean.
+> **Architecture.** U-Net or DiT on \(x_t\) with a time embedding. Lab 12 uses an **oracle** mean so you see the geometry without training.
+> **How.** Loss: \(\mathbb{E}\lVert\varepsilon-\varepsilon_\theta(x_t,t)\rVert^2\). Sample: \(T\) reverse steps (or fewer with a faster sampler, later papers).
+> **Formula.** \(x_{t-1}\) from \(\varepsilon_\theta\) via the standard DDPM mean; cartoon: subtract a scaled \(\varepsilon_\theta\) and add a little noise (except \(t=1\)).
+> **Tradeoffs.** + MSE is easier than GAN min-max. − Many steps at sample time; quality vs speed; classifier-free guidance is next note.
+>
 ## 1. Predict the noise, not the image
 
 Ho et al. (DDPM) train a net \(\boldsymbol{\varepsilon}_\theta(\boldsymbol{x}_t,t)\) to guess the \(\boldsymbol{\varepsilon}\) you added in note **12.1**. The usual loss is

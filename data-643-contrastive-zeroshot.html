@@ -113,6 +113,16 @@
 <p><strong>Contrastive learning</strong> pulls matched pairs together and pushes unmatched pairs apart, in a shared space. <strong>Zero-shot</strong> transfer is what you get when one side of the pair can be a class name written as text. Stanford CS231N 2025 L16 is the matching vision–language hour; CMU 11-777 already called this a <strong>coordination</strong> loss.</p>
 <p>Week 5 will put CLIP’s data and retrieval on the table. This note is the loss and the zero-shot trick.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Contrastive learning</strong> pulls matched pairs together and pushes the rest apart. <strong>Zero-shot</strong> is classify by nearest prompt, not a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>-way trained head.</p>
+<p><strong>What.</strong> InfoNCE on a batch of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> matched pairs. Zero-shot: embed class phrases, pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>\arg</mi><msub><mo>max</mo><mi>c</mi></msub><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><msub><mtext>prompt</mtext><mi>c</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Why.</strong> You may not have labels for every class at train time. A similarity space transfers to new names.
+<strong>Architecture.</strong> Two encoders (or two views of one). A batch matrix of scores. Softmax over the row (or bidirectional).
+<strong>How.</strong> Lab 4: four pairs, heatmap of the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> scores. The diagonal should win.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><msub><mo>&#x02211;</mo><mi>i</mi></msub><mi>log</mi><mfrac><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><msub><mi>s</mi><mrow><mi>i</mi><mi>i</mi></mrow></msub><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mo>&#x02211;</mo><mi>j</mi></msub><mi>exp</mi><mo stretchy="false">&#x00028;</mo><msub><mi>s</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0003D;</mo><mi>cos</mi><mo stretchy="false">&#x00028;</mo><msub><mi>u</mi><mi>i</mi></msub><mo>&#x0002C;</mo><msub><mi>v</mi><mi>j</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Tradeoffs.</strong> + No <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>-way head, works with prompts. − Needs big batches (many negatives); temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> is a knob; compositionality is not free.
+</p>
+</blockquote>
 <h2>1. A batch of matches</h2>
 <p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> images and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> captions. Encode both. Cosine similarities form an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix. The loss (InfoNCE; Oord et al. 2018) wants the <strong>diagonal</strong> hot: image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> with caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>, not caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>j</mi></mrow></math>.</p>
 <p><img alt="Matched pairs on the diagonal" src="files/data-643/graphics/4.3-contrastive-zeroshot/contrastive.png" /></p>
@@ -191,7 +201,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

@@ -4,6 +4,15 @@ Training a net is an optimization problem: pick weights so a **loss** is small o
 
 ---
 
+> **First time this method appears.** **Gradient descent** is how nets learn. Answer these before the ReLU chain rule.
+>
+> **What.** Repeatedly walk downhill on a loss \(L(\theta)\). Stochastic GD uses a minibatch, not the full dataset.
+> **Why.** You cannot solve \(\nabla L=0\) in closed form for a deep net. This is the training loop of pretraining.
+> **Architecture.** Forward (compute \(L\)) → backward (compute \(\nabla_\theta L\)) → update \(\theta\).
+> **How.** Pick a step size \(\eta\). Too large: diverge. Too small: crawl. Adam is a later variant with per-coordinate scales.
+> **Formula.** \(\theta \leftarrow \theta - \eta\nabla_\theta L\). Chain rule on one ReLU: \(\partial L/\partial w = (\partial L/\partial a)\,\mathbf{1}_{z>0}\,x\).
+> **Tradeoffs.** + Simple, scales to millions of steps. − Local minima / saddles, needs a step-size choice, noisy minibatches.
+>
 ## 1. Loss as a surface
 
 Collect all weights and biases into one vector \(\boldsymbol{\theta}\). A loss \(L(\boldsymbol{\theta})\) is a scalar. For classification it is often **cross-entropy**; for a regression toy it is squared error. In two dimensions you can draw the contours. Gradient descent follows \(-\nabla L\).

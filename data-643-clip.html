@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>CLIP</strong> (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. Stanford CS231N 2025 L16’s punchline is the one we keep: after training you have a <strong>similarity score</strong> between an image and a text, not a captioner.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>CLIP</strong> is two towers and a cosine. It scores image–text pairs. It does not write a caption.</p>
+<p><strong>What.</strong> Image encoder + text encoder, InfoNCE on the batch, keep both towers.
+<strong>Why.</strong> One model that retrieves and zero-shot classifies without a detector or a decoder.
+<strong>Architecture.</strong> <code>encode_image</code>, <code>encode_text</code>, cosine. No <code>generate</code>.
+<strong>How.</strong> Train on web pairs. At test, embed the image and a list of prompts. Note 5.2 adds a decoder (BLIP).
+<strong>Formula.</strong> Same InfoNCE as 4.3 with learned <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math>. API is three calls.
+<strong>Tradeoffs.</strong> + Zero-shot and retrieval. − Not a captioner; hungry for batch size; prompt wording is method; bias next note.
+</p>
+</blockquote>
 <h2>1. Two towers</h2>
 <p>An <strong>image encoder</strong> (ResNet or ViT) and a <strong>text encoder</strong> (a transformer). Both emit a vector in the same dimension. Training: InfoNCE on the batch (note <strong>4.3</strong>). After training you keep both towers; you do not keep a fused head.</p>
 <p><img alt="CLIP image and text towers" src="files/data-643/graphics/5.1-clip/clip-towers.png" /></p>
@@ -188,7 +198,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

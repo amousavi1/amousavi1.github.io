@@ -4,6 +4,15 @@ A **GAN** (Goodfellow et al., 2014) is two networks in a contest: a generator th
 
 ---
 
+> **First time this method appears.** A **GAN** is two nets: a **generator** that samples in one pass, and a **discriminator** that scores real vs fake.
+>
+> **What.** You give up on writing \(p(x)\). \(G(z)\) maps noise to a fake. \(D(x)\in(0,1)\) says “real.”
+> **Why.** Likelihood models can be blurry or slow to sample. GANs aim for sharp one-pass samples (images, later 11.3’s coverage bugs).
+> **Architecture.** \(z\sim p(z)\) → \(G\) → fake. \(D\) sees reals from the data and fakes from \(G\). No encoder required.
+> **How.** Train both (details next note). Bayes-optimal \(D\) is \(1/2\) where \(G\) matches the data.
+> **Formula.** \(D^*(x)=p_{\mathrm{data}}(x)/(p_{\mathrm{data}}(x)+p_G(x))\). At a perfect \(G\), \(D^*=1/2\).
+> **Tradeoffs.** + Fast sampling, sharp samples when it works. − No likelihood, unstable train (11.2), mode collapse (11.3), not an LLM method.
+>
 ## 1. The generator
 
 Noise \(\boldsymbol{z}\) (usually isotropic Gaussian) in; a sample \(\boldsymbol{x}=G(\boldsymbol{z};\boldsymbol{\theta}_g)\) out, same shape as a real observation. \(G\) is a decoder without an encoder: it does not reconstruct a particular training point. It maps latent draws into data space.

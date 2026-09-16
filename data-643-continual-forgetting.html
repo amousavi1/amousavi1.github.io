@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Train on task B after task A and <strong>task A’s accuracy falls</strong>. That drop is <strong>catastrophic forgetting</strong>. It is not a bug in one optimizer; it is what a single shared <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math> does when the new gradient points away from the old solution.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Catastrophic forgetting</strong> is: train on task B and task A slips.</p>
+<p><strong>What.</strong> Sequential training without replay overwrites the weights that did A. Continual learning tries to add B without burying A.
+<strong>Why.</strong> You will fine-tune. XOR-then-AND in Lab 8 is the cartoon. Production: new policy PDFs every month.
+<strong>Architecture.</strong> Same net. Mitigations: <strong>replay</strong> (mix old batches), freeze layers, <strong>LoRA</strong> (isolate <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00394;</mi></mrow></math> in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mi>A</mi></mrow></math>), or a regularizer toward old <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> (EWC cartoon: penalty on important weights).
+<strong>How.</strong> Measure A <strong>after</strong> B. If you only plot B, you hid the bug. Replay is the first lever; LoRA is the isolator next note.
+<strong>Formula.</strong> Cartoon EWC: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02112;</mi><mi>B</mi></msub><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002B;</mo><mfrac><mrow><mi>&#x003BB;</mi></mrow><mrow><mn>2</mn></mrow></mfrac><msub><mo>&#x02211;</mo><mi>i</mi></msub><msub><mi>F</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B8;</mi><mi>i</mi></msub><mo>&#x02212;</mo><msubsup><mi>&#x003B8;</mi><mi>i</mi><mi>A</mi></msubsup><msup><mo stretchy="false">&#x00029;</mo><mn>2</mn></msup></mrow></math>. You do not compute a full Fisher in this class; you need the idea.
+<strong>Tradeoffs.</strong> + Replay is simple. − Replay needs stored data; freeze can block B; LoRA still forgets if you merge carelessly; EWC is extra knobs.
+</p>
+</blockquote>
 <h2>1. Why the old skill dies</h2>
 <p>The SFT (or pretrain) minimum for A is a point in weight space. Fine-tuning on B walks away from it. In an MLP, the same hidden units implemented both functions; XOR then AND in Lab 8 is the cartoon. In an LLM, new instruction data overwrites features that still mattered for coding, or for a language you are not currently sampling.</p>
 <p><img alt="Accuracy on A falling while B is trained" src="files/data-643/graphics/8.2-continual-forgetting/forget.png" /></p>
@@ -175,7 +185,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

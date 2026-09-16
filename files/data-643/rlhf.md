@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **RLHF** is three stages: SFT, reward model, then **PPO** on the policy with a KL leash.
+>
+> **What.** After SFT and an RM, you sample from the **current** policy, score with \(r\), update to raise reward minus KL to a frozen reference.
+> **Why.** SFT does not explore. Best-of-\(n\) uses \(r\) only at decode. RLHF trains \(\pi\) to look high-reward **as it samples**.
+> **Architecture.** Policy \(\pi_\theta\), reference \(\pi_{\mathrm{ref}}\) (usually SFT), RM \(r\) (frozen in the PPO stage), optional critic.
+> **How.** PPO clip + advantage. \(\beta=0\) (no KL) is reward hacking: the policy exploits \(r\).
+> **Formula.** \(\max_\pi \mathbb{E}[r(x,y)]-\beta\,\mathrm{KL}(\pi(\cdot\mid x)\|\pi_{\mathrm{ref}}(\cdot\mid x))\).
+> **Tradeoffs.** + Can beat SFT on preference evals. − Unstable, expensive, RM misspecification; people look to DPO (next note) to skip PPO.
+>
 ## 1. The loop
 
 1. **SFT** on instruction pairs (note **8.1**). Call this \(\pi_{\text{SFT}}\).

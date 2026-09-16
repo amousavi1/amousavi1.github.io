@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Training a net is an optimization problem: pick weights so a <strong>loss</strong> is small on training batches, then check a held-out set. Gradient descent is the default way to move the weights.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Gradient descent</strong> is how nets learn. Answer these before the ReLU chain rule.</p>
+<p><strong>What.</strong> Repeatedly walk downhill on a loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mi>&#x003B8;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. Stochastic GD uses a minibatch, not the full dataset.
+<strong>Why.</strong> You cannot solve <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><mi>L</mi><mo>&#x0003D;</mo><mn>0</mn></mrow></math> in closed form for a deep net. This is the training loop of pretraining.
+<strong>Architecture.</strong> Forward (compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math>) → backward (compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x02207;</mo><mi>&#x003B8;</mi></msub><mi>L</mi></mrow></math>) → update <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math>.
+<strong>How.</strong> Pick a step size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi></mrow></math>. Too large: diverge. Too small: crawl. Adam is a later variant with per-coordinate scales.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi><mo>&#x02190;</mo><mi>&#x003B8;</mi><mo>&#x02212;</mo><mi>&#x003B7;</mi><msub><mo>&#x02207;</mo><mi>&#x003B8;</mi></msub><mi>L</mi></mrow></math>. Chain rule on one ReLU: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>a</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mrow><mn mathvariant="bold">1</mn></mrow><mrow><mi>z</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></msub><mspace width="0.167em" /><mi>x</mi></mrow></math>.
+<strong>Tradeoffs.</strong> + Simple, scales to millions of steps. − Local minima / saddles, needs a step-size choice, noisy minibatches.
+</p>
+</blockquote>
 <h2>1. Loss as a surface</h2>
 <p>Collect all weights and biases into one vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow></mrow></math>. A loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">&#x003B8;</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></math> is a scalar. For classification it is often <strong>cross-entropy</strong>; for a regression toy it is squared error. In two dimensions you can draw the contours. Gradient descent follows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x02207;</mo><mi>L</mi></mrow></math>.</p>
 <p><img alt="Gradient descent on a bowl-shaped loss" src="files/data-643/graphics/1.3-gradient-descent/loss-surface.png" /></p>
@@ -213,7 +223,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

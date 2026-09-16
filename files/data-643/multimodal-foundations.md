@@ -6,6 +6,15 @@ If you only train on text, you cannot answer “what is in this photo?” withou
 
 ---
 
+> **First time this method appears.** **Multimodal learning** is more than “glue an image to a caption.”
+>
+> **What.** Five jobs (Baltrušaitis et al.): represent, align, fuse, translate, co-learn. A model can score a pair (CLIP) without decoding a sentence.
+> **Why.** Pixels, text, and audio are different sensors. Concatenation is one fusion; it is not the only job.
+> **Architecture.** Separate encoders per modality, then a fuse (concat, add, or cross-attention) or a score (cosine).
+> **How.** Pick the job first. Retrieval needs a score. Captioning needs a decoder. Classification can be a linear head on a frozen encoder.
+> **Formula.** Coordinated: \(s(i,t)=\cos(f(i),g(t))\). Joint concat: \([f(i);g(t)]\,W\).
+> **Tradeoffs.** + You can reuse a frozen encoder. − Concat grows width; alignment needs paired data; “multimodal” without naming the job is not a project.
+>
 ## 1. Five jobs, not one architecture
 
 ![Represent, align, fuse, translate, co-learn](files/data-643/graphics/4.1-multimodal-foundations/five-challenges.png)

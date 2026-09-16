@@ -4,6 +4,15 @@ An RNN compresses the whole past into one vector. Token 1 can affect token 40 on
 
 ---
 
+> **First time this method appears.** **Attention** is a path of length one between any two positions.
+>
+> **What.** Instead of squeezing a sentence into one RNN hidden state, each output position **looks at** all encoder states with a weighted sum.
+> **Why.** Seq2seq RNNs have a bottleneck: one vector for the whole source. Long sources forget the beginning.
+> **Architecture.** Encoder states \(h_1,\ldots,h_T\). Decoder query \(q_t\). Weights over source, then mix. Self-attention (next note) uses the same sequence for query and keys.
+> **How.** Score, softmax, weighted sum. Cost is \(T^2\) scores, not path length \(T\).
+> **Formula.** Path length 1 at cost \(O(T^2 d)\). Bahdanau: \(e_{ti}=v^{\top}\tanh(W_q q_t+W_h h_i)\).
+> **Tradeoffs.** + No sequential bottleneck, interpretable weights. − Quadratic cost in \(T\); you still need the formula next hour.
+>
 ## 1. The bottleneck
 
 A seq2seq RNN encodes the source into **one** vector, then the decoder must generate from that vector. Long source, same-size bottle. CS224N’s slogan: attention is a **direct connection** from the decoder to the encoder states, so the model can reread instead of remember.

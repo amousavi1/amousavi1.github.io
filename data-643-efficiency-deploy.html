@@ -107,57 +107,85 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 7 &middot; <a href="files/data-643/efficiency-deploy.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/7.3-efficiency-deploy.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Prune, quantize, distill, then speculative decoding at serving time.
+                            First time: prune, quantize, distill, speculate — what each is, why, formulas, tradeoffs.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>Scaling (note <strong>7.1</strong>) makes a model that may not fit on the box you have. <strong>Efficiency</strong> is how you ship it: fewer weights, fatter arithmetic, a smaller student, or fewer expensive forward passes at decode time.</p>
+<p>This is the first full lecture on <strong>shipping</strong> a model that is too big for the box you have. Scaling (note <strong>7.1</strong>) made the net. <strong>Efficiency</strong> is prune, quantize, distill, or speculate. Treat each as a new method. They are not LoRA (note <strong>8.3</strong>).</p>
 <hr />
-<h2>1. Shrink the weights</h2>
-<p><strong>Prune:</strong> set small weights to zero (unstructured) or drop heads, neurons, or layers (structured). You need a pass of recovery training or the quality drop is ugly.</p>
-<p><strong>Quantize:</strong> store weights (and sometimes activations) in fewer bits. INT8 and 4-bit GPTQ/AWQ are the ones you will see in Hugging Face. Affine quantization uses a <strong>scale</strong> and <strong>zero-point</strong>:</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mspace width="0.167em" /><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x02212;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>q</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msup><mn>2</mn><mi>b</mi></msup><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x0007D;</mo><mo>&#x0002E;</mo></mrow></math>
-<p>Lab 7 does this on a toy tensor and reports MSE. The curve is not free: outliers in activations break naive INT8.</p>
-<p><strong>Distill:</strong> a frozen <strong>teacher</strong> produces logits or hidden states; a smaller <strong>student</strong> matches them (plus the usual labels). You buy a model that is cheaper to run, not a new capability.</p>
-<p><img alt="Prune, quantize, distill" src="files/data-643/graphics/7.3-efficiency-deploy/compress.png" /></p>
-<p><img alt="INT8 with a zero-point" src="files/data-643/graphics/7.3-efficiency-deploy/int8-numeric.png" /></p>
-<hr />
-<h2>2. Speculative decoding</h2>
-<p>Autoregressive decode is serial: one token, then another. <strong>Speculative decoding</strong> runs a cheap <strong>draft</strong> model for several tokens, then the large <strong>target</strong> checks them in one parallel pass. If the target agrees, you accept a block; if not, you roll back at the first mismatch and sample from the target. Expected speedup is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>1</mn><mo>&#x000D7;</mo></mrow></math> when the draft is often right; the <strong>distribution</strong> is still the target’s.</p>
-<p><img alt="Draft tokens verified by the large model" src="files/data-643/graphics/7.3-efficiency-deploy/speculative.png" /></p>
-<p>This is not pruning. It is extra compute on a small net to save steps on a large net.</p>
-<p>If the draft proposes 4 tokens and the target accepts 3, you paid one large forward for 3 tokens instead of 3 large forwards. Token 4 is resampled from the target.</p>
-<hr />
-<h2>3. What to report</h2>
-<p>Name bits, which layers you quantized, whether you distilled, and tokens per second versus a dense fp16 baseline. Quality: the same eval as the uncompressed model, not only perplexity. For a project, a 4-bit laptop demo is a deployment result; it is not a new architecture.</p>
-<p>Stanford CS224N 2025 L11 puts <strong>pruning</strong> and <strong>LoRA</strong> in the same PEFT hour: fewer weights, or a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00394;</mi></mrow></math> on a frozen <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math>. Distill and speculative decoding stay on this board; they are not LoRA. Note <strong>8.3</strong> owns the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mi>A</mi></mrow></math> algebra.</p>
-<hr />
-<h2>4. Teaching this note</h2>
-<p>About <strong>35 minutes</strong> at the board: affine INT8 on a 1-D range, a 4-token speculative accept/reject, then one sentence on prune vs distill. Play LoRA <strong>0:00–~15:00</strong> as “deploy a small delta,” then return to prune/quantize/speculate. Lab 7’s toy quantize is studio, not this block.</p>
-<hr />
-<h2>5. Worked example</h2>
-<p>Weights in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math> bits, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mn>255</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>. A symmetric affine map:</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>s</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>2</mn></mrow><mrow><mn>255</mn></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><mi>z</mi><mo>&#x0003D;</mo><mn>128</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x02212;</mo><mn>128</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
-<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>128</mn></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021A6;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>255</mn></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021A6;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x000B7;</mo><mn>127</mn><mo>&#x02248;</mo><mn>0.996</mn></mrow></math>. If you drop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> and only use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mi>q</mi></mrow></math>, you cannot represent negatives.</p>
-<p>Speculative: draft emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>2</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>3</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>4</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. Target, in one forward, assigns probabilities. It agrees on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>2</mn></msub></mrow></math>, rejects <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>3</mn></msub></mrow></math>. You commit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>t</mi><mn>2</mn></msub></mrow></math>, sample a new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mi>t</mi><mn>3</mn><mi>&#x02032;</mi></msubsup></mrow></math> from the <strong>target</strong>, and throw <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>t</mi><mn>4</mn></msub></mrow></math> away. Speedup <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>2</mn></mrow></math> large-tokens per large-forward this step, if the draft is that accurate on average.</p>
-<p>Memory cartoon: 7B fp16 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>14</mn></mrow></math> GB. INT4 weights <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>3.5</mn></mrow></math> GB plus overhead. Same architecture, different bits.</p>
-<hr />
-<h2>6. Where students get stuck</h2>
+<h2>1. What these methods are</h2>
+<p>Four different jobs, one hour.</p>
 <ul>
-<li>Quantizing without a zero-point when the tensor is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02265;</mo><mn>0</mn></mrow></math>.</li>
-<li>Thinking speculative decoding <strong>changes</strong> the target distribution. It must not; rejected drafts are resampled from the target.</li>
-<li>Reporting perplexity only after 4-bit. The project eval is the same downstream number as fp16.</li>
+<li><strong>Pruning:</strong> set some weights to zero (unstructured) or drop heads, neurons, or layers (structured). The graph gets smaller or sparser.</li>
+<li><strong>Quantization:</strong> store the <strong>same</strong> architecture in fewer bits (INT8, 4-bit). The count of weights does not change; the bytes do.</li>
+<li><strong>Distillation:</strong> a frozen <strong>teacher</strong> produces logits (or hidden states); a smaller <strong>student</strong> matches them, plus labels. You buy a cheaper net, not a new capability.</li>
+<li><strong>Speculative decoding:</strong> a cheap <strong>draft</strong> model proposes several tokens; the large <strong>target</strong> checks them in one parallel pass. The <strong>distribution</strong> stays the target’s.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
-<p><a href="https://www.youtube.com/watch?v=PXWYUTMt-AU">Umar Jamil — LoRA explained</a>. Play about <strong>0:00–15:00</strong> (frozen <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi></mrow></math>, small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mi>A</mi></mrow></math>). That is the deploy-small-deltas story. <strong>Prune, quantize, and speculative decoding stay on the board</strong>; they are not in this clip. Full LoRA is note <strong>8.3</strong>.</p>
+<h2>2. Why we use them</h2>
+<p>A 7B fp16 file is about 14 GB. Laptops, phones, and batch servers do not all hold that. Retraining a tiny model from scratch may be worse than compressing a good large one. Decode is serial: one token per large forward. Speculation tries to pay one large forward for several tokens when the draft is often right.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>3. Architecture</h2>
+<p><strong>Prune / quantize / distill</strong> change what you <strong>store</strong> or <strong>train</strong>. <strong>Speculative decoding</strong> changes only the <strong>sampler</strong> at serve time: draft model + target model + accept/reject. You still have the original transformer; you wrap it.</p>
+<p><img alt="Prune, quantize, distill" src="files/data-643/graphics/7.3-efficiency-deploy/compress.png" /></p>
+<p><img alt="Draft tokens verified by the large model" src="files/data-643/graphics/7.3-efficiency-deploy/speculative.png" /></p>
+<p>Stanford CS224N 2025 L11 puts pruning next to LoRA (fewer weights vs a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>). Distill and speculate stay on this board.</p>
+<hr />
+<h2>4. How each one works</h2>
+<p><strong>Prune.</strong> Score weights (magnitude, or a more careful criterion). Zero the small ones, or drop a structure. Then a short recovery train, or quality falls off a cliff.</p>
+<p><strong>Quantize.</strong> Map a real tensor to integers with a <strong>scale</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math> and <strong>zero-point</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>. Lab 7 does this on a toy tensor and reports MSE. Outliers in activations break naive INT8.</p>
+<p><strong>Distill.</strong> Run the teacher on your batches. Train the student so its logits match (KL or MSE) and so labels are still right. If the teacher is already wrong on your domain, the student copies that.</p>
+<p><strong>Speculate.</strong> Draft emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>t</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>t</mi><mi>n</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. Target, in one forward, scores them. Accept the prefix the target agrees with; at the first mismatch, sample from the <strong>target</strong> and drop the rest of the draft.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Affine quantization:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mspace width="0.167em" /><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x02212;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>q</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msup><mn>2</mn><mi>b</mi></msup><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x0007D;</mo><mo>&#x0002E;</mo></mrow></math>
+<p><img alt="INT8 with a zero-point" src="files/data-643/graphics/7.3-efficiency-deploy/int8-numeric.png" /></p>
+<p>Symmetric INT8 on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>2</mn><mo>&#x0002F;</mo><mn>255</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x0003D;</mo><mn>128</mn></mrow></math>. Dropping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> cannot represent negatives.</p>
+<p>Speculative accept: if the target’s next-token distribution assigns the draft token enough mass (exact rule: sample from target; accept if it matches the draft’s proposal in the standard algorithm), you keep it. Teaching form: <strong>agree <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> keep; disagree <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> resample from the target.</strong> Expected tokens per large forward <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>1</mn></mrow></math> when the draft is accurate. The law of the output is still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mrow><mrow><mi mathvariant="normal">t</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">t</mi></mrow></mrow></msub></mrow></math>.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong> INT4 can drop a 7B from ~14 GB toward ~3.5 GB plus overhead. Distill gives a small student you can actually run. Speculation can raise tokens/s without changing answers in distribution. Pruning can cut FLOPs if structured.</p>
+<p><strong>Negative.</strong> Quality drop if you skip recovery (prune) or ignore outliers (INT8). Distill cannot exceed a bad teacher. Speculation adds a draft model and can slow you down if the draft is often wrong. Reporting only perplexity hides downstream damage. None of these is a new architecture for the project write-up.</p>
+<p><strong>When not to.</strong> If the model already fits and latency is fine, leave it in fp16. If you need a new skill, train (SFT/LoRA); do not only quantize.</p>
+<hr />
+<h2>7. What to report</h2>
+<p>Bits, which layers you quantized, whether you distilled, tokens per second versus fp16, and the <strong>same</strong> downstream eval as the uncompressed model.</p>
+<hr />
+<h2>8. Teaching this note</h2>
+<p>About <strong>45 minutes</strong>. Name all four methods before INT8 arithmetic.</p>
+<ul>
+<li><strong>0–10 min.</strong> What / why: four jobs, not one slogan.</li>
+<li><strong>10–25 min.</strong> Affine INT8. Zero-point. Lab 7 tensor.</li>
+<li><strong>25–38 min.</strong> Speculative accept/reject. Then one sentence each on prune and distill.</li>
+<li><strong>38–45 min.</strong> Pros / cons. LoRA is next week.</li>
+<li>Play LoRA video <strong>0:00–~15:00</strong> as “deploy a small delta,” then return to this board.</li>
+</ul>
+<hr />
+<h2>9. Worked example</h2>
+<p>Weights in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mo>&#x02212;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">]</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x02208;</mo><mo stretchy="false">&#x0007B;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mn>255</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>s</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>2</mn></mrow><mrow><mn>255</mn></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><mi>z</mi><mo>&#x0003D;</mo><mn>128</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>x</mi><mo>&#x02248;</mo><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x02212;</mo><mn>128</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>128</mn><mo>&#x021A6;</mo><mn>0</mn></mrow></math>; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mn>255</mn><mo>&#x021A6;</mo><mi>s</mi><mo>&#x000B7;</mo><mn>127</mn><mo>&#x02248;</mo><mn>0.996</mn></mrow></math>.</p>
+<p>Speculative: draft emits four tokens. Target agrees on the first two, rejects the third. Commit two, sample a new third from the <strong>target</strong>, throw the fourth away.</p>
+<p>Memory: 7B fp16 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>14</mn></mrow></math> GB. INT4 weights <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>3.5</mn></mrow></math> GB plus overhead.</p>
+<hr />
+<h2>10. Where students get stuck</h2>
+<ul>
+<li>Quantizing without a zero-point when the tensor is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02265;</mo><mn>0</mn></mrow></math>.</li>
+<li>Thinking speculation <strong>changes</strong> the target distribution.</li>
+<li>Reporting perplexity only after 4-bit.</li>
+<li>Calling all four methods “LoRA.”</li>
+</ul>
+<hr />
+<h2>11. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=PXWYUTMt-AU">Umar Jamil — LoRA explained</a>. Play about <strong>0:00–15:00</strong>. <strong>Prune, quantize, and speculative decoding stay on the board.</strong> Full LoRA is note <strong>8.3</strong>.</p>
+<hr />
+<h2>12. Practice</h2>
 <ol>
 <li>
-<p>Why does a scale-and-zero-point map need <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, not only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>, if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> is not centered at zero?</p>
+<p>In one sentence each: prune vs quantize vs distill vs speculate.</p>
 </li>
 <li>
-<p>Distillation needs a teacher. What happens if the teacher is already calibrated badly on your domain?</p>
+<p>Why does a scale-and-zero-point map need <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, not only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>, if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> is not centered at zero?</p>
 </li>
 <li>
 <p>Speculative decoding must not change the target distribution. Where does a rejected draft token get replaced?</p>
@@ -177,7 +205,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

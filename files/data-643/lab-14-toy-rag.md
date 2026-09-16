@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **NumPy** and **pandas**. Do notes **14.1–14.2** first. Offline only. Download [toy_docs.csv](files/data-643/toy_docs.csv).
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 ```python
 import re
 import numpy as np

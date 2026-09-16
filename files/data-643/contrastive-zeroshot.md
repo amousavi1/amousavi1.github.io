@@ -6,6 +6,15 @@ Week 5 will put CLIP’s data and retrieval on the table. This note is the loss 
 
 ---
 
+> **First time this method appears.** **Contrastive learning** pulls matched pairs together and pushes the rest apart. **Zero-shot** is classify by nearest prompt, not a \(C\)-way trained head.
+>
+> **What.** InfoNCE on a batch of \(N\) matched pairs. Zero-shot: embed class phrases, pick \(\arg\max_c \cos(f(x),g(\text{prompt}_c))\).
+> **Why.** You may not have labels for every class at train time. A similarity space transfers to new names.
+> **Architecture.** Two encoders (or two views of one). A batch matrix of scores. Softmax over the row (or bidirectional).
+> **How.** Lab 4: four pairs, heatmap of the \(N\times N\) scores. The diagonal should win.
+> **Formula.** \(\mathcal{L}=-\frac{1}{N}\sum_i \log \frac{\exp(s_{ii}/\tau)}{\sum_j \exp(s_{ij}/\tau)}\), \(s_{ij}=\cos(u_i,v_j)\).
+> **Tradeoffs.** + No \(C\)-way head, works with prompts. − Needs big batches (many negatives); temperature \(\tau\) is a knob; compositionality is not free.
+>
 ## 1. A batch of matches
 
 \(N\) images and \(N\) captions. Encode both. Cosine similarities form an \(N\times N\) matrix. The loss (InfoNCE; Oord et al. 2018) wants the **diagonal** hot: image \(i\) with caption \(i\), not caption \(j\).

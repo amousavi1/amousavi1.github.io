@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **Python** (NumPy optional). Do notes **13.1–13.3** first. **No LLM API.** The traces are lists of strings we constructed.
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 ```python
 PROBLEMS = [
     {

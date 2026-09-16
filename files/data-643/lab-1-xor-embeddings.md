@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **PyTorch**. Do notes **1.1–1.4** first. You do not need a GPU.
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 When you are done: **File → Download as → HTML**, then upload the HTML on Canvas. Save the notebook before you export.
 
 ```python

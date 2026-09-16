@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **Red-teaming** is a **safety evaluation**: a fixed list of probes, a rate of successful attacks, rerun after you patch.
+>
+> **What.** Not a training algorithm. You try to elicit disallowed behavior (HarmBench-style: hundreds of behaviors) and count failures.
+> **Why.** “The model seems safe in demo” is not a number. After SFT/DPO/edits, the rate can come back.
+> **Architecture.** Probe set + a success classifier (human or automated) + the model under test. Optional: an attacker LM that writes probes.
+> **How.** Freeze the probe list. Report attack success rate. After a safety patch, **rerun the same list**.
+> **Formula.** \(\mathrm{ASR}=\#\{\text{successful probes}\}/\#\{\text{probes}\}\). HarmBench cartoon: 510 behaviors.
+> **Tradeoffs.** + Comparable over time. − Coverage is only as good as the list; automated judges err; not a proof of safety; not a substitute for formal guarantees.
+>
 ## 1. Safety evaluation is a dataset of probes
 
 A probe is a prompt (or a multi-turn script) aimed at a failure class: harmful instructions, privacy leakage, demographic stereotyping, over-refusal of benign medical questions, jailbreak-style roleplay that tries to undo the system prompt. You run a **fixed list**, plus a small exploratory budget. Success for the attacker is a policy violation; success for you is catching it.

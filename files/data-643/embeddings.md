@@ -4,6 +4,15 @@ A language model does not read characters as characters. It reads **vectors**. T
 
 ---
 
+> **First time this method appears.** An **embedding** is a map from a token id to a dense vector.
+>
+> **What.** A short dense vector per word (or subword). Similar usage → nearby vectors.
+> **Why.** One-hot geometry is orthogonal: *film* and *movie* have inner product 0. You need a geometry you can learn.
+> **Architecture.** A table \(E\in\mathbb{R}^{V\times d}\). Row \(i\) is the vector for token \(i\). Skip-gram trains it with a softmax classifier you then throw away.
+> **How.** Windows of neighbors. Skip-gram: from the center, predict a neighbor. Keep the center rows.
+> **Formula.** \(P(w_o\mid w_c)=\exp(u_o^{\top} v_c)/\sum_w \exp(u_w^{\top} v_c)\). Cosine: \(u^{\top}v/(\lVert u\rVert\lVert v\rVert)\).
+> **Tradeoffs.** + Analogies and nearest neighbors as a debug tool. − Static vectors (one vector per word type); bias in the corpus becomes geometry; Week 3 will replace this with contextual states.
+>
 ## 1. One-hot is a bad geometry
 
 Give each word its own coordinate. *film* and *movie* are then orthogonal: inner product 0. The vector is sparse, as long as the vocabulary, and a new word has no coordinate at all.

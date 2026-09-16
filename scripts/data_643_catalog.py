@@ -201,7 +201,7 @@ NOTES = [
         "slug": "efficiency-deploy",
         "week": 7,
         "title": "7.3 Compression and Deployment",
-        "lead": "Prune, quantize, distill, then speculative decoding at serving time.",
+        "lead": "First time: prune, quantize, distill, speculate — what each is, why, formulas, tradeoffs.",
         "slide": "7.3-efficiency-deploy",
     },
     {
@@ -275,7 +275,7 @@ NOTES = [
         "slug": "editing-unlearning",
         "week": 10,
         "title": "10.2 Editing and Unlearning",
-        "lead": "Locate, then a rank-one write. Neighbors and paraphrases are the method.",
+        "lead": "First time: what editing vs unlearning are, locate-then-write, rank-one W plus uv transpose, three probes.",
         "slide": "10.2-editing-unlearning",
     },
     {

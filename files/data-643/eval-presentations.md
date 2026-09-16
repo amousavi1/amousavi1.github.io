@@ -4,6 +4,15 @@ The last week of content is also how you **show** the project. A talk is not a t
 
 ---
 
+> **First time this skill appears.** A **research talk** is an evaluation story.
+>
+> **What.** Question, method, one number that could change your mind, an ablation, one inspected failure.
+> **Why.** A notebook tour is not reproducible. Reviewers (and this class) need a falsifiable claim.
+> **Architecture.** Slides: claim → table (baseline vs yours, \(n\), seeds) → ablation → failure with ids.
+> **How.** Pick the metric first (recall@k, exact match, ASR). Freeze the split. Mean lift vs seed spread.
+> **Formula.** If mean lift is \(+2\) pp and seed spread is \(4\) pp on \(n=50\), you did not beat noise. Do not lead with that bump.
+> **Tradeoffs.** + Honest talks travel. − You will show a miss; that is the point. Screenshots are not a method.
+>
 ## 1. One metric that matches the question
 
 Pick the number that would change your mind. Retrieval: recall@k plus an answer score. Generation: a task metric plus a human or checklist on a slice. Alignment: a refusal or preference rate you can recompute. Do not lead with loss curves.

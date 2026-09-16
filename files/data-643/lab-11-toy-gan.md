@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **PyTorch**. Do notes **11.1–11.3** first. CPU is enough; keep the nets tiny and stop around a few hundred steps.
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 ```python
 import torch
 from torch import nn

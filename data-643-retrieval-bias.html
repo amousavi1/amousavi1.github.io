@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Once image and text share a space, <strong>retrieval</strong> is nearest neighbors. The same geometry that makes search work also encodes <strong>stereotypes</strong> from the training web. CS231N 2025 L16 already warned that a single prompt can be peaked; this note measures what that geometry retrieves.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Recall@k</strong> is a retrieval metric. <strong>Bias probes</strong> and <strong>typographic attacks</strong> are how you stress a CLIP-like space.</p>
+<p><strong>What.</strong> recall@k: fraction of queries whose true match sits in the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. An occupation probe: does “nurse” retrieve stereotyped images? Typographic: a word printed in the photo can hijack the text tower.
+<strong>Why.</strong> A pretty cosine is not a fair or robust system. You need a number that can go the wrong way.
+<strong>Architecture.</strong> Same two towers. Evaluation is a ranked list plus extra probe sets.
+<strong>How.</strong> Rank both directions (image→text and text→image). Report recall@1/@5. Then one occupation table and one typographic miss.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>recall</mo><mi>@</mi><mi>k</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>Q</mi></mrow></mfrac><msub><mo>&#x02211;</mo><mi>q</mi></msub><mrow><mn mathvariant="bold">1</mn></mrow><mo stretchy="false">[</mo><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">k</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></math>.
+<strong>Tradeoffs.</strong> + Cheap to compute, catches misses. − Does not measure calibration or fairness by itself; probes are datasets, not slogans.
+</p>
+</blockquote>
 <h2>1. Two directions</h2>
 <p><strong>Text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> image:</strong> a query string, rank photos. <strong>Image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text:</strong> a photo, rank captions or documents. Dual retrieval is why coordinated towers beat a joint vector that you can only query from one side.</p>
 <p><img alt="Query with an image or with text" src="files/data-643/graphics/5.3-retrieval-bias/retrieval.png" /></p>
@@ -182,7 +192,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

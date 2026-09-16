@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A GAN has no likelihood you can read as “this model covers the data.” The usual failure is not blur. It is <strong>mode collapse</strong>: the generator finds one (or a few) fakes that fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> and repeats them.</p>
 <hr />
+<blockquote>
+<p><strong>First time this failure appears.</strong> <strong>Mode collapse</strong> is when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> parks on a few modes and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> is still happy.</p>
+<p><strong>What.</strong> One pretty sample is not a trained <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math>. Coverage: 92/8 on two Gaussians is collapse; 47/53 is covered.
+<strong>Why.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> only scores “is this fake?” It does not have a missing-mode term. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> can fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> with one spike.
+<strong>Architecture.</strong> Same GAN. Evaluation needs <strong>bins / modes</strong>, not only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">s</mi></mrow><mi>G</mi></msub></mrow></math>.
+<strong>How.</strong> Lab 11: two 1-D Gaussians. Count mass per mode. Fixes (brief): more diverse <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, unrolled/regularized <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math>, or switch to diffusion (Week 12).
+<strong>Formula.</strong> There is no extra loss term in vanilla <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>J</mi></mrow></math> that says “visit mode 2.” That is the bug.
+<strong>Tradeoffs.</strong> + Easy to demo. − Image metrics (FID) are imperfect coverage proxies; fixing collapse is still research-level.
+</p>
+</blockquote>
 <h2>1. One mode is enough to fool <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math></h2>
 <p>Suppose the reals are two well-separated clusters. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> parks all of its mass on cluster A, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>D</mi></mrow></math> learns “cluster A might be fake; cluster B is real.” <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> then jumps to B. You cycle. Or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>G</mi></mrow></math> never leaves A, and every sample looks plausible while half the world is missing.</p>
 <p><img alt="All fakes piled on one of two real modes" src="files/data-643/graphics/11.3-mode-collapse/collapse.png" /></p>
@@ -205,7 +215,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

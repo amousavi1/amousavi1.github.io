@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **CLIP** is two towers and a cosine. It scores image–text pairs. It does not write a caption.
+>
+> **What.** Image encoder + text encoder, InfoNCE on the batch, keep both towers.
+> **Why.** One model that retrieves and zero-shot classifies without a detector or a decoder.
+> **Architecture.** `encode_image`, `encode_text`, cosine. No `generate`.
+> **How.** Train on web pairs. At test, embed the image and a list of prompts. Note 5.2 adds a decoder (BLIP).
+> **Formula.** Same InfoNCE as 4.3 with learned \(\tau\). API is three calls.
+> **Tradeoffs.** + Zero-shot and retrieval. − Not a captioner; hungry for batch size; prompt wording is method; bias next note.
+>
 ## 1. Two towers
 
 An **image encoder** (ResNet or ViT) and a **text encoder** (a transformer). Both emit a vector in the same dimension. Training: InfoNCE on the batch (note **4.3**). After training you keep both towers; you do not keep a fused head.

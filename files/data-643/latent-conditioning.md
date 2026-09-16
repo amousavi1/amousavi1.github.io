@@ -4,6 +4,15 @@ Pixel-space diffusion on \(256\times 256\) RGB is expensive. **Latent diffusion*
 
 ---
 
+> **First time this appears.** **Latent diffusion** denoises in a **VAE latent**, not in pixels. **CFG** mixes a conditional and an unconditional noise prediction.
+>
+> **What.** Encode \(x_0\to z_0\) with a frozen VAE encoder, diffuse \(z\), decode at the end. Text: condition on a CLIP (or T5) vector. CFG scale \(s\) sharpens the condition.
+> **Why.** Pixels are huge. Latent cells are fewer (CS231N: on the order of \(12\times\) fewer in the Stable Diffusion cartoon). Text needs a condition or you sample generic images.
+> **Architecture.** VAE enc/dec (frozen) + denoiser on \(z_t\) + text encoder. CFG: two forwards, \(\hat{\varepsilon}=\varepsilon_u+s(\varepsilon_c-\varepsilon_u)\).
+> **How.** \(s=1\) is still conditional (not “off”). \(s=0\) is the uncond branch. High \(s\): sharper, less diverse.
+> **Formula.** \(\hat{\varepsilon}_\theta=\varepsilon_\theta(z_t,t,\emptyset)+s\big(\varepsilon_\theta(z_t,t,c)-\varepsilon_\theta(z_t,t,\emptyset)\big)\).
+> **Tradeoffs.** + Cheaper than pixel DDPM, steerable with text. − VAE artifacts; CFG is a quality–diversity knob; still many reverse steps.
+>
 ## 1. Diffuse in latent space
 
 A pretrained encoder \(E\) maps an image to \(\boldsymbol{z}_0=E(\boldsymbol{x})\). You run the forward process of note **12.1** on \(\boldsymbol{z}\), not on pixels. A decoder \(D_{\mathrm{VAE}}\) turns the final latent back into an image. Training the U-Net on latents is cheaper; the VAE already threw away some high-frequency detail.

@@ -4,6 +4,15 @@ A transformer is a large neural net. Before attention, you need one unit, a nonl
 
 ---
 
+> **First time this method appears.** A **neuron** is the unit of a net. Answer these before XOR.
+>
+> **What.** A weighted sum plus a bias, then a nonlinearity. Stack them and you have an MLP.
+> **Why.** Linear maps compose to one linear map. The bend is what makes depth useful.
+> **Architecture.** Input \(\boldsymbol{x}\) → \(z=w^{\top}x+b\) → \(a=\sigma(z)\). An MLP stacks that layerwise.
+> **How.** Pick \(\sigma\) (ReLU in hidden layers, softmax when classes compete). Train \(w,b\) next note.
+> **Formula.** \(z=w^{\top}x+b\), \(a=\sigma(z)\), \(\operatorname{softmax}(z)_i=e^{z_i}/\sum_j e^{z_j}\).
+> **Tradeoffs.** + ReLU is cheap and sparse. − Sigmoid saturates (bad gradients). No nonlinearity ⇒ no extra function class.
+>
 ## 1. One neuron
 
 A neuron takes a vector \(\boldsymbol{x}\), forms a weighted sum plus a bias, then applies a scalar nonlinearity \(\sigma\):

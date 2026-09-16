@@ -4,6 +4,15 @@ One chain is a sample, not a proof. **Self-consistency** asks for several traces
 
 ---
 
+> **First time these methods appear.** **Self-consistency (SC)** is majority vote over several CoT traces. **Tree-of-Thoughts (ToT)** is **search** among partial thoughts, not i.i.d. samples.
+>
+> **What.** SC: sample \(k\) traces (temperature \(>0\)), parse answers, vote. ToT: expand nodes, **score**, prune, expand again.
+> **Why.** One CoT is noisy. Voting on the **answer** (not the wording) lifts GSM8K-style math in the CS224N L12 figure (~+17.9 pp in that citation). ToT helps when you need a tree, not \(k\) independent tapes.
+> **Architecture.** SC: decoder + parser + vote. ToT: a frontier of partial strings + a scorer (LM or checker) + beam/DFS.
+> **How.** Temperature 0, \(k=3\) is **not** SC (identical greedy traces). Vote on the parsed number.
+> **Formula.** SC: \(\hat{y}=\mathrm{mode}\{\mathrm{parse}(\tau_1),\ldots,\mathrm{parse}(\tau_k)\}\). ToT has no single loss; it is search.
+> **Tradeoffs.** + SC is simple. − \(k\times\) cost; shared bugs survive the vote; ToT needs a scorer (math not in this hour); ReAct (14.2) calls tools instead of searching thoughts.
+>
 ## 1. Majority vote over traces
 
 Sample \(k\) independent CoT traces (temperature \(>0\)). Parse an answer from each. Take the majority. The hope: wrong paths disagree; right paths land on the same number.

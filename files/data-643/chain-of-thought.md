@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **Chain-of-thought (CoT)** is writing **steps** before the answer. It is a prompt / decoding choice, not a new net.
+>
+> **What.** Direct: “What is \(17\times 24\)?” CoT: “Show your work, then the number.” Few-shot: paste worked traces. Zero-shot: *Let’s think step by step.*
+> **Why.** Extra tokens are extra test-time compute. Multi-hop arithmetic can use the tape. Weights do not change.
+> **Architecture.** Same LM. Longer generation. Parse a final boxed answer separately from the trace (note 13.3).
+> **How.** Freeze the instruction and decoding settings. Temperature 0 is one greedy chain, not a vote (13.2).
+> **Formula.** Still \(\prod_t p(y_t\mid y_{<t},\text{prompt})\); the prompt asks for steps. No new parameters.
+> **Tradeoffs.** + Helps multi-hop. − Hurts one-hop lookup; latency/cost; fluent wrong algebra (faithfulness next). Not retrieval or tools.
+>
 ## 1. Steps are part of the string
 
 A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context; zero-shot CoT is often the sentence *Let’s think step by step.*

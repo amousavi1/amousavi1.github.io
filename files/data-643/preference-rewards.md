@@ -4,6 +4,15 @@ SFT copies demonstrations. **Preferences** say which of two replies is better wh
 
 ---
 
+> **First time this method appears.** A **reward model (RM)** scores completions from **preference pairs** (chosen vs rejected).
+>
+> **What.** Humans (or a teacher) pick \(y_w\) over \(y_l\) for prompt \(x\). Bradley–Terry turns that into a logistic loss on \(r(x,y)\).
+> **Why.** SFT copies a single answer. Preferences say “this is better than that” without writing a scalar label by hand.
+> **Architecture.** Usually the base LM plus a scalar head, or a small classifier on the last token. Best-of-\(n\): sample \(n\), pick \(\arg\max r\), no PPO yet.
+> **How.** Collect pairs. Train \(r\). Chance loss is \(\log 2\). Lab 9 is a tiny head.
+> **Formula.** \(p(y_w\succ y_l\mid x)=\sigma(r(x,y_w)-r(x,y_l))\). Loss \(-\log\sigma(\Delta r)\).
+> **Tradeoffs.** + Pairwise data is easier than absolute scores. − Reward hacking (next notes); RM error becomes policy error; best-of-\(n\) is compute at decode.
+>
 ## 1. Chosen versus rejected
 
 A human (or a strong teacher model) sees a prompt \(x\) and two completions \(y_w\) (**chosen**, winner) and \(y_l\) (**rejected**, loser). The label is a pairwise order, not a numeric grade. Ties and multi-way ranks exist; this course uses pairs.

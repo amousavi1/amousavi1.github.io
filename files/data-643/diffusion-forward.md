@@ -4,6 +4,15 @@ A **diffusion** model learns to denoise. The forward process is not learned. You
 
 ---
 
+> **First time this method appears.** **Diffusion** (DDPM) **destroys** a sample with Gaussian noise on a schedule, then later learns to reverse it.
+>
+> **What.** Forward process \(q(x_t\mid x_0)\) is a **fixed** Gaussian that interpolates from data (\(t=0\)) to nearly isotropic noise (\(t=T\)). You can **jump** to any \(t\) in one shot.
+> **Why.** GANs fight a min-max. Diffusion trains a denoiser with MSE. The kernel is not learned.
+> **Architecture.** Markov chain \(x_0\to x_1\to\cdots\to x_T\). Variance schedule \(\beta_t\) or \(\bar{\alpha}_t\in[1,0]\).
+> **How.** Sample \(\varepsilon\sim\mathcal{N}(0,I)\), set \(x_t=\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\varepsilon\). Lab 12 does this in 2-D.
+> **Formula.** \(q(x_t\mid x_0)=\mathcal{N}(\sqrt{\bar{\alpha}_t}x_0,(1-\bar{\alpha}_t)I)\).
+> **Tradeoffs.** + Stable training target, likelihood-related. − Forward is easy; reverse sampling is slow (next notes). Not a GAN.
+>
 ## 1. Destroy the sample on purpose
 
 Start from data \(\boldsymbol{x}_0\). A variance schedule \(0<\beta_t<1\) (small at first, larger later) defines

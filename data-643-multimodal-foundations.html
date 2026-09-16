@@ -113,6 +113,16 @@
 <p>Module 2 leaves pure text. <strong>Multimodal</strong> systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. CMU 11-777’s list is the map: <strong>representation, alignment, fusion, translation, co-learning</strong>. Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio).</p>
 <p>If you only train on text, you cannot answer “what is in this photo?” without an image tower or a captioner. That is why Weeks 4–5 exist.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Multimodal learning</strong> is more than “glue an image to a caption.”</p>
+<p><strong>What.</strong> Five jobs (Baltrušaitis et al.): represent, align, fuse, translate, co-learn. A model can score a pair (CLIP) without decoding a sentence.
+<strong>Why.</strong> Pixels, text, and audio are different sensors. Concatenation is one fusion; it is not the only job.
+<strong>Architecture.</strong> Separate encoders per modality, then a fuse (concat, add, or cross-attention) or a score (cosine).
+<strong>How.</strong> Pick the job first. Retrieval needs a score. Captioning needs a decoder. Classification can be a linear head on a frozen encoder.
+<strong>Formula.</strong> Coordinated: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. Joint concat: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mi>;</mi><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mspace width="0.167em" /><mi>W</mi></mrow></math>.
+<strong>Tradeoffs.</strong> + You can reuse a frozen encoder. − Concat grows width; alignment needs paired data; “multimodal” without naming the job is not a project.
+</p>
+</blockquote>
 <h2>1. Five jobs, not one architecture</h2>
 <p><img alt="Represent, align, fuse, translate, co-learn" src="files/data-643/graphics/4.1-multimodal-foundations/five-challenges.png" /></p>
 <div class="table-wrap"><table>
@@ -215,7 +225,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

@@ -4,6 +4,15 @@ Pretraining teaches **next token on the web**. **Supervised fine-tuning (SFT)** 
 
 ---
 
+> **First time this method appears.** **Supervised fine-tuning (SFT)** is next-token training on **instruction–answer** pairs, with the prompt masked.
+>
+> **What.** Pretrain already speaks. SFT teaches format: follow the user, answer as an assistant. Loss on the **answer tokens**, not the prompt.
+> **Why.** A base LM completes text; it does not reliably follow “Write a bullet list.” Preferences (Week 9) come after this.
+> **Architecture.** Same transformer. Dataset of (prompt, answer). Causal mask unchanged. Label mask: prompt positions are \(-100\) / ignored.
+> **How.** Collect or write pairs. Train a few epochs. Too many epochs: forget the base (note 8.2).
+> **Formula.** \(\mathcal{L}=-\sum_{t\in\mathrm{answer}}\log p_\theta(y_t\mid y_{<t},\text{prompt})\).
+> **Tradeoffs.** + Fast behavior change. − Copies answers (including bad ones); can forget; not a preference model; noisy instruction data is method.
+>
 ## 1. Pretrain, then SFT
 
 The pretrained decoder already assigns probability to every continuation. It does not, by default, answer as an assistant, refuse a harmful ask, or stay in a JSON schema. SFT continues maximum-likelihood training, but now each example is a **prompt \(\to\) response** pair and you typically supervise only the response tokens (mask the prompt in the loss).

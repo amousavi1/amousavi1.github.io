@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Backprop through an unrolled RNN multiplies one Jacobian per time step. If those matrices shrink, the early-token gradient <strong>vanishes</strong>. If they grow, it <strong>explodes</strong>. Either way, long-range learning dies.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Vanishing (and exploding) gradients</strong> are why vanilla RNNs forget.</p>
+<p><strong>What.</strong> BPTT multiplies the same Jacobian many times. If the largest <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007C;</mo><mi>&#x003BB;</mi><mo stretchy="false">&#x0007C;</mo></mrow></math> of that map is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003C;</mo><mn>1</mn></mrow></math>, early tokens stop training. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>1</mn></mrow></math>, activations explode.
+<strong>Why.</strong> You asked the RNN to carry a bit across <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> steps. The gradient is the only teacher for those early weights.
+<strong>Architecture.</strong> Unrolled RNN: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> copies of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mrow><mi>h</mi><mi>h</mi></mrow></msub></mrow></math>. Gradient of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math> w.r.t. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mn>1</mn></msub></mrow></math> goes through <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x02212;</mo><mn>1</mn></mrow></math> multiplies.
+<strong>How.</strong> Diagnose with gradient norms vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math>. Mitigate with clipping (explode) or gates (next note), not by “more layers” of the same cell.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><msub><mi>h</mi><mi>t</mi></msub><mo>&#x0002F;</mo><mo>&#x02202;</mo><msub><mi>h</mi><mn>1</mn></msub></mrow></math> involves <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msubsup><mo>&#x0220F;</mo><mrow><mi>s</mi><mo>&#x0003D;</mo><mn>2</mn></mrow><mrow><mi>t</mi></mrow></msubsup><msubsup><mi>W</mi><mrow><mi>h</mi><mi>h</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msubsup><msub><mi>D</mi><mi>s</mi></msub></mrow></math>. Clip: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi><mo>&#x02190;</mo><mi>g</mi><mo>&#x000B7;</mo><mo>min</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mi>C</mi><mo>&#x0002F;</mo><mo>&#x02016;</mo><mi>g</mi><mo>&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Tradeoffs.</strong> + Clipping is cheap. − Clipping does not fix vanishing; gates (LSTM) do. Exploding and vanishing are different bugs.
+</p>
+</blockquote>
 <h2>1. Backprop through time</h2>
 <p>The loss at each step depends on the shared <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math>. The multivariable chain rule says: <strong>the gradient with respect to a repeated weight is the sum of the gradient at each copy.</strong></p>
 <p><img alt="BPTT sums the copies of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math>" src="files/data-643/graphics/2.2-vanishing-gradients/bptt.png" /></p>
@@ -208,7 +218,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

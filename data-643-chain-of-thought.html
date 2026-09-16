@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>Chain-of-thought</strong> (CoT) is the habit of writing <strong>steps</strong> before the answer. You are not changing the weights. You are changing what the decoder is asked to emit.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Chain-of-thought (CoT)</strong> is writing <strong>steps</strong> before the answer. It is a prompt / decoding choice, not a new net.</p>
+<p><strong>What.</strong> Direct: “What is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>?” CoT: “Show your work, then the number.” Few-shot: paste worked traces. Zero-shot: <em>Let’s think step by step.</em>
+<strong>Why.</strong> Extra tokens are extra test-time compute. Multi-hop arithmetic can use the tape. Weights do not change.
+<strong>Architecture.</strong> Same LM. Longer generation. Parse a final boxed answer separately from the trace (note 13.3).
+<strong>How.</strong> Freeze the instruction and decoding settings. Temperature 0 is one greedy chain, not a vote (13.2).
+<strong>Formula.</strong> Still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x0220F;</mo><mi>t</mi></msub><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>prompt</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>; the prompt asks for steps. No new parameters.
+<strong>Tradeoffs.</strong> + Helps multi-hop. − Hurts one-hop lookup; latency/cost; fluent wrong algebra (faithfulness next). Not retrieval or tools.
+</p>
+</blockquote>
 <h2>1. Steps are part of the string</h2>
 <p>A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context; zero-shot CoT is often the sentence <em>Let’s think step by step.</em></p>
 <p>Stanford <strong>CS224N 2026 L12</strong>: this is a <strong>prompt / decoding</strong> choice, not a new architecture. Extra tokens are extra <strong>test-time compute</strong>. The weights do not change.</p>
@@ -187,7 +197,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

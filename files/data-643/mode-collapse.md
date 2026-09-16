@@ -4,6 +4,15 @@ A GAN has no likelihood you can read as “this model covers the data.” The us
 
 ---
 
+> **First time this failure appears.** **Mode collapse** is when \(G\) parks on a few modes and \(D\) is still happy.
+>
+> **What.** One pretty sample is not a trained \(G\). Coverage: 92/8 on two Gaussians is collapse; 47/53 is covered.
+> **Why.** \(D\) only scores “is this fake?” It does not have a missing-mode term. \(G\) can fool \(D\) with one spike.
+> **Architecture.** Same GAN. Evaluation needs **bins / modes**, not only \(\mathrm{loss}_G\).
+> **How.** Lab 11: two 1-D Gaussians. Count mass per mode. Fixes (brief): more diverse \(z\), unrolled/regularized \(D\), or switch to diffusion (Week 12).
+> **Formula.** There is no extra loss term in vanilla \(J\) that says “visit mode 2.” That is the bug.
+> **Tradeoffs.** + Easy to demo. − Image metrics (FID) are imperfect coverage proxies; fixing collapse is still research-level.
+>
 ## 1. One mode is enough to fool \(D\)
 
 Suppose the reals are two well-separated clusters. If \(G\) parks all of its mass on cluster A, \(D\) learns “cluster A might be fake; cluster B is real.” \(G\) then jumps to B. You cycle. Or \(G\) never leaves A, and every sample looks plausible while half the world is missing.

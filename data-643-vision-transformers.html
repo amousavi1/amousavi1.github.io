@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A <strong>vision transformer (ViT)</strong> is the Week 3 block on <strong>patches</strong> instead of words. Once an image is a sequence, every LLM trick (attention, positions, [CLS], later CLIP) applies. Stanford CS231N 2025 L8 is the matching vision lecture: patchify, linear map, positions, <strong>no causal mask</strong>.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> A <strong>ViT</strong> treats an image as a sequence of patches.</p>
+<p><strong>What.</strong> Cut the image into non-overlapping patches, linearly map each to a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>-vector, add positions, run a transformer <strong>without</strong> a causal mask.
+<strong>Why.</strong> CNNs are the older default. ViT shows the same block as language can mix patches globally from layer 1.
+<strong>Architecture.</strong> Patch embed <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>P</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></msup></mrow></math> plus optional CLS token, then encoder blocks. Classification: CLS or mean pool, then a head.
+<strong>How.</strong> Lab 4 flattens patches. No convolution is required for the cartoon. Pretrain on a large image set; small data prefers CNNs or a strong recipe.
+<strong>Formula.</strong> For patch size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo>&#x000D7;</mo><mi>p</mi></mrow></math> and image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x000D7;</mo><mi>W</mi></mrow></math>, sequence length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>H</mi><mo>&#x0002F;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo>&#x000B7;</mo><mo stretchy="false">&#x00028;</mo><mi>W</mi><mo>&#x0002F;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">N</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>P</mi><msub><mi>W</mi><mi>e</mi></msub><mo>&#x0002B;</mo><msub><mi>E</mi><mrow><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi></mrow></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Tradeoffs.</strong> + Global mixing, same code as NLP. − Quadratic in patches; needs data or regularization; patch size is a method knob.
+</p>
+</blockquote>
 <h2>1. Patches as tokens</h2>
 <p>Split a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x000D7;</mo><mi>W</mi></mrow></math> image into non-overlapping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x000D7;</mo><mi>P</mi></mrow></math> patches, flatten each patch, map with a linear layer to width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>.</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>N</mi><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>P</mi><mrow><mn>2</mn></mrow></msup><mo>&#x0002E;</mo></mrow></math>
@@ -186,7 +196,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

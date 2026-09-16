@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>The last week of content is also how you <strong>show</strong> the project. A talk is not a tour of notebooks. It is a question, a method, a number, an ablation, and a failure you actually inspected.</p>
 <hr />
+<blockquote>
+<p><strong>First time this skill appears.</strong> A <strong>research talk</strong> is an evaluation story.</p>
+<p><strong>What.</strong> Question, method, one number that could change your mind, an ablation, one inspected failure.
+<strong>Why.</strong> A notebook tour is not reproducible. Reviewers (and this class) need a falsifiable claim.
+<strong>Architecture.</strong> Slides: claim → table (baseline vs yours, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>, seeds) → ablation → failure with ids.
+<strong>How.</strong> Pick the metric first (recall@k, exact match, ASR). Freeze the split. Mean lift vs seed spread.
+<strong>Formula.</strong> If mean lift is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0002B;</mo><mn>2</mn></mrow></math> pp and seed spread is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn></mrow></math> pp on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>, you did not beat noise. Do not lead with that bump.
+<strong>Tradeoffs.</strong> + Honest talks travel. − You will show a miss; that is the point. Screenshots are not a method.
+</p>
+</blockquote>
 <h2>1. One metric that matches the question</h2>
 <p>Pick the number that would change your mind. Retrieval: recall@k plus an answer score. Generation: a task metric plus a human or checklist on a slice. Alignment: a refusal or preference rate you can recompute. Do not lead with loss curves.</p>
 <p><img alt="A talk slide: metric, ablation, one failure" src="files/data-643/graphics/14.3-eval-presentations/talk.png" /></p>
@@ -182,7 +192,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

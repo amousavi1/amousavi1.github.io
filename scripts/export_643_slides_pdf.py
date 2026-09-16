@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html as html_lib
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -95,6 +96,11 @@ ul {
   line-height: 1.38;
 }
 li { margin: 0.16em 0; }
+.slide.first-look ul {
+  font-size: 16.5pt;
+  line-height: 1.32;
+}
+.slide.first-look li { margin: 0.1em 0; }
 .split {
   flex: 1;
   display: grid;
@@ -2089,6 +2095,16 @@ DECKS = [
                 "takeaway": "Key goal: bits and tokens/s versus fp16, on the same eval, not only perplexity.",
             },
             {
+                "layout": "bullets",
+                "title": "First time: four deployment methods",
+                "bullets": [
+                    "What. Prune zeros weights. Quantize uses fewer bits. Distill trains a smaller student. Speculate drafts then verifies.",
+                    r"Why. 7B in fp16 is \(\approx 14\) GB. Serving is memory and tokens/s, not only loss.",
+                    r"How. Affine INT8: \(x\approx s(q-z)\). Speculative accept if \(p_{\mathrm{target}}(x)\ge p_{\mathrm{draft}}(x)\).",
+                    "Tradeoffs. + Fits RAM, faster decode. − Outliers blow the scale; a rejected draft wasted the small model.",
+                ],
+            },
+            {
                 "layout": "split",
                 "title": "A pipeline, not a slogan",
                 "bullets": [
@@ -2647,6 +2663,16 @@ DECKS = [
                     ("4", "Retain is the utility cost"),
                 ],
                 "takeaway": "Key goal: flipping one prompt is not an isolated fact.",
+            },
+            {
+                "layout": "bullets",
+                "title": "First time: editing versus unlearning",
+                "bullets": [
+                    "What. Edit: rewrite one fact. Unlearn: lower a set of behaviors. They are not the same experiment.",
+                    "Why. Retraining from scratch is too expensive. Serving a wrong object is a product bug.",
+                    r"How. Locate the MLP, then \(W\leftarrow W+uv^{\top}\) so \(W'k_*=v_*\). Unlearn: continue train + retain set.",
+                    "Tradeoffs. + Cheap write. − Neighbors leak; paraphrases miss. Retain accuracy is the cost of unlearning.",
+                ],
             },
             {
                 "layout": "split",
@@ -3941,13 +3967,65 @@ def _body(slide: dict) -> str:
     return heading + _ul(slide.get("bullets") or []) + fig + _takeaway(slide)
 
 
+_FIRST_LOOK_KEYS = ("What", "Why", "Architecture", "How", "Formula", "Tradeoffs")
+_FIRST_LOOK_LINE = re.compile(
+    r"^>?\s*\*\*(What|Why|Architecture|How|Formula|Tradeoffs)\.\*\*\s*(.+)$"
+)
+
+
+def _first_look_slide(stem: str) -> dict | None:
+    slug = stem.split("-", 1)[-1]
+    path = FILES / f"{slug}.md"
+    if not path.exists():
+        return None
+    found: dict[str, str] = {}
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        m = _FIRST_LOOK_LINE.match(raw.strip())
+        if m and m.group(1) not in found:
+            found[m.group(1)] = m.group(2).strip()
+    if any(k not in found for k in _FIRST_LOOK_KEYS):
+        return None
+    def _plain(s: str) -> str:
+        return s.replace("**", "")
+
+    return {
+        "layout": "bullets",
+        "title": "First time: what / why / formula",
+        "bullets": [
+            _plain(f"What / why. {found['What']} {found['Why']}"),
+            _plain(f"Architecture. {found['Architecture']}"),
+            _plain(f"Formula. {found['Formula']}"),
+            _plain(f"Tradeoffs. {found['Tradeoffs']}"),
+        ],
+        "takeaway": _plain(f"How. {found['How']}"),
+    }
+
+
+def _slides_with_first_look(deck: dict) -> list[dict]:
+    slides = list(deck["slides"])
+    if any(str(s.get("title") or "").startswith("First time") for s in slides):
+        return slides
+    extra = _first_look_slide(deck["stem"])
+    if extra is None:
+        return slides
+    idx = 1
+    for i, slide in enumerate(slides):
+        if slide.get("layout") == "agenda":
+            idx = i + 1
+    slides.insert(idx, extra)
+    return slides
+
+
 def write_deck(deck: dict) -> pathlib.Path:
     WORK.mkdir(parents=True, exist_ok=True)
-    n = len(deck["slides"])
+    slides = _slides_with_first_look(deck)
+    n = len(slides)
     slides_html = []
-    for i, slide in enumerate(deck["slides"], start=1):
+    for i, slide in enumerate(slides, start=1):
         layout = _infer_layout(slide)
         klass = "slide title-slide" if layout == "title" else "slide"
+        if str(slide.get("title") or "").startswith("First time"):
+            klass += " first-look"
         kicker = ""
         if layout not in {"title"}:
             kicker = f"<p class='kicker'>{html_lib.escape(COURSE)} · lecture {html_lib.escape(deck['stem'].split('-', 1)[0])}</p>"

@@ -4,6 +4,15 @@ Bigger models, trained on more data with more compute, tend to get better at nex
 
 ---
 
+> **First time this method appears.** A **scaling law** is a fitted curve of pretraining loss versus scale, not a promise of a better chatbot.
+>
+> **What.** Kaplan: loss vs compute (and \(N\), \(D\)) looks like a power law plus a floor. Chinchilla: at fixed FLOPs, grow **tokens and parameters together** (~20 tokens/parameter in that paper).
+> **Why.** “We trained a 7B” is not a complete sentence. You need the token budget and whether you were compute-optimal.
+> **Architecture.** Not a new net. A log–log plot and a recipe \((N,D,C)\).
+> **How.** Fit \(L\approx a C^{-b}+L_\infty\) (Lab 7 algebra). Then do Chinchilla arithmetic: \(7\mathrm{B}\times 20=140\mathrm{B}\) tokens.
+> **Formula.** \(L(C)\approx a C^{-b}+L_\infty\). Training FLOPs cartoon: \(\approx 6ND\).
+> **Tradeoffs.** + Planning a run. − \(L\) is not chat quality; data mixture and alignment sit off the curve; four toy points are not a law.
+>
 ## 1. Kaplan: loss as a power of compute
 
 Kaplan et al. (2020) fit language-model cross-entropy against compute \(C\) (and against parameters \(N\), dataset size \(D\)) and saw smooth **power laws** over many orders of magnitude:

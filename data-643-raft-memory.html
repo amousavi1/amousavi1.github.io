@@ -114,6 +114,16 @@
 <p>Students have not had Week 14 yet. Before RAFT, here is <strong>RAG in one page</strong>. Week 14.1 is the full first-time lecture (architecture, cosine, Lewis’s sum, pros and cons). Do not skip that later.</p>
 <p><strong>RAG (retrieval-augmented generation)</strong> means: look up relevant passages from a collection you control, put them in the prompt, then generate the answer from those passages. The language model is usually <strong>frozen</strong>. You update a fact by editing a document and re-indexing, not by retraining. The index must store <strong>vector + raw text + id</strong> so you can cite. Retrieval can miss; then generation cannot recover. That is why this hour exists: a frozen reader often <strong>ignores</strong> a good snippet. RAFT is how you train the reader.</p>
 <hr />
+<blockquote>
+<p><strong>First time RAFT appears.</strong> (RAG itself is defined in one page above, and fully taught in Week 14.1.) <strong>RAFT</strong> is retrieval-augmented <strong>fine-tuning</strong>.</p>
+<p><strong>What.</strong> Train the reader <strong>with</strong> retrieved snippets in context (gold + <strong>distractors</strong>) so it learns to cite or ignore, not only recite pretrain weights.
+<strong>Why.</strong> Vanilla RAG at test time with a frozen SFT model often <strong>ignores</strong> the snippet. Index edits then do nothing.
+<strong>Architecture.</strong> Same retrieve-then-generate stack as RAG. The difference is the <strong>training rows</strong> and that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> <strong>changes</strong>. Loss is SFT on the answer given the bundle.
+<strong>How.</strong> Build rows: question + top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> texts (some irrelevant) + target answer that uses gold and skips junk. Lab 10’s overlap retriever is the toy ranker.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><msub><mo>&#x02211;</mo><mrow><mi>t</mi><mo>&#x02208;</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow></mrow></msub><mi>log</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover></mrow></math> containing distractors on purpose.
+<strong>Tradeoffs.</strong> + Reader learns to use the open book. − Still SFT (can copy); needs a retriever at train time; not a new architecture; gold-only rows never practice skip.
+</p>
+</blockquote>
 <h2>1. RAFT: train the reader, not only the index</h2>
 <p>A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some <strong>distractors</strong>), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”</p>
 <p><img alt="Retrieve, then fine-tune the reader on the bundle" src="files/data-643/graphics/10.3-raft-memory/raft.png" /></p>
@@ -184,7 +194,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **DPO** fits a policy to the same preference pairs **without** an RM loop and **without** PPO.
+>
+> **What.** Under Bradley–Terry, the optimal reward is \(r=\beta\log(\pi/\pi_{\mathrm{ref}})+c(x)\). Plug into the logistic loss; \(r\) disappears. Train \(\pi_\theta\) offline.
+> **Why.** RLHF’s PPO stage is heavy. DPO is a classification loss on logits of \(y_w\) and \(y_l\).
+> **Architecture.** Policy + frozen reference. No critic, no sampling-in-the-loop required (you need logprobs of both completions).
+> **How.** Lab 9: toy scalar logits. Start: \(\pi=\pi_{\mathrm{ref}}\) ⇒ loss \(\log 2\).
+> **Formula.** \(\mathcal{L}_{\mathrm{DPO}}=-\log\sigma\big(\beta\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)}-\beta\log\frac{\pi_\theta(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)}\big)\).
+> **Tradeoffs.** + Offline, no RM. − Still needs pairs and a reference; can overfit; not magic if the pairs are noisy.
+>
 ## 1. Skip the reward model
 
 RLHF solves \(\max_\pi \mathbb{E}[r]-\beta\mathrm{KL}(\pi\|\pi_{\text{ref}})\). Under Bradley–Terry, the optimal \(r\) can be expressed as

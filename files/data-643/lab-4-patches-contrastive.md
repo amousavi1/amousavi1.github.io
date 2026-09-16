@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **PyTorch** and `matplotlib`. No pretrained CLIP weights this week: the point is the geometry. Do notes **4.1–4.3** first.
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 ```python
 import torch
 import torch.nn.functional as F

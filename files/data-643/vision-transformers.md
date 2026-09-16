@@ -4,6 +4,15 @@ A **vision transformer (ViT)** is the Week 3 block on **patches** instead of wor
 
 ---
 
+> **First time this method appears.** A **ViT** treats an image as a sequence of patches.
+>
+> **What.** Cut the image into non-overlapping patches, linearly map each to a \(d\)-vector, add positions, run a transformer **without** a causal mask.
+> **Why.** CNNs are the older default. ViT shows the same block as language can mix patches globally from layer 1.
+> **Architecture.** Patch embed \(E\in\mathbb{R}^{P\times d}\) plus optional CLS token, then encoder blocks. Classification: CLS or mean pool, then a head.
+> **How.** Lab 4 flattens patches. No convolution is required for the cartoon. Pretrain on a large image set; small data prefers CNNs or a strong recipe.
+> **Formula.** For patch size \(p\times p\) and image \(H\times W\), sequence length \(T=(H/p)\cdot(W/p)\). \(X=\mathrm{LN}(P W_e+E_{\mathrm{pos}})\).
+> **Tradeoffs.** + Global mixing, same code as NLP. − Quadratic in patches; needs data or regularization; patch size is a method knob.
+>
 ## 1. Patches as tokens
 
 Split a \(H\times W\) image into non-overlapping \(P\times P\) patches, flatten each patch, map with a linear layer to width \(d\).

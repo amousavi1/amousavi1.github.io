@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Two audio systems you will cite: <strong>Whisper</strong> transcribes (encoder–decoder), <strong>CLAP</strong> retrieves (two towers, like CLIP). Same spectrogram tokens, different heads. The matching lecture for Whisper is Stanford CS224S 2025 L11 (Conformer / Whisper): log-mel in, two convs, a transformer encoder, a GPT-style decoder, 30-second chunks, no CTC.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Whisper</strong> transcribes speech. <strong>CLAP</strong> retrieves audio against text. Same spectrogram, different head.</p>
+<p><strong>What.</strong> Whisper: encoder (audio tokens) + <strong>GPT-style decoder</strong> that writes text (no CTC required in this course). CLAP: two towers like CLIP, audio instead of pixels.
+<strong>Why.</strong> ASR needs a decoder. Retrieval needs a score. Do not use Whisper as a search index or CLAP as a transcriber.
+<strong>Architecture.</strong> Whisper: spectrogram → conv/embed → encoder blocks → decoder with cross-attention. CLAP: audio encoder <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi></mrow></math>, text encoder <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi></mrow></math>, cosine.
+<strong>How.</strong> Whisper: teacher-forced captions of speech, then generate. CLAP: InfoNCE on audio–text pairs (same loss family as 4.3).
+<strong>Formula.</strong> Whisper LM: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x0220F;</mo><mi>t</mi></msub><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>audio</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>. CLAP: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Tradeoffs.</strong> + Whisper is a generator; CLAP is cheap retrieval. − Whisper is not a general audio tagger; CLAP does not decode words; paired audio–text is scarce (note 6.3).
+</p>
+</blockquote>
 <h2>1. Whisper: listen, then write</h2>
 <p>Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note <strong>6.1</strong>). CS224S: encoder input is the log-mel plus <strong>two convolutional layers</strong>, then positional embeddings, then standard transformer blocks. The decoder is causal and <strong>cross-attends</strong> to the encoder, like translation in note <strong>3.3</strong>. CS224S’s wording: it is a <strong>GPT-2 style</strong> decoder. There is <strong>no CTC loss</strong>.</p>
 <p>The output is text, plus special tokens for language, timestamps, and task (transcribe versus translate).</p>
@@ -202,7 +212,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

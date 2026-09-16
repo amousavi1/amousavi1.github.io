@@ -4,6 +4,15 @@ Two audio systems you will cite: **Whisper** transcribes (encoder–decoder), **
 
 ---
 
+> **First time this method appears.** **Whisper** transcribes speech. **CLAP** retrieves audio against text. Same spectrogram, different head.
+>
+> **What.** Whisper: encoder (audio tokens) + **GPT-style decoder** that writes text (no CTC required in this course). CLAP: two towers like CLIP, audio instead of pixels.
+> **Why.** ASR needs a decoder. Retrieval needs a score. Do not use Whisper as a search index or CLAP as a transcriber.
+> **Architecture.** Whisper: spectrogram → conv/embed → encoder blocks → decoder with cross-attention. CLAP: audio encoder \(f\), text encoder \(g\), cosine.
+> **How.** Whisper: teacher-forced captions of speech, then generate. CLAP: InfoNCE on audio–text pairs (same loss family as 4.3).
+> **Formula.** Whisper LM: \(\prod_t p(y_t\mid y_{<t},\text{audio})\). CLAP: \(\cos(f(a),g(t))\).
+> **Tradeoffs.** + Whisper is a generator; CLAP is cheap retrieval. − Whisper is not a general audio tagger; CLAP does not decode words; paired audio–text is scarce (note 6.3).
+>
 ## 1. Whisper: listen, then write
 
 Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note **6.1**). CS224S: encoder input is the log-mel plus **two convolutional layers**, then positional embeddings, then standard transformer blocks. The decoder is causal and **cross-attends** to the encoder, like translation in note **3.3**. CS224S’s wording: it is a **GPT-2 style** decoder. There is **no CTC loss**.

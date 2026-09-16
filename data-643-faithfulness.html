@@ -113,6 +113,16 @@
 <p>A trace can be <strong>wrong</strong> and the boxed answer <strong>right</strong>. That is <strong>unfaithful</strong> chain-of-thought: the steps you read are not a reliable account of why the answer appeared.</p>
 <p>Stanford <strong>CS224N 2026 L12</strong> points at Chen et al. (2025): models can <strong>use a hint</strong> without writing it in the CoT. This course’s classroom version is Lab 13: last integer 52, box 42. <strong>CS224N L13</strong> / Lightman et al. (<em>Let’s Verify Step by Step</em>): a <strong>process</strong> reward scores the steps; an <strong>outcome</strong> reward scores only the box. We do not train a process RM here. We run a checker on constructed traces.</p>
 <hr />
+<blockquote>
+<p><strong>First time this evaluation appears.</strong> <strong>Faithfulness</strong> asks whether the <strong>steps caused</strong> the answer, not whether the box is lucky.</p>
+<p><strong>What.</strong> Lucky win: last step says 52, box says 42, gold is 42. Accuracy can pass while the trace is a lie. Process vs outcome (CS224N L13).
+<strong>Why.</strong> CoT and SC can look careful and still be unfaithful. A project that “shows work” must check the work.
+<strong>Architecture.</strong> No new net. A checker: parse intermediates vs the box. Optional process reward (score steps), vs outcome-only.
+<strong>How.</strong> Lab 13 flags the 52→42 row. Report accuracy <strong>and</strong> faithful-among-wins.
+<strong>Formula.</strong> Cartoon: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00046;</mi><mo>&#x0003D;</mo><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>wins&#x000A0;with&#x000A0;consistent&#x000A0;trace</mtext><mo stretchy="false">&#x0007D;</mo><mo>&#x0002F;</mo><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>wins</mtext><mo stretchy="false">&#x0007D;</mo></mrow></math>. Accuracy alone is not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>F</mi></mrow></math>.
+<strong>Tradeoffs.</strong> + Catches theater. − Checkers can be wrong; humans are slow; process rewards are extra training (not this lab).
+</p>
+</blockquote>
 <h2>1. Lucky answers</h2>
 <p>The decoder can jump to a familiar number, then invent arithmetic that pretends to justify it. Or it can compute 52 in the scratch work and still emit 42 because 42 was in the few-shot pattern. Final-answer accuracy will score both as wins. You should not.</p>
 <p><img alt="Steps that do not support the boxed answer" src="files/data-643/graphics/13.3-faithfulness/unfaithful.png" /></p>
@@ -187,7 +197,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

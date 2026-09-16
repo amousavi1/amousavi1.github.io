@@ -4,6 +4,15 @@ Once image and text share a space, **retrieval** is nearest neighbors. The same 
 
 ---
 
+> **First time this method appears.** **Recall@k** is a retrieval metric. **Bias probes** and **typographic attacks** are how you stress a CLIP-like space.
+>
+> **What.** recall@k: fraction of queries whose true match sits in the top \(k\). An occupation probe: does “nurse” retrieve stereotyped images? Typographic: a word printed in the photo can hijack the text tower.
+> **Why.** A pretty cosine is not a fair or robust system. You need a number that can go the wrong way.
+> **Architecture.** Same two towers. Evaluation is a ranked list plus extra probe sets.
+> **How.** Rank both directions (image→text and text→image). Report recall@1/@5. Then one occupation table and one typographic miss.
+> **Formula.** \(\operatorname{recall}@k=\frac{1}{Q}\sum_q \mathbf{1}[\mathrm{rank}(q)\le k]\).
+> **Tradeoffs.** + Cheap to compute, catches misses. − Does not measure calibration or fairness by itself; probes are datasets, not slogans.
+>
 ## 1. Two directions
 
 **Text \(\to\) image:** a query string, rank photos. **Image \(\to\) text:** a photo, rank captions or documents. Dual retrieval is why coordinated towers beat a joint vector that you can only query from one side.

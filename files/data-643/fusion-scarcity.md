@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **Fusion** is how modalities meet. **Scarcity** is that paired audio/text/video is smaller than text.
+>
+> **What.** Early fusion (concat features then one net), late (combine decisions), cross-attention (queries from one side, keys/values from the other).
+> **Why.** Concat is the student default and grows width. Missing a modality at test time breaks naive concat.
+> **Architecture.** Draw two towers, then pick concat / add / cross-attn. Data pyramid: lots of unpaired text, less paired A/V.
+> **How.** Lab 6: concat vs add on toy vectors. Project: name the fuse and what you do if audio is missing.
+> **Formula.** Concat: \([u;v]\in\mathbb{R}^{d_u+d_v}\). Add needs \(d_u=d_v\). Cross-attn: \(\operatorname{softmax}(Q_u K_v^{\top}/\sqrt{d})V_v\).
+> **Tradeoffs.** + Cross-attn can attend to a spectrogram while generating text. − Width, missing-modality failure, and paired-data cost.
+>
 ## 1. Three places to fuse
 
 **Early:** concatenate (or add) raw features, then one backbone. Cheap at inference if every modality is always there. Missing a stream at test time hurts, unless you trained dropouts.

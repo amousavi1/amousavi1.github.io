@@ -4,6 +4,15 @@ A dense transformer uses **every** MLP on every token. A **mixture of experts (M
 
 ---
 
+> **First time this method appears.** A **mixture of experts (MoE)** stores many MLPs and runs only a few per token.
+>
+> **What.** A **router** picks \(k\) experts (often 2 of 8). Capacity grows with stored experts; FLOPs stay near \(k\) dense MLPs.
+> **Why.** Dense nets pay every MLP on every token. MoE buys width in parameters without width in compute.
+> **Architecture.** Attention stays dense. Replace the block MLP with \(E\) copies plus a linear router. Mixtral cartoon: 8 stored, top-2 active, no shared expert.
+> **How.** Softmax (or noisy top-\(k\)) over router logits, run those experts, weighted sum. Load-balancing so expert 0 does not eat the batch.
+> **Formula.** \(y=\sum_{i\in\mathcal{T}(x)} g_i(x)\,E_i(x)\). Stored MLP weights \(\approx E P\); active FLOPs scale with \(k\).
+> **Tradeoffs.** + More capacity at similar token-FLOPs. − RAM holds all experts; batching is harder; collapse = a dense net in disguise; serving ≠ “same active FLOPs.”
+>
 ## 1. Router plus experts
 
 Replace the block MLP with \(E\) experts \(E_1,\ldots,E_E\) and a **router** (a linear map plus softmax or a noisy top-\(k\)). For token \(\boldsymbol{x}\),

@@ -4,6 +4,15 @@ GPT and BERT are the same block with different **masks** and **objectives**. Tha
 
 ---
 
+> **First time this method appears.** **GPT** and **BERT** are two uses of the same block.
+>
+> **What.** GPT: causal next-token (left to right). BERT: masked tokens, bidirectional context. Both produce **contextual** vectors, not a static table (Week 1).
+> **Why.** Language modeling (GPT) is the pretrain that later becomes ChatGPT. BERT-style MLM is a bidirectional encoder for classification and span tasks.
+> **Architecture.** Same transformer block. GPT masks the future. BERT masks random token ids and reconstructs them. Heads differ (LM vs CLS/span).
+> **How.** Train on unlabeled text. After pretrain, GPT generates; BERT is usually fine-tuned with a small head.
+> **Formula.** GPT: \(\prod_t p(w_t\mid w_{<t})\). BERT: reconstruct masked positions, not a full joint factorization of the sentence.
+> **Tradeoffs.** + Contextual geometry. − GPT cannot see the future inside a prompt token; BERT is not a natural generator. “Transformer” is the block; GPT/BERT is the **objective**.
+>
 ## 1. Static versus contextual
 
 Week 1’s embedding table gave *bank* **one** vector. A transformer gives *bank* a vector that depends on the sentence: river bank versus money bank. That is a **contextual** representation. ELMo did this with LSTMs; GPT and BERT do it with the Week 3 block.

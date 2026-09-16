@@ -4,6 +4,15 @@ A transformer **block** is attention, a residual add, layer norm, then a token-w
 
 ---
 
+> **First time this method appears.** A **transformer block** is attention plus an MLP, with residuals.
+>
+> **What.** One layer: (masked) self-attention, residual + LayerNorm, token-wise MLP, residual + LayerNorm. Positions added on the embeddings.
+> **Why.** Attention mixes **across** positions. The MLP mixes **channels** at one position. Residuals keep a highway so depth trains.
+> **Architecture.** Decoder-only (GPT): causal mask. Encoder (BERT): bidirectional. Encoder–decoder: extra cross-attention.
+> **How.** Add a positional vector to each token embedding. Pre-norm vs post-norm is a stability knob; we draw residual around sublayers.
+> **Formula.** \(X^{\ell+1}=X^\ell+\mathrm{MLP}(X^\ell+\mathrm{Attn}(X^\ell))\) (cartoon; norms omitted). Positions: \(X_0=E+P\).
+> **Tradeoffs.** + Depth, parallelism, one block reused. − Quadratic attention; positions are extra parameters or sinusoids; encoder vs decoder is a method choice, not a vibe.
+>
 ## 1. Positions have to be added
 
 Attention is a **set** operation: permute the tokens, the weights permute with them. Language is ordered. **Positional encodings** (sinusoids in the original paper, or learned vectors) are added to token embeddings before the first block.

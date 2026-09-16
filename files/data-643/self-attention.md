@@ -4,6 +4,15 @@ Self-attention is a weighted sum of **values**, with weights from a comparison o
 
 ---
 
+> **First time this method appears.** **Self-attention** is the calculation inside a transformer layer.
+>
+> **What.** A weighted sum of **values**, with weights from **queries** compared to **keys**. Every token plays all three roles.
+> **Why.** RNNs mix left-to-right through \(h_t\). Self-attention mixes any pair in one layer, in parallel.
+> **Architecture.** \(X\mapsto Q,K,V\) by three matrices. Scores \(QK^{\top}/\sqrt{d_k}\), softmax over keys, mix \(V\). Multi-head: several of those in parallel, then \(W_O\). Causal mask for LMs.
+> **How.** Lab 3: one head by hand, then a causal mask. Zero is the wrong mask fill; use \(-\infty\).
+> **Formula.** \(\operatorname{Attention}(Q,K,V)=\operatorname{softmax}(QK^{\top}/\sqrt{d_k})V\).
+> **Tradeoffs.** + Parallel, path length 1, multi-head specialization. − \(O(T^2)\); mixing **keys** instead of values is a common bug; no positions until note 3.3.
+>
 ## 1. Q, K, V
 
 For a sequence matrix \(X\in\mathbb{R}^{T\times d}\),

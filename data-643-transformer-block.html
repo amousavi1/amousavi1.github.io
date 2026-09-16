@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A transformer <strong>block</strong> is attention, a residual add, layer norm, then a token-wise MLP, another residual and norm. Stack <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> of those. Attention mixes across positions; the MLP mixes across channels at one position. That is Princeton COS 484’s assembly order.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> A <strong>transformer block</strong> is attention plus an MLP, with residuals.</p>
+<p><strong>What.</strong> One layer: (masked) self-attention, residual + LayerNorm, token-wise MLP, residual + LayerNorm. Positions added on the embeddings.
+<strong>Why.</strong> Attention mixes <strong>across</strong> positions. The MLP mixes <strong>channels</strong> at one position. Residuals keep a highway so depth trains.
+<strong>Architecture.</strong> Decoder-only (GPT): causal mask. Encoder (BERT): bidirectional. Encoder–decoder: extra cross-attention.
+<strong>How.</strong> Add a positional vector to each token embedding. Pre-norm vs post-norm is a stability knob; we draw residual around sublayers.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>X</mi><mrow><mi>&#x02113;</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msup><mo>&#x0003D;</mo><msup><mi>X</mi><mi>&#x02113;</mi></msup><mo>&#x0002B;</mo><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">P</mi></mrow><mo stretchy="false">&#x00028;</mo><msup><mi>X</mi><mi>&#x02113;</mi></msup><mo>&#x0002B;</mo><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">n</mi></mrow><mo stretchy="false">&#x00028;</mo><msup><mi>X</mi><mi>&#x02113;</mi></msup><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math> (cartoon; norms omitted). Positions: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>X</mi><mn>0</mn></msub><mo>&#x0003D;</mo><mi>E</mi><mo>&#x0002B;</mo><mi>P</mi></mrow></math>.
+<strong>Tradeoffs.</strong> + Depth, parallelism, one block reused. − Quadratic attention; positions are extra parameters or sinusoids; encoder vs decoder is a method choice, not a vibe.
+</p>
+</blockquote>
 <h2>1. Positions have to be added</h2>
 <p>Attention is a <strong>set</strong> operation: permute the tokens, the weights permute with them. Language is ordered. <strong>Positional encodings</strong> (sinusoids in the original paper, or learned vectors) are added to token embeddings before the first block.</p>
 <p><img alt="Sinusoidal position channels" src="files/data-643/graphics/3.3-transformer-block/positional.png" /></p>
@@ -189,7 +199,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

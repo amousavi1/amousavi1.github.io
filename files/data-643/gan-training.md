@@ -4,6 +4,15 @@ The two nets have opposite goals. You cannot treat a GAN as one ordinary loss. E
 
 ---
 
+> **First time this training loop appears.** GAN **training** is a min-max game with two phases per iteration.
+>
+> **What.** \(D\) climbs to tell real from fake. \(G\) climbs to fool \(D\). The original saturating loss for \(G\) is weak; people use \(-\log D(G(z))\).
+> **Why.** If you only train \(D\) to 99%, \(G\) gets no gradient. If you only train \(G\), \(D\) is stale.
+> **Architecture.** Same two nets. Alternate (or simultaneous) SGD steps. No KL term here; that is RLHF.
+> **How.** Phase D: maximize log \(D\) on reals + log \((1-D)\) on fakes. Phase G: non-saturating \(-\log D(G(z))\).
+> **Formula.** \(J(D,G)=\mathbb{E}_{x}[\log D(x)]+\mathbb{E}_{z}[\log(1-D(G(z)))]\). \(G\) minimizes a surrogate, not always this \(J\).
+> **Tradeoffs.** + When balanced, samples improve. − Oscillation, vanishing gradients for \(G\), sensitivity to step sizes; next note is collapse.
+>
 ## 1. The min-max game
 
 Goodfellow et al. write a two-player objective

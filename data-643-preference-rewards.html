@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>SFT copies demonstrations. <strong>Preferences</strong> say which of two replies is better when both are fluent. A <strong>reward model (RM)</strong> is a classifier of that comparison. Week 9.2 will use the RM inside RL; Week 9.3 will skip it.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> A <strong>reward model (RM)</strong> scores completions from <strong>preference pairs</strong> (chosen vs rejected).</p>
+<p><strong>What.</strong> Humans (or a teacher) pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math> over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>l</mi></msub></mrow></math> for prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math>. Bradley–Terry turns that into a logistic loss on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Why.</strong> SFT copies a single answer. Preferences say “this is better than that” without writing a scalar label by hand.
+<strong>Architecture.</strong> Usually the base LM plus a scalar head, or a small classifier on the last token. Best-of-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>: sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>, pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>\arg</mi><mo>max</mo><mi>r</mi></mrow></math>, no PPO yet.
+<strong>How.</strong> Collect pairs. Train <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi></mrow></math>. Chance loss is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mn>2</mn></mrow></math>. Lab 9 is a tiny head.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo>&#x0227B;</mo><msub><mi>y</mi><mi>l</mi></msub><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. Loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>&#x00394;</mi><mi>r</mi><mo stretchy="false">&#x00029;</mo></mrow></math>.
+<strong>Tradeoffs.</strong> + Pairwise data is easier than absolute scores. − Reward hacking (next notes); RM error becomes policy error; best-of-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math> is compute at decode.
+</p>
+</blockquote>
 <h2>1. Chosen versus rejected</h2>
 <p>A human (or a strong teacher model) sees a prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> and two completions <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math> (<strong>chosen</strong>, winner) and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>l</mi></msub></mrow></math> (<strong>rejected</strong>, loser). The label is a pairwise order, not a numeric grade. Ties and multi-way ranks exist; this course uses pairs.</p>
 <p><img alt="A prompt with a chosen and a rejected completion" src="files/data-643/graphics/9.1-preference-rewards/pair.png" /></p>
@@ -178,7 +188,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

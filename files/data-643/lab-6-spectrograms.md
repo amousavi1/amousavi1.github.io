@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **numpy**, **PyTorch**, and `matplotlib`. Do notes **6.1–6.3** first. No pretrained Whisper or CLAP: construct the waveform yourself.
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 ```python
 import numpy as np
 import torch

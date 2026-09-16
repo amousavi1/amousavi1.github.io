@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A dense transformer uses <strong>every</strong> MLP on every token. A <strong>mixture of experts (MoE)</strong> keeps many MLPs (<strong>experts</strong>) and runs only a few of them per token. Capacity grows with the expert count; FLOPs per token stay closer to a small dense net.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> A <strong>mixture of experts (MoE)</strong> stores many MLPs and runs only a few per token.</p>
+<p><strong>What.</strong> A <strong>router</strong> picks <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> experts (often 2 of 8). Capacity grows with stored experts; FLOPs stay near <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> dense MLPs.
+<strong>Why.</strong> Dense nets pay every MLP on every token. MoE buys width in parameters without width in compute.
+<strong>Architecture.</strong> Attention stays dense. Replace the block MLP with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> copies plus a linear router. Mixtral cartoon: 8 stored, top-2 active, no shared expert.
+<strong>How.</strong> Softmax (or noisy top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>) over router logits, run those experts, weighted sum. Load-balancing so expert 0 does not eat the batch.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mo>&#x0003D;</mo><msub><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x02208;</mo><mi>&#x1D4AF;</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></msub><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. Stored MLP weights <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mi>E</mi><mi>P</mi></mrow></math>; active FLOPs scale with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.
+<strong>Tradeoffs.</strong> + More capacity at similar token-FLOPs. − RAM holds all experts; batching is harder; collapse = a dense net in disguise; serving ≠ “same active FLOPs.”
+</p>
+</blockquote>
 <h2>1. Router plus experts</h2>
 <p>Replace the block MLP with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> experts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>E</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>E</mi><mi>E</mi></msub></mrow></math> and a <strong>router</strong> (a linear map plus softmax or a noisy top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>). For token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>,</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>y</mi><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x02208;</mo><mi>&#x1D4AF;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></munder><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
@@ -177,7 +187,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

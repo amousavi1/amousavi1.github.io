@@ -4,6 +4,15 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ---
 
+> **First time this method appears.** **BLIP** is CLIP-style scoring **plus** a decoder that writes text, with a filter on noisy web pairs.
+>
+> **What.** Three losses: ITC (contrastive), ITM (matched vs unmatched pair), LM (caption tokens). Bootstrap: generate captions, filter, train.
+> **Why.** CLIP cannot decode a sentence. Naive captioners train on noisy alt-text. BLIP tries to clean the web and add generation.
+> **Architecture.** Image encoder, text encoder, and a decoder with **cross-attention** into image tokens (queries from text, keys/values from vision).
+> **How.** ITC aligns. ITM is a binary match head. LM is next-token on the caption. Generation uses the decoder; retrieval can use ITC embeddings.
+> **Formula.** ITC as InfoNCE; ITM as logistic on a CLS; LM as \(\sum_t -\log p(w_t\mid w_{<t},\text{image})\).
+> **Tradeoffs.** + Captions and retrieval in one family. − Hallucinated captions; filter is extra machinery; heavier than frozen CLIP.
+>
 ## 1. Bootstrap the data
 
 Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter keeps the ones that still match the image (ITM: image–text matching). The cleaned pairs retrain the model. That loop is the “bootstrapped pretraining” in the syllabus.

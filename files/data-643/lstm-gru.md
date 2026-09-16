@@ -4,6 +4,15 @@ Gates are learned valves. They let a recurrent cell **keep** a bit of memory for
 
 ---
 
+> **First time this method appears.** **LSTMs** and **GRUs** are gated RNNs.
+>
+> **What.** An additive **cell** path that can copy a value when the forget gate is open and the input gate is closed. GRU is the two-gate cousin.
+> **Why.** Vanilla RNNs vanish. You need a highway whose gradient is \(\approx 1\) along the copy.
+> **Architecture.** LSTM: cell \(c_t\), hidden \(h_t\), gates \(i,f,o\). GRU: reset and update, no extra \(c\).
+> **How.** Copy regime: \(f\approx 1\), \(i\approx 0\) ⇒ \(c_t\approx c_{t-1}\). Lab 2: LSTM vs RNN on a long copy.
+> **Formula.** \(c_t=f_t\odot c_{t-1}+i_t\odot \tilde{c}_t\), \(h_t=o_t\odot\tanh(c_t)\). GRU: \(h_t=(1-z_t)\odot h_{t-1}+z_t\odot \tilde{h}_t\).
+> **Tradeoffs.** + Long-range copy, still sequential. − More parameters than a vanilla RNN; still not parallel like attention. GRU is cheaper, sometimes enough.
+>
 ## 1. The problem gates are for
 
 In a vanilla RNN the hidden state is **constantly rewritten** by \(\tanh(W_h h_{t-1}+\cdots)\). CMU 11-785’s stability lecture: unless \(W_h\) is essentially a wire (eigenvalues on the unit circle and no saturating \(\tanh\)), memory is short. You cannot ask SGD to discover a unitary \(W_h\) and a linear activation at once.

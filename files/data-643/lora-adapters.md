@@ -4,6 +4,15 @@ Full fine-tuning moves every entry of \(\boldsymbol{W}\). **LoRA** (Hu et al., 2
 
 ---
 
+> **First time this method appears.** **LoRA** freezes \(W\) and trains a low-rank residual \(BA\).
+>
+> **What.** \(\Delta W\approx BA\) with rank \(r\ll \min(d,k)\). Store megabytes per task, not a second 7B.
+> **Why.** Full fine-tune copies every weight (GPT-3: 175B extra per task) and overwrites (note 8.2).
+> **Architecture.** Insert \(A,B\) on attention and/or MLP projections. Init \(B=0\) so you start as the base. QLoRA: 4-bit \(W\), float adapters.
+> **How.** Train only \(A,B\). Merge \(W\leftarrow W+(\alpha/r)BA\) at deploy (no extra latency) or swap adapters.
+> **Formula.** \(h=Wx+(\alpha/r)BAx\). Trainable count per matrix \(r(d+k)\), not \(dk\).
+> **Tradeoffs.** + Cheap, mergeable, one adapter per skill. − Small \(r\) may fail hard domain shifts; adapters can leak in federated settings; not a new architecture.
+>
 ## 1. \(W + BA\)
 
 For a linear map \(\boldsymbol{W}\in\mathbb{R}^{d\times k}\),

@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>Red-teaming</strong> is organized probing: you try to elicit disallowed or unreliable behavior so you can <strong>measure</strong> it, then patch or refuse. It is an evaluation method, not a product feature. If your project claims “safe,” this week is how you would show your work.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Red-teaming</strong> is a <strong>safety evaluation</strong>: a fixed list of probes, a rate of successful attacks, rerun after you patch.</p>
+<p><strong>What.</strong> Not a training algorithm. You try to elicit disallowed behavior (HarmBench-style: hundreds of behaviors) and count failures.
+<strong>Why.</strong> “The model seems safe in demo” is not a number. After SFT/DPO/edits, the rate can come back.
+<strong>Architecture.</strong> Probe set + a success classifier (human or automated) + the model under test. Optional: an attacker LM that writes probes.
+<strong>How.</strong> Freeze the probe list. Report attack success rate. After a safety patch, <strong>rerun the same list</strong>.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">R</mi></mrow><mo>&#x0003D;</mo><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>successful&#x000A0;probes</mtext><mo stretchy="false">&#x0007D;</mo><mo>&#x0002F;</mo><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>probes</mtext><mo stretchy="false">&#x0007D;</mo></mrow></math>. HarmBench cartoon: 510 behaviors.
+<strong>Tradeoffs.</strong> + Comparable over time. − Coverage is only as good as the list; automated judges err; not a proof of safety; not a substitute for formal guarantees.
+</p>
+</blockquote>
 <h2>1. Safety evaluation is a dataset of probes</h2>
 <p>A probe is a prompt (or a multi-turn script) aimed at a failure class: harmful instructions, privacy leakage, demographic stereotyping, over-refusal of benign medical questions, jailbreak-style roleplay that tries to undo the system prompt. You run a <strong>fixed list</strong>, plus a small exploratory budget. Success for the attacker is a policy violation; success for you is catching it.</p>
 <p><img alt="Probes in, model out, a logged failure" src="files/data-643/graphics/10.1-red-teaming/probe.png" /></p>
@@ -176,7 +186,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

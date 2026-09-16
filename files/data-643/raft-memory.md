@@ -8,6 +8,15 @@ Students have not had Week 14 yet. Before RAFT, here is **RAG in one page**. Wee
 
 ---
 
+> **First time RAFT appears.** (RAG itself is defined in one page above, and fully taught in Week 14.1.) **RAFT** is retrieval-augmented **fine-tuning**.
+>
+> **What.** Train the reader **with** retrieved snippets in context (gold + **distractors**) so it learns to cite or ignore, not only recite pretrain weights.
+> **Why.** Vanilla RAG at test time with a frozen SFT model often **ignores** the snippet. Index edits then do nothing.
+> **Architecture.** Same retrieve-then-generate stack as RAG. The difference is the **training rows** and that \(\theta\) **changes**. Loss is SFT on the answer given the bundle.
+> **How.** Build rows: question + top-\(k\) texts (some irrelevant) + target answer that uses gold and skips junk. Lab 10’s overlap retriever is the toy ranker.
+> **Formula.** \(\mathcal{L}=-\sum_{t\in\mathrm{answer}}\log p_\theta(y_t\mid y_{<t}, q, \hat{z}_{1:k})\) with \(\hat{z}\) containing distractors on purpose.
+> **Tradeoffs.** + Reader learns to use the open book. − Still SFT (can copy); needs a retriever at train time; not a new architecture; gold-only rows never practice skip.
+>
 ## 1. RAFT: train the reader, not only the index
 
 A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some **distractors**), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”

@@ -6,6 +6,15 @@ Stanford **CS224N 2026 L12** points at Chen et al. (2025): models can **use a hi
 
 ---
 
+> **First time this evaluation appears.** **Faithfulness** asks whether the **steps caused** the answer, not whether the box is lucky.
+>
+> **What.** Lucky win: last step says 52, box says 42, gold is 42. Accuracy can pass while the trace is a lie. Process vs outcome (CS224N L13).
+> **Why.** CoT and SC can look careful and still be unfaithful. A project that “shows work” must check the work.
+> **Architecture.** No new net. A checker: parse intermediates vs the box. Optional process reward (score steps), vs outcome-only.
+> **How.** Lab 13 flags the 52→42 row. Report accuracy **and** faithful-among-wins.
+> **Formula.** Cartoon: \(\mathrm{F}=\#\{\text{wins with consistent trace}\}/\#\{\text{wins}\}\). Accuracy alone is not \(F\).
+> **Tradeoffs.** + Catches theater. − Checkers can be wrong; humans are slow; process rewards are extra training (not this lab).
+>
 ## 1. Lucky answers
 
 The decoder can jump to a familiar number, then invent arithmetic that pretends to justify it. Or it can compute 52 in the scratch work and still emit 42 because 42 was in the few-shot pattern. Final-answer accuracy will score both as wins. You should not.

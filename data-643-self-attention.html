@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Self-attention is a weighted sum of <strong>values</strong>, with weights from a comparison of <strong>queries</strong> to <strong>keys</strong>. Every token plays all three roles. That is CMU 11-711’s calculation, and Lab 3.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Self-attention</strong> is the calculation inside a transformer layer.</p>
+<p><strong>What.</strong> A weighted sum of <strong>values</strong>, with weights from <strong>queries</strong> compared to <strong>keys</strong>. Every token plays all three roles.
+<strong>Why.</strong> RNNs mix left-to-right through <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>h</mi><mi>t</mi></msub></mrow></math>. Self-attention mixes any pair in one layer, in parallel.
+<strong>Architecture.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi><mo>&#x021A6;</mo><mi>Q</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>V</mi></mrow></math> by three matrices. Scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi><msup><mi>K</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002F;</mo><msqrt><mrow><msub><mi>d</mi><mi>k</mi></msub></mrow></msqrt></mrow></math>, softmax over keys, mix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi></mrow></math>. Multi-head: several of those in parallel, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>O</mi></msub></mrow></math>. Causal mask for LMs.
+<strong>How.</strong> Lab 3: one head by hand, then a causal mask. Zero is the wrong mask fill; use <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mo>&#x0221E;</mo></mrow></math>.
+<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>Attention</mo><mo stretchy="false">&#x00028;</mo><mi>Q</mi><mo>&#x0002C;</mo><mi>K</mi><mo>&#x0002C;</mo><mi>V</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>softmax</mo><mo stretchy="false">&#x00028;</mo><mi>Q</mi><msup><mi>K</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mo>&#x0002F;</mo><msqrt><mrow><msub><mi>d</mi><mi>k</mi></msub></mrow></msqrt><mo stretchy="false">&#x00029;</mo><mi>V</mi></mrow></math>.
+<strong>Tradeoffs.</strong> + Parallel, path length 1, multi-head specialization. − <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><msup><mi>T</mi><mn>2</mn></msup><mo stretchy="false">&#x00029;</mo></mrow></math>; mixing <strong>keys</strong> instead of values is a common bug; no positions until note 3.3.
+</p>
+</blockquote>
 <h2>1. Q, K, V</h2>
 <p>For a sequence matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>T</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></msup></mrow></math>,</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>Q</mi><mo>&#x0003D;</mo><mi>X</mi><msub><mi>W</mi><mi>Q</mi></msub><mo>&#x0002C;</mo><mspace width="1em" /><mi>K</mi><mo>&#x0003D;</mo><mi>X</mi><msub><mi>W</mi><mi>K</mi></msub><mo>&#x0002C;</mo><mspace width="1em" /><mi>V</mi><mo>&#x0003D;</mo><mi>X</mi><msub><mi>W</mi><mi>V</mi></msub><mo>&#x0002E;</mo></mrow></math>
@@ -196,7 +206,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

@@ -4,6 +4,15 @@ A waveform is a 1-D list of samples. A **spectrogram** is that list cut into sho
 
 ---
 
+> **First time this method appears.** A **spectrogram** is a picture of sound. Models do not eat 16 kHz samples as a raw list.
+>
+> **What.** STFT: window the waveform, FFT each frame, plot frequency vs time. A **mel** spectrogram warps frequency to a perceptual scale.
+> **Why.** Waveforms are long and oscillatory. A 2-D time–frequency map can be patched like a ViT image.
+> **Architecture.** Waveform → frames → STFT magnitudes (optionally mel + log) → patch embed → transformer.
+> **How.** Lab 6: sine mixture, STFT, patch. Hop length and window are method knobs.
+> **Formula.** Frame \(m\): \(X(m,\omega)=\sum_n x[n]w[n-mH]e^{-j\omega n}\). Sequence length ≈ number of frames (or patches of frames).
+> **Tradeoffs.** + Shares ViT code. − Phase often dropped; time resolution vs frequency resolution; not yet a transcriber (next note).
+>
 ## 1. Waveforms and the STFT
 
 You record pressure \(x[n]\) at a sampling rate \(f_s\) (16 kHz is a common speech default). A sine of \(f\) hertz is \(x[n]=\sin(2\pi f n/f_s)\). Mixtures add; that is still one stream.

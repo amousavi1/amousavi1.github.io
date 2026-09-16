@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>One chain is a sample, not a proof. <strong>Self-consistency</strong> asks for several traces and <strong>votes</strong>. <strong>Tree-of-thoughts</strong> (ToT) searches among partial plans instead of committing to a single left-to-right story.</p>
 <hr />
+<blockquote>
+<p><strong>First time these methods appear.</strong> <strong>Self-consistency (SC)</strong> is majority vote over several CoT traces. <strong>Tree-of-Thoughts (ToT)</strong> is <strong>search</strong> among partial thoughts, not i.i.d. samples.</p>
+<p><strong>What.</strong> SC: sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces (temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>0</mn></mrow></math>), parse answers, vote. ToT: expand nodes, <strong>score</strong>, prune, expand again.
+<strong>Why.</strong> One CoT is noisy. Voting on the <strong>answer</strong> (not the wording) lifts GSM8K-style math in the CS224N L12 figure (~+17.9 pp in that citation). ToT helps when you need a tree, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> independent tapes.
+<strong>Architecture.</strong> SC: decoder + parser + vote. ToT: a frontier of partial strings + a scorer (LM or checker) + beam/DFS.
+<strong>How.</strong> Temperature 0, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> is <strong>not</strong> SC (identical greedy traces). Vote on the parsed number.
+<strong>Formula.</strong> SC: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>y</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false">&#x0007B;</mo><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003C4;</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003C4;</mi><mi>k</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x0007D;</mo></mrow></math>. ToT has no single loss; it is search.
+<strong>Tradeoffs.</strong> + SC is simple. − <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x000D7;</mo></mrow></math> cost; shared bugs survive the vote; ToT needs a scorer (math not in this hour); ReAct (14.2) calls tools instead of searching thoughts.
+</p>
+</blockquote>
 <h2>1. Majority vote over traces</h2>
 <p>Sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> independent CoT traces (temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>0</mn></mrow></math>). Parse an answer from each. Take the majority. The hope: wrong paths disagree; right paths land on the same number.</p>
 <p><img alt="Several chains, then a vote; a tree of partial thoughts" src="files/data-643/graphics/13.2-self-consistency-tot/tree.png" /></p>
@@ -208,7 +218,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 

@@ -4,6 +4,15 @@ Backprop through an unrolled RNN multiplies one Jacobian per time step. If those
 
 ---
 
+> **First time this method appears.** **Vanishing (and exploding) gradients** are why vanilla RNNs forget.
+>
+> **What.** BPTT multiplies the same Jacobian many times. If the largest \(|\lambda|\) of that map is \(<1\), early tokens stop training. If \(>1\), activations explode.
+> **Why.** You asked the RNN to carry a bit across \(T\) steps. The gradient is the only teacher for those early weights.
+> **Architecture.** Unrolled RNN: \(T\) copies of \(W_{hh}\). Gradient of \(L\) w.r.t. \(h_1\) goes through \(T-1\) multiplies.
+> **How.** Diagnose with gradient norms vs \(T\). Mitigate with clipping (explode) or gates (next note), not by “more layers” of the same cell.
+> **Formula.** \(\partial h_t/\partial h_1\) involves \(\prod_{s=2}^{t} W_{hh}^{\top} D_s\). Clip: \(g \leftarrow g \cdot \min(1, C/\lVert g\rVert)\).
+> **Tradeoffs.** + Clipping is cheap. − Clipping does not fix vanishing; gates (LSTM) do. Exploding and vanishing are different bugs.
+>
 ## 1. Backprop through time
 
 The loss at each step depends on the shared \(W_h\). The multivariable chain rule says: **the gradient with respect to a repeated weight is the sum of the gradient at each copy.**

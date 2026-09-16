@@ -1,5 +1,7 @@
 Work in a **Jupyter** notebook with **PyTorch** and `matplotlib`. Do notes **7.1–7.3** first. No Hugging Face weights this week.
 
+**First time you implement this.** The lecture notes this week already answered what the method is, why it exists, the architecture, the formula, and the tradeoffs. Read that first-time block before these exercises. This lab is the first time you **compute** it, not the first definition.
+
 ```python
 import torch
 import matplotlib.pyplot as plt

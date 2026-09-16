@@ -6,6 +6,15 @@ This week is the historical path to transformers. You still need it: LSTMs show 
 
 ---
 
+> **First time this method appears.** An **RNN** is a net that shares one cell across time.
+>
+> **What.** Hidden state \(h_t\) is a function of \(h_{t-1}\) and the new token. An RNN-LM predicts the next token from \(h_t\).
+> **Why.** A fixed window (n-gram / bag) cannot count “the verb agrees with the noun 40 tokens back” without growing width.
+> **Architecture.** Shared cell \(h_t=\tanh(W_{hh}h_{t-1}+W_{xh}x_t+b)\), then softmax on \(h_t\). Unroll in time for training (BPTT).
+> **How.** Read left to right. The same \(W\) at every step. Lab 2 copies the first bit at the end.
+> **Formula.** \(p(w_t\mid w_{<t})=\operatorname{softmax}(W_o h_t)_w\).
+> **Tradeoffs.** + Variable length, parameter sharing. − Sequential (hard to parallelize), vanishing/exploding gradients (next note).
+>
 ## 1. Why a fixed window is not enough
 
 A language model predicts the next token. Week 1 already wrote

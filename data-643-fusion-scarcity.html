@@ -112,6 +112,16 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>Fusion</strong> is when you combine streams. <strong>Scarcity</strong> is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note <strong>4.1</strong> introduced joint versus coordinated (CMU 11-777). This note is 11-777’s <strong>fusion</strong> lecture in classroom form: early, late, and cross-attention, then the data pyramid.</p>
 <hr />
+<blockquote>
+<p><strong>First time this method appears.</strong> <strong>Fusion</strong> is how modalities meet. <strong>Scarcity</strong> is that paired audio/text/video is smaller than text.</p>
+<p><strong>What.</strong> Early fusion (concat features then one net), late (combine decisions), cross-attention (queries from one side, keys/values from the other).
+<strong>Why.</strong> Concat is the student default and grows width. Missing a modality at test time breaks naive concat.
+<strong>Architecture.</strong> Draw two towers, then pick concat / add / cross-attn. Data pyramid: lots of unpaired text, less paired A/V.
+<strong>How.</strong> Lab 6: concat vs add on toy vectors. Project: name the fuse and what you do if audio is missing.
+<strong>Formula.</strong> Concat: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>u</mi><mi>;</mi><mi>v</mi><mo stretchy="false">]</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0002B;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></msup></mrow></math>. Add needs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0003D;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></math>. Cross-attn: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>softmax</mo><mo stretchy="false">&#x00028;</mo><msub><mi>Q</mi><mi>u</mi></msub><msubsup><mi>K</mi><mi>v</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><mo>&#x0002F;</mo><msqrt><mrow><mi>d</mi></mrow></msqrt><mo stretchy="false">&#x00029;</mo><msub><mi>V</mi><mi>v</mi></msub></mrow></math>.
+<strong>Tradeoffs.</strong> + Cross-attn can attend to a spectrogram while generating text. − Width, missing-modality failure, and paired-data cost.
+</p>
+</blockquote>
 <h2>1. Three places to fuse</h2>
 <p><strong>Early:</strong> concatenate (or add) raw features, then one backbone. Cheap at inference if every modality is always there. Missing a stream at test time hurts, unless you trained dropouts.</p>
 <p><strong>Late:</strong> a model per modality, combine decisions (average logits, a small MLP on the scores). Each expert can train on its own data. You lose fine alignment (which word went with which beep).</p>
@@ -188,7 +198,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
             </footer>
         </div>
 
