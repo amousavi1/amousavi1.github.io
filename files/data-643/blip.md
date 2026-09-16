@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**BLIP** (Li et al., 2022) is a vision–language model that **matches** and **writes**. CLIP scores pairs. BLIP also decodes a caption, and it tries to **clean** the noisy web pairs CLIP trained on.
+**BLIP** (Li et al., 2022) is a vision–language model that **matches** and **writes**. CLIP scores pairs. CS231N 2025 L16’s CoCa slide is the sibling idea: add a **decoder**. BLIP does that, and it also **cleans** the noisy web pairs CLIP trained on.
 
 ---
 
@@ -10,7 +10,9 @@ Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter
 
 ![Noisy pairs, filter, matching and language losses](files/data-643/graphics/5.2-blip/blip-pipeline.png)
 
-Alt-text like “IMG_4032” or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.
+Alt-text like `IMG_4032` or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.
+
+CoCa (Yu et al.; the CS231N generation slide) adds a captioning loss on top of contrastive training. It does **not** advertise the bootstrap filter. If your story is “noisy web text,” you need BLIP’s ITM filter, not only a decoder.
 
 ---
 
@@ -22,11 +24,13 @@ Alt-text like “IMG_4032” or a product SKU is a bad caption. Generating a sen
 | ITM (matching) | Binary: does this caption belong to this image? |
 | LM (language modeling) | Decode the caption, causal on text, cross-attend to the image |
 
-The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. **BLIP-2** later freezes a strong image encoder and trains a thin **Q-Former**; you can treat that as “same idea, cheaper.”
+![ITC, ITM, and LM](files/data-643/graphics/5.2-blip/blip-losses.png)
+
+The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. **BLIP-2** later freezes a strong image encoder and trains a thin **Q-Former**; treat that as “same idea, cheaper.” LLaVA (CS231N’s next family) is a frozen CLIP tower plus an LLM. Not this hour.
 
 ITC needs a batch of negatives. ITM can use a **hard** negative (a caption that almost matches). LM is why BLIP can caption at all.
 
-Whisper, which you will watch, is an encoder–decoder for **speech \(\to\) text**. BLIP is encoder–decoder for **image \(\to\) text**, plus ITC and ITM. That is the analog, not the same paper.
+Whisper, which you will watch as an analog, is an encoder–decoder for **speech \(\to\) text**. BLIP is encoder–decoder for **image \(\to\) text**, plus ITC and ITM.
 
 ---
 
@@ -40,7 +44,7 @@ CLIP-score as a caption metric is circular if your captioner was trained to matc
 
 ## 4. Teaching this note
 
-**30–40 minutes.** CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the **encoder–decoder analog** for captioning (**full ~12 min**, or **0:00–8:00**). Say explicitly: Whisper does not add ITC+ITM; **BLIP does**.
+**30–40 minutes.** CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the **encoder–decoder analog** for captioning (**0:00–8:00**). Say explicitly: Whisper does not add ITC+ITM; **BLIP does**.
 
 Minute plan: 8 min retrieve vs generate; 10 min ITC/ITM/LM table; 8 min ITM numbers; 12 min Whisper clip plus the one-sentence BLIP add-on.
 
@@ -52,7 +56,17 @@ One image, two captions: true “a red mug on a desk,” false “a blue bicycle
 
 ITC (\(N=2\)): softmax over the batch; the false caption is one negative among many in a real batch.
 
-ITM: a classifier on the fused `[CLS]` (or matched vs unmatched pair) with labels \(1\) and \(0\). Suppose logits \(s_{+}=2\), \(s_{-}=-1\). Sigmoid probabilities \(\sigma(2)\approx 0.88\), \(\sigma(-1)\approx 0.27\). Binary cross-entropy on those is the ITM term.
+ITM: a classifier on the fused `[CLS]` with labels \(1\) and \(0\). Suppose logits \(s_{+}=2\), \(s_{-}=-1\).
+
+\[
+\sigma(s)=\frac{1}{1+e^{-s}},\qquad
+\sigma(2)\approx 0.88,\qquad
+\sigma(-1)\approx 0.27.
+\]
+
+Binary cross-entropy: matched term \(-\log\sigma(2)\approx 0.13\); mismatched term \(-\log(1-\sigma(-1))\approx 0.31\).
+
+![ITM is a yes/no score](files/data-643/graphics/5.2-blip/blip-itm-numeric.png)
 
 LM: decode `a`, `red`, `mug`, … with cross-attention into ViT patch tokens. Loss is next-token, like GPT, but the “prefix” includes the image.
 
@@ -67,6 +81,7 @@ ITC wants a **batch**. ITM can score one pair. LM wants a **token sequence**. If
 - Using recall@k as the only captioning metric.
 - Thinking ITM and ITC are the same softmax.
 - Skipping the filter and training LM on raw alt-text.
+- Calling CoCa and BLIP the same paper. Shared idea: a decoder. BLIP’s extra: bootstrap + ITM.
 
 ---
 

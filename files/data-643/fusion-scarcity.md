@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**Fusion** is when you combine streams. **Scarcity** is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note **4.1** introduced joint versus coordinated; this note is the practical menu.
+**Fusion** is when you combine streams. **Scarcity** is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note **4.1** introduced joint versus coordinated (CMU 11-777). This note is 11-777’s **fusion** lecture in classroom form: early, late, and cross-attention, then the data pyramid.
 
 ---
 
@@ -16,7 +16,11 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows \(d\); add needs a shared dimension and assumes the axes already mean the same thing.
 
+![Concat versus add](files/data-643/graphics/6.3-fusion-scarcity/concat-add.png)
+
 CLIP-style **two towers** are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. That is the video’s job this hour.
+
+11-777’s warning, in our words: naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.
 
 ---
 
@@ -58,9 +62,14 @@ Audio encoder emits \(a\in\mathbb{R}^{128}\), image encoder emits \(v\in\mathbb{
 - **Add:** \(a+v\in\mathbb{R}^{128}\). Illegal if \(a\in\mathbb{R}^{128}\) and \(v\in\mathbb{R}^{256}\). You would first map \(v\) with \(W_v\in\mathbb{R}^{128\times 256}\).
 - **Late (CLIP-style):** keep \(a\) and \(v\), score \(\cos(a,t)\) and \(\cos(v,t)\) against a text query, average the two scores. Each tower can have been pretrained on its own pairs. You did **not** align a pixel with a spectrogram bin.
 
-Pyramid: 10,000 h unlabeled audio, 600 h paired transcripts (Whisper-scale is much larger; this is a seminar toy), 400 labeled emotion clips. Pretrain or freeze the audio tower on the 600 h; train the emotion head on 400. Do not train a from-scratch joint net on 400 rows.
+Pyramid: 10{,}000 h unlabeled audio, 600 h paired transcripts (Whisper-scale is much larger; this is a seminar toy), 400 labeled emotion clips. Pretrain or freeze the audio tower on the 600 h; train the emotion head on 400. Do not train a from-scratch joint net on 400 rows.
 
 CLIP video as baseline: two towers, InfoNCE, no early concat. That is coordinated fusion with a **late** comparison. Cross-attention would be a decoder querying the other stream’s tokens. Three different pictures; one hour.
+
+Parameter check, ignore bias. Audio \(d_a=64\), vision \(d_v=256\):
+
+- map vision into 64-D so you can **add**: \(W_v\in\mathbb{R}^{64\times 256}\) has \(16{,}384\) weights;
+- **concat** then map to 64-D: \(W\in\mathbb{R}^{64\times 320}\) has \(20{,}480\) weights.
 
 ---
 

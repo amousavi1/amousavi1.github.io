@@ -107,17 +107,20 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 6 &middot; <a href="files/data-643/audio-encoders.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/6.2-audio-encoders.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Patch or frame the spectrogram, then a transformer. Whisper-style encoder–decoder.
+                            Whisper transcribes (GPT-style decoder, no CTC). CLAP retrieves. Same spectrogram, different head.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>Two audio systems you will cite: <strong>Whisper</strong> transcribes (encoder–decoder), <strong>CLAP</strong> retrieves (two towers, like CLIP). Same spectrogram tokens, different heads.</p>
+<p>Two audio systems you will cite: <strong>Whisper</strong> transcribes (encoder–decoder), <strong>CLAP</strong> retrieves (two towers, like CLIP). Same spectrogram tokens, different heads. The matching lecture for Whisper is Stanford CS224S 2025 L11 (Conformer / Whisper): log-mel in, two convs, a transformer encoder, a GPT-style decoder, 30-second chunks, no CTC.</p>
 <hr />
 <h2>1. Whisper: listen, then write</h2>
-<p>Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note <strong>6.1</strong>). The decoder is causal and <strong>cross-attends</strong> to the encoder, like translation in note <strong>3.3</strong>. The output is text, plus special tokens for language, timestamps, and task (transcribe versus translate).</p>
+<p>Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note <strong>6.1</strong>). CS224S: encoder input is the log-mel plus <strong>two convolutional layers</strong>, then positional embeddings, then standard transformer blocks. The decoder is causal and <strong>cross-attends</strong> to the encoder, like translation in note <strong>3.3</strong>. CS224S’s wording: it is a <strong>GPT-2 style</strong> decoder. There is <strong>no CTC loss</strong>.</p>
+<p>The output is text, plus special tokens for language, timestamps, and task (transcribe versus translate).</p>
 <p><img alt="Whisper encoder on audio, decoder on text" src="files/data-643/graphics/6.2-audio-encoders/whisper.png" /></p>
-<p>Pretraining is weakly supervised: a huge pile of audio paired with transcripts from the web, filtered rather than hand-labeled. Multilingual is the point. You do not train this from scratch in the lab; you would load a checkpoint. The architecture is what you need to draw.</p>
-<p>Default front end: 25 ms windows, 10 ms hop, 80 mel bins, <strong>30-second</strong> chunks. Thirty seconds at a 10 ms hop is 3000 frames before patching/conv downsampling. The decoder never sees raw samples; it sees encoder states.</p>
+<p>Pretraining is weakly supervised: a huge pile of audio paired with transcripts from the web, filtered rather than hand-labeled (CS224S: on the order of 680{,}000 hours). Multilingual is the point. You do not train this from scratch in the lab; you would load a checkpoint. The architecture is what you need to draw.</p>
+<p>Default front end: 25 ms windows, 10 ms hop, 80 mel bins, <strong>30-second</strong> chunks. Thirty seconds at a 10 ms hop is 3000 frames before conv downsampling. The decoder never sees raw samples; it sees encoder states.</p>
+<p><img alt="30 seconds is 480k samples or 3000 frames" src="files/data-643/graphics/6.2-audio-encoders/whisper-chunk.png" /></p>
 <p>Draw the two arrows: encoder self-attention over time–frequency tokens, decoder causal self-attention plus <strong>cross-attention</strong> into those states. That is the same picture as translation (note <strong>3.3</strong>), with a spectrogram instead of a source sentence.</p>
+<p>Long-form audio: Whisper only sees 30 s at a time. Timestamp tokens tell it when to shift the window. That is a product detail, not a new architecture.</p>
 <hr />
 <h2>2. CLAP: CLIP, but the image is sound</h2>
 <p><strong>CLAP</strong> (Contrastive Language–Audio Pretraining) is coordinated, not joint. An audio encoder (CNN or transformer on the spectrogram) and a text encoder emit vectors in one space. InfoNCE on audio–caption pairs. After training you keep both towers.</p>
@@ -152,24 +155,26 @@
 <p>Fusing audio with vision or text is next (note <strong>6.3</strong>). Do not concatenate a Whisper hidden state into CLIP and call it a paper; say how you aligned the rates and the losses.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>About <strong>30–35 minutes</strong> at the board: draw the Whisper encoder–decoder (cross-attention arrows), then the CLAP two-tower picture, then fill the table with a project prompt from the room. Play the Whisper video <strong>in full</strong> (~5 min). This is not Lab 6; the lab stays on a sine STFT and toy fusion.</p>
-<p>Board order: (1) 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> 3000 frames, (2) decoder special tokens, (3) CLAP cosine rank, (4) “which model for this app?” You should leave the hour able to pick Whisper vs CLAP without hedging.</p>
+<p>About <strong>30–35 minutes</strong> at the board: draw the Whisper encoder–decoder (cross-attention arrows, 30 s chunk, special tokens), then the CLAP two-tower picture, then fill the table with a project prompt from the room. Play the Whisper video <strong>in full</strong> (~5–12 min). This is not Lab 6; the lab stays on a sine STFT and toy fusion.</p>
+<p>Board order: (1) 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> 3000 frames, (2) decoder special tokens and “no CTC,” (3) CLAP cosine rank, (4) “which model for this app?” You should leave the hour able to pick Whisper vs CLAP without hedging.</p>
 <p>If someone says “both take spectrograms so they are the same,” stop and point at the head: causal decoder vs a cosine.</p>
 <hr />
 <h2>5. Worked example</h2>
-<p>Whisper chunk: 30 s, hop 10 ms <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>30</mn><mo>&#x0002F;</mo><mn>0.010</mn><mo>&#x0003D;</mo><mn>3000</mn></mrow></math> mel frames, 80 bands. After a stride-2 conv (as in the paper’s stem), you are on the order of 1500 encoder time-steps, not 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 16 kHz <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>480</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn></mrow></math> waveform samples. That is why the spectrogram exists.</p>
+<p>Whisper chunk: 30 s, hop 10 ms <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>30</mn><mo>&#x0002F;</mo><mn>0.010</mn><mo>&#x0003D;</mo><mn>3000</mn></mrow></math> mel frames, 80 bands. After a stride-2 conv (as in the paper’s stem / CS224S’s two convs), you are on the order of 1500 encoder time-steps, not 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 16 kHz <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>480</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn></mrow></math> waveform samples. That is why the spectrogram exists.</p>
 <p>Decoder: special token <code>&lt;|transcribe|&gt;</code> then English text. The loss is next-token on those text tokens, <strong>conditioned</strong> on the encoder. Timestamp tokens are just more vocabulary; they are not a separate model.</p>
 <p>CLAP retrieval: three clips with audio embeddings <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mn>2</mn></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mn>3</mn></msub></mrow></math> and a query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.11</mn><mo>&#x0002C;</mo><mn>0.72</mn><mo>&#x0002C;</mo><mn>0.40</mn></mrow></math>. Rank is clip 2, then 3, then 1. No decoder ran. If the user wanted a transcript of clip 2, you would call Whisper on the waveform, not on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>a</mi><mn>2</mn></msub></mrow></math>.</p>
+<p><img alt="CLAP ranks; it does not transcribe" src="files/data-643/graphics/6.2-audio-encoders/clap-rank.png" /></p>
 <hr />
 <h2>6. Where students get stuck</h2>
 <ul>
 <li>Calling CLAP a “speech-to-text model” because both take spectrograms. The head is the task.</li>
 <li>Forgetting Whisper’s decoder is <strong>causal</strong> and CLAP’s text tower need not be.</li>
 <li>Stuffing Whisper encoder states into a CLIP image slot without resampling time. Rates (10 ms frames vs patch tokens) have to be named.</li>
+<li>Assuming Whisper still uses CTC. CS224S: GPT-2 decoder, no CTC.</li>
 </ul>
 <hr />
 <h2>7. Video</h2>
-<p><a href="https://www.youtube.com/watch?v=uFOkMme19Zs">What's AI — OpenAI's Whisper Model Explained</a>. Play <strong>0:00–end</strong> (~5 min). Pause on the encoder–decoder sketch and on the 30-second chunk. CLAP is the board comparison; this clip is Whisper only.</p>
+<p><a href="https://www.youtube.com/watch?v=uFOkMme19Zs">What's AI — OpenAI's Whisper Model Explained</a>. Play <strong>0:00–end</strong>. Pause on the encoder–decoder sketch and on the 30-second chunk. CLAP is the board comparison; this clip is Whisper only.</p>
 <hr />
 <h2>8. Practice</h2>
 <ol>
@@ -197,7 +202,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
             </footer>
         </div>
 

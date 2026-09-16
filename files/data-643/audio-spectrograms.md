@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-A waveform is a 1-D list of samples. A **spectrogram** is that list cut into short windows, each turned into a frequency snapshot. Once you have a 2-D time–frequency picture, every vision trick from Week 4 (patches, a transformer, CLIP-style towers) applies to audio.
+A waveform is a 1-D list of samples. A **spectrogram** is that list cut into short windows, each turned into a frequency snapshot. Stanford CS224S (L2 acoustic phonetics; L5 “why spectrograms”) is the matching course: once you have a 2-D time–frequency picture, every vision trick from Week 4 (patches, a transformer, CLIP-style towers) applies to audio.
 
 ---
 
@@ -21,6 +21,10 @@ T = 1 + \left\lfloor \frac{L-N}{H} \right\rfloor
 \]
 
 when the length \(L \ge N\). Hop \(H\) is the time step; \(N\) is the frequency resolution. You cannot make both arbitrarily fine: small \(H\) means more frames (and more tokens later); large \(N\) means narrower Hertz bins and a longer window that smears onsets.
+
+![Sliding windows](files/data-643/graphics/6.1-audio-spectrograms/stft-frames.png)
+
+CS224S’s reason to prefer this over a raw wave: a transformer on 16 kHz samples would see 16{,}000 tokens per second. An STFT with a 25 ms window and a 10 ms hop sees 100 frames per second. Those frames last long enough to see a phoneme, not a single pressure sample.
 
 ---
 
@@ -54,7 +58,7 @@ About **35 minutes** at the board in the two-hour week: draw one second of a 440
 
 ## 5. Worked example
 
-One second of speech at \(f_s=16\,\mathrm{kHz}\): \(L=16000\) samples. Take \(N=400\), hop \(H=160\) (10 ms).
+One second of speech at \(f_s=16\,\mathrm{kHz}\): \(L=16000\) samples. Take \(N=400\), hop \(H=160\). Window \(400/16000=25\,\mathrm{ms}\), hop \(10\,\mathrm{ms}\). Those are **Whisper’s default** front-end numbers (note **6.2**).
 
 \[
 T = 1 + \left\lfloor\frac{16000-400}{160}\right\rfloor = 1+97 = 98

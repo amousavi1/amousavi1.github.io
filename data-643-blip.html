@@ -107,15 +107,16 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 5 &middot; <a href="files/data-643/blip.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/5.2-blip.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Filter noisy pairs, then match and decode. Bootstrap the captions.
+                            CoCa adds a decoder. BLIP also filters the web: ITC, ITM, and a language-model loss.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>BLIP</strong> (Li et al., 2022) is a vision–language model that <strong>matches</strong> and <strong>writes</strong>. CLIP scores pairs. BLIP also decodes a caption, and it tries to <strong>clean</strong> the noisy web pairs CLIP trained on.</p>
+<p><strong>BLIP</strong> (Li et al., 2022) is a vision–language model that <strong>matches</strong> and <strong>writes</strong>. CLIP scores pairs. CS231N 2025 L16’s CoCa slide is the sibling idea: add a <strong>decoder</strong>. BLIP does that, and it also <strong>cleans</strong> the noisy web pairs CLIP trained on.</p>
 <hr />
 <h2>1. Bootstrap the data</h2>
 <p>Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter keeps the ones that still match the image (ITM: image–text matching). The cleaned pairs retrain the model. That loop is the “bootstrapped pretraining” in the syllabus.</p>
 <p><img alt="Noisy pairs, filter, matching and language losses" src="files/data-643/graphics/5.2-blip/blip-pipeline.png" /></p>
-<p>Alt-text like “IMG_4032” or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.</p>
+<p>Alt-text like <code>IMG_4032</code> or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.</p>
+<p>CoCa (Yu et al.; the CS231N generation slide) adds a captioning loss on top of contrastive training. It does <strong>not</strong> advertise the bootstrap filter. If your story is “noisy web text,” you need BLIP’s ITM filter, not only a decoder.</p>
 <hr />
 <h2>2. Three losses, one backbone</h2>
 <div class="table-wrap"><table>
@@ -140,22 +141,26 @@
 </tr>
 </tbody>
 </table></div>
-<p>The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. <strong>BLIP-2</strong> later freezes a strong image encoder and trains a thin <strong>Q-Former</strong>; you can treat that as “same idea, cheaper.”</p>
+<p><img alt="ITC, ITM, and LM" src="files/data-643/graphics/5.2-blip/blip-losses.png" /></p>
+<p>The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. <strong>BLIP-2</strong> later freezes a strong image encoder and trains a thin <strong>Q-Former</strong>; treat that as “same idea, cheaper.” LLaVA (CS231N’s next family) is a frozen CLIP tower plus an LLM. Not this hour.</p>
 <p>ITC needs a batch of negatives. ITM can use a <strong>hard</strong> negative (a caption that almost matches). LM is why BLIP can caption at all.</p>
-<p>Whisper, which you will watch, is an encoder–decoder for <strong>speech <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>. BLIP is encoder–decoder for <strong>image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>, plus ITC and ITM. That is the analog, not the same paper.</p>
+<p>Whisper, which you will watch as an analog, is an encoder–decoder for <strong>speech <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>. BLIP is encoder–decoder for <strong>image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>, plus ITC and ITM.</p>
 <hr />
 <h2>3. Captioning versus retrieval</h2>
 <p>Retrieval (CLIP) returns an existing string from a gallery. Captioning (BLIP) <strong>generates</strong> a new string. Evaluation: CIDEr / CLIP-score / human, not just recall@k. Hallucinated objects are the usual failure (“a red bike” when there is none).</p>
 <p>CLIP-score as a caption metric is circular if your captioner was trained to match CLIP. Prefer at least one human or task-specific check. CIDEr rewards n-gram overlap with reference captions; it punishes valid paraphrases. Report both and show two example captions, one good and one hallucinated.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p><strong>30–40 minutes.</strong> CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the <strong>encoder–decoder analog</strong> for captioning (<strong>full ~12 min</strong>, or <strong>0:00–8:00</strong>). Say explicitly: Whisper does not add ITC+ITM; <strong>BLIP does</strong>.</p>
+<p><strong>30–40 minutes.</strong> CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the <strong>encoder–decoder analog</strong> for captioning (<strong>0:00–8:00</strong>). Say explicitly: Whisper does not add ITC+ITM; <strong>BLIP does</strong>.</p>
 <p>Minute plan: 8 min retrieve vs generate; 10 min ITC/ITM/LM table; 8 min ITM numbers; 12 min Whisper clip plus the one-sentence BLIP add-on.</p>
 <hr />
 <h2>5. Worked example</h2>
 <p>One image, two captions: true “a red mug on a desk,” false “a blue bicycle.”</p>
 <p>ITC (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>): softmax over the batch; the false caption is one negative among many in a real batch.</p>
-<p>ITM: a classifier on the fused <code>[CLS]</code> (or matched vs unmatched pair) with labels <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>. Suppose logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1</mn></mrow></math>. Sigmoid probabilities <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.88</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.27</mn></mrow></math>. Binary cross-entropy on those is the ITM term.</p>
+<p>ITM: a classifier on the fused <code>[CLS]</code> with labels <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>. Suppose logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1</mn></mrow></math>.</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>s</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mn>1</mn><mo>&#x0002B;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>s</mi></mrow></msup></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.88</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.27</mn><mo>&#x0002E;</mo></mrow></math>
+<p>Binary cross-entropy: matched term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.13</mn></mrow></math>; mismatched term <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.31</mn></mrow></math>.</p>
+<p><img alt="ITM is a yes/no score" src="files/data-643/graphics/5.2-blip/blip-itm-numeric.png" /></p>
 <p>LM: decode <code>a</code>, <code>red</code>, <code>mug</code>, … with cross-attention into ViT patch tokens. Loss is next-token, like GPT, but the “prefix” includes the image.</p>
 <p>If alt-text was <code>DSC0001.jpg</code>, LM on that string teaches garbage. Filter first, then LM.</p>
 <p>ITC wants a <strong>batch</strong>. ITM can score one pair. LM wants a <strong>token sequence</strong>. If your project only retrieves, stop at ITC (or CLIP). If it must write, you need LM. If web text is junk, you need the filter (ITM).</p>
@@ -165,6 +170,7 @@
 <li>Using recall@k as the only captioning metric.</li>
 <li>Thinking ITM and ITC are the same softmax.</li>
 <li>Skipping the filter and training LM on raw alt-text.</li>
+<li>Calling CoCa and BLIP the same paper. Shared idea: a decoder. BLIP’s extra: bootstrap + ITM.</li>
 </ul>
 <hr />
 <h2>7. Video</h2>
@@ -197,7 +203,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
             </footer>
         </div>
 

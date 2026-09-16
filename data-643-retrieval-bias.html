@@ -107,43 +107,49 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 5 &middot; <a href="files/data-643/retrieval-bias.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/5.3-retrieval-bias.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Nearest neighbors in two directions, and the stereotypes that come with them.
+                            recall@k in both directions, an occupation probe, and a typographic miss.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>Once image and text share a space, <strong>retrieval</strong> is nearest neighbors. The same geometry that makes search work also encodes <strong>stereotypes</strong> from the training web.</p>
+<p>Once image and text share a space, <strong>retrieval</strong> is nearest neighbors. The same geometry that makes search work also encodes <strong>stereotypes</strong> from the training web. CS231N 2025 L16 already warned that a single prompt can be peaked; this note measures what that geometry retrieves.</p>
 <hr />
 <h2>1. Two directions</h2>
 <p><strong>Text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> image:</strong> a query string, rank photos. <strong>Image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text:</strong> a photo, rank captions or documents. Dual retrieval is why coordinated towers beat a joint vector that you can only query from one side.</p>
 <p><img alt="Query with an image or with text" src="files/data-643/graphics/5.3-retrieval-bias/retrieval.png" /></p>
 <p>Report <strong>recall@k</strong> and a few failure cases (wrong object, wrong count, text that ignores the image). For a project, freeze the gallery embeddings; do not re-encode millions of images on every demo.</p>
 <p>Recall@1 on a 2-item toy is not a paper. On a 100k gallery, recall@1 can look terrible while recall@10 is usable. Always state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> and gallery size.</p>
+<p>If the gold item is in the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> of the ranked list, that query scores 1; otherwise 0. Average over queries. That is recall@k.</p>
 <hr />
 <h2>2. Bias and robustness</h2>
 <p>Occupation and gender, geography and skin tone, “a terrorist” versus a news photo: CLIP-style models pick up the co-occurrences of the web. Zero-shot prompts (<code>a photo of a man who is a nurse</code>) move the query along the same directions you saw in Week 1’s toy embeddings.</p>
 <p><img alt="Prompted stereotypes in a vision–language space" src="files/data-643/graphics/5.3-retrieval-bias/vlm-bias.png" /></p>
+<p><img alt="A 2-D occupation probe with numbers" src="files/data-643/graphics/5.3-retrieval-bias/occupation-numeric.png" /></p>
 <p><strong>Robustness:</strong> typographic attacks (text painted in the image), distribution shift (medical, sketches), and language variety. A high ImageNet zero-shot number does not certify your domain.</p>
+<p>Goh et al. / the CLIP “multimodal neurons” line: a photo of an apple with the word <code>iPod</code> printed on it is often retrieved as a gadget. CLIP can <strong>read the overlay</strong> instead of the object. That is the same nearest-neighbor geometry, not a separate model.</p>
+<p><img alt="Typographic attack" src="files/data-643/graphics/5.3-retrieval-bias/typographic.png" /></p>
 <p>If your project ranks people, jobs, or health content, put a probe in the report: a small, documented set of prompts and the retrievals they return. Debiasing is incomplete; measuring is required.</p>
 <p>Lab 5’s occupation probe (<code>nurse</code> / <code>ceo</code> vs <code>man</code> / <code>woman</code> in <code>toy_clip.csv</code>) is the miniature of this section. Real CLIP is the same cosine, trained on the web.</p>
 <p>A probe is a <strong>fixed list</strong> of prompts and a rule for a bad hit (wrong gender default, violent stereotype, medical advice). Put the list in an appendix. Do not “debias” by deleting one axis and claiming the space is fair; say what you measured.</p>
-<p>Typographic attack cartoon: a photo of an apple with the word <code>iPod</code> printed on it. CLIP’s text bias can rank it with gadgets. That is robustness, not occupancy of occupations, but it is the same nearest-neighbor geometry.</p>
 <hr />
 <h2>3. Teaching this note</h2>
-<p><strong>30–40 minutes.</strong> Dual retrieval, recall@k with a tiny ranking, then the occupation probe <strong>with numbers</strong>. Play the <strong>second half</strong> of the CLIP video (robustness / broader impact, about <strong>37:40–47:00</strong>). Mention Lab 5’s occupation rows by name so the lab is not a surprise.</p>
+<p><strong>30–40 minutes.</strong> Dual retrieval, recall@k with a tiny ranking, then the occupation probe <strong>with numbers</strong>, then one typographic cartoon. Play the <strong>second half</strong> of the CLIP video (robustness / broader impact, about <strong>37:40–47:00</strong>). Mention Lab 5’s occupation rows by name so the lab is not a surprise.</p>
 <p>Minute plan: 8 min two retrieval directions; 10 min recall@k arithmetic; 10 min occupation probe; 10 min video second half. Do not skip the probe to “save time.”</p>
 <hr />
 <h2>4. Worked example</h2>
 <p>Gallery of three <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalized image vectors:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>cat</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><mtext>nurse</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.2</mn></mtd></mtr><mtr><mtd><mn>0.98</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><mtext>ceo</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.98</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>woman</mtext><mo>&#x02248;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0.10</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.999</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.30</mn></mrow></math>. Rank: nurse, ceo, cat.</p>
-<p>Query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>man</mtext><mo>&#x02248;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0.1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0.995</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.30</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.999</mn></mrow></math>. Rank: ceo (tie-ish with cat), nurse last.</p>
+<p><img alt="Recall depends on k and on who is gold" src="files/data-643/graphics/5.3-retrieval-bias/recall-numeric.png" /></p>
+<p>Query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>man</mtext><mo>&#x02248;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0.1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0.995</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.30</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.995</mn></mrow></math>. Rank: ceo tied with cat; nurse last.</p>
 <p>That is an <strong>occupation probe</strong>: who is nearest to <code>man</code> vs <code>woman</code>. Lab 5 asks you to run it on <code>toy_clip.csv</code>. A production system that ranks résumés needs the same table in the report, on real photos, with documented prompts.</p>
 <p>Recall@1 for query <code>cat</code> is 1 if cat is the top image. If you only report recall@1 on 100k images, a model that puts the right photo at rank 3 looks like a zero.</p>
+<p>Typographic cartoon: query prompts <code>apple</code> vs <code>iPod</code> against one image. If the overlay wins, write that failure next to the occupation table. Two different harms, one cosine.</p>
 <hr />
 <h2>5. Where students get stuck</h2>
 <ul>
 <li>Throwing away one tower and then being unable to query from that side.</li>
 <li>Reporting a single recall@1 without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> or gallery size.</li>
 <li>Skipping a bias probe because “it’s just a toy.”</li>
+<li>Treating a typographic miss as “the model is broken” instead of “text in the image is also a vector.”</li>
 </ul>
 <hr />
 <h2>6. Video</h2>
@@ -162,10 +168,10 @@
 <p>Write one probe prompt you would be embarrassed to ship, and what you would count as a bad retrieval.</p>
 </li>
 <li>
-<p>Cosines of a query to four images: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.11</mn><mo>&#x0002C;</mo><mn>0.40</mn><mo>&#x0002C;</mo><mn>0.39</mn><mo>&#x0002C;</mo><mn>0.38</mn></mrow></math>. What is recall@1? recall@3? If the gold item is the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.40</mn></mrow></math> image, both are 1; if gold is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.38</mn></mrow></math>, write both numbers.</p>
+<p>Cosines of a query to four images: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.11</mn><mo>&#x0002C;</mo><mn>0.40</mn><mo>&#x0002C;</mo><mn>0.39</mn><mo>&#x0002C;</mo><mn>0.38</mn></mrow></math>. If gold is the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.40</mn></mrow></math> image, what is recall@1 and recall@3? If gold is the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.38</mn></mrow></math> image, write both numbers.</p>
 </li>
 <li>
-<p>Vectors <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">q</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">a</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.6</mn></mtd></mtr><mtr><mtd><mn>0.8</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.6</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> (not yet normalized). Rank <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi></mrow></math> by cosine to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">q</mi></mrow></mrow></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">a</mi></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math> and rank again. Did the order change?</p>
+<p>Vectors <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">q</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">a</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.6</mn></mtd></mtr><mtr><mtd><mn>0.8</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.6</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Rank <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi></mrow></math> by cosine to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">q</mi></mrow></mrow></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalize <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">a</mi></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math> and rank again. Did the order change? Why or why not?</p>
 </li>
 </ol>
                     </section>
@@ -176,7 +182,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
             </footer>
         </div>
 

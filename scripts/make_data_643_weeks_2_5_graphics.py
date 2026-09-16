@@ -957,6 +957,147 @@ def vlm_bias():
     _save(fig, "5.3-retrieval-bias/vlm-bias.png")
 
 
+def clip_numeric():
+    S = np.array([[1.0, 0.6], [0.0, 0.8]])
+    fig, ax = plt.subplots(figsize=(6.4, 4.6))
+    im = ax.imshow(S, cmap="YlGnBu", vmin=0, vmax=1)
+    ax.set_xticks([0, 1], [r"$t_1$ (cat)", r"$t_2$ (dog)"])
+    ax.set_yticks([0, 1], [r"$v_1$ (cat)", r"$v_2$ (dog)"])
+    ax.set_xlabel("text")
+    ax.set_ylabel("image")
+    for i in range(2):
+        for j in range(2):
+            ax.text(j, i, f"{S[i, j]:.1f}", ha="center", va="center", color="black", fontsize=16)
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    ax.set_title(r"Batch $N=2$: cosine after $\ell_2$ normalize. Diagonal should win.", loc="left", color=NAVY)
+    fig.tight_layout()
+    _save(fig, "5.1-clip/clip-numeric.png")
+
+
+def clip_tau():
+    scores = np.array([1.0, 0.6])
+    fig, axes = plt.subplots(1, 2, figsize=(9.6, 3.6), sharey=True)
+    for ax, tau, title in (
+        (axes[0], 1.0, r"$\tau=1$: softmax $\approx [0.60,\ 0.40]$"),
+        (axes[1], 0.07, r"$\tau=0.07$: softmax $\approx [1.00,\ 0.00]$"),
+    ):
+        z = scores / tau
+        p = np.exp(z - z.max())
+        p = p / p.sum()
+        ax.bar(["match", "negative"], p, color=[TEAL, CORAL], edgecolor=NAVY, linewidth=1.1)
+        ax.set_ylim(0, 1.15)
+        for i, v in enumerate(p):
+            ax.text(i, v + 0.03, f"{v:.2f}", ha="center", color=NAVY)
+        ax.set_title(title, color=NAVY, fontsize=12)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+    fig.suptitle(r"Same scores $[1.0,\ 0.6]$. Small $\tau$ makes the one negative brutal.", color=NAVY, y=1.02)
+    fig.tight_layout()
+    _save(fig, "5.1-clip/clip-tau.png")
+
+
+def blip_losses():
+    fig, axes = plt.subplots(1, 3, figsize=(11.0, 3.4))
+    specs = [
+        ("ITC", "softmax over the batch\nCLIP-style alignment", FILL2, TEAL),
+        ("ITM", "binary: does this pair\nmatch? Hard negatives", FILL3, CORAL),
+        ("LM", "decode the caption\ncross-attend to patches", FILL4, GOLD),
+    ]
+    for ax, (name, body, fill, edge) in zip(axes, specs):
+        ax.set_xlim(0, 4)
+        ax.set_ylim(0, 4)
+        ax.axis("off")
+        _box(ax, (0.25, 2.35), 3.5, 1.15, name, fill, edge, 16)
+        _box(ax, (0.25, 0.45), 3.5, 1.55, body, FILL, NAVY, 11)
+        ax.set_title(name, color=NAVY, fontsize=12)
+    fig.suptitle("BLIP keeps three losses. CoCa (CS231N) adds a decoder; BLIP also filters the web.", color=NAVY, y=1.04)
+    fig.tight_layout()
+    _save(fig, "5.2-blip/blip-losses.png")
+
+
+def blip_itm_numeric():
+    fig, ax = plt.subplots(figsize=(8.8, 3.6))
+    ax.axis("off")
+    rows = [
+        [r"matched $s=2$", r"$\sigma(2)\approx 0.88$", r"$-\log\sigma\approx 0.13$"],
+        [r"mismatch $s=-1$", r"$\sigma(-1)\approx 0.27$", r"$-\log(1-\sigma)\approx 0.31$"],
+    ]
+    table = ax.table(
+        cellText=rows,
+        colLabels=["ITM logit", "sigmoid", "binary CE term"],
+        loc="center",
+        cellLoc="center",
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.15, 1.85)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY, fontweight="medium")
+        else:
+            cell.set_facecolor("white")
+    ax.set_title("ITM is not a batch softmax. One pair, a yes/no score.", loc="left", color=NAVY, pad=12)
+    _save(fig, "5.2-blip/blip-itm-numeric.png")
+
+
+def recall_numeric():
+    fig, ax = plt.subplots(figsize=(8.6, 3.8))
+    names = ["cat", "ceo", "nurse"]
+    scores = [0.10, 0.30, 0.999]
+    order = np.argsort(scores)[::-1]
+    colors = [TEAL if names[i] == "nurse" else FILL for i in order]
+    ax.barh(range(3, 0, -1), [scores[i] for i in order], color=colors, edgecolor=NAVY)
+    ax.set_yticks(range(3, 0, -1), [names[i] for i in order])
+    ax.set_xlim(0, 1.15)
+    ax.set_xlabel("cosine to query  woman")
+    ax.set_title(r"Gold = nurse. recall@1 = 1. If gold were cat, recall@1 = 0 and recall@3 = 1.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "5.3-retrieval-bias/recall-numeric.png")
+
+
+def occupation_numeric():
+    fig, ax = plt.subplots(figsize=(7.2, 4.8))
+    pts = {
+        "cat": (1.0, 0.0, CORAL),
+        "ceo": (0.98, 0.2, NAVY),
+        "nurse": (0.2, 0.98, TEAL),
+        "woman": (0.1, 1.0, GOLD),
+        "man": (1.0, 0.1, GOLD),
+    }
+    for name, (x, y, c) in pts.items():
+        marker = "s" if name in {"woman", "man"} else "o"
+        ax.scatter([x], [y], c=c, s=90, marker=marker, zorder=3)
+        ax.text(x + 0.03, y + 0.04, name, color=c, fontsize=11)
+    ax.set_xlim(-0.15, 1.25)
+    ax.set_ylim(-0.15, 1.25)
+    ax.set_aspect("equal")
+    ax.set_xlabel("axis near man / cat")
+    ax.set_ylabel("axis near woman / nurse")
+    ax.set_title("Occupation probe: woman retrieves nurse; man sits with ceo.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "5.3-retrieval-bias/occupation-numeric.png")
+
+
+def typographic():
+    fig, ax = plt.subplots(figsize=(9.4, 3.6))
+    ax.set_xlim(0, 11)
+    ax.set_ylim(0, 4)
+    ax.axis("off")
+    _box(ax, (0.3, 1.15), 3.3, 1.7, "photo of an apple\nwith the word iPod", FILL3, CORAL, 12)
+    _box(ax, (4.3, 1.15), 2.6, 1.7, "CLIP\nimage tower", FILL, NAVY, 12)
+    _box(ax, (7.6, 1.15), 3.0, 1.7, "nearest prompt:\ngadget, not fruit", FILL4, GOLD, 12)
+    _arrow(ax, (3.65, 2.0), (4.25, 2.0), CORAL)
+    _arrow(ax, (6.95, 2.0), (7.55, 2.0), NAVY)
+    ax.set_title("Typographic attack: CLIP often reads the printed word first.", loc="left", color=NAVY)
+    _save(fig, "5.3-retrieval-bias/typographic.png")
+
+
 def main():
     _setup()
     rnn_cell()
@@ -999,9 +1140,16 @@ def main():
     infonce_numeric()
     probe_vs_zeroshot()
     clip_towers()
+    clip_numeric()
+    clip_tau()
     blip()
+    blip_losses()
+    blip_itm_numeric()
     retrieval()
     vlm_bias()
+    recall_numeric()
+    occupation_numeric()
+    typographic()
     print("done")
 
 

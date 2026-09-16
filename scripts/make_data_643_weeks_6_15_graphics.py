@@ -198,6 +198,77 @@ def data_pyramid():
     _save(fig, "6.3-fusion-scarcity/scarcity.png")
 
 
+def stft_frames():
+    fig, ax = plt.subplots(figsize=(10.0, 3.5))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 3.6)
+    ax.axis("off")
+    ax.add_patch(Rectangle((0.4, 1.55), 9.2, 0.45, facecolor=FILL, edgecolor=NAVY, lw=1.4))
+    ax.text(5.0, 2.15, "waveform, length L samples", ha="center", color=NAVY, fontsize=11)
+    windows = [(0.5, "N"), (2.3, "hop H"), (4.1, "N"), (5.9, "hop H"), (7.7, "N")]
+    for i, (x, _) in enumerate([(0.5, 0), (2.6, 1), (4.7, 2)]):
+        ax.add_patch(Rectangle((x, 0.45), 2.15, 0.85, facecolor=FILL3 if i % 2 == 0 else FILL2, edgecolor=CORAL if i % 2 == 0 else TEAL, lw=1.5))
+        ax.text(x + 1.07, 0.87, f"frame {i+1}\nwindow N", ha="center", va="center", color=NAVY, fontsize=10)
+    ax.annotate("", xy=(2.6, 0.35), xytext=(0.5, 0.35), arrowprops=dict(arrowstyle="<->", color=SLATE, lw=1.3))
+    ax.text(1.55, 0.08, "hop H", ha="center", color=SLATE, fontsize=10)
+    ax.set_title(r"STFT: slide a window of length $N$ by hop $H$. Frames $T=1+\lfloor(L-N)/H\rfloor$.", loc="left", color=NAVY)
+    _save(fig, "6.1-audio-spectrograms/stft-frames.png")
+
+
+def whisper_chunk():
+    fig, axes = plt.subplots(1, 2, figsize=(10.2, 3.5))
+    for ax in axes:
+        ax.set_xlim(0, 5)
+        ax.set_ylim(0, 4)
+        ax.axis("off")
+    _box(axes[0], (0.35, 1.2), 4.3, 1.6, "30 s at 16 kHz\n= 480,000 samples", FILL3, CORAL, 13)
+    axes[0].set_title("Raw waveform")
+    _box(axes[1], (0.35, 2.25), 4.3, 1.2, "10 ms hop → 3000 mel frames", FILL2, TEAL, 12)
+    _box(axes[1], (0.35, 0.55), 4.3, 1.2, "stride-2 conv → ~1500 tokens", FILL4, GOLD, 12)
+    _arrow(axes[1], (2.5, 2.2), (2.5, 1.8), TEAL)
+    axes[1].set_title("Whisper front end (CS224S L11)")
+    fig.suptitle("The spectrogram exists so the encoder is not a 480k-token transformer.", color=NAVY, y=1.02)
+    fig.tight_layout()
+    _save(fig, "6.2-audio-encoders/whisper-chunk.png")
+
+
+def clap_rank():
+    fig, ax = plt.subplots(figsize=(7.8, 3.8))
+    names = ["clip 2", "clip 3", "clip 1"]
+    scores = [0.72, 0.40, 0.11]
+    ax.barh(names, scores, color=[TEAL, FILL, FILL3], edgecolor=NAVY)
+    ax.set_xlim(0, 1.0)
+    ax.set_xlabel("cosine to query  a dog barking")
+    ax.set_title("CLAP retrieval: rank clips. No decoder ran. Transcripts are Whisper’s job.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "6.2-audio-encoders/clap-rank.png")
+
+
+def concat_add():
+    fig, axes = plt.subplots(1, 2, figsize=(10.4, 3.6))
+    for ax in axes:
+        ax.set_xlim(0, 6)
+        ax.set_ylim(0, 4.2)
+        ax.axis("off")
+    _box(axes[0], (0.3, 2.5), 2.2, 1.1, r"audio $128$", FILL3, CORAL, 12)
+    _box(axes[0], (0.3, 0.7), 2.2, 1.1, r"image $128$", FILL2, TEAL, 12)
+    _box(axes[0], (3.3, 1.45), 2.4, 1.4, r"$[a;v]\in\mathbb{R}^{256}$", FILL4, GOLD, 13)
+    _arrow(axes[0], (2.55, 3.05), (3.25, 2.4), CORAL)
+    _arrow(axes[0], (2.55, 1.25), (3.25, 1.85), TEAL)
+    axes[0].set_title("Concat grows width")
+    _box(axes[1], (0.3, 2.5), 2.2, 1.1, r"audio $128$", FILL3, CORAL, 12)
+    _box(axes[1], (0.3, 0.7), 2.2, 1.1, r"image $128$", FILL2, TEAL, 12)
+    _box(axes[1], (3.3, 1.45), 2.4, 1.4, r"$a+v\in\mathbb{R}^{128}$", FILL, NAVY, 13)
+    _arrow(axes[1], (2.55, 3.05), (3.25, 2.4), CORAL)
+    _arrow(axes[1], (2.55, 1.25), (3.25, 1.85), TEAL)
+    axes[1].set_title("Add needs a shared axis")
+    fig.suptitle("If widths differ, add is illegal until you map. Missing audio breaks concat unless you trained a mask.", color=NAVY, y=1.02)
+    fig.tight_layout()
+    _save(fig, "6.3-fusion-scarcity/concat-add.png")
+
+
 def scaling_curve():
     C = np.logspace(3, 7, 40)
     L = 2.5 * C ** (-0.07) + 1.4
@@ -763,6 +834,10 @@ def main():
     clap_towers()
     fusion_kinds()
     data_pyramid()
+    stft_frames()
+    whisper_chunk()
+    clap_rank()
+    concat_add()
     scaling_curve()
     chinchilla()
     moe()

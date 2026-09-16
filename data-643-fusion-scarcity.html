@@ -107,10 +107,10 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 6 &middot; <a href="files/data-643/fusion-scarcity.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/6.3-fusion-scarcity.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Early, late, and cross-attention fusion. Audio-labeled data is the bottleneck.
+                            Early, late, or cross-attention. Concat grows width. Paired audio is scarce.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>Fusion</strong> is when you combine streams. <strong>Scarcity</strong> is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note <strong>4.1</strong> introduced joint versus coordinated; this note is the practical menu.</p>
+<p><strong>Fusion</strong> is when you combine streams. <strong>Scarcity</strong> is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note <strong>4.1</strong> introduced joint versus coordinated (CMU 11-777). This note is 11-777’s <strong>fusion</strong> lecture in classroom form: early, late, and cross-attention, then the data pyramid.</p>
 <hr />
 <h2>1. Three places to fuse</h2>
 <p><strong>Early:</strong> concatenate (or add) raw features, then one backbone. Cheap at inference if every modality is always there. Missing a stream at test time hurts, unless you trained dropouts.</p>
@@ -118,7 +118,9 @@
 <p><strong>Cross-attention (hybrid):</strong> queries from one stream, keys and values from another. Whisper’s decoder already does this for audio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text. A video LM does it for frames <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> tokens. This is the default when you want alignment, not just a bag of scores.</p>
 <p><img alt="Early, late, and cross-attention fusion" src="files/data-643/graphics/6.3-fusion-scarcity/fusion.png" /></p>
 <p>Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>; add needs a shared dimension and assumes the axes already mean the same thing.</p>
+<p><img alt="Concat versus add" src="files/data-643/graphics/6.3-fusion-scarcity/concat-add.png" /></p>
 <p>CLIP-style <strong>two towers</strong> are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. That is the video’s job this hour.</p>
+<p>11-777’s warning, in our words: naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.</p>
 <hr />
 <h2>2. The data pyramid</h2>
 <p>Plenty of <strong>unpaired</strong> text, plenty of unlabeled audio, fewer <strong>paired</strong> spectrogram–transcript rows, still fewer labeled tasks (emotion, medical, courtroom diarization). Pretrain the towers where the data is thick; fuse or fine-tune where it is thin.</p>
@@ -142,8 +144,13 @@
 <li><strong>Add:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x0002B;</mo><mi>v</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math>. Illegal if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>256</mn></mrow></msup></mrow></math>. You would first map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>v</mi></msub><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn><mo>&#x000D7;</mo><mn>256</mn></mrow></msup></mrow></math>.</li>
 <li><strong>Late (CLIP-style):</strong> keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi></mrow></math>, score <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>v</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math> against a text query, average the two scores. Each tower can have been pretrained on its own pairs. You did <strong>not</strong> align a pixel with a spectrogram bin.</li>
 </ul>
-<p>Pyramid: 10,000 h unlabeled audio, 600 h paired transcripts (Whisper-scale is much larger; this is a seminar toy), 400 labeled emotion clips. Pretrain or freeze the audio tower on the 600 h; train the emotion head on 400. Do not train a from-scratch joint net on 400 rows.</p>
+<p>Pyramid: 10{,}000 h unlabeled audio, 600 h paired transcripts (Whisper-scale is much larger; this is a seminar toy), 400 labeled emotion clips. Pretrain or freeze the audio tower on the 600 h; train the emotion head on 400. Do not train a from-scratch joint net on 400 rows.</p>
 <p>CLIP video as baseline: two towers, InfoNCE, no early concat. That is coordinated fusion with a <strong>late</strong> comparison. Cross-attention would be a decoder querying the other stream’s tokens. Three different pictures; one hour.</p>
+<p>Parameter check, ignore bias. Audio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>a</mi></msub><mo>&#x0003D;</mo><mn>64</mn></mrow></math>, vision <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>v</mi></msub><mo>&#x0003D;</mo><mn>256</mn></mrow></math>:</p>
+<ul>
+<li>map vision into 64-D so you can <strong>add</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>v</mi></msub><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>64</mn><mo>&#x000D7;</mo><mn>256</mn></mrow></msup></mrow></math> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn><mrow><mo>&#x0002C;</mo></mrow><mn>384</mn></mrow></math> weights;</li>
+<li><strong>concat</strong> then map to 64-D: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>64</mn><mo>&#x000D7;</mo><mn>320</mn></mrow></msup></mrow></math> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>20</mn><mrow><mo>&#x0002C;</mo></mrow><mn>480</mn></mrow></math> weights.</li>
+</ul>
 <hr />
 <h2>6. Where students get stuck</h2>
 <ul>
@@ -181,7 +188,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
             </footer>
         </div>
 

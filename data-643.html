@@ -558,18 +558,24 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2103.00020" target="_blank" rel="noopener">Radford et al., CLIP</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2103.00020" target="_blank" rel="noopener">Radford et al., CLIP (towers, InfoNCE, zero-shot; skip the full WIT appendix)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2201.12086" target="_blank" rel="noopener">Li et al., BLIP</a
+                                        <a class="course-material__title" href="https://cs231n.stanford.edu/slides/2025/lecture_16.pdf" target="_blank" rel="noopener">Stanford CS231N 2025 L16: CLIP is a similarity score; CoCa adds a decoder</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2201.12086" target="_blank" rel="noopener">Li et al., BLIP (ITC + ITM + LM, and the bootstrap filter)</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>CLIP retrieves; BLIP can write. Which one belongs in a captioning project?</li>
-                                    <li>Name one retrieval probe you would run before ranking people or jobs.</li>
+                                    <li>CLIP retrieves; BLIP can write. Which one belongs in a captioning project, and which loss is the reason?</li>
+                                    <li>A batch of 8 versus 1024: what did you add, and what did CS231N say still fails (mug in grass)?</li>
+                                    <li>Name one retrieval probe you would run before ranking people or jobs, and one typographic failure you would log.</li>
+                                    <li>ITM versus ITC: when is a binary matcher the right tool and a batch softmax the wrong one?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-6" role="tabpanel" aria-labelledby="tab-week-6" hidden>
@@ -614,18 +620,32 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2212.04356" target="_blank" rel="noopener">Radford et al., Whisper</a
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224s/semesters/2025-spring/lecture-slides/224s.25.lec2.pdf" target="_blank" rel="noopener">Stanford CS224S 2025 L2: spectrogram as spectrum plus time</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2206.04769" target="_blank" rel="noopener">Elizalde et al., CLAP</a
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224s/semesters/2025-spring/lecture-slides/224s.25.lec11.pdf" target="_blank" rel="noopener">Stanford CS224S 2025 L11: Whisper architecture, 30 s chunks, no CTC</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2212.04356" target="_blank" rel="noopener">Radford et al., Whisper (weak supervision, encoder–decoder)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2206.04769" target="_blank" rel="noopener">Elizalde et al., CLAP (CLIP for audio)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://cmu-multicomp-lab.github.io/mmml-course/fall2023/schedule/" target="_blank" rel="noopener">CMU 11-777: multimodal fusion (early / late / cross-attention)</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>Why is a spectrogram a more natural transformer input than the raw waveform for this course?</li>
+                                    <li>Why is a spectrogram a more natural transformer input than the raw waveform at 16 kHz?</li>
+                                    <li>Whisper versus CLAP: both take spectrograms. Which head do you want for subtitles, and which for a typed search?</li>
                                     <li>Name one fusion choice you would defend if audio is often missing at test time.</li>
+                                    <li>Audio is 64-D and vision is 256-D. What linear map lets you add them, and what map do you need after a concat?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-7" role="tabpanel" aria-labelledby="tab-week-7" hidden>
@@ -1086,7 +1106,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T15:35:00-04:00">September 15, 2026, 3:35 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
             </footer>
         </div>
 

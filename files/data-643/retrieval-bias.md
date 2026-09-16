@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Once image and text share a space, **retrieval** is nearest neighbors. The same geometry that makes search work also encodes **stereotypes** from the training web.
+Once image and text share a space, **retrieval** is nearest neighbors. The same geometry that makes search work also encodes **stereotypes** from the training web. CS231N 2025 L16 already warned that a single prompt can be peaked; this note measures what that geometry retrieves.
 
 ---
 
@@ -14,6 +14,8 @@ Report **recall@k** and a few failure cases (wrong object, wrong count, text tha
 
 Recall@1 on a 2-item toy is not a paper. On a 100k gallery, recall@1 can look terrible while recall@10 is usable. Always state \(k\) and gallery size.
 
+If the gold item is in the top \(k\) of the ranked list, that query scores 1; otherwise 0. Average over queries. That is recall@k.
+
 ---
 
 ## 2. Bias and robustness
@@ -22,7 +24,13 @@ Occupation and gender, geography and skin tone, “a terrorist” versus a news 
 
 ![Prompted stereotypes in a vision–language space](files/data-643/graphics/5.3-retrieval-bias/vlm-bias.png)
 
+![A 2-D occupation probe with numbers](files/data-643/graphics/5.3-retrieval-bias/occupation-numeric.png)
+
 **Robustness:** typographic attacks (text painted in the image), distribution shift (medical, sketches), and language variety. A high ImageNet zero-shot number does not certify your domain.
+
+Goh et al. / the CLIP “multimodal neurons” line: a photo of an apple with the word `iPod` printed on it is often retrieved as a gadget. CLIP can **read the overlay** instead of the object. That is the same nearest-neighbor geometry, not a separate model.
+
+![Typographic attack](files/data-643/graphics/5.3-retrieval-bias/typographic.png)
 
 If your project ranks people, jobs, or health content, put a probe in the report: a small, documented set of prompts and the retrievals they return. Debiasing is incomplete; measuring is required.
 
@@ -30,13 +38,11 @@ Lab 5’s occupation probe (`nurse` / `ceo` vs `man` / `woman` in `toy_clip.csv`
 
 A probe is a **fixed list** of prompts and a rule for a bad hit (wrong gender default, violent stereotype, medical advice). Put the list in an appendix. Do not “debias” by deleting one axis and claiming the space is fair; say what you measured.
 
-Typographic attack cartoon: a photo of an apple with the word `iPod` printed on it. CLIP’s text bias can rank it with gadgets. That is robustness, not occupancy of occupations, but it is the same nearest-neighbor geometry.
-
 ---
 
 ## 3. Teaching this note
 
-**30–40 minutes.** Dual retrieval, recall@k with a tiny ranking, then the occupation probe **with numbers**. Play the **second half** of the CLIP video (robustness / broader impact, about **37:40–47:00**). Mention Lab 5’s occupation rows by name so the lab is not a surprise.
+**30–40 minutes.** Dual retrieval, recall@k with a tiny ranking, then the occupation probe **with numbers**, then one typographic cartoon. Play the **second half** of the CLIP video (robustness / broader impact, about **37:40–47:00**). Mention Lab 5’s occupation rows by name so the lab is not a surprise.
 
 Minute plan: 8 min two retrieval directions; 10 min recall@k arithmetic; 10 min occupation probe; 10 min video second half. Do not skip the probe to “save time.”
 
@@ -54,11 +60,15 @@ Gallery of three \(\ell_2\)-normalized image vectors:
 
 Query text \(\text{woman}\approx\begin{bmatrix}0.1\\1\end{bmatrix}\). Cosines \(\approx 0.10,\; 0.999,\; 0.30\). Rank: nurse, ceo, cat.
 
-Query text \(\text{man}\approx\begin{bmatrix}1\\0.1\end{bmatrix}\). Cosines \(\approx 0.995,\; 0.30,\; 0.999\). Rank: ceo (tie-ish with cat), nurse last.
+![Recall depends on k and on who is gold](files/data-643/graphics/5.3-retrieval-bias/recall-numeric.png)
+
+Query text \(\text{man}\approx\begin{bmatrix}1\\0.1\end{bmatrix}\). Cosines \(\approx 0.995,\; 0.30,\; 0.995\). Rank: ceo tied with cat; nurse last.
 
 That is an **occupation probe**: who is nearest to `man` vs `woman`. Lab 5 asks you to run it on `toy_clip.csv`. A production system that ranks résumés needs the same table in the report, on real photos, with documented prompts.
 
 Recall@1 for query `cat` is 1 if cat is the top image. If you only report recall@1 on 100k images, a model that puts the right photo at rank 3 looks like a zero.
+
+Typographic cartoon: query prompts `apple` vs `iPod` against one image. If the overlay wins, write that failure next to the occupation table. Two different harms, one cosine.
 
 ---
 
@@ -67,6 +77,7 @@ Recall@1 for query `cat` is 1 if cat is the top image. If you only report recall
 - Throwing away one tower and then being unable to query from that side.
 - Reporting a single recall@1 without \(k\) or gallery size.
 - Skipping a bias probe because “it’s just a toy.”
+- Treating a typographic miss as “the model is broken” instead of “text in the image is also a vector.”
 
 ---
 
@@ -86,6 +97,6 @@ Start around **robustness to data shift (37:40)** and **broader impact (44:20)**
 
 3. Write one probe prompt you would be embarrassed to ship, and what you would count as a bad retrieval.
 
-4. Cosines of a query to four images: \(0.11, 0.40, 0.39, 0.38\). What is recall@1? recall@3? If the gold item is the \(0.40\) image, both are 1; if gold is \(0.38\), write both numbers.
+4. Cosines of a query to four images: \(0.11, 0.40, 0.39, 0.38\). If gold is the \(0.40\) image, what is recall@1 and recall@3? If gold is the \(0.38\) image, write both numbers.
 
-5. Vectors \(\boldsymbol{q}=\begin{bmatrix}0\\1\end{bmatrix}\), \(\boldsymbol{a}=\begin{bmatrix}0.6\\0.8\end{bmatrix}\), \(\boldsymbol{b}=\begin{bmatrix}0.8\\0.6\end{bmatrix}\) (not yet normalized). Rank \(a,b\) by cosine to \(\boldsymbol{q}\). Then \(\ell_2\)-normalize \(\boldsymbol{a}\) and \(\boldsymbol{b}\) and rank again. Did the order change?
+5. Vectors \(\boldsymbol{q}=\begin{bmatrix}0\\1\end{bmatrix}\), \(\boldsymbol{a}=\begin{bmatrix}0.6\\0.8\end{bmatrix}\), \(\boldsymbol{b}=\begin{bmatrix}0.8\\0.6\end{bmatrix}\). Rank \(a,b\) by cosine to \(\boldsymbol{q}\). Then \(\ell_2\)-normalize \(\boldsymbol{a}\) and \(\boldsymbol{b}\) and rank again. Did the order change? Why or why not?

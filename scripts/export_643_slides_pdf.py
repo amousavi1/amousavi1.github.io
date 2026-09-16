@@ -40,9 +40,16 @@ body {
   flex-direction: column;
 }
 .slide.title-slide .slide-body {
-  justify-content: center;
+  justify-content: flex-start;
   padding-left: 0.9in;
   padding-right: 0.9in;
+  padding-bottom: 0.12in;
+}
+.title-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .kicker {
   margin: 0 0 0.12in;
@@ -73,6 +80,13 @@ h1 {
   font-size: 16pt;
   color: #5f6b73;
   line-height: 1.45;
+}
+.credit {
+  margin: 0;
+  font-size: 11.5pt;
+  color: #5f6b73;
+  line-height: 1.35;
+  max-width: 92%;
 }
 ul {
   margin: 0.05em 0 0.15em;
@@ -1439,12 +1453,79 @@ DECKS = [
         "title": "5.1 CLIP",
         "slides": [
             {
+                "layout": "title",
+                "title": "CLIP",
+                "subtitle": "DATA 443/643  ·  Week 5, note 5.1",
+                "meta": "Week 5  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS231N 2025 L16 (two towers, a cosine, not a captioner). Original slides; that course is not copied.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Two towers; keep both after training"),
+                    ("2", "A similarity score, not a sentence"),
+                    ("3", "A 2 by 2 cosine matrix"),
+                    ("4", "Temperature and batch size"),
+                ],
+                "takeaway": "Key goal: leave able to write encode_image, encode_text, cosine — and to refuse generate.",
+            },
+            {
+                "layout": "split",
                 "title": "Two towers, one cosine",
                 "bullets": [
-                    "Image encoder and text encoder, web-scale pairs.",
-                    "Good at retrieval and zero-shot. Not a captioner.",
+                    "ViT or ResNet for the image. A transformer for the text.",
+                    "InfoNCE on the batch (note 4.3).",
+                    "After training you keep the towers, not a fused head.",
                 ],
                 "image": "graphics/5.1-clip/clip-towers.png",
+            },
+            {
+                "layout": "compare",
+                "title": "What the API is allowed to do",
+                "left_title": "CLIP",
+                "left": "Score a pair. Retrieve. Zero-shot by nearest prompt. Freeze the image tower later.",
+                "right_title": "Not CLIP",
+                "right": "Decode a caption. Draw boxes. Guarantee the photo is true. That is BLIP, a detector, or a human.",
+            },
+            {
+                "layout": "split",
+                "title": "A batch of 2 you will write",
+                "bullets": [
+                    r"Unit vectors. \(S_{11}=1.0\), \(S_{12}=0.6\), \(S_{21}=0\), \(S_{22}=0.8\).",
+                    "The diagonal should win each row.",
+                    "One negative is not CLIP scale. It is the algebra.",
+                ],
+                "image": "graphics/5.1-clip/clip-numeric.png",
+            },
+            {
+                "layout": "equation",
+                "title": "InfoNCE on row 1",
+                "equation": r"-\log\frac{\exp(S_{11}/\tau)}{\exp(S_{11}/\tau)+\exp(S_{12}/\tau)}",
+                "notes": [
+                    r"\(\tau=1\): softmax about [0.60, 0.40], NLL about 0.51.",
+                    r"\(\tau=0.07\): match probability about 0.997.",
+                    "CS231N: huge batches exist so you have many negatives.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Small tau, large batch",
+                "bullets": [
+                    r"Learned \(\tau\) is often near 0.07.",
+                    "A batch of 8 has 7 negatives. A batch of 1024 has 1023.",
+                    "Fine-grained word order still needs hard negatives later.",
+                ],
+                "image": "graphics/5.1-clip/clip-tau.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Three calls", "encode_image, encode_text, cosine. No generate."),
+                    ("Temperature", "Same scores, different softmax. Check unit length first."),
+                    ("Next", "If you must write a sentence, that is 5.2."),
+                ],
             },
         ],
     },
@@ -1453,12 +1534,79 @@ DECKS = [
         "title": "5.2 BLIP and Captioning",
         "slides": [
             {
-                "title": "Clean, match, and write",
+                "layout": "title",
+                "title": "BLIP and Captioning",
+                "subtitle": "DATA 443/643  ·  Week 5, note 5.2",
+                "meta": "Week 5  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS231N 2025 L16 (CoCa: add a decoder) and the BLIP paper (ITC, ITM, LM, bootstrap). Original slides; those sources are not copied.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Retrieve versus write"),
+                    ("2", "Filter noisy web pairs"),
+                    ("3", "Three losses: ITC, ITM, LM"),
+                    ("4", "One ITM numeric"),
+                ],
+                "takeaway": "Key goal: CLIP scores; BLIP can decode; the filter is why web alt-text is not the training text.",
+            },
+            {
+                "layout": "compare",
+                "title": "Two jobs that look similar in a demo",
+                "left_title": "Retrieval (CLIP)",
+                "left": "Return a string that already lives in the gallery. Metric: recall@k.",
+                "right_title": "Captioning (BLIP)",
+                "right": "Generate a new string. Metric: CIDEr, CLIP-score, and a human check. Hallucinated objects are the failure.",
+            },
+            {
+                "layout": "split",
+                "title": "Bootstrap, then train",
                 "bullets": [
-                    "Bootstrap captions, filter with image–text matching.",
-                    "ITC + ITM + a language-model loss.",
+                    "Alt-text is often a filename or a SKU.",
+                    "Generate a caption, keep it if ITM still matches.",
+                    "CS231N CoCa adds a decoder. BLIP also cleans the pairs.",
                 ],
                 "image": "graphics/5.2-blip/blip-pipeline.png",
+            },
+            {
+                "layout": "split",
+                "title": "Three losses, one backbone",
+                "bullets": [
+                    "ITC: CLIP-style softmax over the batch.",
+                    "ITM: yes/no on one pair, often a hard negative.",
+                    "LM: next-token, cross-attend to ViT patches.",
+                ],
+                "image": "graphics/5.2-blip/blip-losses.png",
+            },
+            {
+                "layout": "equation",
+                "title": "ITM is a sigmoid, not a batch softmax",
+                "equation": r"\sigma(s)=\frac{1}{1+e^{-s}}",
+                "notes": [
+                    r"Matched \(s=2\): \(\sigma\approx 0.88\), CE \(\approx 0.13\).",
+                    r"Mismatch \(s=-1\): \(\sigma\approx 0.27\), CE \(\approx 0.31\).",
+                    "ITC needs a batch. ITM can score one pair.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Write the ITM table",
+                "bullets": [
+                    "True caption: a red mug on a desk.",
+                    "False caption: a blue bicycle.",
+                    "If you only retrieve, stop at ITC. If you write, you need LM.",
+                ],
+                "image": "graphics/5.2-blip/blip-itm-numeric.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Filter", "Do not train LM on DSC0001.jpg."),
+                    ("Three verbs", "Align, match, decode. Different losses."),
+                    ("Whisper clip", "Encoder–decoder analog. Whisper has no ITC+ITM."),
+                ],
             },
         ],
     },
@@ -1467,20 +1615,81 @@ DECKS = [
         "title": "5.3 Retrieval, Bias, and Robustness",
         "slides": [
             {
-                "title": "Two retrieval directions",
+                "layout": "title",
+                "title": "Retrieval, Bias, and Robustness",
+                "subtitle": "DATA 443/643  ·  Week 5, note 5.3",
+                "meta": "Week 5  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS231N 2025 L16 (prompt sensitivity, distribution shift) and the CLIP paper’s broader-impact discussion. Original slides; those sources are not copied.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Two retrieval directions"),
+                    ("2", "recall@k needs k and a gallery size"),
+                    ("3", "An occupation probe with numbers"),
+                    ("4", "Typographic attacks"),
+                ],
+                "takeaway": "Key goal: a cosine that finds cats also ranks stereotypes. Measure both.",
+            },
+            {
+                "layout": "split",
+                "title": "One space, two queries",
                 "bullets": [
-                    "Text to image, and image to text.",
-                    "Report recall@k and a few failure cases.",
+                    "Text to image: type a string, rank photos.",
+                    "Image to text: a photo, rank captions.",
+                    "Throw away a tower and one direction dies.",
                 ],
                 "image": "graphics/5.3-retrieval-bias/retrieval.png",
             },
             {
-                "title": "Geometry encodes the web",
+                "layout": "split",
+                "title": "Always write k",
                 "bullets": [
-                    "Occupation and gender probes belong in the report.",
-                    "High ImageNet zero-shot does not certify your domain.",
+                    r"Gold in the top \(k\) scores 1 for that query.",
+                    "Average over queries. State gallery size.",
+                    r"On 100k images, recall@1 can look like zero while recall@10 is usable.",
+                ],
+                "image": "graphics/5.3-retrieval-bias/recall-numeric.png",
+            },
+            {
+                "layout": "split",
+                "title": "Occupation probe",
+                "bullets": [
+                    r"Query woman: nurse, then ceo, then cat.",
+                    r"Query man: ceo tied with cat; nurse last.",
+                    "Lab 5 runs this on toy_clip.csv. A résumé ranker needs the same table.",
+                ],
+                "image": "graphics/5.3-retrieval-bias/occupation-numeric.png",
+            },
+            {
+                "layout": "split",
+                "title": "The web is in the geometry",
+                "bullets": [
+                    "Prompts move the query along Week 1’s axes.",
+                    "High ImageNet zero-shot does not certify medical photos.",
+                    "A probe is a fixed list plus a rule for a bad hit.",
                 ],
                 "image": "graphics/5.3-retrieval-bias/vlm-bias.png",
+            },
+            {
+                "layout": "split",
+                "title": "Typographic attack",
+                "bullets": [
+                    "An apple with iPod printed on it.",
+                    "CLIP often reads the overlay first.",
+                    "Same cosine. Different harm than occupations.",
+                ],
+                "image": "graphics/5.3-retrieval-bias/typographic.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Two numbers", "recall@k and a failure case."),
+                    ("Probe", "Document prompts. Do not claim you debiased by deleting an axis."),
+                    ("Lab 5", "nurse / ceo versus man / woman is this lecture in 2-D."),
+                ],
             },
         ],
     },
@@ -1489,20 +1698,71 @@ DECKS = [
         "title": "6.1 Waveforms, Spectrograms, and Time–Frequency Tokens",
         "slides": [
             {
+                "layout": "title",
+                "title": "Spectrograms as Tokens",
+                "subtitle": "DATA 443/643  ·  Week 6, note 6.1",
+                "meta": "Week 6  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS224S 2025 L2 (spectrogram as spectrum + time) and L5 (why not a raw waveform). Original slides; that course is not copied.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "A 1-D wave, then an STFT"),
+                    ("2", "Count frames, not samples"),
+                    ("3", "Patch the picture as in ViT"),
+                    ("4", "Whisper’s 25 ms / 10 ms numbers"),
+                ],
+                "takeaway": "Key goal: leave able to compute T from L, N, H, and to refuse a 16 kHz transformer.",
+            },
+            {
+                "layout": "split",
                 "title": "A wave, then a picture",
                 "bullets": [
-                    "STFT windows the waveform and takes a DFT per frame.",
-                    "The magnitude spectrogram is an image the Week 4 stack can read.",
+                    r"Pressure \(x[n]\) at sampling rate \(f_s\).",
+                    r"STFT: window length \(N\), hop \(H\), then a DFT.",
+                    "Plot magnitudes. Most encoders drop phase.",
                 ],
                 "image": "graphics/6.1-audio-spectrograms/wave-spec.png",
             },
             {
-                "title": "Patches, as in ViT",
+                "layout": "equation",
+                "title": "How many frames?",
+                "equation": r"T=1+\operatorname{floor}\bigl((L-N)/H\bigr)",
+                "notes": [
+                    r"One second at 16 kHz: \(L=16000\).",
+                    r"\(N=400\), \(H=160\) gives \(T=98\).",
+                    "Double the hop: about half as many frames. Frequency bins do not move.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Slide the window",
                 "bullets": [
-                    "Cut time–frequency tiles, flatten, embed, add positions.",
-                    "Write sampling rate, window, hop, and mel versus linear STFT.",
+                    r"Window \(N/f_s=25\) ms, hop \(10\) ms: Whisper’s default.",
+                    "CS224S: frames last long enough to see a phoneme.",
+                    "A raw 16 kHz wave is 16,000 tokens per second.",
+                ],
+                "image": "graphics/6.1-audio-spectrograms/stft-frames.png",
+            },
+            {
+                "layout": "split",
+                "title": "Then patch, as in ViT",
+                "bullets": [
+                    r"An \(80\times 400\) mel grid, \(16\times 16\) tiles: 125 tokens.",
+                    "Time is not quite space. Name which axis is frequency.",
+                    "Lab 6 crops remainders. Do not drop a formant band silently.",
                 ],
                 "image": "graphics/6.1-audio-spectrograms/spec-patches.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Write the front end", "fs, N, hop, mel versus linear."),
+                    ("Bin k", r"Near \(k\cdot f_s/N\) hertz. Check Lab 6’s 440 and 880."),
+                    ("Not a transcript", "Tasks sit on top of the tokens. That is 6.2."),
+                ],
             },
         ],
     },
@@ -1511,20 +1771,81 @@ DECKS = [
         "title": "6.2 Audio Encoders and Speech Models",
         "slides": [
             {
-                "title": "Whisper-style encoder–decoder",
+                "layout": "title",
+                "title": "Audio Encoders and Speech Models",
+                "subtitle": "DATA 443/643  ·  Week 6, note 6.2",
+                "meta": "Week 6  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS224S 2025 L11 (Whisper: log-mel, two convs, GPT-style decoder, 30 s, no CTC). Original slides; that course is not copied.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Whisper: encoder then a causal decoder"),
+                    ("2", "30 seconds is 3000 frames, not 480k samples"),
+                    ("3", "Special tokens: language, task, time"),
+                    ("4", "CLAP: CLIP for audio"),
+                ],
+                "takeaway": "Key goal: pick Whisper vs CLAP by the head, not by the spectrogram.",
+            },
+            {
+                "layout": "split",
+                "title": "Whisper is translation, with a spectrogram",
                 "bullets": [
-                    "Log-mel in, transformer encoder, text decoder.",
-                    "Same Week 3 block. New input. Transcript out.",
+                    "Log-mel in. Two convs. Transformer encoder.",
+                    "Decoder is GPT-style and causal. CS224S: no CTC.",
+                    "Cross-attention into encoder states. Same as note 3.3.",
                 ],
                 "image": "graphics/6.2-audio-encoders/whisper.png",
             },
             {
-                "title": "CLAP is CLIP for audio",
+                "layout": "equation",
+                "title": "Why the spectrogram exists",
+                "equation": r"30\,\mathrm{s}\times 16\,\mathrm{kHz}=480{,}000 \quad\text{vs}\quad 30/0.010=3000",
+                "notes": [
+                    "3000 mel frames, 80 bands, then a stride-2 stem.",
+                    "About 1500 encoder steps, not a 480k-token transformer.",
+                    "Long audio: 30 s windows. Timestamp tokens shift the window.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Thirty seconds, then tokens",
                 "bullets": [
-                    "Two towers, cosine, paired captions.",
-                    "Retrieval and zero-shot tags, not a transcript.",
+                    r"Special tokens: language, <|transcribe|>, timestamps.",
+                    "The loss is next-token on the text, conditioned on audio.",
+                    "Timestamps are vocabulary, not a second model.",
+                ],
+                "image": "graphics/6.2-audio-encoders/whisper-chunk.png",
+            },
+            {
+                "layout": "split",
+                "title": "CLAP is CLIP for sound",
+                "bullets": [
+                    "Audio tower and text tower. InfoNCE on captions.",
+                    "Rank clips by cosine. Do not decode a transcript.",
+                    "The text tower may be bidirectional. Whisper’s decoder may not.",
                 ],
                 "image": "graphics/6.2-audio-encoders/clap.png",
+            },
+            {
+                "layout": "split",
+                "title": "Rank, then stop",
+                "bullets": [
+                    "Cosines 0.11, 0.72, 0.40. Rank is clip 2, 3, 1.",
+                    "If you needed the words in clip 2, call Whisper on the wave.",
+                    "Same spectrogram tokens. Different head.",
+                ],
+                "image": "graphics/6.2-audio-encoders/clap-rank.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Transcript", "Whisper. Subtitles and timestamps."),
+                    ("Search", "CLAP. Zero-shot tags. Dual retrieval."),
+                    ("Project", "Do not concat Whisper states into CLIP without naming the rates."),
+                ],
             },
         ],
     },
@@ -1533,20 +1854,71 @@ DECKS = [
         "title": "6.3 Fusion, Unified Embeddings, and Data Scarcity",
         "slides": [
             {
-                "title": "Early, late, cross-attention",
+                "layout": "title",
+                "title": "Fusion, Unified Embeddings, and Data Scarcity",
+                "subtitle": "DATA 443/643  ·  Week 6, note 6.3",
+                "meta": "Week 6  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from CMU 11-777 (early / late / cross-attention fusion) and note 4.1’s coordinated baseline. Original slides; that course is not copied.",
+            },
+            {
+                "layout": "agenda",
+                "title": "Lecture plan",
+                "agenda": [
+                    ("1", "Early, late, cross-attention"),
+                    ("2", "Concat grows width; add needs a shared axis"),
+                    ("3", "The data pyramid"),
+                    ("4", "What to write in a report"),
+                ],
+                "takeaway": "Key goal: name the fusion and the missing-modality plan. Cosine is not cross-attention.",
+            },
+            {
+                "layout": "split",
+                "title": "Three places to fuse",
                 "bullets": [
-                    "Early concat is simple and brittle if audio is missing.",
-                    "Cross-attention lets text query audio keys and values.",
+                    "Early: concat features, one backbone. Brittle if audio is missing.",
+                    "Late: a model each, then combine scores.",
+                    "Cross-attention: queries from one stream, K and V from the other.",
                 ],
                 "image": "graphics/6.3-fusion-scarcity/fusion.png",
             },
             {
-                "title": "Labeled audio is scarce",
+                "layout": "split",
+                "title": "Concat versus add",
                 "bullets": [
-                    "Web text dwarfs image–text, which dwarfs transcribed audio.",
-                    "Transfer from CLIP/Whisper is the usual project move.",
+                    r"\([a;v]\in\mathbb{R}^{256}\) if each is 128-D.",
+                    r"Add is illegal if widths differ. Map first: \(W_v\in\mathbb{R}^{128\times 256}\).",
+                    "CLIP two-towers never concat pixels with token ids.",
+                ],
+                "image": "graphics/6.3-fusion-scarcity/concat-add.png",
+            },
+            {
+                "layout": "equation",
+                "title": "A missing microphone",
+                "equation": r"[a;v]\in\mathbb{R}^{256}\quad\text{needs both streams}",
+                "notes": [
+                    "Early concat with no dropout assumes audio is there.",
+                    "Late towers can skip a cosine if the mic dies.",
+                    "Cross-attention can mask a whole key set.",
+                ],
+            },
+            {
+                "layout": "split",
+                "title": "Pretrain where the data is thick",
+                "bullets": [
+                    "Web text, then image–text, then transcribed audio, then labeled tasks.",
+                    "Freeze Whisper or CLIP. Train a small head on 400 rows.",
+                    "Do not train a joint stack from scratch on 400 clips.",
                 ],
                 "image": "graphics/6.3-fusion-scarcity/scarcity.png",
+            },
+            {
+                "layout": "cards",
+                "title": "What to take from this lecture",
+                "cards": [
+                    ("Name it", "Early, late, or cross-attention. Which loss sees both streams?"),
+                    ("Count it", "Unpaired hours, paired hours, labeled rows."),
+                    ("Lab 6", "Concat versus add in 4-D is this slide in miniature."),
+                ],
             },
         ],
     },
@@ -2051,7 +2423,13 @@ def _body(slide: dict) -> str:
     if layout == "title":
         sub = html_lib.escape(slide.get("subtitle") or "")
         meta = html_lib.escape(slide.get("meta") or "").replace("  ·  ", "<br/>")
-        return f"<h1>{title}</h1><p class='subtitle'>{sub}</p><p class='meta'>{meta}</p>"
+        credit = html_lib.escape(slide.get("credit") or "")
+        credit_html = f"<p class='credit'>{credit}</p>" if credit else ""
+        return (
+            f"<div class='title-main'><h1>{title}</h1>"
+            f"<p class='subtitle'>{sub}</p><p class='meta'>{meta}</p></div>"
+            f"{credit_html}"
+        )
     if layout == "agenda":
         rows = []
         for row in slide.get("agenda") or []:
