@@ -112,58 +112,84 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Pretraining teaches <strong>next token on the web</strong>. <strong>Supervised fine-tuning (SFT)</strong> teaches a model to follow <strong>instructions</strong>: a user message, a demonstration of a good reply. Same transformer, different data.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>Supervised fine-tuning (SFT)</strong> is next-token training on <strong>instruction–answer</strong> pairs, with the prompt masked.</p>
-<p><strong>What.</strong> Pretrain already speaks. SFT teaches format: follow the user, answer as an assistant. Loss on the <strong>answer tokens</strong>, not the prompt.
-<strong>Why.</strong> A base LM completes text; it does not reliably follow “Write a bullet list.” Preferences (Week 9) come after this.
-<strong>Architecture.</strong> Same transformer. Dataset of (prompt, answer). Causal mask unchanged. Label mask: prompt positions are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>100</mn></mrow></math> / ignored.
-<strong>How.</strong> Collect or write pairs. Train a few epochs. Too many epochs: forget the base (note 8.2).
-<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><msub><mo>&#x02211;</mo><mrow><mi>t</mi><mo>&#x02208;</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow></mrow></msub><mi>log</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>prompt</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>.
-<strong>Tradeoffs.</strong> + Fast behavior change. − Copies answers (including bad ones); can forget; not a preference model; noisy instruction data is method.
-</p>
-</blockquote>
-<h2>1. Pretrain, then SFT</h2>
-<p>The pretrained decoder already assigns probability to every continuation. It does not, by default, answer as an assistant, refuse a harmful ask, or stay in a JSON schema. SFT continues maximum-likelihood training, but now each example is a <strong>prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> response</strong> pair and you typically supervise only the response tokens (mask the prompt in the loss).</p>
-<p><img alt="Pretraining then instruction SFT" src="files/data-643/graphics/8.1-sft-instructions/sft.png" /></p>
-<p>Instruction fine-tuning is the <strong>first</strong> stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.</p>
-<p>If the concatenated string has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub></mrow></math> prompt tokens and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> response tokens, the SFT loss averages over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> positions, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></math>. Otherwise the model spends gradient on imitating the user.</p>
-<hr />
-<h2>2. What an instruction pair looks like</h2>
-<p>A row is not a Wikipedia paragraph. It is a task plus an answer you are willing to imitate:</p>
+<h2>1. What supervised fine-tuning (SFT) is</h2>
+<p>The pretrained decoder already assigns probability to every continuation. It does not, by default, answer as an assistant, refuse a harmful ask, or stay in a JSON schema. <strong>Supervised fine-tuning (SFT)</strong> continues maximum-likelihood training, but now each example is a <strong>prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> response</strong> pair and you typically supervise only the response tokens (mask the prompt in the loss).</p>
+<p>Pretrain already speaks. SFT teaches <strong>format</strong>: follow the user, answer as an assistant. A row is not a Wikipedia paragraph. It is a task plus an answer you are willing to imitate:</p>
 <ul>
 <li>user: “Summarize this abstract in two sentences.”</li>
 <li>assistant: the two sentences.</li>
 </ul>
-<p>System prompts, few-shot exemplars, and tool schemas are part of the <strong>prompt design</strong>, not a separate model. Wording changes the SFT target: “be brief” and “write a memo” are different labels.</p>
+<p>Instruction fine-tuning is the <strong>first</strong> stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.</p>
+<p>If the concatenated string has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub></mrow></math> prompt tokens and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> response tokens, the SFT loss averages over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> positions, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></math>. Otherwise the model spends gradient on imitating the user.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>A base LM completes text; it does not reliably follow “Write a bullet list.” You need a behavior change—assistant turns, schemas, a house style—without inventing a new architecture. SFT is the cheap way to copy demonstrations you trust.</p>
+<p>Preferences (Week 9) come after this. SFT can overfit to a style; it cannot invent a reward for “humans prefer B over A.” That is why the stack is pretrain <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> SFT <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> preferences, not “skip SFT and run RLHF on a base model.”</p>
+<p>Quality beats volume once you have a few thousand clean pairs. Noisy scraped “instructions” teach the noise. If you mix many tasks, you still risk <strong>forgetting</strong> the pretrain distribution (note <strong>8.2</strong>). Token accounting belongs in the same paragraph as “why”: if you report “2,000 SFT rows” without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math>, you have not said how much supervision you ran. Ten-token answers and 400-token answers are different datasets.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Same transformer. The causal mask is unchanged. What changes is the <strong>dataset</strong> and the <strong>label mask</strong>.</p>
+<p>Each training row is a concatenated prompt and answer. Prompt positions are marked <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>100</mn></mrow></math> / ignored so they do not enter the mean loss. You still <strong>forward</strong> the prompt: the model must condition on it. You just zero those positions in the loss. That is a compute choice as well as a learning choice.</p>
+<p><img alt="Pretraining then instruction SFT" src="files/data-643/graphics/8.1-sft-instructions/sft.png" /></p>
 <p><img alt="An instruction paired with a demonstration" src="files/data-643/graphics/8.1-sft-instructions/pair.png" /></p>
 <p><img alt="Loss mask on the response tokens" src="files/data-643/graphics/8.1-sft-instructions/sft-mask.png" /></p>
-<p>Quality beats volume once you have a few thousand clean pairs. Noisy scraped “instructions” teach the noise. If you mix many tasks, you still risk <strong>forgetting</strong> the pretrain distribution (note <strong>8.2</strong>).</p>
+<p>System prompts, few-shot exemplars, and tool schemas are part of the <strong>prompt design</strong>, not a separate model. Wording changes the SFT target: “be brief” and “write a memo” are different labels. Write the template you used (roles, delimiters, whether you included chain-of-thought). Evaluate with the same template. A project that “just fine-tuned LLaMA” without showing the instruction mix is incomplete.</p>
 <hr />
-<h2>3. Prompt design, as method</h2>
-<p>Write the template you used (roles, delimiters, whether you included chain-of-thought). Evaluate with the same template. A project that “just fine-tuned LLaMA” without showing the instruction mix is incomplete. SFT can overfit to a style; it cannot invent a reward for “humans prefer B over A.” That is Week 9.</p>
-<p>Token accounting: if you report “2,000 SFT rows” without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math>, you have not said how much supervision you ran. Ten-token answers and 400-token answers are different datasets. Masking the prompt is also a compute choice: you still <strong>forward</strong> the prompt (the model must condition on it); you just zero those positions in the loss.</p>
+<h2>4. How it works, step by step</h2>
+<ol>
+<li><strong>Collect or write pairs.</strong> A pair must include a <strong>prompt that looks like test time</strong> and a <strong>demonstration you would accept</strong>. A pretraining document has neither role.</li>
+<li><strong>Concatenate</strong> prompt and answer. Build a 0/1 mask that is zero on the user side and one on the assistant side.</li>
+<li><strong>Train a few epochs</strong> of next-token loss on the masked positions. Too many epochs: forget the base (note <strong>8.2</strong>).</li>
+<li><strong>Filter volume.</strong> Batch of two: one 80-token medical pair (all response tokens clean), one 800-token forum thread with a junk target. Uniform average over tokens <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> the forum dominates 10:1. That is why 80 perfect pairs should lead the first SFT run, and the 80,000 threads should be filtered or down-weighted.</li>
+<li><strong>Keep the template.</strong> If you include chain-of-thought in SFT, the demonstration <strong>is</strong> the trace plus the answer. At eval you must ask for the same format or you are measuring a different target. SFT with <code>### Instruction:</code> and eval with ChatML roles is that bug.</li>
+</ol>
+<p>Chalk the mask as a 0/1 vector under the tokens. Gradient hits only the response positions. The causal LM still predicts every next token; the loss does not.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>SFT is next-token training restricted to answer tokens:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><munder><mo>&#x02211;</mo><mrow><mi>t</mi><mo>&#x02208;</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow></mrow></munder><mi>log</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>prompt</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>If every sequence in a batch of size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi></mrow></math> has prompt length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub></mrow></math> and response length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math>, the number of positions that enter the mean is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><msub><mi>T</mi><mi>r</mi></msub></mrow></math>, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mo stretchy="false">&#x00028;</mo><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. The fraction of the concat that is supervised is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<p>The pretrained objective was the same product of conditionals without the mask. SFT did not add a new head. It changed which tokens count.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Fast behavior change on the same transformer: assistant turns, schemas, and house style without a new net.</li>
+<li>Masking the prompt keeps gradient on the demonstration you actually want copied.</li>
+<li>A few thousand clean pairs often beat a huge noisy scrape.</li>
+<li>Preference methods (Week 9) have a coherent instruction policy to sit on top of.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>SFT copies answers, including bad ones. Noisy instruction data is method, not a footnote.</li>
+<li>Too many epochs on a narrow mix forgets the base (note <strong>8.2</strong>).</li>
+<li>It is not a preference model. It cannot say “B is better than A” unless B was the demonstration.</li>
+<li>Uniform token averaging lets long junk threads dominate short clean pairs.</li>
+<li>A template mismatch (train one format, eval another) makes a fine loss look like a failed demo.</li>
+</ul>
+<p><strong>When not to.</strong> Do not use SFT as a substitute for a reward or a preference loop. Do not dump the whole web forum into the first run when you already have 80 trusted pairs.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p>About <strong>30–35 minutes</strong> at the board: pretrain vs SFT on one toy string, mask the prompt, then a good pair vs a noisy scrape. Play Karpathy <strong>14:14–21:05</strong> (finetuning into an assistant, ~7 min). Lab 8 is LoRA/forgetting, not an instruction dump.</p>
 <p>Chalk the mask as a 0/1 vector under the tokens. If nobody can say why the zeros sit on the user side, replay that minute before the video.</p>
 <hr />
-<h2>5. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Token ids, cartoon: prompt <code>[user] List two colors.</code> is 6 tokens; response <code>red blue</code> is 3 tokens (including a leading space, say). The causal LM still predicts every next token, but the <strong>loss mask</strong> is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn></mrow></math>. Gradient hits only the three response positions.</p>
 <p>Batch of two: one 80-token medical pair (all response tokens clean), one 800-token forum thread with a junk target. Uniform average over tokens <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> the forum dominates 10:1. That is why 80 perfect pairs should lead the first SFT run, and the 80,000 threads should be filtered or down-weighted.</p>
 <p>A pair must include a <strong>prompt that looks like test time</strong> and a <strong>demonstration you would accept</strong>. A pretraining document has neither role.</p>
 <p>If you include chain-of-thought in SFT, the demonstration <strong>is</strong> the trace plus the answer. At eval you must ask for the same format or you are measuring a different target. That is prompt design as method, not a style footnote.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Training on the whole concat equally, so the model learns to mimic the user.</li>
 <li>Equating “more rows” with “better SFT” when most rows are noisy.</li>
 <li>Thinking SFT is RLHF. SFT copies answers; preferences come in Week 9.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>10. Video</h2>
 <p><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — Intro to Large Language Models</a>. Play the <strong>post-training / assistant</strong> section <strong>14:14–21:05</strong>. Pause when he contrasts the base model with the assistant: that is SFT. RLHF in the appendix (<strong>21:05+</strong>) waits for Week 9.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Why mask the prompt tokens in the SFT loss instead of training next-token on the whole concatenated string equally?</p>
@@ -189,7 +215,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 

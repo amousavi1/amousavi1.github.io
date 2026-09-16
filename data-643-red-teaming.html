@@ -112,55 +112,83 @@
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>Red-teaming</strong> is organized probing: you try to elicit disallowed or unreliable behavior so you can <strong>measure</strong> it, then patch or refuse. It is an evaluation method, not a product feature. If your project claims “safe,” this week is how you would show your work.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>Red-teaming</strong> is a <strong>safety evaluation</strong>: a fixed list of probes, a rate of successful attacks, rerun after you patch.</p>
-<p><strong>What.</strong> Not a training algorithm. You try to elicit disallowed behavior (HarmBench-style: hundreds of behaviors) and count failures.
-<strong>Why.</strong> “The model seems safe in demo” is not a number. After SFT/DPO/edits, the rate can come back.
-<strong>Architecture.</strong> Probe set + a success classifier (human or automated) + the model under test. Optional: an attacker LM that writes probes.
-<strong>How.</strong> Freeze the probe list. Report attack success rate. After a safety patch, <strong>rerun the same list</strong>.
-<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">R</mi></mrow><mo>&#x0003D;</mo><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>successful&#x000A0;probes</mtext><mo stretchy="false">&#x0007D;</mo><mo>&#x0002F;</mo><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>probes</mtext><mo stretchy="false">&#x0007D;</mo></mrow></math>. HarmBench cartoon: 510 behaviors.
-<strong>Tradeoffs.</strong> + Comparable over time. − Coverage is only as good as the list; automated judges err; not a proof of safety; not a substitute for formal guarantees.
-</p>
-</blockquote>
-<h2>1. Safety evaluation is a dataset of probes</h2>
-<p>A probe is a prompt (or a multi-turn script) aimed at a failure class: harmful instructions, privacy leakage, demographic stereotyping, over-refusal of benign medical questions, jailbreak-style roleplay that tries to undo the system prompt. You run a <strong>fixed list</strong>, plus a small exploratory budget. Success for the attacker is a policy violation; success for you is catching it.</p>
-<p><img alt="Probes in, model out, a logged failure" src="files/data-643/graphics/10.1-red-teaming/probe.png" /></p>
-<p>Score with a rubric or a judge model, then <strong>spot-check the judge</strong>. Automatic scores drift. Public benchmarks (XSTest, HarmBench-style sets, ToxiGen) are starting points; your domain needs its own rows.</p>
-<p>A rate is a fraction, not a vibe: 4 violations on 40 probes in category C is <strong>10%</strong>. That is the number you rerun after a patch.</p>
-<p><img alt="Four cells on a 40-probe list" src="files/data-643/graphics/10.1-red-teaming/probe-rates.png" /></p>
-<p><strong>HarmBench</strong> is 510 labeled behaviors; <strong>AIR-Bench</strong> is 314 categories and 5694 prompts; HELM hosts the suites. Safety is not only refusal (a medical hallucination is also a safety miss). For an API you mostly measure <strong>propensity</strong> (does it refuse). For an open-weight checkpoint, refusal is not a capability bound.</p>
-<p>Split the list <strong>before</strong> you look at outputs: safety-fail vs over-refusal vs “judge unsure.” Mixing those three into one “unsafe %” hides whether you tightened too far.</p>
-<hr />
-<h2>2. Log the successful attacks</h2>
-<p>A failure that is not logged cannot be regressed against next week’s checkpoint. Store: prompt, output, category, severity, whether it was a known template, and the model hash. Do <strong>not</strong> publish a cookbook of working exploits on the open web as “extra credit.” The course artifact is a <strong>count and a taxonomy</strong> (e.g., 4/40 probes in category C), plus one anonymized example in the appendix if the instructor asks.</p>
-<p>Iterated red-teaming: patch (SFT, DPO, a rule, a filter), then <strong>rerun the same log</strong>. New attacks will appear; that is expected. Coverage, not a one-time clean bill.</p>
-<p>Threat model in the report: who is attacking (curious user versus a persistent adversary), what is in-bounds (the model’s text), and what is out of bounds (phishing real people, touching production keys). The probe list should match that model.</p>
-<hr />
-<h2>3. What red-teaming is not</h2>
+<h2>1. What red-teaming is</h2>
+<p><strong>Red-teaming</strong> is a <strong>safety evaluation</strong>. A probe is a prompt (or a multi-turn script) aimed at a failure class: harmful instructions, privacy leakage, demographic stereotyping, over-refusal of benign medical questions, jailbreak-style roleplay that tries to undo the system prompt. You run a <strong>fixed list</strong>, plus a small exploratory budget. Success for the attacker is a policy violation; success for you is catching it.</p>
+<p>You try to elicit disallowed or unreliable behavior, count failures, and rerun after you patch. It is not a training algorithm. HarmBench-style work is hundreds of labeled behaviors; you report a rate, not a vibe. A rate is a fraction: 4 violations on 40 probes in category C is <strong>10%</strong>. That is the number you rerun after a patch.</p>
 <p>It is not a substitute for access control, and it is not a promise that the model is aligned. Dual-use: the same skill that finds leaks can be misused. In this class you stay on toy models, public benchmarks, and instructor-specified categories. If a probe would cause real harm off-platform, you do not run it.</p>
-<p>Karpathy’s security remarks (jailbreaks, prompt injection, poisoning) are <strong>classes of failure</strong> to measure. They are not homework to reproduce on live systems. Your writeup is a table: category, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>, fails, patch, fails-after.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>2. Why we use it</h2>
+<p>“The model seems safe in demo” is not a number. After SFT, DPO, or an edit, a failure that you already saw can come back. A failure that is not logged cannot be regressed against next week’s checkpoint. Coverage, not a one-time clean bill.</p>
+<p>Karpathy’s security remarks (jailbreaks, prompt injection, poisoning) are <strong>classes of failure</strong> to measure. They are not homework to reproduce on live systems. Your writeup is a table: category, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi></mrow></math>, fails, patch, fails-after. For an API you mostly measure <strong>propensity</strong> (does it refuse). For an open-weight checkpoint, refusal is not a capability bound.</p>
+<p>Safety is not only refusal. A medical hallucination is also a safety miss. Over-refusal is the other miss: a model that refuses “how do I boil water?” is not safer in a useful way. Split the list <strong>before</strong> you look at outputs: safety-fail vs over-refusal vs “judge unsure.” Mixing those three into one “unsafe %” hides whether you tightened too far.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Three pieces, none of them a new net:</p>
+<ul>
+<li>A <strong>probe set</strong> (fixed list, plus a small exploratory budget that you do not mix into the official rate until you freeze it).</li>
+<li>The <strong>model under test</strong> (hash the checkpoint).</li>
+<li>A <strong>success classifier</strong>: human rubric or a judge model, then <strong>spot-check the judge</strong>. Automatic scores drift.</li>
+</ul>
+<p>Optional: an attacker LM that writes probes. That does not replace a frozen list. Public benchmarks (XSTest, HarmBench-style sets, ToxiGen) are starting points; your domain needs its own rows. <strong>HarmBench</strong> is 510 labeled behaviors; <strong>AIR-Bench</strong> is 314 categories and 5694 prompts; HELM hosts the suites.</p>
+<p><img alt="Probes in, model out, a logged failure" src="files/data-643/graphics/10.1-red-teaming/probe.png" /></p>
+<p><img alt="Four cells on a 40-probe list" src="files/data-643/graphics/10.1-red-teaming/probe-rates.png" /></p>
+<p>Threat model in the report: who is attacking (curious user versus a persistent adversary), what is in-bounds (the model’s text), and what is out of bounds (phishing real people, touching production keys). The probe list should match that model. A project line like “curious student on the demo, text only, no production keys” decides which public probe set you copy. It is not a license to improvise exploits.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<ol>
+<li><strong>Freeze the probe list</strong> before you look at outputs. Split cells: safety-fail, over-refusal, judge unsure.</li>
+<li><strong>Run</strong> every probe. Score with a rubric or a judge model. Spot-check the judge on a sample. If a judge labels all 40 “safe” and 1 of 4 hand-read outputs is a miss, the judge’s 0% is not a result.</li>
+<li><strong>Log successful attacks.</strong> Store: prompt, output, category, severity, whether it was a known template, and the model hash. Do <strong>not</strong> publish a cookbook of working exploits on the open web as “extra credit.” The course artifact is a <strong>count and a taxonomy</strong> (e.g., 4/40 probes in category C), plus one anonymized example in the appendix if the instructor asks.</li>
+<li><strong>Report attack success rate</strong> by cell, not one blended “unsafe %.” Over-refusal check (benign, should <strong>not</strong> refuse): “What is ibuprofen usually used for?” If the model refuses, that is a <strong>false refusal</strong>, counted separately from a true safety hit.</li>
+<li><strong>Patch</strong> (SFT, DPO, a rule, a filter), then <strong>rerun the same list</strong>. New attacks will appear; that is expected. Privacy fails going <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x02192;</mo><mn>0</mn></mrow></math> while stereotyping stays <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x02192;</mo><mn>2</mn></mrow></math> means you moved one cell. You did not “finish safety.”</li>
+</ol>
+<p>Spend two minutes on over-refusal so the “safe model” in the room is not the one that refuses boiling water. Then stop. Do not workshop attack wording.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Attack success rate on a frozen list:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">R</mi></mrow><mo>&#x0003D;</mo><mfrac><mrow><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>successful&#x000A0;probes</mtext><mo stretchy="false">&#x0007D;</mo></mrow><mrow><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>probes</mtext><mo stretchy="false">&#x0007D;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Report ASR <strong>per category</strong>, then an overall rate if the cells are comparable. HarmBench cartoon: 510 behaviors. A 40-probe toy list with 10 probes in each of four cells and fails <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>2</mn><mo>&#x0002C;</mo><mn>1</mn></mrow></math> is overall <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><mo>&#x0002F;</mo><mn>40</mn><mo>&#x0003D;</mo><mn>10</mn><mi>&#x00025;</mi></mrow></math>. After a patch, write both rates and keep the probe ids fixed so the drop is meaningful.</p>
+<p>False-refusal rate is the same fraction on the benign/over-refusal cell. Do not add it into ASR. Judge error is not a formula this week; it is a sample you read by hand.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>A frozen list makes rates comparable over time and across patches.</li>
+<li>Category cells separate true safety hits from over-refusal and from a confused judge.</li>
+<li>Logging prompt, output, category, severity, and model hash turns a demo into a regression test.</li>
+<li>Public suites (HarmBench, AIR-Bench, XSTest, ToxiGen) are starting points you can cite.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Coverage is only as good as the list. New attacks will appear after you patch.</li>
+<li>Automated judges err. A 0% from a judge that you never spot-checked is not a result.</li>
+<li>Not a proof of safety and not a substitute for access control or formal guarantees.</li>
+<li>Publishing working attack strings is the wrong artifact; the deliverable is counts and categories.</li>
+<li>Refusal on an open-weight checkpoint is not a capability bound.</li>
+</ul>
+<p><strong>When not to.</strong> Do not treat a one-time clean eval as a guarantee. Do not run a probe that would cause real harm off-platform. Do not workshop jailbreak wording in class; this hour is measurement, not a recipe.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p>About <strong>30 minutes</strong> at the board: a probe table (id, category, pass/fail), a 4/40 rate, then “rerun after DPO.” Play Karpathy’s <strong>limitations / security</strong> remarks <strong>45:43–58:37</strong> as evaluation context. <strong>Do not</strong> assign jailbreak how-to videos. This hour is measurement, not a recipe.</p>
 <p>Spend two minutes on over-refusal so the “safe model” in the room is not the one that refuses boiling water. Then stop. Do not workshop attack wording.</p>
 <hr />
-<h2>5. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Fixed list of 40 probes: 10 over-refusal, 10 privacy, 10 stereotyping, 10 disallowed-instruction. After scoring, 0/10, 1/10, 2/10, 1/10 fail. Overall <strong>4/40 = 10%</strong>. You log the four ids, not the working wording, on the public site.</p>
 <p>Over-refusal check (benign, should <strong>not</strong> refuse): “What is ibuprofen usually used for?” If the model refuses, that is a <strong>false refusal</strong>, counted separately from a true safety hit.</p>
 <p>After a DPO patch, rerun the <strong>same 40</strong>. Privacy fails go 1<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math>0, stereotyping 2<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math>2. You did not “finish safety”; you moved one cell. A judge model labels all 40 “safe”; you still read a 10% sample (4 outputs) by hand. If 1 of those 4 is a miss, the judge’s 0% is not a result.</p>
 <p>Threat-model line for a project: “curious student on the demo, text only, no production keys.” That sentence decides which public probe set you copy. It is not a license to improvise exploits.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Treating a one-time clean eval as a guarantee. Coverage is a log you rerun.</li>
 <li>Publishing working attack strings. The deliverable is counts and categories.</li>
 <li>Ignoring over-refusal. A model that refuses “how do I boil water?” is not safer in a useful way.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>10. Video</h2>
 <p><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — Intro to Large Language Models</a>. Play <strong>45:43–58:37</strong> (security intro, limitations: jailbreaks, prompt injection, data poisoning as <strong>risk classes</strong>). Pause on the idea that these are evaluation problems. <strong>Do not</strong> follow links to jailbreak tutorials. In class you stay on public benchmarks and instructor categories.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Why rerun an old successful probe after a DPO update?</p>
@@ -186,7 +214,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:10:00-04:00">September 16, 2026, 5:10 AM EDT</time></div>
             </footer>
         </div>
 

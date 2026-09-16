@@ -111,40 +111,75 @@
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Facts can live in <strong>weights</strong> (parametric) or in an <strong>external store</strong> you look up (non-parametric). <strong>RAFT</strong> here is <strong>retrieval-augmented fine-tuning</strong>: you train the model <em>with</em> retrieved documents in context so it learns to use them, not only to recite the pretrain snapshot.</p>
-<p>Students have not had Week 14 yet. Before RAFT, here is <strong>RAG in one page</strong>. Week 14.1 is the full first-time lecture (architecture, cosine, Lewis’s sum, pros and cons). Do not skip that later.</p>
+<p>Students have not had Week 14 yet. Before RAFT, here is <strong>RAG in one page</strong>. Week 14.1 is the full pipeline (architecture, cosine, Lewis’s sum, and the tradeoffs). Do not skip that later.</p>
 <p><strong>RAG (retrieval-augmented generation)</strong> means: look up relevant passages from a collection you control, put them in the prompt, then generate the answer from those passages. The language model is usually <strong>frozen</strong>. You update a fact by editing a document and re-indexing, not by retraining. The index must store <strong>vector + raw text + id</strong> so you can cite. Retrieval can miss; then generation cannot recover. That is why this hour exists: a frozen reader often <strong>ignores</strong> a good snippet. RAFT is how you train the reader.</p>
 <hr />
-<blockquote>
-<p><strong>First time RAFT appears.</strong> (RAG itself is defined in one page above, and fully taught in Week 14.1.) <strong>RAFT</strong> is retrieval-augmented <strong>fine-tuning</strong>.</p>
-<p><strong>What.</strong> Train the reader <strong>with</strong> retrieved snippets in context (gold + <strong>distractors</strong>) so it learns to cite or ignore, not only recite pretrain weights.
-<strong>Why.</strong> Vanilla RAG at test time with a frozen SFT model often <strong>ignores</strong> the snippet. Index edits then do nothing.
-<strong>Architecture.</strong> Same retrieve-then-generate stack as RAG. The difference is the <strong>training rows</strong> and that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> <strong>changes</strong>. Loss is SFT on the answer given the bundle.
-<strong>How.</strong> Build rows: question + top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> texts (some irrelevant) + target answer that uses gold and skips junk. Lab 10’s overlap retriever is the toy ranker.
-<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><msub><mo>&#x02211;</mo><mrow><mi>t</mi><mo>&#x02208;</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow></mrow></msub><mi>log</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover></mrow></math> containing distractors on purpose.
-<strong>Tradeoffs.</strong> + Reader learns to use the open book. − Still SFT (can copy); needs a retriever at train time; not a new architecture; gold-only rows never practice skip.
-</p>
-</blockquote>
-<h2>1. RAFT: train the reader, not only the index</h2>
-<p>A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some <strong>distractors</strong>), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”</p>
+<h2>1. What RAFT is</h2>
+<p><strong>RAFT</strong> is retrieval-augmented <strong>fine-tuning</strong>. Vanilla RAG (the one-page primer above; the full pipeline is Week 14.1) retrieves at test time and hopes a frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some <strong>distractors</strong>), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”</p>
+<p>You are not inventing a new transformer. You are changing the <strong>training distribution</strong> for a retrieve-then-generate stack. If every training snippet is gold, the model never practices rejecting junk. Include negatives. If you never train with retrieval, editing the index will not fix a model that ignores the index. Calling any retrieve-then-generate “RAFT” is the usual mix-up: RAG is often the same stack with a frozen reader; RAFT <strong>trains</strong> the reader on the bundle.</p>
+<p><strong>Parametric</strong> recall versus <strong>open-book</strong> is the other half of the name. Weights are always on and hard to update (ROME, SFT, forgetting). A datastore, BM25, embeddings, or a kNN over hidden states (kNN-LM, RETRO, memorizing transformers) is memory you can edit by writing a snippet. Hybrids are the product default: parametric priors plus retrieved evidence. Hallucination often means the parametric prior won over the snippet. RAFT is how you train that fight.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>Vanilla RAG at test time with a frozen SFT model often <strong>ignores</strong> the snippet. Index edits then do nothing. You changed the PDF; the reader still recites last year’s salary from pretrain weights. That failure is a <strong>reader</strong> bug, not an index bug.</p>
+<p>Need daily-changing policy PDFs? Non-parametric plus a RAFT-style reader. Need style and instruction following? Parametric SFT/LoRA. Need to correct one biography? Try an edit <strong>and</strong> a datastore row; measure both. Prefer the PDF if the number moves every month. ROME on “Alice’s salary” would be parametric; updating a salary in a PDF and re-indexing is non-parametric.</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> and gold is ranked 3rd, retrieval failed before the reader ran. Raise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, fix chunking, or change overlap. If gold is in the prompt and the answer still recites the pretrain snapshot, that is RAFT’s job.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Same retrieve-then-generate stack as RAG. The difference is the <strong>training rows</strong> and that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> <strong>changes</strong>.</p>
+<p><strong>Index (non-parametric).</strong> Documents, chunks, a ranker. Lab 10’s token-overlap retriever is the toy ranker. Cosine on embeddings is the grown-up version (Week 14). RAFT does not care which retriever you used; it cares that <strong>training rows look like test rows</strong>, distractors included. Overwriting a dict key (Lab 10) is a parametric cartoon, not this stack.</p>
+<p><strong>Bundle.</strong> Question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi></mrow></math> plus top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> texts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub></mrow></math>. Some of those texts are gold; some are distractors or stale rows on purpose.</p>
+<p><strong>Reader.</strong> The same LM as SFT. Loss is next-token on the target answer given the bundle. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> moves.</p>
 <p><img alt="Retrieve, then fine-tune the reader on the bundle" src="files/data-643/graphics/10.3-raft-memory/raft.png" /></p>
-<p>If every training snippet is gold, the model never practices rejecting junk. Include negatives. If you never train with retrieval, editing the index will not fix a model that ignores the index. RAFT is still SFT: the labels are answers <em>given the bundle</em>, not a new architecture.</p>
-<p><strong>Parametric</strong> recall versus <strong>open-book</strong>. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.</p>
-<hr />
-<h2>2. Parametric versus non-parametric memory</h2>
-<p><strong>Parametric:</strong> the MLP and attention weights. Fast, always on, hard to update (ROME, SFT, forgetting). <strong>Non-parametric:</strong> a datastore, BM25, embeddings, a kNN over hidden states (kNN-LM, RETRO, memorizing transformers). You update a fact by writing a snippet, not by locating a layer.</p>
 <p><img alt="Weights versus an external memory" src="files/data-643/graphics/10.3-raft-memory/memory.png" /></p>
-<p>Hybrids are the product default: parametric priors plus retrieved evidence. Lab 10’s token-overlap retriever is a non-parametric cartoon. Overwriting a dict key is a parametric cartoon.</p>
-<p>Retrieve-then-answer is a <strong>stack</strong>: index <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> SFT loss on the answer. RAFT is the training distribution for that stack (gold + distractors). Vanilla RAG is often the same stack with a frozen reader. Do not mix the words.</p>
+<p>Retrieve-then-answer is a <strong>stack</strong>: index <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> SFT loss on the answer. Do not mix the words. The generator is still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. RAFT changed the data, then the weights; it did not add a retrieval layer inside the transformer.</p>
 <hr />
-<h2>3. What to choose</h2>
-<p>Need daily-changing policy PDFs? Non-parametric plus a RAFT-style reader. Need style and instruction following? Parametric SFT/LoRA. Need to correct one biography? Try an edit <strong>and</strong> a datastore row; measure both. Hallucination often means the parametric prior won over the snippet. RAFT is how you train that fight.</p>
-<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> and gold is ranked 3rd, retrieval failed before the reader ran. Raise <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, fix chunking, or change overlap. If gold is in the prompt and the answer still recites the pretrain snapshot, that is a <strong>reader</strong> bug: RAFT’s job.</p>
+<h2>4. How it works, step by step</h2>
+<p>Take a question students will type: <em>“What is the 2026 lab late policy?”</em> The index has four snippets:</p>
+<ol>
+<li>Gold: “Labs submitted after Sunday 11:59 pm lose 10% per day.”</li>
+<li>Distractor: “The <strong>exam</strong> is closed book.”</li>
+<li>Distractor: “Office hours are Tuesday.”</li>
+<li>Old: “Labs were due Friday” (wrong year).</li>
+</ol>
+<p>Then:</p>
+<ol>
+<li><strong>Retrieve</strong> top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> by token overlap with the question (Lab 10). Suppose shared-token scores are 5, 1, 1, 4. Top-3: snippets 1, 4, 2. Gold and the stale row both retrieve.</li>
+<li><strong>Build a training row:</strong> question + those three texts + a target answer that cites snippet 1 and <strong>ignores</strong> 4. If you only ever trained with snippet 1 alone, the model never learned to skip 4.</li>
+<li><strong>SFT</strong> on the answer tokens given that bundle. Copying a distractor sentence should raise the loss; that is different from ordinary SFT on Wikipedia, where there is no open book to contradict.</li>
+<li><strong>Test</strong> with the same retrieve-then-answer stack. If the reader was frozen SFT with no context, it may still say “Friday” from weights.</li>
+<li><strong>Count overlap live</strong> for two snippets so retrieval is a number, not a slogan. Then ask: if gold is in the prompt and the answer is still the old salary, whose bug is that?</li>
+</ol>
+<p><img alt="Overlap 5, 1, 1, 4: gold and the stale row both retrieve" src="files/data-643/graphics/10.3-raft-memory/overlap-retrieve.png" /></p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>SFT on the answer given the retrieved bundle, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover></mrow></math> containing distractors on purpose:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><munder><mo>&#x02211;</mo><mrow><mi>t</mi><mo>&#x02208;</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">r</mi></mrow></mrow></munder><mi>log</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Toy retrieval in Lab 10 is an overlap count, not cosine. If snippet <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> and question <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi></mrow></math> share a vocabulary, a cartoon score is the number of shared tokens. Rank by that score; keep top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. Four snippets with overlap <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x0002C;</mo><mn>9</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>7</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> stuff ids 2 and 4. If gold is id 2, retrieval succeeded; the reader can still fail.</p>
+<p>Week 14 will write cosine and Lewis’s sum over documents. This hour you only need: hard top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> at train and at test, same shape, distractors included. RAFT did not change the retriever’s formula; it changed whether <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math> sees that formula’s output during training.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>The reader learns to use the open book instead of reciting the pretrain snapshot.</li>
+<li>Distractors in the bundle teach skip, not only cite.</li>
+<li>Facts that move every month stay in a PDF you can re-index; RAFT trains the habit of looking them up.</li>
+<li>Works with Lab 10’s overlap ranker or with a later dense index; the method is the training rows.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Still SFT: the labels are answers given the bundle, so the model can copy, including a well-written distractor.</li>
+<li>Needs a retriever at train time, not only at test time.</li>
+<li>Gold-only rows never practice skip; then junk in the top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> wins at test.</li>
+<li>Not a new architecture. A frozen RAG reader with a better prompt is a different system.</li>
+<li>If gold never entered the top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, RAFT cannot recover it. That is still a retrieval miss.</li>
+</ul>
+<p><strong>When not to.</strong> Do not edit weights to fix a fact that should have been a datastore row. Do not call every retrieve-then-generate stack RAFT. If the job is style and instruction following with no corpus, stay on SFT/LoRA.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p>About <strong>35 minutes</strong> at the board: retrieve-then-answer on one question with 1 gold + 3 distractors, then parametric vs a PDF you can edit. Play Karpathy <strong>27:43–33:32</strong> (tool use) and mention <strong>40:45</strong> (custom GPTs / files as retrieval). Lab 10 section 2 is token-overlap retrieve.</p>
 <p>Count overlap tokens live for two snippets so retrieval is a number, not a slogan. Then ask: if gold is in the prompt and the answer is still the old salary, whose bug is that?</p>
 <hr />
-<h2>5. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Question: “What is the 2026 lab late policy?” Index has four snippets:</p>
 <ol>
 <li>Gold: “Labs submitted after Sunday 11:59 pm lose 10% per day.”</li>
@@ -153,22 +188,21 @@
 <li>Old: “Labs were due Friday” (wrong year).</li>
 </ol>
 <p>Retrieve top-3 by token overlap with the question. Suppose scores (shared tokens) are 5, 1, 1, 4. Top-3: snippets 1, 4, 2. A RAFT <strong>training</strong> row is: question + those three texts + target answer that cites snippet 1 and <strong>ignores</strong> 4. If you only ever trained with snippet 1 alone, the model never learned to skip 4.</p>
-<p><img alt="Overlap 5, 1, 1, 4: gold and the stale row both retrieve" src="files/data-643/graphics/10.3-raft-memory/overlap-retrieve.png" /></p>
 <p>At test time the same retrieve-then-answer stack runs. If the reader was frozen SFT with no context, it may still say “Friday” from weights. That failure is not an index bug.</p>
 <p>Overlap count is a toy retriever (Lab 10). Cosine on embeddings is the grown-up version (Week 14). RAFT does not care which retriever you used; it cares that <strong>training rows look like test rows</strong>, distractors included.</p>
 <p>Update a salary in a PDF and re-index: you changed <strong>non-parametric</strong> memory. ROME on “Alice’s salary” would be parametric. Prefer the PDF if the number moves every month.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Training RAG readers on gold-only context, then blaming the index when distractors win.</li>
 <li>Editing weights to fix a fact that should have been a datastore row.</li>
 <li>Calling any retrieve-then-generate “RAFT.” RAFT is <strong>training</strong> the reader on that bundle.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>10. Video</h2>
 <p><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Karpathy — Intro to Large Language Models</a>. Play <strong>27:43–33:32</strong> (tools: browser, calculator, interpreter — retrieval as a tool) and nod to <strong>40:45</strong> (files / RAG-style customization). Pause when the model looks something up instead of “remembering.” RAFT is how you SFT that habit. Week 14 is the full RAG pipeline.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Why add distractor snippets to RAFT training rows?</p>
@@ -194,7 +228,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:10:00-04:00">September 16, 2026, 5:10 AM EDT</time></div>
             </footer>
         </div>
 
