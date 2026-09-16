@@ -679,6 +679,101 @@ def two_memories():
     _save(fig, "10.3-raft-memory/memory.png")
 
 
+def _numeric_table(rel, title, headers, rows):
+    fig, ax = plt.subplots(figsize=(8.8, 3.5))
+    ax.axis("off")
+    table = ax.table(cellText=rows, colLabels=headers, loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.15, 1.8)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY)
+        else:
+            cell.set_facecolor("white")
+    ax.set_title(title, loc="left", color=NAVY, pad=12)
+    _save(fig, rel)
+
+
+def rm_numeric():
+    _numeric_table(
+        "9.1-preference-rewards/rm-numeric.png",
+        r"Chance is $\log 2\approx 0.693$. Only $\Delta=r_w-r_l$ enters.",
+        [r"$\Delta$", r"$\sigma(\Delta)$", "loss"],
+        [["0", "0.500", r"$\log 2\approx 0.693$"], ["2", "0.881", "0.127"], ["-2", "0.119", "2.13"]],
+    )
+
+
+def kl_numeric():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = [r"$\pi_{\mathrm{ref}}$ on $a$", r"$\pi_\theta$ on $a$"]
+    vals = [0.7, 0.99]
+    ax.bar(names, vals, color=[TEAL, CORAL], edgecolor=NAVY)
+    ax.set_ylabel("mass on token a")
+    ax.set_ylim(0, 1.15)
+    ax.set_title(r"Spike to 0.99: $\mathrm{KL}(\pi_\theta\|\pi_{\mathrm{ref}})\approx 0.31$.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "9.2-rlhf/kl-numeric.png")
+
+
+def dpo_init():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = [r"init $\pi_\theta=\pi_{\mathrm{ref}}$", "after the toy step"]
+    vals = [0.693, 0.201]
+    ax.bar(names, vals, color=[CORAL, TEAL], edgecolor=NAVY)
+    ax.set_ylabel("DPO loss (nats)")
+    ax.set_title(r"$\sigma(0)=1/2$ at start. A +1.5 logit gap cuts the loss.", loc="left", color=NAVY)
+    for i, v in enumerate(vals):
+        ax.text(i, v + 0.02, f"{v:.3f}", ha="center", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_ylim(0, 0.85)
+    fig.tight_layout()
+    _save(fig, "9.3-dpo/dpo-init.png")
+
+
+def probe_rates():
+    fig, ax = plt.subplots(figsize=(8.6, 3.8))
+    names = ["over-refusal", "privacy", "stereotype", "disallowed"]
+    vals = [0, 1, 2, 1]
+    ax.bar(names, vals, color=[TEAL, CORAL, CORAL, CORAL], edgecolor=NAVY)
+    ax.set_ylabel("fails / 10 probes")
+    ax.set_ylim(0, 4)
+    ax.set_title("Same list: 4/40 = 10%. Log ids, not a vibe.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "10.1-red-teaming/probe-rates.png")
+
+
+def edit_probes():
+    _numeric_table(
+        "10.2-editing-unlearning/edit-probes.png",
+        "A flipped prompt is not an isolated fact.",
+        ["probe", "success"],
+        [["edit (France→Berlin)", "8/10"], ["neighbor (Italy)", "2/10"], ["retain (unrelated)", "9/10"]],
+    )
+
+
+def overlap_retrieve():
+    fig, ax = plt.subplots(figsize=(8.6, 3.8))
+    names = ["1 gold", "2 exam", "3 hours", "4 old"]
+    vals = [5, 1, 1, 4]
+    colors = [TEAL, SLATE, SLATE, CORAL]
+    ax.bar(names, vals, color=colors, edgecolor=NAVY)
+    ax.axhline(0, color=SLATE, lw=0.6)
+    ax.set_ylabel("token overlap with the query")
+    ax.set_title("Top-3 at k=3: gold, old, exam. Train the reader to skip 4.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "10.3-raft-memory/overlap-retrieve.png")
+
+
 def gan_players():
     fig, ax = plt.subplots(figsize=(9.6, 3.8))
     ax.set_xlim(0, 11)
@@ -959,6 +1054,12 @@ def main():
     unlearn_vs_edit()
     raft()
     two_memories()
+    rm_numeric()
+    kl_numeric()
+    dpo_init()
+    probe_rates()
+    edit_probes()
+    overlap_retrieve()
     gan_players()
     gan_minmax()
     mode_collapse()

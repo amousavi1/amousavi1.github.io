@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 10 &middot; <a href="files/data-643/raft-memory.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/10.3-raft-memory.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Train with retrieved documents in the prompt. Parametric memory is not the only store.
+                            Train with gold plus distractors. Week 14 is the RAG stack; this hour is the reader.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Facts can live in <strong>weights</strong> (parametric) or in an <strong>external store</strong> you look up (non-parametric). <strong>RAFT</strong> here is <strong>retrieval-augmented fine-tuning</strong>: you train the model <em>with</em> retrieved documents in context so it learns to use them, not only to recite the pretrain snapshot.</p>
@@ -116,6 +116,7 @@
 <p>A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some <strong>distractors</strong>), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”</p>
 <p><img alt="Retrieve, then fine-tune the reader on the bundle" src="files/data-643/graphics/10.3-raft-memory/raft.png" /></p>
 <p>If every training snippet is gold, the model never practices rejecting junk. Include negatives. If you never train with retrieval, editing the index will not fix a model that ignores the index. RAFT is still SFT: the labels are answers <em>given the bundle</em>, not a new architecture.</p>
+<p>Stanford CS224N 2025 L13: <strong>parametric</strong> recall versus <strong>open-book</strong>. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.</p>
 <hr />
 <h2>2. Parametric versus non-parametric memory</h2>
 <p><strong>Parametric:</strong> the MLP and attention weights. Fast, always on, hard to update (ROME, SFT, forgetting). <strong>Non-parametric:</strong> a datastore, BM25, embeddings, a kNN over hidden states (kNN-LM, RETRO, memorizing transformers). You update a fact by writing a snippet, not by locating a layer.</p>
@@ -140,6 +141,7 @@
 <li>Old: “Labs were due Friday” (wrong year).</li>
 </ol>
 <p>Retrieve top-3 by token overlap with the question. Suppose scores (shared tokens) are 5, 1, 1, 4. Top-3: snippets 1, 4, 2. A RAFT <strong>training</strong> row is: question + those three texts + target answer that cites snippet 1 and <strong>ignores</strong> 4. If you only ever trained with snippet 1 alone, the model never learned to skip 4.</p>
+<p><img alt="Overlap 5, 1, 1, 4: gold and the stale row both retrieve" src="files/data-643/graphics/10.3-raft-memory/overlap-retrieve.png" /></p>
 <p>At test time the same retrieve-then-answer stack runs. If the reader was frozen SFT with no context, it may still say “Friday” from weights. That failure is not an index bug.</p>
 <p>Overlap count is a toy retriever (Lab 10). Cosine on embeddings is the grown-up version (Week 14). RAFT does not care which retriever you used; it cares that <strong>training rows look like test rows</strong>, distractors included.</p>
 <p>Update a salary in a PDF and re-index: you changed <strong>non-parametric</strong> memory. ROME on “Alice’s salary” would be parametric. Prefer the PDF if the number moves every month.</p>
@@ -180,7 +182,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T22:20:00-04:00">September 15, 2026, 10:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T23:45:00-04:00">September 15, 2026, 11:45 PM EDT</time></div>
             </footer>
         </div>
 

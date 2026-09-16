@@ -14,6 +14,8 @@ r(x,y)=\beta\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)}+\text{const}(x).
 
 Plug that into the RM logistic loss and the \(r\) parameters disappear. You train \(\pi_\theta\) directly.
 
+Stanford CS224N 2025 L10 writes the same derived reward and stresses that the **partition \(Z(x)\)** cancels because Bradley–Terry only sees a difference. KTO and IPO sit in the same family; this hour is DPO.
+
 ![DPO: pairs in, policy out, no RM loop](files/data-643/graphics/9.3-dpo/dpo.png)
 
 ---
@@ -61,6 +63,8 @@ so \(\mathcal{L}=-\log\sigma(0)=-\log(1/2)=\log 2\).
 After a few steps, toy log-probs (sums over tokens): \(\log\pi_\theta(y_w)=-2.0\), \(\log\pi_{\mathrm{ref}}(y_w)=-2.5\), \(\log\pi_\theta(y_l)=-3.0\), \(\log\pi_{\mathrm{ref}}(y_l)=-2.0\). Log-ratio winner: \(-2.0-(-2.5)=0.5\). Log-ratio loser: \(-3.0-(-2.0)=-1.0\). Difference \(0.5-(-1.0)=1.5\). \(\sigma(1.5)\approx 0.818\), loss \(-\log 0.818\approx 0.201\).
 
 The frozen reference is still there: without it, \(\pi_\theta\) can raise both log-probs or collapse. PPO can **sample new** \(y\) that were not in the pair file; offline DPO cannot.
+
+![Init loss \(\log 2\), then a 1.5 logit gap](files/data-643/graphics/9.3-dpo/dpo-init.png)
 
 ---
 

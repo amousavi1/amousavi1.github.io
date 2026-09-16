@@ -28,7 +28,11 @@ The RM wants a higher number on the chosen reply. Lab 9 will fit this on toy sco
 
 If the two rewards are equal, the argument of \(\sigma\) is 0 and \(\sigma(0)=1/2\), so \(\mathcal{L}_{\text{RM}}=\log 2\approx 0.693\). That is chance: the RM has not ordered the pair.
 
+![Three \(\Delta\) values and the logistic loss](files/data-643/graphics/9.1-preference-rewards/rm-numeric.png)
+
 \(\sigma(\Delta)=\bigl(1+e^{-\Delta}\bigr)^{-1}\). Large positive \(\Delta\) \(\to\) loss near 0; large negative \(\Delta\) (chosen scored **below** rejected) \(\to\) loss near \(\infty\). The RM is a pairwise logistic classifier, not a calibrated “helpfulness out of 10.”
+
+Stanford CS224N 2025 L10: **best-of-\(n\)** already uses this RM and is a competitive baseline (AlpacaFarm). It is not PPO. You sample \(n\) from SFT and return the RM’s favorite. PPO (next note) trains a new \(\pi_\theta\).
 
 ---
 

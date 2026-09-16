@@ -14,6 +14,10 @@ Score with a rubric or a judge model, then **spot-check the judge**. Automatic s
 
 A rate is a fraction, not a vibe: 4 violations on 40 probes in category C is **10%**. That is the number you rerun after a patch.
 
+![Four cells on a 40-probe list](files/data-643/graphics/10.1-red-teaming/probe-rates.png)
+
+Stanford CS336 2025 L12 treats safety the same way: **HarmBench** is 510 labeled behaviors; **AIR-Bench** is 314 categories and 5694 prompts; HELM hosts the suites. Safety is not only refusal (a medical hallucination is also a safety miss). For an API you mostly measure **propensity** (does it refuse). For an open-weight checkpoint, refusal is not a capability bound.
+
 Split the list **before** you look at outputs: safety-fail vs over-refusal vs “judge unsure.” Mixing those three into one “unsafe %” hides whether you tightened too far.
 
 ---

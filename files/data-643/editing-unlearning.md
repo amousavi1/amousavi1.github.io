@@ -14,6 +14,8 @@ Meng et al., **ROME** (Rank-One Model Editing). Empirically, many “subject \(\
 
 A rank-one write is one outer product, \(uv^{\top}\), added into an MLP weight. That is enough to redirect **one** key. It is not a delete of a topic.
 
+Stanford CS224N 2025’s interpretability lecture: if a component stores the association, **intervening** on it should change the predicted object. ROME is that slogan as an edit: locate the mid-layer MLP at the last subject token, then write. **CounterFact**-style grading needs three columns: edit success, neighborhood (specificity), paraphrase (generalization).
+
 Causal tracing (the locate step) is an ablation: run the fact prompt, patch hidden states from a clean run into a corrupted run, see which layer restores the object. You will not implement traces in Lab 10; you need the slogan **locate, then write**.
 
 ---
@@ -49,6 +51,8 @@ Write the three probes (edit, neighbor, paraphrase) as a grading rubric. A repor
 ## 5. Worked example
 
 Edit: `Paris` \(\to\) `capital of Germany` (toy). Probe A: “The capital of France is” should now prefer Berlin. Probe B (neighbor): “The capital of Italy is” should still be Rome. Probe C (paraphrase): “France’s capital city is” may still say Paris if the write sat on one surface form. That is why paraphrase is a required column.
+
+![Edit 8/10 is not isolated if neighbors move](files/data-643/graphics/10.2-editing-unlearning/edit-probes.png)
 
 Unlearn: 200 forget documents, 200 retain documents. After ascent on the forget set, forget-QA accuracy 90% \(\to\) 20% looks like success **until** retain-QA 88% \(\to\) 21%. You did not unlearn a topic; you damaged the model. Report both.
 

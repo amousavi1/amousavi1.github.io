@@ -814,18 +814,28 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">Ouyang et al., InstructGPT / RLHF</a
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1254/slides_w25/cs224n-2025-lecture10-instruction-tunining-rlhf.pdf" target="_blank" rel="noopener">Stanford CS224N 2025 L10: RM, RLHF, DPO (SFT was Week 8)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.02155" target="_blank" rel="noopener">Ouyang et al., InstructGPT (the three-stage stack)</a
                                         >
                                     </li>
                                     <li>
                                         <a class="course-material__title" href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener">Rafailov et al., Direct Preference Optimization</a
                                         >
                                     </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2305.14387" target="_blank" rel="noopener">Dubois et al., AlpacaFarm (best-of-n is a strong baseline)</a
+                                        >
+                                    </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>What can go wrong if the reward model is cheaper to game than the human raters were?</li>
-                                    <li>DPO skips PPO. What assumption on the preference data remains?</li>
+                                    <li>Best-of-n uses the RM and never trains π_θ. When is that enough for a project, and when is it not?</li>
+                                    <li>If r_w = r_l always, what is the RM loss, and what did the head fail to learn?</li>
+                                    <li>Why is π_ref the SFT model rather than the raw pretrained LM?</li>
+                                    <li>DPO skips PPO. What can a fixed pair file still not invent?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-10" role="tabpanel" aria-labelledby="tab-week-10" hidden>
@@ -866,18 +876,28 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
+                                        <a class="course-material__title" href="https://qihongruan.github.io/cs336/lec12.html" target="_blank" rel="noopener">Stanford CS336 2025 L12: HarmBench / HELM safety as rates, not vibes</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w25/cs224n-2025-lecture13-QA.pdf" target="_blank" rel="noopener">Stanford CS224N 2025 L13: parametric knowledge versus open-book / RAG</a
+                                        >
+                                    </li>
+                                    <li>
                                         <a class="course-material__title" href="https://arxiv.org/abs/2202.05262" target="_blank" rel="noopener">Meng et al., ROME / locating and editing factual associations</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2403.10131" target="_blank" rel="noopener">Zhang et al., RAFT</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2403.10131" target="_blank" rel="noopener">Zhang et al., RAFT (train the reader with retrieved context)</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>Editing one fact is not unlearning a behavior. Give an example of each.</li>
-                                    <li>When would you train with retrieved context (RAFT) instead of only retrieving at test time?</li>
+                                    <li>4/40 failed. After a DPO patch, which cells do you rerun, and why is over-refusal a separate column?</li>
+                                    <li>Edit success 8/10 and neighbor 2/10. Did the write isolate the fact?</li>
+                                    <li>Gold is ranked 3rd and k=2. Whose bug is that — retrieval or the reader?</li>
+                                    <li>A salary in a PDF versus a ROME write: which memory did you update, and when is the PDF the better tool?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-11" role="tabpanel" aria-labelledby="tab-week-11" hidden>
@@ -1126,7 +1146,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T22:20:00-04:00">September 15, 2026, 10:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T23:45:00-04:00">September 15, 2026, 11:45 PM EDT</time></div>
             </footer>
         </div>
 

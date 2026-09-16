@@ -12,6 +12,8 @@ A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM
 
 If every training snippet is gold, the model never practices rejecting junk. Include negatives. If you never train with retrieval, editing the index will not fix a model that ignores the index. RAFT is still SFT: the labels are answers *given the bundle*, not a new architecture.
 
+Stanford CS224N 2025 L13: **parametric** recall versus **open-book**. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.
+
 ---
 
 ## 2. Parametric versus non-parametric memory
@@ -52,6 +54,8 @@ Question: “What is the 2026 lab late policy?” Index has four snippets:
 4. Old: “Labs were due Friday” (wrong year).
 
 Retrieve top-3 by token overlap with the question. Suppose scores (shared tokens) are 5, 1, 1, 4. Top-3: snippets 1, 4, 2. A RAFT **training** row is: question + those three texts + target answer that cites snippet 1 and **ignores** 4. If you only ever trained with snippet 1 alone, the model never learned to skip 4.
+
+![Overlap 5, 1, 1, 4: gold and the stale row both retrieve](files/data-643/graphics/10.3-raft-memory/overlap-retrieve.png)
 
 At test time the same retrieve-then-answer stack runs. If the reader was frozen SFT with no context, it may still say “Friday” from weights. That failure is not an index bug.
 
