@@ -1,21 +1,14 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**BLIP** (Li et al., 2022) is a vision–language model that **matches** and **writes**. CLIP scores pairs. CoCa (Yu et al.) is the sibling idea: add a **decoder**. BLIP does that, and it also **cleans** the noisy web pairs CLIP trained on.
+**BLIP** (Li et al., 2022) is a vision–language model that **matches** and **writes**. CLIP scores pairs. CoCa (Yu et al.) is the sibling idea: add a **decoder**. BLIP does that, and it also **cleans** the noisy web pairs CLIP trained on. By the end you should be able to name the three losses, say why the filter exists, and tell retrieval from captioning.
 
 ---
 
-> **First time this method appears.** **BLIP** is CLIP-style scoring **plus** a decoder that writes text, with a filter on noisy web pairs.
->
-> **What.** Three losses: ITC (contrastive), ITM (matched vs unmatched pair), LM (caption tokens). Bootstrap: generate captions, filter, train.
-> **Why.** CLIP cannot decode a sentence. Naive captioners train on noisy alt-text. BLIP tries to clean the web and add generation.
-> **Architecture.** Image encoder, text encoder, and a decoder with **cross-attention** into image tokens (queries from text, keys/values from vision).
-> **How.** ITC aligns. ITM is a binary match head. LM is next-token on the caption. Generation uses the decoder; retrieval can use ITC embeddings.
-> **Formula.** ITC as InfoNCE; ITM as logistic on a CLS; LM as \(\sum_t -\log p(w_t\mid w_{<t},\text{image})\).
-> **Tradeoffs.** + Captions and retrieval in one family. − Hallucinated captions; filter is extra machinery; heavier than frozen CLIP.
->
-## 1. Bootstrap the data
+## 1. What BLIP is
 
-Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter keeps the ones that still match the image (ITM: image–text matching). The cleaned pairs retrain the model. That loop is the “bootstrapped pretraining” in the syllabus.
+**BLIP** is CLIP-style scoring **plus** a decoder that writes text, with a filter on noisy web pairs. CLIP cannot decode a sentence. Naive captioners train on noisy alt-text. BLIP tries to clean the web and add generation.
+
+Three losses share one backbone: **ITC** (contrastive, CLIP-style alignment), **ITM** (matched versus unmatched pair), and **LM** (caption tokens). The bootstrap loop is: generate captions, filter the ones that still match the image, train again.
 
 ![Noisy pairs, filter, matching and language losses](files/data-643/graphics/5.2-blip/blip-pipeline.png)
 
@@ -25,7 +18,21 @@ CoCa (Yu et al.) adds a captioning loss on top of contrastive training. It does 
 
 ---
 
-## 2. Three losses, one backbone
+## 2. Why we use it
+
+CLIP retrieves an existing string from a gallery. Many products need a **new** sentence: a caption, an alt-text rewrite, a description that was never in the index. That job is generation, and it needs a decoder.
+
+The web is the other reason. Alt-text is messy. Training language-model loss on `DSC0001.jpg` teaches garbage. BLIP’s filter is the method that tries to keep only captions that still match the image. Whisper, which you will watch as an analog, is an encoder–decoder for **speech \(\to\) text**. BLIP is encoder–decoder for **image \(\to\) text**, plus ITC and ITM.
+
+If your project only retrieves, stop at ITC (or CLIP). If it must write, you need LM. If web text is junk, you need the filter (ITM).
+
+---
+
+## 3. Architecture
+
+An image encoder, a text encoder, and a decoder with **cross-attention** into image tokens (queries from text, keys and values from vision).
+
+The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. **BLIP-2** later freezes a strong image encoder and trains a thin **Q-Former**; treat that as “same idea, cheaper.” LLaVA is a frozen CLIP tower plus an LLM. Not this hour.
 
 | Loss | Job |
 | ---- | --- |
@@ -35,15 +42,62 @@ CoCa (Yu et al.) adds a captioning loss on top of contrastive training. It does 
 
 ![ITC, ITM, and LM](files/data-643/graphics/5.2-blip/blip-losses.png)
 
-The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. **BLIP-2** later freezes a strong image encoder and trains a thin **Q-Former**; treat that as “same idea, cheaper.” LLaVA is a frozen CLIP tower plus an LLM. Not this hour.
-
-ITC needs a batch of negatives. ITM can use a **hard** negative (a caption that almost matches). LM is why BLIP can caption at all.
-
-Whisper, which you will watch as an analog, is an encoder–decoder for **speech \(\to\) text**. BLIP is encoder–decoder for **image \(\to\) text**, plus ITC and ITM.
+ITC needs a batch of negatives. ITM can use a **hard** negative (a caption that almost matches). LM is why BLIP can caption at all. Generation uses the decoder; retrieval can use ITC embeddings.
 
 ---
 
-## 3. Captioning versus retrieval
+## 4. How it works, step by step
+
+1. **ITC aligns.** Encode a batch of image–text pairs. InfoNCE wants the diagonal, as in CLIP. This is the retrieval-friendly space.
+2. **ITM matches.** A binary head on a fused `[CLS]` asks whether this caption belongs to this image. Hard negatives make the yes/no sharper than a random off-diagonal.
+3. **LM writes.** Decode `a`, `red`, `mug`, … with cross-attention into ViT patch tokens. Loss is next-token, like GPT, but the “prefix” includes the image.
+4. **Bootstrap.** A captioner generates synthetic captions for web images. ITM keeps the ones that still match. Retrain on the cleaned pairs. That loop is the “bootstrapped pretraining” in the syllabus.
+5. **Pick the head at test.** Retrieve with ITC embeddings. Caption with the decoder. Do not report recall@k as the only captioning metric.
+
+If alt-text was `DSC0001.jpg`, LM on that string teaches garbage. Filter first, then LM.
+
+ITC wants a **batch**. ITM can score one pair. LM wants a **token sequence**.
+
+---
+
+## 5. Mathematical formulas
+
+ITC is InfoNCE on the batch, as in note **4.3**. ITM is logistic loss on a match score \(s\). With \(\sigma(s)=1/(1+e^{-s})\),
+
+\[
+\mathcal{L}_{\text{ITM}}=-y\log\sigma(s)-(1-y)\log\bigl(1-\sigma(s)\bigr).
+\]
+
+LM is next-token on the caption, conditioned on the image:
+
+\[
+\mathcal{L}_{\text{LM}}=\sum_t -\log p(w_t\mid w_{<t},\text{image}).
+\]
+
+The three terms share the ViT and the text transformer; they do not share a head.
+
+---
+
+## 6. Positive points and negative points
+
+**Positive.**
+
+- Captions and retrieval in one family: decoder for writing, ITC embeddings for search.
+- The ITM filter is a method for noisy web alt-text, not a slogan.
+- Cross-attention into patch tokens is the same encoder–decoder picture students will see in Whisper.
+
+**Negative.**
+
+- Captions can hallucinate objects that are not in the image.
+- The filter is extra machinery; skipping it and training LM on raw alt-text is a common failure.
+- Heavier than frozen CLIP: you train a decoder, not only two towers.
+- CLIP-score as a caption metric is circular if the captioner was trained to match CLIP.
+
+**When not to.** If your project only retrieves, stop at CLIP or ITC. CoCa and BLIP share a decoder idea; they are not the same paper. BLIP’s extra is bootstrap plus ITM.
+
+---
+
+## 7. Captioning versus retrieval
 
 Retrieval (CLIP) returns an existing string from a gallery. Captioning (BLIP) **generates** a new string. Evaluation: CIDEr / CLIP-score / human, not just recall@k. Hallucinated objects are the usual failure (“a red bike” when there is none).
 
@@ -51,7 +105,7 @@ CLIP-score as a caption metric is circular if your captioner was trained to matc
 
 ---
 
-## 4. Teaching this note
+## 8. Teaching this note
 
 **30–40 minutes.** CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the **encoder–decoder analog** for captioning (**0:00–8:00**). Say explicitly: Whisper does not add ITC+ITM; **BLIP does**.
 
@@ -59,7 +113,7 @@ Minute plan: 8 min retrieve vs generate; 10 min ITC/ITM/LM table; 8 min ITM numb
 
 ---
 
-## 5. Worked example
+## 9. Worked example
 
 One image, two captions: true “a red mug on a desk,” false “a blue bicycle.”
 
@@ -85,7 +139,7 @@ ITC wants a **batch**. ITM can score one pair. LM wants a **token sequence**. If
 
 ---
 
-## 6. Where students get stuck
+## 10. Where students get stuck
 
 - Using recall@k as the only captioning metric.
 - Thinking ITM and ITC are the same softmax.
@@ -94,7 +148,7 @@ ITC wants a **batch**. ITM can score one pair. LM wants a **token sequence**. If
 
 ---
 
-## 7. Video
+## 11. Video
 
 Keep the **BLIP paper** as the reading (Li et al., 2022). For a lecture clip, watch [OpenAI’s Whisper Model Explained](https://www.youtube.com/watch?v=uFOkMme19Zs) as an **encoder–decoder analog for captioning**: audio encoder, text decoder. Pause on that cross-attention picture.
 
@@ -102,7 +156,7 @@ Then say: **BLIP adds ITC + ITM + LM** on image–text pairs, and bootstraps noi
 
 ---
 
-## 8. Practice
+## 12. Practice
 
 1. Why filter generated captions instead of trusting every alt-text on the web?
 

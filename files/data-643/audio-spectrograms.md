@@ -1,43 +1,38 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-A waveform is a 1-D list of samples. A **spectrogram** is that list cut into short windows, each turned into a frequency snapshot. Once you have a 2-D time–frequency picture, every vision trick from Week 4 (patches, a transformer, CLIP-style towers) applies to audio.
+A waveform is a 1-D list of samples. A **spectrogram** is that list cut into short windows, each turned into a frequency snapshot. Once you have a 2-D time–frequency picture, every vision trick from Week 4 (patches, a transformer, CLIP-style towers) applies to audio. Lab 6 will cut a sine mixture by hand; this hour is why the picture exists.
 
 ---
 
-> **First time this method appears.** A **spectrogram** is a picture of sound. Models do not eat 16 kHz samples as a raw list.
->
-> **What.** STFT: window the waveform, FFT each frame, plot frequency vs time. A **mel** spectrogram warps frequency to a perceptual scale.
-> **Why.** Waveforms are long and oscillatory. A 2-D time–frequency map can be patched like a ViT image.
-> **Architecture.** Waveform → frames → STFT magnitudes (optionally mel + log) → patch embed → transformer.
-> **How.** Lab 6: sine mixture, STFT, patch. Hop length and window are method knobs.
-> **Formula.** Frame \(m\): \(X(m,\omega)=\sum_n x[n]w[n-mH]e^{-j\omega n}\). Sequence length ≈ number of frames (or patches of frames).
-> **Tradeoffs.** + Shares ViT code. − Phase often dropped; time resolution vs frequency resolution; not yet a transcriber (next note).
->
-## 1. Waveforms and the STFT
+## 1. What a spectrogram is
 
-You record pressure \(x[n]\) at a sampling rate \(f_s\) (16 kHz is a common speech default). A sine of \(f\) hertz is \(x[n]=\sin(2\pi f n/f_s)\). Mixtures add; that is still one stream.
+A **spectrogram** is a picture of sound. Models do not eat 16 kHz samples as a raw list. You record pressure \(x[n]\) at a sampling rate \(f_s\) (16 kHz is a common speech default). A sine of \(f\) hertz is \(x[n]=\sin(2\pi f n/f_s)\). Mixtures add; that is still one stream.
 
-The **short-time Fourier transform (STFT)** windows the signal (Hann, hop \(H\), FFT size \(N\)), then takes a DFT of each frame. The **magnitude spectrogram** \(S(t,f)=|X(t,f)|\) is what you plot. Phase exists, but most audio encoders drop it and keep magnitudes or a **mel** compression of them (log-mel filterbank).
+The **short-time Fourier transform (STFT)** windows the signal (Hann, hop \(H\), FFT size \(N\)), then takes a DFT of each frame. The **magnitude spectrogram** \(S(t,f)=|X(t,f)|\) is what you plot. Phase exists, but most audio encoders drop it and keep magnitudes or a **mel** compression of them (log-mel filterbank). A **mel** spectrogram warps frequency to a perceptual scale.
 
 ![Waveform next to its spectrogram](files/data-643/graphics/6.1-audio-spectrograms/wave-spec.png)
 
 A tall band that stays put is a steady tone. A sweep that climbs is a chirp. Speech looks like stacked formants that move.
 
-Frame count, without padding, is
-
-\[
-T = 1 + \left\lfloor \frac{L-N}{H} \right\rfloor
-\]
-
-when the length \(L \ge N\). Hop \(H\) is the time step; \(N\) is the frequency resolution. You cannot make both arbitrarily fine: small \(H\) means more frames (and more tokens later); large \(N\) means narrower Hertz bins and a longer window that smears onsets.
-
-![Sliding windows](files/data-643/graphics/6.1-audio-spectrograms/stft-frames.png)
-
-The reason to prefer this over a raw wave: a transformer on 16 kHz samples would see 16{,}000 tokens per second. An STFT with a 25 ms window and a 10 ms hop sees 100 frames per second. Those frames last long enough to see a phoneme, not a single pressure sample.
+Log-mel is a compressive front end: fewer bands than a linear STFT, spaced the way hearing is. It is still a spectrogram. Do not skip the plot; if the 440 Hz band is missing, the rest of the pipeline is theater.
 
 ---
 
-## 2. Spectrograms as images, then as tokens
+## 2. Why we use it
+
+Waveforms are long and oscillatory. A transformer on 16 kHz samples would see 16{,}000 tokens per second. An STFT with a 25 ms window and a 10 ms hop sees 100 frames per second. Those frames last long enough to see a phoneme, not a single pressure sample. A 2-D time–frequency map can then be patched like a ViT image.
+
+You cannot make time resolution and frequency resolution arbitrarily fine at once. Hop \(H\) is the time step; \(N\) is the frequency resolution. Small \(H\) means more frames (and more tokens later); large \(N\) means narrower Hertz bins and a longer window that smears onsets.
+
+If your project uses audio, write \(f_s\), window, hop, and whether you used mel or raw STFT. Those choices change the tokens.
+
+---
+
+## 3. Architecture
+
+The boxes connect in that order: waveform, then frames, then STFT magnitudes (optionally mel + log), then patch embed, then transformer.
+
+![Sliding windows](files/data-643/graphics/6.1-audio-spectrograms/stft-frames.png)
 
 Treat \(S\) as a single-channel image. A CNN can ingest it. A ViT can **patch** it: tiles of time \(\times\) frequency, flatten, linear map to width \(d\), add positions. Lab 6 does that cut by hand.
 
@@ -45,27 +40,81 @@ Treat \(S\) as a single-channel image. A CNN can ingest it. A ViT can **patch** 
 
 Time is not quite space. Adjacent frequency bins are related (harmonics); adjacent frames are related (smooth speech). Positions should know which axis is which. Still, “patch then attend” is the default modern front end.
 
-Non-overlapping \(p\times p\) tiles on an \(F\times T\) grid give \( (F/p)\times(T/p) \) tokens if both axes divide. Remainders are padded or cropped; Lab 6 crops.
+Non-overlapping \(p\times p\) tiles on an \(F\times T\) grid give \((F/p)\times(T/p)\) tokens if both axes divide. Remainders are padded or cropped; Lab 6 crops.
+
+This front end is not a transcriber. Whisper (note **6.2**) will decode text from this picture. CLAP will embed the picture next to a caption.
 
 ---
 
-## 3. What this is not
+## 4. How it works, step by step
+
+Lab 6: sine mixture, STFT, patch. Hop length and window are method knobs.
+
+1. **Record.** Length \(L\) samples at rate \(f_s\). Duration in seconds is \(L/f_s\), not the frame count.
+2. **Window.** Place frames of length \(N\) with hop \(H\). Hann is the usual taper.
+3. **FFT each frame.** Keep magnitudes, or a log-mel filterbank. Phase is usually dropped.
+4. **Check a known tone.** Bin \(k\) of an \(N\)-point FFT sits near \(k\cdot f_s/N\) hertz (real FFT: \(k=0,\ldots,N/2\)). That conversion is how you check Lab 6’s two sines.
+5. **Patch.** Cut the \(F\times T\) grid into non-overlapping tiles, flatten, linear map, add positions that know which axis is frequency.
+6. **Hand the tokens to a transformer.** Encoding, retrieval, or transcription is a later head, not this picture.
+
+A larger FFT does not “hear more of the clip.” It hears a **longer window**, so onsets blur; hop still sets the time grid.
+
+---
+
+## 5. Mathematical formulas
+
+Frame \(m\) of the STFT:
+
+\[
+X(m,\omega)=\sum_n x[n]w[n-mH]e^{-j\omega n}.
+\]
+
+The plot is usually \(S(m,\omega)=|X(m,\omega)|\), or a mel filterbank of those magnitudes. Frame count, without padding, is
+
+\[
+T = 1 + \left\lfloor \frac{L-N}{H} \right\rfloor
+\]
+
+when the length \(L \ge N\). Sequence length for the transformer is then about \(T\) frames, or the number of patches of those frames.
+
+Bin \(k\) sits near \(k\cdot f_s/N\) hertz. Non-overlapping \(p\times p\) tiles on an \(F\times T\) grid give \((F/p)\times(T/p)\) tokens when both axes divide.
+
+---
+
+## 6. Positive points and negative points
+
+**Positive.**
+
+- A spectrogram shares ViT code: patch, position, attend.
+- 100 frames per second is a phoneme-scale sequence; 16{,}000 samples per second is not.
+- Lab 6 can plot two sines and check the Hertz bins by hand.
+
+**Negative.**
+
+- Phase is often dropped; reconstruction is not the job of this encoder.
+- Time resolution versus frequency resolution is a real tradeoff, not a software default.
+- A spectrogram is not yet a transcriber, a speaker id, or a music tag (next note).
+- Patching \(F\times T\) as if it were a square image forgets which axis is frequency; remainders can drop a formant band if you crop carelessly.
+
+**When not to.** Do not feed raw 16 kHz samples to a transformer and call the spectrogram optional. Do not count samples as frames.
+
+---
+
+## 7. What this is not
 
 A spectrogram is not a transcript, a speaker id, or a music tag. Those are **tasks** on top of the tokens. Whisper (note **6.2**) will decode text from this picture. CLAP will embed the picture next to a caption. If your project uses audio, write \(f_s\), window, hop, and whether you used mel or raw STFT. Those choices change the tokens.
-
-Log-mel is a compressive front end: fewer bands than a linear STFT, spaced the way hearing is. It is still a spectrogram. Do not skip the plot; if the 440 Hz band is missing, the rest of the pipeline is theater.
 
 Bin \(k\) of an \(N\)-point FFT sits near \(k\cdot f_s/N\) hertz (real FFT: \(k=0,\ldots,N/2\)). That conversion is how you check Lab 6’s two sines.
 
 ---
 
-## 4. Teaching this note
+## 8. Teaching this note
 
 About **35 minutes** at the board in the two-hour week: draw one second of a 440 Hz sine, mark a window of length \(N\) and hop \(H\), count frames, then cut a toy mel grid into patches. Play the STFT video (**~10–12 min**; see Video). Lab 6 (sine mixture, STFT, concat vs add) is studio time after notes **6.2–6.3**, not this block.
 
 ---
 
-## 5. Worked example
+## 9. Worked example
 
 One second of speech at \(f_s=16\,\mathrm{kHz}\): \(L=16000\) samples. Take \(N=400\), hop \(H=160\). Window \(400/16000=25\,\mathrm{ms}\), hop \(10\,\mathrm{ms}\). Those are **Whisper’s default** front-end numbers (note **6.2**).
 
@@ -93,7 +142,7 @@ tokens. That is the number Lab 6 is practicing in miniature, and the number a Wh
 
 ---
 
-## 6. Where students get stuck
+## 10. Where students get stuck
 
 - Counting **samples** as **frames**. \(L/f_s\) is duration in seconds; \(T\) is how many windows you placed.
 - Thinking a larger FFT “hears more of the clip.” It hears a **longer window**, so onsets blur; hop still sets the time grid.
@@ -101,13 +150,13 @@ tokens. That is the number Lab 6 is practicing in miniature, and the number a Wh
 
 ---
 
-## 7. Video
+## 11. Video
 
 [Valerio Velardo — Short-Time Fourier Transform Explained Easily](https://www.youtube.com/watch?v=-Yxj3yfvY-4). Play the STFT / spectrogram walkthrough in class (~10–12 min). Pause when the window slides: that hop is \(H\) in the formula above. Search **“Valerio Velardo Short-Time Fourier Transform”** if you need the rest of the Sound of AI series. The board hour is the frame count and the patch count, not the complex-phase algebra.
 
 ---
 
-## 8. Practice
+## 12. Practice
 
 1. You double the hop length and keep \(N\) fixed. What happens to the number of time frames, and to time resolution?
 

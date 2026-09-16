@@ -1,19 +1,12 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**Fusion** is when you combine streams. **Scarcity** is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note **4.1** introduced joint versus coordinated. This note is **fusion**: early, late, and cross-attention, then the data pyramid.
+**Fusion** is when you combine streams. **Scarcity** is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note **4.1** introduced joint versus coordinated. This note is **fusion**: early, late, and cross-attention, then the data pyramid. Lab 6 will concat versus add two vectors so you feel the shape change.
 
 ---
 
-> **First time this method appears.** **Fusion** is how modalities meet. **Scarcity** is that paired audio/text/video is smaller than text.
->
-> **What.** Early fusion (concat features then one net), late (combine decisions), cross-attention (queries from one side, keys/values from the other).
-> **Why.** Concat is the student default and grows width. Missing a modality at test time breaks naive concat.
-> **Architecture.** Draw two towers, then pick concat / add / cross-attn. Data pyramid: lots of unpaired text, less paired A/V.
-> **How.** Lab 6: concat vs add on toy vectors. Project: name the fuse and what you do if audio is missing.
-> **Formula.** Concat: \([u;v]\in\mathbb{R}^{d_u+d_v}\). Add needs \(d_u=d_v\). Cross-attn: \(\operatorname{softmax}(Q_u K_v^{\top}/\sqrt{d})V_v\).
-> **Tradeoffs.** + Cross-attn can attend to a spectrogram while generating text. − Width, missing-modality failure, and paired-data cost.
->
-## 1. Three places to fuse
+## 1. What fusion and data scarcity are
+
+**Fusion** is how modalities meet. **Scarcity** is that paired audio/text/video is smaller than text.
 
 **Early:** concatenate (or add) raw features, then one backbone. Cheap at inference if every modality is always there. Missing a stream at test time hurts, unless you trained dropouts.
 
@@ -23,31 +16,98 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 ![Early, late, and cross-attention fusion](files/data-643/graphics/6.3-fusion-scarcity/fusion.png)
 
-Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows \(d\); add needs a shared dimension and assumes the axes already mean the same thing.
+CLIP-style **two towers** are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. Naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.
 
-![Concat versus add](files/data-643/graphics/6.3-fusion-scarcity/concat-add.png)
-
-CLIP-style **two towers** are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. That is the video’s job this hour.
-
-Naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.
+Plenty of **unpaired** text, plenty of unlabeled audio, fewer **paired** spectrogram–transcript rows, still fewer labeled tasks (emotion, medical, courtroom diarization). That mismatch is the scarcity half of the note.
 
 ---
 
-## 2. The data pyramid
+## 2. Why we use it
 
-Plenty of **unpaired** text, plenty of unlabeled audio, fewer **paired** spectrogram–transcript rows, still fewer labeled tasks (emotion, medical, courtroom diarization). Pretrain the towers where the data is thick; fuse or fine-tune where it is thin.
+Concat is the student default and grows width. Missing a modality at test time breaks naive concat. Add looks similar until the widths differ. Cross-attention is heavier and actually aligns tokens, which is what you want for captioning or transcription.
+
+The data reason is the pyramid. Pretrain the towers where the data is thick; fuse or fine-tune where it is thin. Frozen CLIP or Whisper features plus a small fusion head is a legal project design. Training a new joint stack from 800 paired clips is usually not.
 
 ![More unpaired data than paired, than labeled tasks](files/data-643/graphics/6.3-fusion-scarcity/scarcity.png)
 
-Co-learning (note **4.1**): the rich modality teaches the poor one. Frozen CLIP or Whisper features plus a small fusion head is a legal project design. Training a new joint stack from 800 paired clips is usually not.
-
-Write the counts in a report: unpaired hours, paired hours, labeled task rows. “We fused audio and video” without those numbers is incomplete.
+Co-learning (note **4.1**): the rich modality teaches the poor one. Write the counts in a report: unpaired hours, paired hours, labeled task rows. “We fused audio and video” without those numbers is incomplete.
 
 A missing-modality plan is part of fusion, not an afterthought. Early concat with no dropout is a **joint** model that assumes every stream is present. Late towers can abstain: if audio is missing, skip that cosine. Cross-attention can mask a whole key set. Name which of those you trained.
 
 ---
 
-## 3. What to write in a report
+## 3. Architecture
+
+Draw two towers, then pick concat / add / cross-attention.
+
+![Concat versus add](files/data-643/graphics/6.3-fusion-scarcity/concat-add.png)
+
+Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows \(d\); add needs a shared dimension and assumes the axes already mean the same thing.
+
+- **Concat** \([u;v]\) is legal for any pair of widths. The next linear layer sees \(d_u+d_v\).
+- **Add** \(u+v\) needs \(d_u=d_v\). If vision is 256-D and audio is 64-D, map vision first.
+- **Late (CLIP-style)** keeps both vectors and compares each to a query. No concatenated blob.
+- **Cross-attention** is a map over tokens, not one number. Cosine is not cross-attention.
+
+The data pyramid sits under the picture: lots of unpaired text, less paired audio/video, least labeled task rows. Architecture choices that ignore the pyramid overfit the thin layer.
+
+---
+
+## 4. How it works, step by step
+
+Lab 6: concat vs add on toy vectors. Project: name the fuse and what you do if audio is missing.
+
+1. **Encode each stream** with its own tower (or a shared stem if you truly have early raw concat).
+2. **Pick the fuse.** Concat or add at feature level; average logits at decision level; or let text queries attend to spectrogram keys.
+3. **Name the missing-modality plan.** Replace a missing vector by 0 only if you trained that dropout. Otherwise skip the tower.
+4. **Name the loss.** InfoNCE on tower outputs sees both streams **as vectors**. A captioning CE loss with cross-attention sees tokens aligned to frames. Averaging two classifiers’ logits sees neither alignment.
+5. **Respect the pyramid.** Pretrain or freeze where hours are plentiful; train the small head where labels are scarce.
+
+If the microphone dies, early fusion with no dropout has no legal input. Late fusion can still use the camera.
+
+---
+
+## 5. Mathematical formulas
+
+Concat stacks features:
+
+\[
+[u;v]\in\mathbb{R}^{d_u+d_v}.
+\]
+
+Add needs matching width: \(u+v\) only if \(d_u=d_v\). Cross-attention from stream \(u\) into stream \(v\) is the usual scaled dot product:
+
+\[
+\operatorname{softmax}\bigl(Q_u K_v^{\top}/\sqrt{d}\bigr)V_v.
+\]
+
+Parameter check, ignore bias. Audio \(d_a=64\), vision \(d_v=256\):
+
+- map vision into 64-D so you can **add**: \(W_v\in\mathbb{R}^{64\times 256}\) has \(16{,}384\) weights;
+- **concat** then map to 64-D: \(W\in\mathbb{R}^{64\times 320}\) has \(20{,}480\) weights.
+
+---
+
+## 6. Positive points and negative points
+
+**Positive.**
+
+- Cross-attention can attend to a spectrogram while generating text (Whisper already does this).
+- Late towers can train on each modality’s own data and abstain when a stream is missing.
+- Frozen CLIP or Whisper plus a small fusion head is a legal design when paired rows are scarce.
+
+**Negative.**
+
+- Concat grows width and fails if a modality is missing and you never trained dropout.
+- Add is illegal until the widths match; the axes still have to mean the same thing.
+- Two-tower cosine is not cross-attention; you did not align a pixel with a spectrogram bin.
+- Training early fusion on a tiny paired set because “multimodal needs joint data” usually destroys the pretrained towers.
+
+**When not to.** If you only have late fusion, do not claim cross-modal alignment. If paired data is scarce, freeze the thick tower.
+
+---
+
+## 7. What to write in a report
 
 Name the fusion, the missing-modality plan, and which loss sees both streams. If you only have late fusion, do not claim cross-modal alignment. If paired data is scarce, say so and justify freezing a tower.
 
@@ -55,7 +115,7 @@ Loss check: InfoNCE on tower outputs sees both streams **as vectors**. A caption
 
 ---
 
-## 4. Teaching this note
+## 8. Teaching this note
 
 About **30 minutes** at the board: three fusion sketches, concat vs add with dimensions, then the pyramid with made-up counts. Play the CLIP two-tower segment as the **late fusion / coordinated** baseline (~10 min). Lab 6 section 3 is the tiny concat/add; do not turn this lecture into the lab.
 
@@ -63,7 +123,7 @@ Write \(128+128=256\) vs \(128+128\) illegal add. If the room cannot say which l
 
 ---
 
-## 5. Worked example
+## 9. Worked example
 
 Audio encoder emits \(a\in\mathbb{R}^{128}\), image encoder emits \(v\in\mathbb{R}^{128}\).
 
@@ -82,7 +142,7 @@ Parameter check, ignore bias. Audio \(d_a=64\), vision \(d_v=256\):
 
 ---
 
-## 6. Where students get stuck
+## 10. Where students get stuck
 
 - Saying “add is like concat” because both “combine.” Shapes and missing-modality behavior differ.
 - Calling two-tower cosine **cross-attention**. Cosine is one number; cross-attention is a map over tokens.
@@ -90,13 +150,13 @@ Parameter check, ignore bias. Audio \(d_a=64\), vision \(d_v=256\):
 
 ---
 
-## 7. Video
+## 11. Video
 
 [Yannic Kilcher — OpenAI CLIP, Connecting Text and Images](https://www.youtube.com/watch?v=T9XSU0pKX2E). Play the **two-tower** setup (roughly the first 10–15 min). Pause on the image tower and text tower: that is **late / coordinated fusion**, the baseline for this note. Early concat and cross-attention stay on the board.
 
 ---
 
-## 8. Practice
+## 12. Practice
 
 1. Your app must work when the microphone fails but the camera works. Early fusion with no dropout, or late fusion? Why?
 

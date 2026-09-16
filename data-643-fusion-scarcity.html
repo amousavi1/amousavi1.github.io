@@ -110,44 +110,83 @@
                             Early, late, or cross-attention. Concat grows width. Paired audio is scarce.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>Fusion</strong> is when you combine streams. <strong>Scarcity</strong> is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note <strong>4.1</strong> introduced joint versus coordinated. This note is <strong>fusion</strong>: early, late, and cross-attention, then the data pyramid.</p>
+<p><strong>Fusion</strong> is when you combine streams. <strong>Scarcity</strong> is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note <strong>4.1</strong> introduced joint versus coordinated. This note is <strong>fusion</strong>: early, late, and cross-attention, then the data pyramid. Lab 6 will concat versus add two vectors so you feel the shape change.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>Fusion</strong> is how modalities meet. <strong>Scarcity</strong> is that paired audio/text/video is smaller than text.</p>
-<p><strong>What.</strong> Early fusion (concat features then one net), late (combine decisions), cross-attention (queries from one side, keys/values from the other).
-<strong>Why.</strong> Concat is the student default and grows width. Missing a modality at test time breaks naive concat.
-<strong>Architecture.</strong> Draw two towers, then pick concat / add / cross-attn. Data pyramid: lots of unpaired text, less paired A/V.
-<strong>How.</strong> Lab 6: concat vs add on toy vectors. Project: name the fuse and what you do if audio is missing.
-<strong>Formula.</strong> Concat: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>u</mi><mi>;</mi><mi>v</mi><mo stretchy="false">]</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0002B;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></msup></mrow></math>. Add needs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0003D;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></math>. Cross-attn: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>softmax</mo><mo stretchy="false">&#x00028;</mo><msub><mi>Q</mi><mi>u</mi></msub><msubsup><mi>K</mi><mi>v</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><mo>&#x0002F;</mo><msqrt><mrow><mi>d</mi></mrow></msqrt><mo stretchy="false">&#x00029;</mo><msub><mi>V</mi><mi>v</mi></msub></mrow></math>.
-<strong>Tradeoffs.</strong> + Cross-attn can attend to a spectrogram while generating text. − Width, missing-modality failure, and paired-data cost.
-</p>
-</blockquote>
-<h2>1. Three places to fuse</h2>
+<h2>1. What fusion and data scarcity are</h2>
+<p><strong>Fusion</strong> is how modalities meet. <strong>Scarcity</strong> is that paired audio/text/video is smaller than text.</p>
 <p><strong>Early:</strong> concatenate (or add) raw features, then one backbone. Cheap at inference if every modality is always there. Missing a stream at test time hurts, unless you trained dropouts.</p>
 <p><strong>Late:</strong> a model per modality, combine decisions (average logits, a small MLP on the scores). Each expert can train on its own data. You lose fine alignment (which word went with which beep).</p>
 <p><strong>Cross-attention (hybrid):</strong> queries from one stream, keys and values from another. Whisper’s decoder already does this for audio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text. A video LM does it for frames <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> tokens. This is the default when you want alignment, not just a bag of scores.</p>
 <p><img alt="Early, late, and cross-attention fusion" src="files/data-643/graphics/6.3-fusion-scarcity/fusion.png" /></p>
-<p>Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>; add needs a shared dimension and assumes the axes already mean the same thing.</p>
-<p><img alt="Concat versus add" src="files/data-643/graphics/6.3-fusion-scarcity/concat-add.png" /></p>
-<p>CLIP-style <strong>two towers</strong> are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. That is the video’s job this hour.</p>
-<p>Naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.</p>
+<p>CLIP-style <strong>two towers</strong> are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. Naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.</p>
+<p>Plenty of <strong>unpaired</strong> text, plenty of unlabeled audio, fewer <strong>paired</strong> spectrogram–transcript rows, still fewer labeled tasks (emotion, medical, courtroom diarization). That mismatch is the scarcity half of the note.</p>
 <hr />
-<h2>2. The data pyramid</h2>
-<p>Plenty of <strong>unpaired</strong> text, plenty of unlabeled audio, fewer <strong>paired</strong> spectrogram–transcript rows, still fewer labeled tasks (emotion, medical, courtroom diarization). Pretrain the towers where the data is thick; fuse or fine-tune where it is thin.</p>
+<h2>2. Why we use it</h2>
+<p>Concat is the student default and grows width. Missing a modality at test time breaks naive concat. Add looks similar until the widths differ. Cross-attention is heavier and actually aligns tokens, which is what you want for captioning or transcription.</p>
+<p>The data reason is the pyramid. Pretrain the towers where the data is thick; fuse or fine-tune where it is thin. Frozen CLIP or Whisper features plus a small fusion head is a legal project design. Training a new joint stack from 800 paired clips is usually not.</p>
 <p><img alt="More unpaired data than paired, than labeled tasks" src="files/data-643/graphics/6.3-fusion-scarcity/scarcity.png" /></p>
-<p>Co-learning (note <strong>4.1</strong>): the rich modality teaches the poor one. Frozen CLIP or Whisper features plus a small fusion head is a legal project design. Training a new joint stack from 800 paired clips is usually not.</p>
-<p>Write the counts in a report: unpaired hours, paired hours, labeled task rows. “We fused audio and video” without those numbers is incomplete.</p>
+<p>Co-learning (note <strong>4.1</strong>): the rich modality teaches the poor one. Write the counts in a report: unpaired hours, paired hours, labeled task rows. “We fused audio and video” without those numbers is incomplete.</p>
 <p>A missing-modality plan is part of fusion, not an afterthought. Early concat with no dropout is a <strong>joint</strong> model that assumes every stream is present. Late towers can abstain: if audio is missing, skip that cosine. Cross-attention can mask a whole key set. Name which of those you trained.</p>
 <hr />
-<h2>3. What to write in a report</h2>
+<h2>3. Architecture</h2>
+<p>Draw two towers, then pick concat / add / cross-attention.</p>
+<p><img alt="Concat versus add" src="files/data-643/graphics/6.3-fusion-scarcity/concat-add.png" /></p>
+<p>Lab 6 will concat versus add two vectors so you feel the shape change. Concat grows <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>; add needs a shared dimension and assumes the axes already mean the same thing.</p>
+<ul>
+<li><strong>Concat</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>u</mi><mi>;</mi><mi>v</mi><mo stretchy="false">]</mo></mrow></math> is legal for any pair of widths. The next linear layer sees <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0002B;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></math>.</li>
+<li><strong>Add</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>u</mi><mo>&#x0002B;</mo><mi>v</mi></mrow></math> needs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0003D;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></math>. If vision is 256-D and audio is 64-D, map vision first.</li>
+<li><strong>Late (CLIP-style)</strong> keeps both vectors and compares each to a query. No concatenated blob.</li>
+<li><strong>Cross-attention</strong> is a map over tokens, not one number. Cosine is not cross-attention.</li>
+</ul>
+<p>The data pyramid sits under the picture: lots of unpaired text, less paired audio/video, least labeled task rows. Architecture choices that ignore the pyramid overfit the thin layer.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>Lab 6: concat vs add on toy vectors. Project: name the fuse and what you do if audio is missing.</p>
+<ol>
+<li><strong>Encode each stream</strong> with its own tower (or a shared stem if you truly have early raw concat).</li>
+<li><strong>Pick the fuse.</strong> Concat or add at feature level; average logits at decision level; or let text queries attend to spectrogram keys.</li>
+<li><strong>Name the missing-modality plan.</strong> Replace a missing vector by 0 only if you trained that dropout. Otherwise skip the tower.</li>
+<li><strong>Name the loss.</strong> InfoNCE on tower outputs sees both streams <strong>as vectors</strong>. A captioning CE loss with cross-attention sees tokens aligned to frames. Averaging two classifiers’ logits sees neither alignment.</li>
+<li><strong>Respect the pyramid.</strong> Pretrain or freeze where hours are plentiful; train the small head where labels are scarce.</li>
+</ol>
+<p>If the microphone dies, early fusion with no dropout has no legal input. Late fusion can still use the camera.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Concat stacks features:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo stretchy="false">[</mo><mi>u</mi><mi>;</mi><mi>v</mi><mo stretchy="false">]</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0002B;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></msup><mo>&#x0002E;</mo></mrow></math>
+<p>Add needs matching width: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>u</mi><mo>&#x0002B;</mo><mi>v</mi></mrow></math> only if <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>u</mi></msub><mo>&#x0003D;</mo><msub><mi>d</mi><mi>v</mi></msub></mrow></math>. Cross-attention from stream <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>u</mi></mrow></math> into stream <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi></mrow></math> is the usual scaled dot product:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>softmax</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><msub><mi>Q</mi><mi>u</mi></msub><msubsup><mi>K</mi><mi>v</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><mo>&#x0002F;</mo><msqrt><mrow><mi>d</mi></mrow></msqrt><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><msub><mi>V</mi><mi>v</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>Parameter check, ignore bias. Audio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>a</mi></msub><mo>&#x0003D;</mo><mn>64</mn></mrow></math>, vision <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>d</mi><mi>v</mi></msub><mo>&#x0003D;</mo><mn>256</mn></mrow></math>:</p>
+<ul>
+<li>map vision into 64-D so you can <strong>add</strong>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>v</mi></msub><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>64</mn><mo>&#x000D7;</mo><mn>256</mn></mrow></msup></mrow></math> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn><mrow><mo>&#x0002C;</mo></mrow><mn>384</mn></mrow></math> weights;</li>
+<li><strong>concat</strong> then map to 64-D: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>64</mn><mo>&#x000D7;</mo><mn>320</mn></mrow></msup></mrow></math> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>20</mn><mrow><mo>&#x0002C;</mo></mrow><mn>480</mn></mrow></math> weights.</li>
+</ul>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Cross-attention can attend to a spectrogram while generating text (Whisper already does this).</li>
+<li>Late towers can train on each modality’s own data and abstain when a stream is missing.</li>
+<li>Frozen CLIP or Whisper plus a small fusion head is a legal design when paired rows are scarce.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Concat grows width and fails if a modality is missing and you never trained dropout.</li>
+<li>Add is illegal until the widths match; the axes still have to mean the same thing.</li>
+<li>Two-tower cosine is not cross-attention; you did not align a pixel with a spectrogram bin.</li>
+<li>Training early fusion on a tiny paired set because “multimodal needs joint data” usually destroys the pretrained towers.</li>
+</ul>
+<p><strong>When not to.</strong> If you only have late fusion, do not claim cross-modal alignment. If paired data is scarce, freeze the thick tower.</p>
+<hr />
+<h2>7. What to write in a report</h2>
 <p>Name the fusion, the missing-modality plan, and which loss sees both streams. If you only have late fusion, do not claim cross-modal alignment. If paired data is scarce, say so and justify freezing a tower.</p>
 <p>Loss check: InfoNCE on tower outputs sees both streams <strong>as vectors</strong>. A captioning CE loss with cross-attention sees tokens aligned to frames. Averaging two classifiers’ logits sees neither alignment. Use the word that matches the loss.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>8. Teaching this note</h2>
 <p>About <strong>30 minutes</strong> at the board: three fusion sketches, concat vs add with dimensions, then the pyramid with made-up counts. Play the CLIP two-tower segment as the <strong>late fusion / coordinated</strong> baseline (~10 min). Lab 6 section 3 is the tiny concat/add; do not turn this lecture into the lab.</p>
 <p>Write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>128</mn><mo>&#x0002B;</mo><mn>128</mn><mo>&#x0003D;</mo><mn>256</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>128</mn><mo>&#x0002B;</mo><mn>128</mn></mrow></math> illegal add. If the room cannot say which linear map you need to add a 256-D vision vector into 64-D audio, redo that minute.</p>
 <hr />
-<h2>5. Worked example</h2>
+<h2>9. Worked example</h2>
 <p>Audio encoder emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math>, image encoder emits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>v</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>128</mn></mrow></msup></mrow></math>.</p>
 <ul>
 <li><strong>Concat:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>a</mi><mi>;</mi><mi>v</mi><mo stretchy="false">]</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>256</mn></mrow></msup></mrow></math>. A linear head is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>c</mi><mo>&#x000D7;</mo><mn>256</mn></mrow></msup></mrow></math>. If the microphone dies you have no 256-vector unless you trained a missing-audio dropout (replace <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>, or a learned mask token).</li>
@@ -162,17 +201,17 @@
 <li><strong>concat</strong> then map to 64-D: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>64</mn><mo>&#x000D7;</mo><mn>320</mn></mrow></msup></mrow></math> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>20</mn><mrow><mo>&#x0002C;</mo></mrow><mn>480</mn></mrow></math> weights.</li>
 </ul>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>10. Where students get stuck</h2>
 <ul>
 <li>Saying “add is like concat” because both “combine.” Shapes and missing-modality behavior differ.</li>
 <li>Calling two-tower cosine <strong>cross-attention</strong>. Cosine is one number; cross-attention is a map over tokens.</li>
 <li>Planning to train early fusion on a tiny paired set because “multimodal needs joint data.” Freeze the thick tower.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>11. Video</h2>
 <p><a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher — OpenAI CLIP, Connecting Text and Images</a>. Play the <strong>two-tower</strong> setup (roughly the first 10–15 min). Pause on the image tower and text tower: that is <strong>late / coordinated fusion</strong>, the baseline for this note. Early concat and cross-attention stay on the board.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>12. Practice</h2>
 <ol>
 <li>
 <p>Your app must work when the microphone fails but the camera works. Early fusion with no dropout, or late fusion? Why?</p>
@@ -198,7 +237,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 

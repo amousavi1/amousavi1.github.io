@@ -110,25 +110,23 @@
                             CoCa adds a decoder. BLIP also filters the web: ITC, ITM, and a language-model loss.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>BLIP</strong> (Li et al., 2022) is a vision–language model that <strong>matches</strong> and <strong>writes</strong>. CLIP scores pairs. CoCa (Yu et al.) is the sibling idea: add a <strong>decoder</strong>. BLIP does that, and it also <strong>cleans</strong> the noisy web pairs CLIP trained on.</p>
+<p><strong>BLIP</strong> (Li et al., 2022) is a vision–language model that <strong>matches</strong> and <strong>writes</strong>. CLIP scores pairs. CoCa (Yu et al.) is the sibling idea: add a <strong>decoder</strong>. BLIP does that, and it also <strong>cleans</strong> the noisy web pairs CLIP trained on. By the end you should be able to name the three losses, say why the filter exists, and tell retrieval from captioning.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>BLIP</strong> is CLIP-style scoring <strong>plus</strong> a decoder that writes text, with a filter on noisy web pairs.</p>
-<p><strong>What.</strong> Three losses: ITC (contrastive), ITM (matched vs unmatched pair), LM (caption tokens). Bootstrap: generate captions, filter, train.
-<strong>Why.</strong> CLIP cannot decode a sentence. Naive captioners train on noisy alt-text. BLIP tries to clean the web and add generation.
-<strong>Architecture.</strong> Image encoder, text encoder, and a decoder with <strong>cross-attention</strong> into image tokens (queries from text, keys/values from vision).
-<strong>How.</strong> ITC aligns. ITM is a binary match head. LM is next-token on the caption. Generation uses the decoder; retrieval can use ITC embeddings.
-<strong>Formula.</strong> ITC as InfoNCE; ITM as logistic on a CLS; LM as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>&#x02211;</mo><mi>t</mi></msub><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>image</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>.
-<strong>Tradeoffs.</strong> + Captions and retrieval in one family. − Hallucinated captions; filter is extra machinery; heavier than frozen CLIP.
-</p>
-</blockquote>
-<h2>1. Bootstrap the data</h2>
-<p>Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter keeps the ones that still match the image (ITM: image–text matching). The cleaned pairs retrain the model. That loop is the “bootstrapped pretraining” in the syllabus.</p>
+<h2>1. What BLIP is</h2>
+<p><strong>BLIP</strong> is CLIP-style scoring <strong>plus</strong> a decoder that writes text, with a filter on noisy web pairs. CLIP cannot decode a sentence. Naive captioners train on noisy alt-text. BLIP tries to clean the web and add generation.</p>
+<p>Three losses share one backbone: <strong>ITC</strong> (contrastive, CLIP-style alignment), <strong>ITM</strong> (matched versus unmatched pair), and <strong>LM</strong> (caption tokens). The bootstrap loop is: generate captions, filter the ones that still match the image, train again.</p>
 <p><img alt="Noisy pairs, filter, matching and language losses" src="files/data-643/graphics/5.2-blip/blip-pipeline.png" /></p>
 <p>Alt-text like <code>IMG_4032</code> or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.</p>
 <p>CoCa (Yu et al.) adds a captioning loss on top of contrastive training. It does <strong>not</strong> advertise the bootstrap filter. If your story is “noisy web text,” you need BLIP’s ITM filter, not only a decoder.</p>
 <hr />
-<h2>2. Three losses, one backbone</h2>
+<h2>2. Why we use it</h2>
+<p>CLIP retrieves an existing string from a gallery. Many products need a <strong>new</strong> sentence: a caption, an alt-text rewrite, a description that was never in the index. That job is generation, and it needs a decoder.</p>
+<p>The web is the other reason. Alt-text is messy. Training language-model loss on <code>DSC0001.jpg</code> teaches garbage. BLIP’s filter is the method that tries to keep only captions that still match the image. Whisper, which you will watch as an analog, is an encoder–decoder for <strong>speech <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>. BLIP is encoder–decoder for <strong>image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>, plus ITC and ITM.</p>
+<p>If your project only retrieves, stop at ITC (or CLIP). If it must write, you need LM. If web text is junk, you need the filter (ITM).</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>An image encoder, a text encoder, and a decoder with <strong>cross-attention</strong> into image tokens (queries from text, keys and values from vision).</p>
+<p>The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. <strong>BLIP-2</strong> later freezes a strong image encoder and trains a thin <strong>Q-Former</strong>; treat that as “same idea, cheaper.” LLaVA is a frozen CLIP tower plus an LLM. Not this hour.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -152,19 +150,51 @@
 </tbody>
 </table></div>
 <p><img alt="ITC, ITM, and LM" src="files/data-643/graphics/5.2-blip/blip-losses.png" /></p>
-<p>The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. <strong>BLIP-2</strong> later freezes a strong image encoder and trains a thin <strong>Q-Former</strong>; treat that as “same idea, cheaper.” LLaVA is a frozen CLIP tower plus an LLM. Not this hour.</p>
-<p>ITC needs a batch of negatives. ITM can use a <strong>hard</strong> negative (a caption that almost matches). LM is why BLIP can caption at all.</p>
-<p>Whisper, which you will watch as an analog, is an encoder–decoder for <strong>speech <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>. BLIP is encoder–decoder for <strong>image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text</strong>, plus ITC and ITM.</p>
+<p>ITC needs a batch of negatives. ITM can use a <strong>hard</strong> negative (a caption that almost matches). LM is why BLIP can caption at all. Generation uses the decoder; retrieval can use ITC embeddings.</p>
 <hr />
-<h2>3. Captioning versus retrieval</h2>
+<h2>4. How it works, step by step</h2>
+<ol>
+<li><strong>ITC aligns.</strong> Encode a batch of image–text pairs. InfoNCE wants the diagonal, as in CLIP. This is the retrieval-friendly space.</li>
+<li><strong>ITM matches.</strong> A binary head on a fused <code>[CLS]</code> asks whether this caption belongs to this image. Hard negatives make the yes/no sharper than a random off-diagonal.</li>
+<li><strong>LM writes.</strong> Decode <code>a</code>, <code>red</code>, <code>mug</code>, … with cross-attention into ViT patch tokens. Loss is next-token, like GPT, but the “prefix” includes the image.</li>
+<li><strong>Bootstrap.</strong> A captioner generates synthetic captions for web images. ITM keeps the ones that still match. Retrain on the cleaned pairs. That loop is the “bootstrapped pretraining” in the syllabus.</li>
+<li><strong>Pick the head at test.</strong> Retrieve with ITC embeddings. Caption with the decoder. Do not report recall@k as the only captioning metric.</li>
+</ol>
+<p>If alt-text was <code>DSC0001.jpg</code>, LM on that string teaches garbage. Filter first, then LM.</p>
+<p>ITC wants a <strong>batch</strong>. ITM can score one pair. LM wants a <strong>token sequence</strong>.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>ITC is InfoNCE on the batch, as in note <strong>4.3</strong>. ITM is logistic loss on a match score <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>. With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>s</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002B;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mi>s</mi></mrow></msup><mo stretchy="false">&#x00029;</mo></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>ITM</mtext></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>y</mi><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>s</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mi>log</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mn>1</mn><mo>&#x02212;</mo><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>s</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>LM is next-token on the caption, conditioned on the image:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>LM</mtext></mrow></msub><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mi>t</mi></munder><mo>&#x02212;</mo><mi>log</mi><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>image</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>The three terms share the ViT and the text transformer; they do not share a head.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Captions and retrieval in one family: decoder for writing, ITC embeddings for search.</li>
+<li>The ITM filter is a method for noisy web alt-text, not a slogan.</li>
+<li>Cross-attention into patch tokens is the same encoder–decoder picture students will see in Whisper.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Captions can hallucinate objects that are not in the image.</li>
+<li>The filter is extra machinery; skipping it and training LM on raw alt-text is a common failure.</li>
+<li>Heavier than frozen CLIP: you train a decoder, not only two towers.</li>
+<li>CLIP-score as a caption metric is circular if the captioner was trained to match CLIP.</li>
+</ul>
+<p><strong>When not to.</strong> If your project only retrieves, stop at CLIP or ITC. CoCa and BLIP share a decoder idea; they are not the same paper. BLIP’s extra is bootstrap plus ITM.</p>
+<hr />
+<h2>7. Captioning versus retrieval</h2>
 <p>Retrieval (CLIP) returns an existing string from a gallery. Captioning (BLIP) <strong>generates</strong> a new string. Evaluation: CIDEr / CLIP-score / human, not just recall@k. Hallucinated objects are the usual failure (“a red bike” when there is none).</p>
 <p>CLIP-score as a caption metric is circular if your captioner was trained to match CLIP. Prefer at least one human or task-specific check. CIDEr rewards n-gram overlap with reference captions; it punishes valid paraphrases. Report both and show two example captions, one good and one hallucinated.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>8. Teaching this note</h2>
 <p><strong>30–40 minutes.</strong> CLIP retrieves vs BLIP writes, then the three-loss table, then one numeric ITM vs ITC contrast. Reading: the BLIP paper (ITC+ITM+LM). Play the Whisper video as the <strong>encoder–decoder analog</strong> for captioning (<strong>0:00–8:00</strong>). Say explicitly: Whisper does not add ITC+ITM; <strong>BLIP does</strong>.</p>
 <p>Minute plan: 8 min retrieve vs generate; 10 min ITC/ITM/LM table; 8 min ITM numbers; 12 min Whisper clip plus the one-sentence BLIP add-on.</p>
 <hr />
-<h2>5. Worked example</h2>
+<h2>9. Worked example</h2>
 <p>One image, two captions: true “a red mug on a desk,” false “a blue bicycle.”</p>
 <p>ITC (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>): softmax over the batch; the false caption is one negative among many in a real batch.</p>
 <p>ITM: a classifier on the fused <code>[CLS]</code> with labels <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>. Suppose logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>s</mi><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1</mn></mrow></math>.</p>
@@ -175,7 +205,7 @@
 <p>If alt-text was <code>DSC0001.jpg</code>, LM on that string teaches garbage. Filter first, then LM.</p>
 <p>ITC wants a <strong>batch</strong>. ITM can score one pair. LM wants a <strong>token sequence</strong>. If your project only retrieves, stop at ITC (or CLIP). If it must write, you need LM. If web text is junk, you need the filter (ITM).</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>10. Where students get stuck</h2>
 <ul>
 <li>Using recall@k as the only captioning metric.</li>
 <li>Thinking ITM and ITC are the same softmax.</li>
@@ -183,11 +213,11 @@
 <li>Calling CoCa and BLIP the same paper. Shared idea: a decoder. BLIP’s extra: bootstrap + ITM.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>11. Video</h2>
 <p>Keep the <strong>BLIP paper</strong> as the reading (Li et al., 2022). For a lecture clip, watch <a href="https://www.youtube.com/watch?v=uFOkMme19Zs">OpenAI’s Whisper Model Explained</a> as an <strong>encoder–decoder analog for captioning</strong>: audio encoder, text decoder. Pause on that cross-attention picture.</p>
 <p>Then say: <strong>BLIP adds ITC + ITM + LM</strong> on image–text pairs, and bootstraps noisy web captions. Whisper transcribes; BLIP captions and matches.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>12. Practice</h2>
 <ol>
 <li>
 <p>Why filter generated captions instead of trusting every alt-text on the web?</p>
@@ -213,7 +243,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 

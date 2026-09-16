@@ -110,20 +110,10 @@
                             Five jobs: represent, align, fuse, translate, co-learn. CLIP scores; concat fuses.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>Module 2 leaves pure text. <strong>Multimodal</strong> systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. The five jobs are <strong>representation, alignment, fusion, translation, co-learning</strong> (Baltrušaitis et al.). Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio).</p>
-<p>If you only train on text, you cannot answer “what is in this photo?” without an image tower or a captioner. That is why Weeks 4–5 exist.</p>
+<p>Module 2 leaves pure text. <strong>Multimodal</strong> systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio) are both useful, and they are not the same job. If you only train on text, you cannot answer “what is in this photo?” without an image tower or a captioner. That is why Weeks 4–5 exist.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>Multimodal learning</strong> is more than “glue an image to a caption.”</p>
-<p><strong>What.</strong> Five jobs (Baltrušaitis et al.): represent, align, fuse, translate, co-learn. A model can score a pair (CLIP) without decoding a sentence.
-<strong>Why.</strong> Pixels, text, and audio are different sensors. Concatenation is one fusion; it is not the only job.
-<strong>Architecture.</strong> Separate encoders per modality, then a fuse (concat, add, or cross-attention) or a score (cosine).
-<strong>How.</strong> Pick the job first. Retrieval needs a score. Captioning needs a decoder. Classification can be a linear head on a frozen encoder.
-<strong>Formula.</strong> Coordinated: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. Joint concat: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mi>;</mi><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mspace width="0.167em" /><mi>W</mi></mrow></math>.
-<strong>Tradeoffs.</strong> + You can reuse a frozen encoder. − Concat grows width; alignment needs paired data; “multimodal” without naming the job is not a project.
-</p>
-</blockquote>
-<h2>1. Five jobs, not one architecture</h2>
+<h2>1. What multimodal learning is</h2>
+<p><strong>Multimodal learning</strong> is not “glue an image to a caption.” It is a family of jobs on more than one stream of data. Baltrušaitis et al. name five of them: <strong>representation, alignment, fusion, translation, co-learning</strong>. A model can score a pair (CLIP) without ever decoding a sentence. Another model can write a caption (BLIP) without being a good retriever. The word “multimodal” without the job is not a method.</p>
 <p><img alt="Represent, align, fuse, translate, co-learn" src="files/data-643/graphics/4.1-multimodal-foundations/five-challenges.png" /></p>
 <div class="table-wrap"><table>
 <thead>
@@ -162,37 +152,83 @@
 </tbody>
 </table></div>
 <p>Translation is not fusion. Captioning <strong>maps</strong> image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text. CLIP <strong>scores</strong> image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02194;</mo></mrow></math> text. If your demo must output a sentence, you need a decoder. If it must search a gallery, you need two towers and a cosine.</p>
-<p>A detector that puts a box on “the red mug” is alignment at <strong>region</strong> level. A single cosine on the whole image vs the whole caption is alignment at <strong>instance</strong> level. Know which one your project needs.</p>
+<p>A detector that puts a box on “the red mug” is alignment at <strong>region</strong> level. A single cosine on the whole image versus the whole caption is alignment at <strong>instance</strong> level. Know which one your project needs.</p>
 <hr />
-<h2>2. Joint versus coordinated</h2>
-<p><strong>Joint:</strong> mash the streams into <strong>one</strong> vector (early fusion, a concatenating MLP). Missing a modality at test time hurts.</p>
-<p><strong>Coordinated:</strong> keep a tower per modality, then pull the towers together with a similarity (CLIP is this; canonical correlation analysis is another coordinated family). You can query with either side.</p>
+<h2>2. Why we use it</h2>
+<p>Pixels, text, and audio are different sensors. They disagree usefully (complementary) and they agree usefully (redundant). A text-only model cannot look at a photo. An image-only classifier cannot take a typed query. Concatenation is one way to mix features; it is not the only job, and it is a poor default when you will later need to query from one side only.</p>
+<p>Three product questions keep coming back.</p>
+<ol>
+<li><strong>Search a gallery with words.</strong> You need a score between an image vector and a text vector, not a fused blob.</li>
+<li><strong>Write a sentence about an image.</strong> You need translation: a decoder, not a cosine.</li>
+<li><strong>A rich stream helping a poor one.</strong> English captions are plentiful; labels in another language, or in a rare medical code, are not. Co-learning is the hope that the rich side teaches the poor side through a shared space.</li>
+</ol>
+<p>Week 4.3 will make that last job concrete as zero-shot classification. This note is the map of jobs so you stop calling every image–text demo “CLIP.”</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>There is no single multimodal layer. You pick a <strong>representation</strong> first: joint or coordinated.</p>
+<p><strong>Joint:</strong> mash the streams into <strong>one</strong> vector (early fusion, a concatenating MLP). At train time you always have both sides. At test time, missing a modality hurts, unless you trained a special dropout path. On the board this is two arrows that you <strong>add</strong> or <strong>concat</strong>.</p>
+<p><strong>Coordinated:</strong> keep a tower per modality, then pull the towers together with a similarity (CLIP is this; canonical correlation analysis is another coordinated family). You can query with either side. On the board this is two arrows that you <strong>dot</strong>. CLIP never concatenates pixels with token ids during pretraining; it only scores pairs.</p>
 <p><img alt="Joint fusion versus coordinated towers" src="files/data-643/graphics/4.1-multimodal-foundations/joint-coord.png" /></p>
-<p>On the board: two arrows that you <strong>add</strong> (joint) vs two arrows that you <strong>dot</strong> (coordinated). CLIP never concatenates pixels with token ids during pretraining; it only scores pairs.</p>
 <p>We do not derive Deep CCA. The slogan is enough: a coordination <strong>loss</strong>, not a concatenating layer.</p>
+<p>After the towers (or the fused vector) you still have to choose an interaction. Retrieval uses a score such as cosine. Classification can sit a linear head on a frozen encoder. Captioning attaches a decoder. Fusion later in the course (note <strong>6.3</strong>) will name early, late, and cross-attention; this hour you only need to know that concat is one fuse among several.</p>
 <hr />
-<h2>3. Teaching this note</h2>
+<h2>4. How it works, step by step</h2>
+<p>Pick the <strong>job</strong> first. The architecture follows.</p>
+<ol>
+<li><strong>Name the streams.</strong> Image and caption, spectrogram and transcript, PDF pixels and words.</li>
+<li><strong>Name the output.</strong> A ranked list, a class name, a generated sentence, a box on a region.</li>
+<li><strong>Choose joint or coordinated.</strong> Search with a typed query wants coordinated towers. A classifier that always sees both sensors can be joint.</li>
+<li><strong>Choose the interaction.</strong> Retrieval needs a score. Captioning needs a decoder. Classification can be a linear head on a frozen encoder.</li>
+<li><strong>Decide what happens if a stream is missing.</strong> A joint MLP trained on concatenations cannot score the text alone unless you trained that path. A coordinated text tower still embeds the query.</li>
+</ol>
+<p>If the image is missing, that last step is the whole method. Students who concatenate first and ask questions later discover this in the project, not at the board.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p><strong>Coordinated</strong> scoring. Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi></mrow></math> be the image encoder and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi></mrow></math> the text encoder. Similarity is cosine:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>cos</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0003D;</mo><mfrac><mrow><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><msup><mo stretchy="false">&#x00029;</mo><mrow><mo>&#x022A4;</mo></mrow></msup><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mo>&#x02016;</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02016;</mo><mspace width="0.167em" /><mo>&#x02016;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Rank captions (or images) by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>s</mi></mrow></math>. That is retrieval. Zero-shot classification is the same score against a list of class phrases.</p>
+<p><strong>Joint</strong> concat. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow></msup></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>d</mi><mi>t</mi></msub></mrow></msup></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo stretchy="false">[</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mi>;</mi><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mspace width="0.167em" /><mi>W</mi><mo>&#x0002C;</mo><mspace width="2em" /><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>d</mi><mi>i</mi></msub><mo>&#x0002B;</mo><msub><mi>d</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x000D7;</mo><mi>h</mi></mrow></msup><mo>&#x0002C;</mo></mrow></math>
+<p>is a fused vector of width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>h</mi></mrow></math>. You need <strong>both</strong> streams at test time, and a typed query with no image has the wrong shape.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>You can reuse a frozen encoder as one tower and train only the other side or a small head.</li>
+<li>Coordinated spaces let you query from either modality after training.</li>
+<li>Naming the five jobs keeps a retrieval demo from being graded as a captioner.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Concatenation grows width and assumes every stream is present.</li>
+<li>Alignment, whether instance-level cosine or region-level boxes, needs paired data.</li>
+<li>Calling a project “multimodal” without naming the job is not a method.</li>
+<li>Joint models cannot take a text-only query unless you trained that path.</li>
+</ul>
+<p><strong>When not to.</strong> If you only need to search a gallery with words, do not train a concatenating captioner. If you must emit a sentence, a cosine is the wrong head.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p><strong>~16 minutes.</strong> Five-job table, then joint vs coordinated with the 2-D cosine example. Play Yannic Kilcher CLIP <strong>4:40–14:40</strong> (two towers as a coordinated space). Zero-shot details wait for 4.3; captioning waits for BLIP.</p>
 <hr />
-<h2>4. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Image vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Matching caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, other caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>.</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x0002B;</mo></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0.8</mn><mo>&#x0002F;</mo><msqrt><mrow><mn>0.68</mn></mrow></msqrt><mo>&#x02248;</mo><mn>0.97</mn><mo>&#x0002C;</mo><mspace width="2em" /><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002C;</mo><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x02212;</mo></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002E;</mo></mrow></math>
 <p><img alt="Match versus mismatch" src="files/data-643/graphics/4.1-multimodal-foundations/cosine-numeric.png" /></p>
 <p>Coordinated retrieval: rank captions by cosine. Joint fusion: concat(<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">t</mi></mrow></mrow></math>) is 4-D; you need <strong>both</strong> at test time, and a typed query with no image has the wrong shape.</p>
 <p>If the image is missing, a joint MLP trained on concatenations cannot score the text alone unless you trained a special “image dropout” path. A coordinated text tower still embeds the query.</p>
 <hr />
-<h2>5. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Concatenating then calling it CLIP.</li>
 <li>Assuming a joint model can take a text-only query at test time.</li>
 <li>Mixing alignment (what matches what) with fusion (when you mix features) with translation (when you generate the other stream).</li>
 </ul>
 <hr />
-<h2>6. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
 <p>Play <strong>4:40–14:40</strong>. Pause when the two encoders emit vectors in one space, and when a cosine (not a concatenating MLP) is the interaction. That is coordinated representation.</p>
 <hr />
-<h2>7. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Your app must search photos with a typed query. Joint or coordinated? Why?</p>
@@ -224,7 +260,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 

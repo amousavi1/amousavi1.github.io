@@ -110,41 +110,68 @@
                             recall@k in both directions, an occupation probe, and a typographic miss.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>Once image and text share a space, <strong>retrieval</strong> is nearest neighbors. The same geometry that makes search work also encodes <strong>stereotypes</strong> from the training web. A single prompt can be peaked; this note measures what that geometry retrieves.</p>
+<p>Once image and text share a space, <strong>retrieval</strong> is nearest neighbors. The same geometry that makes search work also encodes <strong>stereotypes</strong> from the training web. A single prompt can be peaked; this note measures what that geometry retrieves. Lab 5’s occupation probe is the miniature; the lecture is the metric and the probe.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>Recall@k</strong> is a retrieval metric. <strong>Bias probes</strong> and <strong>typographic attacks</strong> are how you stress a CLIP-like space.</p>
-<p><strong>What.</strong> recall@k: fraction of queries whose true match sits in the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. An occupation probe: does “nurse” retrieve stereotyped images? Typographic: a word printed in the photo can hijack the text tower.
-<strong>Why.</strong> A pretty cosine is not a fair or robust system. You need a number that can go the wrong way.
-<strong>Architecture.</strong> Same two towers. Evaluation is a ranked list plus extra probe sets.
-<strong>How.</strong> Rank both directions (image→text and text→image). Report recall@1/@5. Then one occupation table and one typographic miss.
-<strong>Formula.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>recall</mo><mi>@</mi><mi>k</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>Q</mi></mrow></mfrac><msub><mo>&#x02211;</mo><mi>q</mi></msub><mrow><mn mathvariant="bold">1</mn></mrow><mo stretchy="false">[</mo><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">k</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mi>k</mi><mo stretchy="false">]</mo></mrow></math>.
-<strong>Tradeoffs.</strong> + Cheap to compute, catches misses. − Does not measure calibration or fairness by itself; probes are datasets, not slogans.
-</p>
-</blockquote>
-<h2>1. Two directions</h2>
+<h2>1. What retrieval metrics and bias probes are</h2>
+<p><strong>Recall@k</strong> is a retrieval metric: the fraction of queries whose true match sits in the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. <strong>Bias probes</strong> and <strong>typographic attacks</strong> are how you stress a CLIP-like space. An occupation probe asks whether “nurse” retrieves stereotyped images. A typographic attack prints a word in the photo and hijacks the text tower.</p>
 <p><strong>Text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> image:</strong> a query string, rank photos. <strong>Image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text:</strong> a photo, rank captions or documents. Dual retrieval is why coordinated towers beat a joint vector that you can only query from one side.</p>
 <p><img alt="Query with an image or with text" src="files/data-643/graphics/5.3-retrieval-bias/retrieval.png" /></p>
-<p>Report <strong>recall@k</strong> and a few failure cases (wrong object, wrong count, text that ignores the image). For a project, freeze the gallery embeddings; do not re-encode millions of images on every demo.</p>
-<p>Recall@1 on a 2-item toy is not a paper. On a 100k gallery, recall@1 can look terrible while recall@10 is usable. Always state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> and gallery size.</p>
-<p>If the gold item is in the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> of the ranked list, that query scores 1; otherwise 0. Average over queries. That is recall@k.</p>
+<p>If the gold item is in the top <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> of the ranked list, that query scores 1; otherwise 0. Average over queries. That is recall@k. It is cheap, and it does not measure calibration or fairness by itself.</p>
 <hr />
-<h2>2. Bias and robustness</h2>
-<p>Occupation and gender, geography and skin tone, “a terrorist” versus a news photo: CLIP-style models pick up the co-occurrences of the web. Zero-shot prompts (<code>a photo of a man who is a nurse</code>) move the query along the same directions you saw in Week 1’s toy embeddings.</p>
+<h2>2. Why we use it</h2>
+<p>A pretty cosine is not a fair or robust system. You need a number that can go the wrong way, and a probe set that can embarrass a demo.</p>
+<p>Recall@1 on a 2-item toy is not a paper. On a 100k gallery, recall@1 can look terrible while recall@10 is usable. Always state <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> and gallery size. For a project, freeze the gallery embeddings; do not re-encode millions of images on every demo.</p>
+<p>If your project ranks people, jobs, or health content, put a probe in the report: a small, documented set of prompts and the retrievals they return. Debiasing is incomplete; measuring is required. A high ImageNet zero-shot number does not certify your domain.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Same two CLIP towers. Evaluation is a ranked list plus extra probe sets. You do not add a new layer. You add a gallery, a query encoder, and a rule for a hit.</p>
+<p>Keep both towers. Throw one away and you can no longer query from that side. Rank <strong>both</strong> directions (image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text and text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> image). Report recall@1 and recall@5, then one occupation table and one typographic miss.</p>
+<p>A probe is a <strong>fixed list</strong> of prompts and a rule for a bad hit (wrong gender default, violent stereotype, medical advice). Put the list in an appendix. Do not “debias” by deleting one axis and claiming the space is fair; say what you measured.</p>
+<p>Lab 5’s occupation probe (<code>nurse</code> / <code>ceo</code> vs <code>man</code> / <code>woman</code> in <code>toy_clip.csv</code>) is the miniature of this architecture. Real CLIP is the same cosine, trained on the web.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<ol>
+<li><strong>Embed the gallery</strong> once. Store vectors plus ids plus the raw items you will show.</li>
+<li><strong>Embed the query</strong> with the matching tower (text for a typed query, image for reverse search).</li>
+<li><strong>Rank</strong> by cosine. For each query, mark whether gold sits at rank <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02264;</mo><mi>k</mi></mrow></math>. Average: that is recall@k.</li>
+<li><strong>Read the misses.</strong> Wrong object, wrong count, text that ignores the image. A few failure cases belong next to the number.</li>
+<li><strong>Run a bias probe.</strong> Occupation and gender, geography and skin tone, “a terrorist” versus a news photo: CLIP-style models pick up the co-occurrences of the web. Zero-shot prompts (<code>a photo of a man who is a nurse</code>) move the query along the same directions you saw in Week 1’s toy embeddings.</li>
+<li><strong>Run a robustness check.</strong> Typographic attacks (text painted in the image), distribution shift (medical, sketches), and language variety.</li>
+</ol>
 <p><img alt="Prompted stereotypes in a vision–language space" src="files/data-643/graphics/5.3-retrieval-bias/vlm-bias.png" /></p>
 <p><img alt="A 2-D occupation probe with numbers" src="files/data-643/graphics/5.3-retrieval-bias/occupation-numeric.png" /></p>
-<p><strong>Robustness:</strong> typographic attacks (text painted in the image), distribution shift (medical, sketches), and language variety. A high ImageNet zero-shot number does not certify your domain.</p>
 <p>Goh et al. / the CLIP “multimodal neurons” line: a photo of an apple with the word <code>iPod</code> printed on it is often retrieved as a gadget. CLIP can <strong>read the overlay</strong> instead of the object. That is the same nearest-neighbor geometry, not a separate model.</p>
 <p><img alt="Typographic attack" src="files/data-643/graphics/5.3-retrieval-bias/typographic.png" /></p>
-<p>If your project ranks people, jobs, or health content, put a probe in the report: a small, documented set of prompts and the retrievals they return. Debiasing is incomplete; measuring is required.</p>
-<p>Lab 5’s occupation probe (<code>nurse</code> / <code>ceo</code> vs <code>man</code> / <code>woman</code> in <code>toy_clip.csv</code>) is the miniature of this section. Real CLIP is the same cosine, trained on the web.</p>
-<p>A probe is a <strong>fixed list</strong> of prompts and a rule for a bad hit (wrong gender default, violent stereotype, medical advice). Put the list in an appendix. Do not “debias” by deleting one axis and claiming the space is fair; say what you measured.</p>
+<p>If the overlay wins, write that failure next to the occupation table. Two different harms, one cosine.</p>
 <hr />
-<h2>3. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Q</mi></mrow></math> queries, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">k</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo></mrow></math> the position of the gold item (1 is best),</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>recall</mo><mi>@</mi><mi>k</mi><mo>&#x0003D;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>Q</mi></mrow></mfrac><munder><mo>&#x02211;</mo><mi>q</mi></munder><mrow><mn mathvariant="bold">1</mn></mrow><mo stretchy="false">[</mo><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">k</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02264;</mo><mi>k</mi><mo stretchy="false">]</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Cosine ranking is the same score as CLIP:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>rank</mo><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">\lvert</mo><mo stretchy="false">&#x0007B;</mo><mi>z</mi><mi>:</mi><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo>&#x0003E;</mo><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><msub><mi>z</mi><mrow><mrow><mi mathvariant="normal">g</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">d</mi></mrow></mrow></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">\rvert</mo><mo>&#x0002B;</mo><mn>1</mn></mrow></math>
+<p>(ties: pick a rule and stick to it). Always name <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> and the gallery size when you report the number.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Recall@k is cheap to compute and catches misses before a demo ships.</li>
+<li>Dual retrieval is the reason you kept both towers.</li>
+<li>A documented probe list is a method; Lab 5’s occupation rows are the template.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Recall@k does not measure calibration or fairness by itself.</li>
+<li>Probes are datasets, not slogans: you need a fixed list and a rule for a bad hit.</li>
+<li>A typographic overlay can hijack the text tower; that is the geometry working as designed.</li>
+<li>Reporting a single recall@1 without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> or gallery size hides usable rank-3 hits.</li>
+</ul>
+<p><strong>When not to.</strong> Do not skip a bias probe because “it’s just a toy.” Do not treat a typographic miss as “the model is broken”; text in the image is also a vector.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p><strong>30–40 minutes.</strong> Dual retrieval, recall@k with a tiny ranking, then the occupation probe <strong>with numbers</strong>, then one typographic cartoon. Play the <strong>second half</strong> of the CLIP video (robustness / broader impact, about <strong>37:40–47:00</strong>). Mention Lab 5’s occupation rows by name so the lab is not a surprise.</p>
 <p>Minute plan: 8 min two retrieval directions; 10 min recall@k arithmetic; 10 min occupation probe; 10 min video second half. Do not skip the probe to “save time.”</p>
 <hr />
-<h2>4. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Gallery of three <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalized image vectors:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtext>cat</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><mtext>nurse</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.2</mn></mtd></mtr><mtr><mtd><mn>0.98</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><mtext>ceo</mtext><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.98</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>woman</mtext><mo>&#x02248;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.1</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>0.10</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.999</mn><mo>&#x0002C;</mo><mspace width="0.278em" /><mn>0.30</mn></mrow></math>. Rank: nurse, ceo, cat.</p>
@@ -154,7 +181,7 @@
 <p>Recall@1 for query <code>cat</code> is 1 if cat is the top image. If you only report recall@1 on 100k images, a model that puts the right photo at rank 3 looks like a zero.</p>
 <p>Typographic cartoon: query prompts <code>apple</code> vs <code>iPod</code> against one image. If the overlay wins, write that failure next to the occupation table. Two different harms, one cosine.</p>
 <hr />
-<h2>5. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Throwing away one tower and then being unable to query from that side.</li>
 <li>Reporting a single recall@1 without <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> or gallery size.</li>
@@ -162,11 +189,11 @@
 <li>Treating a typographic miss as “the model is broken” instead of “text in the image is also a vector.”</li>
 </ul>
 <hr />
-<h2>6. Video</h2>
+<h2>10. Video</h2>
 <p>Watch the <strong>second half</strong> of <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
 <p>Start around <strong>robustness to data shift (37:40)</strong> and <strong>broader impact (44:20)</strong>. Pause on prompt sensitivity and on who is harmed when retrieval ranks people. Pair that with Lab 5’s occupation probes (<code>nurse</code>/<code>ceo</code> vs <code>man</code>/<code>woman</code>), not with a vibe check.</p>
 <hr />
-<h2>7. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>You can retrieve with a caption but not with a photo. What did you probably throw away?</p>
@@ -192,7 +219,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 

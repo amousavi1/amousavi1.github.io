@@ -110,38 +110,78 @@
                             Non-overlapping patches, a linear map, positions, no causal mask.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>A <strong>vision transformer (ViT)</strong> is the Week 3 block on <strong>patches</strong> instead of words. Once an image is a sequence, every LLM trick (attention, positions, [CLS], later CLIP) applies. The recipe is patchify, linear map, positions, <strong>no causal mask</strong>.</p>
+<p>A <strong>vision transformer (ViT)</strong> is the Week 3 block on <strong>patches</strong> instead of words. Once an image is a sequence, every later trick in this course (attention, positions, <code>[CLS]</code>, CLIP’s image tower) applies. The recipe is patchify, linear map, positions, <strong>no causal mask</strong>. You do not train a ViT from random pixels in this hour; you learn to count tokens and reuse the stack.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> A <strong>ViT</strong> treats an image as a sequence of patches.</p>
-<p><strong>What.</strong> Cut the image into non-overlapping patches, linearly map each to a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>-vector, add positions, run a transformer <strong>without</strong> a causal mask.
-<strong>Why.</strong> CNNs are the older default. ViT shows the same block as language can mix patches globally from layer 1.
-<strong>Architecture.</strong> Patch embed <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>P</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></msup></mrow></math> plus optional CLS token, then encoder blocks. Classification: CLS or mean pool, then a head.
-<strong>How.</strong> Lab 4 flattens patches. No convolution is required for the cartoon. Pretrain on a large image set; small data prefers CNNs or a strong recipe.
-<strong>Formula.</strong> For patch size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo>&#x000D7;</mo><mi>p</mi></mrow></math> and image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x000D7;</mo><mi>W</mi></mrow></math>, sequence length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>H</mi><mo>&#x0002F;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo><mo>&#x000B7;</mo><mo stretchy="false">&#x00028;</mo><mi>W</mi><mo>&#x0002F;</mo><mi>p</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">N</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>P</mi><msub><mi>W</mi><mi>e</mi></msub><mo>&#x0002B;</mo><msub><mi>E</mi><mrow><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi></mrow></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>.
-<strong>Tradeoffs.</strong> + Global mixing, same code as NLP. − Quadratic in patches; needs data or regularization; patch size is a method knob.
-</p>
-</blockquote>
-<h2>1. Patches as tokens</h2>
-<p>Split a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x000D7;</mo><mi>W</mi></mrow></math> image into non-overlapping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x000D7;</mo><mi>P</mi></mrow></math> patches, flatten each patch, map with a linear layer to width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>.</p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>N</mi><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>P</mi><mrow><mn>2</mn></mrow></msup><mo>&#x0002E;</mo></mrow></math>
-<p>Add a learned <strong>[CLS]</strong> if you classify from one vector, and add <strong>positions</strong> (a 1-D index, or row–column). Attention without positions is a bag of tiles.</p>
+<h2>1. What a vision transformer (ViT) is</h2>
+<p>A <strong>ViT</strong> treats an image as a sequence of patches. Split a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x000D7;</mo><mi>W</mi></mrow></math> image into non-overlapping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x000D7;</mo><mi>P</mi></mrow></math> patches, flatten each patch, and map it with a linear layer to width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>. Add a learned <strong><code>[CLS]</code></strong> if you classify from one vector, and add <strong>positions</strong> (a 1-D index, or row–column). Then run a transformer <strong>without</strong> a causal mask: every patch may look at every patch. Attention without positions is a bag of tiles.</p>
 <p><img alt="An image cut into a sequence of patches" src="files/data-643/graphics/4.2-vision-transformers/patches.png" /></p>
+<p>The sequence length for a tiled image is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>N</mi><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>P</mi><mrow><mn>2</mn></mrow></msup><mo>&#x0002E;</mo></mrow></math>
 <p>A CNN shares a small kernel and builds a hierarchy. A ViT sees global context in layer 1, at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><msup><mi>N</mi><mrow><mn>2</mn></mrow></msup><mo stretchy="false">&#x00029;</mo></mrow></math> cost. For a 224 image and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x0003D;</mo><mn>16</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>196</mn></mrow></math>, which is a short paragraph.</p>
-<p>Flattening a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn><mo>&#x000D7;</mo><mn>16</mn><mo>&#x000D7;</mo><mn>3</mn></mrow></math> patch is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>768</mn></mrow></math> numbers. That linear map is the same as a convolution with kernel <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math>, stride <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> output channels. RGB is just three extra channels in the flatten.</p>
+<p>Flattening a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn><mo>&#x000D7;</mo><mn>16</mn><mo>&#x000D7;</mo><mn>3</mn></mrow></math> patch is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>768</mn></mrow></math> numbers. That linear map is the same as a convolution with kernel <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math>, stride <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> output channels. RGB is just three extra channels in the flatten.</p>
 <p>Do not count overlapping CNN windows and then write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>P</mi><mrow><mn>2</mn></mrow></msup></mrow></math>. ViT patches <strong>tile</strong>.</p>
 <hr />
-<h2>2. The same stack, no language mask</h2>
-<p><img alt="Patches, positions, transformer, features" src="files/data-643/graphics/4.2-vision-transformers/vit.png" /></p>
-<p>Dosovitskiy et al. (2021): ViTs need more data than ResNets if trained from scratch; they shine with scale. In this course you will almost always <strong>start from a pretrained</strong> ViT (CLIP’s image tower, or a Hugging Face checkpoint), not from random pixels.</p>
-<p>Unlike GPT, a classifier ViT is <strong>bidirectional</strong>: every patch may look at every patch. There is no future to hide. Pooling: <code>[CLS]</code> as in BERT, or <strong>mean-pool</strong> the patch tokens then a linear head (also common).</p>
-<p>Hybrid: a small CNN stem, then a transformer on a coarser grid. Same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> idea, fewer tokens.</p>
-<p>CLIP’s image tower is often this ViT. When you later freeze “the vision encoder,” you are freezing patch embed + transformer. You are not freezing a ResNet unless the checkpoint says so.</p>
+<h2>2. Why we use it</h2>
+<p>CNNs were the older default for images. ViT shows that the same block you already use for language can mix patches globally from layer 1. That matters for this course because CLIP’s image tower is often a ViT, and every later “freeze the vision encoder” sentence is freeze patch embed plus transformer.</p>
+<p>Scale is the other reason. Dosovitskiy et al. (2021) found that ViTs need more data than ResNets if trained from scratch, and they shine when the image set is large. In this course you will almost always <strong>start from a pretrained</strong> ViT (CLIP’s image tower, or a Hugging Face checkpoint), not from random pixels. A tiny medical set is the wrong place to train a ViT from scratch.</p>
+<p>A smaller patch gives more tokens and a heavier <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>N</mi><mrow><mn>2</mn></mrow></msup></mrow></math> map. Patch size is a method knob, not a default you ignore.</p>
 <hr />
-<h2>3. Teaching this note</h2>
+<h2>3. Architecture</h2>
+<p>The boxes are the Week 3 encoder, with a patch embedding instead of a token embedding.</p>
+<ol>
+<li>Cut the image into non-overlapping patches and flatten each one.</li>
+<li>Map with a linear layer <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><msub><mi>P</mi><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi></mrow></mrow></msub><mo>&#x000D7;</mo><mi>d</mi></mrow></msup></mrow></math> (for RGB, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>P</mi><mrow><mrow><mi mathvariant="normal">f</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">t</mi></mrow></mrow></msub><mo>&#x0003D;</mo><mi>P</mi><mo>&#x000B7;</mo><mi>P</mi><mo>&#x000B7;</mo><mn>3</mn></mrow></math>).</li>
+<li>Optionally prepend a learned <code>[CLS]</code> token.</li>
+<li>Add positional embeddings. Without them, top and bottom are the same bag.</li>
+<li>Run encoder blocks: LayerNorm, multi-head self-attention, MLP, residuals. <strong>No causal mask.</strong></li>
+<li>Classify from <code>[CLS]</code> or from a <strong>mean-pool</strong> of the patch tokens, then a linear head.</li>
+</ol>
+<p><img alt="Patches, positions, transformer, features" src="files/data-643/graphics/4.2-vision-transformers/vit.png" /></p>
+<p>Unlike GPT, a classifier ViT is <strong>bidirectional</strong>. There is no future patch to hide. Hybrid models put a small CNN stem first, then a transformer on a coarser grid. Same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> idea, fewer tokens.</p>
+<p>When you later freeze “the vision encoder,” you are freezing patch embed + transformer. You are not freezing a ResNet unless the checkpoint says so.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>Lab 4 flattens patches in numpy. No convolution is required for the cartoon. Do one flatten on the board before the lab.</p>
+<ol>
+<li><strong>Count patches.</strong> Image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x0003D;</mo><mi>W</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, one channel <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>. Standard ImageNet: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>224</mn><mo>&#x000D7;</mo><mn>224</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x0003D;</mo><mn>16</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>196</mn></mrow></math>. Plus <code>[CLS]</code>: <strong>197</strong> tokens.</li>
+<li><strong>Flatten one tile.</strong> Top-left <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>2</mn></mrow></math> patch <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> becomes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>.</li>
+<li><strong>Linear map.</strong> A matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>4</mn></mrow></msup></mrow></math> with first row all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.25</mn></mrow></math> sends that tile to a 2-D token whose first coordinate is the mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2.5</mn></mrow></math>.</li>
+<li><strong>Add positions and <code>[CLS]</code>.</strong> The transformer now sees a sequence, not a bag.</li>
+<li><strong>Attend without a causal mask.</strong> Every patch may look at every patch. One attention map with <code>[CLS]</code> has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>197</mn><mrow><mn>2</mn></mrow></msup><mo>&#x0003D;</mo><mn>38809</mn></mrow></math> scores per head.</li>
+<li><strong>Pool and classify</strong>, or pass the sequence into CLIP as the image tower.</li>
+</ol>
+<p>You do not implement ViT from random init in this course. You count patches, you add positions, you reuse Week 3.</p>
+<p>A smaller patch (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math> on 224) gives <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>784</mn></mrow></math> tokens and a heavier <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>N</mi><mrow><mn>2</mn></mrow></msup></mrow></math> map. That is why 16 is the default: enough spatial pieces, still a short sequence.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>For patch size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo>&#x000D7;</mo><mi>p</mi></mrow></math> and image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x000D7;</mo><mi>W</mi></mrow></math>, the tiled sequence length is</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>T</mi><mo>&#x0003D;</mo><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">(</mo><mfrac><mrow><mi>H</mi></mrow><mrow><mi>p</mi></mrow></mfrac><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">)</mo><mo>&#x000B7;</mo><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">(</mo><mfrac><mrow><mi>W</mi></mrow><mrow><mi>p</mi></mrow></mfrac><mo stretchy="true" fence="true" minsize="1.623em" maxsize="1.623em">)</mo><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>p</mi><mrow><mn>2</mn></mrow></msup><mo>&#x0002C;</mo></mrow></math>
+<p>when both axes divide. With a <code>[CLS]</code> token the transformer sees <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></math> positions.</p>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> be the matrix of flattened patches (one row per tile). A linear patch embedding and positions give</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>X</mi><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">N</mi></mrow><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>P</mi><msub><mi>W</mi><mi>e</mi></msub><mo>&#x0002B;</mo><msub><mi>E</mi><mrow><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi></mrow></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002C;</mo></mrow></math>
+<p>then the usual encoder stack. The patch map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>e</mi></msub></mrow></math> is equivalent to a convolution with kernel size <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math>, stride <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math> output channels.</p>
+<p>Attention cost is quadratic in the number of tokens: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>O</mi><mo stretchy="false">&#x00028;</mo><mo stretchy="false">&#x00028;</mo><mi>T</mi><mo>&#x0002B;</mo><mn>1</mn><msup><mo stretchy="false">&#x00029;</mo><mrow><mn>2</mn></mrow></msup><mo stretchy="false">&#x00029;</mo></mrow></math> scores per head if you include <code>[CLS]</code>.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Global mixing from layer 1, with the same encoder code as language.</li>
+<li>A pretrained ViT (CLIP’s image tower, a Hugging Face checkpoint) is the default backbone later in the course.</li>
+<li>Patch size lets you trade spatial detail against sequence length.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Attention is quadratic in the number of patches.</li>
+<li>From-scratch ViTs want large image sets or a strong recipe; small medical sets prefer a pretrained tower or a CNN.</li>
+<li>Forgetting positions makes top and bottom indistinguishable.</li>
+<li>A GPT causal mask on patches hides a “future” that does not exist.</li>
+</ul>
+<p><strong>When not to.</strong> Do not train a ViT from scratch on 800 scans. Start from a pretrained tower. Do not count overlapping CNN windows and then write <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>P</mi><mrow><mn>2</mn></mrow></msup></mrow></math>.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p><strong>~16 minutes.</strong> Count patches on a square image, flatten one toy <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>2</mn></mrow></math> patch, add [CLS]+positions, then “same block as Week 3, no causal mask.” Play the <strong>patch embedding</strong> stretch of the Umar Jamil video. Lab 4 will flatten patches in numpy; do one flatten on the board first. Do not train a ViT in this block.</p>
 <hr />
-<h2>4. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi><mo>&#x0003D;</mo><mi>W</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, 1 channel. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>4</mn></mrow></math> patches. Top-left patch</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>
 <p>flattens to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd><mtd><mn>2</mn></mtd><mtd><mn>3</mn></mtd><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. A linear map <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>W</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mn>2</mn><mo>&#x000D7;</mo><mn>4</mn></mrow></msup></mrow></math> with first row all <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.25</mn></mrow></math> sends it to a 2-D token whose first coordinate is the mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2.5</mn></mrow></math>.</p>
@@ -151,7 +191,7 @@
 <p>A smaller patch (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math> on 224) gives <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>784</mn></mrow></math> tokens and a heavier <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>N</mi><mrow><mn>2</mn></mrow></msup></mrow></math> map. That is why 16 is the default: enough spatial pieces, still a short sequence.</p>
 <p>You do not implement ViT from random init in this course. You count patches, you add positions, you reuse Week 3.</p>
 <hr />
-<h2>5. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Using overlapping CNN-style windows and then miscounting <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mi>H</mi><mi>W</mi><mo>&#x0002F;</mo><msup><mi>P</mi><mrow><mn>2</mn></mrow></msup></mrow></math>.</li>
 <li>Forgetting positions so the model cannot tell top from bottom.</li>
@@ -159,11 +199,11 @@
 <li>Training a ViT from scratch on a tiny medical set.</li>
 </ul>
 <hr />
-<h2>6. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=j6kuzuy2ZZo">Umar Jamil: Vision Transformer / VLM walkthrough</a>.</p>
 <p>Pause on <strong>image patches as tokens</strong>, the linear patch embedding, and positional encodings. That is the ViT; CLIP/BLIP wrap extra towers around it.</p>
 <hr />
-<h2>7. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>Count tokens for a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>384</mn><mo>&#x000D7;</mo><mn>384</mn></mrow></math> image, patch <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>16</mn></mrow></math>.</p>
@@ -195,7 +235,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 

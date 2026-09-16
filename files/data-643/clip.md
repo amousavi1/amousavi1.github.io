@@ -1,21 +1,12 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**CLIP** (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. After training you have a **similarity score** between an image and a text, not a captioner.
+**CLIP** (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. After training you have a **similarity score** between an image and a text, not a captioner. Note **4.3** already taught InfoNCE and the zero-shot trick. This note is the two-tower product: what you keep, what you call at test time, and why batch size and temperature are part of the method.
 
 ---
 
-> **First time this method appears.** **CLIP** is two towers and a cosine. It scores image–text pairs. It does not write a caption.
->
-> **What.** Image encoder + text encoder, InfoNCE on the batch, keep both towers.
-> **Why.** One model that retrieves and zero-shot classifies without a detector or a decoder.
-> **Architecture.** `encode_image`, `encode_text`, cosine. No `generate`.
-> **How.** Train on web pairs. At test, embed the image and a list of prompts. Note 5.2 adds a decoder (BLIP).
-> **Formula.** Same InfoNCE as 4.3 with learned \(\tau\). API is three calls.
-> **Tradeoffs.** + Zero-shot and retrieval. − Not a captioner; hungry for batch size; prompt wording is method; bias next note.
->
-## 1. Two towers
+## 1. What CLIP is
 
-An **image encoder** (ResNet or ViT) and a **text encoder** (a transformer). Both emit a vector in the same dimension. Training: InfoNCE on the batch (note **4.3**). After training you keep both towers; you do not keep a fused head.
+**CLIP** is two towers and a cosine. An **image encoder** (ResNet or ViT) and a **text encoder** (a transformer) both emit a vector in the same dimension. Training is InfoNCE on the batch (note **4.3**). After training you keep both towers; you do not keep a fused head. The model scores image–text pairs. It does not write a caption.
 
 ![CLIP image and text towers](files/data-643/graphics/5.1-clip/clip-towers.png)
 
@@ -27,7 +18,9 @@ Write the API on the board: `encode_image`, `encode_text`, `cosine`. Three calls
 
 ---
 
-## 2. What CLIP is good at, and what it is not
+## 2. Why we use it
+
+One model that retrieves and zero-shot classifies without a detector or a decoder. That is the product reason CLIP became the default vision–language backbone.
 
 - **Zero-shot** classification via prompts (`a photo of a dog`).
 - **Cross-modal retrieval:** image \(\to\) text and text \(\to\) image (note **5.3**).
@@ -37,21 +30,75 @@ What it is not: a captioner (it does not decode a sentence), a detector with box
 
 **CoCa** is next after CLIP: add a decoder with a captioning loss. That generation job is note **5.2** (BLIP). Do not skip from CLIP to LLaVA in this hour.
 
-Prompt wording is part of the method. A single phrase can be too peaked; ensembling `"a photo of"`, `"a drawing of"`, … is optional engineering, not a new model.
+Prompt wording is part of the method. A single phrase can be too peaked; ensembling `"a photo of"`, `"a drawing of"`, and similar templates is optional engineering, not a new model.
 
 ---
 
-## 3. Temperature and batch size
+## 3. Architecture
 
-Temperature \(\tau\) (often learned, around \(0.07\)) sharpens the batch softmax. Small \(\tau\) makes off-diagonal competition brutal; that is why CLIP wanted huge batches.
+Two separate encoders, a shared embedding dimension, and a cosine. No concatenated pixels-and-tokens vector during pretraining.
+
+The image tower can be a ResNet or a ViT (note **4.2**). The text tower is a transformer that encodes a whole caption into one vector. Both outputs are \(\ell_2\)-normalized before the cosine, so the score is a dot product of unit vectors.
+
+You never call `generate`. Hugging Face `CLIPModel` plus a processor is enough for Lab 5’s *idea*; the lab itself uses a toy space so nobody waits on a download. If a project cites “CLIP,” name the Hugging Face id. Freezing is allowed. Pretending freeze is fine-tune is not.
+
+SigLIP keeps the same two-tower picture and changes the pairwise loss. Do not treat a new checkpoint name as a new architecture unless the paper adds a decoder.
+
+---
+
+## 4. How it works, step by step
+
+Train on web image–text pairs. At test, embed the image and a list of prompts. Note 5.2 adds a decoder (BLIP).
+
+1. **Index a batch.** \(N\) images, \(N\) captions, already matched as web pairs.
+2. **Encode.** `encode_image` and `encode_text`. \(\ell_2\)-normalize.
+3. **Score.** Fill the \(N\times N\) cosine matrix. InfoNCE wants the diagonal, both directions, with temperature \(\tau\) (often learned, around \(0.07\)).
+4. **Keep both towers.** Throw away the training matrix. You now have two encoders you can call independently.
+5. **Zero-shot or retrieve.** Embed the image once; embed prompts or gallery texts; rank by cosine.
+
+Temperature \(\tau\) sharpens the batch softmax. Small \(\tau\) makes off-diagonal competition brutal; that is why CLIP wanted huge batches.
 
 CLIP-style models **rely on batch size** to learn fine-grained concepts. A batch of 8 has 7 negatives. A batch of 32{,}768 has 32{,}767. You still will not see both “a mug in grass” and “grass in a mug” in one batch; compositionality is a later paper, not this lecture.
 
-Hugging Face `CLIPModel` plus a processor is enough for Lab 5’s *idea*; the lab itself uses a toy space so nobody waits on a download. If a project cites “CLIP,” name the Hugging Face id. Freezing is allowed. Pretending freeze is fine-tune is not.
+A batch of 2 still has only **one** negative. CLIP cannot emit “a cat sits on a mat” unless that string is already in your gallery. That generation job is BLIP.
 
 ---
 
-## 4. Teaching this note
+## 5. Mathematical formulas
+
+Same InfoNCE as note **4.3**, with a learned temperature. For \(\ell_2\)-normalized vectors, cosine is a dot product. The image-to-text term on row \(i\) uses logits \(S_{ij}/\tau\):
+
+\[
+\mathcal{L}_{\text{i2t}}=-\frac{1}{N}\sum_i\log\frac{\exp(S_{ii}/\tau)}{\sum_j\exp(S_{ij}/\tau)},\qquad S_{ij}=\boldsymbol{v}_i^{\top}\boldsymbol{t}_j.
+\]
+
+CLIP averages this with the text-to-image direction. The public API is three calls: \(f(i)\), \(g(t)\), then \(\cos(f(i),g(t))\).
+
+Small \(\tau\) does not change the argmax of a row of \(S\); it changes how peaked the softmax is during training.
+
+---
+
+## 6. Positive points and negative points
+
+**Positive.**
+
+- Zero-shot classification and both directions of retrieval from one pair of towers.
+- A frozen image backbone you can reuse in captioners and diffusion models.
+- Open copies (OpenCLIP, SigLIP) keep the same picture if you name the checkpoint.
+
+**Negative.**
+
+- Not a captioner: there is no `generate`.
+- Hungry for batch size; a batch of 8 is a weak negative set.
+- Prompt wording is part of the method, not a footnote.
+- Bias and typographic attacks wait for note **5.3**; a high cosine is not a fairness certificate.
+- Fine-tuning a fused head and throwing away the text tower means you can no longer query with words.
+
+**When not to.** You need generated captions, not retrieval. Use BLIP (or CoCa’s decoder), not CLIP.
+
+---
+
+## 7. Teaching this note
 
 **30–40 minutes.** Two towers, cosine, “not a captioner,” then the \(\tau\) and batch-size arithmetic. Play the **CLIP paper video** in class as **selected chapters**: towers **4:40–9:00**, contrastive **14:40–22:25**. Students can finish the hour as homework. Lab 5 is a 2-D fake CLIP, not OpenAI weights.
 
@@ -59,7 +106,7 @@ Minute plan: 10 min two towers; 10 min worked \(N=2\) and \(\tau\); 5 min “can
 
 ---
 
-## 5. Worked example
+## 8. Worked example
 
 Batch \(N=2\). Already \(\ell_2\)-normalized:
 
@@ -93,7 +140,7 @@ A batch of 2 still has only **one** negative. CLIP cannot emit “a cat sits on 
 
 ---
 
-## 6. Where students get stuck
+## 9. Where students get stuck
 
 - Asking CLIP to **write** a caption.
 - Fine-tuning a fused head and throwing away the text tower (you can no longer query with words).
@@ -102,7 +149,7 @@ A batch of 2 still has only **one** negative. CLIP cannot emit “a cat sits on 
 
 ---
 
-## 7. Video
+## 10. Video
 
 Watch [Yannic Kilcher: OpenAI CLIP, Connecting Text and Images](https://www.youtube.com/watch?v=T9XSU0pKX2E) (full paper video).
 
@@ -110,7 +157,7 @@ In class, pause on two towers, the InfoNCE matrix, zero-shot prompts, and the re
 
 ---
 
-## 8. Practice
+## 11. Practice
 
 1. CLIP’s text tower never sees the pixels. How can a typed query retrieve a photo?
 

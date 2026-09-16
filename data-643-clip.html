@@ -110,26 +110,17 @@
                             Two towers and a cosine. CLIP scores pairs; it does not decode a sentence.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>CLIP</strong> (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. After training you have a <strong>similarity score</strong> between an image and a text, not a captioner.</p>
+<p><strong>CLIP</strong> (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. After training you have a <strong>similarity score</strong> between an image and a text, not a captioner. Note <strong>4.3</strong> already taught InfoNCE and the zero-shot trick. This note is the two-tower product: what you keep, what you call at test time, and why batch size and temperature are part of the method.</p>
 <hr />
-<blockquote>
-<p><strong>First time this method appears.</strong> <strong>CLIP</strong> is two towers and a cosine. It scores image–text pairs. It does not write a caption.</p>
-<p><strong>What.</strong> Image encoder + text encoder, InfoNCE on the batch, keep both towers.
-<strong>Why.</strong> One model that retrieves and zero-shot classifies without a detector or a decoder.
-<strong>Architecture.</strong> <code>encode_image</code>, <code>encode_text</code>, cosine. No <code>generate</code>.
-<strong>How.</strong> Train on web pairs. At test, embed the image and a list of prompts. Note 5.2 adds a decoder (BLIP).
-<strong>Formula.</strong> Same InfoNCE as 4.3 with learned <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math>. API is three calls.
-<strong>Tradeoffs.</strong> + Zero-shot and retrieval. − Not a captioner; hungry for batch size; prompt wording is method; bias next note.
-</p>
-</blockquote>
-<h2>1. Two towers</h2>
-<p>An <strong>image encoder</strong> (ResNet or ViT) and a <strong>text encoder</strong> (a transformer). Both emit a vector in the same dimension. Training: InfoNCE on the batch (note <strong>4.3</strong>). After training you keep both towers; you do not keep a fused head.</p>
+<h2>1. What CLIP is</h2>
+<p><strong>CLIP</strong> is two towers and a cosine. An <strong>image encoder</strong> (ResNet or ViT) and a <strong>text encoder</strong> (a transformer) both emit a vector in the same dimension. Training is InfoNCE on the batch (note <strong>4.3</strong>). After training you keep both towers; you do not keep a fused head. The model scores image–text pairs. It does not write a caption.</p>
 <p><img alt="CLIP image and text towers" src="files/data-643/graphics/5.1-clip/clip-towers.png" /></p>
 <p>The text tower never sees pixels. Retrieval still works because training put matched pairs at high cosine. A query string is just another text vector.</p>
 <p>Open-source copies (OpenCLIP, SigLIP) change the loss or the data. The picture is stable. SigLIP replaces the softmax InfoNCE with a sigmoid on each pair; you still have two towers and a score.</p>
 <p>Write the API on the board: <code>encode_image</code>, <code>encode_text</code>, <code>cosine</code>. Three calls. No <code>generate</code>.</p>
 <hr />
-<h2>2. What CLIP is good at, and what it is not</h2>
+<h2>2. Why we use it</h2>
+<p>One model that retrieves and zero-shot classifies without a detector or a decoder. That is the product reason CLIP became the default vision–language backbone.</p>
 <ul>
 <li><strong>Zero-shot</strong> classification via prompts (<code>a photo of a dog</code>).</li>
 <li><strong>Cross-modal retrieval:</strong> image <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> text and text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> image (note <strong>5.3</strong>).</li>
@@ -137,18 +128,55 @@
 </ul>
 <p>What it is not: a captioner (it does not decode a sentence), a detector with boxes, or a guarantee of factual correctness. It scores pairs.</p>
 <p><strong>CoCa</strong> is next after CLIP: add a decoder with a captioning loss. That generation job is note <strong>5.2</strong> (BLIP). Do not skip from CLIP to LLaVA in this hour.</p>
-<p>Prompt wording is part of the method. A single phrase can be too peaked; ensembling <code>"a photo of"</code>, <code>"a drawing of"</code>, … is optional engineering, not a new model.</p>
+<p>Prompt wording is part of the method. A single phrase can be too peaked; ensembling <code>"a photo of"</code>, <code>"a drawing of"</code>, and similar templates is optional engineering, not a new model.</p>
 <hr />
-<h2>3. Temperature and batch size</h2>
-<p>Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> (often learned, around <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.07</mn></mrow></math>) sharpens the batch softmax. Small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> makes off-diagonal competition brutal; that is why CLIP wanted huge batches.</p>
+<h2>3. Architecture</h2>
+<p>Two separate encoders, a shared embedding dimension, and a cosine. No concatenated pixels-and-tokens vector during pretraining.</p>
+<p>The image tower can be a ResNet or a ViT (note <strong>4.2</strong>). The text tower is a transformer that encodes a whole caption into one vector. Both outputs are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalized before the cosine, so the score is a dot product of unit vectors.</p>
+<p>You never call <code>generate</code>. Hugging Face <code>CLIPModel</code> plus a processor is enough for Lab 5’s <em>idea</em>; the lab itself uses a toy space so nobody waits on a download. If a project cites “CLIP,” name the Hugging Face id. Freezing is allowed. Pretending freeze is fine-tune is not.</p>
+<p>SigLIP keeps the same two-tower picture and changes the pairwise loss. Do not treat a new checkpoint name as a new architecture unless the paper adds a decoder.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>Train on web image–text pairs. At test, embed the image and a list of prompts. Note 5.2 adds a decoder (BLIP).</p>
+<ol>
+<li><strong>Index a batch.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> images, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> captions, already matched as web pairs.</li>
+<li><strong>Encode.</strong> <code>encode_image</code> and <code>encode_text</code>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalize.</li>
+<li><strong>Score.</strong> Fill the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> cosine matrix. InfoNCE wants the diagonal, both directions, with temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> (often learned, around <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.07</mn></mrow></math>).</li>
+<li><strong>Keep both towers.</strong> Throw away the training matrix. You now have two encoders you can call independently.</li>
+<li><strong>Zero-shot or retrieve.</strong> Embed the image once; embed prompts or gallery texts; rank by cosine.</li>
+</ol>
+<p>Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> sharpens the batch softmax. Small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> makes off-diagonal competition brutal; that is why CLIP wanted huge batches.</p>
 <p>CLIP-style models <strong>rely on batch size</strong> to learn fine-grained concepts. A batch of 8 has 7 negatives. A batch of 32{,}768 has 32{,}767. You still will not see both “a mug in grass” and “grass in a mug” in one batch; compositionality is a later paper, not this lecture.</p>
-<p>Hugging Face <code>CLIPModel</code> plus a processor is enough for Lab 5’s <em>idea</em>; the lab itself uses a toy space so nobody waits on a download. If a project cites “CLIP,” name the Hugging Face id. Freezing is allowed. Pretending freeze is fine-tune is not.</p>
+<p>A batch of 2 still has only <strong>one</strong> negative. CLIP cannot emit “a cat sits on a mat” unless that string is already in your gallery. That generation job is BLIP.</p>
 <hr />
-<h2>4. Teaching this note</h2>
+<h2>5. Mathematical formulas</h2>
+<p>Same InfoNCE as note <strong>4.3</strong>, with a learned temperature. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalized vectors, cosine is a dot product. The image-to-text term on row <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> uses logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>S</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0002F;</mo><mi>&#x003C4;</mi></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>i2t</mtext></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mfrac><mrow><mn>1</mn></mrow><mrow><mi>N</mi></mrow></mfrac><munder><mo>&#x02211;</mo><mi>i</mi></munder><mi>log</mi><mfrac><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><msub><mi>S</mi><mrow><mi>i</mi><mi>i</mi></mrow></msub><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mo>&#x02211;</mo><mi>j</mi></msub><mi>exp</mi><mo stretchy="false">&#x00028;</mo><msub><mi>S</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0002F;</mo><mi>&#x003C4;</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002C;</mo><mspace width="2em" /><msub><mi>S</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>&#x0003D;</mo><msubsup><mrow><mi mathvariant="bold-italic">v</mi></mrow><mi>i</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mi>j</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>CLIP averages this with the text-to-image direction. The public API is three calls: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>i</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<p>Small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> does not change the argmax of a row of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>; it changes how peaked the softmax is during training.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Zero-shot classification and both directions of retrieval from one pair of towers.</li>
+<li>A frozen image backbone you can reuse in captioners and diffusion models.</li>
+<li>Open copies (OpenCLIP, SigLIP) keep the same picture if you name the checkpoint.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Not a captioner: there is no <code>generate</code>.</li>
+<li>Hungry for batch size; a batch of 8 is a weak negative set.</li>
+<li>Prompt wording is part of the method, not a footnote.</li>
+<li>Bias and typographic attacks wait for note <strong>5.3</strong>; a high cosine is not a fairness certificate.</li>
+<li>Fine-tuning a fused head and throwing away the text tower means you can no longer query with words.</li>
+</ul>
+<p><strong>When not to.</strong> You need generated captions, not retrieval. Use BLIP (or CoCa’s decoder), not CLIP.</p>
+<hr />
+<h2>7. Teaching this note</h2>
 <p><strong>30–40 minutes.</strong> Two towers, cosine, “not a captioner,” then the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math> and batch-size arithmetic. Play the <strong>CLIP paper video</strong> in class as <strong>selected chapters</strong>: towers <strong>4:40–9:00</strong>, contrastive <strong>14:40–22:25</strong>. Students can finish the hour as homework. Lab 5 is a 2-D fake CLIP, not OpenAI weights.</p>
 <p>Minute plan: 10 min two towers; 10 min worked <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C4;</mi></mrow></math>; 5 min “cannot decode a sentence”; 12 min video chapters. Assign robustness to note <strong>5.3</strong>.</p>
 <hr />
-<h2>5. Worked example</h2>
+<h2>8. Worked example</h2>
 <p>Batch <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. Already <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02113;</mi><mn>2</mn></msub></mrow></math>-normalized:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><msub><mrow><mi mathvariant="bold-italic">v</mi></mrow><mn>2</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mn>1</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="0.278em" /><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mn>2</mn></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.6</mn></mtd></mtr><mtr><mtd><mn>0.8</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Cosines (the matrix <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math>):</p>
@@ -160,7 +188,7 @@
 <p><img alt="Temperature sharpens the same scores" src="files/data-643/graphics/5.1-clip/clip-tau.png" /></p>
 <p>A batch of 2 still has only <strong>one</strong> negative. CLIP cannot emit “a cat sits on a mat” unless that string is already in your gallery. That generation job is BLIP.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>9. Where students get stuck</h2>
 <ul>
 <li>Asking CLIP to <strong>write</strong> a caption.</li>
 <li>Fine-tuning a fused head and throwing away the text tower (you can no longer query with words).</li>
@@ -168,11 +196,11 @@
 <li>Using <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">[</mo><mn>0.1</mn><mo>&#x0002C;</mo><mn>0.9</mn><mo stretchy="false">]</mo></mrow></math> and calling it unit length. Check <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mrow><mi mathvariant="bold-italic">t</mi></mrow><msub><mo fence="false" stretchy="false">&#x02016;</mo><mn>2</mn></msub><mo>&#x0003D;</mo><mn>1</mn></mrow></math> before you trust the cosine.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>10. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a> (full paper video).</p>
 <p>In class, pause on two towers, the InfoNCE matrix, zero-shot prompts, and the remark that prompt wording is engineering. Watch the rest after class.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>11. Practice</h2>
 <ol>
 <li>
 <p>CLIP’s text tower never sees the pixels. How can a typed query retrieve a photo?</p>
@@ -198,7 +226,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T05:20:00-04:00">September 16, 2026, 5:20 AM EDT</time></div>
             </footer>
         </div>
 
