@@ -53,6 +53,8 @@ You ran two seeds. Accuracy with RAG: \(0.82\) and \(0.78\) (mean \(0.80\)). No-
 
 The mean lift is \(0.02\). The spread across seeds is \(0.04\). A 2-point gain with 3–4 points of seed jitter and \(n=50\) is **not** a result you lead with. In the talk you say: “point estimate +2 points; seeds move by about that much; \(n=50\).” Then you show a **failure case** that RAG actually changed: e.g. query about library hours, baseline hallucinated 21:00, RAG cited `[d1]` with 23:00—or RAG retrieved `[d2]` and the model ignored `[d1]`.
 
+![Lift 0.02 versus seed spread 0.04](files/data-643/graphics/14.3-eval-presentations/seed-spread.png)
+
 Fake ablation: you claim “LoRA on attention is why we beat the baseline,” but the ablation turns off dropout instead of the adapter. That knob was not the claim.
 
 Time budget for a 5-minute slot: 30 s question, 1 min picture, 1 min table, 30 s ablation, 1 min failure, 30 s limit. If you have one minute left, drop a second architecture slide, not the failure.

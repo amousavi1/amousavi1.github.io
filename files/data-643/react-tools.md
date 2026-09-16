@@ -2,6 +2,8 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 **ReAct** (Yao et al.) interleaves **Thought**, **Action**, and **Observation**. The model is not only writing a chain of thought. It can call a tool, read the result, and then continue.
 
+Stanford **CS224N 2026 L10** contrasts **ReAct vs CoT vs self-consistency**. CoT can invent a fact. Self-consistency votes \(k\) invented traces. ReAct is supposed to **wait for the observation**. If the next thought ignores that string, you are back to unfaithful CoT (note **13.3**).
+
 ---
 
 ## 1. The loop
@@ -36,7 +38,7 @@ Write the five-line log on the board for every demo: Thought, Action, Observatio
 
 ## 4. Teaching this note
 
-About **35 minutes** at the board, then **~8 minutes** of video. Lab 14 can follow in the same two-hour block.
+About **35 minutes** at the board, then **~8 minutes** of video. Lab 14 can follow in the same two-hour block. Lecture ideas follow **CS224N 2026 L10** (ReAct vs CoT vs SC).
 
 - **0–12 min.** Thought / Action / Observation. Parse the action; append the obs.
 - **12–22 min.** New bugs: bad parse, wrong tool, ignored obs, loops. Cap steps.

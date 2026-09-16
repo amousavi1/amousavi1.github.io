@@ -107,13 +107,14 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 13 &middot; <a href="files/data-643/chain-of-thought.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/13.1-chain-of-thought.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Ask for steps before the answer. Intermediate tokens can carry scratch work.
+                            CS224N L12: CoT is extra tokens, not a new net. 17×24 → 408 on the tape.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>Chain-of-thought</strong> (CoT) is the habit of writing <strong>steps</strong> before the answer. You are not changing the weights. You are changing what the decoder is asked to emit.</p>
 <hr />
 <h2>1. Steps are part of the string</h2>
 <p>A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context; zero-shot CoT is often the sentence <em>Let’s think step by step.</em></p>
+<p>Stanford <strong>CS224N 2026 L12</strong>: this is a <strong>prompt / decoding</strong> choice, not a new architecture. Extra tokens are extra <strong>test-time compute</strong>. The weights do not change.</p>
 <p><img alt="Scratch work, then a boxed answer" src="files/data-643/graphics/13.1-chain-of-thought/cot.png" /></p>
 <p>The model still predicts tokens. Intermediate tokens can allocate compute: they store partial products, units, or a plan. That helps <strong>multi-step</strong> arithmetic, symbolic puzzles, and some school-science items. It does not magically add retrieval (Week 14) or tools. A longer string is not “thinking” in the everyday sense; it is extra decoding you can inspect.</p>
 <p>Karpathy’s phrase is System 2 as more tokens. Same idea: each token is a fixed-size compute step, so a hard problem needs a longer tape.</p>
@@ -128,7 +129,7 @@
 <p>Temperature 0 is a single greedy chain: useful as a baseline, not as a vote (note <strong>13.2</strong>). If you raise temperature to get diverse traces, you must still parse a final answer the same way every time.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>About <strong>30 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API.</p>
+<p>About <strong>30 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API. Lecture ideas follow <strong>CS224N 2026 L12</strong>.</p>
 <ul>
 <li><strong>0–10 min.</strong> Direct vs CoT prompt. Tokens as scratch paper.</li>
 <li><strong>10–20 min.</strong> When CoT helps (multi-hop) vs hurts (lookup). Cost.</li>
@@ -145,6 +146,7 @@
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>240</mn><mo>&#x0002B;</mo><mn>168</mn><mo>&#x0003D;</mo><mn>408</mn></mrow></math></li>
 </ol>
 <p>Three intermediate tokens (here, three lines) hold partial products. The boxed answer is 408. Gold is 408. This trace is also <strong>faithful</strong> (note <strong>13.3</strong>): the last computed value matches the box.</p>
+<p><img alt="Partial products 240, 168, 408" src="files/data-643/graphics/13.1-chain-of-thought/cot-partial.png" /></p>
 <p>A one-hop item, “Capital of France?”, does not need hops. A CoT prompt can invent a story (“Lyon was the capital in…”) and then still say Paris—or wander to Lyon. Extra decode is extra risk. That is why you report <strong>answer accuracy</strong> and, separately, a trace check, not a vibe that the model “showed work.”</p>
 <p>Lab 13’s <code>23+19</code> traces are the same algebra with smaller numbers.</p>
 <hr />
@@ -157,7 +159,7 @@
 <hr />
 <h2>7. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej Karpathy, Intro to Large Language Models</a>, <strong>35:00–38:02</strong>.</p>
-<p>Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. Optional nearby: <strong>38:02–40:45</strong> (self-improvement) is not required for this note. Notes <strong>14.1–14.2</strong> and <strong>15.1</strong> reuse this same URL at other minutes.</p>
+<p>Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. That is the CS224N L12 punch in classroom language. Optional nearby: <strong>38:02–40:45</strong> (self-improvement) is not required for this note. Notes <strong>14.1–14.2</strong> and <strong>15.1</strong> reuse this same URL at other minutes.</p>
 <hr />
 <h2>8. Practice</h2>
 <ol>
@@ -185,7 +187,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

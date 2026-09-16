@@ -107,10 +107,11 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/react-tools.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.2-react-tools.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Thought, action, observation. The model calls a tool instead of guessing the lookup.
+                            CS224N L10: ReAct vs CoT vs SC. Observation 408 must be used.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>ReAct</strong> (Yao et al.) interleaves <strong>Thought</strong>, <strong>Action</strong>, and <strong>Observation</strong>. The model is not only writing a chain of thought. It can call a tool, read the result, and then continue.</p>
+<p>Stanford <strong>CS224N 2026 L10</strong> contrasts <strong>ReAct vs CoT vs self-consistency</strong>. CoT can invent a fact. Self-consistency votes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> invented traces. ReAct is supposed to <strong>wait for the observation</strong>. If the next thought ignores that string, you are back to unfaithful CoT (note <strong>13.3</strong>).</p>
 <hr />
 <h2>1. The loop</h2>
 <p>A thought is scratch work. An action is a structured call: <code>search["library hours"]</code>, <code>calc[8+15]</code>, <code>lookup[d3]</code>. The environment returns an observation (a string). You append it to the context and sample again until a final answer.</p>
@@ -128,7 +129,7 @@
 <p>Write the five-line log on the board for every demo: Thought, Action, Observation, Thought, Answer. If a line is missing, you did not run ReAct; you ran CoT with a tool-shaped string.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>About <strong>35 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. Lab 14 can follow in the same two-hour block.</p>
+<p>About <strong>35 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. Lab 14 can follow in the same two-hour block. Lecture ideas follow <strong>CS224N 2026 L10</strong> (ReAct vs CoT vs SC).</p>
 <ul>
 <li><strong>0–12 min.</strong> Thought / Action / Observation. Parse the action; append the obs.</li>
 <li><strong>12–22 min.</strong> New bugs: bad parse, wrong tool, ignored obs, loops. Cap steps.</li>
@@ -186,7 +187,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

@@ -2,6 +2,8 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 A trace can be **wrong** and the boxed answer **right**. That is **unfaithful** chain-of-thought: the steps you read are not a reliable account of why the answer appeared.
 
+Stanford **CS224N 2026 L12** points at Chen et al. (2025): models can **use a hint** without writing it in the CoT. This course’s classroom version is Lab 13: last integer 52, box 42. **CS224N L13** / Lightman et al. (*Let’s Verify Step by Step*): a **process** reward scores the steps; an **outcome** reward scores only the box. We do not train a process RM here. We run a checker on constructed traces.
+
 ---
 
 ## 1. Lucky answers
@@ -34,7 +36,7 @@ Do not call that number “reasoning accuracy.” Call it a **checker pass rate*
 
 ## 4. Teaching this note
 
-About **30 minutes** at the board, then **~12 minutes** of video. Then start Lab 13 if the vote note is already done.
+About **30 minutes** at the board, then **~12 minutes** of video. Then start Lab 13 if the vote note is already done. Lecture ideas follow **CS224N 2026 L12–L13** (unfaithful CoT; process vs outcome).
 
 - **0–10 min.** Define unfaithful: last step value \(\neq\) box, or steps invalid.
 - **10–20 min.** Lucky win vs honest miss. Why accuracy is not enough.
@@ -52,6 +54,8 @@ Trace (Lab 13, `p1` last row):
 - gold: \(42\)
 
 Parse the last integer in the steps: \(52\). Compare to `answer`: \(52\neq 42\). **Unfaithful.** Compare `answer` to gold: \(42=42\). **Lucky win.** Accuracy +1, faithfulness 0 on this row.
+
+![52 in the steps, 42 in the box](files/data-643/graphics/13.3-faithfulness/lucky-win.png)
 
 Faithfulness rate in a report, among correct boxes:
 

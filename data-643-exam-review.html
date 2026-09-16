@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 15 &middot; <a href="files/data-643/exam-review.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/15.1-exam-review.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Four modules, one stack. The exam asks you to connect a method to a measurement.
+                            Four modules. Name the method, then the number that would have caught the failure.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>The exam is cumulative. It asks you to <strong>name a method</strong> and <strong>say what you would measure</strong>. Trivia without a metric is not the point of DATA 443/643.</p>
@@ -146,6 +146,7 @@
 </table></div>
 <p>You should be able to draw the picture (two GAN players; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo stretchy="false">&#x00028;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mi>t</mi></msub><mo>&#x02223;</mo><msub><mrow><mi mathvariant="bold-italic">x</mi></mrow><mn>0</mn></msub><mo stretchy="false">&#x00029;</mo></mrow></math>; retrieve-then-generate) and attach <strong>one number</strong> to it (coverage, a denoising loss, recall@k, majority-vote accuracy, a faithfulness rate).</p>
 <p><img alt="Map of the four modules into the exam" src="files/data-643/graphics/15.1-exam-review/map.png" /></p>
+<p><img alt="Failure to the number that would have caught it" src="files/data-643/graphics/15.1-exam-review/fail-metric.png" /></p>
 <hr />
 <h2>2. How to study</h2>
 <p>Rework the labs on CPU: XOR and embeddings, long-range gates, one attention head, toy CLIP retrieval, 2-D GAN coverage, one reverse diffusion step, vote-and-flag traces, bag-of-words RAG. Redo each note’s practice questions out loud. For every named method, write one sentence of the form “I would change <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>X</mi></mrow></math>; I would report <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Y</mi></mrow></math> on split <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Z</mi></mrow></math>.”</p>
@@ -155,7 +156,7 @@
 <li>attention: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>Q</mi><msup><mi>K</mi><mo>&#x022A4;</mo></msup><mo>&#x0002F;</mo><msqrt><mrow><mi>d</mi></mrow></msqrt><mo stretchy="false">&#x00029;</mo><mi>V</mi></mrow></math></li>
 <li>GAN: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>min</mo><mi>G</mi></msub><msub><mo>max</mo><mi>D</mi></msub><mi>&#x1D53C;</mi><mo stretchy="false">[</mo><mi>log</mi><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo><mo>&#x0002B;</mo><mi>&#x1D53C;</mi><mo stretchy="false">[</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x02212;</mo><mi>D</mi><mo stretchy="false">&#x00028;</mo><mi>G</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x00029;</mo><mo stretchy="false">]</mo></mrow></math></li>
 <li>diffusion jump: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mi>t</mi></msub><mo>&#x0003D;</mo><msqrt><mrow><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><msub><mi>x</mi><mn>0</mn></msub><mo>&#x0002B;</mo><msqrt><mrow><mn>1</mn><mo>&#x02212;</mo><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></msqrt><mspace width="0.167em" /><mi>&#x003B5;</mi></mrow></math></li>
-<li>CFG: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>&#x003B5;</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><msub><mi>&#x003B5;</mi><mo>&#x02205;</mo></msub><mo>&#x0002B;</mo><mi>s</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B5;</mi><mi>c</mi></msub><mo>&#x02212;</mo><msub><mi>&#x003B5;</mi><mo>&#x02205;</mo></msub><mo stretchy="false">&#x00029;</mo></mrow></math></li>
+<li>CFG: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>&#x003B5;</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><msub><mi>&#x003B5;</mi><mi>u</mi></msub><mo>&#x0002B;</mo><mi>s</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003B5;</mi><mi>c</mi></msub><mo>&#x02212;</mo><msub><mi>&#x003B5;</mi><mi>u</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math></li>
 <li>cosine: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>a</mi><mo>&#x022A4;</mo></msup><mi>b</mi><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>a</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>b</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math></li>
 <li>DPO-shaped check: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mn>2</mn></mrow></math> when the two log-ratio terms match</li>
 </ul>
@@ -211,7 +212,7 @@
 <p><strong>Canvas is official</strong> for who speaks when. If you still owe a presentation, bring a <strong>failure case</strong> (input, output, what broke), not only a demo that worked. Upload what Canvas asks. Time limits on the hub still apply.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>This is a <strong>review map</strong>, not a new method. About <strong>40 minutes</strong> at the board walking the four-module table and the failure→metric grid, then <strong>~15 minutes</strong> of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks.</p>
+<p>This is a <strong>review map</strong>, not a new method. About <strong>40 minutes</strong> at the board walking the four-module table and the failure→metric grid, then <strong>~15 minutes</strong> of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks. Weeks 13–14 follow <strong>CS224N 2026 L12, L13, L10</strong>; Weeks 11–12 follow CS231N 2025 L13–L14.</p>
 <p>Board order:</p>
 <ul>
 <li><strong>0–12 min.</strong> Modules 1–2: neuron, embedding, attention, CLIP cosine. One picture each.</li>
@@ -331,7 +332,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

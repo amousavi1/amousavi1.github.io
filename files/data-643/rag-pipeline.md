@@ -2,6 +2,8 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 **RAG** is retrieve, then generate. The language model does not have to store every fact in its weights. You give it **chunks** at request time and ask it to answer from those chunks.
 
+Stanford **CS224N 2026 L10**: this is **non-parametric memory at inference**. Note **10.3 RAFT** is a **training** recipe that teaches the model to use retrieved docs. This week is the retrieve-then-generate **stack**. Do not mix the names.
+
 ---
 
 ## 1. Three stages
@@ -36,7 +38,7 @@ Report retrieval recall@k on a labeled set of (question, gold chunk ids), then a
 
 ## 4. Teaching this note
 
-About **35 minutes** at the board, then **~10 minutes** of video.
+About **35 minutes** at the board, then **~10 minutes** of video. Lecture ideas follow **CS224N 2026 L10**.
 
 - **0–12 min.** Index / retrieve / generate. Cosine as the ranker. What lives in the index besides the vector.
 - **12–22 min.** Failure modes: miss, near-miss, ignore, unfaithful citation.
@@ -62,6 +64,10 @@ Query \(q=\text{“library close”}\), vector \((1,1,0)\). Cosine \(\cos(a,b)=a
 - \(\cos(q,d3)=1/(\sqrt{2}\cdot 1)\approx 0.707\)
 
 Rank: d1, d3, d2. For \(k=1\) you stuff only d1 (right chunk for a closing-time question). For \(k=2\) you also stuff d3: recall can rise, but the generator now sees a near-miss about “hours” that may not include 23:00. Raising \(k\) is not free.
+
+![Cosine 1.0, 0.707, 0](files/data-643/graphics/14.1-rag-pipeline/cosine-rank.png)
+
+**Lost in the middle:** if the gold chunk sits in the middle of a long stuffed list, models often ignore it. That is a retrieval-plus-position bug, not “the model cannot read.” Keep \(k\) small in Lab 14.
 
 If the model then cites `[d2]` while using the 23:00 fact from d1, that is unfaithful attribution: same bug class as CoT steps that do not match the box.
 

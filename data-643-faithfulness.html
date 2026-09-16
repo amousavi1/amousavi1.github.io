@@ -107,10 +107,11 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 13 &middot; <a href="files/data-643/faithfulness.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/13.3-faithfulness.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            A correct final answer can sit on invented steps. Process and outcome are different claims.
+                            Lucky win: 52 in the steps, 42 in the box. Process vs outcome (CS224N L13).
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>A trace can be <strong>wrong</strong> and the boxed answer <strong>right</strong>. That is <strong>unfaithful</strong> chain-of-thought: the steps you read are not a reliable account of why the answer appeared.</p>
+<p>Stanford <strong>CS224N 2026 L12</strong> points at Chen et al. (2025): models can <strong>use a hint</strong> without writing it in the CoT. This course’s classroom version is Lab 13: last integer 52, box 42. <strong>CS224N L13</strong> / Lightman et al. (<em>Let’s Verify Step by Step</em>): a <strong>process</strong> reward scores the steps; an <strong>outcome</strong> reward scores only the box. We do not train a process RM here. We run a checker on constructed traces.</p>
 <hr />
 <h2>1. Lucky answers</h2>
 <p>The decoder can jump to a familiar number, then invent arithmetic that pretends to justify it. Or it can compute 52 in the scratch work and still emit 42 because 42 was in the few-shot pattern. Final-answer accuracy will score both as wins. You should not.</p>
@@ -127,7 +128,7 @@
 <p>Do not call that number “reasoning accuracy.” Call it a <strong>checker pass rate</strong>. Inner states are out of scope.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>About <strong>30 minutes</strong> at the board, then <strong>~12 minutes</strong> of video. Then start Lab 13 if the vote note is already done.</p>
+<p>About <strong>30 minutes</strong> at the board, then <strong>~12 minutes</strong> of video. Then start Lab 13 if the vote note is already done. Lecture ideas follow <strong>CS224N 2026 L12–L13</strong> (unfaithful CoT; process vs outcome).</p>
 <ul>
 <li><strong>0–10 min.</strong> Define unfaithful: last step value <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02260;</mo></mrow></math> box, or steps invalid.</li>
 <li><strong>10–20 min.</strong> Lucky win vs honest miss. Why accuracy is not enough.</li>
@@ -143,6 +144,7 @@
 <li>gold: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn></mrow></math></li>
 </ul>
 <p>Parse the last integer in the steps: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>52</mn></mrow></math>. Compare to <code>answer</code>: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>52</mn><mo>&#x02260;</mo><mn>42</mn></mrow></math>. <strong>Unfaithful.</strong> Compare <code>answer</code> to gold: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>42</mn><mo>&#x0003D;</mo><mn>42</mn></mrow></math>. <strong>Lucky win.</strong> Accuracy +1, faithfulness 0 on this row.</p>
+<p><img alt="52 in the steps, 42 in the box" src="files/data-643/graphics/13.3-faithfulness/lucky-win.png" /></p>
 <p>Faithfulness rate in a report, among correct boxes:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>correct&#x000A0;box&#x000A0;and&#x000A0;steps&#x000A0;match&#x000A0;box</mtext><mo stretchy="false">&#x0007D;</mo></mrow><mrow><mi>&#x00023;</mi><mo stretchy="false">&#x0007B;</mo><mtext>correct&#x000A0;box</mtext><mo stretchy="false">&#x0007D;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
 <p>If 10 items have the right box and 4 of those have matching steps, the rate is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.4</mn></mrow></math>. Say that. Do not say “the model reasoned on 90% of items” because accuracy was 90%.</p>
@@ -185,7 +187,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

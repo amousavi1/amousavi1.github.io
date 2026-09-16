@@ -17,6 +17,8 @@ You should be able to draw the picture (two GAN players; \(q(\boldsymbol{x}_t\mi
 
 ![Map of the four modules into the exam](files/data-643/graphics/15.1-exam-review/map.png)
 
+![Failure to the number that would have caught it](files/data-643/graphics/15.1-exam-review/fail-metric.png)
+
 ---
 
 ## 2. How to study
@@ -29,7 +31,7 @@ Formulas worth being able to write:
 - attention: \(\mathrm{softmax}(QK^\top/\sqrt{d})V\)
 - GAN: \(\min_G\max_D \mathbb{E}[\log D(x)]+\mathbb{E}[\log(1-D(G(z)))]\)
 - diffusion jump: \(x_t=\sqrt{\bar{\alpha}_t}\,x_0+\sqrt{1-\bar{\alpha}_t}\,\varepsilon\)
-- CFG: \(\hat{\varepsilon}=\varepsilon_\varnothing+s(\varepsilon_c-\varepsilon_\varnothing)\)
+- CFG: \(\hat{\varepsilon}=\varepsilon_u+s(\varepsilon_c-\varepsilon_u)\)
 - cosine: \(a^\top b/(\|a\|\|b\|)\)
 - DPO-shaped check: \(\sigma(0)=1/2\) when the two log-ratio terms match
 
@@ -64,7 +66,7 @@ Project language belongs here: baseline, one justified change, ablation, failure
 
 ## 4. Teaching this note
 
-This is a **review map**, not a new method. About **40 minutes** at the board walking the four-module table and the failure→metric grid, then **~15 minutes** of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks.
+This is a **review map**, not a new method. About **40 minutes** at the board walking the four-module table and the failure→metric grid, then **~15 minutes** of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks. Weeks 13–14 follow **CS224N 2026 L12, L13, L10**; Weeks 11–12 follow CS231N 2025 L13–L14.
 
 Board order:
 

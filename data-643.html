@@ -1039,33 +1039,35 @@
                                 <p class="course-group-title">Videos</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Karpathy: Intro to Large Language Models (reasoning / system-2 remarks)</a
+                                        <a class="course-material__title" href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Karpathy: Intro to Large Language Models (reasoning / System 2, 35:00–38:02; pair with CS224N 2026 L12)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://www.youtube.com/watch?v=7xTGNNLPyMI" target="_blank" rel="noopener">Karpathy: Deep Dive into LLMs like ChatGPT (sampling several traces)</a
+                                        <a class="course-material__title" href="https://www.youtube.com/watch?v=7xTGNNLPyMI" target="_blank" rel="noopener">Karpathy: Deep Dive into LLMs like ChatGPT (tokens as compute, 1:46:56–2:01:11; SC is k of those traces)</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noopener">Wei et al., Chain-of-thought prompting</a
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture12-reasoning-part1.pdf" target="_blank" rel="noopener">Stanford CS224N 2026 L12: Reasoning 1 (CoT, self-consistency, unfaithful traces)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener">Wang et al., Self-consistency</a
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture13-reasoning-part2.pdf" target="_blank" rel="noopener">Stanford CS224N 2026 L13: Reasoning 2 (process vs outcome; test-time compute)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2305.10601" target="_blank" rel="noopener">Yao et al., Tree of Thoughts</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener">Wang et al., Self-consistency improves chain of thought reasoning</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>Self-consistency can raise accuracy without making any one trace more faithful. Why?</li>
-                                    <li>When would you refuse to put a CoT trace in a user-facing product?</li>
+                                    <li>CS224N L12 cites +17.9 pp on GSM8K from majority vote. Why can that lift still leave traces unfaithful?</li>
+                                    <li>Temperature 0, k=3: what do the three traces look like, and why is that not self-consistency?</li>
+                                    <li>52 in the last step, 42 in the box, gold 42: accuracy? faithfulness? lucky win?</li>
+                                    <li>Why is Lightman’s process reward a different claim from scoring only the boxed answer?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-14" role="tabpanel" aria-labelledby="tab-week-14" hidden>
@@ -1095,7 +1097,7 @@
                                 <p class="course-group-title">Videos</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Karpathy: Intro to Large Language Models (retrieval and tools)</a
+                                        <a class="course-material__title" href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Karpathy: Intro to Large Language Models (browser as retrieve-then-read, 27:43–33:32; pair with CS224N 2026 L10)</a
                                         >
                                     </li>
                                     <li>
@@ -1106,18 +1108,24 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., RAG</a
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture10-rag-agents.pdf" target="_blank" rel="noopener">Stanford CS224N 2026 L10: RAG and language agents (ReAct vs CoT vs SC)</a
                                         >
                                     </li>
                                     <li>
-                                        <a class="course-material__title" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., ReAct</a
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., Retrieval-augmented generation</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao et al., ReAct: synergizing reasoning and acting</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
-                                    <li>What failure does RAG not fix if the retrieved chunk is itself wrong?</li>
-                                    <li>In a project talk, which number belongs on the slide: a demo GIF, or an ablation?</li>
+                                    <li>Week 10.3 RAFT vs this week’s RAG stack: which one changes weights?</li>
+                                    <li>q = library close: cosine 1, 0.707, 0. What does k=2 stuff, and how can that hurt?</li>
+                                    <li>CoT invents 428; ReAct gets observation 408 and still says 428. What broke?</li>
+                                    <li>Mean RAG lift +2 pp, seed spread 4 pp, n=50. What sentence belongs on the talk slide?</li>
                                 </ul>
                             </div>
                             <div class="course-week-panel" id="week-15" role="tabpanel" aria-labelledby="tab-week-15" hidden>
@@ -1146,6 +1154,7 @@
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
                                     <li>Pick one method from Modules 1–4 and name the measurement you would report, not the architecture.</li>
+                                    <li>Same face, low lossG: which number would have caught it, and which lab already printed it?</li>
                                     <li>Remaining talks: as posted on Canvas. Bring one failure case, not only the best run.</li>
                                 </ul>
                             </div>
@@ -1158,7 +1167,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

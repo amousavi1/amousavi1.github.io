@@ -107,10 +107,11 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/rag-pipeline.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.1-rag-pipeline.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Index documents, retrieve chunks, then generate with those chunks in context.
+                            CS224N L10: retrieve then generate. Cosine 1 / 0.707 / 0. Not Week 10 RAFT.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p><strong>RAG</strong> is retrieve, then generate. The language model does not have to store every fact in its weights. You give it <strong>chunks</strong> at request time and ask it to answer from those chunks.</p>
+<p>Stanford <strong>CS224N 2026 L10</strong>: this is <strong>non-parametric memory at inference</strong>. Note <strong>10.3 RAFT</strong> is a <strong>training</strong> recipe that teaches the model to use retrieved docs. This week is the retrieve-then-generate <strong>stack</strong>. Do not mix the names.</p>
 <hr />
 <h2>1. Three stages</h2>
 <ol>
@@ -131,7 +132,7 @@
 <p>Report retrieval recall@k on a labeled set of (question, gold chunk ids), then answer accuracy with an attribution check: does the cited id actually contain the claim? Always include a no-retrieval baseline. “We used RAG” is not a result.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video.</p>
+<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Lecture ideas follow <strong>CS224N 2026 L10</strong>.</p>
 <ul>
 <li><strong>0–12 min.</strong> Index / retrieve / generate. Cosine as the ranker. What lives in the index besides the vector.</li>
 <li><strong>12–22 min.</strong> Failure modes: miss, near-miss, ignore, unfaithful citation.</li>
@@ -174,6 +175,8 @@
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><mo>&#x000B7;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.707</mn></mrow></math></li>
 </ul>
 <p>Rank: d1, d3, d2. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> you stuff only d1 (right chunk for a closing-time question). For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> you also stuff d3: recall can rise, but the generator now sees a near-miss about “hours” that may not include 23:00. Raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is not free.</p>
+<p><img alt="Cosine 1.0, 0.707, 0" src="files/data-643/graphics/14.1-rag-pipeline/cosine-rank.png" /></p>
+<p><strong>Lost in the middle:</strong> if the gold chunk sits in the middle of a long stuffed list, models often ignore it. That is a retrieval-plus-position bug, not “the model cannot read.” Keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> small in Lab 14.</p>
 <p>If the model then cites <code>[d2]</code> while using the 23:00 fact from d1, that is unfaithful attribution: same bug class as CoT steps that do not match the box.</p>
 <hr />
 <h2>6. Where students get stuck</h2>
@@ -213,7 +216,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

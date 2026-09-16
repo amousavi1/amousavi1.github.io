@@ -8,6 +8,8 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context; zero-shot CoT is often the sentence *Let’s think step by step.*
 
+Stanford **CS224N 2026 L12**: this is a **prompt / decoding** choice, not a new architecture. Extra tokens are extra **test-time compute**. The weights do not change.
+
 ![Scratch work, then a boxed answer](files/data-643/graphics/13.1-chain-of-thought/cot.png)
 
 The model still predicts tokens. Intermediate tokens can allocate compute: they store partial products, units, or a plan. That helps **multi-step** arithmetic, symbolic puzzles, and some school-science items. It does not magically add retrieval (Week 14) or tools. A longer string is not “thinking” in the everyday sense; it is extra decoding you can inspect.
@@ -36,7 +38,7 @@ Temperature 0 is a single greedy chain: useful as a baseline, not as a vote (not
 
 ## 4. Teaching this note
 
-About **30 minutes** at the board, then **~8 minutes** of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API.
+About **30 minutes** at the board, then **~8 minutes** of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API. Lecture ideas follow **CS224N 2026 L12**.
 
 - **0–10 min.** Direct vs CoT prompt. Tokens as scratch paper.
 - **10–20 min.** When CoT helps (multi-hop) vs hurts (lookup). Cost.
@@ -57,6 +59,8 @@ A CoT string that actually computes:
 
 Three intermediate tokens (here, three lines) hold partial products. The boxed answer is 408. Gold is 408. This trace is also **faithful** (note **13.3**): the last computed value matches the box.
 
+![Partial products 240, 168, 408](files/data-643/graphics/13.1-chain-of-thought/cot-partial.png)
+
 A one-hop item, “Capital of France?”, does not need hops. A CoT prompt can invent a story (“Lyon was the capital in…”) and then still say Paris—or wander to Lyon. Extra decode is extra risk. That is why you report **answer accuracy** and, separately, a trace check, not a vibe that the model “showed work.”
 
 Lab 13’s `23+19` traces are the same algebra with smaller numbers.
@@ -75,7 +79,7 @@ Lab 13’s `23+19` traces are the same algebra with smaller numbers.
 
 Watch [Andrej Karpathy, Intro to Large Language Models](https://www.youtube.com/watch?v=zjkBMFhNj_g), **35:00–38:02**.
 
-Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. Optional nearby: **38:02–40:45** (self-improvement) is not required for this note. Notes **14.1–14.2** and **15.1** reuse this same URL at other minutes.
+Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. That is the CS224N L12 punch in classroom language. Optional nearby: **38:02–40:45** (self-improvement) is not required for this note. Notes **14.1–14.2** and **15.1** reuse this same URL at other minutes.
 
 ---
 

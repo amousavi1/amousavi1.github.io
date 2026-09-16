@@ -1109,6 +1109,93 @@ def exam_map():
     _save(fig, "15.1-exam-review/map.png")
 
 
+def cot_partial():
+    _numeric_table(
+        "13.1-chain-of-thought/cot-partial.png",
+        r"$17\times 24$: three lines hold the partial products. Direct decode has no tape.",
+        ["step", "value"],
+        [[r"$10\times 24$", "240"], [r"$7\times 24$", "168"], ["sum", "408"]],
+    )
+
+
+def sc_vote():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["trace A", "trace B", "trace C"]
+    vals = [42, 32, 42]
+    colors = [TEAL, CORAL, TEAL]
+    ax.bar(names, vals, color=colors, edgecolor=NAVY)
+    ax.axhline(42, color=SLATE, ls="--", lw=1)
+    ax.set_ylabel("parsed answer")
+    ax.set_title("Vote on answers: 42, 32, 42. Majority is 42. k=1 on B would miss.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "13.2-self-consistency-tot/sc-vote.png")
+
+
+def gsm8k_sc():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["greedy CoT", "self-consistency"]
+    vals = [0, 17.9]
+    ax.bar(names, vals, color=[SLATE, TEAL], edgecolor=NAVY)
+    ax.set_ylabel("GSM8K lift vs greedy CoT (pp)")
+    ax.set_title("CS224N L12: Wang et al. majority vote, +17.9 pp on GSM8K.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "13.2-self-consistency-tot/gsm8k-sc.png")
+
+
+def lucky_win():
+    _numeric_table(
+        "13.3-faithfulness/lucky-win.png",
+        "Correct box, wrong last step: accuracy +1, faithfulness 0.",
+        ["field", "value"],
+        [["last integer in steps", "52"], ["box / answer", "42"], ["gold", "42"]],
+    )
+
+
+def cosine_rank():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["d1 library close", "d3 library hours", "d2 shuttle"]
+    vals = [1.0, 0.707, 0.0]
+    colors = [TEAL, GOLD, SLATE]
+    ax.bar(names, vals, color=colors, edgecolor=NAVY)
+    ax.set_ylabel("cosine with q")
+    ax.set_ylim(0, 1.15)
+    ax.set_title(r"$k=1$ stuffs d1. $k=2$ also stuffs the near-miss d3.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "14.1-rag-pipeline/cosine-rank.png")
+
+
+def seed_spread():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["mean lift", "seed spread"]
+    vals = [0.02, 0.04]
+    ax.bar(names, vals, color=[GOLD, CORAL], edgecolor=NAVY)
+    ax.set_ylabel("accuracy points")
+    ax.set_title("RAG +2 pp; seeds move by 4 pp. n=50. Do not lead with the lift.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "14.3-eval-presentations/seed-spread.png")
+
+
+def exam_metric():
+    _numeric_table(
+        "15.1-exam-review/fail-metric.png",
+        "Exam shape: name the method, then the number that would have caught it.",
+        ["failure", "measure"],
+        [
+            ["same face, low lossG", "mode bins"],
+            ["right box, last step 52", "faithful among wins"],
+            ["cite [d5], fact in [d1]", "attribution + recall@k"],
+        ],
+    )
+
+
 def main():
     _setup()
     waveform_spectrogram()
@@ -1172,6 +1259,13 @@ def main():
     react_loop()
     talk_eval()
     exam_map()
+    cot_partial()
+    sc_vote()
+    gsm8k_sc()
+    lucky_win()
+    cosine_rank()
+    seed_spread()
+    exam_metric()
     print("done")
 
 

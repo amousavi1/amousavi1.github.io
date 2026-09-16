@@ -349,21 +349,21 @@ NOTES = [
         "slug": "chain-of-thought",
         "week": 13,
         "title": "13.1 Chain-of-Thought",
-        "lead": "Ask for steps before the answer. Intermediate tokens can carry scratch work.",
+        "lead": "CS224N L12: CoT is extra tokens, not a new net. 17×24 → 408 on the tape.",
         "slide": "13.1-chain-of-thought",
     },
     {
         "slug": "self-consistency-tot",
         "week": 13,
         "title": "13.2 Self-Consistency and Tree-of-Thoughts",
-        "lead": "Sample several traces and vote. Search a tree of partial thoughts when one path is not enough.",
+        "lead": "CS224N L12: majority vote +17.9 pp on GSM8K. Vote on answers, not wording.",
         "slide": "13.2-self-consistency-tot",
     },
     {
         "slug": "faithfulness",
         "week": 13,
         "title": "13.3 Faithfulness of Explanations",
-        "lead": "A correct final answer can sit on invented steps. Process and outcome are different claims.",
+        "lead": "Lucky win: 52 in the steps, 42 in the box. Process vs outcome (CS224N L13).",
         "slide": "13.3-faithfulness",
     },
     {
@@ -376,21 +376,21 @@ NOTES = [
         "slug": "rag-pipeline",
         "week": 14,
         "title": "14.1 Retrieval-Augmented Generation",
-        "lead": "Index documents, retrieve chunks, then generate with those chunks in context.",
+        "lead": "CS224N L10: retrieve then generate. Cosine 1 / 0.707 / 0. Not Week 10 RAFT.",
         "slide": "14.1-rag-pipeline",
     },
     {
         "slug": "react-tools",
         "week": 14,
         "title": "14.2 ReAct and Tool Use",
-        "lead": "Thought, action, observation. The model calls a tool instead of guessing the lookup.",
+        "lead": "CS224N L10: ReAct vs CoT vs SC. Observation 408 must be used.",
         "slide": "14.2-react-tools",
     },
     {
         "slug": "eval-presentations",
         "week": 14,
         "title": "14.3 Evaluating Applications and Giving the Talk",
-        "lead": "Citation, uncertainty, and a measured demo. The presentation is part of the method.",
+        "lead": "Mean lift +2 pp; seed spread 4 pp. Lead with the failure, not the bump.",
         "slide": "14.3-eval-presentations",
     },
     {
@@ -403,7 +403,7 @@ NOTES = [
         "slug": "exam-review",
         "week": 15,
         "title": "15.1 Exam Review",
-        "lead": "Four modules, one stack. The exam asks you to connect a method to a measurement.",
+        "lead": "Four modules. Name the method, then the number that would have caught the failure.",
         "slide": "15.1-exam-review",
     },
 ]
@@ -565,23 +565,23 @@ VIDEOS = {
         "https://www.youtube.com/watch?v=ZBKpAp_6TGI",
     ),
     "chain-of-thought": (
-        "Karpathy: Intro to Large Language Models (reasoning / system-2 remarks)",
+        "Karpathy: Intro to Large Language Models (reasoning / System 2, 35:00–38:02; pair with CS224N 2026 L12)",
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "self-consistency-tot": (
-        "Karpathy: Deep Dive into LLMs like ChatGPT (sampling several traces)",
+        "Karpathy: Deep Dive into LLMs like ChatGPT (tokens as compute, 1:46:56–2:01:11; SC is k of those traces)",
         "https://www.youtube.com/watch?v=7xTGNNLPyMI",
     ),
     "faithfulness": (
-        "Karpathy: Deep Dive into LLMs like ChatGPT (why a fluent trace can still be wrong)",
+        "Karpathy: Deep Dive into LLMs like ChatGPT (hallucinations 1:20:32–1:41:46; unfaithful when it is inside CoT)",
         "https://www.youtube.com/watch?v=7xTGNNLPyMI",
     ),
     "rag-pipeline": (
-        "Karpathy: Intro to Large Language Models (retrieval and tools)",
+        "Karpathy: Intro to Large Language Models (browser as retrieve-then-read, 27:43–33:32; pair with CS224N 2026 L10)",
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "react-tools": (
-        "Karpathy: Intro to Large Language Models (tool-use demo in the second half)",
+        "Karpathy: Intro to Large Language Models (calculator / interpreter, 27:43–35:00; ReAct vs CoT vs SC)",
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "eval-presentations": (
@@ -833,13 +833,15 @@ WEEKS = {
         "lectures": ["chain-of-thought", "self-consistency-tot", "faithfulness"],
         "labs": [("lab-13-reasoning", False)],
         "readings": [
-            ("Wei et al., Chain-of-thought prompting", "https://arxiv.org/abs/2201.11903"),
-            ("Wang et al., Self-consistency", "https://arxiv.org/abs/2203.11171"),
-            ("Yao et al., Tree of Thoughts", "https://arxiv.org/abs/2305.10601"),
+            ("Stanford CS224N 2026 L12: Reasoning 1 (CoT, self-consistency, unfaithful traces)", "https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture12-reasoning-part1.pdf"),
+            ("Stanford CS224N 2026 L13: Reasoning 2 (process vs outcome; test-time compute)", "https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture13-reasoning-part2.pdf"),
+            ("Wang et al., Self-consistency improves chain of thought reasoning", "https://arxiv.org/abs/2203.11171"),
         ],
         "discussion": [
-            "Self-consistency can raise accuracy without making any one trace more faithful. Why?",
-            "When would you refuse to put a CoT trace in a user-facing product?",
+            "CS224N L12 cites +17.9 pp on GSM8K from majority vote. Why can that lift still leave traces unfaithful?",
+            "Temperature 0, k=3: what do the three traces look like, and why is that not self-consistency?",
+            "52 in the last step, 42 in the box, gold 42: accuracy? faithfulness? lucky win?",
+            "Why is Lightman’s process reward a different claim from scoring only the boxed answer?",
         ],
     },
     14: {
@@ -847,12 +849,15 @@ WEEKS = {
         "lectures": ["rag-pipeline", "react-tools", "eval-presentations"],
         "labs": [("lab-14-toy-rag", False)],
         "readings": [
-            ("Lewis et al., RAG", "https://arxiv.org/abs/2005.11401"),
-            ("Yao et al., ReAct", "https://arxiv.org/abs/2210.03629"),
+            ("Stanford CS224N 2026 L10: RAG and language agents (ReAct vs CoT vs SC)", "https://web.stanford.edu/class/cs224n/slides_w26/cs224n-2026-lecture10-rag-agents.pdf"),
+            ("Lewis et al., Retrieval-augmented generation", "https://arxiv.org/abs/2005.11401"),
+            ("Yao et al., ReAct: synergizing reasoning and acting", "https://arxiv.org/abs/2210.03629"),
         ],
         "discussion": [
-            "What failure does RAG not fix if the retrieved chunk is itself wrong?",
-            "In a project talk, which number belongs on the slide: a demo GIF, or an ablation?",
+            "Week 10.3 RAFT vs this week’s RAG stack: which one changes weights?",
+            "q = library close: cosine 1, 0.707, 0. What does k=2 stuff, and how can that hurt?",
+            "CoT invents 428; ReAct gets observation 408 and still says 428. What broke?",
+            "Mean RAG lift +2 pp, seed spread 4 pp, n=50. What sentence belongs on the talk slide?",
         ],
     },
     15: {
@@ -863,6 +868,7 @@ WEEKS = {
         ],
         "discussion": [
             "Pick one method from Modules 1–4 and name the measurement you would report, not the architecture.",
+            "Same face, low lossG: which number would have caught it, and which lab already printed it?",
             "Remaining talks: as posted on Canvas. Bring one failure case, not only the best run.",
         ],
     },

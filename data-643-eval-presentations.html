@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/eval-presentations.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.3-eval-presentations.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Citation, uncertainty, and a measured demo. The presentation is part of the method.
+                            Mean lift +2 pp; seed spread 4 pp. Lead with the failure, not the bump.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>The last week of content is also how you <strong>show</strong> the project. A talk is not a tour of notebooks. It is a question, a method, a number, an ablation, and a failure you actually inspected.</p>
@@ -140,6 +140,7 @@
 <h2>5. Worked example</h2>
 <p>You ran two seeds. Accuracy with RAG: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.82</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.78</mn></mrow></math> (mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.80</mn></mrow></math>). No-retrieval baseline: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.80</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.76</mn></mrow></math> (mean <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.78</mn></mrow></math>). Test set <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>.</p>
 <p>The mean lift is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.02</mn></mrow></math>. The spread across seeds is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.04</mn></mrow></math>. A 2-point gain with 3–4 points of seed jitter and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math> is <strong>not</strong> a result you lead with. In the talk you say: “point estimate +2 points; seeds move by about that much; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>n</mi><mo>&#x0003D;</mo><mn>50</mn></mrow></math>.” Then you show a <strong>failure case</strong> that RAG actually changed: e.g. query about library hours, baseline hallucinated 21:00, RAG cited <code>[d1]</code> with 23:00—or RAG retrieved <code>[d2]</code> and the model ignored <code>[d1]</code>.</p>
+<p><img alt="Lift 0.02 versus seed spread 0.04" src="files/data-643/graphics/14.3-eval-presentations/seed-spread.png" /></p>
 <p>Fake ablation: you claim “LoRA on attention is why we beat the baseline,” but the ablation turns off dropout instead of the adapter. That knob was not the claim.</p>
 <p>Time budget for a 5-minute slot: 30 s question, 1 min picture, 1 min table, 30 s ablation, 1 min failure, 30 s limit. If you have one minute left, drop a second architecture slide, not the failure.</p>
 <p>Checklist before you upload slides: one question on slide 1, one table with a baseline, one ablation that matches the claim, one failure with ids or a trace, font large enough for the back row, no unreadable notebook dump.</p>
@@ -181,7 +182,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:20:00-04:00">September 16, 2026, 12:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

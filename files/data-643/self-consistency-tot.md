@@ -12,6 +12,10 @@ Sample \(k\) independent CoT traces (temperature \(>0\)). Parse an answer from e
 
 This is test-time compute. You pay \(k\) forwards. Report \(k\) and the parser (last integer, boxed span, regex). Voting on the **answer**, not on the wording of the steps, is the usual rule. Lab 13 does that vote on constructed strings. Plot accuracy against \(k\) if you use this in a project; the curve usually flattens.
 
+Stanford **CS224N 2026 L12** cites Wang et al.: majority vote raised GSM8K by **+17.9 percentage points** versus greedy CoT. That is a lift on the **box**. It is not a faithfulness claim (note **13.3**). This course’s version of extra test-time compute is \(k\) traces. Do **not** assign DeepSeek-R1, GRPO, or a 256-expert run as homework.
+
+![GSM8K lift from majority vote](files/data-643/graphics/13.2-self-consistency-tot/gsm8k-sc.png)
+
 Self-consistency does not fix a shared bug. If every trace uses the same wrong formula, the majority is still wrong.
 
 ---
@@ -34,7 +38,7 @@ Accuracy versus \(k\) is the self-consistency plot. For ToT, accuracy versus exp
 
 ## 4. Teaching this note
 
-About **35 minutes** at the board, then **~10 minutes** of video.
+About **35 minutes** at the board, then **~10 minutes** of video. Lecture ideas follow **CS224N 2026 L12** (self-consistency) and the ToT paper for the search cartoon.
 
 - **0–12 min.** Temperature \(>0\), \(k\) traces, vote on the parsed answer. Tie-break rule.
 - **12–22 min.** ToT as width: expand, score, keep a beam. Contrast with ReAct (tools).
@@ -54,6 +58,8 @@ Problem: \(23+19\), gold \(42\). Three traces, answers only (Lab 13 style):
 | C | \(42\) | carry arithmetic to \(42\) |
 
 Vote on **answers**: \(42,32,42\). Majority is \(42\) (2 of 3). \(k=1\) using only B would have scored 32 and missed. Self-consistency caught the disagreement.
+
+![Three traces: 42, 32, 42](files/data-643/graphics/13.2-self-consistency-tot/sc-vote.png)
 
 Tie example: answers \(42,32,32\). Majority is \(32\), which is **wrong**. Voting is not a proof; it is a noise reducer when errors are **diverse**.
 
