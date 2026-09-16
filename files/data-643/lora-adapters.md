@@ -16,6 +16,8 @@ with \(\boldsymbol{A}\in\mathbb{R}^{r\times k}\), \(\boldsymbol{B}\in\mathbb{R}^
 
 ![Frozen W plus low-rank BA](files/data-643/graphics/8.3-lora-adapters/lora.png)
 
+![Trainable count versus a full W](files/data-643/graphics/8.3-lora-adapters/lora-count.png)
+
 QLoRA quantizes \(\boldsymbol{W}\) to 4-bit and still trains float adapters. Same algebra. Lab 8 uses a \(4\times 4\) frozen \(\boldsymbol{W}\) so you can print \(BA\).
 
 Trainable count for one matrix is \(r(d+k)\), not \(dk\). That is the whole point.
@@ -23,6 +25,8 @@ Trainable count for one matrix is \(r(d+k)\), not \(dk\). That is the whole poin
 ---
 
 ## 2. Rank, merge, many tasks
+
+Stanford CS224N 2025 L11 (PEFT): the reason for LoRA is that a full \(\Delta\) has the same size as \(\boldsymbol{W}\) (GPT-3: 175B extra weights per task). Encode \(\Delta W = BA\) with \(r\ll \min(d,k)\). Merge at deploy and there is **no extra inference latency**; swap adapters by subtracting one \(BA\) and adding another.
 
 Small \(r\) (4, 8, 16) is often enough for style and instruction shifts; harder domain shifts may want larger \(r\) or more layers. At deploy time you can **merge** \(\boldsymbol{W}\leftarrow \boldsymbol{W}+(\alpha/r)BA\) and throw the adapter away, or keep several adapters and swap them.
 

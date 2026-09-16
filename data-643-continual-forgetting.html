@@ -121,7 +121,7 @@
 <h2>2. Replay and other patches</h2>
 <p><strong>Replay:</strong> mix a buffer of A examples into the B batches so the gradient still has a component that preserves A. The buffer can be real stored rows or <strong>pseudo-replay</strong> (sample the old model). This is the idea you will implement in spirit: do not throw A away.</p>
 <p><img alt="Old examples mixed into the new stream" src="files/data-643/graphics/8.2-continual-forgetting/replay.png" /></p>
-<p>Other knobs: smaller learning rates, freeze early layers, <strong>regularize toward <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">W</mi></mrow><mi>A</mi></msub></mrow></math></strong> (EWC-style penalties), or attach a <strong>task adapter</strong> and leave <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math> frozen (note <strong>8.3</strong>). Adapters are often the cleaner LLM answer: you add B without moving A’s weights.</p>
+<p>Other knobs: smaller learning rates, freeze early layers, <strong>regularize toward <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">W</mi></mrow><mi>A</mi></msub></mrow></math></strong> (EWC-style penalties), or attach a <strong>task adapter</strong> and leave <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math> frozen (note <strong>8.3</strong>). CS224N L11’s PEFT motivation is the same geometry: a full fine-tune is a second copy of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math>, and that copy walks off task A. Adapters are often the cleaner LLM answer: you add B without moving A’s weights.</p>
 <p>A 50/50 mix of A and B in each batch is the simplest replay. If you cannot store A, generate from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>A</mi></msub></mrow></math> and treat those strings as A labels (they are imperfect).</p>
 <p>Replay still <strong>moves</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math>. It only keeps a component of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02207;</mo><msub><mi>L</mi><mi>A</mi></msub></mrow></math> in the batch. LoRA <strong>does not move</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">W</mi></mrow></mrow></math>. Those are different claims; do not mix them in one sentence of a report.</p>
 <hr />
@@ -175,7 +175,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T22:20:00-04:00">September 15, 2026, 10:20 PM EDT</time></div>
             </footer>
         </div>
 

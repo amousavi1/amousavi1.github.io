@@ -16,7 +16,9 @@ where \(\mathcal{T}\) is the set of \(k\) selected experts (often \(k=1\) or \(2
 
 ![A router sending tokens to a few experts](files/data-643/graphics/7.2-mixture-of-experts/moe.png)
 
-Switch Transformer, GLaM, Mixtral: same picture, different \(k\), expert size, and load-balancing tricks.
+![Load collapse on eight experts](files/data-643/graphics/7.2-mixture-of-experts/moe-collapse.png)
+
+Stanford CS336 2025 L4’s Mixtral row is the one to memorize: **8 routed experts, top-2 active, no shared expert.** Switch Transformer used \(k=1\). DeepSeek-style 256-expert nets wait; this hour is stored versus active.
 
 If each expert has \(P\) weights, you store about \(E P\) MLP weights plus a tiny router, but you **compute** only \(k\) experts. Active MLP FLOPs scale with \(k\), not \(E\).
 

@@ -187,14 +187,14 @@ NOTES = [
         "slug": "scaling-laws",
         "week": 7,
         "title": "7.1 Scaling Laws",
-        "lead": "Loss falls as a power of compute, data, and parameters — until you starve one of them.",
+        "lead": "Kaplan power laws, then Chinchilla: GPT-3 was 1.7 tokens/parameter, not 20.",
         "slide": "7.1-scaling-laws",
     },
     {
         "slug": "mixture-of-experts",
         "week": 7,
         "title": "7.2 Mixture of Experts",
-        "lead": "A router sends each token to a few experts. Capacity without dense FLOPs.",
+        "lead": "Mixtral: 8 experts stored, top-2 active. Collapse is a dense net in disguise.",
         "slide": "7.2-mixture-of-experts",
     },
     {
@@ -214,7 +214,7 @@ NOTES = [
         "slug": "sft-instructions",
         "week": 8,
         "title": "8.1 Supervised Fine-Tuning and Instruction Data",
-        "lead": "Pretraining next-token is not the same as following a request. SFT is the first alignment step.",
+        "lead": "Mask the prompt. SFT copies answers; Week 9 is preferences.",
         "slide": "8.1-sft-instructions",
     },
     {
@@ -228,7 +228,7 @@ NOTES = [
         "slug": "lora-adapters",
         "week": 8,
         "title": "8.3 LoRA, Adapters, and Federated Updates",
-        "lead": "A low-rank pair BA instead of rewriting W. Small deltas you can ship or keep local.",
+        "lead": "Train BA, freeze W. r(d+k) trainable, not dk. Merge has no extra decode latency.",
         "slide": "8.3-lora-adapters",
     },
     {
@@ -734,10 +734,14 @@ WEEKS = {
         "labs": [("lab-7-scale-quantize", False)],
         "readings": [
             ("Kaplan et al., Scaling laws for neural language models", "https://arxiv.org/abs/2001.08361"),
+            ("Stanford CS224N 2025 L9: GPT-3 tokens versus Chinchilla", "https://web.stanford.edu/class/cs224n/slides_w25/cs224n-2025-lecture09-pretraining.pdf"),
             ("Hoffmann et al., Chinchilla / training compute-optimal LLMs", "https://arxiv.org/abs/2203.15556"),
+            ("Stanford CS336 2025 L4: Mixtral 8 experts, top-2 active", "https://qihongruan.github.io/cs336/lec04.html"),
         ],
         "discussion": [
+            "GPT-3 was 175B on 300B tokens. Who does Chinchilla pick at the same FLOPs, and why?",
             "If you can 10× parameters or 10× tokens but not both, which does Chinchilla push you toward?",
+            "Mixtral stores 8 MLPs and runs 2. What did you just train if the router always picks expert 2?",
             "Quantization is not a free lunch. What would you measure besides perplexity?",
         ],
     },
@@ -746,11 +750,15 @@ WEEKS = {
         "lectures": ["sft-instructions", "continual-forgetting", "lora-adapters"],
         "labs": [("lab-8-lora-forget", False)],
         "readings": [
+            ("Stanford CS224N 2025 L10: instruction finetuning as the first InstructGPT stage", "https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1254/slides_w25/cs224n-2025-lecture10-instruction-tunining-rlhf.pdf"),
             ("Wei et al., Finetuned language models are zero-shot learners (FLAN)", "https://arxiv.org/abs/2109.01652"),
+            ("Stanford CS224N 2025 L11: PEFT and LoRA (merge, swap, no extra decode latency)", "https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1254/slides_w25/cs224n-2025-lecture11-adapatation.pdf"),
             ("Hu et al., LoRA", "https://arxiv.org/abs/2106.09685"),
         ],
         "discussion": [
             "Why can a model that next-token-predicts Wikipedia still fail a polite instruction?",
+            "Why mask the prompt in the SFT loss?",
+            "Replay still moves W. LoRA does not. Which claim belongs in a hospital adapter write-up?",
             "When is LoRA the wrong tool (name one setting)?",
         ],
     },

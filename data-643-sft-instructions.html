@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 8 &middot; <a href="files/data-643/sft-instructions.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/8.1-sft-instructions.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Pretraining next-token is not the same as following a request. SFT is the first alignment step.
+                            Mask the prompt. SFT copies answers; Week 9 is preferences.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Pretraining teaches <strong>next token on the web</strong>. <strong>Supervised fine-tuning (SFT)</strong> teaches a model to follow <strong>instructions</strong>: a user message, a demonstration of a good reply. Same transformer, different data.</p>
@@ -115,7 +115,7 @@
 <h2>1. Pretrain, then SFT</h2>
 <p>The pretrained decoder already assigns probability to every continuation. It does not, by default, answer as an assistant, refuse a harmful ask, or stay in a JSON schema. SFT continues maximum-likelihood training, but now each example is a <strong>prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> response</strong> pair and you typically supervise only the response tokens (mask the prompt in the loss).</p>
 <p><img alt="Pretraining then instruction SFT" src="files/data-643/graphics/8.1-sft-instructions/sft.png" /></p>
-<p>InstructGPT’s first stage, Alpaca, Vicuna, and most “chat” checkpoints start here. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution.</p>
+<p>Stanford CS224N 2025 L10: instruction fine-tuning is the <strong>first</strong> stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.</p>
 <p>If the concatenated string has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub></mrow></math> prompt tokens and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> response tokens, the SFT loss averages over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> positions, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></math>. Otherwise the model spends gradient on imitating the user.</p>
 <hr />
 <h2>2. What an instruction pair looks like</h2>
@@ -126,6 +126,7 @@
 </ul>
 <p>System prompts, few-shot exemplars, and tool schemas are part of the <strong>prompt design</strong>, not a separate model. Wording changes the SFT target: “be brief” and “write a memo” are different labels.</p>
 <p><img alt="An instruction paired with a demonstration" src="files/data-643/graphics/8.1-sft-instructions/pair.png" /></p>
+<p><img alt="Loss mask on the response tokens" src="files/data-643/graphics/8.1-sft-instructions/sft-mask.png" /></p>
 <p>Quality beats volume once you have a few thousand clean pairs. Noisy scraped “instructions” teach the noise. If you mix many tasks, you still risk <strong>forgetting</strong> the pretrain distribution (note <strong>8.2</strong>).</p>
 <hr />
 <h2>3. Prompt design, as method</h2>
@@ -178,7 +179,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T22:20:00-04:00">September 15, 2026, 10:20 PM EDT</time></div>
             </footer>
         </div>
 

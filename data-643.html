@@ -694,13 +694,23 @@
                                         >
                                     </li>
                                     <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/cs224n/slides_w25/cs224n-2025-lecture09-pretraining.pdf" target="_blank" rel="noopener">Stanford CS224N 2025 L9: GPT-3 tokens versus Chinchilla</a
+                                        >
+                                    </li>
+                                    <li>
                                         <a class="course-material__title" href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener">Hoffmann et al., Chinchilla / training compute-optimal LLMs</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://qihongruan.github.io/cs336/lec04.html" target="_blank" rel="noopener">Stanford CS336 2025 L4: Mixtral 8 experts, top-2 active</a
                                         >
                                     </li>
                                 </ul>
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
+                                    <li>GPT-3 was 175B on 300B tokens. Who does Chinchilla pick at the same FLOPs, and why?</li>
                                     <li>If you can 10× parameters or 10× tokens but not both, which does Chinchilla push you toward?</li>
+                                    <li>Mixtral stores 8 MLPs and runs 2. What did you just train if the router always picks expert 2?</li>
                                     <li>Quantization is not a free lunch. What would you measure besides perplexity?</li>
                                 </ul>
                             </div>
@@ -742,7 +752,15 @@
                                 <p class="course-group-title">Additional readings</p>
                                 <ul class="course-materials">
                                     <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1254/slides_w25/cs224n-2025-lecture10-instruction-tunining-rlhf.pdf" target="_blank" rel="noopener">Stanford CS224N 2025 L10: instruction finetuning as the first InstructGPT stage</a
+                                        >
+                                    </li>
+                                    <li>
                                         <a class="course-material__title" href="https://arxiv.org/abs/2109.01652" target="_blank" rel="noopener">Wei et al., Finetuned language models are zero-shot learners (FLAN)</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1254/slides_w25/cs224n-2025-lecture11-adapatation.pdf" target="_blank" rel="noopener">Stanford CS224N 2025 L11: PEFT and LoRA (merge, swap, no extra decode latency)</a
                                         >
                                     </li>
                                     <li>
@@ -753,6 +771,8 @@
                                 <p class="course-group-title">Discussion</p>
                                 <ul class="course-discussion">
                                     <li>Why can a model that next-token-predicts Wikipedia still fail a polite instruction?</li>
+                                    <li>Why mask the prompt in the SFT loss?</li>
+                                    <li>Replay still moves W. LoRA does not. Which claim belongs in a hospital adapter write-up?</li>
                                     <li>When is LoRA the wrong tool (name one setting)?</li>
                                 </ul>
                             </div>
@@ -1106,7 +1126,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T21:50:00-04:00">September 15, 2026, 9:50 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-15T22:20:00-04:00">September 15, 2026, 10:20 PM EDT</time></div>
             </footer>
         </div>
 

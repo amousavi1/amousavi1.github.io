@@ -16,6 +16,8 @@ The irreducible term \(L_{\infty}\) is entropy of the data plus whatever the arc
 
 ![Pretraining loss versus compute](files/data-643/graphics/7.1-scaling-laws/compute-loss.png)
 
+![GPT-3 tokens per parameter versus the Chinchilla thumb](files/data-643/graphics/7.1-scaling-laws/gpt3-tokens.png)
+
 Fix two of \(\{N, D, C\}\) and the third is constrained. Early GPT-3-style runs were **compute-optimal for a short training budget** that underused data: a large \(N\), not enough tokens.
 
 Lab 7 will fit \(L=a C^{-b}+c\) on constructed points so you see the algebra, not a GPU cluster.
@@ -29,6 +31,8 @@ Hoffmann et al. (2022), **Chinchilla**: for a fixed FLOP budget, you should scal
 ![Chinchilla: more tokens for the same compute](files/data-643/graphics/7.1-scaling-laws/chinchilla.png)
 
 A smaller model trained longer can beat a larger undertrained one. That is why later LLaMA-style recipes look “small” next to GPT-3 and still read well: they were fed more tokens.
+
+Stanford CS224N 2025 L9’s classroom example: GPT-3 was \(175\,\mathrm{B}\) parameters on \(300\,\mathrm{B}\) tokens, about \(1.7\) tokens per parameter. Chinchilla’s rule of thumb is nearer \(20\). Same lecture: a \(70\,\mathrm{B}\) model trained with enough tokens beat much larger undertrained nets.
 
 A 7B model at 20 tokens/parameter wants about \(7\times 10^9 \times 20 = 1.4\times 10^{11}\) tokens. If you only have 14B tokens, you are 10\(\times\) short of that rule of thumb—not “we scaled.”
 

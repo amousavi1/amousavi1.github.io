@@ -438,6 +438,102 @@ def federated():
     _save(fig, "8.3-lora-adapters/federated.png")
 
 
+def gpt3_tokens():
+    fig, ax = plt.subplots(figsize=(8.4, 4.0))
+    names = ["GPT-3\n175B / 300B tok", "Chinchilla thumb\n20 tok / param"]
+    vals = [300 / 175, 20]
+    ax.bar(names, vals, color=[CORAL, TEAL], edgecolor=NAVY)
+    ax.set_ylabel("tokens per parameter")
+    ax.set_title("CS224N L9: GPT-3 was underfed tokens for its size.", loc="left", color=NAVY)
+    for i, v in enumerate(vals):
+        ax.text(i, v + 0.4, f"{v:.1f}", ha="center", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_ylim(0, 24)
+    fig.tight_layout()
+    _save(fig, "7.1-scaling-laws/gpt3-tokens.png")
+
+
+def moe_collapse():
+    fig, ax = plt.subplots(figsize=(8.6, 3.8))
+    experts = [f"E{i}" for i in range(8)]
+    load = [22, 2, 21, 1, 1, 1, 2, 2]
+    colors = [CORAL if v > 10 else TEAL for v in load]
+    ax.bar(experts, load, color=colors, edgecolor=NAVY)
+    ax.axhline(8, color=SLATE, ls="--", lw=1)
+    ax.set_ylabel("tokens (k=2, 32 tokens → 64 slots)")
+    ax.set_title("Uniform load is 8. Collapse: two experts ate the batch.", loc="left", color=NAVY)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    fig.tight_layout()
+    _save(fig, "7.2-mixture-of-experts/moe-collapse.png")
+
+
+def int8_table():
+    fig, ax = plt.subplots(figsize=(8.8, 3.5))
+    ax.axis("off")
+    rows = [
+        [r"$q=128$", r"$s(q-128)=0$"],
+        [r"$q=255$", r"$s\cdot 127\approx 0.996$"],
+        [r"no $z$", "cannot represent negatives"],
+    ]
+    table = ax.table(
+        cellText=rows,
+        colLabels=[r"INT8 on $[-1,1]$", "value"],
+        loc="center",
+        cellLoc="center",
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.15, 1.8)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY)
+        else:
+            cell.set_facecolor("white")
+    ax.set_title(r"$s=2/255$, $z=128$. Drop $z$ and the map cannot go below 0.", loc="left", color=NAVY, pad=12)
+    _save(fig, "7.3-efficiency-deploy/int8-numeric.png")
+
+
+def sft_mask():
+    fig, ax = plt.subplots(figsize=(10.2, 3.2))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 3.2)
+    ax.axis("off")
+    for i, lab in enumerate(["[user]", "List", "two", "colors", ".", "red", "blue", "EOS"]):
+        x = 0.25 + i * 1.2
+        fill, edge = (FILL3, CORAL) if i < 5 else (FILL2, TEAL)
+        _box(ax, (x, 1.35), 1.1, 1.1, lab, fill, edge, 9)
+        ax.text(x + 0.55, 0.55, "0" if i < 5 else "1", ha="center", color=NAVY, fontsize=12)
+    ax.set_title("SFT mask: zeros on the prompt, ones on the response.", loc="left", color=NAVY)
+    _save(fig, "8.1-sft-instructions/sft-mask.png")
+
+
+def lora_count():
+    fig, ax = plt.subplots(figsize=(8.8, 3.5))
+    ax.axis("off")
+    rows = [
+        [r"$dk$", r"$4096^2=16.8\mathrm{M}$"],
+        [r"$r(d+k)$", r"$8\cdot 8192=65{,}536$"],
+        ["ratio", r"$0.39\%$"],
+    ]
+    table = ax.table(cellText=rows, colLabels=[r"$d=k=4096$, $r=8$", "count"], loc="center", cellLoc="center")
+    table.auto_set_font_size(False)
+    table.set_fontsize(12)
+    table.scale(1.15, 1.8)
+    for (r, c), cell in table.get_celld().items():
+        cell.set_edgecolor(SLATE)
+        if r == 0:
+            cell.set_facecolor(FILL)
+            cell.set_text_props(color=NAVY)
+        else:
+            cell.set_facecolor("white")
+    ax.set_title("CS224N L11: a full copy of W is 175B extra for GPT-3. LoRA is this table.", loc="left", color=NAVY, pad=12)
+    _save(fig, "8.3-lora-adapters/lora-count.png")
+
+
 def preference_pair():
     fig, ax = plt.subplots(figsize=(9.4, 3.6))
     ax.set_xlim(0, 11)
@@ -849,6 +945,11 @@ def main():
     replay()
     lora_ba()
     federated()
+    gpt3_tokens()
+    moe_collapse()
+    int8_table()
+    sft_mask()
+    lora_count()
     preference_pair()
     reward_model()
     rlhf_loop()

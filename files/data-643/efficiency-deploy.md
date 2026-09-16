@@ -20,6 +20,8 @@ Lab 7 does this on a toy tensor and reports MSE. The curve is not free: outliers
 
 ![Prune, quantize, distill](files/data-643/graphics/7.3-efficiency-deploy/compress.png)
 
+![INT8 with a zero-point](files/data-643/graphics/7.3-efficiency-deploy/int8-numeric.png)
+
 ---
 
 ## 2. Speculative decoding
@@ -38,7 +40,7 @@ If the draft proposes 4 tokens and the target accepts 3, you paid one large forw
 
 Name bits, which layers you quantized, whether you distilled, and tokens per second versus a dense fp16 baseline. Quality: the same eval as the uncompressed model, not only perplexity. For a project, a 4-bit laptop demo is a deployment result; it is not a new architecture.
 
-LoRA (note **8.3**, and this hour’s video) is another deploy move: ship a frozen base plus a small \(\Delta\). Prune / quantize / speculate still belong on this slide even though the clip is LoRA.
+Stanford CS224N 2025 L11 puts **pruning** and **LoRA** in the same PEFT hour: fewer weights, or a small \(\Delta\) on a frozen \(W\). Distill and speculative decoding stay on this board; they are not LoRA. Note **8.3** owns the \(BA\) algebra.
 
 ---
 

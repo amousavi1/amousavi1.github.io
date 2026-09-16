@@ -10,7 +10,7 @@ The pretrained decoder already assigns probability to every continuation. It doe
 
 ![Pretraining then instruction SFT](files/data-643/graphics/8.1-sft-instructions/sft.png)
 
-InstructGPT’s first stage, Alpaca, Vicuna, and most “chat” checkpoints start here. Preference methods (Week 9) sit **on top of** an SFT policy; they are not a substitute for a coherent instruction distribution.
+Stanford CS224N 2025 L10: instruction fine-tuning is the **first** stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit **on top of** an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.
 
 If the concatenated string has \(T_p\) prompt tokens and \(T_r\) response tokens, the SFT loss averages over \(T_r\) positions, not \(T_p+T_r\). Otherwise the model spends gradient on imitating the user.
 
@@ -26,6 +26,8 @@ A row is not a Wikipedia paragraph. It is a task plus an answer you are willing 
 System prompts, few-shot exemplars, and tool schemas are part of the **prompt design**, not a separate model. Wording changes the SFT target: “be brief” and “write a memo” are different labels.
 
 ![An instruction paired with a demonstration](files/data-643/graphics/8.1-sft-instructions/pair.png)
+
+![Loss mask on the response tokens](files/data-643/graphics/8.1-sft-instructions/sft-mask.png)
 
 Quality beats volume once you have a few thousand clean pairs. Noisy scraped “instructions” teach the noise. If you mix many tasks, you still risk **forgetting** the pretrain distribution (note **8.2**).
 
