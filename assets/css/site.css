@@ -684,6 +684,39 @@ html[data-theme="dark"] .author__urls a:hover {
   color: #0ea1c5;
 }
 
+/* Official platform colors. Icons keep these in both themes; labels stay with the link text. */
+.author__urls a .fa-envelope-square {
+  color: #ea4335;
+}
+
+.author__urls a .ai-google-scholar-square {
+  color: #4285f4;
+}
+
+.author__urls a .fa-linkedin {
+  color: #0a66c2;
+}
+
+.author__urls a .ai-orcid-square {
+  color: #a6ce39;
+}
+
+.author__urls a .ai-researchgate-square {
+  color: #00ccbb;
+}
+
+.author__urls a .fa-github {
+  color: #181717;
+}
+
+.author__urls a .fa-university {
+  color: #a51417;
+}
+
+html[data-theme="dark"] .author__urls a .fa-github {
+  color: #fff;
+}
+
 html[data-theme="dark"] .btn--inverse {
   color: #fff;
   border-color: #5e5e5e;
