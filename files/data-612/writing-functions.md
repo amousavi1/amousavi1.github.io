@@ -259,7 +259,47 @@ both_na <- function(x, y) {
 
 ---
 
-## 6. Practice
+## 6. Three classroom examples
+
+These are the scripts we write in class. Download them into your project's `R/` folder (one function per file, as in note **2.3**):
+
+- [`add_half.R`](files/data-612/add_half.R) — add `y` to the second half of `x`; if the length is odd, the middle value is a random choice
+- [`fib.R`](files/data-612/fib.R) — the `n`th Fibonacci number, with a loop
+- [`rep_even.R`](files/data-612/rep_even.R) — repeat each even value, replace each odd value with that many zeros
+
+`fib()` is the cleanest loop. `stopifnot()` rejects a non-integer or non-positive `n`. Positions 1 and 2 return early. The rest fill a vector:
+
+```r
+fib <- function(n) {
+  stopifnot(n %% 1 == 0 & n > 0)
+  if (n <= 2) {
+    return(1)
+  }
+  f <- numeric(n)
+  f[1] <- 1
+  f[2] <- 1
+  for (i in 3:n) {
+    f[i] <- f[i - 1] + f[i - 2]
+  }
+  return(f[n])
+}
+
+fib(7)
+# [1] 13
+```
+
+`rep_even()` walks the input with `for`. Even: `rep(x[i], x[i])`. Odd: `rep(0, x[i])`. A non-natural number hits `stop()`:
+
+```r
+rep_even(c(2, 3, 4))
+# [1] 2 2 0 0 0 4 4 4 4
+```
+
+`add_half()` is the even/odd branch you will write in Lab 2. Read the comments in the `.R` file for how `%%`, `floor()`, and `sample()` split the vector. Do the lab from the specification first; the file is the class copy, not a paste-in.
+
+---
+
+## 7. Practice
 
 1. Recreate `range()` using `min()` and `max()`. Document it.
 

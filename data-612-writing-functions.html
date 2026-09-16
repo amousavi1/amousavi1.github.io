@@ -301,7 +301,38 @@ both_na &lt;- function(x, y) {
 }
 </code></pre>
 <hr />
-<h2>6. Practice</h2>
+<h2>6. Three classroom examples</h2>
+<p>These are the scripts we write in class. Download them into your project's <code>R/</code> folder (one function per file, as in note <strong>2.3</strong>):</p>
+<ul>
+<li><a href="files/data-612/add_half.R"><code>add_half.R</code></a> — add <code>y</code> to the second half of <code>x</code>; if the length is odd, the middle value is a random choice</li>
+<li><a href="files/data-612/fib.R"><code>fib.R</code></a> — the <code>n</code>th Fibonacci number, with a loop</li>
+<li><a href="files/data-612/rep_even.R"><code>rep_even.R</code></a> — repeat each even value, replace each odd value with that many zeros</li>
+</ul>
+<p><code>fib()</code> is the cleanest loop. <code>stopifnot()</code> rejects a non-integer or non-positive <code>n</code>. Positions 1 and 2 return early. The rest fill a vector:</p>
+<pre><code class="language-r">fib &lt;- function(n) {
+  stopifnot(n %% 1 == 0 &amp; n &gt; 0)
+  if (n &lt;= 2) {
+    return(1)
+  }
+  f &lt;- numeric(n)
+  f[1] &lt;- 1
+  f[2] &lt;- 1
+  for (i in 3:n) {
+    f[i] &lt;- f[i - 1] + f[i - 2]
+  }
+  return(f[n])
+}
+
+fib(7)
+# [1] 13
+</code></pre>
+<p><code>rep_even()</code> walks the input with <code>for</code>. Even: <code>rep(x[i], x[i])</code>. Odd: <code>rep(0, x[i])</code>. A non-natural number hits <code>stop()</code>:</p>
+<pre><code class="language-r">rep_even(c(2, 3, 4))
+# [1] 2 2 0 0 0 4 4 4 4
+</code></pre>
+<p><code>add_half()</code> is the even/odd branch you will write in Lab 2. Read the comments in the <code>.R</code> file for how <code>%%</code>, <code>floor()</code>, and <code>sample()</code> split the vector. Do the lab from the specification first; the file is the class copy, not a paste-in.</p>
+<hr />
+<h2>7. Practice</h2>
 <ol>
 <li>
 <p>Recreate <code>range()</code> using <code>min()</code> and <code>max()</code>. Document it.</p>
@@ -318,7 +349,7 @@ both_na &lt;- function(x, y) {
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:10:00-04:00">September 16, 2026, 1:10 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:20:00-04:00">September 16, 2026, 1:20 AM EDT</time></div>
             </footer>
         </div>
 

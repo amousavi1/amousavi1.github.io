@@ -42,6 +42,12 @@ geo_mean <- function(x) {
 
 If you prefer `%>%`, load `magrittr` or `tidyverse` in the script (or in the file that sources it) before you call `geo_mean()`.
 
+The three classroom functions from note **2.2** are the same kind of file: one function, Roxygen header, then the body. Download them and save them as `R/add_half.R`, `R/fib.R`, and `R/rep_even.R`:
+
+- [`add_half.R`](files/data-612/add_half.R)
+- [`fib.R`](files/data-612/fib.R)
+- [`rep_even.R`](files/data-612/rep_even.R)
+
 ---
 
 ## 3. `source()` makes the function available
@@ -54,6 +60,10 @@ Use a **relative** path from the project, the same rule as note 1.3:
 source("R/geo_mean.R")
 
 geo_mean(c(1, 6, 2, 5))
+
+source("R/fib.R")
+fib(7)
+# [1] 13
 ```
 
 From a Quarto file in `analysis/`, the relative path might be `../R/geo_mean.R`. `here::here("R", "geo_mean.R")` is another reliable option once you are in an RStudio project.
@@ -81,4 +91,4 @@ By the end of Week 2 you should be able to:
 - branch with `if` / `else` / `else if`, or `switch()` when one argument picks among named options
 - save the function in an `.R` script and `source()` it from another file
 
-Functions and helpers from this week include `function()`, `set.seed()`, `rnorm()`, `sort()`, `diff()`, `round()`, `mean()`, `range()`, `stopifnot()`, `any()`, `all()`, `&&`, `||`, `switch()`, and `source()`. For floating-point equality, `dplyr::near()` is safer than `==`.
+Functions and helpers from this week include `function()`, `set.seed()`, `rnorm()`, `sort()`, `diff()`, `round()`, `mean()`, `range()`, `stopifnot()`, `any()`, `all()`, `&&`, `||`, `switch()`, `source()`, `fib()`, `rep_even()`, and `add_half()`. For floating-point equality, `dplyr::near()` is safer than `==`.
