@@ -126,7 +126,7 @@
 <p>RLHF solves <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>max</mo><mi>&#x003C0;</mi></msub><mi>&#x1D53C;</mi><mo stretchy="false">[</mo><mi>r</mi><mo stretchy="false">]</mo><mo>&#x02212;</mo><mi>&#x003B2;</mi><mrow><mi mathvariant="normal">K</mi><mi mathvariant="normal">L</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>&#x003C0;</mi><mo fence="false" stretchy="false">&#x02016;</mo><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>. Under Bradley–Terry, the optimal <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi></mrow></math> can be expressed as</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x003B2;</mi><mi>log</mi><mfrac><mrow><mi>&#x003C0;</mi><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002B;</mo><mtext>const</mtext><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
 <p>Plug that into the RM logistic loss and the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi></mrow></math> parameters disappear. You train <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> directly.</p>
-<p>Stanford CS224N 2025 L10 writes the same derived reward and stresses that the <strong>partition <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Z</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math></strong> cancels because Bradley–Terry only sees a difference. KTO and IPO sit in the same family; this hour is DPO.</p>
+<p>The derived reward has a <strong>partition <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Z</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math></strong> that cancels because Bradley–Terry only sees a difference. KTO and IPO sit in the same family; this hour is DPO.</p>
 <p><img alt="DPO: pairs in, policy out, no RM loop" src="files/data-643/graphics/9.3-dpo/dpo.png" /></p>
 <hr />
 <h2>2. The loss</h2>
@@ -187,7 +187,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

@@ -354,7 +354,7 @@ BLOCKS = {
 **First time this appears.** **Latent diffusion** denoises in a **VAE latent**, not in pixels. **CFG** mixes a conditional and an unconditional noise prediction.
 
 **What.** Encode \(x_0\\to z_0\) with a frozen VAE encoder, diffuse \(z\), decode at the end. Text: condition on a CLIP (or T5) vector. CFG scale \(s\) sharpens the condition.
-**Why.** Pixels are huge. Latent cells are fewer (CS231N: on the order of \(12\\times\) fewer in the Stable Diffusion cartoon). Text needs a condition or you sample generic images.
+**Why.** Pixels are huge. Latent cells are fewer (on the order of \(12\\times\) fewer in the Stable Diffusion cartoon). Text needs a condition or you sample generic images.
 **Architecture.** VAE enc/dec (frozen) + denoiser on \(z_t\) + text encoder. CFG: two forwards, \(\\hat{\\varepsilon}=\\varepsilon_u+s(\\varepsilon_c-\\varepsilon_u)\).
 **How.** \(s=1\) is still conditional (not “off”). \(s=0\) is the uncond branch. High \(s\): sharper, less diverse.
 **Formula.** \(\\hat{\\varepsilon}_\\theta=\\varepsilon_\\theta(z_t,t,\\emptyset)+s\\big(\\varepsilon_\\theta(z_t,t,c)-\\varepsilon_\\theta(z_t,t,\\emptyset)\\big)\).
@@ -374,7 +374,7 @@ BLOCKS = {
 **First time these methods appear.** **Self-consistency (SC)** is majority vote over several CoT traces. **Tree-of-Thoughts (ToT)** is **search** among partial thoughts, not i.i.d. samples.
 
 **What.** SC: sample \(k\) traces (temperature \(>0\)), parse answers, vote. ToT: expand nodes, **score**, prune, expand again.
-**Why.** One CoT is noisy. Voting on the **answer** (not the wording) lifts GSM8K-style math in the CS224N L12 figure (~+17.9 pp in that citation). ToT helps when you need a tree, not \(k\) independent tapes.
+**Why.** One CoT is noisy. Voting on the **answer** (not the wording) lifts GSM8K-style math (~+17.9 pp in Wang et al.). ToT helps when you need a tree, not \(k\) independent tapes.
 **Architecture.** SC: decoder + parser + vote. ToT: a frontier of partial strings + a scorer (LM or checker) + beam/DFS.
 **How.** Temperature 0, \(k=3\) is **not** SC (identical greedy traces). Vote on the parsed number.
 **Formula.** SC: \(\\hat{y}=\\mathrm{mode}\\{\\mathrm{parse}(\\tau_1),\\ldots,\\mathrm{parse}(\\tau_k)\\}\). ToT has no single loss; it is search.
@@ -383,7 +383,7 @@ BLOCKS = {
     "faithfulness": """
 **First time this evaluation appears.** **Faithfulness** asks whether the **steps caused** the answer, not whether the box is lucky.
 
-**What.** Lucky win: last step says 52, box says 42, gold is 42. Accuracy can pass while the trace is a lie. Process vs outcome (CS224N L13).
+**What.** Lucky win: last step says 52, box says 42, gold is 42. Accuracy can pass while the trace is a lie. Process vs outcome (Lightman et al.).
 **Why.** CoT and SC can look careful and still be unfaithful. A project that “shows work” must check the work.
 **Architecture.** No new net. A checker: parse intermediates vs the box. Optional process reward (score steps), vs outcome-only.
 **How.** Lab 13 flags the 52→42 row. Report accuracy **and** faithful-among-wins.

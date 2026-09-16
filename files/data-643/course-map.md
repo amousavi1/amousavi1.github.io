@@ -95,9 +95,9 @@ This is a **~26 minute** first-day block, including a short Karpathy clip. Draw 
 
 **Agreed two-hour plan (one meeting):** 1.1 stack + project + short Karpathy (~26 min) → 1.2 neuron / XOR (~16 min) → 1.3 GD + one chain-rule (~18 min) → 1.4 cosine + skip-gram softmax + bias (~18 min) → Lab 1 start (~32 min). Remaining videos are homework, not in-class playback.
 
-The lecture PDFs are **16:9**, with a timed plan, one large formula, and a diagram that fills the frame. That form is taken from Stanford CS224N Winter 2026 Lecture 2, CS231N 2024 Lecture 4, and MIT 6.S191 2025 Lecture 1. Those decks are **not** copied; the algebra is this course’s.
+The lecture PDFs are **16:9**, with a timed plan, one large formula, and a diagram that fills the frame. Title slides name, once, any related university courses whose ideas or layout informed that hour. Optional extra slides sit under **Extra materials** on the hub. The notes themselves use papers and scientific terms.
 
-Do **not** play a full Stanford CS224N lecture in this room. The 25-minute skip-gram Jacobian and the GloVe SVD assignment stay out of Week 1.
+The 25-minute skip-gram Jacobian and the GloVe SVD assignment stay out of Week 1.
 
 ---
 
@@ -130,7 +130,7 @@ Watch [Karpathy: Intro to Large Language Models](https://www.youtube.com/watch?v
 
 Pause at **0:20** (an LLM is two files: weights + a little code), **4:17** (pretraining as next-token compression of the internet), **8:58** (“dreams” / fluent but ungrounded text), and **14:14** (fine-tuning into an assistant). Stop at the **17:52** summary. The rest of the hour is optional.
 
-Assigned after class, not in the meeting: [MIT 6.S191 Lecture 1](https://www.youtube.com/watch?v=ErnWZxJovaM) from the perceptron (~17:20) through loss and gradient descent (~44:22). That is the homework-video twin of notes 1.2–1.3.
+Assigned after class, not in the meeting: [Intro to deep learning: perceptron through gradient descent](https://www.youtube.com/watch?v=ErnWZxJovaM) from the perceptron (~17:20) through loss and gradient descent (~44:22). That is the homework-video twin of notes 1.2–1.3.
 
 ---
 
@@ -151,9 +151,9 @@ Week 1 was rebuilt so a detail-first teacher, a classical-book teacher, and a cu
 
 Cite, do not assign: Rumelhart, Hinton, Williams (1986) on backpropagation; Mikolov et al. (2013b) on negative sampling.
 
-**Universities we copy intuitions from, not homework from:** Stanford CS224N (Winter 2026) Lectures 2–3 on word vectors and neural nets; CS231N notes on the neuron, backprop as gates, and SGD; MIT 6.S191 Lecture 1; CMU 11-711 on embedding lookup and \(\partial L/\partial w=(p-y)x\). Optional extra, not this week’s lab: CS224N Assignment 1 (exploring word vectors).
+Related university courses are listed once on each title slide and under **Extra materials** on the hub. Do not treat those links as homework.
 
-**Do not add to Week 1:** Adam’s derivation, attention diagrams, LoRA, GloVe SVD homework, the softmax Jacobian, negative-sampling derivation, the GELU formula, CS224N matrix calculus / NER / dependency parsing, or a full NLP-history lecture.
+**Do not add to Week 1:** Adam’s derivation, attention diagrams, LoRA, GloVe SVD homework, the softmax Jacobian, negative-sampling derivation, the GELU formula, matrix calculus, NER, dependency parsing, or a full NLP-history lecture.
 
 On slides, use the classical names next to the modern ones: autograd = backprop; embedding = distributed representation; loss = empirical risk / cost.
 

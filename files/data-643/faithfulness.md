@@ -2,13 +2,13 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 A trace can be **wrong** and the boxed answer **right**. That is **unfaithful** chain-of-thought: the steps you read are not a reliable account of why the answer appeared.
 
-Stanford **CS224N 2026 L12** points at Chen et al. (2025): models can **use a hint** without writing it in the CoT. This course’s classroom version is Lab 13: last integer 52, box 42. **CS224N L13** / Lightman et al. (*Let’s Verify Step by Step*): a **process** reward scores the steps; an **outcome** reward scores only the box. We do not train a process RM here. We run a checker on constructed traces.
+Chen et al. (2025): models can **use a hint** without writing it in the CoT. This course’s classroom version is Lab 13: last integer 52, box 42. Lightman et al. (*Let’s Verify Step by Step*): a **process** reward scores the steps; an **outcome** reward scores only the box. We do not train a process RM here. We run a checker on constructed traces.
 
 ---
 
 > **First time this evaluation appears.** **Faithfulness** asks whether the **steps caused** the answer, not whether the box is lucky.
 >
-> **What.** Lucky win: last step says 52, box says 42, gold is 42. Accuracy can pass while the trace is a lie. Process vs outcome (CS224N L13).
+> **What.** Lucky win: last step says 52, box says 42, gold is 42. Accuracy can pass while the trace is a lie. Process vs outcome (Lightman et al.).
 > **Why.** CoT and SC can look careful and still be unfaithful. A project that “shows work” must check the work.
 > **Architecture.** No new net. A checker: parse intermediates vs the box. Optional process reward (score steps), vs outcome-only.
 > **How.** Lab 13 flags the 52→42 row. Report accuracy **and** faithful-among-wins.
@@ -45,7 +45,7 @@ Do not call that number “reasoning accuracy.” Call it a **checker pass rate*
 
 ## 4. Teaching this note
 
-About **30 minutes** at the board, then **~12 minutes** of video. Then start Lab 13 if the vote note is already done. Lecture ideas follow **CS224N 2026 L12–L13** (unfaithful CoT; process vs outcome).
+About **30 minutes** at the board, then **~12 minutes** of video. Then start Lab 13 if the vote note is already done.
 
 - **0–10 min.** Define unfaithful: last step value \(\neq\) box, or steps invalid.
 - **10–20 min.** Lucky win vs honest miss. Why accuracy is not enough.

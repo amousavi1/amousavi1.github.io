@@ -110,7 +110,7 @@
                             InfoNCE wants the diagonal. Zero-shot is nearest prompt, not a trained C-way head.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>Contrastive learning</strong> pulls matched pairs together and pushes unmatched pairs apart, in a shared space. <strong>Zero-shot</strong> transfer is what you get when one side of the pair can be a class name written as text. Stanford CS231N 2025 L16 is the matching vision–language hour; CMU 11-777 already called this a <strong>coordination</strong> loss.</p>
+<p><strong>Contrastive learning</strong> pulls matched pairs together and pushes unmatched pairs apart, in a shared space. <strong>Zero-shot</strong> transfer is what you get when one side of the pair can be a class name written as text. This is a <strong>coordination</strong> loss: two towers, a similarity, no fused decoder.</p>
 <p>Week 5 will put CLIP’s data and retrieval on the table. This note is the loss and the zero-shot trick.</p>
 <hr />
 <blockquote>
@@ -135,14 +135,14 @@
 <h2>2. Zero-shot classification</h2>
 <p>At test time, encode the image once. Encode prompts <code>"a photo of a dog"</code>, <code>"a photo of a cat"</code>, … Take the nearest prompt. There is no trained softmax over ImageNet. New classes are new strings.</p>
 <p><img alt="Class names as text embeddings" src="files/data-643/graphics/4.3-contrastive-zeroshot/zeroshot.png" /></p>
-<p>CLIP was trained on <strong>phrases</strong>. CS231N’s warning: the raw label <code>"dog"</code> often loses to <code>"a photo of a dog"</code>. Prompt <strong>ensembling</strong> (average several phrasings) is a test-time trick, not a new model. We mention it; Lab 4 does not require it.</p>
+<p>CLIP was trained on <strong>phrases</strong>. The raw label <code>"dog"</code> often loses to <code>"a photo of a dog"</code>. Prompt <strong>ensembling</strong> (average several phrasings) is a test-time trick, not a new model. We mention it; Lab 4 does not require it.</p>
 <p>A class the text tower never saw as a phrase will not magically appear. Open-vocabulary is not infinite-vocabulary.</p>
 <hr />
 <h2>3. Linear probe versus zero-shot</h2>
 <p><img alt="A trained C-way head versus nearest prompt" src="files/data-643/graphics/4.3-contrastive-zeroshot/probe-vs-zeroshot.png" /></p>
 <p><strong>Linear probe:</strong> freeze the image encoder, train a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math>-way softmax on labeled images. Needs a training set for those <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>C</mi></mrow></math> classes.</p>
 <p><strong>Zero-shot:</strong> no extra weights. The classifier is the text tower. Adding a class is adding a string.</p>
-<p>Both are transfer. Zero-shot is what makes CLIP a <strong>foundation</strong> model in CS231N L16. Captioning, LLaVA, and Flamingo wait for later weeks.</p>
+<p>Both are transfer. Zero-shot is what makes CLIP a <strong>foundation</strong> model. Captioning, LLaVA, and Flamingo wait for later weeks.</p>
 <p>Web pairs are noisy (Week 5: BLIP filters them). Contrastive spaces can still be <strong>biased</strong> (Week 5.3).</p>
 <hr />
 <h2>4. Teaching this note</h2>
@@ -167,7 +167,6 @@
 <h2>7. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
 <p>Pause on <strong>zero-shot</strong> (<strong>9:00</strong>) — class names as text — and on <strong>InfoNCE / the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi><mo>&#x000D7;</mo><mi>N</mi></mrow></math> matrix</strong> (<strong>14:40</strong>). That matrix is the whole note.</p>
-<p>The matching university lecture is Stanford <strong>CS231N 2025 L16</strong> (CLIP contrastive objective, “a photo of”, zero-shot vs linear probe). CMU 11-777 L3.2 is the coordination/InfoNCE slogan from 4.1. We do not copy those slides. LLaVA waits.</p>
 <hr />
 <h2>8. Practice</h2>
 <ol>
@@ -201,7 +200,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

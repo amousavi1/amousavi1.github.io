@@ -7,7 +7,7 @@ One chain is a sample, not a proof. **Self-consistency** asks for several traces
 > **First time these methods appear.** **Self-consistency (SC)** is majority vote over several CoT traces. **Tree-of-Thoughts (ToT)** is **search** among partial thoughts, not i.i.d. samples.
 >
 > **What.** SC: sample \(k\) traces (temperature \(>0\)), parse answers, vote. ToT: expand nodes, **score**, prune, expand again.
-> **Why.** One CoT is noisy. Voting on the **answer** (not the wording) lifts GSM8K-style math in the CS224N L12 figure (~+17.9 pp in that citation). ToT helps when you need a tree, not \(k\) independent tapes.
+> **Why.** One CoT is noisy. Voting on the **answer** (not the wording) lifts GSM8K-style math (~+17.9 pp in Wang et al.). ToT helps when you need a tree, not \(k\) independent tapes.
 > **Architecture.** SC: decoder + parser + vote. ToT: a frontier of partial strings + a scorer (LM or checker) + beam/DFS.
 > **How.** Temperature 0, \(k=3\) is **not** SC (identical greedy traces). Vote on the parsed number.
 > **Formula.** SC: \(\hat{y}=\mathrm{mode}\{\mathrm{parse}(\tau_1),\ldots,\mathrm{parse}(\tau_k)\}\). ToT has no single loss; it is search.
@@ -21,7 +21,7 @@ Sample \(k\) independent CoT traces (temperature \(>0\)). Parse an answer from e
 
 This is test-time compute. You pay \(k\) forwards. Report \(k\) and the parser (last integer, boxed span, regex). Voting on the **answer**, not on the wording of the steps, is the usual rule. Lab 13 does that vote on constructed strings. Plot accuracy against \(k\) if you use this in a project; the curve usually flattens.
 
-Stanford **CS224N 2026 L12** cites Wang et al.: majority vote raised GSM8K by **+17.9 percentage points** versus greedy CoT. That is a lift on the **box**. It is not a faithfulness claim (note **13.3**). This course’s version of extra test-time compute is \(k\) traces. Do **not** assign DeepSeek-R1, GRPO, or a 256-expert run as homework.
+Wang et al.: majority vote raised GSM8K by **+17.9 percentage points** versus greedy CoT. That is a lift on the **box**. It is not a faithfulness claim (note **13.3**). This course’s version of extra test-time compute is \(k\) traces. Do **not** assign DeepSeek-R1, GRPO, or a 256-expert run as homework.
 
 ![GSM8K lift from majority vote](files/data-643/graphics/13.2-self-consistency-tot/gsm8k-sc.png)
 
@@ -47,7 +47,7 @@ Accuracy versus \(k\) is the self-consistency plot. For ToT, accuracy versus exp
 
 ## 4. Teaching this note
 
-About **35 minutes** at the board, then **~10 minutes** of video. Lecture ideas follow **CS224N 2026 L12** (self-consistency) and the ToT paper for the search cartoon.
+About **35 minutes** at the board, then **~10 minutes** of video. Self-consistency is the vote; the ToT paper is the search cartoon.
 
 - **0–12 min.** Temperature \(>0\), \(k\) traces, vote on the parsed answer. Tie-break rule.
 - **12–22 min.** ToT as width: expand, score, keep a beam. Contrast with ReAct (tools).

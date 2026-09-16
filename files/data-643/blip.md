@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**BLIP** (Li et al., 2022) is a vision–language model that **matches** and **writes**. CLIP scores pairs. CS231N 2025 L16’s CoCa slide is the sibling idea: add a **decoder**. BLIP does that, and it also **cleans** the noisy web pairs CLIP trained on.
+**BLIP** (Li et al., 2022) is a vision–language model that **matches** and **writes**. CLIP scores pairs. CoCa (Yu et al.) is the sibling idea: add a **decoder**. BLIP does that, and it also **cleans** the noisy web pairs CLIP trained on.
 
 ---
 
@@ -21,7 +21,7 @@ Web alt-text is messy. BLIP’s captioner generates synthetic captions; a filter
 
 Alt-text like `IMG_4032` or a product SKU is a bad caption. Generating a sentence and then asking “does this still match?” is the filter. You will not run that loop in lab; you will remember it when your project scrapes the web.
 
-CoCa (Yu et al.; the CS231N generation slide) adds a captioning loss on top of contrastive training. It does **not** advertise the bootstrap filter. If your story is “noisy web text,” you need BLIP’s ITM filter, not only a decoder.
+CoCa (Yu et al.) adds a captioning loss on top of contrastive training. It does **not** advertise the bootstrap filter. If your story is “noisy web text,” you need BLIP’s ITM filter, not only a decoder.
 
 ---
 
@@ -35,7 +35,7 @@ CoCa (Yu et al.; the CS231N generation slide) adds a captioning loss on top of c
 
 ![ITC, ITM, and LM](files/data-643/graphics/5.2-blip/blip-losses.png)
 
-The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. **BLIP-2** later freezes a strong image encoder and trains a thin **Q-Former**; treat that as “same idea, cheaper.” LLaVA (CS231N’s next family) is a frozen CLIP tower plus an LLM. Not this hour.
+The image tower is a ViT. The text side is a transformer that can encode or decode depending on the head. **BLIP-2** later freezes a strong image encoder and trains a thin **Q-Former**; treat that as “same idea, cheaper.” LLaVA is a frozen CLIP tower plus an LLM. Not this hour.
 
 ITC needs a batch of negatives. ITM can use a **hard** negative (a caption that almost matches). LM is why BLIP can caption at all.
 

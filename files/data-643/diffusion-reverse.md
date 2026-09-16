@@ -105,7 +105,7 @@ If \(\varepsilon_\theta=0\) (the net refuses to denoise), the subtracted term va
 
 ![Oracle reverse mean: \(2.0\) peels back to \(1.0\)](files/data-643/graphics/12.2-diffusion-reverse/reverse-mean.png)
 
-CS231N L14: sampling is an **iterative** procedure. You pay \(T\) network calls (or fewer with DDIM). A GAN still samples in one pass and fights collapse instead.
+Sampling is an **iterative** procedure. You pay \(T\) network calls (or fewer with DDIM). A GAN still samples in one pass and fights collapse instead.
 
 ---
 

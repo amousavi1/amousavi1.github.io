@@ -123,7 +123,7 @@
 </p>
 </blockquote>
 <h2>1. The bottleneck</h2>
-<p>A seq2seq RNN encodes the source into <strong>one</strong> vector, then the decoder must generate from that vector. Long source, same-size bottle. CS224N’s slogan: attention is a <strong>direct connection</strong> from the decoder to the encoder states, so the model can reread instead of remember.</p>
+<p>A seq2seq RNN encodes the source into <strong>one</strong> vector, then the decoder must generate from that vector. Long source, same-size bottle. Attention is a <strong>direct connection</strong> from the decoder to the encoder states, so the model can reread instead of remember.</p>
 <p><img alt="One vector versus rereading the source" src="files/data-643/graphics/3.1-attention-need/bottleneck.png" /></p>
 <p>Bahdanau et al. (2015) added that reread <strong>on top of</strong> an RNN. Queries come from the decoder; keys and values come from the encoder. Vaswani et al. (2017) dropped the recurrence: <strong>self-attention</strong> is the layer, and every token in the <strong>same</strong> sequence plays all three roles.</p>
 <p>Draw <em>The cat … it</em> with 40 dots. RNN: 39 arrows in a line. Attention: one arrow from <em>it</em> to <em>cat</em>, plus arrows to everyone else, with <strong>weights</strong>. Note 3.2 turns those weights into softmax.</p>
@@ -182,7 +182,6 @@
 <h2>6. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=wjZofJX0v4M">3Blue1Brown: But what is a GPT? Visual intro to transformers</a>.</p>
 <p>Pause when next-token prediction is a stack of vectors, and at the first all-to-all attention cartoon. Stop before the full QKV derivation if you are teaching 3.2 next.</p>
-<p>The matching university lecture for <em>form</em> is Stanford CS224N W26 Lecture 5 (attention and transformers): bottleneck, then Bahdanau, then self-attention. We do not copy those slides. The transformer block waits for 3.3.</p>
 <hr />
 <h2>7. Practice</h2>
 <ol>
@@ -216,7 +215,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

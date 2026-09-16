@@ -121,7 +121,7 @@
 <li><strong>Augmented:</strong> put those passages into the prompt, next to the question.</li>
 <li><strong>Generation:</strong> the same next-token model as always writes the answer, now <strong>conditioned</strong> on the passages.</li>
 </ul>
-<p>You are not training a new network today. You are changing what the network is allowed to read at request time. Stanford <strong>CS224N 2026 L10</strong> calls the passages <strong>non-parametric memory</strong>: the facts live in an index you can edit, not only inside <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math>.</p>
+<p>You are not training a new network today. You are changing what the network is allowed to read at request time. The passages are <strong>non-parametric memory</strong>: the facts live in an index you can edit, not only inside <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math>.</p>
 <p>A search engine returns links. RAG returns an <strong>answer</strong>, with the retrieved passages sitting in the context window. A fine-tune changes weights. RAG leaves the weights alone and changes the <strong>context</strong>.</p>
 <hr />
 <h2>2. Why we use it</h2>
@@ -224,7 +224,6 @@
 <li><strong>34–48 min.</strong> Pros / cons. Four failures. Recall@k and attribution. RAFT is training; this is inference.</li>
 <li><strong>Then</strong> play Karpathy intro <strong>27:43–33:32</strong> (tool use: browser as retrieve-then-read) and mention <strong>40:45–42:15</strong> (custom GPTs / files as a private index). Pause when the model emits a search and reads the hits.</li>
 </ul>
-<p>Lecture ideas follow <strong>CS224N 2026 L10</strong>. Original notes; that course is not copied.</p>
 <hr />
 <h2>10. Worked example</h2>
 <p>Three chunks, vocab <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mtext>library</mtext><mo>&#x0002C;</mo><mtext>close</mtext><mo>&#x0002C;</mo><mtext>shuttle</mtext><mo stretchy="false">&#x0007D;</mo></mrow></math>, bag-of-words counts:</p>
@@ -310,7 +309,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

@@ -127,7 +127,7 @@ A larger score sits closer to *he* in this constructed space. That is not a bug 
 
 ## 7. Teaching this note
 
-**~18 minutes.** One-hot vs dense, then the four-box pipeline (corpus → window → fake task → keep the rows), then skip-gram’s \(P(o\mid c)\) on the \(V=3\) softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is **homework** (**0:00–12:00**, skip-gram vs. CBOW). Do not play CS224N Lecture 2 in class.
+**~18 minutes.** One-hot vs dense, then the four-box pipeline (corpus → window → fake task → keep the rows), then skip-gram’s \(P(o\mid c)\) on the \(V=3\) softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is **homework** (**0:00–12:00**, skip-gram vs. CBOW).
 
 ---
 

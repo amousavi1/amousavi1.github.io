@@ -110,7 +110,7 @@
                             Five jobs: represent, align, fuse, translate, co-learn. CLIP scores; concat fuses.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>Module 2 leaves pure text. <strong>Multimodal</strong> systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. CMU 11-777’s list is the map: <strong>representation, alignment, fusion, translation, co-learning</strong>. Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio).</p>
+<p>Module 2 leaves pure text. <strong>Multimodal</strong> systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. The five jobs are <strong>representation, alignment, fusion, translation, co-learning</strong> (Baltrušaitis et al.). Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio).</p>
 <p>If you only train on text, you cannot answer “what is in this photo?” without an image tower or a captioner. That is why Weeks 4–5 exist.</p>
 <hr />
 <blockquote>
@@ -166,13 +166,13 @@
 <hr />
 <h2>2. Joint versus coordinated</h2>
 <p><strong>Joint:</strong> mash the streams into <strong>one</strong> vector (early fusion, a concatenating MLP). Missing a modality at test time hurts.</p>
-<p><strong>Coordinated:</strong> keep a tower per modality, then pull the towers together with a similarity (CLIP is this; CMU 11-777 also puts CCA here). You can query with either side.</p>
+<p><strong>Coordinated:</strong> keep a tower per modality, then pull the towers together with a similarity (CLIP is this; canonical correlation analysis is another coordinated family). You can query with either side.</p>
 <p><img alt="Joint fusion versus coordinated towers" src="files/data-643/graphics/4.1-multimodal-foundations/joint-coord.png" /></p>
 <p>On the board: two arrows that you <strong>add</strong> (joint) vs two arrows that you <strong>dot</strong> (coordinated). CLIP never concatenates pixels with token ids during pretraining; it only scores pairs.</p>
 <p>We do not derive Deep CCA. The slogan is enough: a coordination <strong>loss</strong>, not a concatenating layer.</p>
 <hr />
 <h2>3. Teaching this note</h2>
-<p><strong>~16 minutes.</strong> Five-job table, then joint vs coordinated with the 2-D cosine example. Play Yannic Kilcher CLIP <strong>4:40–14:40</strong> (two towers as a coordinated space). Zero-shot details wait for 4.3; captioning waits for BLIP. Do not play a full 11-777 hour in class.</p>
+<p><strong>~16 minutes.</strong> Five-job table, then joint vs coordinated with the 2-D cosine example. Play Yannic Kilcher CLIP <strong>4:40–14:40</strong> (two towers as a coordinated space). Zero-shot details wait for 4.3; captioning waits for BLIP.</p>
 <hr />
 <h2>4. Worked example</h2>
 <p>Image vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Matching caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x0002B;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, other caption <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">t</mi></mrow><mrow><mo>&#x02212;</mo></mrow></msub><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>.</p>
@@ -191,7 +191,6 @@
 <h2>6. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=T9XSU0pKX2E">Yannic Kilcher: OpenAI CLIP, Connecting Text and Images</a>.</p>
 <p>Play <strong>4:40–14:40</strong>. Pause when the two encoders emit vectors in one space, and when a cosine (not a concatenating MLP) is the interaction. That is coordinated representation.</p>
-<p>The matching university course is CMU <strong>11-777 Multimodal Machine Learning</strong> (joint vs coordinated, then the five challenges). We do not copy those slides. Do not assign DCCA.</p>
 <hr />
 <h2>7. Practice</h2>
 <ol>
@@ -225,7 +224,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

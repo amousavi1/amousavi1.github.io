@@ -63,7 +63,7 @@ About **35 minutes** at the board, then **~10 minutes** of video.
 - **0–12 min.** Write \(J\) and mark who maximizes which term. Circle that \(G\) does not appear in the real term.
 - **12–22 min.** The two-phase loop. Non-saturating trick: \(\max_G \log D(G(z))\).
 - **22–33 min.** Worked numbers: one real, one fake, both forms of the \(G\) loss.
-- **Then** play CS231N **54:00–64:00** (minimax objective and the training algorithm). Pause on the “train \(D\) then \(G\)” slide.
+- **Then** play **54:00–64:00** of the assigned video (minimax objective and the training algorithm). Pause on the “train \(D\) then \(G\)” loop.
 
 ---
 
@@ -92,7 +92,7 @@ If instead \(D(G(z))=0.01\), that becomes \(\log 0.99\approx -0.010\): almost fl
 
 ![A sample of \(J\), then a flat saturating \(G\) loss](files/data-643/graphics/11.2-gan-training/j-numeric.png)
 
-Stanford CS231N 2025 L13 writes the same minimax and the practical loop: update \(D\), then \(G\). A 99% discriminator is the saturating regime, not a trophy.
+The practical loop is the same minimax: update \(D\), then \(G\). A 99% discriminator is the saturating regime, not a trophy.
 
 ---
 
@@ -106,7 +106,7 @@ Stanford CS231N 2025 L13 writes the same minimax and the practical loop: update 
 
 ## 7. Video
 
-Watch [Stanford CS231N 2017 lecture 13, Generative Models](https://www.youtube.com/watch?v=5WoItGTWV54), **54:00–64:00**.
+Watch [Generative models: training \(G\) and \(D\)](https://www.youtube.com/watch?v=5WoItGTWV54), **54:00–64:00**.
 
 Pause on the minimax \(J\) and on the practical loop (alternate \(D\) and \(G\)). Same URL as note **11.1**; do not replay 46:45–54:00 unless someone missed it.
 

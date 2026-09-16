@@ -35,7 +35,7 @@ L=\max(z,0)-z\,y+\log(1+e^{-\lvert z\rvert}),
 
 which is numerically stable BCE. The extra line you need: **pass \(z\), never `sigmoid(z)`, into that loss.** If you sigmoid first, you squash twice.
 
-You need: **one scalar**, then **one vector of derivatives**. Nielsen calls this the **cost**; CS231N calls it the **loss**; a statistician calls it **empirical risk**. Same object.
+You need: **one scalar**, then **one vector of derivatives**. Nielsen calls this the **cost**; the usual name here is **loss**; a statistician calls it **empirical risk**. Same object.
 
 ---
 
@@ -76,7 +76,7 @@ If you forget `zero_grad()`, gradients **accumulate** across steps. That is a si
 
 ## 4. One ReLU unit, by hand
 
-CS231N treats each operation as a **gate** with a local derivative. Autograd is that picture. For squared error on one ReLU neuron,
+Treat each operation as a **gate** with a local derivative. Autograd is that picture. For squared error on one ReLU neuron,
 
 \[
 z=\boldsymbol{w}^{\top}\boldsymbol{x}+b,\qquad
@@ -94,7 +94,7 @@ Same pattern for \(b\), with \(x\) replaced by \(1\). If \(z\le 0\), the local d
 
 ![One ReLU unit as a chain of gates](files/data-643/graphics/1.3-gradient-descent/one-unit-backprop.png)
 
-CMU 11-711 writes the softmax/cross-entropy cousin \(\partial L/\partial w=(p-y)x\). Same “upstream error times input” shape. We do not need Adam’s derivation this week.
+The softmax/cross-entropy cousin is \(\partial L/\partial w=(p-y)x\). Same “upstream error times input” shape. We do not need Adam’s derivation this week.
 
 ---
 

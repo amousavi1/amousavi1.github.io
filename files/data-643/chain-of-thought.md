@@ -17,7 +17,7 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 A direct prompt is “What is 17 × 24?” A CoT prompt is “Show your work, then give the number.” Few-shot CoT puts worked examples in the context; zero-shot CoT is often the sentence *Let’s think step by step.*
 
-Stanford **CS224N 2026 L12**: this is a **prompt / decoding** choice, not a new architecture. Extra tokens are extra **test-time compute**. The weights do not change.
+This is a **prompt / decoding** choice, not a new architecture. Extra tokens are extra **test-time compute**. The weights do not change.
 
 ![Scratch work, then a boxed answer](files/data-643/graphics/13.1-chain-of-thought/cot.png)
 
@@ -47,7 +47,7 @@ Temperature 0 is a single greedy chain: useful as a baseline, not as a vote (not
 
 ## 4. Teaching this note
 
-About **30 minutes** at the board, then **~8 minutes** of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API. Lecture ideas follow **CS224N 2026 L12**.
+About **30 minutes** at the board, then **~8 minutes** of video. First of three Week-13 notes; Lab 13 is constructed traces, not an API.
 
 - **0–10 min.** Direct vs CoT prompt. Tokens as scratch paper.
 - **10–20 min.** When CoT helps (multi-hop) vs hurts (lookup). Cost.
@@ -88,7 +88,7 @@ Lab 13’s `23+19` traces are the same algebra with smaller numbers.
 
 Watch [Andrej Karpathy, Intro to Large Language Models](https://www.youtube.com/watch?v=zjkBMFhNj_g), **35:00–38:02**.
 
-Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. That is the CS224N L12 punch in classroom language. Optional nearby: **38:02–40:45** (self-improvement) is not required for this note. Notes **14.1–14.2** and **15.1** reuse this same URL at other minutes.
+Pause on System 1 vs System 2: the model gets more compute by emitting more tokens. That is extra test-time compute in classroom language. Optional nearby: **38:02–40:45** (self-improvement) is not required for this note. Notes **14.1–14.2** and **15.1** reuse this same URL at other minutes.
 
 ---
 

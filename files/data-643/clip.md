@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**CLIP** (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. Stanford CS231N 2025 L16’s punchline is the one we keep: after training you have a **similarity score** between an image and a text, not a captioner.
+**CLIP** (Radford et al., 2021) is the coordinated, contrastive model that made zero-shot vision–language the default. After training you have a **similarity score** between an image and a text, not a captioner.
 
 ---
 
@@ -35,9 +35,9 @@ Write the API on the board: `encode_image`, `encode_text`, `cosine`. Three calls
 
 What it is not: a captioner (it does not decode a sentence), a detector with boxes, or a guarantee of factual correctness. It scores pairs.
 
-CS231N’s next slide after CLIP is **CoCa**: add a decoder with a captioning loss. That generation job is note **5.2** (BLIP). Do not skip from CLIP to LLaVA in this hour.
+**CoCa** is next after CLIP: add a decoder with a captioning loss. That generation job is note **5.2** (BLIP). Do not skip from CLIP to LLaVA in this hour.
 
-Prompt wording is part of the method. CS231N: a single phrase can be too peaked; ensembling `"a photo of"`, `"a drawing of"`, … is optional engineering, not a new model.
+Prompt wording is part of the method. A single phrase can be too peaked; ensembling `"a photo of"`, `"a drawing of"`, … is optional engineering, not a new model.
 
 ---
 
@@ -45,7 +45,7 @@ Prompt wording is part of the method. CS231N: a single phrase can be too peaked;
 
 Temperature \(\tau\) (often learned, around \(0.07\)) sharpens the batch softmax. Small \(\tau\) makes off-diagonal competition brutal; that is why CLIP wanted huge batches.
 
-CS231N’s first listed disadvantage of CLIP-style models: they **rely on batch size** to learn fine-grained concepts. A batch of 8 has 7 negatives. A batch of 32{,}768 has 32{,}767. You still will not see both “a mug in grass” and “grass in a mug” in one batch; compositionality is a later paper, not this lecture.
+CLIP-style models **rely on batch size** to learn fine-grained concepts. A batch of 8 has 7 negatives. A batch of 32{,}768 has 32{,}767. You still will not see both “a mug in grass” and “grass in a mug” in one batch; compositionality is a later paper, not this lecture.
 
 Hugging Face `CLIPModel` plus a processor is enough for Lab 5’s *idea*; the lab itself uses a toy space so nobody waits on a download. If a project cites “CLIP,” name the Hugging Face id. Freezing is allowed. Pretending freeze is fine-tune is not.
 

@@ -29,7 +29,7 @@ A 7B fp16 file is about 14 GB. Laptops, phones, and batch servers do not all hol
 
 ![Draft tokens verified by the large model](files/data-643/graphics/7.3-efficiency-deploy/speculative.png)
 
-Stanford CS224N 2025 L11 puts pruning next to LoRA (fewer weights vs a small \(\Delta\)). Distill and speculate stay on this board.
+Pruning is fewer weights; LoRA (note **8.3**) is a small \(\Delta\). Distill and speculate stay on this board.
 
 ---
 

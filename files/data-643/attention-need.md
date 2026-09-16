@@ -15,7 +15,7 @@ An RNN compresses the whole past into one vector. Token 1 can affect token 40 on
 >
 ## 1. The bottleneck
 
-A seq2seq RNN encodes the source into **one** vector, then the decoder must generate from that vector. Long source, same-size bottle. CS224N’s slogan: attention is a **direct connection** from the decoder to the encoder states, so the model can reread instead of remember.
+A seq2seq RNN encodes the source into **one** vector, then the decoder must generate from that vector. Long source, same-size bottle. Attention is a **direct connection** from the decoder to the encoder states, so the model can reread instead of remember.
 
 ![One vector versus rereading the source](files/data-643/graphics/3.1-attention-need/bottleneck.png)
 
@@ -80,8 +80,6 @@ If each RNN Jacobian factor is \(0.9\), the product over 39 steps is \(0.9^{39}\
 Watch [3Blue1Brown: But what is a GPT? Visual intro to transformers](https://www.youtube.com/watch?v=wjZofJX0v4M).
 
 Pause when next-token prediction is a stack of vectors, and at the first all-to-all attention cartoon. Stop before the full QKV derivation if you are teaching 3.2 next.
-
-The matching university lecture for *form* is Stanford CS224N W26 Lecture 5 (attention and transformers): bottleneck, then Bahdanau, then self-attention. We do not copy those slides. The transformer block waits for 3.3.
 
 ---
 

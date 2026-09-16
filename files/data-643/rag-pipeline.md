@@ -16,7 +16,7 @@ The name is literal.
 - **Augmented:** put those passages into the prompt, next to the question.
 - **Generation:** the same next-token model as always writes the answer, now **conditioned** on the passages.
 
-You are not training a new network today. You are changing what the network is allowed to read at request time. Stanford **CS224N 2026 L10** calls the passages **non-parametric memory**: the facts live in an index you can edit, not only inside \(\theta\).
+You are not training a new network today. You are changing what the network is allowed to read at request time. The passages are **non-parametric memory**: the facts live in an index you can edit, not only inside \(\theta\).
 
 A search engine returns links. RAG returns an **answer**, with the retrieved passages sitting in the context window. A fine-tune changes weights. RAG leaves the weights alone and changes the **context**.
 
@@ -170,8 +170,6 @@ About **50 minutes** at the board, then **~10 minutes** of video. Students have 
 - **22–34 min.** Worked three-doc cosine. \(k=1\) vs \(k=2\). Lost in the middle.
 - **34–48 min.** Pros / cons. Four failures. Recall@k and attribution. RAFT is training; this is inference.
 - **Then** play Karpathy intro **27:43–33:32** (tool use: browser as retrieve-then-read) and mention **40:45–42:15** (custom GPTs / files as a private index). Pause when the model emits a search and reads the hits.
-
-Lecture ideas follow **CS224N 2026 L10**. Original notes; that course is not copied.
 
 ---
 

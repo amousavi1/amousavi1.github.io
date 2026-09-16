@@ -35,7 +35,7 @@ Trainable count for one matrix is \(r(d+k)\), not \(dk\). That is the whole poin
 
 ## 2. Rank, merge, many tasks
 
-Stanford CS224N 2025 L11 (PEFT): the reason for LoRA is that a full \(\Delta\) has the same size as \(\boldsymbol{W}\) (GPT-3: 175B extra weights per task). Encode \(\Delta W = BA\) with \(r\ll \min(d,k)\). Merge at deploy and there is **no extra inference latency**; swap adapters by subtracting one \(BA\) and adding another.
+The reason for LoRA is that a full \(\Delta\) has the same size as \(\boldsymbol{W}\) (GPT-3: 175B extra weights per task). Encode \(\Delta W = BA\) with \(r\ll \min(d,k)\). Merge at deploy and there is **no extra inference latency**; swap adapters by subtracting one \(BA\) and adding another.
 
 Small \(r\) (4, 8, 16) is often enough for style and instruction shifts; harder domain shifts may want larger \(r\) or more layers. At deploy time you can **merge** \(\boldsymbol{W}\leftarrow \boldsymbol{W}+(\alpha/r)BA\) and throw the adapter away, or keep several adapters and swap them.
 

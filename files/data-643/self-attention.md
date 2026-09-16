@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Self-attention is a weighted sum of **values**, with weights from a comparison of **queries** to **keys**. Every token plays all three roles. That is CMU 11-711’s calculation, and Lab 3.
+Self-attention is a weighted sum of **values**, with weights from a comparison of **queries** to **keys**. Every token plays all three roles. That is the calculation, and Lab 3.
 
 ---
 
@@ -114,8 +114,6 @@ Without the \(\sqrt{2}\), row 1 would be \(\mathrm{softmax}([2,0])\approx [0.88,
 Watch [3Blue1Brown: Attention in transformers, visually explained](https://www.youtube.com/watch?v=eMlx5fFNoYc).
 
 Pause when queries and keys meet as a grid of dots, when softmax turns a row into a distribution, and when values are mixed. That grid is Lab 3’s heatmap.
-
-The matching university lecture is CMU 11-711 (Neubig): scaled dot-product, multi-head, then the causal mask for LM training. We do not copy those slides.
 
 ---
 

@@ -110,7 +110,7 @@
                             Same block. Causal next-token versus masked tokens. Contextual, not a static table.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>GPT and BERT are the same block with different <strong>masks</strong> and <strong>objectives</strong>. That choice is the difference between a generator and a bidirectional encoder. Princeton COS 484 L10 is the matching pretraining hour; CS224N’s pretraining lecture is the same fork.</p>
+<p>GPT and BERT are the same block with different <strong>masks</strong> and <strong>objectives</strong>. That choice is the difference between a generator and a bidirectional encoder. The fork is the objective: causal language modeling versus masked language modeling.</p>
 <hr />
 <blockquote>
 <p><strong>First time this method appears.</strong> <strong>GPT</strong> and <strong>BERT</strong> are two uses of the same block.</p>
@@ -125,7 +125,7 @@
 <h2>1. Static versus contextual</h2>
 <p>Week 1’s embedding table gave <em>bank</em> <strong>one</strong> vector. A transformer gives <em>bank</em> a vector that depends on the sentence: river bank versus money bank. That is a <strong>contextual</strong> representation. ELMo did this with LSTMs; GPT and BERT do it with the Week 3 block.</p>
 <p><img alt="The same type, two contexts" src="files/data-643/graphics/3.4-gpt-bert/contextual.png" /></p>
-<p>Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. CS224N’s slogan: <strong>pretrain once, fine-tune many times.</strong></p>
+<p>Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. <strong>Pretrain once, fine-tune many times.</strong></p>
 <hr />
 <h2>2. Two attention patterns</h2>
 <p><strong>GPT</strong> (decoder-only): each token may attend to itself and the past. The pretraining job is <strong>next-token</strong> (causal language modeling). Sampling is ancestral: emit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>, then condition on it.</p>
@@ -201,7 +201,6 @@
 <h2>8. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">Karpathy: Let’s build GPT</a> through the first attention / causal-mask implementation (start <strong>0:00–12:00</strong> in class; the attention code is later if you assign homework).</p>
 <p>Also <a href="https://www.youtube.com/watch?v=xI0HHN5XKDo">CodeEmporium: BERT Neural Network — EXPLAINED!</a>. Pause on masked language modeling and next-sentence prediction. You do not need to train BERT today.</p>
-<p>The matching university lecture is Princeton COS 484 L10 (contextualized representations, GPT, BERT), with CS224N W26 pretraining as the second source for “pretrain once, fine-tune many.” We do not copy those slides.</p>
 <hr />
 <h2>9. Practice</h2>
 <ol>
@@ -235,7 +234,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

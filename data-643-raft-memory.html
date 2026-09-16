@@ -128,7 +128,7 @@
 <p>A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some <strong>distractors</strong>), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”</p>
 <p><img alt="Retrieve, then fine-tune the reader on the bundle" src="files/data-643/graphics/10.3-raft-memory/raft.png" /></p>
 <p>If every training snippet is gold, the model never practices rejecting junk. Include negatives. If you never train with retrieval, editing the index will not fix a model that ignores the index. RAFT is still SFT: the labels are answers <em>given the bundle</em>, not a new architecture.</p>
-<p>Stanford CS224N 2025 L13: <strong>parametric</strong> recall versus <strong>open-book</strong>. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.</p>
+<p><strong>Parametric</strong> recall versus <strong>open-book</strong>. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.</p>
 <hr />
 <h2>2. Parametric versus non-parametric memory</h2>
 <p><strong>Parametric:</strong> the MLP and attention weights. Fast, always on, hard to update (ROME, SFT, forgetting). <strong>Non-parametric:</strong> a datastore, BM25, embeddings, a kNN over hidden states (kNN-LM, RETRO, memorizing transformers). You update a fact by writing a snippet, not by locating a layer.</p>
@@ -194,7 +194,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

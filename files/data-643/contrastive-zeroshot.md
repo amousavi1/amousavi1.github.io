@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**Contrastive learning** pulls matched pairs together and pushes unmatched pairs apart, in a shared space. **Zero-shot** transfer is what you get when one side of the pair can be a class name written as text. Stanford CS231N 2025 L16 is the matching vision–language hour; CMU 11-777 already called this a **coordination** loss.
+**Contrastive learning** pulls matched pairs together and pushes unmatched pairs apart, in a shared space. **Zero-shot** transfer is what you get when one side of the pair can be a class name written as text. This is a **coordination** loss: two towers, a similarity, no fused decoder.
 
 Week 5 will put CLIP’s data and retrieval on the table. This note is the loss and the zero-shot trick.
 
@@ -41,7 +41,7 @@ At test time, encode the image once. Encode prompts `"a photo of a dog"`, `"a ph
 
 ![Class names as text embeddings](files/data-643/graphics/4.3-contrastive-zeroshot/zeroshot.png)
 
-CLIP was trained on **phrases**. CS231N’s warning: the raw label `"dog"` often loses to `"a photo of a dog"`. Prompt **ensembling** (average several phrasings) is a test-time trick, not a new model. We mention it; Lab 4 does not require it.
+CLIP was trained on **phrases**. The raw label `"dog"` often loses to `"a photo of a dog"`. Prompt **ensembling** (average several phrasings) is a test-time trick, not a new model. We mention it; Lab 4 does not require it.
 
 A class the text tower never saw as a phrase will not magically appear. Open-vocabulary is not infinite-vocabulary.
 
@@ -55,7 +55,7 @@ A class the text tower never saw as a phrase will not magically appear. Open-voc
 
 **Zero-shot:** no extra weights. The classifier is the text tower. Adding a class is adding a string.
 
-Both are transfer. Zero-shot is what makes CLIP a **foundation** model in CS231N L16. Captioning, LLaVA, and Flamingo wait for later weeks.
+Both are transfer. Zero-shot is what makes CLIP a **foundation** model. Captioning, LLaVA, and Flamingo wait for later weeks.
 
 Web pairs are noisy (Week 5: BLIP filters them). Contrastive spaces can still be **biased** (Week 5.3).
 
@@ -99,8 +99,6 @@ Zero-shot: image \(\boldsymbol{v}=\begin{bmatrix}1\\0\end{bmatrix}\), prompts \(
 Watch [Yannic Kilcher: OpenAI CLIP, Connecting Text and Images](https://www.youtube.com/watch?v=T9XSU0pKX2E).
 
 Pause on **zero-shot** (**9:00**) — class names as text — and on **InfoNCE / the \(N\times N\) matrix** (**14:40**). That matrix is the whole note.
-
-The matching university lecture is Stanford **CS231N 2025 L16** (CLIP contrastive objective, “a photo of”, zero-shot vs linear probe). CMU 11-777 L3.2 is the coordination/InfoNCE slogan from 4.1. We do not copy those slides. LLaVA waits.
 
 ---
 

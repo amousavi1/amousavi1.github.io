@@ -47,7 +47,7 @@ For this course, GANs are the first **implicit** generator you meet. Diffusion (
 
 Draw the figure on the board and leave it up: \(z\to G\to\) fake into \(D\), real \(x\) into \(D\). Everything later in Week 11 is a comment on that picture.
 
-Stanford CS231N 2025 L13: a GAN is an **implicit** density and a **direct** sample. You give up on \(p(\boldsymbol{x})\) and keep a one-forward-pass sampler. Diffusion (Week 12) is the other implicit family: iterative, not one shot.
+A GAN is an **implicit** density and a **direct** sample. You give up on \(p(\boldsymbol{x})\) and keep a one-forward-pass sampler. Diffusion (Week 12) is the other implicit family: iterative, not one shot.
 
 Name what you cannot do: \(p(\boldsymbol{x})\), \(p(\boldsymbol{z}\mid\boldsymbol{x})\), a test log-likelihood. Name what you can do: draw fakes in one forward pass. That pair of sentences is the exam answer for “why a GAN vs why a diffusion model.”
 
@@ -60,7 +60,7 @@ About **35 minutes** at the board, then **~8 minutes** of video. This is the fir
 - **0–12 min.** Implicit vs explicit. You cannot write \(p(\boldsymbol{x})\) for a GAN. You can sample. Sketch the two-player diagram.
 - **12–24 min.** What \(G\) and \(D\) each see. \(G\) never sees a real \(\boldsymbol{x}\) on its own update. \(D\) never sees \(\boldsymbol{z}\).
 - **24–34 min.** Worked 1-D two-mode example. Leave the numbers on the board; note **11.3** will reuse them.
-- **Then** play CS231N **46:45–54:00** (GAN setup: give up on density, noise through a generator). Pause when the two-player cartoon appears.
+- **Then** play **46:45–54:00** of the assigned video (GAN setup: give up on density, noise through a generator). Pause when the two-player cartoon appears.
 
 ---
 
@@ -84,7 +84,7 @@ If you now let \(G\) move and it jumps all mass to \(-2\), the table flips: \(D(
 
 ![Bayes \(D\) when \(G\) parks on \(+2\)](files/data-643/graphics/11.1-gan-idea/d-bayes.png)
 
-The optimal discriminator (Goodfellow / CS231N) is \(D^*(x)=p_r(x)/(p_r(x)+p_g(x))\). Where \(G\) never goes, \(p_g=0\) and \(D^*=1\). \(G\)’s loss never sees that location.
+The optimal discriminator (Goodfellow et al.) is \(D^*(x)=p_r(x)/(p_r(x)+p_g(x))\). Where \(G\) never goes, \(p_g=0\) and \(D^*=1\). \(G\)’s loss never sees that location.
 
 ---
 
@@ -98,7 +98,7 @@ The optimal discriminator (Goodfellow / CS231N) is \(D^*(x)=p_r(x)/(p_r(x)+p_g(x
 
 ## 7. Video
 
-Watch [Stanford CS231N 2017 lecture 13, Generative Models](https://www.youtube.com/watch?v=5WoItGTWV54), **46:45–54:00**.
+Watch [Generative models: GAN setup](https://www.youtube.com/watch?v=5WoItGTWV54), **46:45–54:00**.
 
 Pause at the two-player setup: noise \(\boldsymbol{z}\) through a generator, no explicit density. Skip PixelCNN/VAE (the first 45 minutes) in class; those are not this note. Notes **11.2** and **11.3** reuse the same URL at later pause points.
 

@@ -128,7 +128,7 @@
 <p><strong>Prune / quantize / distill</strong> change what you <strong>store</strong> or <strong>train</strong>. <strong>Speculative decoding</strong> changes only the <strong>sampler</strong> at serve time: draft model + target model + accept/reject. You still have the original transformer; you wrap it.</p>
 <p><img alt="Prune, quantize, distill" src="files/data-643/graphics/7.3-efficiency-deploy/compress.png" /></p>
 <p><img alt="Draft tokens verified by the large model" src="files/data-643/graphics/7.3-efficiency-deploy/speculative.png" /></p>
-<p>Stanford CS224N 2025 L11 puts pruning next to LoRA (fewer weights vs a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>). Distill and speculate stay on this board.</p>
+<p>Pruning is fewer weights; LoRA (note <strong>8.3</strong>) is a small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x00394;</mi></mrow></math>. Distill and speculate stay on this board.</p>
 <hr />
 <h2>4. How each one works</h2>
 <p><strong>Prune.</strong> Score weights (magnitude, or a more careful criterion). Zero the small ones, or drop a structure. Then a short recovery train, or quality falls off a cliff.</p>
@@ -205,7 +205,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

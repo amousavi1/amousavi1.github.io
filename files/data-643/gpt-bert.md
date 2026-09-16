@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-GPT and BERT are the same block with different **masks** and **objectives**. That choice is the difference between a generator and a bidirectional encoder. Princeton COS 484 L10 is the matching pretraining hour; CS224N’s pretraining lecture is the same fork.
+GPT and BERT are the same block with different **masks** and **objectives**. That choice is the difference between a generator and a bidirectional encoder. The fork is the objective: causal language modeling versus masked language modeling.
 
 ---
 
@@ -19,7 +19,7 @@ Week 1’s embedding table gave *bank* **one** vector. A transformer gives *bank
 
 ![The same type, two contexts](files/data-643/graphics/3.4-gpt-bert/contextual.png)
 
-Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. CS224N’s slogan: **pretrain once, fine-tune many times.**
+Pretrain once on unlabeled text, then fine-tune a small head (or the whole stack) on a labeled task. **Pretrain once, fine-tune many times.**
 
 ---
 
@@ -101,8 +101,6 @@ Objective contrast: GPT loss on this pair is \(-\log p(x_2\mid x_1)\). BERT, if 
 Watch [Karpathy: Let’s build GPT](https://www.youtube.com/watch?v=kCc8FmEb1nY) through the first attention / causal-mask implementation (start **0:00–12:00** in class; the attention code is later if you assign homework).
 
 Also [CodeEmporium: BERT Neural Network — EXPLAINED!](https://www.youtube.com/watch?v=xI0HHN5XKDo). Pause on masked language modeling and next-sentence prediction. You do not need to train BERT today.
-
-The matching university lecture is Princeton COS 484 L10 (contextualized representations, GPT, BERT), with CS224N W26 pretraining as the second source for “pretrain once, fine-tune many.” We do not copy those slides.
 
 ---
 

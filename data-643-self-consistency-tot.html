@@ -107,7 +107,7 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 13 &middot; <a href="files/data-643/self-consistency-tot.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/13.2-self-consistency-tot.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            CS224N L12: majority vote +17.9 pp on GSM8K. Vote on answers, not wording.
+                            Majority vote +17.9 pp on GSM8K. Vote on answers, not wording.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>One chain is a sample, not a proof. <strong>Self-consistency</strong> asks for several traces and <strong>votes</strong>. <strong>Tree-of-thoughts</strong> (ToT) searches among partial plans instead of committing to a single left-to-right story.</p>
@@ -115,7 +115,7 @@
 <blockquote>
 <p><strong>First time these methods appear.</strong> <strong>Self-consistency (SC)</strong> is majority vote over several CoT traces. <strong>Tree-of-Thoughts (ToT)</strong> is <strong>search</strong> among partial thoughts, not i.i.d. samples.</p>
 <p><strong>What.</strong> SC: sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces (temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>0</mn></mrow></math>), parse answers, vote. ToT: expand nodes, <strong>score</strong>, prune, expand again.
-<strong>Why.</strong> One CoT is noisy. Voting on the <strong>answer</strong> (not the wording) lifts GSM8K-style math in the CS224N L12 figure (~+17.9 pp in that citation). ToT helps when you need a tree, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> independent tapes.
+<strong>Why.</strong> One CoT is noisy. Voting on the <strong>answer</strong> (not the wording) lifts GSM8K-style math (~+17.9 pp in Wang et al.). ToT helps when you need a tree, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> independent tapes.
 <strong>Architecture.</strong> SC: decoder + parser + vote. ToT: a frontier of partial strings + a scorer (LM or checker) + beam/DFS.
 <strong>How.</strong> Temperature 0, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> is <strong>not</strong> SC (identical greedy traces). Vote on the parsed number.
 <strong>Formula.</strong> SC: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover accent="true"><mrow><mi>y</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x0003D;</mo><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false">&#x0007B;</mo><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003C4;</mi><mn>1</mn></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003C4;</mi><mi>k</mi></msub><mo stretchy="false">&#x00029;</mo><mo stretchy="false">&#x0007D;</mo></mrow></math>. ToT has no single loss; it is search.
@@ -126,7 +126,7 @@
 <p>Sample <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> independent CoT traces (temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>0</mn></mrow></math>). Parse an answer from each. Take the majority. The hope: wrong paths disagree; right paths land on the same number.</p>
 <p><img alt="Several chains, then a vote; a tree of partial thoughts" src="files/data-643/graphics/13.2-self-consistency-tot/tree.png" /></p>
 <p>This is test-time compute. You pay <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> forwards. Report <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> and the parser (last integer, boxed span, regex). Voting on the <strong>answer</strong>, not on the wording of the steps, is the usual rule. Lab 13 does that vote on constructed strings. Plot accuracy against <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> if you use this in a project; the curve usually flattens.</p>
-<p>Stanford <strong>CS224N 2026 L12</strong> cites Wang et al.: majority vote raised GSM8K by <strong>+17.9 percentage points</strong> versus greedy CoT. That is a lift on the <strong>box</strong>. It is not a faithfulness claim (note <strong>13.3</strong>). This course’s version of extra test-time compute is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces. Do <strong>not</strong> assign DeepSeek-R1, GRPO, or a 256-expert run as homework.</p>
+<p>Wang et al.: majority vote raised GSM8K by <strong>+17.9 percentage points</strong> versus greedy CoT. That is a lift on the <strong>box</strong>. It is not a faithfulness claim (note <strong>13.3</strong>). This course’s version of extra test-time compute is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces. Do <strong>not</strong> assign DeepSeek-R1, GRPO, or a 256-expert run as homework.</p>
 <p><img alt="GSM8K lift from majority vote" src="files/data-643/graphics/13.2-self-consistency-tot/gsm8k-sc.png" /></p>
 <p>Self-consistency does not fix a shared bug. If every trace uses the same wrong formula, the majority is still wrong.</p>
 <hr />
@@ -139,7 +139,7 @@
 <p>Accuracy versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is the self-consistency plot. For ToT, accuracy versus expansion budget (nodes scored). Always include a greedy CoT baseline at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. Cost belongs in the table: tokens, or wall time on the hardware you used.</p>
 <hr />
 <h2>4. Teaching this note</h2>
-<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Lecture ideas follow <strong>CS224N 2026 L12</strong> (self-consistency) and the ToT paper for the search cartoon.</p>
+<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Self-consistency is the vote; the ToT paper is the search cartoon.</p>
 <ul>
 <li><strong>0–12 min.</strong> Temperature <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003E;</mo><mn>0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> traces, vote on the parsed answer. Tie-break rule.</li>
 <li><strong>12–22 min.</strong> ToT as width: expand, score, keep a beam. Contrast with ReAct (tools).</li>
@@ -218,7 +218,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

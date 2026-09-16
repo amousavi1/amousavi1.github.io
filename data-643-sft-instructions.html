@@ -125,7 +125,7 @@
 <h2>1. Pretrain, then SFT</h2>
 <p>The pretrained decoder already assigns probability to every continuation. It does not, by default, answer as an assistant, refuse a harmful ask, or stay in a JSON schema. SFT continues maximum-likelihood training, but now each example is a <strong>prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> response</strong> pair and you typically supervise only the response tokens (mask the prompt in the loss).</p>
 <p><img alt="Pretraining then instruction SFT" src="files/data-643/graphics/8.1-sft-instructions/sft.png" /></p>
-<p>Stanford CS224N 2025 L10: instruction fine-tuning is the <strong>first</strong> stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.</p>
+<p>Instruction fine-tuning is the <strong>first</strong> stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit <strong>on top of</strong> an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.</p>
 <p>If the concatenated string has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub></mrow></math> prompt tokens and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> response tokens, the SFT loss averages over <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>r</mi></msub></mrow></math> positions, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>T</mi><mi>p</mi></msub><mo>&#x0002B;</mo><msub><mi>T</mi><mi>r</mi></msub></mrow></math>. Otherwise the model spends gradient on imitating the user.</p>
 <hr />
 <h2>2. What an instruction pair looks like</h2>
@@ -189,7 +189,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

@@ -123,7 +123,7 @@
 </p>
 </blockquote>
 <h2>1. The problem gates are for</h2>
-<p>In a vanilla RNN the hidden state is <strong>constantly rewritten</strong> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mi>h</mi></msub><msub><mi>h</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><mo>&#x022EF;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. CMU 11-785’s stability lecture: unless <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> is essentially a wire (eigenvalues on the unit circle and no saturating <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>), memory is short. You cannot ask SGD to discover a unitary <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> and a linear activation at once.</p>
+<p>In a vanilla RNN the hidden state is <strong>constantly rewritten</strong> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi><mo stretchy="false">&#x00028;</mo><msub><mi>W</mi><mi>h</mi></msub><msub><mi>h</mi><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub><mo>&#x0002B;</mo><mo>&#x022EF;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>. Unless <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> is essentially a wire (eigenvalues on the unit circle and no saturating <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>tanh</mi></mrow></math>), memory is short. You cannot ask SGD to discover a unitary <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>W</mi><mi>h</mi></msub></mrow></math> and a linear activation at once.</p>
 <p>What you want instead: a <strong>cell</strong> that can copy, plus <strong>input-dependent switches</strong> that say when to write, when to erase, and when to report. That is an LSTM (Hochreiter and Schmidhuber 1997; forget gate from Gers et al. 2000).</p>
 <hr />
 <h2>2. LSTM: a highway plus three gates</h2>
@@ -156,7 +156,7 @@
 <p><img alt="LSTM gates around a cell highway" src="files/data-643/graphics/2.3-lstm-gru/lstm-gates.png" /></p>
 <p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">f</mi></mrow><mi>t</mi></msub><mo>&#x02248;</mo><mrow><mn mathvariant="bold">1</mn></mrow></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mrow><mi mathvariant="bold-italic">i</mi></mrow><mi>t</mi></msub><mo>&#x02248;</mo><mrow><mn mathvariant="bold">0</mn></mrow></mrow></math>, the cell <strong>copies</strong>. That is the long-range path. Along that coordinate,</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mi>t</mi></msub></mrow><mrow><mo>&#x02202;</mo><msub><mrow><mi mathvariant="bold-italic">c</mi></mrow><mrow><mi>t</mi><mo>&#x02212;</mo><mn>1</mn></mrow></msub></mrow></mfrac><mo>&#x0003D;</mo><msub><mrow><mi mathvariant="bold-italic">f</mi></mrow><mi>t</mi></msub><mo>&#x0002C;</mo></mrow></math>
-<p>which can stay near 1. That is why the vanishing plot in 2.2 had a gated curve. CS231N’s warning, which we keep: <strong>LSTM does not guarantee</strong> that every coordinate copies. It makes a copy path <em>learnable</em>. In practice you get on the order of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mn>2</mn></msup></mrow></math> steps rather than <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>7</mn></mrow></math>, not infinite context.</p>
+<p>which can stay near 1. That is why the vanishing plot in 2.2 had a gated curve. <strong>LSTM does not guarantee</strong> that every coordinate copies. It makes a copy path <em>learnable</em>. In practice you get on the order of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mn>10</mn><mn>2</mn></msup></mrow></math> steps rather than <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>7</mn></mrow></math>, not infinite context.</p>
 <p>Peephole connections (cell into the gates) exist in some papers. We do not use them. <code>nn.LSTM</code> is the three-gate cell above.</p>
 <hr />
 <h2>3. The copy regime, in numbers</h2>
@@ -201,7 +201,6 @@
 <h2>9. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=YCzL96nL7j0">StatQuest: Long Short-Term Memory (LSTM), Clearly Explained</a>.</p>
 <p>Pause when the forget gate is a number in <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math> multiplying the cell, and when the cell is drawn as a highway. Then <a href="https://www.youtube.com/watch?v=tOuXgORsXJ4">StatQuest: Gated Recurrent Units (GRU), Clearly Explained</a> — play the update-gate mix; skip if time is gone.</p>
-<p>The matching university lecture is CMU 11-785 Lecture 14 (stability and memory, then the LSTM as a constant-error carousel). Stanford CS224N’s LSTM hour (older “fancy RNN” lecture) is the copy-regime slogan we use on the board. We do not copy either deck.</p>
 <hr />
 <h2>10. Practice</h2>
 <ol>
@@ -235,7 +234,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

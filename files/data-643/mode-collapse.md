@@ -57,7 +57,7 @@ About **30 minutes** at the board, then **~10 minutes** of video. Lab 11 should 
 - **0–10 min.** Replay the two-spike cartoon. Collapse vs oscillation.
 - **10–20 min.** Fidelity vs coverage table. Write the Lab 11 binning rule on the board.
 - **20–30 min.** Worked count: 100 fakes, 92 / 8. Precision high, recall not.
-- **Then** play CS231N **64:00–74:00** (training is unstable; you do not have \(p(x)\); samples can look good anyway). Pause on the “cons” / summary slide and name that gap **coverage**.
+- **Then** play **64:00–74:00** of the assigned video (training is unstable; you do not have \(p(x)\); samples can look good anyway). Pause on the summary and name that gap **coverage**.
 
 ---
 
@@ -78,7 +78,7 @@ If a second seed gives 47 / 53, write **covered**. Same architecture, different 
 
 ![92/8 collapse versus 47/53 covered](files/data-643/graphics/11.3-mode-collapse/coverage-bins.png)
 
-CS231N’s GAN recap: you can interpolate in \(z\) when the map is healthy (StyleGAN made that famous). A jump from “shoe” to “face” is a broken map. You will not train StyleGAN here; you will print two bin fractions.
+You can interpolate in \(z\) when the map is healthy (StyleGAN made that famous). A jump from “shoe” to “face” is a broken map. You will not train StyleGAN here; you will print two bin fractions.
 
 ---
 
@@ -92,7 +92,7 @@ CS231N’s GAN recap: you can interpolate in \(z\) when the map is healthy (Styl
 
 ## 7. Video
 
-Watch [Stanford CS231N 2017 lecture 13, Generative Models](https://www.youtube.com/watch?v=5WoItGTWV54), **64:00–74:00**.
+Watch [Generative models: coverage and collapse](https://www.youtube.com/watch?v=5WoItGTWV54), **64:00–74:00**.
 
 Pause on instability and the recap that GANs do not give you \(p(\boldsymbol{x})\) or inference queries. The lecture’s word is “unstable”; your word in this course is **mode collapse / coverage**. Same URL as **11.1** and **11.2**.
 

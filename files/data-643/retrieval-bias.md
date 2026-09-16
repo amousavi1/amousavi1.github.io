@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Once image and text share a space, **retrieval** is nearest neighbors. The same geometry that makes search work also encodes **stereotypes** from the training web. CS231N 2025 L16 already warned that a single prompt can be peaked; this note measures what that geometry retrieves.
+Once image and text share a space, **retrieval** is nearest neighbors. The same geometry that makes search work also encodes **stereotypes** from the training web. A single prompt can be peaked; this note measures what that geometry retrieves.
 
 ---
 

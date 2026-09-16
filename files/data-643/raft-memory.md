@@ -25,7 +25,7 @@ A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM
 
 If every training snippet is gold, the model never practices rejecting junk. Include negatives. If you never train with retrieval, editing the index will not fix a model that ignores the index. RAFT is still SFT: the labels are answers *given the bundle*, not a new architecture.
 
-Stanford CS224N 2025 L13: **parametric** recall versus **open-book**. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.
+**Parametric** recall versus **open-book**. Week 14 is the RAG pipeline (index, retrieve, generate). This hour is the training distribution that makes the reader use the open book instead of the pretrain snapshot.
 
 ---
 

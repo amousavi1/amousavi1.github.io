@@ -239,6 +239,7 @@ DECKS = [
                 "title": "Course Map and the Semester Project",
                 "subtitle": "DATA 443/643  ·  Advanced Concepts in Large Language Models",
                 "meta": "Week 1  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas and 16:9 layout from Stanford CS224N, CS231N, and MIT 6.S191. Original slides; those courses are not copied.",
             },
             {
                 "layout": "agenda",
@@ -308,7 +309,7 @@ DECKS = [
                     ("1.2–1.4 Board notes", "Neuron and XOR, then gradient descent, then skip-gram and bias."),
                     ("Lab 1", "Linear vs MLP on XOR, then the constructed 2-D embedding probe."),
                 ],
-                "takeaway": "Pedagogy drawn from Stanford CS224N (plan + one formula), CS231N (footer, one idea), MIT 6.S191 (diagram + numbers). Original slides; those courses are not copied.",
+                "takeaway": "Key goal: one timed meeting, one stack picture, one project sentence.",
             },
         ],
     },
@@ -320,7 +321,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Neurons, Activations, and Feedforward Nets",
                 "subtitle": "DATA 443/643  ·  Week 1, note 1.2",
-                "meta": "After MIT 6.S191 L1 and CS231N L4: one unit, then why depth needs a bend.",
+                "meta": "Week 1  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from MIT 6.S191 L1 and CS231N L4. Original slides; those courses are not copied.",
             },
             {
                 "layout": "agenda",
@@ -346,7 +348,7 @@ DECKS = [
                 "layout": "figure",
                 "title": "The perceptron: plug in the numbers",
                 "image": "graphics/1.2-neurons-activations/perceptron-numeric.png",
-                "caption": "MIT 6.S191 style: same example as a diagram and as a line. Ours uses ReLU, not sigmoid.",
+                "caption": "Same example as a diagram and as a line. Ours uses ReLU, not sigmoid.",
             },
             {
                 "layout": "equation",
@@ -364,7 +366,7 @@ DECKS = [
                 "bullets": [
                     "Two affine maps compose to one affine map.",
                     "Without a bend, depth adds no power.",
-                    "CS231N: you get a linear classifier again.",
+                    "Without a nonlinearity you get a linear classifier again.",
                 ],
                 "image": "graphics/1.2-neurons-activations/activations.png",
                 "takeaway": r"\(W_2(W_1 x+b_1)+b_2=(W_2 W_1)x+(W_2 b_1+b_2)\).",
@@ -405,7 +407,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Gradient Descent",
                 "subtitle": "DATA 443/643  ·  Week 1, note 1.3",
-                "meta": "After CS231N L3–L4 and Nielsen Ch. 1: walk downhill, then one computational graph.",
+                "meta": "Week 1  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from CS231N L3–L4 and Nielsen Ch. 1. Original slides; those sources are not copied.",
             },
             {
                 "layout": "agenda",
@@ -461,7 +464,7 @@ DECKS = [
                 "layout": "figure",
                 "title": "One ReLU unit as a computational graph",
                 "image": "graphics/1.3-gradient-descent/one-unit-backprop.png",
-                "caption": "CS231N: each op is a gate. Local derivative times upstream.",
+                "caption": "Each op is a gate. Local derivative times upstream.",
             },
             {
                 "layout": "equation",
@@ -469,7 +472,7 @@ DECKS = [
                 "equation": r"\frac{\partial L}{\partial w}=(a-y)\,\mathrm{ReLU}'(z)\,x",
                 "notes": [
                     r"Squared error on one ReLU neuron.",
-                    r"CMU 11-711 cousin: \(\partial L/\partial w=(p-y)x\).",
+                    r"Softmax/CE cousin: \(\partial L/\partial w=(p-y)x\).",
                     r"\(x=2,w=0.5,y=0\): gradient \(2\), then \(w\leftarrow 0.3\) at \(\eta=0.1\).",
                 ],
             },
@@ -492,7 +495,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Word Embeddings and Semantic Geometry",
                 "subtitle": "DATA 443/643  ·  Week 1, note 1.4",
-                "meta": "After Stanford CS224N Lecture 2: distributional meaning, skip-gram softmax, then evaluation.",
+                "meta": "Week 1  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS224N Lecture 2 (distributional meaning, skip-gram). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -624,7 +628,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Sequential Models and RNNs",
                 "subtitle": "DATA 443/643  ·  Week 2, note 2.1",
-                "meta": "After Stanford CS224N W26 L4: any-length input, shared weights, then an RNN-LM.",
+                "meta": "Week 2  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS224N W26 L4 (language models and RNNs). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -721,7 +726,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Vanishing and Exploding Gradients",
                 "subtitle": "DATA 443/643  ·  Week 2, note 2.2",
-                "meta": "After CS231N L7 (BPTT, singular values) and CS224N L4 (near vs. long-term effects).",
+                "meta": "Week 2  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from CS231N L7 and CS224N L4 (BPTT, singular values). Original slides; those courses are not copied.",
             },
             {
                 "layout": "agenda",
@@ -821,7 +827,8 @@ DECKS = [
                 "layout": "title",
                 "title": "LSTMs and GRUs",
                 "subtitle": "DATA 443/643  ·  Week 2, note 2.3",
-                "meta": "After CMU 11-785 L14: a cell that can copy, plus input-dependent gates.",
+                "meta": "Week 2  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from CMU 11-785 L14 (stability, LSTM as a copy path). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -909,7 +916,8 @@ DECKS = [
                 "layout": "title",
                 "title": "From Recurrence to Attention",
                 "subtitle": "DATA 443/643  ·  Week 3, note 3.1",
-                "meta": "After Stanford CS224N W26 L5: the bottleneck, then a direct look at the source.",
+                "meta": "Week 3  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS224N W26 L5 (attention as a direct look). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -989,7 +997,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Self-Attention (Q, K, V)",
                 "subtitle": "DATA 443/643  ·  Week 3, note 3.2",
-                "meta": "After CMU 11-711: scaled dots, mix values, then a causal mask.",
+                "meta": "Week 3  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from CMU 11-711 (scaled dots, multi-head, causal mask). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -1080,7 +1089,8 @@ DECKS = [
                 "layout": "title",
                 "title": "The Transformer Block",
                 "subtitle": "DATA 443/643  ·  Week 3, note 3.3",
-                "meta": "After Princeton COS 484 L8–L9: positions, residual, MLP, encoder vs decoder.",
+                "meta": "Week 3  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Princeton COS 484 L8–L9 (positions, residual, MLP). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -1161,7 +1171,8 @@ DECKS = [
                 "layout": "title",
                 "title": "GPT and BERT",
                 "subtitle": "DATA 443/643  ·  Week 3, note 3.4",
-                "meta": "After Princeton COS 484 L10: contextual vectors, then two pretraining jobs.",
+                "meta": "Week 3  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Princeton COS 484 L10 and CS224N pretraining (GPT vs BERT). Original slides; those courses are not copied.",
             },
             {
                 "layout": "agenda",
@@ -1240,7 +1251,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Multimodal Foundations",
                 "subtitle": "DATA 443/643  ·  Week 4, note 4.1",
-                "meta": "After CMU 11-777: five jobs, then joint versus coordinated.",
+                "meta": "Week 4  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from CMU 11-777 (five jobs; joint vs coordinated). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -1310,7 +1322,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Vision Transformers",
                 "subtitle": "DATA 443/643  ·  Week 4, note 4.2",
-                "meta": "After Stanford CS231N 2025 L8: patches, a linear map, positions, no causal mask.",
+                "meta": "Week 4  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS231N 2025 L8 (ViT patches). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -1381,7 +1394,8 @@ DECKS = [
                 "layout": "title",
                 "title": "Contrastive Learning and Zero-Shot Transfer",
                 "subtitle": "DATA 443/643  ·  Week 4, note 4.3",
-                "meta": "After CS231N 2025 L16: InfoNCE on the diagonal, then class names as prompts.",
+                "meta": "Week 4  ·  American University  ·  Ahmad Mousavi",
+                "credit": "Ideas from Stanford CS231N 2025 L16 (InfoNCE, zero-shot prompts). Original slides; that course is not copied.",
             },
             {
                 "layout": "agenda",
@@ -1511,7 +1525,7 @@ DECKS = [
                 "notes": [
                     r"\(\tau=1\): softmax about [0.60, 0.40], NLL about 0.51.",
                     r"\(\tau=0.07\): match probability about 0.997.",
-                    "CS231N: huge batches exist so you have many negatives.",
+                    "Huge batches exist so you have many negatives.",
                 ],
             },
             {
@@ -1571,7 +1585,7 @@ DECKS = [
                 "bullets": [
                     "Alt-text is often a filename or a SKU.",
                     "Generate a caption, keep it if ITM still matches.",
-                    "CS231N CoCa adds a decoder. BLIP also cleans the pairs.",
+                    "CoCa adds a decoder. BLIP also cleans the pairs.",
                 ],
                 "image": "graphics/5.2-blip/blip-pipeline.png",
             },
@@ -1746,7 +1760,7 @@ DECKS = [
                 "title": "Slide the window",
                 "bullets": [
                     r"Window \(N/f_s=25\) ms, hop \(10\) ms: Whisper’s default.",
-                    "CS224S: frames last long enough to see a phoneme.",
+                    "Frames last long enough to see a phoneme.",
                     "A raw 16 kHz wave is 16,000 tokens per second.",
                 ],
                 "image": "graphics/6.1-audio-spectrograms/stft-frames.png",
@@ -1799,7 +1813,7 @@ DECKS = [
                 "title": "Whisper is translation, with a spectrogram",
                 "bullets": [
                     "Log-mel in. Two convs. Transformer encoder.",
-                    "Decoder is GPT-style and causal. CS224S: no CTC.",
+                    "Decoder is GPT-style and causal. No CTC.",
                     "Cross-attention into encoder states. Same as note 3.3.",
                 ],
                 "image": "graphics/6.2-audio-encoders/whisper.png",
@@ -1974,7 +1988,7 @@ DECKS = [
                 "layout": "split",
                 "title": "GPT-3 was underfed",
                 "bullets": [
-                    "CS224N L9: 175B parameters, 300B tokens.",
+                    "GPT-3: 175B parameters, 300B tokens.",
                     r"That is about 1.7 tokens per parameter, not 20.",
                     "A 70B trained with enough tokens beat larger starved nets.",
                 ],
@@ -2028,7 +2042,7 @@ DECKS = [
                 "title": "Sparse where the parameters already live",
                 "bullets": [
                     "Attention can stay dense. The MLP is the MoE.",
-                    "CS336: Mixtral is 8 experts, k=2. Switch used k=1.",
+                    "Mixtral is 8 experts, k=2. Switch used k=1.",
                     "DeepSeek’s 256-expert nets wait. This hour is the picture.",
                 ],
                 "image": "graphics/7.2-mixture-of-experts/moe.png",
@@ -2110,7 +2124,7 @@ DECKS = [
                 "bullets": [
                     "Prune: zeros or dropped heads. Needs recovery training.",
                     "Quantize: fewer bits. Distill: a smaller student.",
-                    "CS224N L11 also puts LoRA here. Algebra is note 8.3.",
+                    "LoRA is a small Δ, not pruning. Algebra is note 8.3.",
                 ],
                 "image": "graphics/7.3-efficiency-deploy/compress.png",
             },
@@ -2182,7 +2196,7 @@ DECKS = [
                 "title": "Same transformer, different data",
                 "bullets": [
                     "The base model already scores every continuation.",
-                    "CS224N L10: instruction FT is the first InstructGPT stage.",
+                    "Instruction fine-tuning is the first InstructGPT stage.",
                     "Alpaca and Vicuna are this stage with public pairs.",
                 ],
                 "image": "graphics/8.1-sft-instructions/sft.png",
@@ -2274,7 +2288,7 @@ DECKS = [
                 "left_title": "Replay / EWC",
                 "left": "Yes. You still need A data (or a Fisher sketch).",
                 "right_title": "Frozen LoRA",
-                "right": "No. XOR accuracy on the frozen net cannot move. CS224N L11: that is why PEFT exists.",
+                "right": "No. XOR accuracy on the frozen net cannot move. That is why PEFT exists.",
             },
             {
                 "layout": "cards",
@@ -2335,7 +2349,7 @@ DECKS = [
                 "bullets": [
                     r"Full W: \(4096^2\approx 16.8\) million.",
                     r"LoRA: \(8\times 8192=65{,}536\) (about 0.39%).",
-                    "CS224N: a full GPT-3 copy is 175B extra per task.",
+                    "A full GPT-3 copy is 175B extra per task.",
                 ],
                 "image": "graphics/8.3-lora-adapters/lora-count.png",
             },
@@ -2414,7 +2428,7 @@ DECKS = [
             },
             {
                 "layout": "compare",
-                "title": "CS224N L10: the RM is already useful",
+                "title": "The RM is already useful",
                 "left_title": "Best-of-n",
                 "left": "Sample n from SFT, return the RM’s favorite. AlpacaFarm: a strong baseline. Extra cost is n forwards, not a PPO loop.",
                 "right_title": "PPO (next note)",
@@ -2459,7 +2473,7 @@ DECKS = [
                 "bullets": [
                     "Stages 1–2 use a fixed dataset.",
                     "Stage 3 needs fresh samples from the current π_θ.",
-                    "CS224N L10: InstructGPT scaled this stack.",
+                    "InstructGPT scaled this stack.",
                 ],
                 "image": "graphics/9.2-rlhf/loop.png",
             },
@@ -2528,7 +2542,7 @@ DECKS = [
                 "layout": "split",
                 "title": "Same pairs, shorter stack",
                 "bullets": [
-                    "CS224N L10: the optimal r is a log-ratio plus Z(x).",
+                    "The optimal r is a log-ratio plus Z(x).",
                     "Z(x) cancels in a pairwise difference.",
                     "KTO and IPO exist. This hour is DPO.",
                 ],
@@ -2599,7 +2613,7 @@ DECKS = [
                 "layout": "split",
                 "title": "Probes in, a log out",
                 "bullets": [
-                    "CS336 L12: HarmBench is 510 labeled behaviors.",
+                    "HarmBench is 510 labeled behaviors.",
                     "AIR-Bench: 314 categories, 5694 prompts. HELM hosts suites.",
                     "In class you use a short public list and instructor categories.",
                 ],
@@ -2625,7 +2639,7 @@ DECKS = [
             },
             {
                 "layout": "compare",
-                "title": "CS336: capability versus propensity",
+                "title": "Capability versus propensity",
                 "left_title": "API model",
                 "left": "Refusal rate (propensity) is the number you ship. The user cannot fine-tune the weights.",
                 "right_title": "Open-weight",
@@ -2636,7 +2650,7 @@ DECKS = [
                 "title": "What to take from this lecture",
                 "cards": [
                     ("Rerun", "Same 40 after DPO. One cell moved is not “done.”"),
-                    ("Judge", "Spot-check a 10% sample. CS224N L12: look at the outputs."),
+                    ("Judge", "Spot-check a 10% sample. Look at the outputs."),
                     ("Not a recipe", "Measurement. No jailbreak how-to in this course."),
                 ],
             },
@@ -2678,7 +2692,7 @@ DECKS = [
                 "layout": "split",
                 "title": "Locate, then write",
                 "bullets": [
-                    "CS224N: if a component stores the fact, intervening on it should change the object.",
+                    "If a component stores the fact, intervening on it should change the object.",
                     "ROME: mid-layer MLP on the last subject token.",
                     "MEMIT spreads the write across several layers.",
                 ],
@@ -2759,7 +2773,7 @@ DECKS = [
                 "layout": "split",
                 "title": "SFT on the bundle",
                 "bullets": [
-                    "CS224N L13: parametric recall versus open-book.",
+                    "Parametric recall versus open-book.",
                     "RAFT: question + snippets + an answer that cites or ignores.",
                     "Still SFT. The labels are answers given the bundle.",
                 ],
@@ -2830,7 +2844,7 @@ DECKS = [
                 "bullets": [
                     r"\(z\sim\mathcal{N}(0,I)\). \(x=G(z)\).",
                     "D never sees z. G never sees a real x on its own update.",
-                    "CS231N: implicit density, direct sample.",
+                    "Implicit density, direct sample.",
                 ],
                 "image": "graphics/11.1-gan-idea/players.png",
             },
@@ -3071,7 +3085,7 @@ DECKS = [
                 "left_title": "Markov loop",
                 "left": "Walk t hops of q(x_s | x_{s-1}). Slow, and unnecessary for the loss.",
                 "right_title": "Jump",
-                "right": "Sample t, draw ε, form x_t. CS231N L14: noise levels, then learn to undo a bit.",
+                "right": "Sample t, draw ε, form x_t. Noise levels, then learn to undo a bit.",
             },
             {
                 "layout": "cards",
@@ -3182,7 +3196,7 @@ DECKS = [
                 "title": "Compress, denoise, decode",
                 "bullets": [
                     "Encoder frozen. UNet on z. Decoder back to pixels.",
-                    "CS231N L14: modern LDM stacks VAE + GAN + diffusion.",
+                    "A modern LDM stacks VAE + GAN + diffusion.",
                     "DiT exists. This hour is the VAE latent picture.",
                 ],
                 "image": "graphics/12.3-latent-conditioning/ldm.png",
@@ -3191,7 +3205,7 @@ DECKS = [
                 "layout": "split",
                 "title": "Count the cells",
                 "bullets": [
-                    r"CS231N: \(256\times 256\times 3\) vs \(32\times 32\times 16\) (\(D=8\), \(C=16\)).",
+                    r"\(256\times 256\times 3\) vs \(32\times 32\times 16\) (\(D=8\), \(C=16\)).",
                     "About 12× fewer numbers per reverse step.",
                     r"Stable Diffusion’s public recipe is \(64\times 64\times 4\) on \(512^2\): about \(48\times\) fewer.",
                 ],
@@ -3255,7 +3269,7 @@ DECKS = [
                 "title": "Ask for work, then the number",
                 "bullets": [
                     "Direct: “What is 17 × 24?” CoT: “Show your work.”",
-                    "CS224N L12: the weights do not change. The tape gets longer.",
+                    "The weights do not change. The tape gets longer.",
                     "Few-shot traces must match the test task.",
                 ],
                 "image": "graphics/13.1-chain-of-thought/cot.png",
@@ -3326,7 +3340,7 @@ DECKS = [
                 "title": "Test-time compute as k forwards",
                 "bullets": [
                     r"Temperature \(>0\). Parse each box. Majority.",
-                    "CS224N L12: extra tokens are extra compute. SC spends k of them.",
+                    "Extra tokens are extra compute. SC spends k of them.",
                     "Do not assign DeepSeek-R1 / GRPO as homework.",
                 ],
                 "image": "graphics/13.2-self-consistency-tot/tree.png",
@@ -3347,7 +3361,7 @@ DECKS = [
                 "bullets": [
                     "23+19: answers 42, 32, 42. Majority 42.",
                     r"\(k=1\) on B scores 32 and misses.",
-                    "Wang et al., cited in CS224N L12: +17.9 pp vs greedy CoT.",
+                    "Wang et al.: +17.9 pp vs greedy CoT.",
                 ],
                 "image": "graphics/13.2-self-consistency-tot/sc-vote.png",
             },
@@ -3398,7 +3412,7 @@ DECKS = [
                 "bullets": [
                     "Outcome: the box matches gold.",
                     "Process: the written steps compute that box, validly.",
-                    "CS224N L13 / Lightman: a process reward scores steps, not only the box.",
+                    "Lightman et al.: a process reward scores steps, not only the box.",
                 ],
                 "image": "graphics/13.3-faithfulness/unfaithful.png",
             },
@@ -3418,7 +3432,7 @@ DECKS = [
                 "bullets": [
                     r"Steps: \(23+10=33\), \(33+9=52\). Box: 42. Gold: 42.",
                     "Last integer in steps is 52. Unfaithful. Lucky win.",
-                    "Chen et al. 2025 (CS224N L12): models can use a hint they never write.",
+                    "Chen et al. 2025: models can use a hint they never write.",
                 ],
                 "image": "graphics/13.3-faithfulness/lucky-win.png",
             },

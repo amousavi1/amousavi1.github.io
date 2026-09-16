@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-A transformer **block** is attention, a residual add, layer norm, then a token-wise MLP, another residual and norm. Stack \(N\) of those. Attention mixes across positions; the MLP mixes across channels at one position. That is Princeton COS 484’s assembly order.
+A transformer **block** is attention, a residual add, layer norm, then a token-wise MLP, another residual and norm. Stack \(N\) of those. Attention mixes across positions; the MLP mixes across channels at one position. That is the assembly order.
 
 ---
 
@@ -95,8 +95,6 @@ Layer-norm of \(\boldsymbol{u}=\begin{bmatrix}3\\1\end{bmatrix}\): mean \(2\), p
 Watch [Umar Jamil: Transformer Neural Network — architecture and PyTorch](https://www.youtube.com/watch?v=bCz4OMemCcA).
 
 Play the architecture / block walkthrough (roughly **10:00–25:00**). Pause on positional encodings and on the residual+norm sandwich. The hour of typing `nn.Linear` is optional homework, not this meeting.
-
-The matching university lectures are Princeton COS 484 L8–L9 (encoder vs decoder stack) and CMU 11-711 (residual + layer norm + feed-forward as the remaining transformer parts). We do not copy those slides.
 
 ---
 

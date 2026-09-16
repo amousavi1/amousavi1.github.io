@@ -156,7 +156,7 @@
 <p>The reverse mean lands on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mn>0</mn></msub></mrow></math>. That is the oracle: if you predict the true noise, one algebraic step peels it off (here <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B1;</mi><mi>t</mi></msub><mo>&#x0003D;</mo><msub><mover><mrow><mi>&#x003B1;</mi></mrow><mo stretchy="true">&#x000AF;</mo></mover><mi>t</mi></msub></mrow></math>, a first-step special case). At a generic <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> you do not jump all the way to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mn>0</mn></msub></mrow></math>; you move <strong>closer</strong>. Lab 12 checks <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><msub><mi>x</mi><mi>t</mi></msub><mo>&#x02212;</mo><msub><mi>x</mi><mn>0</mn></msub><mo fence="false" stretchy="false">&#x02016;</mo></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo fence="false" stretchy="false">&#x02016;</mo><mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover><mo>&#x02212;</mo><msub><mi>x</mi><mn>0</mn></msub><mo fence="false" stretchy="false">&#x02016;</mo></mrow></math> at <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math> and wants the second smaller.</p>
 <p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003B5;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><mn>0</mn></mrow></math> (the net refuses to denoise), the subtracted term vanishes and you mostly rescale <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>x</mi><mi>t</mi></msub></mrow></math>, which is not a sample from the data.</p>
 <p><img alt="Oracle reverse mean: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2.0</mn></mrow></math> peels back to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1.0</mn></mrow></math>" src="files/data-643/graphics/12.2-diffusion-reverse/reverse-mean.png" /></p>
-<p>CS231N L14: sampling is an <strong>iterative</strong> procedure. You pay <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> network calls (or fewer with DDIM). A GAN still samples in one pass and fights collapse instead.</p>
+<p>Sampling is an <strong>iterative</strong> procedure. You pay <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> network calls (or fewer with DDIM). A GAN still samples in one pass and fights collapse instead.</p>
 <hr />
 <h2>6. Where students get stuck</h2>
 <ul>
@@ -195,7 +195,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

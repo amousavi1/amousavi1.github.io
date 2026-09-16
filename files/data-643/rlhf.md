@@ -71,7 +71,7 @@ Penalty \(\beta\cdot 0.31\). If \(\beta=0.1\), you subtract \(0.031\) from rewar
 
 ![A two-word spike: mass on \(a\) goes 0.7 \(\to\) 0.99](files/data-643/graphics/9.2-rlhf/kl-numeric.png)
 
-Stanford CS224N 2025 L10 draws the same three boxes (SFT, RM, RL) and notes that **best-of-\(n\)** is already a strong baseline in AlpacaFarm-style studies. PPO still exists because on-policy sampling can find replies that were never in the pair file. InstructGPT is this stack at company scale; a seminar project usually stops at best-of-\(n\) or DPO.
+The three boxes are SFT, RM, and RL. **Best-of-\(n\)** is already a strong baseline in AlpacaFarm-style studies. PPO still exists because on-policy sampling can find replies that were never in the pair file. InstructGPT is this stack at company scale; a seminar project usually stops at best-of-\(n\) or DPO.
 
 Why \(\pi_{\mathrm{ref}}=\pi_{\mathrm{SFT}}\) not the raw pretrained LM: the RM was trained on SFT-style answers. Leashing to the base model pulls you back to web-text, not to the assistant you already paid for.
 

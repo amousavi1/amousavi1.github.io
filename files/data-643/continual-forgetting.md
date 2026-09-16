@@ -31,7 +31,7 @@ A single shared \(\boldsymbol{W}\) cannot be at two distant minima at once unles
 
 ![Old examples mixed into the new stream](files/data-643/graphics/8.2-continual-forgetting/replay.png)
 
-Other knobs: smaller learning rates, freeze early layers, **regularize toward \(\boldsymbol{W}_A\)** (EWC-style penalties), or attach a **task adapter** and leave \(\boldsymbol{W}\) frozen (note **8.3**). CS224N L11’s PEFT motivation is the same geometry: a full fine-tune is a second copy of \(\boldsymbol{W}\), and that copy walks off task A. Adapters are often the cleaner LLM answer: you add B without moving A’s weights.
+Other knobs: smaller learning rates, freeze early layers, **regularize toward \(\boldsymbol{W}_A\)** (EWC-style penalties), or attach a **task adapter** and leave \(\boldsymbol{W}\) frozen (note **8.3**). A full fine-tune is a second copy of \(\boldsymbol{W}\), and that copy walks off task A. Adapters are often the cleaner LLM answer: you add B without moving A’s weights.
 
 A 50/50 mix of A and B in each batch is the simplest replay. If you cannot store A, generate from \(\pi_A\) and treat those strings as A labels (they are imperfect).
 

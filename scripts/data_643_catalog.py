@@ -336,7 +336,7 @@ NOTES = [
         "slug": "latent-conditioning",
         "week": 12,
         "title": "12.3 Latent Diffusion and Text Conditioning",
-        "lead": "CS231N: 12× fewer latent cells. CFG: s=1 is still conditional.",
+        "lead": "12× fewer latent cells. CFG: s=1 is still conditional.",
         "slide": "12.3-latent-conditioning",
     },
     {
@@ -349,21 +349,21 @@ NOTES = [
         "slug": "chain-of-thought",
         "week": 13,
         "title": "13.1 Chain-of-Thought",
-        "lead": "CS224N L12: CoT is extra tokens, not a new net. 17×24 → 408 on the tape.",
+        "lead": "CoT is extra tokens, not a new net. 17×24 → 408 on the tape.",
         "slide": "13.1-chain-of-thought",
     },
     {
         "slug": "self-consistency-tot",
         "week": 13,
         "title": "13.2 Self-Consistency and Tree-of-Thoughts",
-        "lead": "CS224N L12: majority vote +17.9 pp on GSM8K. Vote on answers, not wording.",
+        "lead": "Majority vote +17.9 pp on GSM8K. Vote on answers, not wording.",
         "slide": "13.2-self-consistency-tot",
     },
     {
         "slug": "faithfulness",
         "week": 13,
         "title": "13.3 Faithfulness of Explanations",
-        "lead": "Lucky win: 52 in the steps, 42 in the box. Process vs outcome (CS224N L13).",
+        "lead": "Lucky win: 52 in the steps, 42 in the box. Process vs outcome.",
         "slide": "13.3-faithfulness",
     },
     {
@@ -433,7 +433,7 @@ VIDEOS = {
         "https://www.youtube.com/watch?v=AsNTP8Kwu80",
     ),
     "vanishing-gradients": (
-        "Stanford CS224N: Simple and LSTM RNNs (watch the vanishing/exploding segment)",
+        "RNNs and vanishing gradients (watch the vanishing/exploding segment)",
         "https://www.youtube.com/watch?v=0LixFSa7yts",
     ),
     "lstm-gru": (
@@ -541,15 +541,15 @@ VIDEOS = {
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "gan-idea": (
-        "Stanford CS231N: Generative models (GAN setup; 2017 lecture 13)",
+        "Generative models: GAN setup",
         "https://www.youtube.com/watch?v=5WoItGTWV54",
     ),
     "gan-training": (
-        "Stanford CS231N: Generative models (training dynamics of G vs D)",
+        "Generative models: training dynamics of G vs D",
         "https://www.youtube.com/watch?v=5WoItGTWV54",
     ),
     "mode-collapse": (
-        "Stanford CS231N: Generative models (mode collapse / evaluation)",
+        "Generative models: mode collapse and evaluation",
         "https://www.youtube.com/watch?v=5WoItGTWV54",
     ),
     "diffusion-forward": (
@@ -565,7 +565,7 @@ VIDEOS = {
         "https://www.youtube.com/watch?v=ZBKpAp_6TGI",
     ),
     "chain-of-thought": (
-        "Karpathy: Intro to Large Language Models (reasoning / System 2, 35:00–38:02; pair with CS224N 2026 L12)",
+        "Karpathy: Intro to Large Language Models (reasoning / System 2, 35:00–38:02)",
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "self-consistency-tot": (
@@ -577,7 +577,7 @@ VIDEOS = {
         "https://www.youtube.com/watch?v=7xTGNNLPyMI",
     ),
     "rag-pipeline": (
-        "Karpathy: Intro to Large Language Models (browser as retrieve-then-read, 27:43–33:32; pair with CS224N 2026 L10)",
+        "Karpathy: Intro to Large Language Models (browser as retrieve-then-read, 27:43–33:32)",
         "https://www.youtube.com/watch?v=zjkBMFhNj_g",
     ),
     "react-tools": (
@@ -705,7 +705,7 @@ WEEKS = {
         ],
         "discussion": [
             "CLIP retrieves; BLIP can write. Which one belongs in a captioning project, and which loss is the reason?",
-            "A batch of 8 versus 1024: what did you add, and what did CS231N say still fails (mug in grass)?",
+            "A batch of 8 versus 1024: what did you add, and what still fails (mug in grass)?",
             "Name one retrieval probe you would run before ranking people or jobs, and one typographic failure you would log.",
             "ITM versus ITC: when is a binary matcher the right tool and a batch softmax the wrong one?",
         ],
@@ -838,7 +838,7 @@ WEEKS = {
             ("Wang et al., Self-consistency improves chain of thought reasoning", "https://arxiv.org/abs/2203.11171"),
         ],
         "discussion": [
-            "CS224N L12 cites +17.9 pp on GSM8K from majority vote. Why can that lift still leave traces unfaithful?",
+            "Wang et al. cite +17.9 pp on GSM8K from majority vote. Why can that lift still leave traces unfaithful?",
             "Temperature 0, k=3: what do the three traces look like, and why is that not self-consistency?",
             "52 in the last step, 42 in the box, gold 42: accuracy? faithfulness? lucky win?",
             "Why is Lightman’s process reward a different claim from scoring only the boxed answer?",

@@ -75,7 +75,7 @@ Project language belongs here: baseline, one justified change, ablation, failure
 
 ## 4. Teaching this note
 
-This is a **review map**, not a new method. About **40 minutes** at the board walking the four-module table and the failure→metric grid, then **~15 minutes** of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks. Weeks 13–14 follow **CS224N 2026 L12, L13, L10**; Weeks 11–12 follow CS231N 2025 L13–L14.
+This is a **review map**, not a new method. About **40 minutes** at the board walking the four-module table and the failure→metric grid, then **~15 minutes** of Karpathy as a recap of the LLM stack (not of GANs/diffusion). Leave 20 minutes for student questions and remaining talks. Weeks 13–14 are CoT, vote/search, faithfulness, RAG, and ReAct; Weeks 11–12 are GANs and diffusion.
 
 Board order:
 
@@ -83,7 +83,7 @@ Board order:
 - **12–24 min.** Modules 3–4: SFT/RLHF/DPO in one sentence each; GAN vs diffusion; CoT vs RAG vs ReAct.
 - **24–40 min.** Failure table. Worked exam-style item (GAN collapse; unfaithful CoT; RAG citation).
 
-Then play the Karpathy minutes below. **GANs and diffusion are not in that talk**; restudy notes **11.1–12.3** and the CS231N / Umar Jamil clips from those weeks.
+Then play the Karpathy minutes below. **GANs and diffusion are not in that talk**; restudy notes **11.1–12.3** and the assigned clips from those weeks.
 
 Bring one page of handwritten formulas and one page of “failure → metric” rows. That beats rereading every HTML slide the night before.
 
@@ -140,7 +140,7 @@ In class, play **11:22–17:52** and **27:43–38:02** (~17 min) if you only hav
 
 Same URL as notes **13.1**, **14.1**, and **14.2**. Deep Dive chapters from **13.2–13.3** are optional extra, not a replacement for the formula sheet.
 
-Week 11–12 video recap (not Karpathy): CS231N lecture 13 from **46:45** ([setup / train / collapse](https://www.youtube.com/watch?v=5WoItGTWV54)); Umar Jamil diffusion [I1sPXkm2NH4](https://www.youtube.com/watch?v=I1sPXkm2NH4) from **7:35**; Stable Diffusion [ZBKpAp_6TGI](https://www.youtube.com/watch?v=ZBKpAp_6TGI) **0:00–45:00**. Talk craft: Peyton Jones [sT_-owjKIbA](https://www.youtube.com/watch?v=sT_-owjKIbA) **0:00–20:00**.
+Week 11–12 video recap (not Karpathy): generative models from **46:45** ([setup / train / collapse](https://www.youtube.com/watch?v=5WoItGTWV54)); Umar Jamil diffusion [I1sPXkm2NH4](https://www.youtube.com/watch?v=I1sPXkm2NH4) from **7:35**; Stable Diffusion [ZBKpAp_6TGI](https://www.youtube.com/watch?v=ZBKpAp_6TGI) **0:00–45:00**. Talk craft: Peyton Jones [sT_-owjKIbA](https://www.youtube.com/watch?v=sT_-owjKIbA) **0:00–20:00**.
 
 ---
 

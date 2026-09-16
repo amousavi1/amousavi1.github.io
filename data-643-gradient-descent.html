@@ -131,7 +131,7 @@
 <p>Lab 1 uses binary cross-entropy on <strong>logits</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, not on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. PyTorch’s <code>BCEWithLogitsLoss</code> is</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>L</mi><mo>&#x0003D;</mo><mo>max</mo><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02212;</mo><mi>z</mi><mspace width="0.167em" /><mi>y</mi><mo>&#x0002B;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002B;</mo><msup><mi>e</mi><mrow><mo>&#x02212;</mo><mo>&#x0007C;</mo><mi>z</mi><mo>&#x0007C;</mo></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
 <p>which is numerically stable BCE. The extra line you need: <strong>pass <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, never <code>sigmoid(z)</code>, into that loss.</strong> If you sigmoid first, you squash twice.</p>
-<p>You need: <strong>one scalar</strong>, then <strong>one vector of derivatives</strong>. Nielsen calls this the <strong>cost</strong>; CS231N calls it the <strong>loss</strong>; a statistician calls it <strong>empirical risk</strong>. Same object.</p>
+<p>You need: <strong>one scalar</strong>, then <strong>one vector of derivatives</strong>. Nielsen calls this the <strong>cost</strong>; the usual name here is <strong>loss</strong>; a statistician calls it <strong>empirical risk</strong>. Same object.</p>
 <hr />
 <h2>2. The update</h2>
 <p>One step is</p>
@@ -154,13 +154,13 @@
 <p>If you forget <code>zero_grad()</code>, gradients <strong>accumulate</strong> across steps. That is a silent <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B7;</mi></mrow></math> disaster, not a new algorithm.</p>
 <hr />
 <h2>4. One ReLU unit, by hand</h2>
-<p>CS231N treats each operation as a <strong>gate</strong> with a local derivative. Autograd is that picture. For squared error on one ReLU neuron,</p>
+<p>Treat each operation as a <strong>gate</strong> with a local derivative. Autograd is that picture. For squared error on one ReLU neuron,</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>z</mi><mo>&#x0003D;</mo><msup><mrow><mi mathvariant="bold-italic">w</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo>&#x0002B;</mo><mi>b</mi><mo>&#x0002C;</mo><mspace width="2em" /><mi>a</mi><mo>&#x0003D;</mo><mo>ReLU</mo><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>L</mi><mo>&#x0003D;</mo><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x02212;</mo><mi>y</mi><msup><mo stretchy="false">&#x00029;</mo><mrow><mn>2</mn></mrow></msup><mo>&#x0002E;</mo></mrow></math>
 <p>Chain rule, using <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mo>ReLU</mo><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mrow><mn mathvariant="bold">1</mn></mrow><mrow><mi>z</mi><mo>&#x0003E;</mo><mn>0</mn></mrow></msub></mrow></math> from note 1.2:</p>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mo>&#x02202;</mo><mi>L</mi></mrow><mrow><mo>&#x02202;</mo><mi>w</mi></mrow></mfrac><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x02212;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msup><mo>ReLU</mo><mi>&#x02032;</mi></msup><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><mi>x</mi><mo>&#x0002E;</mo></mrow></math>
 <p>Same pattern for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>b</mi></mrow></math>, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi></mrow></math> replaced by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x02264;</mo><mn>0</mn></mrow></math>, the local derivative is 0 and that example does not move <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>w</mi></mrow></math>. That is a dead ReLU on this point, not a PyTorch bug.</p>
 <p><img alt="One ReLU unit as a chain of gates" src="files/data-643/graphics/1.3-gradient-descent/one-unit-backprop.png" /></p>
-<p>CMU 11-711 writes the softmax/cross-entropy cousin <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo>&#x02212;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mi>x</mi></mrow></math>. Same “upstream error times input” shape. We do not need Adam’s derivation this week.</p>
+<p>The softmax/cross-entropy cousin is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02202;</mo><mi>L</mi><mo>&#x0002F;</mo><mo>&#x02202;</mo><mi>w</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mi>p</mi><mo>&#x02212;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mi>x</mi></mrow></math>. Same “upstream error times input” shape. We do not need Adam’s derivation this week.</p>
 <hr />
 <h2>5. What this has to do with language models</h2>
 <p>Pretraining an LLM is this loop on a next-token loss, at huge batch and data scale. Fine-tuning (Week 8) is the same loop on a smaller, more specific dataset. RLHF (Week 9) changes what <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi></mrow></math> is, not the fact that you are differentiating a scalar with respect to weights.</p>
@@ -223,7 +223,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

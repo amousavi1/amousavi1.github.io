@@ -100,7 +100,7 @@ Generation (optional picture): sample \(\hat x_{t+1}\) from the softmax, feed it
 
 ## 6. Teaching this note
 
-**~18 minutes.** Why a window is not enough, then the cell, then unroll three tokens with **shared** \(W_h\), then the 2-D numeric table, then the RNN-LM diagram so next-token NLL has a hidden state. Play **0:00–12:00** of StatQuest RNNs (the loop and the unroll). Save vanishing gradients for note 2.2 even if the video teases them. Do not play a full CS224N hour in class.
+**~18 minutes.** Why a window is not enough, then the cell, then unroll three tokens with **shared** \(W_h\), then the 2-D numeric table, then the RNN-LM diagram so next-token NLL has a hidden state. Play **0:00–12:00** of StatQuest RNNs (the loop and the unroll). Save vanishing gradients for note 2.2 even if the video teases them.
 
 ---
 
@@ -139,8 +139,6 @@ The same \(W_h\) was used twice. Token 1 still has a **shrunk** footprint in \(\
 Watch [StatQuest: Recurrent Neural Networks, Clearly Explained](https://www.youtube.com/watch?v=AsNTP8Kwu80).
 
 Pause on the first unroll (same weights copied) and on the moment the hidden state is described as memory. Skip any long software demo; the board math is the point.
-
-The matching university lecture for *form* is Stanford CS224N W26 Lecture 4 (language models and RNNs): any-length input, shared weights, then an RNN-LM. We do not copy those slides. Machine translation in that hour waits for Week 3.
 
 ---
 

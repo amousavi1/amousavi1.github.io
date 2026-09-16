@@ -41,7 +41,7 @@ Hoffmann et al. (2022), **Chinchilla**: for a fixed FLOP budget, you should scal
 
 A smaller model trained longer can beat a larger undertrained one. That is why later LLaMA-style recipes look “small” next to GPT-3 and still read well: they were fed more tokens.
 
-Stanford CS224N 2025 L9’s classroom example: GPT-3 was \(175\,\mathrm{B}\) parameters on \(300\,\mathrm{B}\) tokens, about \(1.7\) tokens per parameter. Chinchilla’s rule of thumb is nearer \(20\). Same lecture: a \(70\,\mathrm{B}\) model trained with enough tokens beat much larger undertrained nets.
+GPT-3 was \(175\,\mathrm{B}\) parameters on \(300\,\mathrm{B}\) tokens, about \(1.7\) tokens per parameter. Chinchilla’s rule of thumb is nearer \(20\). A \(70\,\mathrm{B}\) model trained with enough tokens beat much larger undertrained nets.
 
 A 7B model at 20 tokens/parameter wants about \(7\times 10^9 \times 20 = 1.4\times 10^{11}\) tokens. If you only have 14B tokens, you are 10\(\times\) short of that rule of thumb—not “we scaled.”
 

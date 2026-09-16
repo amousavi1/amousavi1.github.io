@@ -14,7 +14,7 @@ A **chain of thought (CoT)** is extra tokens the model writes before the answer 
 - **Action:** a **structured** call the environment can parse, for example `calc[17*24]`, `search["library hours"]`, `lookup[d3]`.
 - **Observation:** a string the **environment** returns. The model did not write it.
 
-The model is not only talking to itself. It is talking to a tool, then reading. Stanford **CS224N 2026 L10** contrasts **ReAct vs CoT vs self-consistency**. CoT can invent a fact. Self-consistency votes \(k\) invented traces. ReAct is supposed to **wait for the observation**.
+The model is not only talking to itself. It is talking to a tool, then reading. Contrast **ReAct vs CoT vs self-consistency**. CoT can invent a fact. Self-consistency votes \(k\) invented traces. ReAct is supposed to **wait for the observation**.
 
 RAG retrieve is **one** tool. A calculator is another. A code runner is another. The control pattern is the same.
 
@@ -133,8 +133,6 @@ About **45 minutes** at the board, then **~8 minutes** of video. Lab 14 can foll
 - **22–34 min.** Worked \(17\times 24\) with `calc`, then Lab 14’s `23*60=1380`. Unfaithful next-thought.
 - **34–45 min.** Pros / cons. ReAct vs stuffed RAG vs ToT. Step cap and `ERR`.
 - **Then** play Karpathy intro **27:43–35:00** (calculator, interpreter, browser). Pause when a special token launches a tool and an observation returns.
-
-Lecture ideas follow **CS224N 2026 L10**. Original notes; that course is not copied.
 
 ---
 

@@ -19,7 +19,7 @@ The pretrained decoder already assigns probability to every continuation. It doe
 
 ![Pretraining then instruction SFT](files/data-643/graphics/8.1-sft-instructions/sft.png)
 
-Stanford CS224N 2025 L10: instruction fine-tuning is the **first** stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit **on top of** an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.
+Instruction fine-tuning is the **first** stage of the InstructGPT / ChatGPT stack. Preference methods (Week 9) sit **on top of** an SFT policy; they are not a substitute for a coherent instruction distribution. Alpaca and Vicuna are this stage with public data.
 
 If the concatenated string has \(T_p\) prompt tokens and \(T_r\) response tokens, the SFT loss averages over \(T_r\) positions, not \(T_p+T_r\). Otherwise the model spends gradient on imitating the user.
 

@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Two audio systems you will cite: **Whisper** transcribes (encoder–decoder), **CLAP** retrieves (two towers, like CLIP). Same spectrogram tokens, different heads. The matching lecture for Whisper is Stanford CS224S 2025 L11 (Conformer / Whisper): log-mel in, two convs, a transformer encoder, a GPT-style decoder, 30-second chunks, no CTC.
+Two audio systems you will cite: **Whisper** transcribes (encoder–decoder), **CLAP** retrieves (two towers, like CLIP). Same spectrogram tokens, different heads. Whisper: log-mel in, two convs, a transformer encoder, a GPT-style decoder, 30-second chunks, no CTC.
 
 ---
 
@@ -15,13 +15,13 @@ Two audio systems you will cite: **Whisper** transcribes (encoder–decoder), **
 >
 ## 1. Whisper: listen, then write
 
-Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note **6.1**). CS224S: encoder input is the log-mel plus **two convolutional layers**, then positional embeddings, then standard transformer blocks. The decoder is causal and **cross-attends** to the encoder, like translation in note **3.3**. CS224S’s wording: it is a **GPT-2 style** decoder. There is **no CTC loss**.
+Radford et al. (2022). The encoder is a transformer on log-mel spectrogram patches (note **6.1**). Encoder input is the log-mel plus **two convolutional layers**, then positional embeddings, then standard transformer blocks. The decoder is causal and **cross-attends** to the encoder, like translation in note **3.3**. It is a **GPT-2 style** decoder. There is **no CTC loss**.
 
 The output is text, plus special tokens for language, timestamps, and task (transcribe versus translate).
 
 ![Whisper encoder on audio, decoder on text](files/data-643/graphics/6.2-audio-encoders/whisper.png)
 
-Pretraining is weakly supervised: a huge pile of audio paired with transcripts from the web, filtered rather than hand-labeled (CS224S: on the order of 680{,}000 hours). Multilingual is the point. You do not train this from scratch in the lab; you would load a checkpoint. The architecture is what you need to draw.
+Pretraining is weakly supervised: a huge pile of audio paired with transcripts from the web, filtered rather than hand-labeled (on the order of 680{,}000 hours). Multilingual is the point. You do not train this from scratch in the lab; you would load a checkpoint. The architecture is what you need to draw.
 
 Default front end: 25 ms windows, 10 ms hop, 80 mel bins, **30-second** chunks. Thirty seconds at a 10 ms hop is 3000 frames before conv downsampling. The decoder never sees raw samples; it sees encoder states.
 
@@ -71,7 +71,7 @@ If someone says “both take spectrograms so they are the same,” stop and poin
 
 ## 5. Worked example
 
-Whisper chunk: 30 s, hop 10 ms \(\Rightarrow\) \(30/0.010=3000\) mel frames, 80 bands. After a stride-2 conv (as in the paper’s stem / CS224S’s two convs), you are on the order of 1500 encoder time-steps, not 30 s \(\times\) 16 kHz \(= 480{,}000\) waveform samples. That is why the spectrogram exists.
+Whisper chunk: 30 s, hop 10 ms \(\Rightarrow\) \(30/0.010=3000\) mel frames, 80 bands. After a stride-2 conv (as in the paper’s stem, two convs), you are on the order of 1500 encoder time-steps, not 30 s \(\times\) 16 kHz \(= 480{,}000\) waveform samples. That is why the spectrogram exists.
 
 Decoder: special token `<|transcribe|>` then English text. The loss is next-token on those text tokens, **conditioned** on the encoder. Timestamp tokens are just more vocabulary; they are not a separate model.
 
@@ -86,7 +86,7 @@ CLAP retrieval: three clips with audio embeddings \(a_1,a_2,a_3\) and a query te
 - Calling CLAP a “speech-to-text model” because both take spectrograms. The head is the task.
 - Forgetting Whisper’s decoder is **causal** and CLAP’s text tower need not be.
 - Stuffing Whisper encoder states into a CLIP image slot without resampling time. Rates (10 ms frames vs patch tokens) have to be named.
-- Assuming Whisper still uses CTC. CS224S: GPT-2 decoder, no CTC.
+- Assuming Whisper still uses CTC. Whisper’s decoder is GPT-2 style; there is no CTC.
 
 ---
 

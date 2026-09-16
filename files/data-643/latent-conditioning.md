@@ -7,7 +7,7 @@ Pixel-space diffusion on \(256\times 256\) RGB is expensive. **Latent diffusion*
 > **First time this appears.** **Latent diffusion** denoises in a **VAE latent**, not in pixels. **CFG** mixes a conditional and an unconditional noise prediction.
 >
 > **What.** Encode \(x_0\to z_0\) with a frozen VAE encoder, diffuse \(z\), decode at the end. Text: condition on a CLIP (or T5) vector. CFG scale \(s\) sharpens the condition.
-> **Why.** Pixels are huge. Latent cells are fewer (CS231N: on the order of \(12\times\) fewer in the Stable Diffusion cartoon). Text needs a condition or you sample generic images.
+> **Why.** Pixels are huge. Latent cells are fewer (on the order of \(12\times\) fewer in the Stable Diffusion cartoon). Text needs a condition or you sample generic images.
 > **Architecture.** VAE enc/dec (frozen) + denoiser on \(z_t\) + text encoder. CFG: two forwards, \(\hat{\varepsilon}=\varepsilon_u+s(\varepsilon_c-\varepsilon_u)\).
 > **How.** \(s=1\) is still conditional (not “off”). \(s=0\) is the uncond branch. High \(s\): sharper, less diverse.
 > **Formula.** \(\hat{\varepsilon}_\theta=\varepsilon_\theta(z_t,t,\emptyset)+s\big(\varepsilon_\theta(z_t,t,c)-\varepsilon_\theta(z_t,t,\emptyset)\big)\).
@@ -23,9 +23,9 @@ Stable Diffusion is this picture plus a big text-conditioned U-Net. The idea is 
 
 Typical sizes to say out loud: an image \(512\times 512\times 3\) becomes a latent like \(64\times 64\times 4\). You pay diffusion steps on the small tensor.
 
-Stanford CS231N 2025 L14’s classroom setting is \(D=8\), \(C=16\): \(256\times 256\times 3=196{,}608\) numbers versus \(32\times 32\times 16=16{,}384\) (about \(12\times\) fewer). Stable Diffusion’s public \(64\times 64\times 4\) on \(512^2\) is about \(48\times\). Same slogan: denoise the small tensor.
+A classroom setting is \(D=8\), \(C=16\): \(256\times 256\times 3=196{,}608\) numbers versus \(32\times 32\times 16=16{,}384\) (about \(12\times\) fewer). Stable Diffusion’s public \(64\times 64\times 4\) on \(512^2\) is about \(48\times\). Same slogan: denoise the small tensor.
 
-![Pixel cells versus CS231N’s latent cells](files/data-643/graphics/12.3-latent-conditioning/latent-count.png)
+![Pixel cells versus latent cells](files/data-643/graphics/12.3-latent-conditioning/latent-count.png)
 
 The same lecture notes that modern LDM pipelines stack a VAE, a GAN (for the decoder), and diffusion. DiT exists. This hour is the VAE-latent picture, not a transformer-block homework.
 
@@ -99,7 +99,7 @@ About **35 minutes** at the board, then **~12 minutes** of selected video from t
 
 ![CFG scale \(s=1,3,7.5\) on a scalar pair](files/data-643/graphics/12.3-latent-conditioning/cfg-scale.png)
 
-CS231N L14: randomly **drop** the text in training so one net is both conditional and unconditional. Two forwards at sample time, then mix with \(s\).
+Randomly **drop** the text in training so one net is both conditional and unconditional. Two forwards at sample time, then mix with \(s\).
 
 ---
 

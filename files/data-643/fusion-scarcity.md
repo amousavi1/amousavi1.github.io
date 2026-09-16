@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-**Fusion** is when you combine streams. **Scarcity** is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note **4.1** introduced joint versus coordinated (CMU 11-777). This note is 11-777’s **fusion** lecture in classroom form: early, late, and cross-attention, then the data pyramid.
+**Fusion** is when you combine streams. **Scarcity** is why you often cannot train the fused model the way you trained CLIP: paired audio–video–text is rarer than text alone. Note **4.1** introduced joint versus coordinated. This note is **fusion**: early, late, and cross-attention, then the data pyramid.
 
 ---
 
@@ -29,7 +29,7 @@ Lab 6 will concat versus add two vectors so you feel the shape change. Concat gr
 
 CLIP-style **two towers** are a late/coordinated baseline: you never concatenate pixels with token ids; you compare two vectors. That is the video’s job this hour.
 
-11-777’s warning, in our words: naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.
+Naming “multimodal” does not name the fusion. Write early, late, or cross-attention, and which loss sees both streams.
 
 ---
 

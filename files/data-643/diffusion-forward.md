@@ -87,7 +87,7 @@ You can jump to any \(t\) without simulating \(q(x_s\mid x_{s-1})\) for \(s=1,\l
 
 ![Three \(\bar{\alpha}_t\) values on \(x_0=1\), \(\varepsilon=2\)](files/data-643/graphics/12.1-diffusion-forward/alphabar.png)
 
-Stanford CS231N 2025 L14: pick a noise level, corrupt \(x\), then learn to undo a bit. The closed-form jump is why the loss never walks \(1,\ldots,t\).
+Pick a noise level, corrupt \(x\), then learn to undo a bit. The closed-form jump is why the loss never walks \(1,\ldots,t\).
 
 ---
 

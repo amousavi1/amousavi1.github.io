@@ -15,7 +15,7 @@ Gates are learned valves. They let a recurrent cell **keep** a bit of memory for
 >
 ## 1. The problem gates are for
 
-In a vanilla RNN the hidden state is **constantly rewritten** by \(\tanh(W_h h_{t-1}+\cdots)\). CMU 11-785’s stability lecture: unless \(W_h\) is essentially a wire (eigenvalues on the unit circle and no saturating \(\tanh\)), memory is short. You cannot ask SGD to discover a unitary \(W_h\) and a linear activation at once.
+In a vanilla RNN the hidden state is **constantly rewritten** by \(\tanh(W_h h_{t-1}+\cdots)\). Unless \(W_h\) is essentially a wire (eigenvalues on the unit circle and no saturating \(\tanh\)), memory is short. You cannot ask SGD to discover a unitary \(W_h\) and a linear activation at once.
 
 What you want instead: a **cell** that can copy, plus **input-dependent switches** that say when to write, when to erase, and when to report. That is an LSTM (Hochreiter and Schmidhuber 1997; forget gate from Gers et al. 2000).
 
@@ -49,7 +49,7 @@ If \(\boldsymbol{f}_t \approx \boldsymbol{1}\) and \(\boldsymbol{i}_t \approx \b
 \frac{\partial \boldsymbol{c}_t}{\partial \boldsymbol{c}_{t-1}} = \boldsymbol{f}_t,
 \]
 
-which can stay near 1. That is why the vanishing plot in 2.2 had a gated curve. CS231N’s warning, which we keep: **LSTM does not guarantee** that every coordinate copies. It makes a copy path *learnable*. In practice you get on the order of \(10^2\) steps rather than \(\approx 7\), not infinite context.
+which can stay near 1. That is why the vanishing plot in 2.2 had a gated curve. **LSTM does not guarantee** that every coordinate copies. It makes a copy path *learnable*. In practice you get on the order of \(10^2\) steps rather than \(\approx 7\), not infinite context.
 
 Peephole connections (cell into the gates) exist in some papers. We do not use them. `nn.LSTM` is the three-gate cell above.
 
@@ -142,8 +142,6 @@ Coordinate 1 replaced (\(z=1\)); coordinate 2 copied (\(z=0\)).
 Watch [StatQuest: Long Short-Term Memory (LSTM), Clearly Explained](https://www.youtube.com/watch?v=YCzL96nL7j0).
 
 Pause when the forget gate is a number in \((0,1)\) multiplying the cell, and when the cell is drawn as a highway. Then [StatQuest: Gated Recurrent Units (GRU), Clearly Explained](https://www.youtube.com/watch?v=tOuXgORsXJ4) — play the update-gate mix; skip if time is gone.
-
-The matching university lecture is CMU 11-785 Lecture 14 (stability and memory, then the LSTM as a constant-error carousel). Stanford CS224N’s LSTM hour (older “fancy RNN” lecture) is the copy-regime slogan we use on the board. We do not copy either deck.
 
 ---
 

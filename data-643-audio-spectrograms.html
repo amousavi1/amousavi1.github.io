@@ -110,7 +110,7 @@
                             STFT frames, not 16 kHz samples. Patch the picture the way ViT patched pixels.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p>A waveform is a 1-D list of samples. A <strong>spectrogram</strong> is that list cut into short windows, each turned into a frequency snapshot. Stanford CS224S (L2 acoustic phonetics; L5 “why spectrograms”) is the matching course: once you have a 2-D time–frequency picture, every vision trick from Week 4 (patches, a transformer, CLIP-style towers) applies to audio.</p>
+<p>A waveform is a 1-D list of samples. A <strong>spectrogram</strong> is that list cut into short windows, each turned into a frequency snapshot. Once you have a 2-D time–frequency picture, every vision trick from Week 4 (patches, a transformer, CLIP-style towers) applies to audio.</p>
 <hr />
 <blockquote>
 <p><strong>First time this method appears.</strong> A <strong>spectrogram</strong> is a picture of sound. Models do not eat 16 kHz samples as a raw list.</p>
@@ -131,7 +131,7 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>T</mi><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002B;</mo><mrow><mo stretchy="true" fence="true" form="prefix">&#x0230A;</mo><mfrac><mrow><mi>L</mi><mo>&#x02212;</mo><mi>N</mi></mrow><mrow><mi>H</mi></mrow></mfrac><mo stretchy="true" fence="true" form="postfix">&#x0230B;</mo></mrow></mrow></math>
 <p>when the length <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>L</mi><mo>&#x02265;</mo><mi>N</mi></mrow></math>. Hop <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math> is the time step; <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> is the frequency resolution. You cannot make both arbitrarily fine: small <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>H</mi></mrow></math> means more frames (and more tokens later); large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>N</mi></mrow></math> means narrower Hertz bins and a longer window that smears onsets.</p>
 <p><img alt="Sliding windows" src="files/data-643/graphics/6.1-audio-spectrograms/stft-frames.png" /></p>
-<p>CS224S’s reason to prefer this over a raw wave: a transformer on 16 kHz samples would see 16{,}000 tokens per second. An STFT with a 25 ms window and a 10 ms hop sees 100 frames per second. Those frames last long enough to see a phoneme, not a single pressure sample.</p>
+<p>The reason to prefer this over a raw wave: a transformer on 16 kHz samples would see 16{,}000 tokens per second. An STFT with a 25 ms window and a 10 ms hop sees 100 frames per second. Those frames last long enough to see a phoneme, not a single pressure sample.</p>
 <hr />
 <h2>2. Spectrograms as images, then as tokens</h2>
 <p>Treat <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>S</mi></mrow></math> as a single-channel image. A CNN can ingest it. A ViT can <strong>patch</strong> it: tiles of time <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> frequency, flatten, linear map to width <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>, add positions. Lab 6 does that cut by hand.</p>
@@ -194,7 +194,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 

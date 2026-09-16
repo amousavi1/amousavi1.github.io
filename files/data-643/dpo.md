@@ -23,7 +23,7 @@ r(x,y)=\beta\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)}+\text{const}(x).
 
 Plug that into the RM logistic loss and the \(r\) parameters disappear. You train \(\pi_\theta\) directly.
 
-Stanford CS224N 2025 L10 writes the same derived reward and stresses that the **partition \(Z(x)\)** cancels because Bradley–Terry only sees a difference. KTO and IPO sit in the same family; this hour is DPO.
+The derived reward has a **partition \(Z(x)\)** that cancels because Bradley–Terry only sees a difference. KTO and IPO sit in the same family; this hour is DPO.
 
 ![DPO: pairs in, policy out, no RM loop](files/data-643/graphics/9.3-dpo/dpo.png)
 

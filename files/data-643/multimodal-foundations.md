@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-Module 2 leaves pure text. **Multimodal** systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. CMU 11-777’s list is the map: **representation, alignment, fusion, translation, co-learning**. Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio).
+Module 2 leaves pure text. **Multimodal** systems see more than one stream: image and caption, video and audio, a PDF’s pixels and its words. The five jobs are **representation, alignment, fusion, translation, co-learning** (Baltrušaitis et al.). Complementary signal (the label says flammable; the photo does not) and redundant signal (lips plus audio).
 
 If you only train on text, you cannot answer “what is in this photo?” without an image tower or a captioner. That is why Weeks 4–5 exist.
 
@@ -37,7 +37,7 @@ A detector that puts a box on “the red mug” is alignment at **region** level
 
 **Joint:** mash the streams into **one** vector (early fusion, a concatenating MLP). Missing a modality at test time hurts.
 
-**Coordinated:** keep a tower per modality, then pull the towers together with a similarity (CLIP is this; CMU 11-777 also puts CCA here). You can query with either side.
+**Coordinated:** keep a tower per modality, then pull the towers together with a similarity (CLIP is this; canonical correlation analysis is another coordinated family). You can query with either side.
 
 ![Joint fusion versus coordinated towers](files/data-643/graphics/4.1-multimodal-foundations/joint-coord.png)
 
@@ -49,7 +49,7 @@ We do not derive Deep CCA. The slogan is enough: a coordination **loss**, not a 
 
 ## 3. Teaching this note
 
-**~16 minutes.** Five-job table, then joint vs coordinated with the 2-D cosine example. Play Yannic Kilcher CLIP **4:40–14:40** (two towers as a coordinated space). Zero-shot details wait for 4.3; captioning waits for BLIP. Do not play a full 11-777 hour in class.
+**~16 minutes.** Five-job table, then joint vs coordinated with the 2-D cosine example. Play Yannic Kilcher CLIP **4:40–14:40** (two towers as a coordinated space). Zero-shot details wait for 4.3; captioning waits for BLIP.
 
 ---
 
@@ -83,8 +83,6 @@ If the image is missing, a joint MLP trained on concatenations cannot score the 
 Watch [Yannic Kilcher: OpenAI CLIP, Connecting Text and Images](https://www.youtube.com/watch?v=T9XSU0pKX2E).
 
 Play **4:40–14:40**. Pause when the two encoders emit vectors in one space, and when a cosine (not a concatenating MLP) is the interaction. That is coordinated representation.
-
-The matching university course is CMU **11-777 Multimodal Machine Learning** (joint vs coordinated, then the five challenges). We do not copy those slides. Do not assign DCCA.
 
 ---
 

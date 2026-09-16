@@ -1,6 +1,6 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
-A **vision transformer (ViT)** is the Week 3 block on **patches** instead of words. Once an image is a sequence, every LLM trick (attention, positions, [CLS], later CLIP) applies. Stanford CS231N 2025 L8 is the matching vision lecture: patchify, linear map, positions, **no causal mask**.
+A **vision transformer (ViT)** is the Week 3 block on **patches** instead of words. Once an image is a sequence, every LLM trick (attention, positions, [CLS], later CLIP) applies. The recipe is patchify, linear map, positions, **no causal mask**.
 
 ---
 
@@ -27,7 +27,7 @@ Add a learned **[CLS]** if you classify from one vector, and add **positions** (
 
 A CNN shares a small kernel and builds a hierarchy. A ViT sees global context in layer 1, at \(O(N^{2})\) cost. For a 224 image and \(P=16\), \(N=196\), which is a short paragraph.
 
-Flattening a \(16\times 16\times 3\) patch is \(768\) numbers. CS231N’s extra slogan: that linear map is the same as a convolution with kernel \(P\), stride \(P\), \(d\) output channels. RGB is just three extra channels in the flatten.
+Flattening a \(16\times 16\times 3\) patch is \(768\) numbers. That linear map is the same as a convolution with kernel \(P\), stride \(P\), \(d\) output channels. RGB is just three extra channels in the flatten.
 
 Do not count overlapping CNN windows and then write \(N=HW/P^{2}\). ViT patches **tile**.
 
@@ -90,8 +90,6 @@ Watch [Umar Jamil: Vision Transformer / VLM walkthrough](https://www.youtube.com
 
 Pause on **image patches as tokens**, the linear patch embedding, and positional encodings. That is the ViT; CLIP/BLIP wrap extra towers around it.
 
-The matching university lecture is Stanford **CS231N 2025 L8** (ViT patchification, linear = strided conv, positions, no mask). We do not copy those slides.
-
 ---
 
 ## 7. Practice
@@ -108,4 +106,4 @@ The matching university lecture is Stanford **CS231N 2025 L8** (ViT patchificati
 
 6. Why does a classifier ViT **not** use a causal mask?
 
-7. CS231N: the patch linear map is a convolution with which kernel size and stride?
+7. The patch linear map is a convolution with which kernel size and stride?

@@ -80,7 +80,7 @@ Unlearning has no single official loss. A cartoon ascent on forget log-prob is \
 
 Specificity (did neighbors survive?), generalization (paraphrase), and a retain metric. If your project needs “remove this,” say which operational definition you used (extractive QA, membership inference, verbatim match).
 
-Stanford CS224N 2025: if a component stores the association, intervening on it should change the predicted object. **CounterFact**-style grading needs three columns: edit success, neighborhood, paraphrase.
+If a component stores the association, intervening on it should change the predicted object. **CounterFact**-style grading needs three columns: edit success, neighborhood, paraphrase.
 
 ---
 

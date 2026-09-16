@@ -41,7 +41,7 @@ If the two rewards are equal, the argument of \(\sigma\) is 0 and \(\sigma(0)=1/
 
 \(\sigma(\Delta)=\bigl(1+e^{-\Delta}\bigr)^{-1}\). Large positive \(\Delta\) \(\to\) loss near 0; large negative \(\Delta\) (chosen scored **below** rejected) \(\to\) loss near \(\infty\). The RM is a pairwise logistic classifier, not a calibrated “helpfulness out of 10.”
 
-Stanford CS224N 2025 L10: **best-of-\(n\)** already uses this RM and is a competitive baseline (AlpacaFarm). It is not PPO. You sample \(n\) from SFT and return the RM’s favorite. PPO (next note) trains a new \(\pi_\theta\).
+**Best-of-\(n\)** already uses this RM and is a competitive baseline (AlpacaFarm). It is not PPO. You sample \(n\) from SFT and return the RM’s favorite. PPO (next note) trains a new \(\pi_\theta\).
 
 ---
 

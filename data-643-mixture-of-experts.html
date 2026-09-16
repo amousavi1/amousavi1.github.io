@@ -128,7 +128,7 @@
 <p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4AF;</mi></mrow></math> is the set of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> selected experts (often <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn></mrow></math>) and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math> are the gate scores. Attention can stay dense; the sparse part is the feedforward path, where most parameters already live (note <strong>3.3</strong>).</p>
 <p><img alt="A router sending tokens to a few experts" src="files/data-643/graphics/7.2-mixture-of-experts/moe.png" /></p>
 <p><img alt="Load collapse on eight experts" src="files/data-643/graphics/7.2-mixture-of-experts/moe-collapse.png" /></p>
-<p>Stanford CS336 2025 L4’s Mixtral row is the one to memorize: <strong>8 routed experts, top-2 active, no shared expert.</strong> Switch Transformer used <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. DeepSeek-style 256-expert nets wait; this hour is stored versus active.</p>
+<p>Mixtral’s row to memorize: <strong>8 routed experts, top-2 active, no shared expert.</strong> Switch Transformer used <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. DeepSeek-style 256-expert nets wait; this hour is stored versus active.</p>
 <p>If each expert has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> weights, you store about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mi>P</mi></mrow></math> MLP weights plus a tiny router, but you <strong>compute</strong> only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> experts. Active MLP FLOPs scale with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math>.</p>
 <hr />
 <h2>2. Why sparsity, and what breaks</h2>
@@ -187,7 +187,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:05:00-04:00">September 16, 2026, 1:05 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T01:50:00-04:00">September 16, 2026, 1:50 AM EDT</time></div>
             </footer>
         </div>
 
