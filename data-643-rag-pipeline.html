@@ -107,41 +107,127 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/rag-pipeline.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.1-rag-pipeline.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            CS224N L10: retrieve then generate. Cosine 1 / 0.707 / 0. Not Week 10 RAFT.
+                            First time: what RAG is, why, architecture, cosine and Lewis’s sum, then the three-doc ranking.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>RAG</strong> is retrieve, then generate. The language model does not have to store every fact in its weights. You give it <strong>chunks</strong> at request time and ask it to answer from those chunks.</p>
-<p>Stanford <strong>CS224N 2026 L10</strong>: this is <strong>non-parametric memory at inference</strong>. Note <strong>10.3 RAFT</strong> is a <strong>training</strong> recipe that teaches the model to use retrieved docs. This week is the retrieve-then-generate <strong>stack</strong>. Do not mix the names.</p>
+<p>This is the first full lecture on <strong>retrieval-augmented generation (RAG)</strong>. Treat the method as new. Week <strong>10.3</strong> only named it so RAFT would make sense. Today you should be able to say what RAG is, why anyone bothers, how the boxes connect, which formulas you write, and what it is good and bad at.</p>
 <hr />
-<h2>1. Three stages</h2>
-<ol>
-<li><strong>Index.</strong> Split documents, embed each chunk, store vectors plus the raw text and an id.</li>
-<li><strong>Retrieve.</strong> Embed the query, take top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> by cosine (or a hybrid with keywords).</li>
-<li><strong>Generate.</strong> Stuff the chunks into a prompt: answer the question, cite ids, say when the context is missing.</li>
-</ol>
-<p><img alt="Index documents, retrieve chunks, then generate with citations" src="files/data-643/graphics/14.1-rag-pipeline/rag.png" /></p>
-<p>The generator is still a next-token model. RAG changes its <strong>conditioning</strong>, not its architecture. A wrong index cannot be saved by a prettier prompt. Dense embeddings (Week 1, Week 5) are one index; keyword overlap is another. Lab 14 uses counts so the ranking is something you can print.</p>
-<p>Karpathy’s browser demo is the same loop with the web as the index: emit a search, read hits, then write. Custom GPTs that file your PDFs are the same loop with a private index.</p>
-<hr />
-<h2>2. What can fail</h2>
-<p>Retrieval misses the supporting chunk (recall@k). Retrieval returns a near-miss that the model then over-trusts. The model <strong>ignores</strong> a good chunk and hallucinates. Citations that do not match the used sentences are the RAG version of unfaithful CoT (note <strong>13.3</strong>).</p>
-<p>Chunk size, overlap, embedding choice, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> are method. Lab 14 uses bag-of-words cosine so you can see the ranking without a GPU. ReAct (note <strong>14.2</strong>) can treat retrieve as one tool among others, including a calculator.</p>
-<p>A no-retrieval baseline is the parametric model on the same questions. If RAG does not beat it, the index or the prompt is the story, not “we added RAG.”</p>
-<hr />
-<h2>3. Measurement</h2>
-<p>Report retrieval recall@k on a labeled set of (question, gold chunk ids), then answer accuracy with an attribution check: does the cited id actually contain the claim? Always include a no-retrieval baseline. “We used RAG” is not a result.</p>
-<hr />
-<h2>4. Teaching this note</h2>
-<p>About <strong>35 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Lecture ideas follow <strong>CS224N 2026 L10</strong>.</p>
+<h2>1. What RAG is</h2>
+<p>A frozen language model answers from <strong>weights</strong>. Those weights were trained on a snapshot of the web. They do not contain this semester's syllabus, a private PDF, or a fact that changed last week. When the model is unsure, it still produces fluent text. That fluent guess is a <strong>hallucination</strong>.</p>
+<p><strong>RAG</strong> means: <strong>look up relevant text first, then generate the answer from that text.</strong></p>
+<p>The name is literal.</p>
 <ul>
-<li><strong>0–12 min.</strong> Index / retrieve / generate. Cosine as the ranker. What lives in the index besides the vector.</li>
-<li><strong>12–22 min.</strong> Failure modes: miss, near-miss, ignore, unfaithful citation.</li>
-<li><strong>22–33 min.</strong> Worked cosine on three toy docs.</li>
+<li><strong>Retrieval:</strong> given a question, find a few passages from a collection you control.</li>
+<li><strong>Augmented:</strong> put those passages into the prompt, next to the question.</li>
+<li><strong>Generation:</strong> the same next-token model as always writes the answer, now <strong>conditioned</strong> on the passages.</li>
+</ul>
+<p>You are not training a new network today. You are changing what the network is allowed to read at request time. Stanford <strong>CS224N 2026 L10</strong> calls the passages <strong>non-parametric memory</strong>: the facts live in an index you can edit, not only inside <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B8;</mi></mrow></math>.</p>
+<p>A search engine returns links. RAG returns an <strong>answer</strong>, with the retrieved passages sitting in the context window. A fine-tune changes weights. RAG leaves the weights alone and changes the <strong>context</strong>.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>Three jobs keep coming up in products and in this course.</p>
+<ol>
+<li><strong>Fresh or private knowledge.</strong> Campus hours, a company policy PDF, a paper that appeared this month. Retraining a 7B model every time a PDF moves is the wrong tool.</li>
+<li><strong>Citations.</strong> If the answer is supposed to come from chunk <code>[d1]</code>, a reader can open <code>[d1]</code> and check. Weights do not give you that handle.</li>
+<li><strong>A smaller generator plus a large library.</strong> You can keep a modest LLM and a large corpus, instead of stuffing the corpus into parameters.</li>
+</ol>
+<p><strong>Why not just fine-tune on the PDFs?</strong> Fine-tuning is slow to update, easy to overfit, and still does not cite a chunk id. Use it for <em>style</em> and <em>format</em> (Week 8 SFT / LoRA). Use RAG for <em>facts that live in documents</em>.</p>
+<p><strong>Why not dump the whole corpus into a long prompt?</strong> Context is expensive, and models often ignore the middle of a long list (<strong>lost in the middle</strong>). Retrieval is how you pick a handful of passages instead of all of them.</p>
+<p>Karpathy’s browser demo is the same idea with the web as the index: emit a search, read the hits, then write. Custom GPTs that file your PDFs are the same loop with a private index.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>RAG is a <strong>pipeline</strong>, not a new layer inside the transformer.</p>
+<p><strong>Offline (once, then whenever the corpus changes):</strong></p>
+<ol>
+<li>Collect documents (HTML, PDF, notes, a CSV of snippets).</li>
+<li><strong>Chunk</strong> them into passages of a few hundred tokens, often with overlap so a sentence is not split from its date.</li>
+<li><strong>Embed</strong> each chunk with the same embedder you will use for queries (Week 1 vectors; Week 5 CLIP is the multimodal cousin). Lab 14 uses bag-of-words counts so you can print the ranking without a GPU.</li>
+<li>Store, for each chunk: the <strong>vector</strong>, the <strong>raw text</strong>, and an <strong>id</strong>. That triple is the <strong>index</strong>. Vectors without text cannot be cited.</li>
+</ol>
+<p><strong>Online (every question):</strong></p>
+<ol>
+<li>Embed the query with the <strong>same</strong> embedder.</li>
+<li>Score every chunk (or a fast approximate neighbor search). Keep the top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</li>
+<li><strong>Stuff</strong> the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> texts into a prompt: question, passages with ids, and instructions (answer from the passages; cite ids; say when the context is missing).</li>
+<li>The language model generates tokens. It is still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>prompt</mtext><mo stretchy="false">&#x00029;</mo></mrow></math>. RAG changed the prompt, not the architecture.</li>
+</ol>
+<p><img alt="Offline index, then query → retrieve → generate" src="files/data-643/graphics/14.1-rag-pipeline/architecture.png" /></p>
+<p>Dense embeddings are one index. <strong>Keyword overlap / BM25</strong> is another (Lab 10’s toy retriever). Hybrid systems use both. The generator does not care which ranker you used; it only sees the strings you stuffed.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>Take a question students will actually type: <em>“What time does Bender Library close on a weekday?”</em></p>
+<ol>
+<li><strong>Index already exists.</strong> Suppose chunk <code>[d1]</code> says the weekday close is 23:00, <code>[d3]</code> says something about hours but not 23:00, <code>[d2]</code> is about a shuttle.</li>
+<li><strong>Embed the question.</strong> In Lab 14 this is a count vector over the vocabulary. In a product this is a neural embedding.</li>
+<li><strong>Rank.</strong> Cosine (below) puts <code>[d1]</code> first, <code>[d3]</code> second, <code>[d2]</code> last.</li>
+<li><strong>Choose <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> stuffs only <code>[d1]</code>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> also stuffs <code>[d3]</code>. Recall can rise; a <strong>near-miss</strong> can now mislead the generator.</li>
+<li><strong>Prompt.</strong> Something like: <em>Use only the passages. Cite ids like <code>[d1]</code>. If the passages do not contain the answer, say you do not know.</em> Then list the passages.</li>
+<li><strong>Generate.</strong> A good run answers 23:00 and cites <code>[d1]</code>. A bad run cites <code>[d2]</code> while using the 23:00 fact, or ignores <code>[d1]</code> and invents 22:00 from pretraining.</li>
+</ol>
+<p>The generator is still a next-token model. A wrong index cannot be saved by a prettier prompt.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4B5;</mi></mrow></math> be the set of chunks. Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>e</mi><mo stretchy="false">&#x00028;</mo><mo>&#x000B7;</mo><mo stretchy="false">&#x00029;</mo></mrow></math> be the embedder (counts or a neural map). For a query <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi></mrow></math> and a chunk <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>cos</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0003D;</mo><mfrac><mrow><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><msup><mo stretchy="false">&#x00029;</mo><mrow><mo>&#x022A4;</mo></mrow></msup><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><mo>&#x02016;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02016;</mo><mspace width="0.167em" /><mo>&#x02016;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p><strong>Retrieve</strong> the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> chunks with largest cosine (ties: pick a rule and stick to it):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo>&#x0003D;</mo><msub><mo>TopK</mo><mrow><mi>z</mi><mo>&#x02208;</mo><mi>&#x1D4B5;</mi></mrow></msub><mi>cos</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>e</mi><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p><strong>Generate</strong> one token at a time from the stuffed prompt <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>x</mi><mo>&#x0003D;</mo><mo>Prompt</mo><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munder><mo>&#x0220F;</mo><mrow><mi>t</mi></mrow></munder><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>That is what Lab 14 and most production “stuffing” RAG systems do: <strong>one</strong> generation given the concatenated top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>.</p>
+<p>Lewis et al. (2020) write a slightly richer model: retrieval is a distribution, and you <strong>marginalize</strong> over documents,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mrow><mi>z</mi><mo>&#x02208;</mo><mi>&#x1D4B5;</mi></mrow></munder><msub><mi>p</mi><mi>&#x003B7;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo>&#x02223;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>In practice the sum is restricted to the top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mi>&#x003B7;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo>&#x02223;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo></mrow></math> is often a softmax over retrieval scores. You do not need to train <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mi>&#x003B7;</mi></msub></mrow></math> this week. You do need to know: <strong>the original paper treats which document you fetched as a latent variable</strong>; the lab treats it as a hard top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> list.</p>
+<p><strong>Recall@<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math></strong> on a labeled item (question, gold chunk ids <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4A2;</mi></mrow></math>):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>recall</mo><mi>@</mi><mi>k</mi><mo>&#x0003D;</mo><mfrac><mrow><mo>&#x0007C;</mo><mo stretchy="false">&#x0007B;</mo><mtext>retrieved&#x000A0;ids</mtext><mo stretchy="false">&#x0007D;</mo><mo>&#x02229;</mo><mi>&#x1D4A2;</mi><mo>&#x0007C;</mo></mrow><mrow><mo>&#x0007C;</mo><mi>&#x1D4A2;</mi><mo>&#x0007C;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>If gold is <code>[d1]</code> and top-2 are <code>[d3],[d2]</code>, recall@2 is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>. Retrieval failed before the generator ran.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Update a fact by editing a document and re-indexing. No full retrain.</li>
+<li>You can ask for citations and check them.</li>
+<li>Works with a frozen generator (LoRA is optional; that is RAFT / Week 10.3).</li>
+<li>Domain corpora (this course, a hospital, a legal archive) stay outside the weights.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>If the right chunk is not in the top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, generation cannot recover it. Garbage in, fluent garbage out.</li>
+<li>Extra latency: embed + search + generate.</li>
+<li>Chunking is a method. Too small: you lose the date. Too large: you retrieve noise. Overlap is a knob.</li>
+<li><strong>Lost in the middle:</strong> gold sitting in a long stuffed list is often ignored. Raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is not free.</li>
+<li><strong>Unfaithful citations:</strong> the model uses <code>[d1]</code> and writes <code>[d2]</code>. Same bug class as unfaithful CoT (note <strong>13.3</strong>).</li>
+<li>The index can be stale, biased, or confidential. Retrieval copies whatever you stored.</li>
+<li>Dense retrievers fail on rare tokens (ids, course numbers) unless you add keywords.</li>
+</ul>
+<p><strong>When not to use RAG.</strong> A closed-book puzzle that is only in the weights (arithmetic without a calculator; ReAct’s tool is the better extra). A task that needs <em>behavior</em> change (stop being sycophantic): that is SFT / DPO, not an index.</p>
+<hr />
+<h2>7. What can fail</h2>
+<p>Four failure modes to name on the board.</p>
+<ol>
+<li><strong>Miss.</strong> Gold never entered the top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. Measure recall@k. Fix chunking, the embedder, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, or hybrid search.</li>
+<li><strong>Near-miss.</strong> A related chunk ranks high (<code>[d3]</code> “hours” for a closing-time question). The model over-trusts it.</li>
+<li><strong>Ignore.</strong> Gold is in the prompt; the model recites a pretrain snapshot anyway. That is a <strong>reader</strong> bug. Week 10.3 RAFT trains the reader. This week the reader is frozen.</li>
+<li><strong>Unfaithful citation.</strong> The used sentence is in <code>[d1]</code>; the model writes <code>[d2]</code>.</li>
+</ol>
+<p>ReAct (note <strong>14.2</strong>) can treat retrieve as one tool among others, including a calculator.</p>
+<p>A <strong>no-retrieval baseline</strong> is the parametric model on the same questions. If RAG does not beat it, the index or the prompt is the story, not “we added RAG.”</p>
+<hr />
+<h2>8. Measurement</h2>
+<p>Report <strong>retrieval recall@k</strong> on a labeled set of (question, gold chunk ids), then <strong>answer accuracy</strong> with an <strong>attribution check</strong>: does the cited id actually contain the claim? Always include a no-retrieval baseline. “We used RAG” is not a result.</p>
+<hr />
+<h2>9. Teaching this note</h2>
+<p>About <strong>50 minutes</strong> at the board, then <strong>~10 minutes</strong> of video. Students have not seen RAG as a method before. Do not start from cosine.</p>
+<ul>
+<li><strong>0–10 min.</strong> What / why: frozen weights vs an editable library; RAG vs fine-tune vs dumping the corpus.</li>
+<li><strong>10–22 min.</strong> Architecture: offline index (vector + text + id) and the online path. Write the cosine and top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> formulas.</li>
+<li><strong>22–34 min.</strong> Worked three-doc cosine. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> vs <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. Lost in the middle.</li>
+<li><strong>34–48 min.</strong> Pros / cons. Four failures. Recall@k and attribution. RAFT is training; this is inference.</li>
 <li><strong>Then</strong> play Karpathy intro <strong>27:43–33:32</strong> (tool use: browser as retrieve-then-read) and mention <strong>40:45–42:15</strong> (custom GPTs / files as a private index). Pause when the model emits a search and reads the hits.</li>
 </ul>
+<p>Lecture ideas follow <strong>CS224N 2026 L10</strong>. Original notes; that course is not copied.</p>
 <hr />
-<h2>5. Worked example</h2>
-<p>Three chunks, vocab <code>{library, close, shuttle}</code>, bag-of-words counts:</p>
+<h2>10. Worked example</h2>
+<p>Three chunks, vocab <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mtext>library</mtext><mo>&#x0002C;</mo><mtext>close</mtext><mo>&#x0002C;</mo><mtext>shuttle</mtext><mo stretchy="false">&#x0007D;</mo></mrow></math>, bag-of-words counts:</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
@@ -168,44 +254,52 @@
 </tr>
 </tbody>
 </table></div>
-<p>Query <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mtext>“library&#x000A0;close”</mtext></mrow></math>, vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. Cosine <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mi>a</mi><mo>&#x022A4;</mo></msup><mi>b</mi><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>a</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo fence="false" stretchy="false">&#x02016;</mo><mi>b</mi><mo fence="false" stretchy="false">&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<p>Query <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>q</mi><mo>&#x0003D;</mo><mtext>“library&#x000A0;close”</mtext></mrow></math>, vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. Cosine <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>b</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msup><mi>a</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mi>b</mi><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02016;</mo><mi>a</mi><mo>&#x02016;</mo><mo>&#x02016;</mo><mi>b</mi><mo>&#x02016;</mo><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
 <ul>
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>2</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><msqrt><mrow><mn>2</mn></mrow></msqrt><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn></mrow></math></li>
 <li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0</mn></mrow></math></li>
-<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><mo>&#x000B7;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.707</mn></mrow></math></li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mo stretchy="false">&#x00028;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><mo>&#x000B7;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt><mo>&#x02248;</mo><mn>0.707</mn></mrow></math></li>
 </ul>
-<p>Rank: d1, d3, d2. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> you stuff only d1 (right chunk for a closing-time question). For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> you also stuff d3: recall can rise, but the generator now sees a near-miss about “hours” that may not include 23:00. Raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> is not free.</p>
+<p>Rank: d1, d3, d2. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> you stuff only d1 (right chunk for a closing-time question). For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> you also stuff d3: recall can rise, but the generator now sees a near-miss about “hours” that may not include 23:00.</p>
 <p><img alt="Cosine 1.0, 0.707, 0" src="files/data-643/graphics/14.1-rag-pipeline/cosine-rank.png" /></p>
 <p><strong>Lost in the middle:</strong> if the gold chunk sits in the middle of a long stuffed list, models often ignore it. That is a retrieval-plus-position bug, not “the model cannot read.” Keep <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> small in Lab 14.</p>
-<p>If the model then cites <code>[d2]</code> while using the 23:00 fact from d1, that is unfaithful attribution: same bug class as CoT steps that do not match the box.</p>
+<p>If the model then cites <code>[d2]</code> while using the 23:00 fact from d1, that is unfaithful attribution.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>11. Where students get stuck</h2>
 <ul>
+<li>Treating RAG as a new neural net. It is a <strong>conditioning</strong> stack.</li>
 <li>Measuring only answer accuracy. You need recall@k <strong>and</strong> a citation check.</li>
 <li>Stuffing <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>20</mn></mrow></math> and wondering why the model ignores the gold chunk.</li>
 <li>Putting only vectors in the index and dropping the raw text / id, so you cannot cite.</li>
+<li>Calling Week 10.3 RAFT “RAG.” RAFT <strong>trains</strong> the reader on retrieved bundles. This week the reader is frozen.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>12. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej Karpathy, Intro to Large Language Models</a>, second half: <strong>27:43–33:32</strong> (browser / retrieval) and <strong>40:45–42:15</strong> (customization with files).</p>
-<p>Pause on emit-search → read hits → write with sources. Same URL as notes <strong>13.1</strong>, <strong>14.2</strong>, and <strong>15.1</strong>. This note is the retrieve-then-generate picture; <strong>14.2</strong> is the tool loop.</p>
+<p>Pause on emit-search → read hits → write with sources. Same URL as notes <strong>13.1</strong>, <strong>14.2</strong>, and <strong>15.1</strong>. This note is the retrieve-then-generate picture; <strong>14.2</strong> is the tool loop. For the original paper’s sum-over-documents picture, skim Lewis et al., <a href="https://arxiv.org/abs/2005.11401">arXiv:2005.11401</a>, the RAG-sequence setup.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>13. Practice</h2>
 <ol>
 <li>
-<p>Why can raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> hurt the answer even if it raises recall?</p>
+<p>In one sentence each: what RAG is, and why a frozen LLM by itself is not enough for this semester’s late-policy PDF.</p>
+</li>
+<li>
+<p>What belongs in the index besides the embedding vector? Why?</p>
+</li>
+<li>
+<p>Write the cosine formula, then compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo></mrow></math> exactly as a fraction from the three vectors above. Write the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> id list.</p>
+</li>
+<li>
+<p>Why can raising <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> hurt the answer even if it raises recall@k?</p>
 </li>
 <li>
 <p>You retrieve the right chunk and the answer is still wrong. Name two different bugs.</p>
 </li>
 <li>
-<p>What belongs in the index besides the embedding vector?</p>
-</li>
-<li>
-<p>Using the three vectors above, compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>d</mi><mn>3</mn><mo stretchy="false">&#x00029;</mo></mrow></math> exactly as a fraction, and write the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> id list.</p>
-</li>
-<li>
 <p>Gold chunk is d1. Retrieved top-2 are d3, d2. Recall@2 for this item? Answer cites <code>[d1]</code>. Attribution pass or fail?</p>
+</li>
+<li>
+<p>Write Lewis’s sum <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><msub><mo>&#x02211;</mo><mi>z</mi></msub><msub><mi>p</mi><mi>&#x003B7;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>z</mi><mo>&#x02223;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>q</mi><mo>&#x0002C;</mo><mi>z</mi><mo stretchy="false">&#x00029;</mo></mrow></math> in words. What does Lab 14 do instead of the sum?</p>
 </li>
 </ol>
                     </section>
@@ -216,7 +310,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:30:00-04:00">September 16, 2026, 12:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

@@ -1045,8 +1045,52 @@ def rag_pipe():
     _box(ax, (8.5, 1.4), 3.5, 1.3, "generate with\nchunks in context", FILL4, GOLD, 11)
     for a, b in [(2.55, 2.85), (5.35, 5.65), (8.15, 8.45)]:
         _arrow(ax, (a, 2.05), (b, 2.05))
-    ax.set_title("RAG: non-parametric memory at inference (and, in RAFT, at train time)", loc="left", color=NAVY)
+    ax.set_title("RAG: look up passages, then write the answer from them", loc="left", color=NAVY)
     _save(fig, "14.1-rag-pipeline/rag.png")
+
+
+def rag_architecture():
+    fig, ax = plt.subplots(figsize=(11.2, 5.6))
+    ax.set_xlim(0, 13.2)
+    ax.set_ylim(0, 6.4)
+    ax.axis("off")
+    ax.text(0.2, 5.95, "Offline  (build the index)", fontsize=12, color=NAVY, fontweight="bold")
+    _box(ax, (0.2, 4.35), 2.4, 1.25, "documents", FILL, NAVY, 11)
+    _box(ax, (3.0, 4.35), 2.4, 1.25, "chunk\n(+ overlap)", FILL2, TEAL, 11)
+    _box(ax, (5.8, 4.35), 2.4, 1.25, "embed $e(z)$", FILL3, CORAL, 11)
+    _box(ax, (8.6, 4.35), 4.2, 1.25, "index: vector + raw text + id", FILL4, GOLD, 11)
+    for a, b in [(2.65, 2.95), (5.45, 5.75), (8.25, 8.55)]:
+        _arrow(ax, (a, 4.97), (b, 4.97))
+    ax.text(0.2, 3.55, "Online  (every question)", fontsize=12, color=NAVY, fontweight="bold")
+    _box(ax, (0.2, 1.85), 2.4, 1.25, "query $q$", FILL, NAVY, 11)
+    _box(ax, (3.0, 1.85), 2.4, 1.25, "embed $e(q)$", FILL2, TEAL, 11)
+    _box(ax, (5.8, 1.85), 2.6, 1.25, "top-$k$ by cosine", FILL3, CORAL, 11)
+    _box(ax, (8.8, 1.85), 2.0, 1.25, "stuff\nprompt", FILL4, GOLD, 10)
+    _box(ax, (11.1, 1.85), 1.85, 1.25, "LM\nanswer+$\\mathrm{id}$", FILL5, NAVY, 10)
+    for a, b in [(2.65, 2.95), (5.45, 5.75), (8.45, 8.75), (10.85, 11.05)]:
+        _arrow(ax, (a, 2.47), (b, 2.47))
+    ax.annotate(
+        "",
+        xy=(10.7, 4.35),
+        xytext=(7.1, 3.15),
+        arrowprops=dict(arrowstyle="-|>", color=SLATE, connectionstyle="arc3,rad=0.12", lw=1.3),
+    )
+    ax.text(8.5, 3.35, "read text+id", fontsize=9, color=SLATE)
+    ax.set_title("RAG architecture: the transformer is unchanged; the prompt is not", loc="left", color=NAVY)
+    _save(fig, "14.1-rag-pipeline/architecture.png")
+
+
+def rag_tradeoffs():
+    _numeric_table(
+        "14.1-rag-pipeline/tradeoffs.png",
+        "Three ways to give a model new facts. RAG edits an index.",
+        ["method", "updates by", "cites?", "main cost"],
+        [
+            ["fine-tune / LoRA", "changing weights", "no", "retrain"],
+            ["long context", "pasting everything", "weak", "tokens + middle"],
+            ["RAG", "editing the index", "yes, if you store ids", "retrieve + $k$"],
+        ],
+    )
 
 
 def react_loop():
@@ -1256,6 +1300,8 @@ def main():
     tot_tree()
     faithfulness()
     rag_pipe()
+    rag_architecture()
+    rag_tradeoffs()
     react_loop()
     talk_eval()
     exam_map()

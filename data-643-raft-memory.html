@@ -107,10 +107,12 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 10 &middot; <a href="files/data-643/raft-memory.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/10.3-raft-memory.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            Train with gold plus distractors. Week 14 is the RAG stack; this hour is the reader.
+                            Define RAG in one page, then train the reader with gold plus distractors. Week 14 is the full stack.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
 <p>Facts can live in <strong>weights</strong> (parametric) or in an <strong>external store</strong> you look up (non-parametric). <strong>RAFT</strong> here is <strong>retrieval-augmented fine-tuning</strong>: you train the model <em>with</em> retrieved documents in context so it learns to use them, not only to recite the pretrain snapshot.</p>
+<p>Students have not had Week 14 yet. Before RAFT, here is <strong>RAG in one page</strong>. Week 14.1 is the full first-time lecture (architecture, cosine, Lewis’s sum, pros and cons). Do not skip that later.</p>
+<p><strong>RAG (retrieval-augmented generation)</strong> means: look up relevant passages from a collection you control, put them in the prompt, then generate the answer from those passages. The language model is usually <strong>frozen</strong>. You update a fact by editing a document and re-indexing, not by retraining. The index must store <strong>vector + raw text + id</strong> so you can cite. Retrieval can miss; then generation cannot recover. That is why this hour exists: a frozen reader often <strong>ignores</strong> a good snippet. RAFT is how you train the reader.</p>
 <hr />
 <h2>1. RAFT: train the reader, not only the index</h2>
 <p>A vanilla RAG pipeline (Week 14) retrieves at test time and hopes the frozen LLM attends. Domain RAFT (Zhang et al. and related recipes) builds training rows that look like the test stack: question, a set of snippets (some relevant, some <strong>distractors</strong>), and an answer that must cite or ignore on purpose. The loss is SFT on that answer. The model learns “read this, skip that.”</p>
@@ -182,7 +184,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:30:00-04:00">September 16, 2026, 12:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

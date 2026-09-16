@@ -107,76 +107,165 @@
                             <a href="data-643.html">DATA 443/643</a> &middot; Week 14 &middot; <a href="files/data-643/react-tools.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/data-643/slides/14.2-react-tools.pdf" target="_blank" rel="noopener">Slides</a>
                         </p>
                         <p>
-                            CS224N L10: ReAct vs CoT vs SC. Observation 408 must be used.
+                            First time: what ReAct is, why CoT is not enough, the tool loop, then calc[17*24]=408.
                         </p>
 <p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
-<p><strong>ReAct</strong> (Yao et al.) interleaves <strong>Thought</strong>, <strong>Action</strong>, and <strong>Observation</strong>. The model is not only writing a chain of thought. It can call a tool, read the result, and then continue.</p>
-<p>Stanford <strong>CS224N 2026 L10</strong> contrasts <strong>ReAct vs CoT vs self-consistency</strong>. CoT can invent a fact. Self-consistency votes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> invented traces. ReAct is supposed to <strong>wait for the observation</strong>. If the next thought ignores that string, you are back to unfaithful CoT (note <strong>13.3</strong>).</p>
+<p>This is the first full lecture on <strong>ReAct</strong> (Yao et al.: <em>Reason + Act</em>). Treat the method as new. Note <strong>14.1</strong> just taught RAG as retrieve-then-stuff. Today the model can <strong>call a tool</strong>, read what comes back, and only then continue writing.</p>
 <hr />
-<h2>1. The loop</h2>
-<p>A thought is scratch work. An action is a structured call: <code>search["library hours"]</code>, <code>calc[8+15]</code>, <code>lookup[d3]</code>. The environment returns an observation (a string). You append it to the context and sample again until a final answer.</p>
+<h2>1. What ReAct is</h2>
+<p>A <strong>chain of thought (CoT)</strong> is extra tokens the model writes before the answer (Week 13). Those tokens are still guesses. If the thought says “<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn><mo>&#x0003D;</mo><mn>428</mn></mrow></math>”, the algebra can be wrong and the prose still looks careful.</p>
+<p><strong>ReAct</strong> interleaves three kinds of line:</p>
+<ul>
+<li><strong>Thought:</strong> scratch work in language. Not a tool. Not the answer.</li>
+<li><strong>Action:</strong> a <strong>structured</strong> call the environment can parse, for example <code>calc[17*24]</code>, <code>search["library hours"]</code>, <code>lookup[d3]</code>.</li>
+<li><strong>Observation:</strong> a string the <strong>environment</strong> returns. The model did not write it.</li>
+</ul>
+<p>The model is not only talking to itself. It is talking to a tool, then reading. Stanford <strong>CS224N 2026 L10</strong> contrasts <strong>ReAct vs CoT vs self-consistency</strong>. CoT can invent a fact. Self-consistency votes <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> invented traces. ReAct is supposed to <strong>wait for the observation</strong>.</p>
+<p>RAG retrieve is <strong>one</strong> tool. A calculator is another. A code runner is another. The control pattern is the same.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>Language models are bad at exact arithmetic, at looking up a fresh PDF, and at anything that needs a <strong>world</strong> (time, a database, a compiler). You can try to bake those skills into weights. That is slow and still drifts.</p>
+<p>Tools fix a different slice of the problem than RAG stuffing:</p>
+<ul>
+<li><strong>RAG (14.1):</strong> one retrieve, then one generate. The passages are already in the prompt before the first answer token.</li>
+<li><strong>ReAct:</strong> the model <strong>decides</strong> when to call retrieve, or calc, or both, and it can call again after it reads.</li>
+</ul>
+<p>Use ReAct when the next step depends on an observation you do not have yet. Use stuffed RAG when you already know you want top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> passages in the prompt.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>There are three pieces.</p>
+<ol>
+<li><strong>Policy (the LLM).</strong> Samples the next line given the transcript so far.</li>
+<li><strong>Parser.</strong> Turns an Action line into a tool name and arguments. If the parse fails, the observation is an error string, not a silent skip.</li>
+<li><strong>Tools.</strong> Each tool is a function: arguments in, string out. Lab 14’s <code>calc</code> only matches <code>[0-9+\s*/]</code>. That restriction is the point.</li>
+</ol>
+<p>The transcript is the memory:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mtext>context</mtext><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub><mo>&#x0003D;</mo><msub><mtext>context</mtext><mi>t</mi></msub><mo>&#x0002B;</mo><msub><mtext>Thought</mtext><mi>t</mi></msub><mo>&#x0002B;</mo><msub><mtext>Action</mtext><mi>t</mi></msub><mo>&#x0002B;</mo><msub><mtext>Observation</mtext><mi>t</mi></msub><mo>&#x0002E;</mo></mrow></math>
+<p>Stop when the model emits a final <strong>Answer</strong>, or when you hit a step cap.</p>
 <p><img alt="Thought, tool call, observation, then another thought" src="files/data-643/graphics/14.2-react-tools/react.png" /></p>
-<p>RAG (note <strong>14.1</strong>) is one tool: retrieve. A calculator is another. A code runner is another. The control pattern is the same. Lab 14’s calculator is dummy arithmetic so you can implement the loop without an API. The observation must appear in the context; a thought that ignores it is the same bug as unfaithful CoT.</p>
 <p>Karpathy’s calculator / interpreter demos are this loop in a product: special tokens, a tool runs, text comes back, the model continues.</p>
 <hr />
-<h2>2. Why tools change the error modes</h2>
-<p>CoT can invent a product of two numbers. A calc tool can return the product if the model <strong>writes the right call</strong>. New failures: malformed actions, calling the wrong tool, ignoring the observation, or looping. That is still unfaithfulness: the thought says “I added” when the observation was never used.</p>
-<p>Parse actions strictly (regex or JSON). Cap the number of steps. Log every observation in the report appendix for one worked example. If the parse fails, return an error observation and let the model retry once; do not silently drop the call.</p>
-<p>A dummy <code>calc</code> that only matches <code>[0-9+\s*/]</code> (Lab 14) is a feature: <code>eval</code> on free Python is a different threat model. In this class you keep the dummy. A project that opens a code runner must say what is in bounds (arithmetic) and what is not (network, files).</p>
-<hr />
-<h2>3. ReAct versus ToT</h2>
-<p>ToT searches among thoughts. ReAct calls the world. You can combine them (search over tool-using traces), but name the knobs separately. For the project, one tool plus a checker is enough; a zoo of APIs is not.</p>
-<p>Write the five-line log on the board for every demo: Thought, Action, Observation, Thought, Answer. If a line is missing, you did not run ReAct; you ran CoT with a tool-shaped string.</p>
-<hr />
-<h2>4. Teaching this note</h2>
-<p>About <strong>35 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. Lab 14 can follow in the same two-hour block. Lecture ideas follow <strong>CS224N 2026 L10</strong> (ReAct vs CoT vs SC).</p>
-<ul>
-<li><strong>0–12 min.</strong> Thought / Action / Observation. Parse the action; append the obs.</li>
-<li><strong>12–22 min.</strong> New bugs: bad parse, wrong tool, ignored obs, loops. Cap steps.</li>
-<li><strong>22–33 min.</strong> Worked <code>17×24</code> with <code>calc</code>, then Lab 14’s <code>23*60=1380</code>.</li>
-<li><strong>Then</strong> play Karpathy intro <strong>27:43–35:00</strong> (calculator, interpreter, browser). Pause when a special token launches a tool and an observation returns.</li>
-</ul>
-<hr />
-<h2>5. Worked example</h2>
+<h2>4. How it works, step by step</h2>
 <p>Question: what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>? Do <strong>not</strong> multiply in the thought.</p>
 <ol>
 <li><strong>Thought:</strong> I need a product; use the calculator.</li>
 <li><strong>Action:</strong> <code>calc[17*24]</code></li>
-<li><strong>Observation:</strong> <code>408</code></li>
+<li><strong>Environment:</strong> run the dummy calculator. <strong>Observation:</strong> <code>408</code></li>
 <li><strong>Thought:</strong> Use 408; do not recompute.</li>
 <li><strong>Answer:</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>408</mn></mrow></math></li>
 </ol>
-<p>If step 4 says “that is 428” while the observation is <code>408</code>, the loop is unfaithful: the observation was ignored. Final-answer grading might still pass if it boxes 408 from a later copy, or fail on 428. Either way the trace is the bug.</p>
-<p>Lab 14’s library minutes: weekday close 23:00, <code>calc[23*60]</code>, observation <code>1380</code>. The answer must contain <code>1380</code> from the observation, plus a citation <code>[d1]</code> from retrieval. Two tools, one loop: retrieve is <strong>14.1</strong>, calc is this note.</p>
-<p>A second board log: <code>60/12</code> shuttle loops. Action <code>calc[60/12]</code>, observation <code>5.0</code>, cite <code>[d2]</code>.</p>
+<p>If step 4 says “that is 428” while the observation is <code>408</code>, the loop is <strong>unfaithful</strong>: the observation was ignored (note <strong>13.3</strong>).</p>
+<p>Lab 14’s library minutes: weekday close 23:00 from retrieval, then <code>calc[23*60]</code>, observation <code>1380</code>. The answer must contain <code>1380</code> <strong>from the observation</strong>, plus a citation <code>[d1]</code> from RAG. Two tools, one loop.</p>
 <hr />
-<h2>6. Where students get stuck</h2>
+<h2>5. Mathematical formulas</h2>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>c</mi><mi>t</mi></msub></mrow></math> be the transcript after <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> rounds. The model samples a thought and an action,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003C4;</mi><mi>t</mi></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mi>&#x0007E;</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mspace width="0.167em" /><mo>&#x000B7;</mo><mo>&#x02223;</mo><msub><mi>c</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>The environment is deterministic in this class:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>o</mi><mi>t</mi></msub><mo>&#x0003D;</mo><mo>Tool</mo><mo stretchy="false">&#x00028;</mo><msub><mi>a</mi><mi>t</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>c</mi><mrow><mi>t</mi><mo>&#x0002B;</mo><mn>1</mn></mrow></msub><mo>&#x0003D;</mo><msub><mi>c</mi><mi>t</mi></msub><mo>&#x02295;</mo><msub><mi>&#x003C4;</mi><mi>t</mi></msub><mo>&#x02295;</mo><msub><mi>a</mi><mi>t</mi></msub><mo>&#x02295;</mo><msub><mi>o</mi><mi>t</mi></msub></mrow></math>. A final answer <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> is sampled from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><msub><mi>c</mi><mi>T</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>.</p>
+<p>There is <strong>no</strong> extra trained module today. ReAct is a <strong>decoding protocol</strong> plus tools. (You <em>can</em> SFT on ReAct traces later; Lab 14 does not.)</p>
+<p>Compare CoT: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mi>&#x0007E;</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mtext>steps</mtext><mo>&#x0002C;</mo><mspace width="0.167em" /><mtext>answer</mtext><mo>&#x02223;</mo><mi>q</mi><mo stretchy="false">&#x00029;</mo></mrow></math> with no <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>o</mi><mi>t</mi></msub></mrow></math>. Compare stuffed RAG: one retrieve <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi><mi>&#x0007E;</mi><msub><mi>p</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>q</mi><mo>&#x0002C;</mo><msub><mover accent="true"><mrow><mi>z</mi></mrow><mo>&#x0005E;</mo></mover><mrow><mn>1</mn><mi>:</mi><mi>k</mi></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math> with no loop.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
 <ul>
-<li>Multiplying in the Thought and using <code>calc</code> as decoration. Then you did not test the tool.</li>
+<li>Exact operations (arithmetic, code, SQL) can be delegated instead of guessed.</li>
+<li>The next thought can depend on a real observation.</li>
+<li>You can mix retrieve, calc, and lookup without stuffing everything first.</li>
+<li>The transcript is an audit log: Thought / Action / Observation / Answer.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>New bugs: malformed actions, wrong tool, ignored observation, infinite loops.</li>
+<li>Each tool call adds latency.</li>
+<li>A dummy <code>eval</code> on free Python is a security hole. Lab 14’s regex is the safe cartoon.</li>
+<li>If the thought already contains the product, <code>calc</code> is decoration and you did not test the tool.</li>
+<li>Mixing <strong>Tree of Thoughts</strong> (search over thoughts) with ReAct (call the world) under one name hides the knobs.</li>
+</ul>
+<p><strong>When not to use it.</strong> A single retrieve-then-answer with no later decision: stuffed RAG is simpler. A pure style rewrite: SFT, not a calculator.</p>
+<hr />
+<h2>7. Why tools change the error modes</h2>
+<p>CoT can invent a product. A calc tool can return the product <strong>if</strong> the model writes the right call. Parse actions strictly (regex or JSON). Cap the number of steps. Log every observation. If the parse fails, return <code>ERR</code> and let the model retry once; do not silently drop the call.</p>
+<p>Write the five-line log on the board for every demo: Thought, Action, Observation, Thought, Answer. If a line is missing, you did not run ReAct; you ran CoT with a tool-shaped string.</p>
+<p>ToT searches among thoughts. ReAct calls the world. You can combine them, but name the knobs separately. For the project, one tool plus a checker is enough.</p>
+<hr />
+<h2>8. Teaching this note</h2>
+<p>About <strong>45 minutes</strong> at the board, then <strong>~8 minutes</strong> of video. Lab 14 can follow in the same two-hour block. Students have not seen ReAct as a method before. Do <strong>14.1</strong> first.</p>
+<ul>
+<li><strong>0–10 min.</strong> What / why: CoT can invent; a tool returns a string the model did not write.</li>
+<li><strong>10–22 min.</strong> Architecture: policy, parser, tools. Write the context-update formula. Five-line log.</li>
+<li><strong>22–34 min.</strong> Worked <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math> with <code>calc</code>, then Lab 14’s <code>23*60=1380</code>. Unfaithful next-thought.</li>
+<li><strong>34–45 min.</strong> Pros / cons. ReAct vs stuffed RAG vs ToT. Step cap and <code>ERR</code>.</li>
+<li><strong>Then</strong> play Karpathy intro <strong>27:43–35:00</strong> (calculator, interpreter, browser). Pause when a special token launches a tool and an observation returns.</li>
+</ul>
+<p>Lecture ideas follow <strong>CS224N 2026 L10</strong>. Original notes; that course is not copied.</p>
+<hr />
+<h2>9. Worked example</h2>
+<p>Question: what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>17</mn><mo>&#x000D7;</mo><mn>24</mn></mrow></math>?</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>role</th>
+<th>text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thought</td>
+<td>I need a product; use the calculator.</td>
+</tr>
+<tr>
+<td>Action</td>
+<td><code>calc[17*24]</code></td>
+</tr>
+<tr>
+<td>Observation</td>
+<td><code>408</code></td>
+</tr>
+<tr>
+<td>Thought</td>
+<td>Use 408; do not recompute.</td>
+</tr>
+<tr>
+<td>Answer</td>
+<td><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>408</mn></mrow></math></td>
+</tr>
+</tbody>
+</table></div>
+<p>A second board log: <code>60/12</code> shuttle loops. Action <code>calc[60/12]</code>, observation <code>5.0</code>, cite <code>[d2]</code>.</p>
+<p>If the second thought says 428 while the observation is <code>408</code>, final-answer grading might still pass if it later copies 408, or fail on 428. Either way the <strong>trace</strong> is the bug.</p>
+<hr />
+<h2>10. Where students get stuck</h2>
+<ul>
+<li>Multiplying in the Thought and using <code>calc</code> as decoration.</li>
 <li>Swallowing a parse error (<code>ERR</code>) and answering anyway.</li>
-<li>Mixing ToT (search over thoughts) with ReAct (call the world) under one name.</li>
+<li>Calling stuffed RAG “ReAct” because retrieval happened. ReAct is the <strong>loop</strong>.</li>
+<li>Mixing ToT with ReAct under one name.</li>
 </ul>
 <hr />
-<h2>7. Video</h2>
+<h2>11. Video</h2>
 <p>Watch <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej Karpathy, Intro to Large Language Models</a>, <strong>27:43–35:00</strong> (tool use: browser, calculator, interpreter).</p>
-<p>Pause on the calculator and on the Python interpreter: emit a call, get an observation, continue. Same URL as <strong>14.1</strong>; this note is the control loop, not the cosine index. Stop before multimodality (<strong>33:32</strong>) if you already used that minute for retrieval; otherwise 33:32–35:00 is optional.</p>
+<p>Pause on the calculator and on the Python interpreter: emit a call, get an observation, continue. Same URL as <strong>14.1</strong>; that note is the cosine index, this note is the control loop.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>12. Practice</h2>
 <ol>
 <li>
-<p>Write one Thought–Action–Observation triple that answers “what is 17×24?” with a calculator, without doing the multiply in the thought.</p>
+<p>In one sentence each: what ReAct is, and how it differs from chain-of-thought.</p>
 </li>
 <li>
-<p>The observation is <code>23:00</code> and the model answers <code>midnight</code>. What broke?</p>
+<p>Why must the observation be appended to the context before the next thought is sampled?</p>
 </li>
 <li>
-<p>Why is an unconstrained <code>python_eval</code> tool riskier than a dummy <code>calc</code> that only does <code>+</code> and <code>*</code> on numbers?</p>
+<p>Write the five-line log for <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>12</mn><mo>&#x000D7;</mo><mn>11</mn></mrow></math> using <code>calc</code>. What is the observation?</p>
 </li>
 <li>
-<p>Lab-style: Action <code>calc[23*60]</code>, Observation <code>1380</code>. The Answer says “closes at 1380 o’clock.” Name the bug (hint: units), and write a faithful one-line Answer that still uses <code>1380</code>.</p>
+<p>The observation is <code>408</code> and the next thought says <code>428</code>. Name the bug. Is it a tool bug or a reader bug?</p>
 </li>
 <li>
-<p>Four steps, no cap. The model emits <code>calc[1+1]</code> forever. What two guardrails belong in the loop?</p>
+<p>When would stuffed RAG (note 14.1) be the better design than a ReAct retrieve-tool?</p>
+</li>
+<li>
+<p>Lab 14’s <code>calc</code> rejects letters. Why is that a feature for this class?</p>
 </li>
 </ol>
                     </section>
@@ -187,7 +276,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:30:00-04:00">September 16, 2026, 12:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-16T00:50:00-04:00">September 16, 2026, 12:50 AM EDT</time></div>
             </footer>
         </div>
 

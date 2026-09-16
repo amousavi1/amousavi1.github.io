@@ -2,6 +2,10 @@ These notes match the lecture slides. Use **(slides)** on the course hub for the
 
 Facts can live in **weights** (parametric) or in an **external store** you look up (non-parametric). **RAFT** here is **retrieval-augmented fine-tuning**: you train the model *with* retrieved documents in context so it learns to use them, not only to recite the pretrain snapshot.
 
+Students have not had Week 14 yet. Before RAFT, here is **RAG in one page**. Week 14.1 is the full first-time lecture (architecture, cosine, Lewis’s sum, pros and cons). Do not skip that later.
+
+**RAG (retrieval-augmented generation)** means: look up relevant passages from a collection you control, put them in the prompt, then generate the answer from those passages. The language model is usually **frozen**. You update a fact by editing a document and re-indexing, not by retraining. The index must store **vector + raw text + id** so you can cite. Retrieval can miss; then generation cannot recover. That is why this hour exists: a frozen reader often **ignores** a good snippet. RAFT is how you train the reader.
+
 ---
 
 ## 1. RAFT: train the reader, not only the index

@@ -282,7 +282,7 @@ NOTES = [
         "slug": "raft-memory",
         "week": 10,
         "title": "10.3 RAFT and Memory-Augmented Models",
-        "lead": "Train with gold plus distractors. Week 14 is the RAG stack; this hour is the reader.",
+        "lead": "Define RAG in one page, then train the reader with gold plus distractors. Week 14 is the full stack.",
         "slide": "10.3-raft-memory",
     },
     {
@@ -376,14 +376,14 @@ NOTES = [
         "slug": "rag-pipeline",
         "week": 14,
         "title": "14.1 Retrieval-Augmented Generation",
-        "lead": "CS224N L10: retrieve then generate. Cosine 1 / 0.707 / 0. Not Week 10 RAFT.",
+        "lead": "First time: what RAG is, why, architecture, cosine and Lewis’s sum, then the three-doc ranking.",
         "slide": "14.1-rag-pipeline",
     },
     {
         "slug": "react-tools",
         "week": 14,
         "title": "14.2 ReAct and Tool Use",
-        "lead": "CS224N L10: ReAct vs CoT vs SC. Observation 408 must be used.",
+        "lead": "First time: what ReAct is, why CoT is not enough, the tool loop, then calc[17*24]=408.",
         "slide": "14.2-react-tools",
     },
     {
