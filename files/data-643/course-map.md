@@ -21,8 +21,6 @@ Software: Python, PyTorch, Hugging Face, Jupyter. Canvas remains official for du
 
 ![Four modules from nets to tools](files/data-643/graphics/1.1-course-map/roadmap.png)
 
-A two-hour weekly meeting is not four independent mini-classes. You will usually get **one 30–40 minute board note**, a short video clip, discussion, and lab time. The other notes that week are homework or the second board block. Week 1 is the exception: all four notes are started in the same meeting so Lab 1 has a spine.
-
 ---
 
 ## 2. A language model is a stack
