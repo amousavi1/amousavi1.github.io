@@ -5,7 +5,7 @@ NOTES = [
         "slug": "course-map",
         "week": 1,
         "title": "1.1 Course Map and the Semester Project",
-        "lead": "A self-contained LLM course. Week 1 is the base of the stack; next-token NLL is the cost; the project starts now.",
+        "lead": "Four modules, one stack. Week 1 is the base; next-token NLL is the cost; the project names a layer you will change.",
         "slide": "1.1-course-map",
     },
     {
