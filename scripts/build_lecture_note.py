@@ -383,8 +383,14 @@ SIDEBAR = """            <div class="sidebar sticky">
                             </li>
                             <li>
                                 <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
-                                    <i class="fas fa-fw fa-university" aria-hidden="true"></i>
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
                                     <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
                                 </a>
                             </li>
                         </ul>

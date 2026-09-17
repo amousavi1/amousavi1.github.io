@@ -709,8 +709,24 @@ html[data-theme="dark"] .author__urls a:hover {
   color: #181717;
 }
 
-.author__urls a .fa-university {
-  color: #a51417;
+.author__urls a .icon-brand {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.15em;
+  vertical-align: -0.2em;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.author__urls a .icon-au {
+  background-image: url("../images/icons/au.png");
+}
+
+.author__urls a .icon-openreview {
+  background-image: url("../images/icons/openreview.png");
+  border-radius: 0.12em;
 }
 
 html[data-theme="dark"] .author__urls a .fa-github {
