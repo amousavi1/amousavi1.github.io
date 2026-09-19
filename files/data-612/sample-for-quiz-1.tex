@@ -1,0 +1,130 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.6em,
+  belowskip=0.6em
+}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.7em, topsep=0.4em}
+\setlist[itemize]{leftmargin=1.4em, itemsep=0.35em, topsep=0.25em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Sample for Quiz 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.5em}
+
+\begin{enumerate}
+\item Create the following matrix:
+\begin{lstlisting}
+A <- 10*t(matrix(99:0, 10,10))
+A
+\end{lstlisting}
+\begin{lstlisting}
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+ [1,]  990  980  970  960  950  940  930  920  910   900
+ [2,]  890  880  870  860  850  840  830  820  810   800
+ [3,]  790  780  770  760  750  740  730  720  710   700
+ [4,]  690  680  670  660  650  640  630  620  610   600
+ [5,]  590  580  570  560  550  540  530  520  510   500
+ [6,]  490  480  470  460  450  440  430  420  410   400
+ [7,]  390  380  370  360  350  340  330  320  310   300
+ [8,]  290  280  270  260  250  240  230  220  210   200
+ [9,]  190  180  170  160  150  140  130  120  110   100
+[10,]   90   80   70   60   50   40   30   20   10     0
+\end{lstlisting}
+
+\item Find the sum of the entries of the even columns of the above matrix.
+\begin{lstlisting}
+sum(A[,2],A[,4],A[,6],A[,8],A[,10])
+# [1] 24500
+\end{lstlisting}
+
+\item Suppose you have the following data frame:
+\begin{lstlisting}
+df <- data.frame(
+  Name = c("Johny", "Alisson", "Andy", "Sarah", "Alex"),
+  Age = c(25, 30, 28, 22, 32),
+  Annual_Income = c(50000, 60000, 55000, 48000, 70000),
+  Account_Balance = c(1700, 2000, 1800, 900, 2500.90)
+)
+df
+\end{lstlisting}
+\begin{lstlisting}
+     Name Age Annual_Income Account_Balance
+1   Johny  25         50000          1700.0
+2 Alisson  30         60000          2000.0
+3    Andy  28         55000          1800.0
+4   Sarah  22         48000           900.0
+5    Alex  32         70000          2500.9
+\end{lstlisting}
+\begin{itemize}
+\item What is the age average of people who get more than \$51k in a year.
+\begin{lstlisting}
+mean(df$Age[df$Annual_Income > 51000])
+# [1] 30
+\end{lstlisting}
+\item What are their names?
+\begin{lstlisting}
+df$Name[df$Annual_Income > 51000]
+# [1] "Alisson" "Andy"    "Alex"
+\end{lstlisting}
+\end{itemize}
+
+\item Given a data frame \texttt{df} with only positive values, write a function that check if the number of columns in it is less than equal to 1 or it has negative values at all. If yes, it returns $-1$. If not, the function compares the geometric means (using the pipe operator) of the first and the second columns and produces 1 if that is correct, otherwise 0. Try your function on these inputs \texttt{data.frame(a=c(9,1,8))}, \texttt{data.frame(a=c(9,9,8), b=c(9,7,6))}, and \texttt{data.frame(a=c(9,1,8), b=c(9,17,6))}.
+\begin{lstlisting}
+library(tidyverse)
+
+my_df_function <- function(df) {
+  if (length(df) <= 1 | any(df < 0)) {
+    return(-1)
+  } else {
+    df[,1] %>%
+      log() %>%
+      mean() %>%
+      exp() -> geo_mean_1
+
+    df[,2] %>%
+      log() %>%
+      mean() %>%
+      exp() -> geo_mean_2
+
+    if (geo_mean_1 >= geo_mean_2) {
+      return(1)
+    } else {
+      return(0)
+    }
+  }
+}
+
+df <- data.frame(a=c(-9,1,8), b=c(-4,3,18))
+my_df_function(df)   # [1] -1
+
+df1 <- data.frame(a=c(9,9,8), b=c(9,7,6))
+my_df_function(df1)  # [1] 1
+
+df2 <- data.frame(a=c(9,1,8), b=c(9,17,6))
+my_df_function(df2)  # [1] 0
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}
