@@ -318,9 +318,12 @@ body {
 
 .page-toc__weeks {
   margin-bottom: 1.15em;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .page-toc__weeks .page-toc__title {
+  font-size: 0.8rem;
   margin-bottom: 0.55em;
 }
 
