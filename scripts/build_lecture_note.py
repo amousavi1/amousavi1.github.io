@@ -346,21 +346,9 @@ SIDEBAR = """            <div class="sidebar sticky">
                         <button type="button" class="btn btn--inverse">Follow</button>
                         <ul class="author__urls social-icons">
                             <li>
-                                <a href="mailto:mousavi@american.edu">
-                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
-                                    <span class="label">Email</span>
-                                </a>
-                            </li>
-                            <li>
                                 <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
                                     <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
                                     <span class="label">Google Scholar</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
-                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
-                                    <span class="label">LinkedIn</span>
                                 </a>
                             </li>
                             <li>
@@ -370,9 +358,9 @@ SIDEBAR = """            <div class="sidebar sticky">
                                 </a>
                             </li>
                             <li>
-                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
-                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
-                                    <span class="label">ResearchGate</span>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
                                 </a>
                             </li>
                             <li>
@@ -382,15 +370,27 @@ SIDEBAR = """            <div class="sidebar sticky">
                                 </a>
                             </li>
                             <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
                                     <i class="icon-brand icon-au" aria-hidden="true"></i>
                                     <span class="label">AU Profile</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
-                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
-                                    <span class="label">OpenReview</span>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
                                 </a>
                             </li>
                         </ul>
