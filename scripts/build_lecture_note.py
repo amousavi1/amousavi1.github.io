@@ -571,11 +571,36 @@ def markdown_to_html(text: str) -> str:
     return html
 
 
+def lecture_page_nav(note: dict) -> str:
+    index = next(i for i, item in enumerate(NOTES) if item["slug"] == note["slug"])
+    prev_note = NOTES[index - 1] if index else None
+    next_note = NOTES[index + 1] if index + 1 < len(NOTES) else None
+    week = note["week"]
+    prev = (
+        f'<a class="course-page-nav__prev" href="data-612-{prev_note["slug"]}.html"><span aria-hidden="true">←</span> {prev_note["title"]}</a>'
+        if prev_note
+        else f'<a class="course-page-nav__prev" href="data-612-week-{week}.html"><span aria-hidden="true">←</span> Week {week}</a>'
+    )
+    nxt = (
+        f'<a class="course-page-nav__next" href="data-612-{next_note["slug"]}.html">{next_note["title"]} <span aria-hidden="true">→</span></a>'
+        if next_note
+        else f'<a class="course-page-nav__next" href="data-612-week-{week}.html">Week {week} <span aria-hidden="true">→</span></a>'
+    )
+    return (
+        '                        <nav class="course-page-nav" aria-label="Page">\n'
+        f"                            {prev}\n"
+        f'                            <a class="course-page-nav__week" href="data-612-week-{week}.html">Week {week}</a>\n'
+        f"                            {nxt}\n"
+        "                        </nav>"
+    )
+
+
 def write_site_page(note: dict, body: str) -> pathlib.Path:
     slug = note["slug"]
     title = note["title"]
     lead = note["lead"]
     week = note["week"]
+    nav = lecture_page_nav(note)
     pdf_href = f"files/data-612/{slug}.pdf"
     page_path = ROOT / f"data-612-{slug}.html"
     page = f"""<!doctype html>
@@ -623,13 +648,14 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
                     </header>
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
-                            <a href="data-612.html">DATA 412/612</a> &middot; Week {week} &middot;
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-{week}.html">Week {week}</a> &middot;
                             <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
                         </p>
                         <p>
                             {lead}
                         </p>
 {body}
+{nav}
                     </section>
                 </div>
             </article>

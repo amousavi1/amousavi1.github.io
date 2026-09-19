@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Week 14: Iteration, purrr, and wrap-up - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-week">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Week 14: Iteration, purrr, and wrap-up</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; December 9
+                        </p>
+<p class="course-group-title">Lectures</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-612-vectors-lists.html">14.1 Vectors and Lists</a
+                                        ><a class="course-material__pdf" href="files/data-612/vectors-lists.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-612-purrr-iteration.html">14.2 Iteration: Loops and purrr</a
+                                        ><a class="course-material__pdf" href="files/data-612/purrr-iteration.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-612-course-wrap.html">14.3 Course Wrap</a
+                                        ><a class="course-material__pdf" href="files/data-612/course-wrap.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://rstudio.github.io/cheatsheets/purrr.pdf" target="_blank" rel="noopener">purrr cheat sheet</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-612-lab-14-iteration.html">Lab 14: Vectors and Iteration</a
+                                        ><a class="course-material__pdf" href="files/data-612/lab-14-iteration.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-612-lab-14-solutions.html">Lab 14 solutions</a
+                                        ><span class="course-material__note"> (password)</span>
+                                    </li>
+                                </ul>
+                            
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://r4ds.hadley.nz/iteration.html" target="_blank" rel="noopener">R for Data Science: Iteration</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://r4ds.hadley.nz/base-r.html" target="_blank" rel="noopener">R for Data Science: A field guide to base R</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://jennybc.github.io/purrr-tutorial/" target="_blank" rel="noopener">Jenny Bryan’s purrr tutorial</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://rstats.wtf/debugging-r-code.html" target="_blank" rel="noopener">What They Forgot to Teach You About R: Debugging R code</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>When is a <code>for</code> loop clearer than <code>purrr::map()</code>, and when is it the other way around?</li>
+                                    <li>What does it mean for a vector to be atomic, and why does that matter when dates and numbers land in one column?</li>
+                                </ul>
+                        <nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-week-13.html"><span aria-hidden="true">←</span> Week 13</a>
+                            <a class="course-page-nav__next" href="data-612.html">Course hub <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-19T17:35:00-04:00">September 19, 2026, 5:35 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

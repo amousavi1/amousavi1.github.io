@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Week 4: dplyr: rows, columns, and groups - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-week">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Week 4: dplyr: rows, columns, and groups</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; September 23
+                        </p>
+<p class="course-group-title">Lectures</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-612-dplyr-rows.html">4.1 dplyr: Rows</a
+                                        ><a class="course-material__pdf" href="files/data-612/dplyr-rows.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-612-dplyr-columns.html">4.2 dplyr: Columns</a
+                                        ><a class="course-material__pdf" href="files/data-612/dplyr-columns.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-612-dplyr-groups.html">4.3 dplyr: Groups and Summaries</a
+                                        ><a class="course-material__pdf" href="files/data-612/dplyr-groups.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://rstudio.github.io/cheatsheets/data-transformation.pdf" target="_blank" rel="noopener">dplyr cheat sheet</a
+                                        ><span class="course-material__note"> (Posit)</span>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Labs</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="data-612-lab-4-dplyr.html">Lab 4: dplyr, Part 1</a
+                                        ><a class="course-material__pdf" href="files/data-612/lab-4-dplyr.pdf" target="_blank" rel="noopener">(PDF)</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="data-612-lab-4-solutions.html">Lab 4 solutions</a
+                                        ><span class="course-material__note"> (password)</span>
+                                    </li>
+                                </ul>
+                            
+                                <p class="course-group-title">Additional readings</p>
+                                <ul class="course-materials">
+                                    <li>
+                                        <a class="course-material__title" href="https://r4ds.hadley.nz/data-transform.html" target="_blank" rel="noopener">R for Data Science: Data transformation</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://style.tidyverse.org/syntax.html" target="_blank" rel="noopener">Tidyverse Style Guide: Syntax</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://stat545.com/dplyr-intro.html" target="_blank" rel="noopener">STAT 545: Introduction to dplyr</a>
+                                    </li>
+                                    <li>
+                                        <a class="course-material__title" href="https://stat545.com/dplyr-single.html" target="_blank" rel="noopener">STAT 545: Single-table dplyr functions</a>
+                                    </li>
+                                </ul>
+                                <p class="course-group-title">Discussion</p>
+                                <ul class="course-discussion">
+                                    <li>If a table has extra rows, extra columns, and the wrong order, which dplyr verb would you use first, and why?</li>
+                                    <li>Why does <code>group_by()</code> without a later summary or grouped mutate often surprise people?</li>
+                                </ul>
+                        <nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-week-3.html"><span aria-hidden="true">←</span> Week 3</a>
+                            <a class="course-page-nav__next" href="data-612-week-5.html">Week 5 <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-19T17:35:00-04:00">September 19, 2026, 5:35 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>

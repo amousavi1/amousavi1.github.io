@@ -1279,3 +1279,65 @@ html[data-theme="dark"] .site-cover img {
 html[data-theme="dark"] .page__content math {
   color: inherit;
 }
+
+.course-week-index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.course-week-index > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  padding: 0.55em 0;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.course-week-index__meta {
+  color: #5f6368;
+}
+
+.course-page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 2.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.course-page-nav a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.course-page-nav__prev,
+.course-page-nav__next {
+  flex: 1 1 0;
+}
+
+.course-page-nav__next {
+  text-align: right;
+}
+
+.course-page-nav__week {
+  flex: 0 0 auto;
+  color: #5f6368;
+  font-weight: 600;
+}
+
+html[data-theme="dark"] .course-week-index > li {
+  border-bottom-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .course-week-index__meta,
+html[data-theme="dark"] .course-page-nav__week {
+  color: #b0b0b0;
+}
+
+html[data-theme="dark"] .course-page-nav {
+  border-top-color: #5e5e5e;
+}
