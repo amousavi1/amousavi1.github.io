@@ -257,15 +257,15 @@ body {
   max-height: calc(100vh - var(--masthead-height, 4rem) - 1.5rem);
   overflow-x: hidden;
   overflow-y: auto;
-  font-size: 0.65rem;
-  line-height: 1.25;
+  font-size: 1.05rem;
+  line-height: 1.4;
 }
 
 .page-toc__title {
   margin: 0 0 0.45em;
   padding-left: 0.45em;
   font-family: var(--font-display);
-  font-size: 0.58rem;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -318,12 +318,9 @@ body {
 
 .page-toc__weeks {
   margin-bottom: 1.15em;
-  font-size: 0.95rem;
-  line-height: 1.4;
 }
 
 .page-toc__weeks .page-toc__title {
-  font-size: 0.8rem;
   margin-bottom: 0.55em;
 }
 
