@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-19T17:48:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-19T17:52:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -370,6 +370,84 @@
     headings.forEach((heading) => observer.observe(heading));
   }
 
+  const DATA_612_WEEKS = [
+    { n: 1, title: 'R, RStudio, and tidyverse basics' },
+    { n: 2, title: 'Pipes, functions, and scripts' },
+    { n: 3, title: 'ggplot2' },
+    { n: 4, title: 'dplyr: rows, columns, and groups' },
+    { n: 5, title: 'dplyr: rowwise, across, and case_when' },
+    { n: 6, title: 'readr and exploratory data analysis' },
+    { n: 7, title: 'tidyr' },
+    { n: 8, title: 'Joins and databases' },
+    { n: 9, title: 'Strings and regular expressions' },
+    { n: 10, title: 'Factors and dates' },
+    { n: 11, title: 'Statistics in R' },
+    { n: 12, title: 'R Markdown presentations' },
+    { n: 13, title: 'R Markdown: chunks, tables, and citations' },
+    { n: 14, title: 'Iteration, purrr, and wrap-up' },
+  ];
+
+  function currentData612Week() {
+    const fromPath = window.location.pathname.match(/data-612-week-(\d+)/);
+    if (fromPath) return Number(fromPath[1]);
+    const meta = document.querySelector('.lecture-meta a[href*="data-612-week-"]');
+    if (!meta) return null;
+    const fromMeta = (meta.getAttribute('href') || '').match(/data-612-week-(\d+)/);
+    return fromMeta ? Number(fromMeta[1]) : null;
+  }
+
+  function buildData612WeekNav(currentWeek) {
+    const nav = document.createElement('nav');
+    nav.className = 'page-toc__weeks';
+    nav.setAttribute('aria-label', 'Weeks');
+
+    const title = document.createElement('p');
+    title.className = 'page-toc__title';
+    title.textContent = 'Weeks';
+    nav.appendChild(title);
+
+    const list = document.createElement('ul');
+    list.className = 'page-toc__list';
+    DATA_612_WEEKS.forEach((week) => {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = `data-612-week-${week.n}.html`;
+      link.textContent = `Week ${week.n}`;
+      link.title = week.title;
+      if (week.n === currentWeek) {
+        link.classList.add('is-active');
+        link.setAttribute('aria-current', 'page');
+      }
+      item.appendChild(link);
+      list.appendChild(item);
+    });
+    nav.appendChild(list);
+    return nav;
+  }
+
+  function initData612WeekJump(currentWeek) {
+    if (!document.body.classList.contains('page-week')) return;
+    const content = document.querySelector('#main > .page .page__content');
+    const meta = content && content.querySelector('.lecture-meta');
+    if (!meta) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'course-week-jump';
+    nav.setAttribute('aria-label', 'Jump to week');
+    DATA_612_WEEKS.forEach((week) => {
+      const link = document.createElement('a');
+      link.href = `data-612-week-${week.n}.html`;
+      link.textContent = String(week.n);
+      link.title = `Week ${week.n}: ${week.title}`;
+      if (week.n === currentWeek) {
+        link.classList.add('is-active');
+        link.setAttribute('aria-current', 'page');
+      }
+      nav.appendChild(link);
+    });
+    meta.insertAdjacentElement('afterend', nav);
+  }
+
   function initPageToc() {
     const main = document.getElementById('main');
     const content = document.querySelector('#main > .page .page__content');
@@ -377,17 +455,27 @@
 
     const headingSelector = document.body.classList.contains('page-lecture') ? 'h2' : 'h2, h3';
     const headings = Array.from(content.querySelectorAll(headingSelector));
+    const currentWeek = currentData612Week();
     const aside = document.createElement('aside');
     aside.className = 'sidebar-right';
     aside.setAttribute('aria-label', 'On this page');
 
+    const stack = document.createElement('div');
+    stack.className = 'page-toc';
+
+    if (currentWeek) {
+      stack.appendChild(buildData612WeekNav(currentWeek));
+      initData612WeekJump(currentWeek);
+    }
+
     if (headings.length) {
       const nav = document.createElement('nav');
-      nav.className = 'page-toc';
+      nav.className = 'page-toc__contents';
+      nav.setAttribute('aria-label', 'Contents');
 
       const title = document.createElement('p');
       title.className = 'page-toc__title';
-        title.textContent = 'Contents';
+      title.textContent = 'Contents';
       nav.appendChild(title);
 
       const list = document.createElement('ul');
@@ -431,9 +519,11 @@
       });
 
       nav.appendChild(list);
-      aside.appendChild(nav);
+      stack.appendChild(nav);
       initTocSpy(nav, headings);
     }
+
+    if (stack.childElementCount) aside.appendChild(stack);
 
     const page = main.querySelector(':scope > .page');
     if (page) page.insertAdjacentElement('afterend', aside);

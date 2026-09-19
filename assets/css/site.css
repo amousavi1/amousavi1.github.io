@@ -316,6 +316,37 @@ body {
   border-left-color: #1a73e8;
 }
 
+.page-toc__weeks {
+  margin-bottom: 1.15em;
+}
+
+.course-week-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 0.55em;
+  margin: 0 0 1.2em;
+}
+
+.course-week-jump a {
+  min-width: 1.7em;
+  padding: 0.15em 0.35em;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid #d0d0d0;
+}
+
+.course-week-jump a.is-active {
+  color: #1a73e8;
+  border-color: #1a73e8;
+}
+
+@media (min-width: 57.8125em) {
+  .course-week-jump {
+    display: none;
+  }
+}
+
 #main > .page .page__content h2,
 #main > .page .page__content h3 {
   scroll-margin-top: calc(var(--masthead-height, 4rem) + 0.75rem);
@@ -635,6 +666,15 @@ html[data-theme="dark"] .page-toc a {
 html[data-theme="dark"] .page-toc a:hover,
 html[data-theme="dark"] .page-toc a.is-active {
   color: #79c0ff;
+}
+
+html[data-theme="dark"] .course-week-jump a {
+  border-color: #5e5e5e;
+}
+
+html[data-theme="dark"] .course-week-jump a.is-active {
+  color: #79c0ff;
+  border-color: #58a6ff;
 }
 
 html[data-theme="dark"] .page-toc a.is-active {
