@@ -2,23 +2,52 @@
 \usepackage[margin=0.85in]{geometry}
 \usepackage{lmodern}
 \usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
 \usepackage[T1]{fontenc}
 
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
 \pagestyle{empty}
+\setlength{\parskip}{0.45em}
 \setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
 
 \begin{document}
 
 \begin{center}
-{\LARGE\bfseries Sample Quiz 2}\\[0.35em]
+{\LARGE\bfseries Quiz 1 --- Sample 2}\\[0.35em]
 DATA 412/612
 \end{center}
 
-\vspace{1em}
+\vspace{0.4em}
 
-Write a function named \texttt{column\_check} in an R script. It takes a data frame \texttt{df} with exactly two columns.
-Returns \texttt{FALSE} if either of the columns is not numeric (\texttt{is.numeric}). If both columns are numeric, it
-computes their maximum values and returns 1 if the maximum of the first column is greater than or equal
-to the maximum of the second column. Otherwise, it returns \texttt{Second Column}.
+Write your answers in an R script. You may use R and RStudio.
+You may \textbf{not} use the internet or your notes.
+
+\begin{enumerate}
+\item Write a function named \texttt{column\_check} in an R script. It takes a
+data frame \texttt{df} with exactly two columns.
+\begin{itemize}
+  \item Return \texttt{FALSE} if either column is not numeric
+        (\texttt{is.numeric}).
+  \item If both columns are numeric, compute their maximum values and return
+        \texttt{1} if the maximum of the first column is greater than or equal
+        to the maximum of the second column.
+  \item Otherwise, return \texttt{Second Column}.
+\end{itemize}
+\end{enumerate}
 
 \end{document}

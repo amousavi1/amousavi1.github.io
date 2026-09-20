@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Quiz 1 --- Sample 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.4em}
+
+Write your answers in an R script. You may use R and RStudio.
+You may \textbf{not} use the internet or your notes.
+Do \textbf{not} use dplyr, \texttt{filter()}, or \texttt{select()} on this quiz.
+Use Base R, including \texttt{subset()} and \texttt{function()}.
+
+\begin{enumerate}
+\item \textbf{\texttt{subset()}}
+
+This data frame is already in your environment:
+
+\begin{lstlisting}
+offers <- data.frame(
+  firm   = c("Helix", "Nimble", "Helix", "Orbit", "Nimble", "Orbit", "Helix"),
+  role   = c("intern", "intern", "analyst", "intern", "analyst", "analyst", "intern"),
+  salary = c(22, 19, NA, 21, 28, 27, 24),
+  remote = c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+)
+\end{lstlisting}
+
+\begin{itemize}
+  \item Using \texttt{subset()} only (not \texttt{[} and not dplyr), keep the
+        \textbf{intern} rows whose \texttt{salary} is \textbf{strictly greater than the
+        mean salary of interns}. Compute that intern-only mean with missing values
+        removed. Drop the \texttt{role} column from what you return.
+  \item Using \texttt{subset()} on the \texttt{salary} \textbf{vector}
+        (not on the whole data frame), return every salary that is at least 22.
+\end{itemize}
+
+\item \textbf{Writing a function}
+
+Write a function named \texttt{pair\_mean\_call} in an R script. It takes one
+argument, a data frame \texttt{df}.
+
+\begin{itemize}
+  \item If \texttt{df} has fewer than 2 columns, return \texttt{"thin"}.
+  \item If \texttt{df} has more than 2 columns, return \texttt{"wide"}.
+  \item If the first column or the second column is not numeric, return \texttt{FALSE}.
+  \item If either of those two columns contains any \texttt{NA}, return \texttt{"missing"}.
+  \item Using a pipe, compute the mean of the \textbf{finite} values in column 1
+        and the mean of the \textbf{finite} values in column 2.
+        (\texttt{Inf}, \texttt{-Inf}, and \texttt{NaN} are not finite.
+        They are also not \texttt{NA}; do not treat them as missing for the
+        previous bullet.)
+  \item Return \texttt{1} if the first mean is greater than or equal to the
+        second mean. Otherwise return the \textbf{name} of the second column.
+\end{itemize}
+
+Run your function on each of these inputs:
+
+\begin{lstlisting}
+data.frame(u = 1:2)
+data.frame(u = 1:2, v = c("a", "b"))
+data.frame(u = c(1, NA), v = c(2, 3))
+data.frame(u = c(1, Inf, 3), v = c(10, 10, 10))
+data.frame(low = c(2, 4), high = c(1, 1))
+data.frame(low = c(1, 1), high = c(2, 4))
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}
