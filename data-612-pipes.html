@@ -111,100 +111,138 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">2.1 Pipes</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                                            <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-2.html">Week 2</a> &middot;
                             <a href="files/data-612/pipes.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Read the pipe as then. Chain steps instead of nesting calls or leaving extra objects in the environment.
-                        </p>
-<h2>1. Read the pipe as "then"</h2>
-<p>Note 1.2 introduced the pipe. This note is about using it for a sequence of steps.</p>
+                         &middot; <a href="files/data-612/lectures/pipes.qmd">Source (.qmd)</a></p>
+<p>Read the pipe as then. Chain steps instead of nesting calls or
+leaving extra objects in the environment.</p>
+<div id="read-the-pipe-as-then" class="section level2">
+<h2>1. Read the pipe as “then”</h2>
+<p>Note 1.2 introduced the pipe. This note is about using it for a
+sequence of steps.</p>
 <p>You can do several things to the same data by:</p>
 <ul>
 <li>creating intermediate objects</li>
 <li>nesting functions</li>
 <li>piping the result of one function into the next</li>
 </ul>
-<p>Read either pipe as <strong>then</strong>: take what is on the left, <em>then</em> do what follows.</p>
-<pre><code class="language-r">x |&gt; mean()
-</code></pre>
-<p>is the same idea as <code>mean(x)</code>. The gain appears when there are several steps.</p>
+<p>Read either pipe as <strong>then</strong>: take what is on the left,
+<em>then</em> do what follows.</p>
+<pre><code class="language-r">x |&gt; mean()</code></pre>
+<pre><code>## Error:
+## ! object &#39;x&#39; not found</code></pre>
+<p>is the same idea as <code>mean(x)</code>. The gain appears when there
+are several steps.</p>
 <p>In this course you may use either pipe:</p>
 <pre><code class="language-r">|&gt;      # Base R (R 4.1 and later). No extra package.
-%&gt;%     # magrittr / tidyverse. Comes with library(tidyverse).
-</code></pre>
-<p>They are interchangeable for the work we do this week. The Base R pipe <code>|&gt;</code> only fills the <strong>first</strong> argument of the next function. The magrittr pipe <code>%&gt;%</code> can place the left-hand result elsewhere with <code>.</code> if you need a later argument:</p>
-<pre><code class="language-r">x %&gt;% mean(na.rm = TRUE)
-x %&gt;% mean(., na.rm = TRUE)   # same thing; the dot is the piped value
-</code></pre>
-<p>We will not need the dot this week. Put extra arguments in the function that uses them, as in section 3.</p>
-<p>In RStudio, <strong>Ctrl+Shift+M</strong> (Windows) or <strong>Cmd+Shift+M</strong> (Mac) inserts a pipe with spaces around it. After a pipe, Enter indents the next line.</p>
-<p>You can turn the shortcut toward <code>|&gt;</code> or <code>%&gt;%</code> under <strong>Tools → Global Options… → Code</strong>.</p>
+%&gt;%     # magrittr / tidyverse. Comes with library(tidyverse).</code></pre>
+<p>They are interchangeable for the work we do this week. The Base R
+pipe <code>|&gt;</code> only fills the <strong>first</strong> argument
+of the next function. The magrittr pipe <code>%&gt;%</code> can place
+the left-hand result elsewhere with <code>.</code> if you need a later
+argument:</p>
+<pre><code class="language-r">x %&gt;% mean(na.rm = TRUE)</code></pre>
+<pre><code>## Error:
+## ! object &#39;x&#39; not found</code></pre>
+<pre><code class="language-r">x %&gt;% mean(., na.rm = TRUE)   # same thing; the dot is the piped value</code></pre>
+<pre><code>## Error:
+## ! object &#39;x&#39; not found</code></pre>
+<p>We will not need the dot this week. Put extra arguments in the
+function that uses them, as in section 3.</p>
+<p>In RStudio, <strong>Ctrl+Shift+M</strong> (Windows) or
+<strong>Cmd+Shift+M</strong> (Mac) inserts a pipe with spaces around it.
+After a pipe, Enter indents the next line.</p>
+<p>You can turn the shortcut toward <code>|&gt;</code> or
+<code>%&gt;%</code> under <strong>Tools → Global Options… →
+Code</strong>.</p>
 <hr />
+</div>
+<div id="three-ways-to-compute-a-geometric-mean" class="section level2">
 <h2>2. Three ways to compute a geometric mean</h2>
-<p>The <a href="https://en.wikipedia.org/wiki/Geometric_mean">geometric mean</a> is useful for positive, skewed data, ratios, and growth rates. A numerically stable recipe is:</p>
-<ol>
+<p>The <a href="https://en.wikipedia.org/wiki/Geometric_mean">geometric
+mean</a> is useful for positive, skewed data, ratios, and growth rates.
+A numerically stable recipe is:</p>
+<ol style="list-style-type: decimal">
 <li>take the log of each value</li>
 <li>average those logs</li>
 <li>exponentiate the average</li>
 </ol>
-<p>Additions of logs are usually more stable than a long product. A small illustration:</p>
+<p>Additions of logs are usually more stable than a long product. A
+small illustration:</p>
 <pre><code class="language-r">a &lt;- sqrt(2)
-a^2 == 2
-# [1] FALSE
+a^2 == 2</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre><code class="language-r"># [1] FALSE
 
-exp(log(a) + log(a)) == 2
-# [1] TRUE
-</code></pre>
-<p>Generate some positive numbers so we can compare styles. <code>set.seed()</code> makes <code>rnorm()</code> repeatable.</p>
+exp(log(a) + log(a)) == 2</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r"># [1] TRUE</code></pre>
+<p>Generate some positive numbers so we can compare styles.
+<code>set.seed()</code> makes <code>rnorm()</code> repeatable.</p>
 <pre><code class="language-r">set.seed(10)
 x &lt;- abs(rnorm(100))
-head(x)
-# [1] 0.01874617 0.18425254 1.37133055 0.59916772 0.29454513 0.38979430
-</code></pre>
-<p><code>rnorm()</code> draws from a normal distribution. <code>abs()</code> makes the draws non-negative so <code>log()</code> is defined.</p>
+head(x)</code></pre>
+<pre><code>## [1] 0.01874617 0.18425254 1.37133055 0.59916772 0.29454513 0.38979430</code></pre>
+<pre><code class="language-r"># [1] 0.01874617 0.18425254 1.37133055 0.59916772 0.29454513 0.38979430</code></pre>
+<p><code>rnorm()</code> draws from a normal distribution.
+<code>abs()</code> makes the draws non-negative so <code>log()</code> is
+defined.</p>
+<div id="intermediate-objects" class="section level3">
 <h3>Intermediate objects</h3>
 <pre><code class="language-r">log_x &lt;- log(x)
 mean_lx &lt;- mean(log_x)
 geo_mean &lt;- exp(mean_lx)
-geo_mean
-# [1] 0.5703996
-</code></pre>
-<p>This is easy to debug one line at a time. The cost is extra names in the environment, especially if you repeat the calculation.</p>
+geo_mean</code></pre>
+<pre><code>## [1] 0.5703996</code></pre>
+<pre><code class="language-r"># [1] 0.5703996</code></pre>
+<p>This is easy to debug one line at a time. The cost is extra names in
+the environment, especially if you repeat the calculation.</p>
+</div>
+<div id="nested-calls" class="section level3">
 <h3>Nested calls</h3>
 <pre><code class="language-r">geo_mean &lt;- exp(mean(log(x)))
-geo_mean
-# [1] 0.5703996
-</code></pre>
-<p>Fine for two or three functions. Past that, the parentheses become hard to read and hard to edit.</p>
+geo_mean</code></pre>
+<pre><code>## [1] 0.5703996</code></pre>
+<pre><code class="language-r"># [1] 0.5703996</code></pre>
+<p>Fine for two or three functions. Past that, the parentheses become
+hard to read and hard to edit.</p>
+</div>
+<div id="a-pipe" class="section level3">
 <h3>A pipe</h3>
 <pre><code class="language-r">x |&gt;
   log() |&gt;
   mean() |&gt;
-  exp()
-# [1] 0.5703996
-</code></pre>
+  exp()</code></pre>
+<pre><code>## [1] 0.5703996</code></pre>
+<pre><code class="language-r"># [1] 0.5703996</code></pre>
 <p>One task per line. To keep the result:</p>
 <pre><code class="language-r">geo_mean &lt;- x |&gt;
   log() |&gt;
   mean() |&gt;
-  exp()
-</code></pre>
-<p>Some people assign at the end with <code>-&gt;</code>. Either is fine. Left assignment at the top is the usual style in this course, because you can run the pipeline line by line without creating <code>geo_mean</code> until you want it.</p>
-<p>Load tidyverse if you want <code>%&gt;%</code> instead of <code>|&gt;</code>:</p>
-<pre><code class="language-r">library(tidyverse)
-</code></pre>
+  exp()</code></pre>
+<p>Some people assign at the end with <code>-&gt;</code>. Either is
+fine. Left assignment at the top is the usual style in this course,
+because you can run the pipeline line by line without creating
+<code>geo_mean</code> until you want it.</p>
+<p>Load tidyverse if you want <code>%&gt;%</code> instead of
+<code>|&gt;</code>:</p>
+<pre><code class="language-r">library(tidyverse)</code></pre>
 <hr />
+</div>
+</div>
+<div id="extra-arguments-stay-in-the-function-that-needs-them"
+class="section level2">
 <h2>3. Extra arguments stay in the function that needs them</h2>
-<p>The piped value usually becomes the <strong>first</strong> argument of the next function. Other arguments stay written in that call:</p>
+<p>The piped value usually becomes the <strong>first</strong> argument
+of the next function. Other arguments stay written in that call:</p>
 <pre><code class="language-r">geo_mean &lt;- x |&gt;
   log() |&gt;
   mean(na.rm = TRUE) |&gt;
-  exp()
-</code></pre>
-<p>That is <code>mean(log(x), na.rm = TRUE)</code>, then <code>exp(...)</code>.</p>
+  exp()</code></pre>
+<p>That is <code>mean(log(x), na.rm = TRUE)</code>, then
+<code>exp(...)</code>.</p>
 <p>A pipe helps you:</p>
 <ul>
 <li>read the work top to bottom instead of inside-out</li>
@@ -212,61 +250,661 @@ geo_mean
 <li>add, comment, or drop a step without renaming intermediates</li>
 </ul>
 <hr />
+</div>
+<div id="subset-keeps-the-rows-you-want" class="section level2">
 <h2>4. <code>subset()</code> keeps the rows you want</h2>
-<p><code>subset()</code> is Base R. Give it a data frame and a condition written with column names. It returns the rows where the condition is <code>TRUE</code>.</p>
-<pre><code class="language-r">subset(iris, Sepal.Length &gt; mean(Sepal.Length))
-</code></pre>
-<p>That is the same idea as indexing, but you do not have to repeat the data name:</p>
-<pre><code class="language-r">iris[iris$Sepal.Length &gt; mean(iris$Sepal.Length), ]
-</code></pre>
-<p>The optional <code>select</code> argument keeps columns. You can name them, or drop some with <code>-</code>:</p>
-<pre><code class="language-r">subset(iris, Sepal.Length &gt; 5, select = c(Sepal.Length, Species))
-subset(iris, Sepal.Length &gt; 5, select = -c(Sepal.Width, Petal.Width))
-</code></pre>
-<p><code>subset()</code> also works on a vector. The condition is written in terms of the vector itself:</p>
+<p><code>subset()</code> is Base R. Give it a data frame and a condition
+written with column names. It returns the rows where the condition is
+<code>TRUE</code>.</p>
+<pre><code class="language-r">subset(iris, Sepal.Length &gt; mean(Sepal.Length))</code></pre>
+<pre><code>##     Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 51           7.0         3.2          4.7         1.4 versicolor
+## 52           6.4         3.2          4.5         1.5 versicolor
+## 53           6.9         3.1          4.9         1.5 versicolor
+## 55           6.5         2.8          4.6         1.5 versicolor
+## 57           6.3         3.3          4.7         1.6 versicolor
+## 59           6.6         2.9          4.6         1.3 versicolor
+## 62           5.9         3.0          4.2         1.5 versicolor
+## 63           6.0         2.2          4.0         1.0 versicolor
+## 64           6.1         2.9          4.7         1.4 versicolor
+## 66           6.7         3.1          4.4         1.4 versicolor
+## 69           6.2         2.2          4.5         1.5 versicolor
+## 71           5.9         3.2          4.8         1.8 versicolor
+## 72           6.1         2.8          4.0         1.3 versicolor
+## 73           6.3         2.5          4.9         1.5 versicolor
+## 74           6.1         2.8          4.7         1.2 versicolor
+## 75           6.4         2.9          4.3         1.3 versicolor
+## 76           6.6         3.0          4.4         1.4 versicolor
+## 77           6.8         2.8          4.8         1.4 versicolor
+## 78           6.7         3.0          5.0         1.7 versicolor
+## 79           6.0         2.9          4.5         1.5 versicolor
+## 84           6.0         2.7          5.1         1.6 versicolor
+## 86           6.0         3.4          4.5         1.6 versicolor
+## 87           6.7         3.1          4.7         1.5 versicolor
+## 88           6.3         2.3          4.4         1.3 versicolor
+## 92           6.1         3.0          4.6         1.4 versicolor
+## 98           6.2         2.9          4.3         1.3 versicolor
+## 101          6.3         3.3          6.0         2.5  virginica
+## 103          7.1         3.0          5.9         2.1  virginica
+## 104          6.3         2.9          5.6         1.8  virginica
+## 105          6.5         3.0          5.8         2.2  virginica
+## 106          7.6         3.0          6.6         2.1  virginica
+## 108          7.3         2.9          6.3         1.8  virginica
+## 109          6.7         2.5          5.8         1.8  virginica
+## 110          7.2         3.6          6.1         2.5  virginica
+## 111          6.5         3.2          5.1         2.0  virginica
+## 112          6.4         2.7          5.3         1.9  virginica
+## 113          6.8         3.0          5.5         2.1  virginica
+## 116          6.4         3.2          5.3         2.3  virginica
+## 117          6.5         3.0          5.5         1.8  virginica
+## 118          7.7         3.8          6.7         2.2  virginica
+## 119          7.7         2.6          6.9         2.3  virginica
+## 120          6.0         2.2          5.0         1.5  virginica
+## 121          6.9         3.2          5.7         2.3  virginica
+## 123          7.7         2.8          6.7         2.0  virginica
+## 124          6.3         2.7          4.9         1.8  virginica
+## 125          6.7         3.3          5.7         2.1  virginica
+## 126          7.2         3.2          6.0         1.8  virginica
+## 127          6.2         2.8          4.8         1.8  virginica
+## 128          6.1         3.0          4.9         1.8  virginica
+## 129          6.4         2.8          5.6         2.1  virginica
+## 130          7.2         3.0          5.8         1.6  virginica
+## 131          7.4         2.8          6.1         1.9  virginica
+## 132          7.9         3.8          6.4         2.0  virginica
+## 133          6.4         2.8          5.6         2.2  virginica
+## 134          6.3         2.8          5.1         1.5  virginica
+## 135          6.1         2.6          5.6         1.4  virginica
+## 136          7.7         3.0          6.1         2.3  virginica
+## 137          6.3         3.4          5.6         2.4  virginica
+## 138          6.4         3.1          5.5         1.8  virginica
+## 139          6.0         3.0          4.8         1.8  virginica
+## 140          6.9         3.1          5.4         2.1  virginica
+## 141          6.7         3.1          5.6         2.4  virginica
+## 142          6.9         3.1          5.1         2.3  virginica
+## 144          6.8         3.2          5.9         2.3  virginica
+## 145          6.7         3.3          5.7         2.5  virginica
+## 146          6.7         3.0          5.2         2.3  virginica
+## 147          6.3         2.5          5.0         1.9  virginica
+## 148          6.5         3.0          5.2         2.0  virginica
+## 149          6.2         3.4          5.4         2.3  virginica
+## 150          5.9         3.0          5.1         1.8  virginica</code></pre>
+<p>That is the same idea as indexing, but you do not have to repeat the
+data name:</p>
+<pre><code class="language-r">iris[iris$Sepal.Length &gt; mean(iris$Sepal.Length), ]</code></pre>
+<pre><code>##     Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 51           7.0         3.2          4.7         1.4 versicolor
+## 52           6.4         3.2          4.5         1.5 versicolor
+## 53           6.9         3.1          4.9         1.5 versicolor
+## 55           6.5         2.8          4.6         1.5 versicolor
+## 57           6.3         3.3          4.7         1.6 versicolor
+## 59           6.6         2.9          4.6         1.3 versicolor
+## 62           5.9         3.0          4.2         1.5 versicolor
+## 63           6.0         2.2          4.0         1.0 versicolor
+## 64           6.1         2.9          4.7         1.4 versicolor
+## 66           6.7         3.1          4.4         1.4 versicolor
+## 69           6.2         2.2          4.5         1.5 versicolor
+## 71           5.9         3.2          4.8         1.8 versicolor
+## 72           6.1         2.8          4.0         1.3 versicolor
+## 73           6.3         2.5          4.9         1.5 versicolor
+## 74           6.1         2.8          4.7         1.2 versicolor
+## 75           6.4         2.9          4.3         1.3 versicolor
+## 76           6.6         3.0          4.4         1.4 versicolor
+## 77           6.8         2.8          4.8         1.4 versicolor
+## 78           6.7         3.0          5.0         1.7 versicolor
+## 79           6.0         2.9          4.5         1.5 versicolor
+## 84           6.0         2.7          5.1         1.6 versicolor
+## 86           6.0         3.4          4.5         1.6 versicolor
+## 87           6.7         3.1          4.7         1.5 versicolor
+## 88           6.3         2.3          4.4         1.3 versicolor
+## 92           6.1         3.0          4.6         1.4 versicolor
+## 98           6.2         2.9          4.3         1.3 versicolor
+## 101          6.3         3.3          6.0         2.5  virginica
+## 103          7.1         3.0          5.9         2.1  virginica
+## 104          6.3         2.9          5.6         1.8  virginica
+## 105          6.5         3.0          5.8         2.2  virginica
+## 106          7.6         3.0          6.6         2.1  virginica
+## 108          7.3         2.9          6.3         1.8  virginica
+## 109          6.7         2.5          5.8         1.8  virginica
+## 110          7.2         3.6          6.1         2.5  virginica
+## 111          6.5         3.2          5.1         2.0  virginica
+## 112          6.4         2.7          5.3         1.9  virginica
+## 113          6.8         3.0          5.5         2.1  virginica
+## 116          6.4         3.2          5.3         2.3  virginica
+## 117          6.5         3.0          5.5         1.8  virginica
+## 118          7.7         3.8          6.7         2.2  virginica
+## 119          7.7         2.6          6.9         2.3  virginica
+## 120          6.0         2.2          5.0         1.5  virginica
+## 121          6.9         3.2          5.7         2.3  virginica
+## 123          7.7         2.8          6.7         2.0  virginica
+## 124          6.3         2.7          4.9         1.8  virginica
+## 125          6.7         3.3          5.7         2.1  virginica
+## 126          7.2         3.2          6.0         1.8  virginica
+## 127          6.2         2.8          4.8         1.8  virginica
+## 128          6.1         3.0          4.9         1.8  virginica
+## 129          6.4         2.8          5.6         2.1  virginica
+## 130          7.2         3.0          5.8         1.6  virginica
+## 131          7.4         2.8          6.1         1.9  virginica
+## 132          7.9         3.8          6.4         2.0  virginica
+## 133          6.4         2.8          5.6         2.2  virginica
+## 134          6.3         2.8          5.1         1.5  virginica
+## 135          6.1         2.6          5.6         1.4  virginica
+## 136          7.7         3.0          6.1         2.3  virginica
+## 137          6.3         3.4          5.6         2.4  virginica
+## 138          6.4         3.1          5.5         1.8  virginica
+## 139          6.0         3.0          4.8         1.8  virginica
+## 140          6.9         3.1          5.4         2.1  virginica
+## 141          6.7         3.1          5.6         2.4  virginica
+## 142          6.9         3.1          5.1         2.3  virginica
+## 144          6.8         3.2          5.9         2.3  virginica
+## 145          6.7         3.3          5.7         2.5  virginica
+## 146          6.7         3.0          5.2         2.3  virginica
+## 147          6.3         2.5          5.0         1.9  virginica
+## 148          6.5         3.0          5.2         2.0  virginica
+## 149          6.2         3.4          5.4         2.3  virginica
+## 150          5.9         3.0          5.1         1.8  virginica</code></pre>
+<p>The optional <code>select</code> argument keeps columns. You can name
+them, or drop some with <code>-</code>:</p>
+<pre><code class="language-r">subset(iris, Sepal.Length &gt; 5, select = c(Sepal.Length, Species))</code></pre>
+<pre><code>##     Sepal.Length    Species
+## 1            5.1     setosa
+## 6            5.4     setosa
+## 11           5.4     setosa
+## 15           5.8     setosa
+## 16           5.7     setosa
+## 17           5.4     setosa
+## 18           5.1     setosa
+## 19           5.7     setosa
+## 20           5.1     setosa
+## 21           5.4     setosa
+## 22           5.1     setosa
+## 24           5.1     setosa
+## 28           5.2     setosa
+## 29           5.2     setosa
+## 32           5.4     setosa
+## 33           5.2     setosa
+## 34           5.5     setosa
+## 37           5.5     setosa
+## 40           5.1     setosa
+## 45           5.1     setosa
+## 47           5.1     setosa
+## 49           5.3     setosa
+## 51           7.0 versicolor
+## 52           6.4 versicolor
+## 53           6.9 versicolor
+## 54           5.5 versicolor
+## 55           6.5 versicolor
+## 56           5.7 versicolor
+## 57           6.3 versicolor
+## 59           6.6 versicolor
+## 60           5.2 versicolor
+## 62           5.9 versicolor
+## 63           6.0 versicolor
+## 64           6.1 versicolor
+## 65           5.6 versicolor
+## 66           6.7 versicolor
+## 67           5.6 versicolor
+## 68           5.8 versicolor
+## 69           6.2 versicolor
+## 70           5.6 versicolor
+## 71           5.9 versicolor
+## 72           6.1 versicolor
+## 73           6.3 versicolor
+## 74           6.1 versicolor
+## 75           6.4 versicolor
+## 76           6.6 versicolor
+## 77           6.8 versicolor
+## 78           6.7 versicolor
+## 79           6.0 versicolor
+## 80           5.7 versicolor
+## 81           5.5 versicolor
+## 82           5.5 versicolor
+## 83           5.8 versicolor
+## 84           6.0 versicolor
+## 85           5.4 versicolor
+## 86           6.0 versicolor
+## 87           6.7 versicolor
+## 88           6.3 versicolor
+## 89           5.6 versicolor
+## 90           5.5 versicolor
+## 91           5.5 versicolor
+## 92           6.1 versicolor
+## 93           5.8 versicolor
+## 95           5.6 versicolor
+## 96           5.7 versicolor
+## 97           5.7 versicolor
+## 98           6.2 versicolor
+## 99           5.1 versicolor
+## 100          5.7 versicolor
+## 101          6.3  virginica
+## 102          5.8  virginica
+## 103          7.1  virginica
+## 104          6.3  virginica
+## 105          6.5  virginica
+## 106          7.6  virginica
+## 108          7.3  virginica
+## 109          6.7  virginica
+## 110          7.2  virginica
+## 111          6.5  virginica
+## 112          6.4  virginica
+## 113          6.8  virginica
+## 114          5.7  virginica
+## 115          5.8  virginica
+## 116          6.4  virginica
+## 117          6.5  virginica
+## 118          7.7  virginica
+## 119          7.7  virginica
+## 120          6.0  virginica
+## 121          6.9  virginica
+## 122          5.6  virginica
+## 123          7.7  virginica
+## 124          6.3  virginica
+## 125          6.7  virginica
+## 126          7.2  virginica
+## 127          6.2  virginica
+## 128          6.1  virginica
+## 129          6.4  virginica
+## 130          7.2  virginica
+## 131          7.4  virginica
+## 132          7.9  virginica
+## 133          6.4  virginica
+## 134          6.3  virginica
+## 135          6.1  virginica
+## 136          7.7  virginica
+## 137          6.3  virginica
+## 138          6.4  virginica
+## 139          6.0  virginica
+## 140          6.9  virginica
+## 141          6.7  virginica
+## 142          6.9  virginica
+## 143          5.8  virginica
+## 144          6.8  virginica
+## 145          6.7  virginica
+## 146          6.7  virginica
+## 147          6.3  virginica
+## 148          6.5  virginica
+## 149          6.2  virginica
+## 150          5.9  virginica</code></pre>
+<pre><code class="language-r">subset(iris, Sepal.Length &gt; 5, select = -c(Sepal.Width, Petal.Width))</code></pre>
+<pre><code>##     Sepal.Length Petal.Length    Species
+## 1            5.1          1.4     setosa
+## 6            5.4          1.7     setosa
+## 11           5.4          1.5     setosa
+## 15           5.8          1.2     setosa
+## 16           5.7          1.5     setosa
+## 17           5.4          1.3     setosa
+## 18           5.1          1.4     setosa
+## 19           5.7          1.7     setosa
+## 20           5.1          1.5     setosa
+## 21           5.4          1.7     setosa
+## 22           5.1          1.5     setosa
+## 24           5.1          1.7     setosa
+## 28           5.2          1.5     setosa
+## 29           5.2          1.4     setosa
+## 32           5.4          1.5     setosa
+## 33           5.2          1.5     setosa
+## 34           5.5          1.4     setosa
+## 37           5.5          1.3     setosa
+## 40           5.1          1.5     setosa
+## 45           5.1          1.9     setosa
+## 47           5.1          1.6     setosa
+## 49           5.3          1.5     setosa
+## 51           7.0          4.7 versicolor
+## 52           6.4          4.5 versicolor
+## 53           6.9          4.9 versicolor
+## 54           5.5          4.0 versicolor
+## 55           6.5          4.6 versicolor
+## 56           5.7          4.5 versicolor
+## 57           6.3          4.7 versicolor
+## 59           6.6          4.6 versicolor
+## 60           5.2          3.9 versicolor
+## 62           5.9          4.2 versicolor
+## 63           6.0          4.0 versicolor
+## 64           6.1          4.7 versicolor
+## 65           5.6          3.6 versicolor
+## 66           6.7          4.4 versicolor
+## 67           5.6          4.5 versicolor
+## 68           5.8          4.1 versicolor
+## 69           6.2          4.5 versicolor
+## 70           5.6          3.9 versicolor
+## 71           5.9          4.8 versicolor
+## 72           6.1          4.0 versicolor
+## 73           6.3          4.9 versicolor
+## 74           6.1          4.7 versicolor
+## 75           6.4          4.3 versicolor
+## 76           6.6          4.4 versicolor
+## 77           6.8          4.8 versicolor
+## 78           6.7          5.0 versicolor
+## 79           6.0          4.5 versicolor
+## 80           5.7          3.5 versicolor
+## 81           5.5          3.8 versicolor
+## 82           5.5          3.7 versicolor
+## 83           5.8          3.9 versicolor
+## 84           6.0          5.1 versicolor
+## 85           5.4          4.5 versicolor
+## 86           6.0          4.5 versicolor
+## 87           6.7          4.7 versicolor
+## 88           6.3          4.4 versicolor
+## 89           5.6          4.1 versicolor
+## 90           5.5          4.0 versicolor
+## 91           5.5          4.4 versicolor
+## 92           6.1          4.6 versicolor
+## 93           5.8          4.0 versicolor
+## 95           5.6          4.2 versicolor
+## 96           5.7          4.2 versicolor
+## 97           5.7          4.2 versicolor
+## 98           6.2          4.3 versicolor
+## 99           5.1          3.0 versicolor
+## 100          5.7          4.1 versicolor
+## 101          6.3          6.0  virginica
+## 102          5.8          5.1  virginica
+## 103          7.1          5.9  virginica
+## 104          6.3          5.6  virginica
+## 105          6.5          5.8  virginica
+## 106          7.6          6.6  virginica
+## 108          7.3          6.3  virginica
+## 109          6.7          5.8  virginica
+## 110          7.2          6.1  virginica
+## 111          6.5          5.1  virginica
+## 112          6.4          5.3  virginica
+## 113          6.8          5.5  virginica
+## 114          5.7          5.0  virginica
+## 115          5.8          5.1  virginica
+## 116          6.4          5.3  virginica
+## 117          6.5          5.5  virginica
+## 118          7.7          6.7  virginica
+## 119          7.7          6.9  virginica
+## 120          6.0          5.0  virginica
+## 121          6.9          5.7  virginica
+## 122          5.6          4.9  virginica
+## 123          7.7          6.7  virginica
+## 124          6.3          4.9  virginica
+## 125          6.7          5.7  virginica
+## 126          7.2          6.0  virginica
+## 127          6.2          4.8  virginica
+## 128          6.1          4.9  virginica
+## 129          6.4          5.6  virginica
+## 130          7.2          5.8  virginica
+## 131          7.4          6.1  virginica
+## 132          7.9          6.4  virginica
+## 133          6.4          5.6  virginica
+## 134          6.3          5.1  virginica
+## 135          6.1          5.6  virginica
+## 136          7.7          6.1  virginica
+## 137          6.3          5.6  virginica
+## 138          6.4          5.5  virginica
+## 139          6.0          4.8  virginica
+## 140          6.9          5.4  virginica
+## 141          6.7          5.6  virginica
+## 142          6.9          5.1  virginica
+## 143          5.8          5.1  virginica
+## 144          6.8          5.9  virginica
+## 145          6.7          5.7  virginica
+## 146          6.7          5.2  virginica
+## 147          6.3          5.0  virginica
+## 148          6.5          5.2  virginica
+## 149          6.2          5.4  virginica
+## 150          5.9          5.1  virginica</code></pre>
+<p><code>subset()</code> also works on a vector. The condition is
+written in terms of the vector itself:</p>
 <pre><code class="language-r">x &lt;- c(2, 9, 4, 11)
-subset(x, x &gt; 5)
-# [1]  9 11
-</code></pre>
-<p>Rows (or values) where the condition is <code>NA</code> are dropped. <code>?subset</code> says the function is convenient for interactive work. In a function you will keep, prefer <code>[</code> or the dplyr verbs below. Non-standard evaluation of column names is the reason.</p>
+subset(x, x &gt; 5)</code></pre>
+<pre><code>## [1]  9 11</code></pre>
+<pre><code class="language-r"># [1]  9 11</code></pre>
+<p>Rows (or values) where the condition is <code>NA</code> are dropped.
+<code>?subset</code> says the function is convenient for interactive
+work. In a function you will keep, prefer <code>[</code> or the dplyr
+verbs below. Non-standard evaluation of column names is the reason.</p>
+<div id="the-closest-dplyr-functions" class="section level3">
 <h3>The closest dplyr functions</h3>
-<p><code>dplyr</code> splits the two jobs <code>subset()</code> can do in one call:</p>
+<p><code>dplyr</code> splits the two jobs <code>subset()</code> can do
+in one call:</p>
 <ul>
-<li><code>filter()</code> is the closest match to the row condition (the second argument of <code>subset()</code>)</li>
-<li><code>select()</code> is the closest match to <code>select = ...</code></li>
+<li><code>filter()</code> is the closest match to the row condition (the
+second argument of <code>subset()</code>)</li>
+<li><code>select()</code> is the closest match to
+<code>select = ...</code></li>
 </ul>
 <pre><code class="language-r">library(dplyr)
 
 iris |&gt;
-  filter(Sepal.Length &gt; mean(Sepal.Length))
-
-iris |&gt;
+  filter(Sepal.Length &gt; mean(Sepal.Length))</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 1           7.0         3.2          4.7         1.4 versicolor
+## 2           6.4         3.2          4.5         1.5 versicolor
+## 3           6.9         3.1          4.9         1.5 versicolor
+## 4           6.5         2.8          4.6         1.5 versicolor
+## 5           6.3         3.3          4.7         1.6 versicolor
+## 6           6.6         2.9          4.6         1.3 versicolor
+## 7           5.9         3.0          4.2         1.5 versicolor
+## 8           6.0         2.2          4.0         1.0 versicolor
+## 9           6.1         2.9          4.7         1.4 versicolor
+## 10          6.7         3.1          4.4         1.4 versicolor
+## 11          6.2         2.2          4.5         1.5 versicolor
+## 12          5.9         3.2          4.8         1.8 versicolor
+## 13          6.1         2.8          4.0         1.3 versicolor
+## 14          6.3         2.5          4.9         1.5 versicolor
+## 15          6.1         2.8          4.7         1.2 versicolor
+## 16          6.4         2.9          4.3         1.3 versicolor
+## 17          6.6         3.0          4.4         1.4 versicolor
+## 18          6.8         2.8          4.8         1.4 versicolor
+## 19          6.7         3.0          5.0         1.7 versicolor
+## 20          6.0         2.9          4.5         1.5 versicolor
+## 21          6.0         2.7          5.1         1.6 versicolor
+## 22          6.0         3.4          4.5         1.6 versicolor
+## 23          6.7         3.1          4.7         1.5 versicolor
+## 24          6.3         2.3          4.4         1.3 versicolor
+## 25          6.1         3.0          4.6         1.4 versicolor
+## 26          6.2         2.9          4.3         1.3 versicolor
+## 27          6.3         3.3          6.0         2.5  virginica
+## 28          7.1         3.0          5.9         2.1  virginica
+## 29          6.3         2.9          5.6         1.8  virginica
+## 30          6.5         3.0          5.8         2.2  virginica
+## 31          7.6         3.0          6.6         2.1  virginica
+## 32          7.3         2.9          6.3         1.8  virginica
+## 33          6.7         2.5          5.8         1.8  virginica
+## 34          7.2         3.6          6.1         2.5  virginica
+## 35          6.5         3.2          5.1         2.0  virginica
+## 36          6.4         2.7          5.3         1.9  virginica
+## 37          6.8         3.0          5.5         2.1  virginica
+## 38          6.4         3.2          5.3         2.3  virginica
+## 39          6.5         3.0          5.5         1.8  virginica
+## 40          7.7         3.8          6.7         2.2  virginica
+## 41          7.7         2.6          6.9         2.3  virginica
+## 42          6.0         2.2          5.0         1.5  virginica
+## 43          6.9         3.2          5.7         2.3  virginica
+## 44          7.7         2.8          6.7         2.0  virginica
+## 45          6.3         2.7          4.9         1.8  virginica
+## 46          6.7         3.3          5.7         2.1  virginica
+## 47          7.2         3.2          6.0         1.8  virginica
+## 48          6.2         2.8          4.8         1.8  virginica
+## 49          6.1         3.0          4.9         1.8  virginica
+## 50          6.4         2.8          5.6         2.1  virginica
+## 51          7.2         3.0          5.8         1.6  virginica
+## 52          7.4         2.8          6.1         1.9  virginica
+## 53          7.9         3.8          6.4         2.0  virginica
+## 54          6.4         2.8          5.6         2.2  virginica
+## 55          6.3         2.8          5.1         1.5  virginica
+## 56          6.1         2.6          5.6         1.4  virginica
+## 57          7.7         3.0          6.1         2.3  virginica
+## 58          6.3         3.4          5.6         2.4  virginica
+## 59          6.4         3.1          5.5         1.8  virginica
+## 60          6.0         3.0          4.8         1.8  virginica
+## 61          6.9         3.1          5.4         2.1  virginica
+## 62          6.7         3.1          5.6         2.4  virginica
+## 63          6.9         3.1          5.1         2.3  virginica
+## 64          6.8         3.2          5.9         2.3  virginica
+## 65          6.7         3.3          5.7         2.5  virginica
+## 66          6.7         3.0          5.2         2.3  virginica
+## 67          6.3         2.5          5.0         1.9  virginica
+## 68          6.5         3.0          5.2         2.0  virginica
+## 69          6.2         3.4          5.4         2.3  virginica
+## 70          5.9         3.0          5.1         1.8  virginica</code></pre>
+<pre><code class="language-r">iris |&gt;
   filter(Sepal.Length &gt; 5) |&gt;
-  select(Sepal.Length, Species)
-</code></pre>
-<p><code>filter()</code> and <code>select()</code> are the tidyverse versions we will use later. You can still read <code>subset()</code> when you see it, including in the next example.</p>
+  select(Sepal.Length, Species)</code></pre>
+<pre><code>##     Sepal.Length    Species
+## 1            5.1     setosa
+## 2            5.4     setosa
+## 3            5.4     setosa
+## 4            5.8     setosa
+## 5            5.7     setosa
+## 6            5.4     setosa
+## 7            5.1     setosa
+## 8            5.7     setosa
+## 9            5.1     setosa
+## 10           5.4     setosa
+## 11           5.1     setosa
+## 12           5.1     setosa
+## 13           5.2     setosa
+## 14           5.2     setosa
+## 15           5.4     setosa
+## 16           5.2     setosa
+## 17           5.5     setosa
+## 18           5.5     setosa
+## 19           5.1     setosa
+## 20           5.1     setosa
+## 21           5.1     setosa
+## 22           5.3     setosa
+## 23           7.0 versicolor
+## 24           6.4 versicolor
+## 25           6.9 versicolor
+## 26           5.5 versicolor
+## 27           6.5 versicolor
+## 28           5.7 versicolor
+## 29           6.3 versicolor
+## 30           6.6 versicolor
+## 31           5.2 versicolor
+## 32           5.9 versicolor
+## 33           6.0 versicolor
+## 34           6.1 versicolor
+## 35           5.6 versicolor
+## 36           6.7 versicolor
+## 37           5.6 versicolor
+## 38           5.8 versicolor
+## 39           6.2 versicolor
+## 40           5.6 versicolor
+## 41           5.9 versicolor
+## 42           6.1 versicolor
+## 43           6.3 versicolor
+## 44           6.1 versicolor
+## 45           6.4 versicolor
+## 46           6.6 versicolor
+## 47           6.8 versicolor
+## 48           6.7 versicolor
+## 49           6.0 versicolor
+## 50           5.7 versicolor
+## 51           5.5 versicolor
+## 52           5.5 versicolor
+## 53           5.8 versicolor
+## 54           6.0 versicolor
+## 55           5.4 versicolor
+## 56           6.0 versicolor
+## 57           6.7 versicolor
+## 58           6.3 versicolor
+## 59           5.6 versicolor
+## 60           5.5 versicolor
+## 61           5.5 versicolor
+## 62           6.1 versicolor
+## 63           5.8 versicolor
+## 64           5.6 versicolor
+## 65           5.7 versicolor
+## 66           5.7 versicolor
+## 67           6.2 versicolor
+## 68           5.1 versicolor
+## 69           5.7 versicolor
+## 70           6.3  virginica
+## 71           5.8  virginica
+## 72           7.1  virginica
+## 73           6.3  virginica
+## 74           6.5  virginica
+## 75           7.6  virginica
+## 76           7.3  virginica
+## 77           6.7  virginica
+## 78           7.2  virginica
+## 79           6.5  virginica
+## 80           6.4  virginica
+## 81           6.8  virginica
+## 82           5.7  virginica
+## 83           5.8  virginica
+## 84           6.4  virginica
+## 85           6.5  virginica
+## 86           7.7  virginica
+## 87           7.7  virginica
+## 88           6.0  virginica
+## 89           6.9  virginica
+## 90           5.6  virginica
+## 91           7.7  virginica
+## 92           6.3  virginica
+## 93           6.7  virginica
+## 94           7.2  virginica
+## 95           6.2  virginica
+## 96           6.1  virginica
+## 97           6.4  virginica
+## 98           7.2  virginica
+## 99           7.4  virginica
+## 100          7.9  virginica
+## 101          6.4  virginica
+## 102          6.3  virginica
+## 103          6.1  virginica
+## 104          7.7  virginica
+## 105          6.3  virginica
+## 106          6.4  virginica
+## 107          6.0  virginica
+## 108          6.9  virginica
+## 109          6.7  virginica
+## 110          6.9  virginica
+## 111          5.8  virginica
+## 112          6.8  virginica
+## 113          6.7  virginica
+## 114          6.7  virginica
+## 115          6.3  virginica
+## 116          6.5  virginica
+## 117          6.2  virginica
+## 118          5.9  virginica</code></pre>
+<p><code>filter()</code> and <code>select()</code> are the tidyverse
+versions we will use later. You can still read <code>subset()</code>
+when you see it, including in the next example.</p>
 <hr />
+</div>
+</div>
+<div id="other-magrittr-pipes-aside" class="section level2">
 <h2>5. Other magrittr pipes (aside)</h2>
-<p><code>magrittr</code> also has <code>%\%$</code>, which exposes column names on the right-hand side. You may see it in older code. We will stay with <code>|&gt;</code> or <code>%&gt;%</code>.</p>
-<p>The next pipeline first uses <code>subset()</code> to keep the longer sepals, then <code>%$%</code> so <code>cor()</code> can see <code>Sepal.Length</code> and <code>Sepal.Width</code> as names rather than as <code>iris$...</code>. <code>dplyr::filter()</code> would do the same row step. <code>dplyr::select()</code> plus <code>cor()</code> on two columns, or <code>dplyr::summarize(cor = cor(Sepal.Length, Sepal.Width))</code> after <code>filter()</code>, is the tidyverse version of the whole thing.</p>
+<p><code>magrittr</code> also has <code>%\%$</code>, which exposes
+column names on the right-hand side. You may see it in older code. We
+will stay with <code>|&gt;</code> or <code>%&gt;%</code>.</p>
+<p>The next pipeline first uses <code>subset()</code> to keep the longer
+sepals, then <code>%$%</code> so <code>cor()</code> can see
+<code>Sepal.Length</code> and <code>Sepal.Width</code> as names rather
+than as <code>iris$...</code>. <code>dplyr::filter()</code> would do the
+same row step. <code>dplyr::select()</code> plus <code>cor()</code> on
+two columns, or
+<code>dplyr::summarize(cor = cor(Sepal.Length, Sepal.Width))</code>
+after <code>filter()</code>, is the tidyverse version of the whole
+thing.</p>
 <pre><code class="language-r">library(magrittr)
 iris |&gt;
   subset(Sepal.Length &gt; mean(Sepal.Length)) %$%
-  cor(Sepal.Length, Sepal.Width)
-# [1] 0.3361992
-</code></pre>
+  cor(Sepal.Length, Sepal.Width)</code></pre>
+<pre><code>## [1] 0.3361992</code></pre>
+<pre><code class="language-r"># [1] 0.3361992</code></pre>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>6. Practice</h2>
 <p>Using a pipe, and without intermediate objects:</p>
-<ol>
-<li>draw 100 values from a normal distribution with standard deviation 10</li>
+<ol style="list-style-type: decimal">
+<li>draw 100 values from a normal distribution with standard deviation
+10</li>
 <li>sort them</li>
 <li>take lagged differences</li>
 <li>average those differences</li>
 <li>round the average to one decimal place</li>
 </ol>
-<p>Useful functions: <code>rnorm()</code>, <code>sort()</code>, <code>diff()</code>, <code>mean()</code>, <code>round()</code>. Use <code>set.seed()</code> if you want a repeatable number.</p>
-                        <nav class="course-page-nav" aria-label="Page">
+<p>Useful functions: <code>rnorm()</code>, <code>sort()</code>,
+<code>diff()</code>, <code>mean()</code>, <code>round()</code>. Use
+<code>set.seed()</code> if you want a repeatable number.</p>
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lab-1-solutions.html"><span aria-hidden="true">←</span> Lab 1 solutions</a>
                         <a class="course-page-nav__week" href="data-612-week-2.html">Week 2</a>
                             <a class="course-page-nav__next" href="data-612-writing-functions.html">2.2 Writing Functions <span aria-hidden="true">→</span></a>
@@ -279,7 +917,7 @@ iris |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

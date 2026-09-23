@@ -1,0 +1,828 @@
+
+
+
+<p>Find a file, tell R where it is, import it, and save the result.</p>
+<p>When working with data in R, we often need to:</p>
+<ol style="list-style-type: decimal">
+<li>Find a file on the computer.</li>
+<li>Tell R where the file is located.</li>
+<li>Understand how the data inside the file is organized.</li>
+<li>Choose the appropriate function to import it.</li>
+<li>Inspect and work with the data.</li>
+<li>Save or export the results.</li>
+</ol>
+<p>A useful workflow is:</p>
+<p>Find → Path → Identify Format → Import → Inspect → Work → Export</p>
+<p>Work in an RStudio project so <code>getwd()</code> is the project
+folder. Download <a href="files/data-612/students.csv">students.csv</a>
+and place it in a <code>data/</code> folder inside that project (or in
+the project folder itself). Note <strong>1.2</strong> is how you install
+and load the tidyverse. The <code>read_csv()</code> examples below
+assume <code>library(tidyverse)</code> has already been run, or you can
+write <code>readr::read_csv()</code>.</p>
+<hr />
+<div id="files-folders-and-paths" class="section level2">
+<h2>1. Files, Folders, and Paths</h2>
+<p>A <strong>path</strong> tells R where a file or folder is
+located.</p>
+<p>Suppose our project has the following structure:</p>
+<p>my_project/ │ ├── analysis.R │ ├── data/ │ └── students.csv │ └──
+output/</p>
+<p>The file <code>students.csv</code> is located inside the
+<code>data</code> folder.</p>
+<p>There are two main ways to describe its location:</p>
+<ul>
+<li>Absolute path</li>
+<li>Relative path</li>
+</ul>
+<hr />
+</div>
+<div id="absolute-paths" class="section level2">
+<h2>2. Absolute Paths</h2>
+<p>An <strong>absolute path</strong> gives the complete location of a
+file on the computer.</p>
+<p>For example:</p>
+<pre class="r"><code>&quot;C:/Users/John/Documents/my_project/data/students.csv&quot;</code></pre>
+<pre><code>## [1] &quot;C:/Users/John/Documents/my_project/data/students.csv&quot;</code></pre>
+<p>We could therefore write:</p>
+<pre class="r"><code>students &lt;- read.csv(
+  &quot;C:/Users/John/Documents/my_project/data/students.csv&quot;
+)</code></pre>
+<p>This may work on John’s computer, but probably not on someone else’s
+computer.</p>
+<p>For example, another student may have the project at:</p>
+<p>C:/Users/Sara/Desktop/my_project/</p>
+<p>Therefore, absolute paths can make code difficult to share. Do not
+put them in work you submit. Use <code>/</code> in paths in R, even on
+Windows.</p>
+<hr />
+</div>
+<div id="the-working-directory" class="section level2">
+<h2>3. The Working Directory</h2>
+<p>R has a <strong>working directory</strong>.</p>
+<p>Think of the working directory as:</p>
+<blockquote>
+<p><strong>R’s current location or starting point.</strong></p>
+</blockquote>
+<p>To find the current working directory:</p>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/Lenovo/Documents/Cursor/Website-Mousavi/files/data-612/lectures&quot;</code></pre>
+<p>Think:</p>
+<p>getwd() = Where am I?</p>
+<p>For example, suppose:</p>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/Lenovo/Documents/Cursor/Website-Mousavi/files/data-612/lectures&quot;</code></pre>
+<p>returns:</p>
+<p>“C:/Users/John/Documents/my_project”</p>
+<p>Then R currently considers <code>my_project</code> its starting
+location.</p>
+<p>In RStudio, <strong>File → New Project</strong> pins the working
+directory to the project folder.</p>
+<hr />
+</div>
+<div id="relative-paths" class="section level2">
+<h2>4. Relative Paths</h2>
+<p>A <strong>relative path</strong> describes the location of a file
+relative to our current location.</p>
+<p>Suppose:</p>
+<p>my_project/ │ ├── analysis.R │ ├── data/ │ └── students.csv │ └──
+output/</p>
+<p>and our working directory is:</p>
+<p>my_project/</p>
+<p>Instead of writing:</p>
+<pre class="r"><code>&quot;C:/Users/John/Documents/my_project/data/students.csv&quot;</code></pre>
+<pre><code>## [1] &quot;C:/Users/John/Documents/my_project/data/students.csv&quot;</code></pre>
+<p>we can simply write:</p>
+<pre class="r"><code>&quot;data/students.csv&quot;</code></pre>
+<pre><code>## [1] &quot;data/students.csv&quot;</code></pre>
+<p>Therefore:</p>
+<pre class="r"><code>students &lt;- read.csv(&quot;data/students.csv&quot;)</code></pre>
+<p>means:</p>
+<blockquote>
+<p>Starting from the current directory, go into the <code>data</code>
+folder and find <code>students.csv</code>.</p>
+</blockquote>
+<p>Relative paths are usually preferable because they make projects
+easier to move and share.</p>
+<hr />
+</div>
+<div id="understanding-.-..-and" class="section level2">
+<h2>5. Understanding <code>.</code>, <code>..</code>, and
+<code>/</code></h2>
+<p>Three symbols are particularly useful when working with relative
+paths.</p>
+<p>Symbol Meaning</p>
+<p><code>.</code> Current directory</p>
+<p><code>..</code> Parent directory — one folder up</p>
+<p><code>/</code> Separates folders</p>
+<div id="means-here" class="section level3">
+<h3><code>.</code> means “here”</h3>
+<p>These are generally equivalent:</p>
+<pre class="r"><code>read.csv(&quot;data/students.csv&quot;)</code></pre>
+<p>and:</p>
+<pre class="r"><code>read.csv(&quot;./data/students.csv&quot;)</code></pre>
+<p>The second can be read as:</p>
+<blockquote>
+<p>Start here → enter <code>data</code> → find
+<code>students.csv</code>.</p>
+</blockquote>
+</div>
+<div id="means-go-up-one-folder" class="section level3">
+<h3><code>..</code> means “go up one folder”</h3>
+<p>Suppose:</p>
+<p>my_project/ │ ├── data/ │ └── students.csv │ └── scripts/ └──
+analysis.R</p>
+<p>If our current location is:</p>
+<p>my_project/scripts/</p>
+<p>then the relative path to <code>students.csv</code> is:</p>
+<pre class="r"><code>&quot;../data/students.csv&quot;</code></pre>
+<pre><code>## [1] &quot;../data/students.csv&quot;</code></pre>
+<p>Read this as:</p>
+<p>.. → go up to my_project data/ → enter the data folder students.csv →
+find the file</p>
+<p>So:</p>
+<pre class="r"><code>students &lt;- read.csv(&quot;../data/students.csv&quot;)</code></pre>
+</div>
+<div id="going-up-multiple-folders" class="section level3">
+<h3>Going up multiple folders</h3>
+<p>Suppose:</p>
+<p>my_project/ │ ├── data/ │ └── students.csv │ └── R/ └── week1/ └──
+analysis.R</p>
+<p>If our current directory is:</p>
+<p>my_project/R/week1/</p>
+<p>then:</p>
+<pre class="r"><code>&quot;../../data/students.csv&quot;</code></pre>
+<pre><code>## [1] &quot;../../data/students.csv&quot;</code></pre>
+<p>means:</p>
+<p>.. → R/ ../.. → my_project/ data/ → my_project/data/</p>
+<ol start="6" style="list-style-type: decimal">
+<li>Why Prefer Relative Paths? Compare:</li>
+</ol>
+<pre class="r"><code># Absolute path
+read.csv(
+  &quot;C:/Users/John/Documents/my_project/data/students.csv&quot;
+)</code></pre>
+<p>with:</p>
+<pre class="r"><code># Relative path
+read.csv(&quot;data/students.csv&quot;)</code></pre>
+<p>If we send the entire <code>my_project</code> folder to another
+person, the absolute path will probably not work.</p>
+<p>The relative path can still work because the relationship between the
+folders has not changed.</p>
+<p>Therefore:</p>
+<blockquote>
+<p><strong>When working within an R project, use relative paths whenever
+possible.</strong></p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="finding-files-in-r" class="section level2">
+<h2>7. Finding Files in R</h2>
+<p>Before importing a file, we may need to determine where it is.</p>
+<p>Start with:</p>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/Lenovo/Documents/Cursor/Website-Mousavi/files/data-612/lectures&quot;</code></pre>
+<blockquote>
+<p>Where am I?</p>
+</blockquote>
+<p>Then:</p>
+<pre class="r"><code>list.files()</code></pre>
+<pre><code>##  [1] &quot;_figs&quot;                               &quot;data-science-and-r.fragment.html&quot;   
+##  [3] &quot;data-science-and-r.qmd&quot;              &quot;files-and-paths.qmd&quot;                
+##  [5] &quot;files-and-paths.render.Rmd&quot;          &quot;getting-started.fragment.html&quot;      
+##  [7] &quot;getting-started.qmd&quot;                 &quot;ggplot2-facets-themes.fragment.html&quot;
+##  [9] &quot;ggplot2-facets-themes.qmd&quot;           &quot;ggplot2-geoms.fragment.html&quot;        
+## [11] &quot;ggplot2-geoms.qmd&quot;                   &quot;ggplot2-grammar.fragment.html&quot;      
+## [13] &quot;ggplot2-grammar.qmd&quot;                 &quot;introduction-to-r-concepts.qmd&quot;     
+## [15] &quot;lab-1-looking-under-the-hood.qmd&quot;    &quot;lab-2-pipes-functions.qmd&quot;          
+## [17] &quot;lab-3-ggplot2.fragment.html&quot;         &quot;lab-3-ggplot2.qmd&quot;                  
+## [19] &quot;pipes.qmd&quot;                           &quot;r-markdown-and-quarto.qmd&quot;          
+## [21] &quot;r-packages-and-the-tidyverse.qmd&quot;    &quot;r-scripts.fragment.html&quot;            
+## [23] &quot;r-scripts.qmd&quot;                       &quot;writing-functions.qmd&quot;</code></pre>
+<blockquote>
+<p>What files and folders are here?</p>
+</blockquote>
+<p>For example:</p>
+<pre class="r"><code>list.files()</code></pre>
+<pre><code>##  [1] &quot;_figs&quot;                               &quot;data-science-and-r.fragment.html&quot;   
+##  [3] &quot;data-science-and-r.qmd&quot;              &quot;files-and-paths.qmd&quot;                
+##  [5] &quot;files-and-paths.render.Rmd&quot;          &quot;getting-started.fragment.html&quot;      
+##  [7] &quot;getting-started.qmd&quot;                 &quot;ggplot2-facets-themes.fragment.html&quot;
+##  [9] &quot;ggplot2-facets-themes.qmd&quot;           &quot;ggplot2-geoms.fragment.html&quot;        
+## [11] &quot;ggplot2-geoms.qmd&quot;                   &quot;ggplot2-grammar.fragment.html&quot;      
+## [13] &quot;ggplot2-grammar.qmd&quot;                 &quot;introduction-to-r-concepts.qmd&quot;     
+## [15] &quot;lab-1-looking-under-the-hood.qmd&quot;    &quot;lab-2-pipes-functions.qmd&quot;          
+## [17] &quot;lab-3-ggplot2.fragment.html&quot;         &quot;lab-3-ggplot2.qmd&quot;                  
+## [19] &quot;pipes.qmd&quot;                           &quot;r-markdown-and-quarto.qmd&quot;          
+## [21] &quot;r-packages-and-the-tidyverse.qmd&quot;    &quot;r-scripts.fragment.html&quot;            
+## [23] &quot;r-scripts.qmd&quot;                       &quot;writing-functions.qmd&quot;</code></pre>
+<p>might return:</p>
+<p>“analysis.R” “data” “output”</p>
+<p>We can look inside a particular folder:</p>
+<pre class="r"><code>list.files(&quot;data&quot;)</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>which might return:</p>
+<p>“students.csv”</p>
+<p>The function:</p>
+<pre class="r"><code>dir()</code></pre>
+<pre><code>##  [1] &quot;_figs&quot;                               &quot;data-science-and-r.fragment.html&quot;   
+##  [3] &quot;data-science-and-r.qmd&quot;              &quot;files-and-paths.qmd&quot;                
+##  [5] &quot;files-and-paths.render.Rmd&quot;          &quot;getting-started.fragment.html&quot;      
+##  [7] &quot;getting-started.qmd&quot;                 &quot;ggplot2-facets-themes.fragment.html&quot;
+##  [9] &quot;ggplot2-facets-themes.qmd&quot;           &quot;ggplot2-geoms.fragment.html&quot;        
+## [11] &quot;ggplot2-geoms.qmd&quot;                   &quot;ggplot2-grammar.fragment.html&quot;      
+## [13] &quot;ggplot2-grammar.qmd&quot;                 &quot;introduction-to-r-concepts.qmd&quot;     
+## [15] &quot;lab-1-looking-under-the-hood.qmd&quot;    &quot;lab-2-pipes-functions.qmd&quot;          
+## [17] &quot;lab-3-ggplot2.fragment.html&quot;         &quot;lab-3-ggplot2.qmd&quot;                  
+## [19] &quot;pipes.qmd&quot;                           &quot;r-markdown-and-quarto.qmd&quot;          
+## [21] &quot;r-packages-and-the-tidyverse.qmd&quot;    &quot;r-scripts.fragment.html&quot;            
+## [23] &quot;r-scripts.qmd&quot;                       &quot;writing-functions.qmd&quot;</code></pre>
+<p>can also be used to list files.</p>
+<hr />
+</div>
+<div id="searching-for-a-particular-type-of-file"
+class="section level2">
+<h2>8. Searching for a Particular Type of File</h2>
+<p>Suppose we want to find CSV files:</p>
+<pre class="r"><code>list.files(pattern = &quot;\\.csv$&quot;)</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>To search inside subfolders as well:</p>
+<pre class="r"><code>list.files(
+  recursive = TRUE,
+  pattern = &quot;\\.csv$&quot;
+)</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>This might return:</p>
+<p>“data/students.csv”</p>
+<p>To return full paths:</p>
+<pre class="r"><code>list.files(
+  recursive = TRUE,
+  pattern = &quot;\\.csv$&quot;,
+  full.names = TRUE
+)</code></pre>
+<pre><code>## character(0)</code></pre>
+<hr />
+</div>
+<div id="does-the-file-exist" class="section level2">
+<h2>9. Does the File Exist?</h2>
+<p>Before importing:</p>
+<pre class="r"><code>file.exists(&quot;data/students.csv&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>If R returns:</p>
+<pre class="r"><code>TRUE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>the file exists at that path.</p>
+<p>If R returns:</p>
+<pre class="r"><code>FALSE</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>check:</p>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/Lenovo/Documents/Cursor/Website-Mousavi/files/data-612/lectures&quot;</code></pre>
+<pre class="r"><code>list.files()</code></pre>
+<pre><code>##  [1] &quot;_figs&quot;                               &quot;data-science-and-r.fragment.html&quot;   
+##  [3] &quot;data-science-and-r.qmd&quot;              &quot;files-and-paths.qmd&quot;                
+##  [5] &quot;files-and-paths.render.Rmd&quot;          &quot;getting-started.fragment.html&quot;      
+##  [7] &quot;getting-started.qmd&quot;                 &quot;ggplot2-facets-themes.fragment.html&quot;
+##  [9] &quot;ggplot2-facets-themes.qmd&quot;           &quot;ggplot2-geoms.fragment.html&quot;        
+## [11] &quot;ggplot2-geoms.qmd&quot;                   &quot;ggplot2-grammar.fragment.html&quot;      
+## [13] &quot;ggplot2-grammar.qmd&quot;                 &quot;introduction-to-r-concepts.qmd&quot;     
+## [15] &quot;lab-1-looking-under-the-hood.qmd&quot;    &quot;lab-2-pipes-functions.qmd&quot;          
+## [17] &quot;lab-3-ggplot2.fragment.html&quot;         &quot;lab-3-ggplot2.qmd&quot;                  
+## [19] &quot;pipes.qmd&quot;                           &quot;r-markdown-and-quarto.qmd&quot;          
+## [21] &quot;r-packages-and-the-tidyverse.qmd&quot;    &quot;r-scripts.fragment.html&quot;            
+## [23] &quot;r-scripts.qmd&quot;                       &quot;writing-functions.qmd&quot;</code></pre>
+<pre class="r"><code>list.files(&quot;data&quot;)</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>For directories:</p>
+<pre class="r"><code>dir.exists(&quot;data&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<hr />
+</div>
+<div id="constructing-paths" class="section level2">
+<h2>10. Constructing Paths</h2>
+<p>R provides <code>file.path()</code>:</p>
+<pre class="r"><code>file.path(&quot;data&quot;, &quot;students.csv&quot;)</code></pre>
+<pre><code>## [1] &quot;data/students.csv&quot;</code></pre>
+<p>For longer paths:</p>
+<pre class="r"><code>file.path(&quot;data&quot;, &quot;raw&quot;, &quot;students.csv&quot;)</code></pre>
+<pre><code>## [1] &quot;data/raw/students.csv&quot;</code></pre>
+<p>This is useful for constructing paths from individual folder and file
+names.</p>
+<hr />
+</div>
+<div id="selecting-a-file-manually" class="section level2">
+<h2>11. Selecting a File Manually</h2>
+<p>Base R provides:</p>
+<pre class="r"><code>file.choose()</code></pre>
+<p>This opens a file-selection window.</p>
+<p>For example:</p>
+<pre class="r"><code>path &lt;- file.choose()</code></pre>
+<p>Then:</p>
+<pre class="r"><code>path</code></pre>
+<pre><code>## Error:
+## ! object &#39;path&#39; not found</code></pre>
+<p>shows the selected path.</p>
+<p>We could import the selected file using:</p>
+<pre class="r"><code>students &lt;- read.csv(path)</code></pre>
+<pre><code>## Error:
+## ! object &#39;path&#39; not found</code></pre>
+<p>This is convenient for quick interactive work.</p>
+<p>For reproducible scripts, however, relative paths are usually
+preferable:</p>
+<pre class="r"><code>students &lt;- read.csv(&quot;data/students.csv&quot;)</code></pre>
+<hr />
+</div>
+<div id="before-importing-what-is-inside-the-file"
+class="section level2">
+<h2>12. Before Importing: What Is Inside the File?</h2>
+<p>Finding the file is only part of the problem.</p>
+<p>We also need to understand <strong>how the data inside the file is
+organized</strong>.</p>
+<p>Many data files are <strong>delimited text files</strong>.</p>
+<p>A <strong>delimiter</strong> is the character used to separate
+values.</p>
+<p>For example:</p>
+<p>name,age,grade John,20,85 Sara,21,92</p>
+<p>The values are separated by:</p>
+<p>,</p>
+<p>Therefore, this is <strong>comma-separated data</strong>.</p>
+<p>Now consider:</p>
+<p>name age grade John 20 85 Sara 21 92</p>
+<p>If the spaces between values are tab characters, this is
+<strong>tab-separated data</strong>.</p>
+<p>Other delimiters are also possible:</p>
+<p>John;20;85</p>
+<p>uses a semicolon.</p>
+<p>And:</p>
+<p>John|20|85</p>
+<p>uses a pipe character.</p>
+<p>The course file <code>students.csv</code> uses commas. Its columns
+are <code>name</code>, <code>grade</code>, and <code>passed</code>. The
+<code>name,age,grade</code> lines above are only to show what a
+delimiter looks like.</p>
+<hr />
+</div>
+<div id="how-do-we-determine-the-delimiter" class="section level2">
+<h2>13. How Do We Determine the Delimiter?</h2>
+<p>The file extension gives us a useful clue:</p>
+<p>Extension Usually means</p>
+<p><code>.csv</code> Comma-separated values</p>
+<p><code>.tsv</code> Tab-separated values</p>
+<p><code>.txt</code> General text file; delimiter may vary</p>
+<p>However:</p>
+<blockquote>
+<p><strong>The file extension is a clue, not a guarantee.</strong></p>
+</blockquote>
+<p>Someone could name a semicolon-separated file
+<code>students.csv</code>.</p>
+<p>Therefore, for an unfamiliar file, we can inspect its first few lines
+before importing it.</p>
+<p>Base R provides:</p>
+<pre class="r"><code>readLines()</code></pre>
+<pre><code>## [1] &quot;message(\&quot;Done.\&quot;)&quot;</code></pre>
+<p>For example:</p>
+<pre class="r"><code>readLines(
+  &quot;data/students.csv&quot;,
+  n = 3
+)</code></pre>
+<pre><code>## Error in `file()`:
+## ! cannot open the connection</code></pre>
+<p>R might display:</p>
+<p>“name,age,grade” “John,20,85” “Sara,21,92”</p>
+<p>We can clearly see commas.</p>
+<p>Or R might display:</p>
+<p>“name” “John05” “Sara12”</p>
+<p>Here:</p>
+<p>epresents a <strong>tab character</strong>.</p>
+<p>Therefore, the data is tab-separated.</p>
+<hr />
+</div>
+<div id="choosing-the-correct-import-function" class="section level2">
+<h2>14. Choosing the Correct Import Function</h2>
+<p>Once we know the delimiter, we can choose an appropriate
+function.</p>
+<p>Delimiter Example Base R readr/tidyverse</p>
+<p>Comma <code>,</code> <code>John,20,85</code> <code>read.csv()</code>
+<code>read_csv()</code></p>
+<p>Tab <code>\t</code> <code>John  20  85</code>
+<code>read.delim()</code> <code>read_tsv()</code></p>
+<p>Other <code>John;20;85</code> <code>read.table(sep = ";")</code>
+<code>read_delim(delim = ";")</code></p>
+<p>For comma-separated data:</p>
+<pre class="r"><code>students &lt;- read.csv(&quot;data/students.csv&quot;)</code></pre>
+<p>For tab-separated data:</p>
+<pre class="r"><code>students &lt;- read.delim(&quot;data/students.tsv&quot;)</code></pre>
+<pre><code>## Error in `file()`:
+## ! cannot open the connection</code></pre>
+<p>For another delimiter, such as <code>;</code>:</p>
+<pre class="r"><code>students &lt;- read.table(
+  &quot;data/students.txt&quot;,
+  sep = &quot;;&quot;,
+  header = TRUE
+)</code></pre>
+<pre><code>## Error in `file()`:
+## ! cannot open the connection</code></pre>
+<p>With <code>readr</code>:</p>
+<pre class="r"><code>students &lt;- read_delim(
+  &quot;data/students.txt&quot;,
+  delim = &quot;;&quot;
+)</code></pre>
+<hr />
+</div>
+<div id="the-relationship-between-the-base-r-functions"
+class="section level2">
+<h2>15. The Relationship Between the Base R Functions</h2>
+<p>The functions:</p>
+<pre class="r"><code>read.csv()</code></pre>
+<pre><code>## Error in `read.csv()`:
+## ! argument &quot;file&quot; is missing, with no default</code></pre>
+<pre class="r"><code>read.delim()</code></pre>
+<pre><code>## Error in `read.delim()`:
+## ! argument &quot;file&quot; is missing, with no default</code></pre>
+<p>are convenient variations of the more general:</p>
+<pre class="r"><code>read.table()</code></pre>
+<pre><code>## Error in `read.table()`:
+## ! argument &quot;file&quot; is missing, with no default</code></pre>
+<p>The main difference is that they provide useful default arguments for
+particular file formats.</p>
+<p>Conceptually:</p>
+<p>read.table() │ ├── comma separator → read.csv() │ └── tab separator →
+read.delim()</p>
+<p>Therefore, these are not completely unrelated functions. The
+difference is <strong>default arguments</strong>, which note
+<strong>1.4</strong> discusses in more detail.</p>
+<p>Similarly, <code>readr</code> provides:</p>
+<p>read_csv() → comma-separated</p>
+<p>read_tsv() → tab-separated</p>
+<p>read_delim() → specify another delimiter</p>
+<ol start="16" style="list-style-type: decimal">
+<li>Importing a CSV File CSV stands for:</li>
+</ol>
+<blockquote>
+<p><strong>Comma-Separated Values</strong></p>
+</blockquote>
+<p>For example:</p>
+<p>name,age,grade John,20,85 Sara,21,92 David,19,78</p>
+<p>Each row represents an observation, and each column represents a
+variable.</p>
+<p>Using Base R:</p>
+<pre class="r"><code>students &lt;- read.csv(&quot;data/students.csv&quot;)</code></pre>
+<p>Using <code>readr</code>:</p>
+<pre class="r"><code>students &lt;- read_csv(&quot;data/students.csv&quot;)</code></pre>
+<hr />
+</div>
+<div id="file-vs.-r-object" class="section level2">
+<h2>17. File vs. R Object</h2>
+<p>It is important to understand what happens when we import data:</p>
+<p>FILE ON COMPUTER OBJECT IN R</p>
+<p>students.csv –read.csv()–&gt; students</p>
+<p><code>students.csv</code> is a <strong>file stored on the
+computer</strong>.</p>
+<p><code>students</code> is an <strong>R object stored in
+memory</strong>.</p>
+<p>They are not the same thing.</p>
+<hr />
+</div>
+<div id="inspecting-imported-data" class="section level2">
+<h2>18. Inspecting Imported Data</h2>
+<p>Never assume that the file was imported correctly.</p>
+<p>Start with:</p>
+<pre class="r"><code>head(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>Then:</p>
+<pre class="r"><code>str(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>and:</p>
+<pre class="r"><code>summary(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>Other useful functions include:</p>
+<pre class="r"><code>tail(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>dim(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>nrow(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>ncol(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>names(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>A useful habit is:</p>
+<pre class="r"><code>head(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>str(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>summary(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<hr />
+</div>
+<div id="a-common-sign-of-the-wrong-delimiter" class="section level2">
+<h2>19. A Common Sign of the Wrong Delimiter</h2>
+<p>Suppose the original file contains:</p>
+<p>name,age,grade John,20,85 Sara,21,92</p>
+<p>We expect <strong>three columns</strong>:</p>
+<p>name | age | grade</p>
+<p>If R imports everything as <strong>one column</strong>, something is
+probably wrong.</p>
+<p>One common reason is:</p>
+<blockquote>
+<p><strong>The wrong delimiter was used.</strong></p>
+</blockquote>
+<p>Therefore, if an imported dataset does not look correct:</p>
+<pre class="r"><code>head(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<pre class="r"><code>str(students)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>Then inspect the original file:</p>
+<pre class="r"><code>readLines(
+  &quot;data/students.csv&quot;,
+  n = 3
+)</code></pre>
+<pre><code>## Error in `file()`:
+## ! cannot open the connection</code></pre>
+<p>and verify the delimiter.</p>
+<hr />
+</div>
+<div id="working-with-imported-data" class="section level2">
+<h2>20. Working with Imported Data</h2>
+<p>Once imported, we normally work with the <strong>R object</strong>,
+not directly with the original file.</p>
+<p>For example:</p>
+<pre class="r"><code>students$grade</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>Calculate:</p>
+<pre class="r"><code>mean(students$grade)</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>or create a variable:</p>
+<pre class="r"><code>students$passed &lt;- students$grade &gt;= 80</code></pre>
+<pre><code>## Error:
+## ! object &#39;students&#39; not found</code></pre>
+<p>The R object has changed.</p>
+<p>However:</p>
+<blockquote>
+<p><strong>Changing an R object does not automatically change the
+original file.</strong></p>
+</blockquote>
+<p>The original:</p>
+<p>data/students.csv</p>
+<p>remains unchanged.</p>
+<hr />
+</div>
+<div id="exporting-data-with-base-r" class="section level2">
+<h2>21. Exporting Data with Base R</h2>
+<p>To save our modified data:</p>
+<pre class="r"><code>write.csv(
+  students,
+  &quot;output/students_updated.csv&quot;,
+  row.names = FALSE
+)</code></pre>
+<p>The workflow is:</p>
+<p>students.csv │ │ read.csv() ▼ R object: students │ │ analyze / modify
+▼ Modified R object │ │ write.csv() ▼ students_updated.csv</p>
+<ol start="22" style="list-style-type: decimal">
+<li>Exporting with readr/tidyverse Using <code>readr</code>:</li>
+</ol>
+<pre class="r"><code>write_csv(
+  students,
+  &quot;output/students_updated.csv&quot;
+)</code></pre>
+<p>The main functions can therefore be summarized as:</p>
+<p>Task Base R readr/tidyverse</p>
+<p>Read comma-separated <code>read.csv()</code>
+<code>read_csv()</code></p>
+<p>Read tab-separated <code>read.delim()</code>
+<code>read_tsv()</code></p>
+<p>Read other delimiter <code>read.table()</code>
+<code>read_delim()</code></p>
+<p>Write CSV <code>write.csv()</code> <code>write_csv()</code></p>
+<hr />
+</div>
+<div id="other-useful-file-functions" class="section level2">
+<h2>23. Other Useful File Functions</h2>
+<div id="current-directory" class="section level3">
+<h3>Current directory</h3>
+<pre class="r"><code>getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/Lenovo/Documents/Cursor/Website-Mousavi/files/data-612/lectures&quot;</code></pre>
+</div>
+<div id="list-files" class="section level3">
+<h3>List files</h3>
+<pre class="r"><code>list.files()</code></pre>
+<pre><code>##  [1] &quot;_figs&quot;                               &quot;data-science-and-r.fragment.html&quot;   
+##  [3] &quot;data-science-and-r.qmd&quot;              &quot;files-and-paths.qmd&quot;                
+##  [5] &quot;files-and-paths.render.Rmd&quot;          &quot;getting-started.fragment.html&quot;      
+##  [7] &quot;getting-started.qmd&quot;                 &quot;ggplot2-facets-themes.fragment.html&quot;
+##  [9] &quot;ggplot2-facets-themes.qmd&quot;           &quot;ggplot2-geoms.fragment.html&quot;        
+## [11] &quot;ggplot2-geoms.qmd&quot;                   &quot;ggplot2-grammar.fragment.html&quot;      
+## [13] &quot;ggplot2-grammar.qmd&quot;                 &quot;introduction-to-r-concepts.qmd&quot;     
+## [15] &quot;lab-1-looking-under-the-hood.qmd&quot;    &quot;lab-2-pipes-functions.qmd&quot;          
+## [17] &quot;lab-3-ggplot2.fragment.html&quot;         &quot;lab-3-ggplot2.qmd&quot;                  
+## [19] &quot;pipes.qmd&quot;                           &quot;r-markdown-and-quarto.qmd&quot;          
+## [21] &quot;r-packages-and-the-tidyverse.qmd&quot;    &quot;r-scripts.fragment.html&quot;            
+## [23] &quot;r-scripts.qmd&quot;                       &quot;writing-functions.qmd&quot;</code></pre>
+</div>
+<div id="preview-a-text-file" class="section level3">
+<h3>Preview a text file</h3>
+<pre class="r"><code>readLines(&quot;data/students.csv&quot;, n = 3)</code></pre>
+<pre><code>## Error in `file()`:
+## ! cannot open the connection</code></pre>
+</div>
+<div id="check-whether-a-file-exists" class="section level3">
+<h3>Check whether a file exists</h3>
+<pre class="r"><code>file.exists(&quot;data/students.csv&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="check-whether-a-directory-exists" class="section level3">
+<h3>Check whether a directory exists</h3>
+<pre class="r"><code>dir.exists(&quot;data&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="construct-a-path" class="section level3">
+<h3>Construct a path</h3>
+<pre class="r"><code>file.path(&quot;data&quot;, &quot;students.csv&quot;)</code></pre>
+<pre><code>## [1] &quot;data/students.csv&quot;</code></pre>
+</div>
+<div id="select-a-file-manually" class="section level3">
+<h3>Select a file manually</h3>
+<pre class="r"><code>file.choose()</code></pre>
+</div>
+<div id="get-file-information" class="section level3">
+<h3>Get file information</h3>
+<pre class="r"><code>file.info(&quot;data/students.csv&quot;)</code></pre>
+<pre><code>##                   size isdir mode mtime ctime atime  exe uname udomain
+## data/students.csv   NA    NA &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt; &lt;NA&gt;</code></pre>
+</div>
+<div id="create-a-directory" class="section level3">
+<h3>Create a directory</h3>
+<pre class="r"><code>dir.create(&quot;results&quot;)</code></pre>
+</div>
+<div id="copy-a-file" class="section level3">
+<h3>Copy a file</h3>
+<pre class="r"><code>file.copy(
+  &quot;data/students.csv&quot;,
+  &quot;output/students_copy.csv&quot;
+)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="rename-a-file" class="section level3">
+<h3>Rename a file</h3>
+<pre class="r"><code>file.rename(
+  &quot;output/students_copy.csv&quot;,
+  &quot;output/backup.csv&quot;
+)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="delete-a-file" class="section level3">
+<h3>Delete a file</h3>
+<pre class="r"><code>file.remove(&quot;output/backup.csv&quot;)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>You do not need to memorize all these functions. The important goal
+is to understand what each type of operation does.</p>
+<hr />
+</div>
+</div>
+<div id="other-common-file-types" class="section level2">
+<h2>24. Other Common File Types</h2>
+<p>CSV is only one format.</p>
+<p>File type Base R / Common function readr/tidyverse</p>
+<p><code>.csv</code> <code>read.csv()</code> <code>read_csv()</code></p>
+<p><code>.tsv</code> <code>read.delim()</code>
+<code>read_tsv()</code></p>
+<p><code>.txt</code> <code>read.table()</code>
+<code>read_delim()</code></p>
+<p><code>.rds</code> <code>readRDS()</code> —</p>
+<p><code>.RData</code> <code>load()</code> —</p>
+<p><code>.xlsx</code> <code>readxl::read_excel()</code>
+<code>readxl::read_excel()</code></p>
+<p>The exact function changes depending on the file format, but the
+general workflow remains the same.</p>
+<hr />
+</div>
+<div id="saving-r-objects" class="section level2">
+<h2>25. Saving R Objects</h2>
+<p>Sometimes we want to save an R object in R’s own format rather than
+exporting it as CSV.</p>
+<pre class="r"><code>saveRDS(
+  students,
+  &quot;output/students.rds&quot;
+)</code></pre>
+<p>Later:</p>
+<pre class="r"><code>students &lt;- readRDS(
+  &quot;output/students.rds&quot;
+)</code></pre>
+<pre><code>## Error in `gzfile()`:
+## ! cannot open the connection</code></pre>
+<p>This preserves an R object rather than converting it to a general
+text format such as CSV.</p>
+<hr />
+</div>
+<div id="complete-base-r-workflow" class="section level2">
+<h2>26. Complete Base R Workflow</h2>
+<pre class="r"><code># 1. Where am I?
+getwd()
+
+# 2. What files are here?
+list.files()
+list.files(&quot;data&quot;)
+
+# 3. Does the file exist?
+file.exists(&quot;data/students.csv&quot;)
+
+# 4. Look inside the file
+readLines(
+  &quot;data/students.csv&quot;,
+  n = 3
+)
+
+# 5. Import using the appropriate function
+students &lt;- read.csv(
+  &quot;data/students.csv&quot;
+)
+
+# 6. Inspect
+head(students)
+str(students)
+summary(students)
+
+# 7. Work with the data
+students$passed &lt;- students$grade &gt;= 80
+
+# 8. Export
+write.csv(
+  students,
+  &quot;output/students_updated.csv&quot;,
+  row.names = FALSE
+)</code></pre>
+<hr />
+</div>
+<div id="the-same-basic-workflow-with-tidyverse-tools"
+class="section level2">
+<h2>27. The Same Basic Workflow with Tidyverse Tools</h2>
+<pre class="r"><code>library(tidyverse)
+
+# Import
+students &lt;- read_csv(
+  &quot;data/students.csv&quot;
+)
+
+# Inspect
+students
+glimpse(students)
+summary(students)
+
+# Export
+write_csv(
+  students,
+  &quot;output/students_updated.csv&quot;
+)</code></pre>
+<p>Load <code>tidyverse</code> as in note <strong>1.2</strong>. We will
+learn additional tidyverse tools for manipulating data later.</p>
+<hr />
+</div>
+<div id="the-file-workflow-to-remember" class="section level2">
+<h2>28. The File Workflow to Remember</h2>
+<p>When working with an unfamiliar data file, ask these questions:</p>
+<p>WHERE AM I? getwd() │ ▼ WHAT FILES ARE HERE? list.files() │ ▼ WHERE
+IS MY FILE? relative path │ ▼ DOES IT EXIST? file.exists() │ ▼ WHAT IS
+INSIDE IT? readLines() │ ▼ WHAT IS THE DELIMITER? comma / tab / other │
+▼ CHOOSE THE READER read.csv() / read.delim() read_csv() / read_tsv() │
+▼ IMPORT │ ▼ INSPECT head(), str(), summary() │ ▼ WORK WITH DATA │ ▼
+SAVE / EXPORT write.csv() / write_csv()</p>
+<p>Three ideas to remember</p>
+<p><strong>1. A path tells R where a file is.</strong></p>
+<p><strong>2. A delimiter tells R how values inside a text file are
+separated.</strong></p>
+<p><strong>3. An import function reads the file and creates an R object
+that we can work with.</strong></p>
+<p>For an unfamiliar text data file:</p>
+<pre class="r"><code># Find/check it
+file.exists(&quot;data/students.csv&quot;)
+
+# Look inside
+readLines(&quot;data/students.csv&quot;, n = 3)
+
+# Choose the appropriate reader
+students &lt;- read.csv(&quot;data/students.csv&quot;)
+
+# Check that it worked
+head(students)
+str(students)</code></pre>
+<p>This habit—<strong>find → inspect → import → verify</strong>—will
+prevent many common file-import problems.</p>
+<p>Lab 1 asks you to import <code>students.csv</code>. Put it where a
+relative path can see it.</p>
+</div>

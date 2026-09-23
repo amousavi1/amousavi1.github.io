@@ -11,22 +11,22 @@ often clearer than twenty colors on one panel.</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
   facet_wrap(~ class)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/facet-wrap-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/facet-wrap-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>facet_grid(rows ~ cols)</code> is a matrix of two
 categoricals:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point(alpha = 0.3) +
   facet_grid(drv ~ class)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/facet-grid-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/facet-grid-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>A <code>.</code> means “no faceting on that side”:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
   facet_grid(class ~ .)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/facet-grid-rows-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/facet-grid-rows-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
   facet_grid(. ~ drv)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/facet-grid-cols-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/facet-grid-cols-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 </div>
 <div id="a-fixed-color-is-not-a-mapping" class="section level2">
 <h2>2. A fixed color is not a mapping</h2>
@@ -34,19 +34,19 @@ categoricals:</p>
 <strong>outside</strong> <code>aes()</code>:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point(color = &quot;blue&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/fixed-blue-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/fixed-blue-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>The name is a character, so it is in quotes. Inside
 <code>aes()</code>, ggplot2 treats <code>"blue"</code> as a one-level
 categorical variable and draws a legend for it. That is a common
 mistake:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = &quot;blue&quot;)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/mistaken-blue-aes-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/mistaken-blue-aes-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>The same rule applies to histograms. <code>fill</code> is the
 interior; <code>color</code> is the outline:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = hwy)) +
   geom_histogram(bins = 25, fill = &quot;white&quot;, color = &quot;black&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/hist-outline-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/hist-outline-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 </div>
 <div id="themes" class="section level2">
 <h2>3. Themes</h2>
@@ -56,7 +56,7 @@ interior; <code>color</code> is the outline:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
   geom_point() +
   theme_bw()</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/theme-bw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/theme-bw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>ggthemes</code> adds more, including
 <code>theme_economist()</code> and <code>theme_fivethirtyeight()</code>.
 Load the package first.</p>
@@ -68,12 +68,12 @@ continuous color scale, or log both axes:</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point() +
   scale_color_continuous(low = &quot;black&quot;, high = &quot;white&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/scale-continuous-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/scale-continuous-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
   geom_point(alpha = 0.01) +
   scale_x_log10() +
   scale_y_log10()</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/scale-log-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/scale-log-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>For a plot you will share, use a colorblind-safe palette.
 <code>ggthemes::scale_color_colorblind()</code> and
 <code>scale_fill_colorblind()</code> are one option. viridis is another:
@@ -85,12 +85,12 @@ colorful, perceptually even, and still readable in grayscale. Use
   geom_point() +
   theme_bw() +
   scale_color_colorblind()</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/colorblind-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/colorblind-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_histogram(position = &quot;dodge&quot;, bins = 15) +
   theme_bw() +
   scale_fill_viridis_d()</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/viridis-fill-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/viridis-fill-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 </div>
 <div id="labels" class="section level2">
 <h2>5. Labels</h2>
@@ -104,7 +104,7 @@ on the scale (<code>name = ...</code>).</p>
   xlab(&quot;Displacement&quot;) +
   ylab(&quot;Highway&quot;) +
   ggtitle(&quot;Displacement vs Highway&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/labels-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/labels-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 </div>
 <div id="saving-a-plot" class="section level2">
 <h2>6. Saving a plot</h2>
@@ -114,7 +114,7 @@ on the scale (<code>name = ...</code>).</p>
   theme_bw()
 
 pl</code></pre>
-<p><img src="files/data-612/lectures/_figs/facets/save-object-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-facets-themes/save-object-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>In RStudio, <strong>Export</strong> in the Plots pane writes a file.
 In a script or Quarto document, <code>ggsave()</code> does the same. It
 overwrites without asking.</p>

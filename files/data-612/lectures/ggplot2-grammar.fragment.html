@@ -34,7 +34,7 @@ unconnected calls. The ggplot2 version is one chain:</p>
   geom_rug() +
   xlab(&quot;Displacement&quot;) +
   ylab(&quot;Highway&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/mpg-smooth-rug-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/mpg-smooth-rug-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>qplot()</code> is a short ggplot2 helper for a quick look. We
 will write <code>ggplot()</code> so the layers stay visible.</p>
 </div>
@@ -59,20 +59,20 @@ them.</p>
 <p><code>ggplot()</code> makes the canvas. It needs <code>data</code> (a
 data frame) and, usually, <code>mapping = aes(...)</code>.</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy))</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/empty-canvas-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/empty-canvas-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>That draws axes and an empty panel. There is no geom yet.</p>
 <p>Add a layer with <code>+</code> at the <strong>end</strong> of the
 line, then the next function on the next line. A <code>+</code> at the
 start of a line will error.</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/first-points-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/first-points-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>You can pipe the data in. The first argument of <code>ggplot()</code>
 is then filled, so you only write the mapping:</p>
 <pre class="r"><code>mpg |&gt;
   ggplot(mapping = aes(x = displ, y = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/pipe-ggplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/pipe-ggplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>Larger <code>displ</code> goes with smaller <code>cty</code>: a
 negative relationship.</p>
 </div>
@@ -86,7 +86,7 @@ change the association. It does change what a reader thinks is doing the
 explaining.</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/cty-hwy-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/cty-hwy-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>cty</code> and <code>hwy</code> move together: a positive
 relationship.</p>
 </div>
@@ -99,10 +99,10 @@ relationship.</p>
 (harder once you have many levels):</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, shape = drv)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/shape-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/shape-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>Fifty states as fifty colors is a mess. Recode into fewer groups, or
 facet (note 3.3).</p>
 <p><code>size</code> and <code>alpha</code> have a natural order (small
@@ -117,17 +117,17 @@ legal and usually a bad idea.</p>
 worst when points overlap).</p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/color-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/color-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point() +
   viridis::scale_color_viridis()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/color-cty-viridis-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/color-cty-viridis-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, alpha = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/alpha-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/alpha-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, size = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/size-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/size-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>shape</code> has a short list of symbols. Mapping a continuous
 variable to <code>shape</code> errors.</p>
 <p>Stacking <code>color</code>, <code>size</code>, <code>alpha</code>,

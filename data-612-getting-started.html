@@ -111,157 +111,217 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">1.1 Getting Started with R and RStudio</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                                            <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-1.html">Week 1</a> &middot;
                             <a href="files/data-612/getting-started.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Install R and RStudio, run a script, and open a project so R can find your files.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/getting-started.qmd">Source (.qmd)</a></p>
+<p>Install R and RStudio, run a script, and open a project so R can find
+your files.</p>
+<div id="install-r-then-rstudio" class="section level2">
 <h2>1. Install R, then RStudio</h2>
-<p>R is the language. RStudio (Posit) is an editor that makes R easier to use.</p>
+<p>R is the language. RStudio (Posit) is an editor that makes R easier
+to use.</p>
 <p>Install them in this order:</p>
-<ol>
-<li><a href="https://www.r-project.org/">R</a> for Windows, macOS, or Linux.</li>
-<li><a href="https://posit.co/download/rstudio-desktop/">RStudio Desktop</a>.</li>
+<ol style="list-style-type: decimal">
+<li><a href="https://www.r-project.org/">R</a> for Windows, macOS, or
+Linux.</li>
+<li><a href="https://posit.co/download/rstudio-desktop/">RStudio
+Desktop</a>.</li>
 </ol>
 <p>RStudio will not work properly if R is not installed first.</p>
-<p>We will work in RStudio, not in the older R application that installs with R.</p>
-<p>R was designed for statistics. It is free, it is built around packages, and it is a good language for analysis you can rerun. Python is also widely used in data science. This course uses R.</p>
+<p>We will work in RStudio, not in the older R application that installs
+with R.</p>
+<p>R was designed for statistics. It is free, it is built around
+packages, and it is a good language for analysis you can rerun. Python
+is also widely used in data science. This course uses R.</p>
 <hr />
+</div>
+<div id="the-rstudio-layout" class="section level2">
 <h2>2. The RStudio Layout</h2>
 <p>When you open RStudio, you will typically see several panes:</p>
 <ul>
-<li>the <strong>console</strong>, where R evaluates code immediately</li>
-<li>a <strong>source</strong> editor, where you write scripts and documents you want to keep</li>
-<li>an <strong>environment / history</strong> pane, which lists objects in the current session</li>
+<li>the <strong>console</strong>, where R evaluates code
+immediately</li>
+<li>a <strong>source</strong> editor, where you write scripts and
+documents you want to keep</li>
+<li>an <strong>environment / history</strong> pane, which lists objects
+in the current session</li>
 <li>a <strong>files / plots / packages / help</strong> pane</li>
 </ul>
 <p>The source pane stays closed until you open or create a file.</p>
 <p>A few habits that save time:</p>
 <ul>
-<li>The <strong>Files</strong> tab is a limited file manager. You can open, copy, and delete files, and you can set the console working directory from <strong>More</strong>.</li>
-<li>The <strong>Environment</strong> tab shows objects you have created in this session.</li>
-<li>The <strong>Help</strong> tab shows documentation. You can also type <code>help(mean)</code> or <code>?mean</code> in the console.</li>
+<li>The <strong>Files</strong> tab is a limited file manager. You can
+open, copy, and delete files, and you can set the console working
+directory from <strong>More</strong>.</li>
+<li>The <strong>Environment</strong> tab shows objects you have created
+in this session.</li>
+<li>The <strong>Help</strong> tab shows documentation. You can also type
+<code>help(mean)</code> or <code>?mean</code> in the console.</li>
 </ul>
 <hr />
+</div>
+<div id="configure-rstudio-once" class="section level2">
 <h2>3. Configure RStudio Once</h2>
 <p>Open <strong>Tools → Global Options… → General</strong>.</p>
 <p>Under <strong>Workspace</strong>:</p>
 <ul>
-<li>uncheck <strong>Restore .RData into workspace at startup</strong></li>
-<li>set <strong>Save workspace to .RData on exit</strong> to <strong>Never</strong></li>
+<li>uncheck <strong>Restore .RData into workspace at
+startup</strong></li>
+<li>set <strong>Save workspace to .RData on exit</strong> to
+<strong>Never</strong></li>
 </ul>
-<p>If RStudio restores yesterday's objects, you can accidentally use results you no longer have code for. That looks convenient and is bad for reproducibility.</p>
+<p>If RStudio restores yesterday’s objects, you can accidentally use
+results you no longer have code for. That looks convenient and is bad
+for reproducibility.</p>
 <p>Other useful options:</p>
 <ul>
 <li><strong>Code → Editing</strong>: turn on soft wrapping</li>
 <li><strong>Appearance</strong>: choose a font size you can read</li>
 </ul>
 <hr />
+</div>
+<div id="the-console" class="section level2">
 <h2>4. The Console</h2>
 <p>The console is the pane with the <code>&gt;</code> prompt.</p>
 <p>Type:</p>
-<pre><code class="language-r">1 + 1
-</code></pre>
+<pre><code class="language-r">1 + 1</code></pre>
+<pre><code>## [1] 2</code></pre>
 <p>and press Enter.</p>
 <p>R prints:</p>
-<pre><code class="language-r"># [1] 2
-</code></pre>
-<p>The <code>[1]</code> is not part of the answer. It is the index of the first element R is showing you.</p>
-<p>The up and down arrow keys cycle through recent console commands. That is useful when you mistype a line.</p>
+<pre><code class="language-r"># [1] 2</code></pre>
+<p>The <code>[1]</code> is not part of the answer. It is the index of
+the first element R is showing you.</p>
+<p>The up and down arrow keys cycle through recent console commands.
+That is useful when you mistype a line.</p>
 <p>R is a calculator:</p>
-<pre><code class="language-r">3 * 7
-9 / 3
-(3 + 5) * 6
-3 ^ 2
-</code></pre>
+<pre><code class="language-r">3 * 7</code></pre>
+<pre><code>## [1] 21</code></pre>
+<pre><code class="language-r">9 / 3</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre><code class="language-r">(3 + 5) * 6</code></pre>
+<pre><code>## [1] 48</code></pre>
+<pre><code class="language-r">3 ^ 2</code></pre>
+<pre><code>## [1] 9</code></pre>
 <p><code>%%</code> is remainder after integer division:</p>
-<pre><code class="language-r">1 %% 2
-# 1
+<pre><code class="language-r">1 %% 2</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre><code class="language-r"># 1
 
-4 %% 2
-# 0
-</code></pre>
-<p>The console is useful for short experiments. It is a poor place to keep your work. When you close RStudio, console history is not a script.</p>
-<p>If a command is incomplete, R shows a <code>+</code> prompt and waits. Press <strong>Esc</strong> to get back to <code>&gt;</code>.</p>
+4 %% 2</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre><code class="language-r"># 0</code></pre>
+<p>The console is useful for short experiments. It is a poor place to
+keep your work. When you close RStudio, console history is not a
+script.</p>
+<p>If a command is incomplete, R shows a <code>+</code> prompt and
+waits. Press <strong>Esc</strong> to get back to <code>&gt;</code>.</p>
 <hr />
+</div>
+<div id="scripts" class="section level2">
 <h2>5. Scripts</h2>
-<p>A <strong>script</strong> is a text file of R code, usually with a <code>.R</code> extension.</p>
+<p>A <strong>script</strong> is a text file of R code, usually with a
+<code>.R</code> extension.</p>
 <p>Create one with <strong>File → New File → R Script</strong>.</p>
 <p>Type this into the script:</p>
 <pre><code class="language-r">x &lt;- 10
-x * 2
-</code></pre>
-<p>Place the cursor on a line and run it with <strong>Ctrl+Enter</strong> (Windows/Linux) or <strong>Cmd+Enter</strong> (macOS). You can also click <strong>Run</strong>.</p>
-<p>The code is sent to the console, and the console shows the result.</p>
+x * 2</code></pre>
+<pre><code>## [1] 20</code></pre>
+<p>Place the cursor on a line and run it with
+<strong>Ctrl+Enter</strong> (Windows/Linux) or
+<strong>Cmd+Enter</strong> (macOS). You can also click
+<strong>Run</strong>.</p>
+<p>The code is sent to the console, and the console shows the
+result.</p>
 <p>A useful habit is:</p>
 <blockquote>
-<p>Type in a script. Run from the script. Treat the console as a scratch pad.</p>
+<p>Type in a script. Run from the script. Treat the console as a scratch
+pad.</p>
 </blockquote>
 <p>Save the script. You can reopen it in a later session.</p>
-<p>Lab 1 is mostly a script (<code>lab01.R</code>). Section G is a short Quarto file; see note <strong>1.5</strong>.</p>
+<p>Lab 1 is mostly a script (<code>lab01.R</code>). Section G is a short
+Quarto file; see note <strong>1.5</strong>.</p>
 <hr />
+</div>
+<div id="comments" class="section level2">
 <h2>6. Comments</h2>
 <p>R ignores anything after <code>#</code> on a line:</p>
 <pre><code class="language-r"># This line is only for humans.
 
-x &lt;- 10   # store 10 in x
-</code></pre>
-<p>Comments are how you explain <em>why</em> you wrote something, not how you hide code you might need later.</p>
+x &lt;- 10   # store 10 in x</code></pre>
+<p>Comments are how you explain <em>why</em> you wrote something, not
+how you hide code you might need later.</p>
 <hr />
+</div>
+<div id="assignment" class="section level2">
 <h2>7. Assignment</h2>
 <p>We store a value with <code>&lt;-</code>:</p>
 <pre><code class="language-r">greeting &lt;- &quot;Hello&quot;
-greeting
-</code></pre>
+greeting</code></pre>
+<pre><code>## [1] &quot;Hello&quot;</code></pre>
 <p>In this course:</p>
 <ul>
 <li><code>&lt;-</code> stores a value in an object</li>
-<li><code>=</code> names an argument inside a function call, for example <code>mean(x, na.rm = TRUE)</code></li>
+<li><code>=</code> names an argument inside a function call, for example
+<code>mean(x, na.rm = TRUE)</code></li>
 </ul>
-<p>R is <strong>case sensitive</strong>. <code>x</code> and <code>X</code> are different objects. <code>TRUE</code> is not <code>true</code>. <code>sum()</code> is not <code>Sum()</code>.</p>
+<p>R is <strong>case sensitive</strong>. <code>x</code> and
+<code>X</code> are different objects. <code>TRUE</code> is not
+<code>true</code>. <code>sum()</code> is not <code>Sum()</code>.</p>
 <hr />
+</div>
+<div id="getting-help" class="section level2">
 <h2>8. Getting Help</h2>
 <p>Almost every function has a help page:</p>
 <pre><code class="language-r">help(mean)
 ?mean
-help(&quot;%%&quot;)
-</code></pre>
-<p><code>??topic</code> searches help pages. Adding <code>"in R"</code> to a web search is often faster than memorizing function names.</p>
+help(&quot;%%&quot;)</code></pre>
+<p><code>??topic</code> searches help pages. Adding <code>"in R"</code>
+to a web search is often faster than memorizing function names.</p>
 <hr />
+</div>
+<div id="organize-your-files" class="section level2">
 <h2>9. Organize Your Files</h2>
-<p>Do not keep every course file on the Desktop with names like <code>file 1</code>. You will not be able to tell R where the data is, and other people will not be able to rerun your work.</p>
-<p>Create one folder for the course, for example <code>data_612</code>, and keep lecture work and assignments in separate subfolders. Use <strong>snake_case</strong> names. Avoid spaces and special characters.</p>
-<pre><code class="language-text">data_612/
-  students.csv
-  lab01.R
-  data/
-    students.csv
-    extra/
-  R/
-  output/
-  assignments/
-    lab_01/
-</code></pre>
+<p>Do not keep every course file on the Desktop with names like
+<code>file 1</code>. You will not be able to tell R where the data is,
+and other people will not be able to rerun your work.</p>
+<p>Create one folder for the course, for example <code>data_612</code>,
+and keep lecture work and assignments in separate subfolders. Use
+<strong>snake_case</strong> names. Avoid spaces and special
+characters.</p>
+<p>data_612/ students.csv lab01.R data/ students.csv extra/ R/ output/
+assignments/ lab_01/</p>
 <p>Inside a project, a common pattern is:</p>
 <ul>
 <li><code>R/</code> for <code>.R</code> scripts</li>
 <li><code>data/</code> for files you import</li>
 <li><code>output/</code> for files you write</li>
 </ul>
-<p>You do not need every folder every week. You do need a place that is not a pile.</p>
-<p>Back up that folder to Google Drive or another cloud service. A crashed laptop is a common way to lose a course.</p>
+<p>You do not need every folder every week. You do need a place that is
+not a pile.</p>
+<p>Back up that folder to Google Drive or another cloud service. A
+crashed laptop is a common way to lose a course.</p>
 <hr />
+</div>
+<div id="where-are-your-files" class="section level2">
 <h2>10. Where Are Your Files?</h2>
-<p>R does not search your whole computer for a file. It looks in one folder, called the <strong>working directory</strong>, unless you tell it a path.</p>
-<pre><code class="language-r">getwd()
-</code></pre>
-<p>That path is "where R is standing." In RStudio you can also read it just under the Console tab.</p>
-<p>A better habit for the course is <strong>File → New Project</strong>. An RStudio project pins the working directory to that folder. Do not nest one project inside another.</p>
-<p>Note <strong>1.3</strong> is the full treatment: relative vs absolute paths, <code>.</code> and <code>..</code>, choosing an import function, and saving results.</p>
+<p>R does not search your whole computer for a file. It looks in one
+folder, called the <strong>working directory</strong>, unless you tell
+it a path.</p>
+<pre><code class="language-r">getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/Lenovo/Documents/Cursor/Website-Mousavi/files/data-612/lectures&quot;</code></pre>
+<p>That path is “where R is standing.” In RStudio you can also read it
+just under the Console tab.</p>
+<p>A better habit for the course is <strong>File → New Project</strong>.
+An RStudio project pins the working directory to that folder. Do not
+nest one project inside another.</p>
+<p>Note <strong>1.3</strong> is the full treatment: relative vs absolute
+paths, <code>.</code> and <code>..</code>, choosing an import function,
+and saving results.</p>
 <hr />
+</div>
+<div id="errors-are-information" class="section level2">
 <h2>11. Errors Are Information</h2>
 <p>If R cannot run a line, it prints an error. Read it from the top.</p>
 <p>Common first-week mistakes include:</p>
@@ -274,16 +334,21 @@ help(&quot;%%&quot;)
 </ul>
 <p>You do not need to memorize every error. You do need to read it.</p>
 <hr />
+</div>
+<div id="what-to-do-next" class="section level2">
 <h2>12. What to Do Next</h2>
-<p>Once R and RStudio are installed and you can run a line from a script, continue with:</p>
+<p>Once R and RStudio are installed and you can run a line from a
+script, continue with:</p>
 <ul>
 <li><strong>1.2</strong> R Packages and the Tidyverse</li>
 <li><strong>1.3</strong> Working with Files and Paths</li>
 <li><strong>1.4</strong> Introduction to R Concepts</li>
 <li><strong>1.5</strong> R Markdown and Quarto</li>
-<li><strong>Lab 1</strong>, which asks you to predict what R will do <em>before</em> you run the code. Work in a <code>.R</code> script.</li>
+<li><strong>Lab 1</strong>, which asks you to predict what R will do
+<em>before</em> you run the code. Work in a <code>.R</code> script.</li>
 </ul>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-data-science-and-r.html"><span aria-hidden="true">←</span> 1.0 Data Science and R</a>
                         <a class="course-page-nav__week" href="data-612-week-1.html">Week 1</a>
                             <a class="course-page-nav__next" href="data-612-r-packages-and-the-tidyverse.html">1.2 R Packages and the Tidyverse <span aria-hidden="true">→</span></a>
@@ -296,7 +361,7 @@ help(&quot;%%&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

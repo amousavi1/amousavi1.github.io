@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   fig.height = 3.6,
   fig.align = "center",
   dpi = 120,
+  error = TRUE,
   fig.path = "_figs/geoms/"
 )
 library(tidyverse)

@@ -111,106 +111,130 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">2.2 Writing Functions</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                                            <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-2.html">Week 2</a> &middot;
                             <a href="files/data-612/writing-functions.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Write a function when you repeat a calculation. Test it, check the inputs, and document it.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/writing-functions.qmd">Source (.qmd)</a></p>
+<p>Write a function when you repeat a calculation. Test it, check the
+inputs, and document it.</p>
+<div id="when-to-write-a-function" class="section level2">
 <h2>1. When to write a function</h2>
-<p>Base R and packages already give you many functions. Write your own when you will do the same work more than once: a conversion, a summary, a plot you rebuild every week.</p>
+<p>Base R and packages already give you many functions. Write your own
+when you will do the same work more than once: a conversion, a summary,
+a plot you rebuild every week.</p>
 <p>A function has a name, arguments, a body, and a return value:</p>
 <pre><code class="language-r">add_two &lt;- function(a, b) {
   a + b
 }
 
-add_two(2, 4)
-# [1] 6
-</code></pre>
-<p>R returns the last value it evaluates. <code>return()</code> is useful when you want to leave early, or when several branches could be the last line. Put <code>return(...)</code> on its own line. A clear pattern is to store the answer in one name and return it at the end:</p>
+add_two(2, 4)</code></pre>
+<pre><code>## [1] 6</code></pre>
+<pre><code class="language-r"># [1] 6</code></pre>
+<p>R returns the last value it evaluates. <code>return()</code> is
+useful when you want to leave early, or when several branches could be
+the last line. Put <code>return(...)</code> on its own line. A clear
+pattern is to store the answer in one name and return it at the end:</p>
 <pre><code class="language-r">add_two &lt;- function(a, b) {
   total &lt;- a + b
   return(total)
-}
-</code></pre>
+}</code></pre>
 <p>A useful order of work:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>get the logic right on a small example</li>
 <li>choose a verb-like name</li>
 <li>wrap the working code in <code>function(...) { ... }</code></li>
 <li>test ordinary inputs</li>
 <li>check bad inputs</li>
-<li>write a short comment or Roxygen header so you remember the contract</li>
+<li>write a short comment or Roxygen header so you remember the
+contract</li>
 </ol>
 <hr />
+</div>
+<div id="duplication-is-a-reason-to-stop-and-wrap"
+class="section level2">
 <h2>2. Duplication is a reason to stop and wrap</h2>
-<p>This example is the usual one from R for Data Science. Four columns, each rescaled to sit between 0 and 1:</p>
+<p>This example is the usual one from R for Data Science. Four columns,
+each rescaled to sit between 0 and 1:</p>
 <pre><code class="language-r">set.seed(1)
 df &lt;- tibble::tibble(
   a = rnorm(10),
   b = rnorm(10),
   c = rnorm(10),
   d = rnorm(10)
-)
-</code></pre>
+)</code></pre>
 <p>Copy-paste looks like this:</p>
 <pre><code class="language-r">df$a &lt;- (df$a - min(df$a, na.rm = TRUE)) /
-  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
-</code></pre>
-<p>Four columns means four copies. It is easy to reuse the wrong column in a <code>min()</code> or <code>max()</code>, and <code>min()</code> is computed twice. <code>range()</code> does both ends in one pass:</p>
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))</code></pre>
+<p>Four columns means four copies. It is easy to reuse the wrong column
+in a <code>min()</code> or <code>max()</code>, and <code>min()</code> is
+computed twice. <code>range()</code> does both ends in one pass:</p>
 <pre><code class="language-r">x &lt;- df$a
 rng &lt;- range(x, na.rm = TRUE)
-(x - rng[1]) / (rng[2] - rng[1])
-</code></pre>
+(x - rng[1]) / (rng[2] - rng[1])</code></pre>
+<pre><code>##  [1] 0.086047962 0.419296552 0.000000000 1.000000000 0.479300618 0.006236443
+##  [7] 0.544264487 0.647475101 0.580609856 0.218124222</code></pre>
 <p>That is a function:</p>
 <pre><code class="language-r">rescale01 &lt;- function(x) {
   rng &lt;- range(x, na.rm = TRUE)
   (x - rng[1]) / (rng[2] - rng[1])
 }
 
-rescale01(c(0, 5, 10))
-# [1] 0.0 0.5 1.0
+rescale01(c(0, 5, 10))</code></pre>
+<pre><code>## [1] 0.0 0.5 1.0</code></pre>
+<pre><code class="language-r"># [1] 0.0 0.5 1.0
 
-rescale01(c(1, 2, 3, NA, 5))
-# [1] 0.00 0.25 0.50   NA 1.00
-</code></pre>
+rescale01(c(1, 2, 3, NA, 5))</code></pre>
+<pre><code>## [1] 0.00 0.25 0.50   NA 1.00</code></pre>
+<pre><code class="language-r"># [1] 0.00 0.25 0.50   NA 1.00</code></pre>
 <p>Now each column is one line, and a change happens in one place:</p>
 <pre><code class="language-r">df$a &lt;- rescale01(df$a)
 df$b &lt;- rescale01(df$b)
 df$c &lt;- rescale01(df$c)
-df$d &lt;- rescale01(df$d)
-</code></pre>
-<p><code>Inf</code> is a good test. <code>range()</code> treats it as a real endpoint unless you say otherwise:</p>
+df$d &lt;- rescale01(df$d)</code></pre>
+<p><code>Inf</code> is a good test. <code>range()</code> treats it as a
+real endpoint unless you say otherwise:</p>
 <pre><code class="language-r">x &lt;- c(1:10, Inf)
-rescale01(x)
-#  [1]   0   0   0   0   0   0   0   0   0   0 NaN
-</code></pre>
-<p>That is not useful. Ignore non-finite values when you compute the range:</p>
+rescale01(x)</code></pre>
+<pre><code>##  [1]   0   0   0   0   0   0   0   0   0   0 NaN</code></pre>
+<pre><code class="language-r">#  [1]   0   0   0   0   0   0   0   0   0   0 NaN</code></pre>
+<p>That is not useful. Ignore non-finite values when you compute the
+range:</p>
 <pre><code class="language-r">rescale01 &lt;- function(x) {
   rng &lt;- range(x, na.rm = TRUE, finite = TRUE)
   (x - rng[1]) / (rng[2] - rng[1])
 }
 
-rescale01(x)
-#  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444
-#  [6] 0.5555556 0.6666667 0.7777778 0.8888889 1.0000000       Inf
-</code></pre>
+rescale01(x)</code></pre>
+<pre><code>##  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444 0.5555556 0.6666667
+##  [8] 0.7777778 0.8888889 1.0000000       Inf</code></pre>
+<pre><code class="language-r">#  [1] 0.0000000 0.1111111 0.2222222 0.3333333 0.4444444
+#  [6] 0.5555556 0.6666667 0.7777778 0.8888889 1.0000000       Inf</code></pre>
 <hr />
-<h2>3. <code>if</code> needs one <code>TRUE</code> or <code>FALSE</code></h2>
+</div>
+<div id="if-needs-one-true-or-false" class="section level2">
+<h2>3. <code>if</code> needs one <code>TRUE</code> or
+<code>FALSE</code></h2>
 <p>A conditional runs one block or the other:</p>
 <pre><code class="language-r">if (condition) {
   # when condition is TRUE
 } else {
   # when condition is FALSE
-}
-</code></pre>
-<p>The condition must be a <strong>single</strong> logical value. Vectorized <code>&amp;</code> and <code>|</code> are for elementwise work. Inside <code>if</code>, use <code>&amp;&amp;</code> and <code>||</code>, or collapse a vector with <code>any()</code> or <code>all()</code>:</p>
-<pre><code class="language-r">any(c(FALSE, TRUE, FALSE))   # TRUE  — at least one TRUE
-all(c(TRUE, TRUE, FALSE))    # FALSE — not every value is TRUE
-</code></pre>
-<p>Prefer <code>identical()</code> to <code>==</code> when you want exact equality of two objects. For floating-point comparisons, <code>dplyr::near()</code> is safer than <code>==</code>.</p>
+}</code></pre>
+<pre><code>## Error:
+## ! object &#39;condition&#39; not found</code></pre>
+<p>The condition must be a <strong>single</strong> logical value.
+Vectorized <code>&amp;</code> and <code>|</code> are for elementwise
+work. Inside <code>if</code>, use <code>&amp;&amp;</code> and
+<code>||</code>, or collapse a vector with <code>any()</code> or
+<code>all()</code>:</p>
+<pre><code class="language-r">any(c(FALSE, TRUE, FALSE))   # TRUE  — at least one TRUE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">all(c(TRUE, TRUE, FALSE))    # FALSE — not every value is TRUE</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>Prefer <code>identical()</code> to <code>==</code> when you want
+exact equality of two objects. For floating-point comparisons,
+<code>dplyr::near()</code> is safer than <code>==</code>.</p>
 <p>This function reports which elements of a vector have names:</p>
 <pre><code class="language-r">has_name &lt;- function(x) {
   nms &lt;- names(x)
@@ -221,13 +245,16 @@ all(c(TRUE, TRUE, FALSE))    # FALSE — not every value is TRUE
   }
 }
 
-has_name(c(1, 2, 3))
-# [1] FALSE FALSE FALSE
+has_name(c(1, 2, 3))</code></pre>
+<pre><code>## [1] FALSE FALSE FALSE</code></pre>
+<pre><code class="language-r"># [1] FALSE FALSE FALSE
 
-has_name(c(a = 1, 2, c = 3))
-# [1]  TRUE FALSE  TRUE
-</code></pre>
-<p>Chain branches with <code>else if</code> when you have several exclusive cases. When one argument chooses among named options, <code>switch()</code> is often clearer:</p>
+has_name(c(a = 1, 2, c = 3))</code></pre>
+<pre><code>## [1]  TRUE FALSE  TRUE</code></pre>
+<pre><code class="language-r"># [1]  TRUE FALSE  TRUE</code></pre>
+<p>Chain branches with <code>else if</code> when you have several
+exclusive cases. When one argument chooses among named options,
+<code>switch()</code> is often clearer:</p>
 <pre><code class="language-r">do_op &lt;- function(x, y, op) {
   switch(
     op,
@@ -239,19 +266,36 @@ has_name(c(a = 1, 2, c = 3))
   )
 }
 
-do_op(2, 4, &quot;plus&quot;)
-# [1] 6
+do_op(2, 4, &quot;plus&quot;)</code></pre>
+<pre><code>## [1] 6</code></pre>
+<pre><code class="language-r"># [1] 6
 
-do_op(2, 4, &quot;mod&quot;)
-# Error in do_op(2, 4, &quot;mod&quot;): Unknown op!
-</code></pre>
-<p>Opening <code>{</code> stays at the end of the <code>if</code> or <code>function</code> line. Closing <code>}</code> sits on its own line, unless <code>else</code> follows it. RStudio's <strong>Code → Reindent Lines</strong> will fix indentation.</p>
+do_op(2, 4, &quot;mod&quot;)</code></pre>
+<pre><code>## Error in `do_op()`:
+## ! Unknown op!</code></pre>
+<pre><code class="language-r"># Error in do_op(2, 4, &quot;mod&quot;): Unknown op!</code></pre>
+<p>Opening <code>{</code> stays at the end of the <code>if</code> or
+<code>function</code> line. Closing <code>}</code> sits on its own line,
+unless <code>else</code> follows it. RStudio’s <strong>Code → Reindent
+Lines</strong> will fix indentation.</p>
 <hr />
+</div>
+<div id="names-arguments-and-scope" class="section level2">
 <h2>4. Names, arguments, and scope</h2>
-<p>Use snake_case: lowercase letters, digits, and <code>_</code>. Related functions can share a prefix (<code>str_</code>, <code>fct_</code>). Do not reuse names of functions you still need, such as <code>sum</code> or <code>length</code>.</p>
-<p>When you call a function, R makes a <strong>new environment</strong> for that call. Arguments live there. A name you define inside the function does not overwrite the same name in the console.</p>
-<p>If the function uses a name it did not define, R walks outward until it finds one, or it errors with <code>object not found</code>. That is convenient and dangerous. Keep inputs as arguments. Use generic names inside the function (<code>x</code>, <code>y</code>, <code>df</code>) rather than data-specific names from the console.</p>
-<p>Put data arguments first, so a pipe can feed them. Give control arguments defaults when there is a sensible usual value:</p>
+<p>Use snake_case: lowercase letters, digits, and <code>_</code>.
+Related functions can share a prefix (<code>str_</code>,
+<code>fct_</code>). Do not reuse names of functions you still need, such
+as <code>sum</code> or <code>length</code>.</p>
+<p>When you call a function, R makes a <strong>new environment</strong>
+for that call. Arguments live there. A name you define inside the
+function does not overwrite the same name in the console.</p>
+<p>If the function uses a name it did not define, R walks outward until
+it finds one, or it errors with <code>object not found</code>. That is
+convenient and dangerous. Keep inputs as arguments. Use generic names
+inside the function (<code>x</code>, <code>y</code>, <code>df</code>)
+rather than data-specific names from the console.</p>
+<p>Put data arguments first, so a pipe can feed them. Give control
+arguments defaults when there is a sensible usual value:</p>
 <pre><code class="language-r">wt_mean &lt;- function(x, w, na.rm = FALSE) {
   stopifnot(is.logical(na.rm), length(na.rm) == 1)
   stopifnot(length(x) == length(w))
@@ -262,17 +306,19 @@ do_op(2, 4, &quot;mod&quot;)
     w &lt;- w[!miss]
   }
   sum(w * x) / sum(w)
-}
-</code></pre>
-<p><code>stopifnot()</code> checks that each expression is <code>TRUE</code>. The error message names the failed check. <code>stop("...")</code> lets you write the message yourself:</p>
+}</code></pre>
+<p><code>stopifnot()</code> checks that each expression is
+<code>TRUE</code>. The error message names the failed check.
+<code>stop("...")</code> lets you write the message yourself:</p>
 <pre><code class="language-r">wt_mean &lt;- function(x, w) {
   if (length(x) != length(w)) {
     stop(&quot;`x` and `w` must be the same length&quot;, call. = FALSE)
   }
   sum(w * x) / sum(w)
-}
-</code></pre>
-<p>When you call a function, you can leave names off the leading data arguments. Name the later ones (<code>na.rm = TRUE</code>) so a new argument in the middle will not silently shift yours.</p>
+}</code></pre>
+<p>When you call a function, you can leave names off the leading data
+arguments. Name the later ones (<code>na.rm = TRUE</code>) so a new
+argument in the middle will not silently shift yours.</p>
 <p>Usual argument names, when a short name is enough:</p>
 <ul>
 <li><code>x</code>, <code>y</code>, <code>z</code> for vectors</li>
@@ -280,44 +326,68 @@ do_op(2, 4, &quot;mod&quot;)
 <li><code>n</code> for a length or a count of rows</li>
 <li><code>i</code>, <code>j</code> for indices</li>
 </ul>
-<p>Look at <code>?mean</code>, <code>?log</code>, and <code>?t.test</code> for the usual pattern: data first, then options with defaults.</p>
+<p>Look at <code>?mean</code>, <code>?log</code>, and
+<code>?t.test</code> for the usual pattern: data first, then options
+with defaults.</p>
 <hr />
+</div>
+<div id="comments-and-roxygen" class="section level2">
 <h2>5. Comments and Roxygen</h2>
-<p>A <code>#</code> comment should say <em>why</em>, not restate the code. A line such as <code># load data --------------------</code> is a useful section break.</p>
-<p>For a function you will keep, write a short header. Roxygen comments start with <code>#'</code>, not plain <code>#</code>. Install <code>roxygen2</code> once, put the cursor on the <code>function(</code> line, and use <strong>Code → Insert Roxygen Skeleton</strong>. You get something like:</p>
-<pre><code class="language-r">#' Title
-#'
-#' @param x
-#' @param y
-#'
-#' @return
-#'
-#' @examples
-my_fun &lt;- function(x, y) {}
-</code></pre>
-<p>Fill it in. The first line is a short title (sentence case, no period). The next paragraph is a one- or two-sentence description. <code>@param</code> describes each argument, starting with the type. You can document two arguments together as <code>@param x,y</code>. <code>@return</code> describes the output. <code>@examples</code> should be code that actually runs. <code>@export</code> matters when you later turn the file into a package; ignore it this week.</p>
-<pre><code class="language-r">#' Count positions that are NA in both vectors
-#'
-#' @param x,y Atomic vectors of the same length.
-#'
-#' @return A single integer.
-#'
-#' @examples
-#' both_na(c(1, NA, 3), c(NA, NA, 4))
+<p>A <code>#</code> comment should say <em>why</em>, not restate the
+code. A line such as <code># load data --------------------</code> is a
+useful section break.</p>
+<p>For a function you will keep, write a short header. Roxygen comments
+start with <code>#'</code>, not plain <code>#</code>. Install
+<code>roxygen2</code> once, put the cursor on the <code>function(</code>
+line, and use <strong>Code → Insert Roxygen Skeleton</strong>. You get
+something like:</p>
+<pre><code class="language-r">#&#39; Title
+#&#39;
+#&#39; @param x
+#&#39; @param y
+#&#39;
+#&#39; @return
+#&#39;
+#&#39; @examples
+my_fun &lt;- function(x, y) {}</code></pre>
+<p>Fill it in. The first line is a short title (sentence case, no
+period). The next paragraph is a one- or two-sentence description.
+<code>@param</code> describes each argument, starting with the type. You
+can document two arguments together as <code>@param x,y</code>.
+<code>@return</code> describes the output. <code>@examples</code> should
+be code that actually runs. <code>@export</code> matters when you later
+turn the file into a package; ignore it this week.</p>
+<pre><code class="language-r">#&#39; Count positions that are NA in both vectors
+#&#39;
+#&#39; @param x,y Atomic vectors of the same length.
+#&#39;
+#&#39; @return A single integer.
+#&#39;
+#&#39; @examples
+#&#39; both_na(c(1, NA, 3), c(NA, NA, 4))
 both_na &lt;- function(x, y) {
   stopifnot(length(x) == length(y))
   sum(is.na(x) &amp; is.na(y))
-}
-</code></pre>
+}</code></pre>
 <hr />
+</div>
+<div id="three-classroom-examples" class="section level2">
 <h2>6. Three classroom examples</h2>
-<p>These are the scripts we write in class. Download them into your project's <code>R/</code> folder (one function per file, as in note <strong>2.3</strong>):</p>
+<p>These are the scripts we write in class. Download them into your
+project’s <code>R/</code> folder (one function per file, as in note
+<strong>2.3</strong>):</p>
 <ul>
-<li><a href="files/data-612/add_half.R"><code>add_half.R</code></a> — add <code>y</code> to the second half of <code>x</code>; if the length is odd, the middle value is a random choice</li>
-<li><a href="files/data-612/fib.R"><code>fib.R</code></a> — the <code>n</code>th Fibonacci number, with a loop</li>
-<li><a href="files/data-612/rep_even.R"><code>rep_even.R</code></a> — repeat each even value, replace each odd value with that many zeros</li>
+<li><a href="files/data-612/add_half.R"><code>add_half.R</code></a> —
+add <code>y</code> to the second half of <code>x</code>; if the length
+is odd, the middle value is a random choice</li>
+<li><a href="files/data-612/fib.R"><code>fib.R</code></a> — the
+<code>n</code>th Fibonacci number, with a loop</li>
+<li><a href="files/data-612/rep_even.R"><code>rep_even.R</code></a> —
+repeat each even value, replace each odd value with that many zeros</li>
 </ul>
-<p><code>fib()</code> is the cleanest loop. <code>stopifnot()</code> rejects a non-integer or non-positive <code>n</code>. Positions 1 and 2 return early. The rest fill a vector:</p>
+<p><code>fib()</code> is the cleanest loop. <code>stopifnot()</code>
+rejects a non-integer or non-positive <code>n</code>. Positions 1 and 2
+return early. The rest fill a vector:</p>
 <pre><code class="language-r">fib &lt;- function(n) {
   stopifnot(n %% 1 == 0 &amp; n &gt; 0)
   if (n &lt;= 2) {
@@ -332,25 +402,34 @@ both_na &lt;- function(x, y) {
   return(f[n])
 }
 
-fib(7)
-# [1] 13
-</code></pre>
-<p><code>rep_even()</code> walks the input with <code>for</code>. Even: <code>rep(x[i], x[i])</code>. Odd: <code>rep(0, x[i])</code>. A non-natural number hits <code>stop()</code>:</p>
-<pre><code class="language-r">rep_even(c(2, 3, 4))
-# [1] 2 2 0 0 0 4 4 4 4
-</code></pre>
-<p><code>add_half()</code> is the even/odd branch you will write in Lab 2. Read the comments in the <code>.R</code> file for how <code>%%</code>, <code>floor()</code>, and <code>sample()</code> split the vector. Do the lab from the specification first; the file is the class copy, not a paste-in.</p>
+fib(7)</code></pre>
+<pre><code>## [1] 13</code></pre>
+<pre><code class="language-r"># [1] 13</code></pre>
+<p><code>rep_even()</code> walks the input with <code>for</code>. Even:
+<code>rep(x[i], x[i])</code>. Odd: <code>rep(0, x[i])</code>. A
+non-natural number hits <code>stop()</code>:</p>
+<pre><code class="language-r">rep_even(c(2, 3, 4))</code></pre>
+<pre><code>## Error in `rep_even()`:
+## ! could not find function &quot;rep_even&quot;</code></pre>
+<pre><code class="language-r"># [1] 2 2 0 0 0 4 4 4 4</code></pre>
+<p><code>add_half()</code> is the even/odd branch you will write in Lab
+2. Read the comments in the <code>.R</code> file for how
+<code>%%</code>, <code>floor()</code>, and <code>sample()</code> split
+the vector. Do the lab from the specification first; the file is the
+class copy, not a paste-in.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>7. Practice</h2>
-<ol>
-<li>
-<p>Recreate <code>range()</code> using <code>min()</code> and <code>max()</code>. Document it.</p>
-</li>
-<li>
-<p>Write <code>both_na(x, y)</code>: two vectors of the same length, return how many positions are <code>NA</code> in both. Check the inputs. Document it.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Recreate <code>range()</code> using <code>min()</code> and
+<code>max()</code>. Document it.</li>
+<li>Write <code>both_na(x, y)</code>: two vectors of the same length,
+return how many positions are <code>NA</code> in both. Check the inputs.
+Document it.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-pipes.html"><span aria-hidden="true">←</span> 2.1 Pipes</a>
                         <a class="course-page-nav__week" href="data-612-week-2.html">Week 2</a>
                             <a class="course-page-nav__next" href="data-612-r-scripts.html">2.3 R Scripts <span aria-hidden="true">→</span></a>
@@ -363,7 +442,7 @@ fib(7)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

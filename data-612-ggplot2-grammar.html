@@ -111,7 +111,7 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">3.1 ggplot2: The Grammar of Graphics</h1>
                     </header>
-                                                                                <section class="page__content" itemprop="text">
+                                                                                                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-3.html">Week 3</a> &middot;
                             <a href="files/data-612/ggplot2-grammar.pdf" target="_blank" rel="noopener">PDF</a>
@@ -150,7 +150,7 @@ unconnected calls. The ggplot2 version is one chain:</p>
   geom_rug() +
   xlab(&quot;Displacement&quot;) +
   ylab(&quot;Highway&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/mpg-smooth-rug-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/mpg-smooth-rug-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>qplot()</code> is a short ggplot2 helper for a quick look. We
 will write <code>ggplot()</code> so the layers stay visible.</p>
 </div>
@@ -175,20 +175,20 @@ them.</p>
 <p><code>ggplot()</code> makes the canvas. It needs <code>data</code> (a
 data frame) and, usually, <code>mapping = aes(...)</code>.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy))</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/empty-canvas-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/empty-canvas-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>That draws axes and an empty panel. There is no geom yet.</p>
 <p>Add a layer with <code>+</code> at the <strong>end</strong> of the
 line, then the next function on the next line. A <code>+</code> at the
 start of a line will error.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/first-points-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/first-points-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>You can pipe the data in. The first argument of <code>ggplot()</code>
 is then filled, so you only write the mapping:</p>
 <pre><code class="language-r">mpg |&gt;
   ggplot(mapping = aes(x = displ, y = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/pipe-ggplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/pipe-ggplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>Larger <code>displ</code> goes with smaller <code>cty</code>: a
 negative relationship.</p>
 </div>
@@ -202,7 +202,7 @@ change the association. It does change what a reader thinks is doing the
 explaining.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/cty-hwy-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/cty-hwy-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>cty</code> and <code>hwy</code> move together: a positive
 relationship.</p>
 </div>
@@ -215,10 +215,10 @@ relationship.</p>
 (harder once you have many levels):</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, shape = drv)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/shape-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/shape-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>Fifty states as fifty colors is a mess. Recode into fewer groups, or
 facet (note 3.3).</p>
 <p><code>size</code> and <code>alpha</code> have a natural order (small
@@ -233,17 +233,17 @@ legal and usually a bad idea.</p>
 worst when points overlap).</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/color-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/color-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point() +
   viridis::scale_color_viridis()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/color-cty-viridis-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/color-cty-viridis-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, alpha = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/alpha-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/alpha-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, size = cty)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/grammar/size-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-grammar/size-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>shape</code> has a short list of symbols. Mapping a continuous
 variable to <code>shape</code> errors.</p>
 <p>Stacking <code>color</code>, <code>size</code>, <code>alpha</code>,
@@ -262,7 +262,7 @@ do you see?</p></li>
 or <code>alpha</code>. Why is that a poor default?</p></li>
 </ol>
 </div>
-                        <nav class="course-page-nav" aria-label="Page">
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lab-2-solutions.html"><span aria-hidden="true">←</span> Lab 2 solutions</a>
                         <a class="course-page-nav__week" href="data-612-week-3.html">Week 3</a>
                             <a class="course-page-nav__next" href="data-612-ggplot2-geoms.html">3.2 ggplot2: Geoms <span aria-hidden="true">→</span></a>
@@ -275,7 +275,7 @@ or <code>alpha</code>. Why is that a poor default?</p></li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

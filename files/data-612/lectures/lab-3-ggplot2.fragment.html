@@ -1,0 +1,68 @@
+
+
+
+<p>Map, smooth, fix overplotting, and save a faceted boxplot.</p>
+<p>Work in a <strong>Quarto</strong> document. Number the exercises.
+Keep the plots. Do <strong>3.1</strong> through <strong>3.3</strong>
+first. You will need <code>ggplot2</code> (from
+<code>library(tidyverse)</code>), <code>mpg</code>, <code>iris</code>,
+and <code>diamonds</code>.</p>
+<pre class="r"><code>library(tidyverse)
+data(&quot;mpg&quot;)
+data(&quot;iris&quot;)
+data(&quot;diamonds&quot;)</code></pre>
+<hr />
+<div id="mappings" class="section level2">
+<h2>1. Mappings</h2>
+<ol style="list-style-type: decimal">
+<li>What happens when you map a categorical variable to
+<code>size</code> or <code>alpha</code>? Try it on <code>mpg</code> with
+<code>drv</code>. Write one sentence about whether the mapping is a good
+idea.</li>
+<li>Look at <code>head(iris)</code>. Name the variables and say whether
+each is quantitative or categorical.</li>
+<li>Scatterplot petal length vs petal width, colored by species. What do
+you notice?</li>
+<li>What happens when you map a quantitative variable to
+<code>shape</code>? Try <code>shape = cty</code> on an <code>mpg</code>
+scatterplot of <code>displ</code> vs <code>hwy</code>.</li>
+<li>On <code>iris</code>, plot petal length vs petal width, and also map
+species, sepal length, and sepal width. Is the plot still readable?</li>
+</ol>
+<hr />
+</div>
+<div id="smooths-and-overplotting" class="section level2">
+<h2>2. Smooths and overplotting</h2>
+<ol style="list-style-type: decimal">
+<li>Scatterplot petal length vs petal width. Color the points by
+species. Add <strong>one</strong> linear smooth
+(<code>method = lm</code>, <code>se = FALSE</code>) that does not use
+species.</li>
+<li>Plot <code>price</code> vs <code>carat</code> in
+<code>diamonds</code>. Show the overplotted version and a version that
+you can actually read.</li>
+</ol>
+<hr />
+</div>
+<div id="distributions-and-boxplots" class="section level2">
+<h2>3. Distributions and boxplots</h2>
+<ol style="list-style-type: decimal">
+<li>Histogram of diamond <code>price</code>, filled by <code>cut</code>.
+Try <code>bins = 50</code>.</li>
+<li>Boxplot of <code>price</code> vs <code>cut</code> on a
+log-<code>y</code> scale. Does anything surprise you? Add a second plot
+that helps explain it.</li>
+</ol>
+<hr />
+</div>
+<div id="facets-theme-and-save" class="section level2">
+<h2>4. Facets, theme, and save</h2>
+<ol style="list-style-type: decimal">
+<li>Boxplots of <code>price</code> vs <code>cut</code>,
+log-<code>y</code>, faceted by <code>color</code>.</li>
+<li>Same plot: orange fill, <code>theme_bw()</code>.</li>
+<li>Save the plot from (2) with <code>ggsave()</code>. Put it in a
+folder you already have. <code>ggsave()</code> overwrites without
+asking.</li>
+</ol>
+</div>

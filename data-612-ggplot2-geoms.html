@@ -111,7 +111,7 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">3.2 ggplot2: Geoms</h1>
                     </header>
-                                                                                <section class="page__content" itemprop="text">
+                                                                                                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-3.html">Week 3</a> &middot;
                             <a href="files/data-612/ggplot2-geoms.pdf" target="_blank" rel="noopener">PDF</a>
@@ -125,18 +125,18 @@ densities, boxplots.</p>
 with a gray standard-error band.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_smooth()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/smooth-default-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/smooth-default-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_smooth(se = FALSE)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/smooth-no-se-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/smooth-no-se-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>se = FALSE</code> drops the band. A categorical mapping in
 <code>aes()</code> gives one line per level:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
   geom_smooth(se = FALSE)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/smooth-color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/smooth-color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, linetype = drv)) +
   geom_smooth(se = FALSE)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/smooth-linetype-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/smooth-linetype-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>color</code> is usually easier to read than
 <code>linetype</code>.</p>
 <p><code>method = lm</code> is ordinary least squares. For a binary 0/1
@@ -145,11 +145,11 @@ curve:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
   geom_smooth(se = FALSE, method = lm)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/smooth-lm-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/smooth-lm-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mtcars, mapping = aes(x = hp, y = vs)) +
   geom_point() +
   geom_smooth(method = glm, method.args = list(family = &quot;binomial&quot;), se = FALSE)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/smooth-glm-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/smooth-glm-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 </div>
 <div id="where-the-mapping-lives" class="section level2">
 <h2>2. Where the mapping lives</h2>
@@ -158,14 +158,14 @@ inherit it unless they set their own.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
   geom_smooth(se = FALSE)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/inherit-mapping-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/inherit-mapping-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>A mapping written only inside one geom stays there. Later geoms do
 not see it. That is how you color the points by <code>drv</code> and
 still get <strong>one</strong> smooth line:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point(mapping = aes(color = drv)) +
   geom_smooth(se = FALSE)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/local-color-mapping-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/local-color-mapping-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>If <code>aes(x, y)</code> is only on <code>geom_point()</code>,
 <code>geom_smooth()</code> has nothing to smooth and errors.</p>
 </div>
@@ -184,13 +184,13 @@ smaller)</li>
 </ol>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/overplot-raw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/overplot-raw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_jitter()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/overplot-jitter-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/overplot-jitter-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
   geom_point(alpha = 0.1)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/overplot-alpha-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/overplot-alpha-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>geom_hex()</code> bins the plane into hexagons and colors by
 the count. Useful when jitter and alpha are not enough:</p>
 <pre><code class="language-r">data(&quot;diamonds&quot;)
@@ -198,7 +198,7 @@ the count. Useful when jitter and alpha are not enough:</p>
 ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
   geom_hex(bins = 50) +
   viridis::scale_fill_viridis()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hex-diamonds-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hex-diamonds-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>diamonds</code> is in ggplot2. <code>data("diamonds")</code>
 loads it.</p>
 </div>
@@ -210,19 +210,19 @@ in each bin. The default is 30 bins; change <code>bins</code> or
 <code>binwidth</code> until the shape is readable.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
   geom_histogram()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-default-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-default-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
   geom_histogram(bins = 20)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-bins-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-bins-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
   geom_histogram(binwidth = 5)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-binwidth-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-binwidth-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>fill</code> colors the interior of the bars. <code>color</code>
 colors the outline. Mapping a categorical variable to <code>fill</code>
 stacks the groups inside each bin:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_histogram(bins = 20)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-fill-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-fill-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>Stacked bars are hard to compare. <code>position</code> changes the
 layout:</p>
 <ul>
@@ -234,20 +234,20 @@ other; add <code>alpha</code></li>
 </ul>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_histogram(bins = 20, position = &quot;identity&quot;, alpha = 0.3)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-identity-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-identity-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_histogram(bins = 20, position = &quot;dodge&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-dodge-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-dodge-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_histogram(bins = 20, position = &quot;fill&quot;)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/hist-fill-pos-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/hist-fill-pos-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>A density is a smoothed histogram:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
   geom_density()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/density-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/density-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_density(alpha = 0.3)</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/density-fill-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/density-fill-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 </div>
 <div id="one-categorical-and-one-quantitative-boxplots"
 class="section level2">
@@ -257,7 +257,7 @@ whose height is the IQR), whiskers out to 1.5 IQR from the hinges, and
 points beyond that.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = drv, y = hwy)) +
   geom_boxplot()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/boxplot-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/boxplot-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>geom_violin()</code> shows the density of the points inside the
 box. <code>ggbeeswarm::geom_beeswarm()</code> shows every point without
 stacking them on a line.</p>
@@ -272,12 +272,12 @@ ticks are still in the original units, spaced on a log scale.</li>
 <pre><code class="language-r">txhousing |&gt;
   ggplot(aes(x = as.factor(year), y = volume)) +
   geom_boxplot()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/txhousing-raw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/txhousing-raw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <pre><code class="language-r">txhousing |&gt;
   ggplot(aes(x = as.factor(year), y = volume)) +
   geom_boxplot() +
   scale_y_log10()</code></pre>
-<p><img src="files/data-612/lectures/_figs/geoms/txhousing-log-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><img src="files/data-612/lectures/_figs/ggplot2-geoms/txhousing-log-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p><code>txhousing</code> is in ggplot2.</p>
 </div>
 <div id="practice" class="section level2">
@@ -295,7 +295,7 @@ log-<code>y</code> scale. Does Ideal look cheaper? Check
 <code>carat</code> the same way.</p></li>
 </ol>
 </div>
-                        <nav class="course-page-nav" aria-label="Page">
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-ggplot2-grammar.html"><span aria-hidden="true">←</span> 3.1 ggplot2: The Grammar of Graphics</a>
                         <a class="course-page-nav__week" href="data-612-week-3.html">Week 3</a>
                             <a class="course-page-nav__next" href="data-612-ggplot2-facets-themes.html">3.3 ggplot2: Facets, Themes, and Saving <span aria-hidden="true">→</span></a>
@@ -308,7 +308,7 @@ log-<code>y</code> scale. Does Ideal look cheaper? Check
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

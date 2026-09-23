@@ -111,73 +111,77 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 3: Graphics with ggplot2</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                                            <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-3.html">Week 3</a> &middot;
                             <a href="files/data-612/lab-3-ggplot2.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Map, smooth, fix overplotting, and save a faceted boxplot.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Number the exercises. Keep the plots. Do <strong>3.1</strong> through <strong>3.3</strong> first. You will need <code>ggplot2</code> (from <code>library(tidyverse)</code>), <code>mpg</code>, <code>iris</code>, and <code>diamonds</code>.</p>
+                         &middot; <a href="files/data-612/lectures/lab-3-ggplot2.qmd">Source (.qmd)</a></p>
+<p>Map, smooth, fix overplotting, and save a faceted boxplot.</p>
+<p>Work in a <strong>Quarto</strong> document. Number the exercises.
+Keep the plots. Do <strong>3.1</strong> through <strong>3.3</strong>
+first. You will need <code>ggplot2</code> (from
+<code>library(tidyverse)</code>), <code>mpg</code>, <code>iris</code>,
+and <code>diamonds</code>.</p>
 <pre><code class="language-r">library(tidyverse)
 data(&quot;mpg&quot;)
 data(&quot;iris&quot;)
-data(&quot;diamonds&quot;)
-</code></pre>
+data(&quot;diamonds&quot;)</code></pre>
 <hr />
+<div id="mappings" class="section level2">
 <h2>1. Mappings</h2>
-<ol>
-<li>
-<p>What happens when you map a categorical variable to <code>size</code> or <code>alpha</code>? Try it on <code>mpg</code> with <code>drv</code>. Write one sentence about whether the mapping is a good idea.</p>
-</li>
-<li>
-<p>Look at <code>head(iris)</code>. Name the variables and say whether each is quantitative or categorical.</p>
-</li>
-<li>
-<p>Scatterplot petal length vs petal width, colored by species. What do you notice?</p>
-</li>
-<li>
-<p>What happens when you map a quantitative variable to <code>shape</code>? Try <code>shape = cty</code> on an <code>mpg</code> scatterplot of <code>displ</code> vs <code>hwy</code>.</p>
-</li>
-<li>
-<p>On <code>iris</code>, plot petal length vs petal width, and also map species, sepal length, and sepal width. Is the plot still readable?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>What happens when you map a categorical variable to
+<code>size</code> or <code>alpha</code>? Try it on <code>mpg</code> with
+<code>drv</code>. Write one sentence about whether the mapping is a good
+idea.</li>
+<li>Look at <code>head(iris)</code>. Name the variables and say whether
+each is quantitative or categorical.</li>
+<li>Scatterplot petal length vs petal width, colored by species. What do
+you notice?</li>
+<li>What happens when you map a quantitative variable to
+<code>shape</code>? Try <code>shape = cty</code> on an <code>mpg</code>
+scatterplot of <code>displ</code> vs <code>hwy</code>.</li>
+<li>On <code>iris</code>, plot petal length vs petal width, and also map
+species, sepal length, and sepal width. Is the plot still readable?</li>
 </ol>
 <hr />
+</div>
+<div id="smooths-and-overplotting" class="section level2">
 <h2>2. Smooths and overplotting</h2>
-<ol>
-<li>
-<p>Scatterplot petal length vs petal width. Color the points by species. Add <strong>one</strong> linear smooth (<code>method = lm</code>, <code>se = FALSE</code>) that does not use species.</p>
-</li>
-<li>
-<p>Plot <code>price</code> vs <code>carat</code> in <code>diamonds</code>. Show the overplotted version and a version that you can actually read.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Scatterplot petal length vs petal width. Color the points by
+species. Add <strong>one</strong> linear smooth
+(<code>method = lm</code>, <code>se = FALSE</code>) that does not use
+species.</li>
+<li>Plot <code>price</code> vs <code>carat</code> in
+<code>diamonds</code>. Show the overplotted version and a version that
+you can actually read.</li>
 </ol>
 <hr />
+</div>
+<div id="distributions-and-boxplots" class="section level2">
 <h2>3. Distributions and boxplots</h2>
-<ol>
-<li>
-<p>Histogram of diamond <code>price</code>, filled by <code>cut</code>. Try <code>bins = 50</code>.</p>
-</li>
-<li>
-<p>Boxplot of <code>price</code> vs <code>cut</code> on a log-<code>y</code> scale. Does anything surprise you? Add a second plot that helps explain it.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Histogram of diamond <code>price</code>, filled by <code>cut</code>.
+Try <code>bins = 50</code>.</li>
+<li>Boxplot of <code>price</code> vs <code>cut</code> on a
+log-<code>y</code> scale. Does anything surprise you? Add a second plot
+that helps explain it.</li>
 </ol>
 <hr />
+</div>
+<div id="facets-theme-and-save" class="section level2">
 <h2>4. Facets, theme, and save</h2>
-<ol>
-<li>
-<p>Boxplots of <code>price</code> vs <code>cut</code>, log-<code>y</code>, faceted by <code>color</code>.</p>
-</li>
-<li>
-<p>Same plot: orange fill, <code>theme_bw()</code>.</p>
-</li>
-<li>
-<p>Save the plot from (2) with <code>ggsave()</code>. Put it in a folder you already have. <code>ggsave()</code> overwrites without asking.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Boxplots of <code>price</code> vs <code>cut</code>,
+log-<code>y</code>, faceted by <code>color</code>.</li>
+<li>Same plot: orange fill, <code>theme_bw()</code>.</li>
+<li>Save the plot from (2) with <code>ggsave()</code>. Put it in a
+folder you already have. <code>ggsave()</code> overwrites without
+asking.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-ggplot2-facets-themes.html"><span aria-hidden="true">←</span> 3.3 ggplot2: Facets, Themes, and Saving</a>
                         <a class="course-page-nav__week" href="data-612-week-3.html">Week 3</a>
                             <a class="course-page-nav__next" href="data-612-lab-3-solutions.html">Lab 3 solutions <span aria-hidden="true">→</span></a>
@@ -190,7 +194,7 @@ data(&quot;diamonds&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
             </footer>
         </div>
 

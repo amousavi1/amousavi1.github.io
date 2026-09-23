@@ -1,0 +1,95 @@
+
+
+
+<p>Use a pipe, then write a function with a conditional and a check on
+the inputs.</p>
+<p>Work in a <strong>Quarto</strong> document (or R Markdown if you
+already started one). Number the exercises. Keep only the code that
+answers the question.</p>
+<p>Do <strong>2.1</strong> through <strong>2.3</strong> first. You will
+need a pipe, <code>function()</code>, <code>if</code> /
+<code>else</code>, and <code>stopifnot()</code>.</p>
+<hr />
+<div id="using-a-pipe" class="section level2">
+<h2>1. Using a pipe</h2>
+<p>Use a pipe to:</p>
+<ol style="list-style-type: decimal">
+<li>draw 100 values from a normal distribution with mean 0 and standard
+deviation 8</li>
+<li>take absolute values</li>
+<li>take square roots</li>
+<li>replace each value by the largest integer that is still smaller than
+it</li>
+<li>show the first 10 results</li>
+</ol>
+<p>Do this <strong>without</strong> intermediate objects.</p>
+<p>Useful functions: <code>rnorm()</code>, <code>abs()</code>,
+<code>sqrt()</code>, <code>floor()</code>, <code>head()</code>.</p>
+<hr />
+</div>
+<div id="write-add_half" class="section level2">
+<h2>2. Write <code>add_half()</code></h2>
+<p>Write a function of two arguments: a numeric vector <code>x</code>
+and a numeric scalar <code>y</code>.</p>
+<p>The returned vector should keep the first half of <code>x</code>
+unchanged, and add <code>y</code> to the second half.</p>
+<p>If <code>length(x)</code> is odd, the middle value is a random
+choice: either the middle of <code>x</code>, or the middle of
+<code>x + y</code>.</p>
+<p>Choose a clear name if you prefer another one, but the examples below
+use <code>add_half()</code>. Write a short documentation header.</p>
+<p>Useful functions: <code>length()</code>, <code>%%</code> (even vs
+odd), <code>floor()</code>, <code>sample()</code>, <code>c()</code>, and
+<code>[...]</code>. You will need a conditional.</p>
+<p>Example when the length is odd. The middle <code>3</code> happened to
+be kept; another run could have used <code>4</code>:</p>
+<pre class="r"><code>x &lt;- c(1, 1, 3, 1, 1)
+y &lt;- 1
+add_half(x, y)</code></pre>
+<pre><code>## Error in `add_half()`:
+## ! could not find function &quot;add_half&quot;</code></pre>
+<pre class="r"><code># [1] 1 1 3 2 2</code></pre>
+<p>Example when the length is even:</p>
+<pre class="r"><code>x &lt;- c(1, 1, 2, 2)
+y &lt;- 1
+add_half(x, y)</code></pre>
+<pre><code>## Error in `add_half()`:
+## ! could not find function &quot;add_half&quot;</code></pre>
+<pre class="r"><code># [1] 1 1 3 3</code></pre>
+<p>Plan the steps before you type:</p>
+<ol style="list-style-type: decimal">
+<li>take <code>x</code> and <code>y</code></li>
+<li>find <code>length(x)</code></li>
+<li>decide even or odd (<code>%%</code>)</li>
+<li>if even: take half the length; build
+<code>c(first_half, second_half + y)</code></li>
+<li>if odd: <code>floor()</code> of half the length;
+<code>sample()</code> the middle from <code>x</code> or
+<code>x + y</code>; build
+<code>c(first_half, middle, second_half + y)</code></li>
+<li>return the new vector</li>
+</ol>
+<hr />
+</div>
+<div id="check-the-inputs" class="section level2">
+<h2>3. Check the inputs</h2>
+<p>Add <code>stopifnot()</code> so <code>x</code> is a numeric vector
+and <code>y</code> is a single numeric value. <code>?length</code>,
+<code>?is.numeric</code>, and <code>?is.vector</code> are enough.</p>
+<p>These calls should fail:</p>
+<pre class="r"><code>x &lt;- c(1, 1, 1, 1)
+y &lt;- c(1, 2)
+add_half(x, y)</code></pre>
+<pre><code>## Error in `add_half()`:
+## ! could not find function &quot;add_half&quot;</code></pre>
+<pre class="r"><code># Error in add_half(x, y): length(y) == 1 is not TRUE
+
+x &lt;- c(1, 1, 1, 1)
+y &lt;- &quot;0&quot;
+add_half(x, y)</code></pre>
+<pre><code>## Error in `add_half()`:
+## ! could not find function &quot;add_half&quot;</code></pre>
+<pre class="r"><code># Error in add_half(x, y): is.numeric(y) is not TRUE</code></pre>
+<p>Show at least two failing checks in your document, including the
+error.</p>
+</div>

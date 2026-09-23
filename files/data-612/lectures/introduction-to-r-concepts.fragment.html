@@ -1,0 +1,1155 @@
+
+
+
+<p>Data types, data structures, indexing, functions, and special
+values.</p>
+<div id="values-and-objects" class="section level2">
+<h2>1. Values and Objects</h2>
+<p>R works with <strong>values</strong>. For example:</p>
+<pre class="r"><code>10</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>3.14</code></pre>
+<pre><code>## [1] 3.14</code></pre>
+<pre class="r"><code>&quot;Hello&quot;</code></pre>
+<pre><code>## [1] &quot;Hello&quot;</code></pre>
+<pre class="r"><code>TRUE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>We can store a value in an <strong>object</strong> using the
+assignment operator <code>&lt;-</code>:</p>
+<pre class="r"><code>x &lt;- 10
+name &lt;- &quot;John&quot;
+passed &lt;- TRUE</code></pre>
+<p>Anything after <code>#</code> on a line is a
+<strong>comment</strong>. R ignores it:</p>
+<pre class="r"><code>x &lt;- 10   # store the number 10 in x</code></pre>
+<p>In this course we use <code>&lt;-</code> for assignment. We use
+<code>=</code> for named function arguments, which we will meet
+shortly.</p>
+<p>We can then use these objects later:</p>
+<pre class="r"><code>x</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>name</code></pre>
+<pre><code>## [1] &quot;John&quot;</code></pre>
+<pre class="r"><code>passed</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<hr />
+</div>
+<div id="basic-data-types" class="section level2">
+<h2>2. Basic Data Types</h2>
+<p>Some of the most common data types in R are:</p>
+<p>Type Examples Description</p>
+<p>Numeric <code>5</code>, <code>3.14</code>, <code>-10</code>
+Numbers</p>
+<p>Integer <code>5L</code>, <code>10L</code> Whole numbers explicitly
+stored as integers</p>
+<p>Character <code>"Hello"</code>, <code>"John"</code> Text</p>
+<p>Logical <code>TRUE</code>, <code>FALSE</code> Boolean values</p>
+<p>Complex <code>2 + 3i</code> Complex numbers</p>
+<p>Examples:</p>
+<pre class="r"><code>x &lt;- 10
+y &lt;- &quot;Hello&quot;
+z &lt;- TRUE</code></pre>
+<p>We can investigate objects using several functions:</p>
+<pre class="r"><code>typeof(x)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code>class(x)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>mode(x)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>length(x)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>str(x)</code></pre>
+<pre><code>##  num 10</code></pre>
+<p>For example:</p>
+<pre class="r"><code>typeof(10)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code># &quot;double&quot;
+
+typeof(&quot;Hello&quot;)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code># &quot;character&quot;
+
+typeof(TRUE)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre class="r"><code># &quot;logical&quot;</code></pre>
+<div id="numeric-vs.-integer" class="section level3">
+<h3>Numeric vs. Integer</h3>
+<p>By default, R stores ordinary numbers as doubles:</p>
+<pre class="r"><code>typeof(5)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code># &quot;double&quot;</code></pre>
+<p>To explicitly create an integer, add <code>L</code>:</p>
+<pre class="r"><code>typeof(5L)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code># &quot;integer&quot;</code></pre>
+<p>Both are considered numeric:</p>
+<pre class="r"><code>is.numeric(5)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE
+
+is.numeric(5L)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE</code></pre>
+<p>Useful type-checking functions include:</p>
+<pre class="r"><code>is.numeric()</code></pre>
+<pre><code>## Error in `is.numeric()`:
+## ! 0 arguments passed to &#39;is.numeric&#39; which requires 1</code></pre>
+<pre class="r"><code>is.integer()</code></pre>
+<pre><code>## Error in `is.integer()`:
+## ! 0 arguments passed to &#39;is.integer&#39; which requires 1</code></pre>
+<pre class="r"><code>is.double()</code></pre>
+<pre><code>## Error in `is.double()`:
+## ! 0 arguments passed to &#39;is.double&#39; which requires 1</code></pre>
+<pre class="r"><code>is.character()</code></pre>
+<pre><code>## Error in `is.character()`:
+## ! 0 arguments passed to &#39;is.character&#39; which requires 1</code></pre>
+<pre class="r"><code>is.logical()</code></pre>
+<pre><code>## Error in `is.logical()`:
+## ! 0 arguments passed to &#39;is.logical&#39; which requires 1</code></pre>
+<pre class="r"><code>is.complex()</code></pre>
+<pre><code>## Error in `is.complex()`:
+## ! 0 arguments passed to &#39;is.complex&#39; which requires 1</code></pre>
+<p>R also provides conversion functions:</p>
+<pre class="r"><code>as.numeric()</code></pre>
+<pre><code>## numeric(0)</code></pre>
+<pre class="r"><code>as.integer()</code></pre>
+<pre><code>## integer(0)</code></pre>
+<pre class="r"><code>as.character()</code></pre>
+<pre><code>## character(0)</code></pre>
+<pre class="r"><code>as.logical()</code></pre>
+<pre><code>## logical(0)</code></pre>
+<pre class="r"><code>as.complex()</code></pre>
+<pre><code>## complex(0)</code></pre>
+<p>For example:</p>
+<pre class="r"><code>as.character(25)</code></pre>
+<pre><code>## [1] &quot;25&quot;</code></pre>
+<pre class="r"><code># &quot;25&quot;
+
+as.numeric(&quot;25&quot;)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code># 25
+
+as.logical(1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE</code></pre>
+<hr />
+</div>
+</div>
+<div id="vectors" class="section level2">
+<h2>3. Vectors</h2>
+<p>A <strong>vector</strong> is one of the most fundamental data
+structures in R.</p>
+<p>A vector contains a sequence of values, normally of the <strong>same
+basic type</strong>.</p>
+<p>We use <code>c()</code> (“combine”) to create a vector:</p>
+<pre class="r"><code>x &lt;- c(10, 20, 30, 40)
+
+x</code></pre>
+<pre><code>## [1] 10 20 30 40</code></pre>
+<pre class="r"><code># [1] 10 20 30 40</code></pre>
+<p>The vector contains four elements:</p>
+<pre class="r"><code>length(x)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># 4</code></pre>
+<p>We can create vectors of different types:</p>
+<pre class="r"><code>numbers &lt;- c(10, 20, 30)
+
+names &lt;- c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;)
+
+answers &lt;- c(TRUE, FALSE, TRUE)</code></pre>
+<p>Useful functions for exploring vectors include:</p>
+<pre class="r"><code>length(x)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>typeof(x)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code>class(x)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>str(x)</code></pre>
+<pre><code>##  num [1:4] 10 20 30 40</code></pre>
+<pre class="r"><code>head(x)</code></pre>
+<pre><code>## [1] 10 20 30 40</code></pre>
+<pre class="r"><code>tail(x)</code></pre>
+<pre><code>## [1] 10 20 30 40</code></pre>
+<pre class="r"><code>unique(x)</code></pre>
+<pre><code>## [1] 10 20 30 40</code></pre>
+<pre class="r"><code>duplicated(x)</code></pre>
+<pre><code>## [1] FALSE FALSE FALSE FALSE</code></pre>
+<pre class="r"><code>sort(x)</code></pre>
+<pre><code>## [1] 10 20 30 40</code></pre>
+<pre class="r"><code>rev(x)</code></pre>
+<pre><code>## [1] 40 30 20 10</code></pre>
+<div id="vectorized-arithmetic" class="section level3">
+<h3>Vectorized arithmetic</h3>
+<p>R applies arithmetic to every element of a vector:</p>
+<pre class="r"><code>x &lt;- c(10, 20, 30, 40)
+
+x * 2</code></pre>
+<pre><code>## [1] 20 40 60 80</code></pre>
+<pre class="r"><code># 20 40 60 80
+
+x + 1</code></pre>
+<pre><code>## [1] 11 21 31 41</code></pre>
+<pre class="r"><code># 11 21 31 41
+
+x / 10</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+<pre class="r"><code># 1 2 3 4</code></pre>
+<p>If two vectors have different lengths, R <strong>recycles</strong>
+the shorter one. We will look at this more carefully in the lab.</p>
+<p>Useful numerical summaries include:</p>
+<pre class="r"><code>sum(x)</code></pre>
+<pre><code>## [1] 100</code></pre>
+<pre class="r"><code>mean(x)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code>median(x)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code>min(x)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code>max(x)</code></pre>
+<pre><code>## [1] 40</code></pre>
+<pre class="r"><code>range(x)</code></pre>
+<pre><code>## [1] 10 40</code></pre>
+<pre class="r"><code>var(x)</code></pre>
+<pre><code>## [1] 166.6667</code></pre>
+<pre class="r"><code>sd(x)</code></pre>
+<pre><code>## [1] 12.90994</code></pre>
+<hr />
+</div>
+</div>
+<div id="what-happens-when-types-are-mixed" class="section level2">
+<h2>4. What Happens When Types Are Mixed?</h2>
+<p>An atomic vector normally contains one type.</p>
+<p>Consider:</p>
+<pre class="r"><code>x &lt;- c(1, 2, &quot;hello&quot;)</code></pre>
+<p>R cannot keep some elements numeric and one character in the same
+atomic vector, so it converts them to a common type:</p>
+<pre class="r"><code>x</code></pre>
+<pre><code>## [1] &quot;1&quot;     &quot;2&quot;     &quot;hello&quot;</code></pre>
+<pre class="r"><code># &quot;1&quot; &quot;2&quot; &quot;hello&quot;
+
+typeof(x)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code># &quot;character&quot;</code></pre>
+<p>This automatic conversion is called <strong>coercion</strong>.</p>
+<p>Another example:</p>
+<pre class="r"><code>c(TRUE, 5)</code></pre>
+<pre><code>## [1] 1 5</code></pre>
+<p>R converts <code>TRUE</code> to a numeric value:</p>
+<pre class="r"><code># 1 5</code></pre>
+<p>A useful simplified coercion hierarchy is:</p>
+<p>logical → integer → double → character</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Lists What if we actually want one object to contain values of
+<strong>different types</strong>?</li>
+</ol>
+<p>We can use a <strong>list</strong>.</p>
+<p>A list is a data structure that can contain elements of different
+types and even different structures.</p>
+<pre class="r"><code>x &lt;- list(
+  25,
+  &quot;John&quot;,
+  TRUE
+)
+
+x</code></pre>
+<pre><code>## [[1]]
+## [1] 25
+## 
+## [[2]]
+## [1] &quot;John&quot;
+## 
+## [[3]]
+## [1] TRUE</code></pre>
+<p>Unlike an atomic vector, the elements do not need to have the same
+type.</p>
+<p>We can also name the elements:</p>
+<pre class="r"><code>student &lt;- list(
+  name = &quot;John&quot;,
+  age = 25,
+  grades = c(90, 85, 95),
+  passed = TRUE
+)</code></pre>
+<p>Useful functions include:</p>
+<pre class="r"><code>length(student)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>names(student)</code></pre>
+<pre><code>## [1] &quot;name&quot;   &quot;age&quot;    &quot;grades&quot; &quot;passed&quot;</code></pre>
+<pre class="r"><code>str(student)</code></pre>
+<pre><code>## List of 4
+##  $ name  : chr &quot;John&quot;
+##  $ age   : num 25
+##  $ grades: num [1:3] 90 85 95
+##  $ passed: logi TRUE</code></pre>
+<pre class="r"><code>is.list(student)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>Lists are extremely flexible: an element of a list can itself be a
+vector, matrix, data frame, or even another list.</p>
+<hr />
+</div>
+<div id="other-important-data-structures" class="section level2">
+<h2>6. Other Important Data Structures</h2>
+<div id="matrix" class="section level3">
+<h3>Matrix</h3>
+<p>A matrix organizes values into rows and columns:</p>
+<pre class="r"><code>x &lt;- matrix(1:6, nrow = 2)
+
+x</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    3    5
+## [2,]    2    4    6</code></pre>
+<p>Useful functions:</p>
+<pre class="r"><code>dim(x)</code></pre>
+<pre><code>## [1] 2 3</code></pre>
+<pre class="r"><code>nrow(x)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>ncol(x)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>rownames(x)</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>colnames(x)</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>is.matrix(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="data-frame" class="section level3">
+<h3>Data Frame</h3>
+<p>A data frame is one of the most important structures for data
+analysis.</p>
+<pre class="r"><code>students &lt;- data.frame(
+  name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
+  grade = c(90, 85, 95),
+  passed = c(TRUE, TRUE, TRUE)
+)</code></pre>
+<p>Each column can have a different data type.</p>
+<p>Useful functions include:</p>
+<pre class="r"><code>dim(students)</code></pre>
+<pre><code>## [1] 3 3</code></pre>
+<pre class="r"><code>nrow(students)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>ncol(students)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>names(students)</code></pre>
+<pre><code>## [1] &quot;name&quot;   &quot;grade&quot;  &quot;passed&quot;</code></pre>
+<pre class="r"><code>colnames(students)</code></pre>
+<pre><code>## [1] &quot;name&quot;   &quot;grade&quot;  &quot;passed&quot;</code></pre>
+<pre class="r"><code>rownames(students)</code></pre>
+<pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</code></pre>
+<pre class="r"><code>head(students)</code></pre>
+<pre><code>##    name grade passed
+## 1  John    90   TRUE
+## 2  Sara    85   TRUE
+## 3 David    95   TRUE</code></pre>
+<pre class="r"><code>tail(students)</code></pre>
+<pre><code>##    name grade passed
+## 1  John    90   TRUE
+## 2  Sara    85   TRUE
+## 3 David    95   TRUE</code></pre>
+<pre class="r"><code>str(students)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    3 obs. of  3 variables:
+##  $ name  : chr  &quot;John&quot; &quot;Sara&quot; &quot;David&quot;
+##  $ grade : num  90 85 95
+##  $ passed: logi  TRUE TRUE TRUE</code></pre>
+<pre class="r"><code>summary(students)</code></pre>
+<pre><code>##         name       grade       passed       
+##  Length   :3   Min.   :85.0   Mode:logical  
+##  N.unique :3   1st Qu.:87.5   TRUE:3        
+##  N.blank  :0   Median :90.0                 
+##  Min.nchar:4   Mean   :90.0                 
+##  Max.nchar:5   3rd Qu.:92.5                 
+##                Max.   :95.0</code></pre>
+<pre class="r"><code>is.data.frame(students)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><code>View(students)</code> opens the data in an RStudio tab. That is
+often easier than printing a large table in the console.</p>
+<p>A <strong>tibble</strong> is the tidyverse version of a data frame.
+Printing is cleaner, and character columns stay character instead of
+being turned into factors. <code>readr::read_csv()</code> returns a
+tibble.</p>
+<pre class="r"><code>library(tidyverse)
+
+as_tibble(students)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##   name  grade passed
+##   &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt; 
+## 1 John     90 TRUE  
+## 2 Sara     85 TRUE  
+## 3 David    95 TRUE</code></pre>
+<pre class="r"><code>tibble(
+  name = c(&quot;John&quot;, &quot;Sara&quot;, &quot;David&quot;),
+  grade = c(90, 85, 95)
+)</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   name  grade
+##   &lt;chr&gt; &lt;dbl&gt;
+## 1 John     90
+## 2 Sara     85
+## 3 David    95</code></pre>
+<p>A tibble is still a data frame. <code>is.data.frame()</code> is
+<code>TRUE</code> for both.</p>
+</div>
+<div id="factor" class="section level3">
+<h3>Factor</h3>
+<p>A factor is commonly used to represent <strong>categorical
+data</strong>:</p>
+<pre class="r"><code>gender &lt;- factor(c(&quot;Male&quot;, &quot;Female&quot;, &quot;Female&quot;, &quot;Male&quot;))</code></pre>
+<p>Useful functions:</p>
+<pre class="r"><code>levels(gender)</code></pre>
+<pre><code>## [1] &quot;Female&quot; &quot;Male&quot;</code></pre>
+<pre class="r"><code>nlevels(gender)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>table(gender)</code></pre>
+<pre><code>## gender
+## Female   Male 
+##      2      2</code></pre>
+<pre class="r"><code>is.factor(gender)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<hr />
+</div>
+</div>
+<div id="comparisons-and-logical-operators" class="section level2">
+<h2>7. Comparisons and Logical Operators</h2>
+<p>A <strong>logical</strong> value is <code>TRUE</code> or
+<code>FALSE</code>. Comparison operators produce logicals:</p>
+<pre class="r"><code>13 &gt; 4</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE
+
+13 &lt; 4</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># FALSE
+
+4 &gt;= 4</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE
+
+4 == 4</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE
+
+13 != 4</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE</code></pre>
+<p>Use <code>==</code> to test equality. A single <code>=</code> is
+assignment or a named argument, not a comparison.</p>
+<p>The operators are vectorized:</p>
+<pre class="r"><code>x &lt;- c(1, 2, 3, 4)
+y &lt;- c(1, 4, 4, 4)
+
+x == y</code></pre>
+<pre><code>## [1]  TRUE FALSE FALSE  TRUE</code></pre>
+<pre class="r"><code># TRUE FALSE FALSE TRUE
+
+x &lt; y</code></pre>
+<pre><code>## [1] FALSE  TRUE  TRUE FALSE</code></pre>
+<pre class="r"><code># FALSE TRUE TRUE FALSE</code></pre>
+<p>Combine conditions with <code>&amp;</code> (and) and <code>|</code>
+(or):</p>
+<pre class="r"><code>TRUE &amp; FALSE</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># FALSE
+
+TRUE | FALSE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE
+
+(x &lt; 3) &amp; (y &gt;= 4)</code></pre>
+<pre><code>## [1] FALSE  TRUE FALSE FALSE</code></pre>
+<pre class="r"><code># FALSE TRUE FALSE FALSE
+
+(x &lt; 3) | (y &gt;= 4)</code></pre>
+<pre><code>## [1] TRUE TRUE TRUE TRUE</code></pre>
+<pre class="r"><code># TRUE TRUE TRUE TRUE</code></pre>
+<p><code>!</code> negates a logical. <code>xor(a, b)</code> is true when
+exactly one of <code>a</code> or <code>b</code> is true.</p>
+<p>A comparison is the usual way to subset a vector:</p>
+<pre class="r"><code>x &lt;- 1:5
+x[x &lt; 3]</code></pre>
+<pre><code>## [1] 1 2</code></pre>
+<pre class="r"><code># 1 2</code></pre>
+<p><code>%%</code> is useful here. <code>n %% 3 == 0</code> is true when
+<code>n</code> is a multiple of 3.</p>
+<hr />
+</div>
+<div id="indexing" class="section level2">
+<h2>8. Indexing</h2>
+<p>We often need part of an object, not the entire object.</p>
+<p>The main indexing operator in R is <code>[ ]</code>.</p>
+<div id="vectors-1" class="section level3">
+<h3>Vectors</h3>
+<pre class="r"><code>x &lt;- c(10, 20, 30, 40)
+
+x[1]</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code># 10
+
+x[c(1, 4)]</code></pre>
+<pre><code>## [1] 10 40</code></pre>
+<pre class="r"><code># 10 40
+
+x[2:3]</code></pre>
+<pre><code>## [1] 20 30</code></pre>
+<pre class="r"><code># 20 30</code></pre>
+<p>Positions in R start at 1, not 0.</p>
+<p>Negative indices drop elements:</p>
+<pre class="r"><code>x[-1]</code></pre>
+<pre><code>## [1] 20 30 40</code></pre>
+<pre class="r"><code># 20 30 40</code></pre>
+<p>We can also index with a logical vector:</p>
+<pre class="r"><code>x[c(TRUE, FALSE, TRUE, FALSE)]</code></pre>
+<pre><code>## [1] 10 30</code></pre>
+<pre class="r"><code># 10 30</code></pre>
+<p>A common pattern is to keep the values that satisfy a condition:</p>
+<pre class="r"><code>x[x &gt; 20]</code></pre>
+<pre><code>## [1] 30 40</code></pre>
+<pre class="r"><code># 30 40</code></pre>
+<p>If the elements have names, we can index by name:</p>
+<pre class="r"><code>scores &lt;- c(midterm = 90, final = 85)
+
+scores[&quot;final&quot;]</code></pre>
+<pre><code>## final 
+##    85</code></pre>
+<pre class="r"><code># 85</code></pre>
+</div>
+<div id="lists" class="section level3">
+<h3>Lists</h3>
+<p>For a list, <code>[</code> and <code>[[</code> do different
+things.</p>
+<pre class="r"><code>student &lt;- list(
+  name = &quot;John&quot;,
+  age = 25,
+  grades = c(90, 85, 95)
+)
+
+student[1]</code></pre>
+<pre><code>## $name
+## [1] &quot;John&quot;</code></pre>
+<p>This returns a <strong>list</strong> of length 1.</p>
+<pre class="r"><code>student[[1]]</code></pre>
+<pre><code>## [1] &quot;John&quot;</code></pre>
+<pre class="r"><code># &quot;John&quot;</code></pre>
+<p>This returns the element itself.</p>
+<p>The <code>$</code> operator is a convenient way to extract a named
+element:</p>
+<pre class="r"><code>student$name</code></pre>
+<pre><code>## [1] &quot;John&quot;</code></pre>
+<pre class="r"><code># &quot;John&quot;</code></pre>
+<p>A useful way to remember the difference is:</p>
+<p>[ → a piece of the list, still a list [[ → the element itself $ → a
+named element</p>
+<p>Matrices A matrix is indexed by row and column:</p>
+<pre class="r"><code>x &lt;- matrix(1:6, nrow = 2)
+
+x[1, 2]</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code>x[1, ]</code></pre>
+<pre><code>## [1] 1 3 5</code></pre>
+<pre class="r"><code>x[, 2]</code></pre>
+<pre><code>## [1] 3 4</code></pre>
+<p><code>x[1, ]</code> is the first row. <code>x[, 2]</code> is the
+second column.</p>
+</div>
+<div id="data-frames" class="section level3">
+<h3>Data Frames</h3>
+<p>A data frame can be indexed like a matrix and also like a list.</p>
+<pre class="r"><code>students$grade</code></pre>
+<pre><code>## [1] 90 85 95</code></pre>
+<pre class="r"><code>students[1, ]</code></pre>
+<pre><code>##   name grade passed
+## 1 John    90   TRUE</code></pre>
+<pre class="r"><code>students[, &quot;grade&quot;]</code></pre>
+<pre><code>## [1] 90 85 95</code></pre>
+<p><code>students$grade</code> extracts the <code>grade</code> column as
+a vector.</p>
+<p><code>students[1, ]</code> extracts the first row, still as a data
+frame.</p>
+<p>An important detail:</p>
+<pre class="r"><code>students[, &quot;grade&quot;]</code></pre>
+<pre><code>## [1] 90 85 95</code></pre>
+<pre class="r"><code># a vector
+
+students[, &quot;grade&quot;, drop = FALSE]</code></pre>
+<pre><code>##   grade
+## 1    90
+## 2    85
+## 3    95</code></pre>
+<pre class="r"><code># a data frame with one column</code></pre>
+<p>By default, extracting a single column drops the data-frame
+structure.</p>
+<hr />
+</div>
+</div>
+<div id="functions" class="section level2">
+<h2>9. Functions</h2>
+<p>A <strong>function</strong> performs a particular task.</p>
+<p>The general form is:</p>
+<pre class="r"><code>function_name(arguments)</code></pre>
+<pre><code>## Error in `function_name()`:
+## ! could not find function &quot;function_name&quot;</code></pre>
+<p>For example:</p>
+<pre class="r"><code>sqrt(16)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># 4</code></pre>
+<p>Here:</p>
+<ul>
+<li><code>sqrt</code> is the <strong>function name</strong>.</li>
+<li><code>16</code> is an <strong>argument</strong>.</li>
+<li><code>4</code> is the returned result.</li>
+</ul>
+<p>Another example:</p>
+<pre class="r"><code>round(3.14159, digits = 2)</code></pre>
+<pre><code>## [1] 3.14</code></pre>
+<pre class="r"><code># 3.14</code></pre>
+<p>This function has multiple arguments.</p>
+<p>You can read the documentation of a function using:</p>
+<pre class="r"><code>?round</code></pre>
+<p>or:</p>
+<pre class="r"><code>help(round)</code></pre>
+<p>You can also inspect the arguments:</p>
+<pre class="r"><code>args(round)</code></pre>
+<pre><code>## function (x, digits = 0, ...) 
+## NULL</code></pre>
+<hr />
+</div>
+<div id="positional-and-named-arguments" class="section level2">
+<h2>10. Positional and Named Arguments</h2>
+<p>Consider:</p>
+<pre class="r"><code>seq(from = 1, to = 10, by = 2)</code></pre>
+<pre><code>## [1] 1 3 5 7 9</code></pre>
+<p>The arguments have names:</p>
+<p>from = 1 to = 10 by = 2</p>
+<p>Because R can match arguments by their positions, we can also
+write:</p>
+<pre class="r"><code>seq(1, 10, 2)</code></pre>
+<pre><code>## [1] 1 3 5 7 9</code></pre>
+<p>Both produce:</p>
+<pre class="r"><code># 1 3 5 7 9</code></pre>
+<p>Using argument names often makes code easier to understand.</p>
+<p>A useful distinction is:</p>
+<pre class="r"><code>x &lt;- 10                      # assignment: store a value
+
+round(3.14159, digits = 2)   # = gives a name to an argument</code></pre>
+<pre><code>## [1] 3.14</code></pre>
+<p><code>&lt;-</code> creates an object. <code>=</code> inside a
+function call names an argument.</p>
+<hr />
+</div>
+<div id="default-arguments" class="section level2">
+<h2>11. Default Arguments</h2>
+<p>Functions can provide <strong>default values</strong> for
+arguments.</p>
+<p>For example:</p>
+<pre class="r"><code>round(3.14159)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 3</code></pre>
+<p>We did not specify <code>digits</code>, so R uses its default.</p>
+<p>Compare:</p>
+<pre class="r"><code>round(3.14159, digits = 2)</code></pre>
+<pre><code>## [1] 3.14</code></pre>
+<pre class="r"><code># 3.14</code></pre>
+<p>The help page of a function shows its available arguments and their
+defaults:</p>
+<pre class="r"><code>?round</code></pre>
+<hr />
+</div>
+<div id="the-seq-function" class="section level2">
+<h2>12. The <code>seq()</code> Function</h2>
+<p><code>seq()</code> is a useful example for understanding function
+arguments.</p>
+<p>It creates sequences.</p>
+<pre class="r"><code>seq(from = 1, to = 10, by = 2)</code></pre>
+<pre><code>## [1] 1 3 5 7 9</code></pre>
+<pre class="r"><code># 1 3 5 7 9</code></pre>
+<p>Here:</p>
+<p>from = 1 starting value to = 10 ending value by = 2 step size</p>
+<p>We can also specify the desired number of elements:</p>
+<pre class="r"><code>seq(from = 1, to = 10, length.out = 4)</code></pre>
+<pre><code>## [1]  1  4  7 10</code></pre>
+<pre class="r"><code># 1 4 7 10</code></pre>
+<p>So there are different ways to tell <code>seq()</code> what sequence
+we want.</p>
+<p>Some arguments in <code>seq()</code> have a default value of
+<code>NULL</code>. This brings us to several important special values in
+R.</p>
+<hr />
+</div>
+<div id="special-values-na-nan-inf-and-null" class="section level2">
+<h2>13. Special Values: <code>NA</code>, <code>NaN</code>,
+<code>Inf</code>, and <code>NULL</code></h2>
+<p>R has several special values that have different meanings:</p>
+<p>Value Meaning Example</p>
+<p><code>NA</code> Missing or unknown value
+<code>c(10, NA, 20)</code></p>
+<p><code>NaN</code> Undefined numerical result (“Not a Number”)
+<code>0/0</code></p>
+<p><code>Inf</code> Infinity <code>1/0</code></p>
+<p><code>-Inf</code> Negative infinity <code>-1/0</code></p>
+<p><code>NULL</code> Absence of a value <code>x &lt;- NULL</code></p>
+<p>A simple way to remember them:</p>
+<p><strong><code>NA</code></strong> = I don’t know the value.</p>
+<p><strong><code>NaN</code></strong> = The numerical calculation is
+undefined.</p>
+<p><strong><code>Inf</code></strong> = The numerical result is
+infinite.</p>
+<p><strong><code>NULL</code></strong> = There is no value at all.</p>
+<hr />
+</div>
+<div id="detecting-special-values-the-is.-family"
+class="section level2">
+<h2>14. Detecting Special Values: The <code>is.*()</code> Family</h2>
+<p>Consider:</p>
+<pre class="r"><code>x &lt;- c(NA, NaN, Inf, 5)</code></pre>
+<p>Now apply several functions:</p>
+<pre class="r"><code>is.na(x)</code></pre>
+<pre><code>## [1]  TRUE  TRUE FALSE FALSE</code></pre>
+<pre class="r"><code># TRUE TRUE FALSE FALSE
+
+is.nan(x)</code></pre>
+<pre><code>## [1] FALSE  TRUE FALSE FALSE</code></pre>
+<pre class="r"><code># FALSE TRUE FALSE FALSE
+
+is.infinite(x)</code></pre>
+<pre><code>## [1] FALSE FALSE  TRUE FALSE</code></pre>
+<pre class="r"><code># FALSE FALSE TRUE FALSE
+
+is.finite(x)</code></pre>
+<pre><code>## [1] FALSE FALSE FALSE  TRUE</code></pre>
+<pre class="r"><code># FALSE FALSE FALSE TRUE</code></pre>
+<p>The results can be summarized as:</p>
+<p>Value <code>is.na()</code> <code>is.nan()</code>
+<code>is.infinite()</code> <code>is.finite()</code></p>
+<p><code>NA</code> TRUE FALSE FALSE FALSE</p>
+<p><code>NaN</code> TRUE TRUE FALSE FALSE</p>
+<p><code>Inf</code> FALSE FALSE TRUE FALSE</p>
+<p><code>5</code> FALSE FALSE FALSE TRUE</p>
+<p>An important observation is:</p>
+<pre class="r"><code>is.na(NaN)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE
+
+is.nan(NA)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># FALSE</code></pre>
+<p>Thus, <code>NaN</code> is also considered a missing value by
+<code>is.na()</code>.</p>
+<hr />
+</div>
+<div id="why-is-null-different" class="section level2">
+<h2>15. Why Is <code>NULL</code> Different?</h2>
+<p>Consider:</p>
+<pre class="r"><code>x &lt;- c(NA, NaN, Inf, NULL)
+
+x</code></pre>
+<pre><code>## [1]  NA NaN Inf</code></pre>
+<pre class="r"><code># NA NaN Inf</code></pre>
+<p>Although we supplied four things:</p>
+<pre class="r"><code>length(x)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 3</code></pre>
+<p>Why?</p>
+<p>Because <code>NULL</code> represents <strong>the absence of a
+value</strong>. It contributes no element to the vector.</p>
+<p>Compare:</p>
+<pre class="r"><code>length(NA)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># 1
+
+length(NaN)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># 1
+
+length(Inf)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># 1
+
+length(NULL)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code># 0</code></pre>
+<p>Therefore:</p>
+<p><strong><code>NA</code> is a missing value; <code>NULL</code> is no
+value.</strong></p>
+<p>We test for <code>NULL</code> using:</p>
+<pre class="r"><code>is.null(NULL)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># TRUE</code></pre>
+<hr />
+</div>
+<div id="missing-values-in-real-data" class="section level2">
+<h2>16. Missing Values in Real Data</h2>
+<p>Suppose we have:</p>
+<pre class="r"><code>grades &lt;- c(90, 85, NA, 95)</code></pre>
+<p>Then:</p>
+<pre class="r"><code>mean(grades)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code># NA</code></pre>
+<p>Because one grade is unknown, R cannot calculate the ordinary
+mean.</p>
+<p>Many R functions provide an <code>na.rm</code> argument:</p>
+<pre class="r"><code>mean(grades, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 90</code></pre>
+<pre class="r"><code># 90</code></pre>
+<p><code>na.rm</code> means:</p>
+<p>NA remove</p>
+<p>Other useful functions include:</p>
+<pre class="r"><code>is.na(grades)</code></pre>
+<pre><code>## [1] FALSE FALSE  TRUE FALSE</code></pre>
+<p>to identify missing values,</p>
+<pre class="r"><code>anyNA(grades)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>to determine whether there are any missing values,</p>
+<p>and:</p>
+<pre class="r"><code>na.omit(grades)</code></pre>
+<pre><code>## [1] 90 85 95
+## attr(,&quot;na.action&quot;)
+## [1] 3
+## attr(,&quot;class&quot;)
+## [1] &quot;omit&quot;</code></pre>
+<p>to remove observations containing missing values.</p>
+<p>For data frames, another important function is:</p>
+<pre class="r"><code>complete.cases()</code></pre>
+<pre><code>## Error in `complete.cases()`:
+## ! no input has determined the number of cases</code></pre>
+<p>For example:</p>
+<pre class="r"><code>students &lt;- data.frame(
+  grade = c(90, NA, 85),
+  age = c(20, 21, NA)
+)
+
+complete.cases(students)</code></pre>
+<pre><code>## [1]  TRUE FALSE FALSE</code></pre>
+<pre class="r"><code># TRUE FALSE FALSE</code></pre>
+<hr />
+</div>
+<div id="useful-is.-functions" class="section level2">
+<h2>17. Useful <code>is.*()</code> Functions</h2>
+<p>R has a large family of functions beginning with <code>is.</code>.
+They ask questions about an object and usually return <code>TRUE</code>
+or <code>FALSE</code>.</p>
+<div id="checking-data-types" class="section level3">
+<h3>Checking data types</h3>
+<pre class="r"><code>is.numeric(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>is.integer(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.double(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>is.character(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.logical(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.complex(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="checking-data-structures" class="section level3">
+<h3>Checking data structures</h3>
+<pre class="r"><code>is.vector(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>is.list(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.matrix(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.array(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.data.frame(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>is.factor(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="checking-special-values" class="section level3">
+<h3>Checking special values</h3>
+<pre class="r"><code>is.na(x)</code></pre>
+<pre><code>## [1]  TRUE  TRUE FALSE</code></pre>
+<pre class="r"><code>is.nan(x)</code></pre>
+<pre><code>## [1] FALSE  TRUE FALSE</code></pre>
+<pre class="r"><code>is.finite(x)</code></pre>
+<pre><code>## [1] FALSE FALSE FALSE</code></pre>
+<pre class="r"><code>is.infinite(x)</code></pre>
+<pre><code>## [1] FALSE FALSE  TRUE</code></pre>
+<pre class="r"><code>is.null(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<p>These functions make the naming convention easy to remember:</p>
+<p>is.numeric(x)</p>
+<p>asks:</p>
+<blockquote>
+<p>“Is <code>x</code> numeric?”</p>
+</blockquote>
+<p>and:</p>
+<p>is.na(x)</p>
+<p>asks:</p>
+<blockquote>
+<p>“Is <code>x</code> missing?”</p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="useful-as.-functions" class="section level2">
+<h2>18. Useful <code>as.*()</code> Functions</h2>
+<p>The <code>as.*()</code> family usually attempts to
+<strong>convert</strong> an object.</p>
+<pre class="r"><code>as.numeric(x)</code></pre>
+<pre><code>## [1]  NA NaN Inf</code></pre>
+<pre class="r"><code>as.integer(x)</code></pre>
+<pre><code>## [1] NA NA NA</code></pre>
+<pre class="r"><code>as.double(x)</code></pre>
+<pre><code>## [1]  NA NaN Inf</code></pre>
+<pre class="r"><code>as.character(x)</code></pre>
+<pre><code>## [1] NA    &quot;NaN&quot; &quot;Inf&quot;</code></pre>
+<pre class="r"><code>as.logical(x)</code></pre>
+<pre><code>## [1]   NA   NA TRUE</code></pre>
+<pre class="r"><code>as.vector(x)</code></pre>
+<pre><code>## [1]  NA NaN Inf</code></pre>
+<pre class="r"><code>as.list(x)</code></pre>
+<pre><code>## [[1]]
+## [1] NA
+## 
+## [[2]]
+## [1] NaN
+## 
+## [[3]]
+## [1] Inf</code></pre>
+<pre class="r"><code>as.matrix(x)</code></pre>
+<pre><code>##      [,1]
+## [1,]   NA
+## [2,]  NaN
+## [3,]  Inf</code></pre>
+<pre class="r"><code>as.data.frame(x)</code></pre>
+<pre><code>##     x
+## 1  NA
+## 2 NaN
+## 3 Inf</code></pre>
+<pre class="r"><code>as.factor(x)</code></pre>
+<pre><code>## [1] &lt;NA&gt; NaN  Inf 
+## Levels: Inf NaN</code></pre>
+<p>This gives us a useful distinction:</p>
+<p>is.*() → asks what something is</p>
+<p>as.*() → tries to convert something</p>
+<p>For example:</p>
+<pre class="r"><code>x &lt;- &quot;25&quot;
+
+is.numeric(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># FALSE
+
+as.numeric(x)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code># 25</code></pre>
+<hr />
+</div>
+<div id="a-useful-family-of-functions-to-remember"
+class="section level2">
+<h2>19. A Useful Family of Functions to Remember</h2>
+<p>At this stage, students should recognize several families of
+functions.</p>
+<div id="investigating-an-object" class="section level3">
+<h3>Investigating an object</h3>
+<pre class="r"><code>typeof()</code></pre>
+<pre><code>## Error in `typeof()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>class()</code></pre>
+<pre><code>## Error in `class()`:
+## ! 0 arguments passed to &#39;class&#39; which requires 1</code></pre>
+<pre class="r"><code>mode()</code></pre>
+<pre><code>## Error in `mode()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>str()</code></pre>
+<pre><code>## Error in `str.default()`:
+## ! argument &quot;object&quot; is missing, with no default</code></pre>
+<pre class="r"><code>length()</code></pre>
+<pre><code>## Error in `length()`:
+## ! 0 arguments passed to &#39;length&#39; which requires 1</code></pre>
+<pre class="r"><code>attributes()</code></pre>
+<pre><code>## Error in `attributes()`:
+## ! 0 arguments passed to &#39;attributes&#39; which requires 1</code></pre>
+<pre class="r"><code>names()</code></pre>
+<pre><code>## Error in `names()`:
+## ! 0 arguments passed to &#39;names&#39; which requires 1</code></pre>
+<pre class="r"><code>dim()</code></pre>
+<pre><code>## Error in `dim()`:
+## ! 0 arguments passed to &#39;dim&#39; which requires 1</code></pre>
+</div>
+<div id="asking-what-an-object-is" class="section level3">
+<h3>Asking what an object is</h3>
+<pre class="r"><code>is.numeric()</code></pre>
+<pre><code>## Error in `is.numeric()`:
+## ! 0 arguments passed to &#39;is.numeric&#39; which requires 1</code></pre>
+<pre class="r"><code>is.integer()</code></pre>
+<pre><code>## Error in `is.integer()`:
+## ! 0 arguments passed to &#39;is.integer&#39; which requires 1</code></pre>
+<pre class="r"><code>is.character()</code></pre>
+<pre><code>## Error in `is.character()`:
+## ! 0 arguments passed to &#39;is.character&#39; which requires 1</code></pre>
+<pre class="r"><code>is.logical()</code></pre>
+<pre><code>## Error in `is.logical()`:
+## ! 0 arguments passed to &#39;is.logical&#39; which requires 1</code></pre>
+<pre class="r"><code>is.vector()</code></pre>
+<pre><code>## Error in `is.vector()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>is.list()</code></pre>
+<pre><code>## Error in `is.list()`:
+## ! 0 arguments passed to &#39;is.list&#39; which requires 1</code></pre>
+<pre class="r"><code>is.matrix()</code></pre>
+<pre><code>## Error in `is.matrix()`:
+## ! 0 arguments passed to &#39;is.matrix&#39; which requires 1</code></pre>
+<pre class="r"><code>is.data.frame()</code></pre>
+<pre><code>## Error in `is.data.frame()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>is.factor()</code></pre>
+<pre><code>## Error in `is.factor()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>is.na()</code></pre>
+<pre><code>## Error in `is.na()`:
+## ! 0 arguments passed to &#39;is.na&#39; which requires 1</code></pre>
+<pre class="r"><code>is.nan()</code></pre>
+<pre><code>## Error in `is.nan()`:
+## ! 0 arguments passed to &#39;is.nan&#39; which requires 1</code></pre>
+<pre class="r"><code>is.infinite()</code></pre>
+<pre><code>## Error in `is.infinite()`:
+## ! 0 arguments passed to &#39;is.infinite&#39; which requires 1</code></pre>
+<pre class="r"><code>is.finite()</code></pre>
+<pre><code>## Error in `is.finite()`:
+## ! 0 arguments passed to &#39;is.finite&#39; which requires 1</code></pre>
+<pre class="r"><code>is.null()</code></pre>
+<pre><code>## Error in `is.null()`:
+## ! 0 arguments passed to &#39;is.null&#39; which requires 1</code></pre>
+</div>
+<div id="converting-objects" class="section level3">
+<h3>Converting objects</h3>
+<pre class="r"><code>as.numeric()</code></pre>
+<pre><code>## numeric(0)</code></pre>
+<pre class="r"><code>as.integer()</code></pre>
+<pre><code>## integer(0)</code></pre>
+<pre class="r"><code>as.character()</code></pre>
+<pre><code>## character(0)</code></pre>
+<pre class="r"><code>as.logical()</code></pre>
+<pre><code>## logical(0)</code></pre>
+<pre class="r"><code>as.vector()</code></pre>
+<pre><code>## Error in `as.vector()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>as.list()</code></pre>
+<pre><code>## Error in `as.list.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>as.matrix()</code></pre>
+<pre><code>## Error in `as.matrix.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>as.data.frame()</code></pre>
+<pre><code>## Error in `as.data.frame()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>as.factor()</code></pre>
+<pre><code>## Error in `as.factor()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+</div>
+<div id="indexing-1" class="section level3">
+<h3>Indexing</h3>
+<pre class="r"><code>x[1]</code></pre>
+<pre><code>## [1] &quot;25&quot;</code></pre>
+<pre class="r"><code>x[1:3]</code></pre>
+<pre><code>## [1] &quot;25&quot; NA   NA</code></pre>
+<pre class="r"><code>x[-1]</code></pre>
+<pre><code>## character(0)</code></pre>
+<pre class="r"><code>x[x &gt; 20]</code></pre>
+<pre><code>## [1] &quot;25&quot;</code></pre>
+<pre class="r"><code>x[&quot;name&quot;]</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>student[[1]]</code></pre>
+<pre><code>## [1] &quot;John&quot;</code></pre>
+<pre class="r"><code>student$name</code></pre>
+<pre><code>## [1] &quot;John&quot;</code></pre>
+<pre class="r"><code>m[1, 2]</code></pre>
+<pre><code>## Error:
+## ! object &#39;m&#39; not found</code></pre>
+<pre class="r"><code>df[1, ]</code></pre>
+<pre><code>## Error in `df[1, ]`:
+## ! object of type &#39;closure&#39; is not subsettable</code></pre>
+<pre class="r"><code>df$grade</code></pre>
+<pre><code>## Error in `df$grade`:
+## ! object of type &#39;closure&#39; is not subsettable</code></pre>
+</div>
+<div id="basic-vector-operations" class="section level3">
+<h3>Basic vector operations</h3>
+<pre class="r"><code>c()</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>length()</code></pre>
+<pre><code>## Error in `length()`:
+## ! 0 arguments passed to &#39;length&#39; which requires 1</code></pre>
+<pre class="r"><code>seq()</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>rep()</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>sort()</code></pre>
+<pre><code>## Error in `sort.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>rev()</code></pre>
+<pre><code>## Error in `rev.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>unique()</code></pre>
+<pre><code>## Error in `unique.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>duplicated()</code></pre>
+<pre><code>## Error in `duplicated.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+</div>
+<div id="basic-numerical-summaries" class="section level3">
+<h3>Basic numerical summaries</h3>
+<pre class="r"><code>sum()</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>mean()</code></pre>
+<pre><code>## Error in `mean.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>median()</code></pre>
+<pre><code>## Error in `median.default()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>min()</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code>max()</code></pre>
+<pre><code>## [1] -Inf</code></pre>
+<pre class="r"><code>range()</code></pre>
+<pre><code>## [1]  Inf -Inf</code></pre>
+<pre class="r"><code>var()</code></pre>
+<pre><code>## Error in `var()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>sd()</code></pre>
+<pre><code>## Error in `sd()`:
+## ! argument &quot;x&quot; is missing, with no default</code></pre>
+<pre class="r"><code>summary()</code></pre>
+<pre><code>## Error in `summary.default()`:
+## ! argument &quot;object&quot; is missing, with no default</code></pre>
+</div>
+<div id="missing-data-functions" class="section level3">
+<h3>Missing-data functions</h3>
+<pre class="r"><code>is.na()</code></pre>
+<pre><code>## Error in `is.na()`:
+## ! 0 arguments passed to &#39;is.na&#39; which requires 1</code></pre>
+<pre class="r"><code>anyNA()</code></pre>
+<pre><code>## Error in `anyNA()`:
+## ! anyNA takes 1 or 2 arguments</code></pre>
+<pre class="r"><code>na.omit()</code></pre>
+<pre><code>## Error in `na.omit.default()`:
+## ! argument &quot;object&quot; is missing, with no default</code></pre>
+<pre class="r"><code>complete.cases()</code></pre>
+<pre><code>## Error in `complete.cases()`:
+## ! no input has determined the number of cases</code></pre>
+<p>and the commonly encountered argument:</p>
+<pre class="r"><code>na.rm = TRUE</code></pre>
+<hr />
+</div>
+</div>
+<div id="the-big-picture" class="section level2">
+<h2>20. The Big Picture</h2>
+<p>The concepts introduced so far fit together:</p>
+<p>VALUES │ ├── Numeric ├── Character ├── Logical └── Other types │ ▼
+OBJECTS │ ▼ DATA STRUCTURES │ ├── Vector ├── List ├── Matrix ├── Data
+Frame └── Factor │ ▼ INDEXING │ ├── [ → select a part ├── [[ → extract
+an element └── $ → extract a named element │ ▼ FUNCTIONS │ ├── Function
+name ├── Arguments ├── Named/positional arguments └── Default arguments
+│ ▼ SPECIAL VALUES │ ├── NA → missing/unknown value ├── NaN → undefined
+numerical result ├── Inf → infinity └── NULL → absence of a value</p>
+<p>Three function families are particularly useful to remember:</p>
+<p>is.<em>() → What is it? as.</em>() → Convert it ? → How does it
+work?</p>
+<p>For example:</p>
+<pre class="r"><code>is.numeric(x)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code>as.numeric(x)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code>?as.numeric</code></pre>
+<p>These ideas form the foundation for working with data in R.</p>
+</div>
