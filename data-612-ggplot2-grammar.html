@@ -111,112 +111,157 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">3.1 ggplot2: The Grammar of Graphics</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                                                                <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-3.html">Week 3</a> &middot;
                             <a href="files/data-612/ggplot2-grammar.pdf" target="_blank" rel="noopener">PDF</a>
+                            &middot; <a href="files/data-612/lectures/ggplot2-grammar.qmd">Source (.qmd)</a>
                         </p>
-                        <p>
-                            A plot is data, a mapping, and a geom. ggplot() is the canvas; + adds a layer.
-                        </p>
+<p>A plot is data, a mapping, and a geom. <code>ggplot()</code> is the
+canvas; <code>+</code> adds a layer.</p>
+<div id="why-we-plot" class="section level2">
 <h2>1. Why we plot</h2>
-<p>Numbers do not tell the whole story. Anscombe's quartet is four data sets with the same means, variances, and correlation. The scatterplots are not the same: one is a line, one is a curve, one is a line with an outlier, one is a vertical stack with an outlier. The Datasaurus dozen is the same idea with a T-Rex in it.</p>
-<p>Plot when you explore and when you explain. Do not add decoration that does not carry information.</p>
+<p>Numbers do not tell the whole story. Anscombe’s quartet is four data
+sets with the same means, variances, and correlation. The scatterplots
+are not the same: one is a line, one is a curve, one is a line with an
+outlier, one is a vertical stack with an outlier. The Datasaurus dozen
+is the same idea with a T-Rex in it.</p>
+<p>Plot when you explore and when you explain. Do not add decoration
+that does not carry information.</p>
 <p>R has three plotting systems:</p>
 <ul>
-<li>Base R: start a blank plot, then add pieces (<code>plot()</code>, <code>lines()</code>, <code>rug()</code>)</li>
+<li>Base R: start a blank plot, then add pieces (<code>plot()</code>,
+<code>lines()</code>, <code>rug()</code>)</li>
 <li><code>lattice</code>: one large function call</li>
 <li><code>ggplot2</code>: layers that follow a grammar of graphics</li>
 </ul>
-<p>This course uses <code>ggplot2</code>. It comes with <code>library(tidyverse)</code>. You do not load it again.</p>
-<pre><code class="language-r">library(tidyverse)
-data(&quot;mpg&quot;)
-</code></pre>
-<p><code>mpg</code> is a tibble of cars: engine size (<code>displ</code>), city and highway mpg (<code>cty</code>, <code>hwy</code>), drive (<code>drv</code>), class, and more. Type <code>?mpg</code>.</p>
-<p>A Base R scatterplot with a loess curve and rugs takes several unconnected calls. The ggplot2 version is one chain:</p>
+<p>This course uses <code>ggplot2</code>. It comes with
+<code>library(tidyverse)</code>. You do not load it again.</p>
+<pre><code class="language-r">data(&quot;mpg&quot;)</code></pre>
+<p><code>mpg</code> is a tibble of cars: engine size
+(<code>displ</code>), city and highway mpg (<code>cty</code>,
+<code>hwy</code>), drive (<code>drv</code>), class, and more. Type
+<code>?mpg</code>.</p>
+<p>A Base R scatterplot with a loess curve and rugs takes several
+unconnected calls. The ggplot2 version is one chain:</p>
 <pre><code class="language-r">ggplot(mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
   geom_smooth(se = FALSE, method = loess) +
   geom_rug() +
   xlab(&quot;Displacement&quot;) +
-  ylab(&quot;Highway&quot;)
-</code></pre>
-<p><code>qplot()</code> is a short ggplot2 helper for a quick look. We will write <code>ggplot()</code> so the layers stay visible.</p>
-<hr />
+  ylab(&quot;Highway&quot;)</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/mpg-smooth-rug-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>qplot()</code> is a short ggplot2 helper for a quick look. We
+will write <code>ggplot()</code> so the layers stay visible.</p>
+</div>
+<div id="the-grammar-in-four-pieces" class="section level2">
 <h2>2. The grammar, in four pieces</h2>
-<p>The grammar of graphics treats a plot as layers. You can get most of the work done with four of them:</p>
+<p>The grammar of graphics treats a plot as layers. You can get most of
+the work done with four of them:</p>
 <ul>
 <li><strong>data</strong>: a data frame</li>
-<li><strong>aesthetic mappings</strong>: which column is <code>x</code>, <code>y</code>, <code>color</code>, <code>shape</code>, <code>size</code>, <code>alpha</code>, <code>fill</code>, … Created with <code>aes()</code></li>
-<li><strong>geoms</strong>: the marks, <code>geom_point()</code>, <code>geom_histogram()</code>, <code>geom_boxplot()</code>, …</li>
-<li><strong>facets</strong>: a panel per level of a categorical variable, <code>facet_wrap()</code> or <code>facet_grid()</code></li>
+<li><strong>aesthetic mappings</strong>: which column is <code>x</code>,
+<code>y</code>, <code>color</code>, <code>shape</code>,
+<code>size</code>, <code>alpha</code>, <code>fill</code>, … Created with
+<code>aes()</code></li>
+<li><strong>geoms</strong>: the marks, <code>geom_point()</code>,
+<code>geom_histogram()</code>, <code>geom_boxplot()</code>, …</li>
+<li><strong>facets</strong>: a panel per level of a categorical
+variable, <code>facet_wrap()</code> or <code>facet_grid()</code></li>
 </ul>
-<p>There are also stats (binning for a histogram), positions (jitter, dodge, stack), and coordinate systems. We will change those when we need them.</p>
-<p><code>ggplot()</code> makes the canvas. It needs <code>data</code> (a data frame) and, usually, <code>mapping = aes(...)</code>.</p>
-<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy))
-</code></pre>
+<p>There are also stats (binning for a histogram), positions (jitter,
+dodge, stack), and coordinate systems. We will change those when we need
+them.</p>
+<p><code>ggplot()</code> makes the canvas. It needs <code>data</code> (a
+data frame) and, usually, <code>mapping = aes(...)</code>.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy))</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/empty-canvas-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <p>That draws axes and an empty panel. There is no geom yet.</p>
-<p>Add a layer with <code>+</code> at the <strong>end</strong> of the line, then the next function on the next line. A <code>+</code> at the start of a line will error.</p>
+<p>Add a layer with <code>+</code> at the <strong>end</strong> of the
+line, then the next function on the next line. A <code>+</code> at the
+start of a line will error.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
-  geom_point()
-</code></pre>
-<p>You can pipe the data in. The first argument of <code>ggplot()</code> is then filled, so you only write the mapping:</p>
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/first-points-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>You can pipe the data in. The first argument of <code>ggplot()</code>
+is then filled, so you only write the mapping:</p>
 <pre><code class="language-r">mpg |&gt;
   ggplot(mapping = aes(x = displ, y = cty)) +
-  geom_point()
-</code></pre>
-<p>Larger <code>displ</code> goes with smaller <code>cty</code>: a negative relationship.</p>
-<hr />
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/pipe-ggplot-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>Larger <code>displ</code> goes with smaller <code>cty</code>: a
+negative relationship.</p>
+</div>
+<div id="which-variable-is-x" class="section level2">
 <h2>3. Which variable is <code>x</code></h2>
-<p>You choose the axes from the question. The response usually goes on <code>y</code>. The explanatory variable goes on <code>x</code>.</p>
-<p>"Plot A vs B" and "plot A as a function of B" both put B on <code>x</code> and A on <code>y</code>. Swapping the axes does not change the association. It does change what a reader thinks is doing the explaining.</p>
+<p>You choose the axes from the question. The response usually goes on
+<code>y</code>. The explanatory variable goes on <code>x</code>.</p>
+<p>“Plot A vs B” and “plot A as a function of B” both put B on
+<code>x</code> and A on <code>y</code>. Swapping the axes does not
+change the association. It does change what a reader thinks is doing the
+explaining.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
-  geom_point()
-</code></pre>
-<p><code>cty</code> and <code>hwy</code> move together: a positive relationship.</p>
-<hr />
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/cty-hwy-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>cty</code> and <code>hwy</code> move together: a positive
+relationship.</p>
+</div>
+<div id="a-third-variable-categorical" class="section level2">
 <h2>4. A third variable: categorical</h2>
-<p>A categorical variable has a short list of groups. In <code>mpg</code>, <code>drv</code> is <code>f</code> (front), <code>r</code> (rear), or <code>4</code>.</p>
-<p>Map it to <code>color</code> (usually clearer) or <code>shape</code> (harder once you have many levels):</p>
+<p>A categorical variable has a short list of groups. In
+<code>mpg</code>, <code>drv</code> is <code>f</code> (front),
+<code>r</code> (rear), or <code>4</code>.</p>
+<p>Map it to <code>color</code> (usually clearer) or <code>shape</code>
+(harder once you have many levels):</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
-  geom_point()
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, shape = drv)) +
-  geom_point()
-</code></pre>
-<p>Fifty states as fifty colors is a mess. Recode into fewer groups, or facet (note 3.3).</p>
-<p><code>size</code> and <code>alpha</code> have a natural order (small to large, faint to dark). A categorical variable usually does not. Mapping <code>drv</code> to <code>size</code> or <code>alpha</code> is legal and usually a bad idea.</p>
-<hr />
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/color-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, shape = drv)) +
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/shape-drv-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>Fifty states as fifty colors is a mess. Recode into fewer groups, or
+facet (note 3.3).</p>
+<p><code>size</code> and <code>alpha</code> have a natural order (small
+to large, faint to dark). A categorical variable usually does not.
+Mapping <code>drv</code> to <code>size</code> or <code>alpha</code> is
+legal and usually a bad idea.</p>
+</div>
+<div id="a-third-variable-quantitative" class="section level2">
 <h2>5. A third variable: quantitative</h2>
-<p>A third number can go on <code>color</code> (a spectrum), <code>alpha</code> (transparency), or <code>size</code> (a bubble chart; worst when points overlap).</p>
+<p>A third number can go on <code>color</code> (a spectrum),
+<code>alpha</code> (transparency), or <code>size</code> (a bubble chart;
+worst when points overlap).</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
-  geom_point()
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/color-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point() +
-  viridis::scale_color_viridis()
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, alpha = cty)) +
-  geom_point()
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, size = cty)) +
-  geom_point()
-</code></pre>
-<p><code>shape</code> has a short list of symbols. Mapping a continuous variable to <code>shape</code> errors.</p>
-<p>Stacking <code>color</code>, <code>size</code>, <code>alpha</code>, and <code>shape</code> at once is possible and usually unreadable. If you cannot say the sentence the plot is making, drop a mapping.</p>
-<hr />
+  viridis::scale_color_viridis()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/color-cty-viridis-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, alpha = cty)) +
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/alpha-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, size = cty)) +
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/grammar/size-cty-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>shape</code> has a short list of symbols. Mapping a continuous
+variable to <code>shape</code> errors.</p>
+<p>Stacking <code>color</code>, <code>size</code>, <code>alpha</code>,
+and <code>shape</code> at once is possible and usually unreadable. If
+you cannot say the sentence the plot is making, drop a mapping.</p>
+</div>
+<div id="practice" class="section level2">
 <h2>6. Practice</h2>
-<ol>
-<li>
-<p>Load <code>iris</code> (<code>data(iris)</code>; <code>head(iris)</code>). Which columns are quantitative? Which is categorical?</p>
-</li>
-<li>
-<p>Scatterplot petal length vs petal width, colored by species. What do you see?</p>
-</li>
-<li>
-<p>Map a categorical column in <code>mpg</code> to <code>size</code> or <code>alpha</code>. Why is that a poor default?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li><p>Load <code>iris</code> (<code>data(iris)</code>;
+<code>head(iris)</code>). Which columns are quantitative? Which is
+categorical?</p></li>
+<li><p>Scatterplot petal length vs petal width, colored by species. What
+do you see?</p></li>
+<li><p>Map a categorical column in <code>mpg</code> to <code>size</code>
+or <code>alpha</code>. Why is that a poor default?</p></li>
 </ol>
+</div>
                         <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lab-2-solutions.html"><span aria-hidden="true">←</span> Lab 2 solutions</a>
                         <a class="course-page-nav__week" href="data-612-week-3.html">Week 3</a>
@@ -230,7 +275,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, size = cty)) +
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-22T19:20:00-04:00">September 22, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
             </footer>
         </div>
 

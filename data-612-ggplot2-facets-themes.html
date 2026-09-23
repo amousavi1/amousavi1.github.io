@@ -111,131 +111,172 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">3.3 ggplot2: Facets, Themes, and Saving</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                                                                <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-3.html">Week 3</a> &middot;
                             <a href="files/data-612/ggplot2-facets-themes.pdf" target="_blank" rel="noopener">PDF</a>
+                            &middot; <a href="files/data-612/lectures/ggplot2-facets-themes.qmd">Source (.qmd)</a>
                         </p>
-                        <p>
-                            Facet to add a category, set a theme and a scale, then ggsave() the object.
-                        </p>
+<p>Facet to add a category, set a theme and a scale, then
+<code>ggsave()</code> the object.</p>
+<div id="facets" class="section level2">
 <h2>1. Facets</h2>
-<p>Facets make a panel for each level of a categorical variable. That is often clearer than twenty colors on one panel.</p>
+<p>Facets make a panel for each level of a categorical variable. That is
+often clearer than twenty colors on one panel.</p>
 <p><code>facet_wrap(~ class)</code> wraps one variable into a grid:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
-  facet_wrap(~ class)
-</code></pre>
-<p><code>facet_grid(rows ~ cols)</code> is a matrix of two categoricals:</p>
+  facet_wrap(~ class)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/facet-wrap-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>facet_grid(rows ~ cols)</code> is a matrix of two
+categoricals:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point(alpha = 0.3) +
-  facet_grid(drv ~ class)
-</code></pre>
-<p>A <code>.</code> means "no faceting on that side":</p>
+  facet_grid(drv ~ class)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/facet-grid-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>A <code>.</code> means “no faceting on that side”:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
-  facet_grid(class ~ .)
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+  facet_grid(class ~ .)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/facet-grid-rows-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
   geom_point() +
-  facet_grid(. ~ drv)
-</code></pre>
-<hr />
+  facet_grid(. ~ drv)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/facet-grid-cols-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+</div>
+<div id="a-fixed-color-is-not-a-mapping" class="section level2">
 <h2>2. A fixed color is not a mapping</h2>
-<p>To make every point blue, set <code>color</code> <strong>outside</strong> <code>aes()</code>:</p>
+<p>To make every point blue, set <code>color</code>
+<strong>outside</strong> <code>aes()</code>:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
-  geom_point(color = &quot;blue&quot;)
-</code></pre>
-<p>The name is a character, so it is in quotes. Inside <code>aes()</code>, ggplot2 treats <code>"blue"</code> as a one-level categorical variable and draws a legend for it. That is a common mistake:</p>
+  geom_point(color = &quot;blue&quot;)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/fixed-blue-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>The name is a character, so it is in quotes. Inside
+<code>aes()</code>, ggplot2 treats <code>"blue"</code> as a one-level
+categorical variable and draws a legend for it. That is a common
+mistake:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = &quot;blue&quot;)) +
-  geom_point()
-</code></pre>
-<p>The same rule applies to histograms. <code>fill</code> is the interior; <code>color</code> is the outline:</p>
+  geom_point()</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/mistaken-blue-aes-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>The same rule applies to histograms. <code>fill</code> is the
+interior; <code>color</code> is the outline:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy)) +
-  geom_histogram(bins = 25, fill = &quot;white&quot;, color = &quot;black&quot;)
-</code></pre>
-<hr />
+  geom_histogram(bins = 25, fill = &quot;white&quot;, color = &quot;black&quot;)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/hist-outline-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+</div>
+<div id="themes" class="section level2">
 <h2>3. Themes</h2>
-<p>A theme sets the background, grid, and fonts in one step. <code>theme_bw()</code> is a usual choice for a document. <code>theme_classic()</code> is quieter.</p>
+<p>A theme sets the background, grid, and fonts in one step.
+<code>theme_bw()</code> is a usual choice for a document.
+<code>theme_classic()</code> is quieter.</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
   geom_point() +
-  theme_bw()
-</code></pre>
-<p><code>ggthemes</code> adds more, including <code>theme_economist()</code> and <code>theme_fivethirtyeight()</code>. Load the package first.</p>
-<hr />
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/theme-bw-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>ggthemes</code> adds more, including
+<code>theme_economist()</code> and <code>theme_fivethirtyeight()</code>.
+Load the package first.</p>
+</div>
+<div id="scales-and-colorblind-palettes" class="section level2">
 <h2>4. Scales and colorblind palettes</h2>
-<p>A scale maps data values to visual values. You can set the ends of a continuous color scale, or log both axes:</p>
+<p>A scale maps data values to visual values. You can set the ends of a
+continuous color scale, or log both axes:</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = cty)) +
   geom_point() +
-  scale_color_continuous(low = &quot;black&quot;, high = &quot;white&quot;)
-
-ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
+  scale_color_continuous(low = &quot;black&quot;, high = &quot;white&quot;)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/scale-continuous-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = diamonds, mapping = aes(x = carat, y = price)) +
   geom_point(alpha = 0.01) +
   scale_x_log10() +
-  scale_y_log10()
-</code></pre>
-<p>For a plot you will share, use a colorblind-safe palette. <code>ggthemes::scale_color_colorblind()</code> and <code>scale_fill_colorblind()</code> are one option. viridis is another: colorful, perceptually even, and still readable in grayscale. Use <code>scale_color_viridis_d()</code> / <code>scale_fill_viridis_d()</code> for discrete groups and <code>_c</code> for continuous.</p>
-<pre><code class="language-r">library(ggthemes)
-
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
+  scale_y_log10()</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/scale-log-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>For a plot you will share, use a colorblind-safe palette.
+<code>ggthemes::scale_color_colorblind()</code> and
+<code>scale_fill_colorblind()</code> are one option. viridis is another:
+colorful, perceptually even, and still readable in grayscale. Use
+<code>scale_color_viridis_d()</code> /
+<code>scale_fill_viridis_d()</code> for discrete groups and
+<code>_c</code> for continuous.</p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
   geom_point() +
   theme_bw() +
-  scale_color_colorblind()
-
-ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
+  scale_color_colorblind()</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/colorblind-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = hwy, fill = drv)) +
   geom_histogram(position = &quot;dodge&quot;, bins = 15) +
   theme_bw() +
-  scale_fill_viridis_d()
-</code></pre>
-<hr />
+  scale_fill_viridis_d()</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/viridis-fill-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+</div>
+<div id="labels" class="section level2">
 <h2>5. Labels</h2>
-<p><code>xlab()</code>, <code>ylab()</code>, and <code>ggtitle()</code> set the axis titles and the main title. The legend title is an argument on the scale (<code>name = ...</code>).</p>
+<p><code>xlab()</code>, <code>ylab()</code>, and <code>ggtitle()</code>
+set the axis titles and the main title. The legend title is an argument
+on the scale (<code>name = ...</code>).</p>
 <pre><code class="language-r">ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
   geom_point() +
   theme_bw() +
   scale_color_discrete(name = &quot;Car Class&quot;) +
   xlab(&quot;Displacement&quot;) +
   ylab(&quot;Highway&quot;) +
-  ggtitle(&quot;Displacement vs Highway&quot;)
-</code></pre>
-<hr />
+  ggtitle(&quot;Displacement vs Highway&quot;)</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/labels-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+</div>
+<div id="saving-a-plot" class="section level2">
 <h2>6. Saving a plot</h2>
 <p>A ggplot is an object. Assign it, print it, then export.</p>
 <pre><code class="language-r">pl &lt;- ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = class)) +
   geom_point() +
   theme_bw()
 
-pl
-</code></pre>
-<p>In RStudio, <strong>Export</strong> in the Plots pane writes a file. In a script or Quarto document, <code>ggsave()</code> does the same. It overwrites without asking.</p>
-<pre><code class="language-r">ggsave(&quot;hwy-vs-displ.pdf&quot;, plot = pl, width = 6, height = 4)
-</code></pre>
-<p>If you omit <code>plot</code>, <code>ggsave()</code> uses the last plot you printed. Put the file in a folder you already have, or create one first.</p>
-<hr />
+pl</code></pre>
+<p><img src="files/data-612/lectures/_figs/facets/save-object-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>In RStudio, <strong>Export</strong> in the Plots pane writes a file.
+In a script or Quarto document, <code>ggsave()</code> does the same. It
+overwrites without asking.</p>
+<pre><code class="language-r">ggsave(&quot;hwy-vs-displ.pdf&quot;, plot = pl, width = 6, height = 4)</code></pre>
+<p>If you omit <code>plot</code>, <code>ggsave()</code> uses the last
+plot you printed. Put the file in a folder you already have, or create
+one first.</p>
+</div>
+<div id="this-week-in-one-place" class="section level2">
 <h2>7. This week, in one place</h2>
 <p>By the end of Week 3 you should be able to:</p>
 <ul>
-<li>build a plot with <code>ggplot()</code>, <code>aes()</code>, and a <code>geom_*()</code></li>
-<li>choose a geom from the variables: scatter (two quantitative), histogram or density (one quantitative), boxplot (one categorical and one quantitative)</li>
-<li>map a third variable with <code>color</code>, <code>fill</code>, or facets</li>
+<li>build a plot with <code>ggplot()</code>, <code>aes()</code>, and a
+<code>geom_*()</code></li>
+<li>choose a geom from the variables: scatter (two quantitative),
+histogram or density (one quantitative), boxplot (one categorical and
+one quantitative)</li>
+<li>map a third variable with <code>color</code>, <code>fill</code>, or
+facets</li>
 <li>add a smooth, fix overplotting, change a theme and a scale</li>
 <li>label the plot and save it with <code>ggsave()</code></li>
 </ul>
-<p>Functions from this week include <code>ggplot()</code>, <code>aes()</code>, <code>geom_point()</code>, <code>geom_smooth()</code>, <code>geom_jitter()</code>, <code>geom_hex()</code>, <code>geom_histogram()</code>, <code>geom_density()</code>, <code>geom_boxplot()</code>, <code>facet_wrap()</code>, <code>facet_grid()</code>, <code>theme_bw()</code>, <code>scale_y_log10()</code>, <code>xlab()</code>, <code>ylab()</code>, <code>ggtitle()</code>, and <code>ggsave()</code>.</p>
-<p>Chapter 3 of <a href="https://r4ds.had.co.nz/data-visualisation.html">R for Data Science</a> and the <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">ggplot2 cheat sheet</a> are the usual references.</p>
-<hr />
+<p>Functions from this week include <code>ggplot()</code>,
+<code>aes()</code>, <code>geom_point()</code>,
+<code>geom_smooth()</code>, <code>geom_jitter()</code>,
+<code>geom_hex()</code>, <code>geom_histogram()</code>,
+<code>geom_density()</code>, <code>geom_boxplot()</code>,
+<code>facet_wrap()</code>, <code>facet_grid()</code>,
+<code>theme_bw()</code>, <code>scale_y_log10()</code>,
+<code>xlab()</code>, <code>ylab()</code>, <code>ggtitle()</code>, and
+<code>ggsave()</code>.</p>
+<p>Chapter 3 of <a
+href="https://r4ds.had.co.nz/data-visualisation.html">R for Data
+Science</a> and the <a
+href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">ggplot2
+cheat sheet</a> are the usual references.</p>
+</div>
+<div id="practice" class="section level2">
 <h2>8. Practice</h2>
-<ol>
-<li>
-<p>Boxplots of diamond <code>price</code> vs <code>cut</code>, log-<code>y</code>, faceted by <code>color</code>.</p>
-</li>
-<li>
-<p>The same plot: orange boxes, <code>theme_bw()</code>.</p>
-</li>
-<li>
-<p>Save that plot with <code>ggsave()</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li><p>Boxplots of diamond <code>price</code> vs <code>cut</code>,
+log-<code>y</code>, faceted by <code>color</code>.</p></li>
+<li><p>The same plot: orange boxes, <code>theme_bw()</code>.</p></li>
+<li><p>Save that plot with <code>ggsave()</code>.</p></li>
 </ol>
+</div>
                         <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-ggplot2-geoms.html"><span aria-hidden="true">←</span> 3.2 ggplot2: Geoms</a>
                         <a class="course-page-nav__week" href="data-612-week-3.html">Week 3</a>
@@ -249,7 +290,7 @@ pl
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-22T19:20:00-04:00">September 22, 2026, 7:20 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T02:20:00-04:00">September 23, 2026, 2:20 AM EDT</time></div>
             </footer>
         </div>
 
