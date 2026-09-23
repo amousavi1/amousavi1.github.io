@@ -111,16 +111,19 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">6.2 readr: Parsers</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-6.html">Week 6</a> &middot;
                             <a href="files/data-612/readr-parsers.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            parse_date(), parse_number(), and col_types when the import guess is wrong.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/readr-parsers.qmd">Source (.qmd)</a></p>
+<p>parse_date(), parse_number(), and col_types when the import guess is
+wrong.</p>
+<div id="parse-after-the-file-is-in" class="section level2">
 <h2>1. Parse after the file is in</h2>
-<p>Sometimes <code>read_csv()</code> guesses a character column because one bad token spoiled the first 1,000 rows. <code>parse_*()</code> converts a character vector in place. The same parsers sit behind <code>col_types</code>.</p>
+<p>Sometimes <code>read_csv()</code> guesses a character column because
+one bad token spoiled the first 1,000 rows. <code>parse_*()</code>
+converts a character vector in place. The same parsers sit behind
+<code>col_types</code>.</p>
 <pre><code class="language-r">library(tidyverse)
 
 dfdat &lt;- tribble(
@@ -130,55 +133,106 @@ dfdat &lt;- tribble(
   &quot;02-03-1989&quot;, &quot;10:10:25&quot;, &quot;6&quot;,     &quot;B&quot;,     &quot;FALSE&quot;,
   &quot;06-03-1982&quot;, &quot;22:10:55&quot;, &quot;2&quot;,     &quot;B&quot;,     &quot;TRUE&quot;,
   &quot;09-21-1981&quot;, &quot;10:10:02&quot;, &quot;1&quot;,     &quot;A&quot;,     &quot;N-A&quot;
-)
-</code></pre>
+)</code></pre>
 <hr />
+</div>
+<div id="dates-and-times" class="section level2">
 <h2>2. Dates and times</h2>
-<p><code>parse_date()</code> expects <code>"YYYY-MM-DD"</code> unless you set <code>format</code>. <code>parse_datetime()</code> includes a time zone.</p>
-<pre><code class="language-r">parse_date(&quot;2018-01-02&quot;)
-parse_date(&quot;02/01/2018&quot;)                    # fails
-parse_date(&quot;02/01/2018&quot;, format = &quot;%m/%d/%Y&quot;)
-parse_date(&quot;January 1, 2018&quot;, format = &quot;%B %d, %Y&quot;)
-
-dfdat |&gt; mutate(date = parse_date(date, format = &quot;%m-%d-%Y&quot;))
-</code></pre>
-<p>Useful tokens: <code>%d</code> day, <code>%m</code> month number, <code>%b</code> Jan, <code>%B</code> January, <code>%y</code> two-digit year, <code>%Y</code> four-digit year.</p>
-<p>Times: <code>%H</code> 0–23, <code>%I</code> 1–12 with <code>%p</code> for am/pm, <code>%M</code> minutes, <code>%S</code> seconds.</p>
-<pre><code class="language-r">dfdat |&gt; mutate(time = parse_time(time, format = &quot;%H:%M:%S&quot;))
-parse_time(&quot;10:40 pm&quot;, format = &quot;%I:%M %p&quot;)
-</code></pre>
+<p><code>parse_date()</code> expects <code>"YYYY-MM-DD"</code> unless
+you set <code>format</code>. <code>parse_datetime()</code> includes a
+time zone.</p>
+<pre><code class="language-r">parse_date(&quot;2018-01-02&quot;)</code></pre>
+<pre><code>## [1] &quot;2018-01-02&quot;</code></pre>
+<pre><code class="language-r">parse_date(&quot;02/01/2018&quot;)                    # fails</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre><code class="language-r">parse_date(&quot;02/01/2018&quot;, format = &quot;%m/%d/%Y&quot;)</code></pre>
+<pre><code>## [1] &quot;2018-02-01&quot;</code></pre>
+<pre><code class="language-r">parse_date(&quot;January 1, 2018&quot;, format = &quot;%B %d, %Y&quot;)</code></pre>
+<pre><code>## [1] &quot;2018-01-01&quot;</code></pre>
+<pre><code class="language-r">dfdat |&gt; mutate(date = parse_date(date, format = &quot;%m-%d-%Y&quot;))</code></pre>
+<pre><code>## # A tibble: 5 × 5
+##   date       time     number factor logical
+##   &lt;date&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;  
+## 1 1988-12-01 10:10:02 2      A      TRUE   
+## 2 1987-11-12 11:10:57 4      A      TRUE   
+## 3 1989-02-03 10:10:25 6      B      FALSE  
+## 4 1982-06-03 22:10:55 2      B      TRUE   
+## 5 1981-09-21 10:10:02 1      A      N-A</code></pre>
+<p>Useful tokens: <code>%d</code> day, <code>%m</code> month number,
+<code>%b</code> Jan, <code>%B</code> January, <code>%y</code> two-digit
+year, <code>%Y</code> four-digit year.</p>
+<p>Times: <code>%H</code> 0–23, <code>%I</code> 1–12 with
+<code>%p</code> for am/pm, <code>%M</code> minutes, <code>%S</code>
+seconds.</p>
+<pre><code class="language-r">dfdat |&gt; mutate(time = parse_time(time, format = &quot;%H:%M:%S&quot;))</code></pre>
+<pre><code>## # A tibble: 5 × 5
+##   date       time     number factor logical
+##   &lt;chr&gt;      &lt;time&gt;   &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;  
+## 1 12-01-1988 10:10:02 2      A      TRUE   
+## 2 11-12-1987 11:10:57 4      A      TRUE   
+## 3 02-03-1989 10:10:25 6      B      FALSE  
+## 4 06-03-1982 22:10:55 2      B      TRUE   
+## 5 09-21-1981 10:10:02 1      A      N-A</code></pre>
+<pre><code class="language-r">parse_time(&quot;10:40 pm&quot;, format = &quot;%I:%M %p&quot;)</code></pre>
+<pre><code>## 22:40:00</code></pre>
 <hr />
+</div>
+<div id="numbers-logicals-factors" class="section level2">
 <h2>3. Numbers, logicals, factors</h2>
-<p><code>parse_double()</code> and <code>parse_integer()</code> fail on <code>$</code> or <code>%</code>. <code>parse_number()</code> strips the extra characters.</p>
-<pre><code class="language-r">parse_double(&quot;$2.11&quot;)     # fail
-parse_number(&quot;$2.11&quot;)
-parse_number(&quot;2%&quot;)
-parse_number(&quot;2.555,11&quot;, locale = locale(grouping_mark = &quot;.&quot;, decimal_mark = &quot;,&quot;))
-</code></pre>
-<p><code>parse_logical()</code>, <code>parse_factor()</code>, <code>parse_character()</code>. Any parser accepts <code>na = "N-A"</code> or a vector of missing tokens.</p>
-<pre><code class="language-r">dfdat |&gt; mutate(logical = parse_logical(logical, na = &quot;N-A&quot;))
-</code></pre>
+<p><code>parse_double()</code> and <code>parse_integer()</code> fail on
+<code>$</code> or <code>%</code>. <code>parse_number()</code> strips the
+extra characters.</p>
+<pre><code class="language-r">parse_double(&quot;$2.11&quot;)     # fail</code></pre>
+<pre><code>## [1] NA
+## attr(,&quot;problems&quot;)
+## # A tibble: 1 × 4
+##     row   col expected actual
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;    &lt;chr&gt; 
+## 1     1    NA a double $2.11</code></pre>
+<pre><code class="language-r">parse_number(&quot;$2.11&quot;)</code></pre>
+<pre><code>## [1] 2.11</code></pre>
+<pre><code class="language-r">parse_number(&quot;2%&quot;)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre><code class="language-r">parse_number(&quot;2.555,11&quot;, locale = locale(grouping_mark = &quot;.&quot;, decimal_mark = &quot;,&quot;))</code></pre>
+<pre><code>## [1] 2555.11</code></pre>
+<p><code>parse_logical()</code>, <code>parse_factor()</code>,
+<code>parse_character()</code>. Any parser accepts
+<code>na = "N-A"</code> or a vector of missing tokens.</p>
+<pre><code class="language-r">dfdat |&gt; mutate(logical = parse_logical(logical, na = &quot;N-A&quot;))</code></pre>
+<pre><code>## # A tibble: 5 × 5
+##   date       time     number factor logical
+##   &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;  &lt;lgl&gt;  
+## 1 12-01-1988 10:10:02 2      A      TRUE   
+## 2 11-12-1987 11:10:57 4      A      TRUE   
+## 3 02-03-1989 10:10:25 6      B      FALSE  
+## 4 06-03-1982 22:10:55 2      B      TRUE   
+## 5 09-21-1981 10:10:02 1      A      NA</code></pre>
 <hr />
+</div>
+<div id="col_types-at-import" class="section level2">
 <h2>4. <code>col_types</code> at import</h2>
-<p>Guessing from the first 1,000 rows is fast and can be wrong. Set types when you know them. The letters are wrappers for the parsers: <code>c</code> character, <code>i</code> integer, <code>d</code> double, <code>l</code> logical, <code>f</code> factor, <code>D</code> date, <code>T</code> datetime, <code>t</code> time, <code>_</code> skip.</p>
+<p>Guessing from the first 1,000 rows is fast and can be wrong. Set
+types when you know them. The letters are wrappers for the parsers:
+<code>c</code> character, <code>i</code> integer, <code>d</code> double,
+<code>l</code> logical, <code>f</code> factor, <code>D</code> date,
+<code>T</code> datetime, <code>t</code> time, <code>_</code> skip.</p>
 <pre><code class="language-r">estate &lt;- read_csv(&quot;data/estate.csv&quot;)
 estate &lt;- read_csv(
   &quot;data/estate.csv&quot;,
   col_types = cols(price = col_double(), ac = col_logical())
-)
-</code></pre>
+)</code></pre>
 <p><code>problems(estate)</code> lists rows that did not parse.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>5. Practice</h2>
-<ol>
-<li>
-<p>Parse <code>"01, January 2018"</code>, <code>"01-January/2000"</code>, and <code>"1 Jan 19"</code>.</p>
-</li>
-<li>
-<p>Parse <code>"10:40 pm"</code> and <code>"23:40-22"</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Parse <code>"01, January 2018"</code>,
+<code>"01-January/2000"</code>, and <code>"1 Jan 19"</code>.</li>
+<li>Parse <code>"10:40 pm"</code> and <code>"23:40-22"</code>.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-readr-import.html"><span aria-hidden="true">←</span> 6.1 readr: Import and Export</a>
                         <a class="course-page-nav__week" href="data-612-week-6.html">Week 6</a>
                             <a class="course-page-nav__next" href="data-612-eda-strategy.html">6.3 Exploratory Data Analysis <span aria-hidden="true">→</span></a>
@@ -191,7 +245,7 @@ estate &lt;- read_csv(
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:10:00-04:00">September 23, 2026, 3:10 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
             </footer>
         </div>
 

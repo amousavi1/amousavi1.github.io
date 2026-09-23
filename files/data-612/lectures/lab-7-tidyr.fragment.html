@@ -1,0 +1,42 @@
+
+
+
+<p>Pivot monkeymem and the flower files. Unite a few flight columns.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>7.1</strong>
+and <strong>7.2</strong> first. Put the course CSV files in a
+<code>data/</code> folder of your project (see the Data section of the
+course page).</p>
+<pre class="r"><code>library(tidyverse)
+library(nycflights13)</code></pre>
+<hr />
+<div id="longer" class="section level2">
+<h2>1. Longer</h2>
+<ol style="list-style-type: decimal">
+<li>Load <code>monkeymem.csv</code>. Pivot <code>Week2</code> through
+<code>Week16</code> longer. Each row should be one monkey-week. The week
+names go in one column; accuracy goes in another.</li>
+<li>On <code>table4a</code>, show a <code>pivot_longer()</code> call
+that fails because the year names are written as numbers, then the call
+that works. In a sentence, why the first one fails.</li>
+</ol>
+<hr />
+</div>
+<div id="wider-separate-unite" class="section level2">
+<h2>2. Wider, separate, unite</h2>
+<ol style="list-style-type: decimal">
+<li>Load <code>flowers1.csv</code> with
+<code>read_delim("data/flowers1.csv", delim = ";")</code>. Widen so
+<code>Variable</code> becomes column names and <code>Value</code> fills
+the cells. Fix the decimal commas if <code>Value</code> is not
+numeric.</li>
+<li>Load <code>flowers2.csv</code>. Separate
+<code>Flowers/Intensity</code> into two numeric columns. Unite those two
+columns again with a comma.</li>
+<li>In <code>flights</code>, select <code>month</code>,
+<code>day</code>, <code>hour</code>, and <code>minute</code>. Unite
+<code>hour</code> and <code>minute</code> into <code>sd_time</code>,
+then parse that column as a time. What happens, and why? Fix it with
+<code>paste0()</code> or <code>stringr</code> so minutes stay two
+digits.</li>
+</ol>
+</div>

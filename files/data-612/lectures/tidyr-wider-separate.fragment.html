@@ -1,0 +1,145 @@
+
+
+
+<p>Widen a key/value pair, split a combined column, or paste columns
+back together.</p>
+<div id="pivot_wider-is-the-inverse" class="section level2">
+<h2>1. <code>pivot_wider()</code> is the inverse</h2>
+<p><code>table2</code> is long: a <code>type</code> column
+(<code>"cases"</code> or <code>"population"</code>) and a
+<code>count</code> column. That is tidy in a different way. For a rate
+you want cases and population <strong>side by side</strong>.</p>
+<pre class="r"><code>library(tidyverse)
+
+table2 |&gt;
+  pivot_wider(names_from = type, values_from = count)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   country      year  cases population
+##   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Afghanistan  1999    745   19987071
+## 2 Afghanistan  2000   2666   20595360
+## 3 Brazil       1999  37737  172006362
+## 4 Brazil       2000  80488  174504898
+## 5 China        1999 212258 1272915272
+## 6 China        2000 213766 1280428583</code></pre>
+<p><code>names_from</code> is the column whose <strong>values</strong>
+become new names. <code>values_from</code> is the column that fills the
+cells. The other columns (<code>country</code>, <code>year</code>) stay
+as keys.</p>
+<p><code>pivot_longer()</code> then <code>pivot_wider()</code> (with
+matching arguments) should return the table you started with.</p>
+<hr />
+</div>
+<div id="duplicate-keys-fail" class="section level2">
+<h2>2. Duplicate keys fail</h2>
+<p>Each key must point to <strong>one</strong> cell. Two ages for the
+same person cannot both occupy an <code>age</code> column.</p>
+<pre class="r"><code>people &lt;- tribble(
+  ~name,             ~key,    ~value,
+  &quot;Phillip Woods&quot;,   &quot;age&quot;,       45,
+  &quot;Phillip Woods&quot;,   &quot;height&quot;,   186,
+  &quot;Phillip Woods&quot;,   &quot;age&quot;,       50,
+  &quot;Jessica Cordero&quot;, &quot;age&quot;,       37,
+  &quot;Jessica Cordero&quot;, &quot;height&quot;,   156
+)
+
+people |&gt;
+  pivot_wider(names_from = key, values_from = value)</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##   name            age       height   
+##   &lt;chr&gt;           &lt;list&gt;    &lt;list&gt;   
+## 1 Phillip Woods   &lt;dbl [2]&gt; &lt;dbl [1]&gt;
+## 2 Jessica Cordero &lt;dbl [1]&gt; &lt;dbl [1]&gt;</code></pre>
+<p>The error is that the rows are not uniquely identified. Add a row id
+(<code>mutate(id = row_number())</code>), or decide which age to keep,
+before you widen.</p>
+<hr />
+</div>
+<div id="separate-splits-one-column" class="section level2">
+<h2>3. <code>separate()</code> splits one column</h2>
+<p><code>table3</code> stores <code>rate</code> as
+<code>"745/19987071"</code>. Two values, one cell — not tidy.</p>
+<pre class="r"><code>table3 |&gt;
+  separate(rate, into = c(&quot;cases&quot;, &quot;population&quot;), sep = &quot;/&quot;, convert = TRUE)</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   country      year  cases population
+##   &lt;chr&gt;       &lt;dbl&gt;  &lt;int&gt;      &lt;int&gt;
+## 1 Afghanistan  1999    745   19987071
+## 2 Afghanistan  2000   2666   20595360
+## 3 Brazil       1999  37737  172006362
+## 4 Brazil       2000  80488  174504898
+## 5 China        1999 212258 1272915272
+## 6 China        2000 213766 1280428583</code></pre>
+<p><code>into</code> names the new columns. <code>sep</code> can be a
+string or a position. <code>convert = TRUE</code> runs
+<code>type.convert()</code> so the pieces become numbers when they look
+like numbers.</p>
+<p>Too many pieces: <code>extra = "merge"</code> or <code>"drop"</code>.
+Too few: <code>fill = "right"</code> or <code>"left"</code>.</p>
+<hr />
+</div>
+<div id="unite-pastes-columns" class="section level2">
+<h2>4. <code>unite()</code> pastes columns</h2>
+<p><code>table5</code> splits the year into <code>century</code> and
+<code>year</code>. Paste them back:</p>
+<pre class="r"><code>table5 |&gt;
+  unite(new, century, year, sep = &quot;&quot;)</code></pre>
+<pre><code>## # A tibble: 6 × 3
+##   country     new   rate             
+##   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;            
+## 1 Afghanistan 1999  745/19987071     
+## 2 Afghanistan 2000  2666/20595360    
+## 3 Brazil      1999  37737/172006362  
+## 4 Brazil      2000  80488/174504898  
+## 5 China       1999  212258/1272915272
+## 6 China       2000  213766/1280428583</code></pre>
+<p><code>sep = ""</code> glues with nothing in between. Default
+<code>sep</code> is <code>"_"</code>. <code>remove = FALSE</code> keeps
+the old columns.</p>
+<hr />
+</div>
+<div id="tidy-then-join" class="section level2">
+<h2>5. Tidy, then join</h2>
+<p><code>table4a</code> is cases; <code>table4b</code> is population.
+Lengthen both, then join on the keys. <code>left_join()</code> keeps
+every row of the left table and adds matching columns from the right.
+Note 8.1 is the full join story.</p>
+<pre class="r"><code>tidy4a &lt;- table4a |&gt;
+  pivot_longer(cols = -country, names_to = &quot;year&quot;, values_to = &quot;cases&quot;)
+
+tidy4b &lt;- table4b |&gt;
+  pivot_longer(cols = -country, names_to = &quot;year&quot;, values_to = &quot;population&quot;)
+
+left_join(tidy4a, tidy4b, by = c(&quot;country&quot;, &quot;year&quot;))</code></pre>
+<pre><code>## # A tibble: 6 × 4
+##   country     year   cases population
+##   &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Afghanistan 1999     745   19987071
+## 2 Afghanistan 2000    2666   20595360
+## 3 Brazil      1999   37737  172006362
+## 4 Brazil      2000   80488  174504898
+## 5 China       1999  212258 1272915272
+## 6 China       2000  213766 1280428583</code></pre>
+<p>That result is <code>table1</code> (year may still be character).</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>6. Practice</h2>
+<p>Put course CSV files in a <code>data/</code> folder of your
+project.</p>
+<ol style="list-style-type: decimal">
+<li><code>flowers1.csv</code> uses <code>;</code> and a comma as the
+decimal mark. Load it with
+<code>read_delim("data/flowers1.csv", delim = ";")</code>. If
+<code>Value</code> is character, set
+<code>locale = locale(decimal_mark = ",")</code>. Then
+<code>pivot_wider()</code> so <code>Flowers</code> and
+<code>Intensity</code> are columns.</li>
+<li>Load <code>flowers2.csv</code>. <code>separate()</code> the
+<code>Flowers/Intensity</code> column. Then <code>unite()</code> those
+two columns again with a comma.</li>
+<li>In <code>nycflights13::flights</code>, <code>unite()</code>
+<code>month</code>, <code>day</code>, <code>hour</code>, and
+<code>minute</code> into <code>sd_time</code>.</li>
+</ol>
+</div>

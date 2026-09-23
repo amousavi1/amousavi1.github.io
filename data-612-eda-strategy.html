@@ -111,97 +111,146 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">6.3 Exploratory Data Analysis</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-6.html">Week 6</a> &middot;
                             <a href="files/data-612/eda-strategy.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            One variable, then pairs, then a third variable. Plot before you trust a summary.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/eda-strategy.qmd">Source (.qmd)</a></p>
+<p>One variable, then pairs, then a third variable. Plot before you
+trust a summary.</p>
+<div id="a-working-order" class="section level2">
 <h2>1. A working order</h2>
-<p>Once the file is in and the types look right, explore before you model. EDA is curiosity with a notebook: many plots, many summaries, then a few questions worth keeping. Write the dead ends down so you are not only keeping the pretty ones.</p>
+<p>Once the file is in and the types look right, explore before you
+model. EDA is curiosity with a notebook: many plots, many summaries,
+then a few questions worth keeping. Write the dead ends down so you are
+not only keeping the pretty ones.</p>
 <p>A useful order:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>the distribution of each variable</li>
 <li>every pair of variables</li>
 <li>a third variable (color or facet)</li>
 <li>missingness and extremes</li>
 </ol>
-<p><code>diamonds</code> is the running example. <code>skimr::skim()</code> is a compact alternative to <code>summary()</code>.</p>
+<p><code>diamonds</code> is the running example.
+<code>skimr::skim()</code> is a compact alternative to
+<code>summary()</code>.</p>
 <pre><code class="language-r">library(tidyverse)
-data(&quot;diamonds&quot;)
-</code></pre>
+data(&quot;diamonds&quot;)</code></pre>
 <hr />
+</div>
+<div id="one-variable" class="section level2">
 <h2>2. One variable</h2>
-<p>A categorical variable: counts and proportions. <code>geom_bar()</code> for the picture; <code>table()</code> and <code>prop.table()</code> for the numbers.</p>
+<p>A categorical variable: counts and proportions.
+<code>geom_bar()</code> for the picture; <code>table()</code> and
+<code>prop.table()</code> for the numbers.</p>
 <pre><code class="language-r">ggplot(diamonds, aes(x = color)) +
   geom_bar() +
-  theme_bw()
-
-prop.table(table(diamonds$color))
-</code></pre>
-<p>Ask whether the levels have an order, and whether a rare level is real or a coding accident.</p>
-<p>A quantitative variable: <code>geom_histogram()</code> or <code>geom_density()</code>, plus <code>mean()</code>, <code>sd()</code>, and <code>fivenum()</code> (min, lower hinge, median, upper hinge, max). Look for skew and extra modes.</p>
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/eda-strategy/chunk-2-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">prop.table(table(diamonds$color))</code></pre>
+<pre><code>## 
+##          D          E          F          G          H          I          J 
+## 0.12560252 0.18162773 0.17690026 0.20934372 0.15394883 0.10051910 0.05205784</code></pre>
+<p>Ask whether the levels have an order, and whether a rare level is
+real or a coding accident.</p>
+<p>A quantitative variable: <code>geom_histogram()</code> or
+<code>geom_density()</code>, plus <code>mean()</code>,
+<code>sd()</code>, and <code>fivenum()</code> (min, lower hinge, median,
+upper hinge, max). Look for skew and extra modes.</p>
 <pre><code class="language-r">ggplot(diamonds, aes(x = carat)) +
   geom_histogram(bins = 50) +
-  theme_bw()
-
-fivenum(diamonds$carat)
-</code></pre>
-<p>Color or <code>geom_freqpoly()</code> to split one quantitative variable by a category.</p>
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/eda-strategy/chunk-3-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">fivenum(diamonds$carat)</code></pre>
+<pre><code>## [1] 0.20 0.40 0.70 1.04 5.01</code></pre>
+<p>Color or <code>geom_freqpoly()</code> to split one quantitative
+variable by a category.</p>
 <hr />
+</div>
+<div id="two-variables" class="section level2">
 <h2>3. Two variables</h2>
 <ul>
-<li>Two quantitative: <code>geom_point()</code>, then a smooth. Overplotting: <code>alpha</code> or <code>geom_hex()</code> (note 3.2).</li>
-<li>One categorical and one quantitative: <code>geom_boxplot()</code>, maybe on a log scale.</li>
-<li>Two categorical: <code>table()</code>, <code>prop.table(table(...), margin = 1)</code> or <code>margin = 2</code> for conditional distributions. A count plot is <code>geom_count()</code>. A mosaic plot (<code>ggmosaic</code>) is optional.</li>
+<li>Two quantitative: <code>geom_point()</code>, then a smooth.
+Overplotting: <code>alpha</code> or <code>geom_hex()</code> (note
+3.2).</li>
+<li>One categorical and one quantitative: <code>geom_boxplot()</code>,
+maybe on a log scale.</li>
+<li>Two categorical: <code>table()</code>,
+<code>prop.table(table(...), margin = 1)</code> or
+<code>margin = 2</code> for conditional distributions. A count plot is
+<code>geom_count()</code>. A mosaic plot (<code>ggmosaic</code>) is
+optional.</li>
 </ul>
-<p><code>UCBAdmissions</code> is the classic Simpson warning: a third variable can reverse an association. The overall admission rate by gender is not the same story as the rate inside each department.</p>
+<p><code>UCBAdmissions</code> is the classic Simpson warning: a third
+variable can reverse an association. The overall admission rate by
+gender is not the same story as the rate inside each department.</p>
 <pre><code class="language-r">ucb &lt;- as_tibble(UCBAdmissions)
 ucb |&gt;
   group_by(Gender) |&gt;
-  summarize(p = sum(Freq[Admit == &quot;Admitted&quot;]) / sum(Freq), .groups = &quot;drop&quot;)
-
-ucb |&gt;
+  summarize(p = sum(Freq[Admit == &quot;Admitted&quot;]) / sum(Freq), .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## Error in `summarize()`:
+## ℹ In argument: `p = sum(Freq[Admit == &quot;Admitted&quot;])/sum(Freq)`.
+## ℹ In group 1: `Gender = &quot;Female&quot;`.
+## Caused by error:
+## ! object &#39;Freq&#39; not found</code></pre>
+<pre><code class="language-r">ucb |&gt;
   group_by(Dept, Gender) |&gt;
-  summarize(p = sum(Freq[Admit == &quot;Admitted&quot;]) / sum(Freq), .groups = &quot;drop&quot;)
-</code></pre>
+  summarize(p = sum(Freq[Admit == &quot;Admitted&quot;]) / sum(Freq), .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## Error in `summarize()`:
+## ℹ In argument: `p = sum(Freq[Admit == &quot;Admitted&quot;])/sum(Freq)`.
+## ℹ In group 1: `Dept = &quot;A&quot;`, `Gender = &quot;Female&quot;`.
+## Caused by error:
+## ! object &#39;Freq&#39; not found</code></pre>
 <pre><code class="language-r">ggplot(diamonds, aes(x = carat, y = price)) +
   geom_point(alpha = 0.05) +
-  theme_bw()
-
-ggplot(diamonds, aes(x = cut, y = price)) +
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/eda-strategy/chunk-5-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">ggplot(diamonds, aes(x = cut, y = price)) +
   geom_boxplot() +
   scale_y_log10() +
-  theme_bw()
-</code></pre>
-<p><code>GGally::ggpairs()</code> builds a panel of pairwise plots at once. Use it as a scan, then make the plots you actually need.</p>
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/eda-strategy/chunk-5-2.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>GGally::ggpairs()</code> builds a panel of pairwise plots at
+once. Use it as a scan, then make the plots you actually need.</p>
 <hr />
+</div>
+<div id="missingness-patterns-outliers" class="section level2">
 <h2>4. Missingness, patterns, outliers</h2>
-<p>Count <code>NA</code>s by column (<code>across</code> and <code>sum(is.na(.x))</code>, note 5.1). A hole you expected to be filled is information.</p>
-<p>A pattern is a relationship you can name: linear, curved, clustered, seasonal. An outlier is a point that does not follow that pattern. Do not delete it by reflex. Ask whether it is a data error or a real rare case. Note 3.1 (Anscombe) is why you plot before you trust a correlation.</p>
+<p>Count <code>NA</code>s by column (<code>across</code> and
+<code>sum(is.na(.x))</code>, note 5.1). A hole you expected to be filled
+is information.</p>
+<p>A pattern is a relationship you can name: linear, curved, clustered,
+seasonal. An outlier is a point that does not follow that pattern. Do
+not delete it by reflex. Ask whether it is a data error or a real rare
+case. Note 3.1 (Anscombe) is why you plot before you trust a
+correlation.</p>
 <hr />
+</div>
+<div id="this-week-in-one-place" class="section level2">
 <h2>5. This week, in one place</h2>
 <ul>
-<li><code>read_lines()</code> then <code>read_csv()</code> / <code>read_tsv()</code> / <code>read_csv2()</code></li>
+<li><code>read_lines()</code> then <code>read_csv()</code> /
+<code>read_tsv()</code> / <code>read_csv2()</code></li>
 <li>check types, <code>NA</code>s, and duplicates</li>
-<li><code>parse_*()</code> and <code>col_types</code> when the guess is wrong</li>
+<li><code>parse_*()</code> and <code>col_types</code> when the guess is
+wrong</li>
 <li><code>write_csv()</code> and <code>saveRDS()</code></li>
 <li>EDA: one variable, then pairs, then a third variable</li>
 </ul>
-<p>Chapter 11 of <a href="https://r4ds.had.co.nz/data-import.html">R for Data Science</a> for readr; Chapter 7 for EDA.</p>
+<p>Chapter 11 of <a href="https://r4ds.had.co.nz/data-import.html">R for
+Data Science</a> for readr; Chapter 7 for EDA.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>6. Practice</h2>
-<ol>
-<li>
-<p>For <code>diamonds</code>, a bar chart of <code>cut</code> and a histogram of <code>price</code>.</p>
-</li>
-<li>
-<p>Boxplots of <code>price</code> by <code>cut</code>, log-<code>y</code>, colored or faceted by <code>color</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>For <code>diamonds</code>, a bar chart of <code>cut</code> and a
+histogram of <code>price</code>.</li>
+<li>Boxplots of <code>price</code> by <code>cut</code>,
+log-<code>y</code>, colored or faceted by <code>color</code>.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-readr-parsers.html"><span aria-hidden="true">←</span> 6.2 readr: Parsers</a>
                         <a class="course-page-nav__week" href="data-612-week-6.html">Week 6</a>
                             <a class="course-page-nav__next" href="data-612-lab-6-readr-eda.html">Lab 6: Import, Parse, and Explore <span aria-hidden="true">→</span></a>
@@ -214,7 +263,7 @@ ggplot(diamonds, aes(x = cut, y = price)) +
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:10:00-04:00">September 23, 2026, 3:10 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
             </footer>
         </div>
 

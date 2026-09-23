@@ -1,0 +1,49 @@
+
+
+
+<p>Load the hate-crime files, parse a few strings, and explore
+diamonds.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>6.1</strong>
+through <strong>6.3</strong> first. Put the course CSV files in a
+<code>data/</code> folder of your project (see the Data section of the
+course page).</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<hr />
+<div id="import" class="section level2">
+<h2>1. Import</h2>
+<ol style="list-style-type: decimal">
+<li><code>read_lines()</code> on <code>hate_crimes1.csv</code> through
+<code>hate_crimes7.csv</code> and <code>hate_crimes_1a.csv</code>. Then
+load each with the matching <code>read_*()</code>. Check
+<code>head()</code> and the number of <code>NA</code>s per column.</li>
+<li>Load <code>hate_crimes_1a.csv</code> once as-is and once with
+<code>na = "missing"</code>. What changed?</li>
+</ol>
+<hr />
+</div>
+<div id="parsers" class="section level2">
+<h2>2. Parsers</h2>
+<ol style="list-style-type: decimal">
+<li>Parse <code>"01, January 2018"</code>,
+<code>"01-January/2000"</code>, and <code>"1 Jan 19"</code> as
+dates.</li>
+<li>Parse <code>"10:40 pm"</code> and <code>"23:40-22"</code> as
+times.</li>
+<li>Load <code>estate.csv</code>. Use <code>problems()</code> if
+anything looks off. Set <code>col_types</code> for at least one
+column.</li>
+</ol>
+<hr />
+</div>
+<div id="eda" class="section level2">
+<h2>3. EDA</h2>
+<p>Using <code>diamonds</code> (or <code>estate</code> if you
+prefer):</p>
+<ol style="list-style-type: decimal">
+<li>The distribution of one categorical variable and one quantitative
+variable.</li>
+<li>A scatterplot of two quantitative variables, with overplotting
+handled.</li>
+<li>A boxplot of a quantitative variable by a categorical variable.</li>
+</ol>
+</div>
