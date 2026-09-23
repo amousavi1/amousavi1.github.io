@@ -1,0 +1,54 @@
+
+
+
+<p>Filter, slice, arrange, select, mutate, and summarize flights.</p>
+<p>Work in a <strong>Quarto</strong> document. Number the exercises. Do
+<strong>4.1</strong> through <strong>4.3</strong> first.</p>
+<pre class="r"><code>library(tidyverse)
+library(nycflights13)
+data(&quot;flights&quot;)</code></pre>
+<hr />
+<div id="filter-and-slice" class="section level2">
+<h2>1. Filter and slice</h2>
+<ol style="list-style-type: decimal">
+<li>Flights in odd months, or on even days of even months.</li>
+<li>Flights to Houston (<code>IAH</code> or <code>HOU</code>), on UA,
+AA, or DL, in July–September, that arrived more than 15 minutes late and
+did not leave late.</li>
+<li>Rows 10, 100, 1000, 10000, and 100000.</li>
+<li>The last 10 of the first 30 Newark (<code>EWR</code>) flights.</li>
+<li><code>set.seed(1)</code>. A random 1% sample, and a sample of 3367
+rows. Are the last 10 rows the same? Why?</li>
+<li>The 50 longest <code>air_time</code>s, then the 10 smallest
+<code>arr_delay</code>s among those. Repeat after
+<code>filter(air_time &lt; 300)</code>. What does
+<code>with_ties = FALSE</code> change?</li>
+</ol>
+<hr />
+</div>
+<div id="arrange-select-mutate" class="section level2">
+<h2>2. Arrange, select, mutate</h2>
+<ol style="list-style-type: decimal">
+<li>Longest <code>distance</code>, ties broken by
+<code>air_time</code>.</li>
+<li>Keep every arrival column plus <code>year</code>,
+<code>month</code>, and <code>day</code>.</li>
+<li>Convert <code>dep_time</code> and <code>sched_dep_time</code> to
+minutes past midnight.</li>
+<li>Move columns ending in <code>"time"</code> to just before
+<code>flight</code>. Then put <code>sched</code> columns before the
+actual times.</li>
+</ol>
+<hr />
+</div>
+<div id="summarize-and-group" class="section level2">
+<h2>3. Summarize and group</h2>
+<ol style="list-style-type: decimal">
+<li>Standard deviation of <code>dep_delay</code>.</li>
+<li>Maximum <code>dep_delay</code> by <code>origin</code> in one
+pipeline.</li>
+<li>For each <code>day</code>, the number and proportion of canceled
+flights (<code>is.na(dep_delay) | is.na(arr_delay)</code>). Plot the
+proportion against day, and against average departure delay.</li>
+</ol>
+</div>

@@ -111,89 +111,305 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">4.2 dplyr: Columns</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-4.html">Week 4</a> &middot;
                             <a href="files/data-612/dplyr-columns.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            select(), rename(), mutate(), and relocate() keep, name, and create columns.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/dplyr-columns.qmd">Source (.qmd)</a></p>
+<p>select(), rename(), mutate(), and relocate() keep, name, and create
+columns.</p>
+<div id="select-keeps-columns" class="section level2">
 <h2>1. <code>select()</code> keeps columns</h2>
-<pre><code class="language-r">flights |&gt; select(dep_delay, arr_delay)
-flights |&gt; select(year:carrier)
-flights |&gt; select(-dep_delay, -arr_delay)
-flights |&gt; select(-(year:day))
-</code></pre>
+<pre><code class="language-r">flights |&gt; select(dep_delay, arr_delay)</code></pre>
+<pre><code>## # A tibble: 336,776 × 2
+##    dep_delay arr_delay
+##        &lt;dbl&gt;     &lt;dbl&gt;
+##  1         2        11
+##  2         4        20
+##  3         2        33
+##  4        -1       -18
+##  5        -6       -25
+##  6        -4        12
+##  7        -5        19
+##  8        -3       -14
+##  9        -3        -8
+## 10        -2         8
+## # ℹ 336,766 more rows</code></pre>
+<pre><code class="language-r">flights |&gt; select(year:carrier)</code></pre>
+<pre><code>## # A tibble: 336,776 × 10
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 2 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;</code></pre>
+<pre><code class="language-r">flights |&gt; select(-dep_delay, -arr_delay)</code></pre>
+<pre><code>## # A tibble: 336,776 × 17
+##     year month   day dep_time sched_dep_time arr_time sched_arr_time carrier
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt; &lt;chr&gt;  
+##  1  2013     1     1      517            515      830            819 UA     
+##  2  2013     1     1      533            529      850            830 UA     
+##  3  2013     1     1      542            540      923            850 AA     
+##  4  2013     1     1      544            545     1004           1022 B6     
+##  5  2013     1     1      554            600      812            837 DL     
+##  6  2013     1     1      554            558      740            728 UA     
+##  7  2013     1     1      555            600      913            854 B6     
+##  8  2013     1     1      557            600      709            723 EV     
+##  9  2013     1     1      557            600      838            846 B6     
+## 10  2013     1     1      558            600      753            745 AA     
+## # ℹ 336,766 more rows
+## # ℹ 9 more variables: flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre><code class="language-r">flights |&gt; select(-(year:day))</code></pre>
+<pre><code>## # A tibble: 336,776 × 16
+##    dep_time sched_dep_time dep_delay arr_time sched_arr_time arr_delay carrier
+##       &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;  
+##  1      517            515         2      830            819        11 UA     
+##  2      533            529         4      850            830        20 UA     
+##  3      542            540         2      923            850        33 AA     
+##  4      544            545        -1     1004           1022       -18 B6     
+##  5      554            600        -6      812            837       -25 DL     
+##  6      554            558        -4      740            728        12 UA     
+##  7      555            600        -5      913            854        19 B6     
+##  8      557            600        -3      709            723       -14 EV     
+##  9      557            600        -3      838            846        -8 B6     
+## 10      558            600        -2      753            745         8 AA     
+## # ℹ 336,766 more rows
+## # ℹ 9 more variables: flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Helpers (from tidyselect) match <strong>names</strong>:</p>
 <ul>
 <li><code>starts_with("dep")</code></li>
 <li><code>ends_with("delay")</code></li>
 <li><code>contains("arr_")</code></li>
-<li><code>matches("(.)\\1")</code> — a regular expression; we will do those in the strings week</li>
-<li><code>num_range("x", 1:3)</code> — <code>x1</code>, <code>x2</code>, <code>x3</code></li>
+<li><code>matches("(.)\1")</code> — a regular expression; we will do
+those in the strings week</li>
+<li><code>num_range("x", 1:3)</code> — <code>x1</code>, <code>x2</code>,
+<code>x3</code></li>
 </ul>
-<pre><code class="language-r">flights |&gt; select(ends_with(&quot;delay&quot;))
-flights |&gt; select(starts_with(&quot;dep&quot;), year, month, day)
-</code></pre>
-<p><code>select()</code> talks about <strong>names</strong> (or positions). Bare names are allowed. Quoted names are also allowed: <code>select(flights, c("carrier", "tailnum"))</code>.</p>
+<pre><code class="language-r">flights |&gt; select(ends_with(&quot;delay&quot;))</code></pre>
+<pre><code>## # A tibble: 336,776 × 2
+##    dep_delay arr_delay
+##        &lt;dbl&gt;     &lt;dbl&gt;
+##  1         2        11
+##  2         4        20
+##  3         2        33
+##  4        -1       -18
+##  5        -6       -25
+##  6        -4        12
+##  7        -5        19
+##  8        -3       -14
+##  9        -3        -8
+## 10        -2         8
+## # ℹ 336,766 more rows</code></pre>
+<pre><code class="language-r">flights |&gt; select(starts_with(&quot;dep&quot;), year, month, day)</code></pre>
+<pre><code>## # A tibble: 336,776 × 5
+##    dep_time dep_delay  year month   day
+##       &lt;int&gt;     &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+##  1      517         2  2013     1     1
+##  2      533         4  2013     1     1
+##  3      542         2  2013     1     1
+##  4      544        -1  2013     1     1
+##  5      554        -6  2013     1     1
+##  6      554        -4  2013     1     1
+##  7      555        -5  2013     1     1
+##  8      557        -3  2013     1     1
+##  9      557        -3  2013     1     1
+## 10      558        -2  2013     1     1
+## # ℹ 336,766 more rows</code></pre>
+<p><code>select()</code> talks about <strong>names</strong> (or
+positions). Bare names are allowed. Quoted names are also allowed:
+<code>select(flights, c("carrier", "tailnum"))</code>.</p>
 <hr />
+</div>
+<div id="rename" class="section level2">
 <h2>2. <code>rename()</code></h2>
 <p><code>rename(new = old)</code>. The old name goes away.</p>
-<pre><code class="language-r">flights |&gt; rename(departure_time = dep_time)
-</code></pre>
+<pre><code class="language-r">flights |&gt; rename(departure_time = dep_time)</code></pre>
+<pre><code>## # A tibble: 336,776 × 19
+##     year month   day departure_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;          &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1            517            515         2      830
+##  2  2013     1     1            533            529         4      850
+##  3  2013     1     1            542            540         2      923
+##  4  2013     1     1            544            545        -1     1004
+##  5  2013     1     1            554            600        -6      812
+##  6  2013     1     1            554            558        -4      740
+##  7  2013     1     1            555            600        -5      913
+##  8  2013     1     1            557            600        -3      709
+##  9  2013     1     1            557            600        -3      838
+## 10  2013     1     1            558            600        -2      753
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
+## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <hr />
+</div>
+<div id="mutate-and-transmute" class="section level2">
 <h2>3. <code>mutate()</code> and <code>transmute()</code></h2>
-<p><code>mutate()</code> adds or overwrites columns. New columns go on the right unless you set <code>.before</code> or <code>.after</code>. Use <code>=</code> inside <code>mutate()</code>, not <code>&lt;-</code>.</p>
+<p><code>mutate()</code> adds or overwrites columns. New columns go on
+the right unless you set <code>.before</code> or <code>.after</code>.
+Use <code>=</code> inside <code>mutate()</code>, not
+<code>&lt;-</code>.</p>
 <pre><code class="language-r">flights |&gt;
   mutate(
     gain = dep_delay - arr_delay,
     speed = distance / air_time * 60
   ) |&gt;
-  select(year:day, gain, speed)
-
-flights |&gt;
-  mutate(distance = distance * 1.60934)
-</code></pre>
+  select(year:day, gain, speed)</code></pre>
+<pre><code>## # A tibble: 336,776 × 5
+##     year month   day  gain speed
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  2013     1     1    -9  370.
+##  2  2013     1     1   -16  374.
+##  3  2013     1     1   -31  408.
+##  4  2013     1     1    17  517.
+##  5  2013     1     1    19  394.
+##  6  2013     1     1   -16  288.
+##  7  2013     1     1   -24  404.
+##  8  2013     1     1    11  259.
+##  9  2013     1     1     5  405.
+## 10  2013     1     1   -10  319.
+## # ℹ 336,766 more rows</code></pre>
+<pre><code class="language-r">flights |&gt;
+  mutate(distance = distance * 1.60934)</code></pre>
+<pre><code>## # A tibble: 336,776 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p><code>transmute()</code> keeps only the new columns.</p>
 <p>Nothing is saved until you assign:</p>
 <pre><code class="language-r">flights_k &lt;- flights |&gt;
-  mutate(distance_km = distance * 1.60934)
-</code></pre>
-<p><code>mutate()</code> talks about <strong>vectors</strong>. The name <code>dep_time</code> means the whole column, not the string <code>"dep_time"</code>.</p>
-<p>A useful conversion: <code>dep_time</code> is stored as 517 for 5:17. Minutes past midnight are <code>hours * 60 + minutes</code>:</p>
+  mutate(distance_km = distance * 1.60934)</code></pre>
+<p><code>mutate()</code> talks about <strong>vectors</strong>. The name
+<code>dep_time</code> means the whole column, not the string
+<code>"dep_time"</code>.</p>
+<p>A useful conversion: <code>dep_time</code> is stored as 517 for 5:17.
+Minutes past midnight are <code>hours * 60 + minutes</code>:</p>
 <pre><code class="language-r">flights |&gt;
   mutate(
     dep_h = dep_time %/% 100,
     dep_m = dep_time %% 100,
     dep_elapsed_min = dep_h * 60 + dep_m
-  )
-</code></pre>
-<p><code>%/%</code> is integer division. <code>%%</code> is the remainder.</p>
+  )</code></pre>
+<pre><code>## # A tibble: 336,776 × 22
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 14 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, dep_h &lt;dbl&gt;, dep_m &lt;dbl&gt;,
+## #   dep_elapsed_min &lt;dbl&gt;</code></pre>
+<p><code>%/%</code> is integer division. <code>%%</code> is the
+remainder.</p>
 <hr />
+</div>
+<div id="relocate" class="section level2">
 <h2>4. <code>relocate()</code></h2>
-<p>Same selection language as <code>select()</code>. Default is the left side. <code>.before</code> and <code>.after</code> place the block.</p>
-<pre><code class="language-r">flights |&gt; relocate(origin:dest)
-flights |&gt; relocate(starts_with(&quot;d&quot;), .after = day)
-flights |&gt; relocate(where(is.character))
-</code></pre>
+<p>Same selection language as <code>select()</code>. Default is the left
+side. <code>.before</code> and <code>.after</code> place the block.</p>
+<pre><code class="language-r">flights |&gt; relocate(origin:dest)</code></pre>
+<pre><code>## # A tibble: 336,776 × 19
+##    origin dest   year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1 EWR    IAH    2013     1     1      517            515         2      830
+##  2 LGA    IAH    2013     1     1      533            529         4      850
+##  3 JFK    MIA    2013     1     1      542            540         2      923
+##  4 JFK    BQN    2013     1     1      544            545        -1     1004
+##  5 LGA    ATL    2013     1     1      554            600        -6      812
+##  6 EWR    ORD    2013     1     1      554            558        -4      740
+##  7 EWR    FLL    2013     1     1      555            600        -5      913
+##  8 LGA    IAD    2013     1     1      557            600        -3      709
+##  9 JFK    MCO    2013     1     1      557            600        -3      838
+## 10 LGA    ORD    2013     1     1      558            600        -2      753
+## # ℹ 336,766 more rows
+## # ℹ 10 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre><code class="language-r">flights |&gt; relocate(starts_with(&quot;d&quot;), .after = day)</code></pre>
+<pre><code>## # A tibble: 336,776 × 19
+##     year month   day dep_time dep_delay dest  distance sched_dep_time arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;          &lt;int&gt;    &lt;int&gt;
+##  1  2013     1     1      517         2 IAH       1400            515      830
+##  2  2013     1     1      533         4 IAH       1416            529      850
+##  3  2013     1     1      542         2 MIA       1089            540      923
+##  4  2013     1     1      544        -1 BQN       1576            545     1004
+##  5  2013     1     1      554        -6 ATL        762            600      812
+##  6  2013     1     1      554        -4 ORD        719            558      740
+##  7  2013     1     1      555        -5 FLL       1065            600      913
+##  8  2013     1     1      557        -3 IAD        229            600      709
+##  9  2013     1     1      557        -3 MCO        944            600      838
+## 10  2013     1     1      558        -2 ORD        733            600      753
+## # ℹ 336,766 more rows
+## # ℹ 10 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, air_time &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre><code class="language-r">flights |&gt; relocate(where(is.character))</code></pre>
+<pre><code>## # A tibble: 336,776 × 19
+##    carrier tailnum origin dest   year month   day dep_time sched_dep_time
+##    &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;
+##  1 UA      N14228  EWR    IAH    2013     1     1      517            515
+##  2 UA      N24211  LGA    IAH    2013     1     1      533            529
+##  3 AA      N619AA  JFK    MIA    2013     1     1      542            540
+##  4 B6      N804JB  JFK    BQN    2013     1     1      544            545
+##  5 DL      N668DN  LGA    ATL    2013     1     1      554            600
+##  6 UA      N39463  EWR    ORD    2013     1     1      554            558
+##  7 B6      N516JB  EWR    FLL    2013     1     1      555            600
+##  8 EV      N829AS  LGA    IAD    2013     1     1      557            600
+##  9 B6      N593JB  JFK    MCO    2013     1     1      557            600
+## 10 AA      N3ALAA  LGA    ORD    2013     1     1      558            600
+## # ℹ 336,766 more rows
+## # ℹ 10 more variables: dep_delay &lt;dbl&gt;, arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
+## #   arr_delay &lt;dbl&gt;, flight &lt;int&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>5. Practice</h2>
-<ol>
-<li>
-<p>Keep <code>origin</code> and <code>dest</code> two ways.</p>
-</li>
-<li>
-<p>Keep every arrival column plus <code>year</code>, <code>month</code>, and <code>day</code>. Use as few characters as you can.</p>
-</li>
-<li>
-<p>Convert <code>dep_time</code> and <code>sched_dep_time</code> to minutes past midnight. Assign the result if you want to keep it.</p>
-</li>
-<li>
-<p>Move columns that end with <code>"time"</code> to just before <code>flight</code>. Then put the <code>sched</code> columns before the actual times.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Keep <code>origin</code> and <code>dest</code> two ways.</li>
+<li>Keep every arrival column plus <code>year</code>,
+<code>month</code>, and <code>day</code>. Use as few characters as you
+can.</li>
+<li>Convert <code>dep_time</code> and <code>sched_dep_time</code> to
+minutes past midnight. Assign the result if you want to keep it.</li>
+<li>Move columns that end with <code>"time"</code> to just before
+<code>flight</code>. Then put the <code>sched</code> columns before the
+actual times.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dplyr-rows.html"><span aria-hidden="true">←</span> 4.1 dplyr: Rows</a>
                         <a class="course-page-nav__week" href="data-612-week-4.html">Week 4</a>
                             <a class="course-page-nav__next" href="data-612-dplyr-groups.html">4.3 dplyr: Groups and Summaries <span aria-hidden="true">→</span></a>
@@ -206,7 +422,7 @@ flights |&gt; relocate(where(is.character))
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:10:00-04:00">September 23, 2026, 3:10 AM EDT</time></div>
             </footer>
         </div>
 

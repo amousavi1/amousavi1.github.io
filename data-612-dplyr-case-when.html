@@ -111,27 +111,34 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">5.2 dplyr: case_when() and Distinct Rows</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-5.html">Week 5</a> &middot;
                             <a href="files/data-612/dplyr-case-when.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            case_when() replaces nested if_else(). distinct() and rownames_to_column() clean identifiers.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/dplyr-case-when.qmd">Source (.qmd)</a></p>
+<p>case_when() replaces nested if_else(). distinct() and
+rownames_to_column() clean identifiers.</p>
+<div id="case_when" class="section level2">
 <h2>1. <code>case_when()</code></h2>
-<p><code>case_when()</code> is a vectorized chain of <code>if</code> / <code>else</code>. Each argument is <code>condition ~ value</code>. Conditions are tried in order. End with <code>TRUE ~ ...</code> as the default. If nothing matches, you get <code>NA</code>.</p>
+<p><code>case_when()</code> is a vectorized chain of <code>if</code> /
+<code>else</code>. Each argument is <code>condition ~ value</code>.
+Conditions are tried in order. End with <code>TRUE ~ ...</code> as the
+default. If nothing matches, you get <code>NA</code>.</p>
 <pre><code class="language-r">x &lt;- 1:16
 case_when(
   x %% 35 == 0 ~ &quot;fizz buzz&quot;,
   x %% 5 == 0 ~ &quot;fizz&quot;,
   x %% 7 == 0 ~ &quot;buzz&quot;,
   TRUE ~ as.character(x)
-)
-</code></pre>
-<p>Put the specific cases first. A leading <code>TRUE ~</code> catches everything and the later lines never run.</p>
-<p><code>NA</code> in <code>x</code> is not special. Handle it with <code>is.na(x) ~ ...</code>.</p>
-<p>Inside <code>mutate()</code> it is the usual way to build a category from several columns:</p>
+)</code></pre>
+<pre><code>##  [1] &quot;1&quot;    &quot;2&quot;    &quot;3&quot;    &quot;4&quot;    &quot;fizz&quot; &quot;6&quot;    &quot;buzz&quot; &quot;8&quot;    &quot;9&quot;    &quot;fizz&quot;
+## [11] &quot;11&quot;   &quot;12&quot;   &quot;13&quot;   &quot;buzz&quot; &quot;fizz&quot; &quot;16&quot;</code></pre>
+<p>Put the specific cases first. A leading <code>TRUE ~</code> catches
+everything and the later lines never run.</p>
+<p><code>NA</code> in <code>x</code> is not special. Handle it with
+<code>is.na(x) ~ ...</code>.</p>
+<p>Inside <code>mutate()</code> it is the usual way to build a category
+from several columns:</p>
 <pre><code class="language-r">starwars |&gt;
   select(name:mass, gender, species) |&gt;
   mutate(
@@ -140,44 +147,105 @@ case_when(
       species == &quot;Droid&quot; ~ &quot;robot&quot;,
       TRUE ~ &quot;other&quot;
     )
-  )
-</code></pre>
+  )</code></pre>
+<pre><code>## # A tibble: 87 × 6
+##    name               height  mass gender    species type 
+##    &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;
+##  1 Luke Skywalker        172    77 masculine Human   other
+##  2 C-3PO                 167    75 masculine Droid   robot
+##  3 R2-D2                  96    32 masculine Droid   robot
+##  4 Darth Vader           202   136 masculine Human   large
+##  5 Leia Organa           150    49 feminine  Human   other
+##  6 Owen Lars             178   120 masculine Human   other
+##  7 Beru Whitesun Lars    165    75 feminine  Human   other
+##  8 R5-D4                  97    32 masculine Droid   robot
+##  9 Biggs Darklighter     183    84 masculine Human   other
+## 10 Obi-Wan Kenobi        182    77 masculine Human   other
+## # ℹ 77 more rows</code></pre>
 <p>All right-hand sides must have the same type.</p>
 <hr />
+</div>
+<div id="row-names-and-distinct" class="section level2">
 <h2>2. Row names and <code>distinct()</code></h2>
-<p>Tibbles do not use row names. A matrix such as <code>state.x77</code> or <code>mtcars</code> does. <code>has_rownames()</code> checks. <code>rownames_to_column(mtcars, var = "car")</code> then <code>as_tibble()</code> turns the names into a real column.</p>
-<pre><code class="language-r">has_rownames(mtcars)
-mtcars |&gt;
+<p>Tibbles do not use row names. A matrix such as <code>state.x77</code>
+or <code>mtcars</code> does. <code>has_rownames()</code> checks.
+<code>rownames_to_column(mtcars, var = "car")</code> then
+<code>as_tibble()</code> turns the names into a real column.</p>
+<pre><code class="language-r">has_rownames(mtcars)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">mtcars |&gt;
   rownames_to_column(var = &quot;car&quot;) |&gt;
-  as_tibble()
-</code></pre>
-<p><code>distinct()</code> keeps unique rows, in the original order. You can name columns, or use <code>across()</code>:</p>
+  as_tibble()</code></pre>
+<pre><code>## # A tibble: 32 × 12
+##    car           mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+##    &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 Mazda RX4    21       6  160    110  3.9   2.62  16.5     0     1     4     4
+##  2 Mazda RX4 …  21       6  160    110  3.9   2.88  17.0     0     1     4     4
+##  3 Datsun 710   22.8     4  108     93  3.85  2.32  18.6     1     1     4     1
+##  4 Hornet 4 D…  21.4     6  258    110  3.08  3.22  19.4     1     0     3     1
+##  5 Hornet Spo…  18.7     8  360    175  3.15  3.44  17.0     0     0     3     2
+##  6 Valiant      18.1     6  225    105  2.76  3.46  20.2     1     0     3     1
+##  7 Duster 360   14.3     8  360    245  3.21  3.57  15.8     0     0     3     4
+##  8 Merc 240D    24.4     4  147.    62  3.69  3.19  20       1     0     4     2
+##  9 Merc 230     22.8     4  141.    95  3.92  3.15  22.9     1     0     4     2
+## 10 Merc 280     19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
+## # ℹ 22 more rows</code></pre>
+<p><code>distinct()</code> keeps unique rows, in the original order. You
+can name columns, or use <code>across()</code>:</p>
 <pre><code class="language-r">starwars |&gt;
   distinct(across(contains(&quot;color&quot;))) |&gt;
-  arrange(hair_color, skin_color, eye_color)
-</code></pre>
+  arrange(hair_color, skin_color, eye_color)</code></pre>
+<pre><code>## # A tibble: 67 × 3
+##    hair_color    skin_color eye_color
+##    &lt;chr&gt;         &lt;chr&gt;      &lt;chr&gt;    
+##  1 auburn        fair       blue     
+##  2 auburn, grey  fair       blue     
+##  3 auburn, white fair       blue-gray
+##  4 black         blue, grey yellow   
+##  5 black         brown      brown    
+##  6 black         dark       brown    
+##  7 black         dark       dark     
+##  8 black         fair       brown    
+##  9 black         light      brown    
+## 10 black         tan        brown    
+## # ℹ 57 more rows</code></pre>
 <hr />
+</div>
+<div id="programming-note-aside" class="section level2">
 <h2>3. Programming note (aside)</h2>
-<p>dplyr verbs use <strong>data masking</strong> (<code>filter(month == 1)</code> means the column, not an object in the console) or <strong>tidy selection</strong> (<code>select(starts_with("dep"))</code>). That is why interactive work is short. Inside a function, when the column name is stored in an ordinary R object, you need extra tools. We will stay with typed column names this week.</p>
+<p>dplyr verbs use <strong>data masking</strong>
+(<code>filter(month == 1)</code> means the column, not an object in the
+console) or <strong>tidy selection</strong>
+(<code>select(starts_with("dep"))</code>). That is why interactive work
+is short. Inside a function, when the column name is stored in an
+ordinary R object, you need extra tools. We will stay with typed column
+names this week.</p>
 <hr />
+</div>
+<div id="this-week-in-one-place" class="section level2">
 <h2>4. This week, in one place</h2>
 <ul>
-<li><code>rowwise()</code> and <code>c_across()</code> for a summary across columns in one row</li>
+<li><code>rowwise()</code> and <code>c_across()</code> for a summary
+across columns in one row</li>
 <li><code>across()</code> to repeat a function on many columns</li>
-<li><code>case_when()</code> instead of nested <code>if_else()</code></li>
-<li><code>distinct()</code> and <code>rownames_to_column()</code> when you need them</li>
+<li><code>case_when()</code> instead of nested
+<code>if_else()</code></li>
+<li><code>distinct()</code> and <code>rownames_to_column()</code> when
+you need them</li>
 </ul>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>5. Practice</h2>
-<ol>
-<li>
-<p>Check whether <code>mtcars</code> has row names. If it does, make a tibble with a <code>car</code> column.</p>
-</li>
-<li>
-<p>Min and max of every numeric column except <code>birth_year</code>, by <code>species</code> and <code>gender</code>, plus <code>n()</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Check whether <code>mtcars</code> has row names. If it does, make a
+tibble with a <code>car</code> column.</li>
+<li>Min and max of every numeric column except <code>birth_year</code>,
+by <code>species</code> and <code>gender</code>, plus
+<code>n()</code>.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dplyr-rowwise-across.html"><span aria-hidden="true">←</span> 5.1 dplyr: rowwise() and across()</a>
                         <a class="course-page-nav__week" href="data-612-week-5.html">Week 5</a>
                             <a class="course-page-nav__next" href="data-612-lab-5-dplyr.html">Lab 5: dplyr, Part 2 <span aria-hidden="true">→</span></a>
@@ -190,7 +258,7 @@ mtcars |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:10:00-04:00">September 23, 2026, 3:10 AM EDT</time></div>
             </footer>
         </div>
 

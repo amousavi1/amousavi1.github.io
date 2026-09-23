@@ -1,0 +1,37 @@
+
+
+
+<p>Row-wise maxima, across(), case_when(), and row names.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>5.1</strong>
+and <strong>5.2</strong> first. <code>starwars</code> comes with
+dplyr.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<hr />
+<div id="row-wise-and-across" class="section level2">
+<h2>1. Row-wise and across</h2>
+<ol style="list-style-type: decimal">
+<li>For each <code>starwars</code> character, the maximum of
+<code>height</code>, <code>mass</code>, and <code>birth_year</code>
+(<code>na.rm = TRUE</code>). Who is largest? Run it with
+<code>rowwise()</code> and once without.</li>
+<li>Median of every numeric column, by <code>species</code> and
+<code>gender</code>, plus <code>n()</code>, sorted by <code>n</code>
+descending.</li>
+<li>Min and max of every numeric column except <code>birth_year</code>,
+by <code>species</code> and <code>gender</code>, plus
+<code>n()</code>.</li>
+</ol>
+<hr />
+</div>
+<div id="case_when-and-row-names" class="section level2">
+<h2>2. case_when and row names</h2>
+<ol style="list-style-type: decimal">
+<li>Add a <code>type</code> column to <code>starwars</code>:
+<code>"large"</code> if height or mass is over 200, <code>"robot"</code>
+if the species is Droid, otherwise <code>"other"</code>.</li>
+<li>Does <code>mtcars</code> have row names? If so, make a tibble with a
+<code>car</code> column.</li>
+<li>Distinct combinations of the <code>starwars</code> columns whose
+names contain <code>"color"</code>.</li>
+</ol>
+</div>

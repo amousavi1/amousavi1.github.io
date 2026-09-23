@@ -1,0 +1,88 @@
+
+
+
+<p>group_by() marks groups. summarize() collapses them. Always keep
+n().</p>
+<div id="summarize-collapses-rows" class="section level2">
+<h2>1. <code>summarize()</code> collapses rows</h2>
+<p>After <code>summarize()</code>, you keep only the summaries. Always
+think about <code>NA</code>. <code>mean(x, na.rm = TRUE)</code> drops
+missing values <strong>inside that mean</strong>. Filtering both delay
+columns first drops any row that is missing either one, so the two means
+use the same flights and <code>n()</code> is smaller.</p>
+<pre class="r"><code>flights |&gt;
+  summarize(mean_del = mean(dep_delay, na.rm = TRUE), n = n())</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   mean_del      n
+##      &lt;dbl&gt;  &lt;int&gt;
+## 1     12.6 336776</code></pre>
+<p><code>n()</code> counts rows in the current table (or group).</p>
+<hr />
+</div>
+<div id="group_by-makes-virtual-groups" class="section level2">
+<h2>2. <code>group_by()</code> makes virtual groups</h2>
+<p><code>group_by(origin)</code> does not split the file. It marks the
+tibble so later verbs run <strong>per group</strong>.
+<code>ungroup()</code> clears the mark.</p>
+<p>One grouping variable: one group per distinct value. Two variables:
+one group per combination.</p>
+<pre class="r"><code>flights |&gt;
+  group_by(origin) |&gt;
+  summarize(
+    mean_del = mean(dep_delay, na.rm = TRUE),
+    sd_del = sd(dep_delay, na.rm = TRUE),
+    n = n()
+  )</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   origin mean_del sd_del      n
+##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;int&gt;
+## 1 EWR        15.1   41.3 120835
+## 2 JFK        12.1   39.0 111279
+## 3 LGA        10.3   40.0 104662</code></pre>
+<p>Always put <code>n()</code> in a grouped summary so you can see
+whether a group is tiny.</p>
+<p><code>summarize()</code> peels off one grouping level by default and
+prints a message. <code>.groups = "drop"</code> drops all of them.
+<code>options(dplyr.summarise.inform = FALSE)</code> quiets the
+message.</p>
+<p><code>arrange()</code> ignores groups unless you set
+<code>.by_group = TRUE</code>.</p>
+<p>Pipe the summary into ggplot2:</p>
+<pre class="r"><code>flights |&gt;
+  group_by(origin, hour) |&gt;
+  summarize(mean_del = mean(dep_delay, na.rm = TRUE), .groups = &quot;drop&quot;) |&gt;
+  ggplot(aes(x = hour, y = mean_del, color = origin)) +
+  geom_line() +
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/dplyr-groups/chunk-3-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="this-week-in-one-place" class="section level2">
+<h2>3. This week, in one place</h2>
+<ul>
+<li><code>filter()</code> / <code>slice()</code> /
+<code>arrange()</code> for rows</li>
+<li><code>select()</code> / <code>rename()</code> /
+<code>mutate()</code> / <code>relocate()</code> for columns</li>
+<li><code>group_by()</code> then <code>summarize()</code> for one number
+(or a few) per group</li>
+</ul>
+<p><code>filter()</code> is the dplyr cousin of <code>subset()</code>
+for rows. <code>select()</code> is the cousin for columns. Note 2.1.</p>
+<p>Chapter 5 of <a href="https://r4ds.had.co.nz/transform.html">R for
+Data Science</a> and the <a
+href="https://rstudio.github.io/cheatsheets/data-transformation.pdf">data-transformation
+cheat sheet</a>.</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>4. Practice</h2>
+<ol style="list-style-type: decimal">
+<li>Standard deviation of <code>dep_delay</code>.</li>
+<li>Maximum <code>dep_delay</code> at JFK, EWR, and LGA. Then do all
+three airports in one <code>group_by(origin)</code> pipeline.</li>
+<li>For each day, the number and proportion of canceled flights, where
+canceled means <code>is.na(dep_delay) | is.na(arr_delay)</code>. Plot
+the proportion against day, and against average departure delay.</li>
+</ol>
+</div>

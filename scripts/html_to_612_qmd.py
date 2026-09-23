@@ -10,19 +10,14 @@ LECTURES = ROOT / "files" / "data-612" / "lectures"
 
 # html filename stem (after data-612-) -> qmd stem / fig folder
 LECTURE_STEMS = [
-    "data-science-and-r",
-    "getting-started",
-    "r-packages-and-the-tidyverse",
-    "files-and-paths",
-    "introduction-to-r-concepts",
-    "r-markdown-and-quarto",
-    "lab-1-looking-under-the-hood",
-    "pipes",
-    "writing-functions",
-    "r-scripts",
-    "lab-2-pipes-functions",
-    "lab-3-ggplot2",
-    # ggplot already authored by hand; skip if present
+    # weeks 4–5
+    "dplyr-rows",
+    "dplyr-columns",
+    "dplyr-groups",
+    "lab-4-dplyr",
+    "dplyr-rowwise-across",
+    "dplyr-case-when",
+    "lab-5-dplyr",
 ]
 
 SKIP_IF_EXISTS = {
@@ -140,6 +135,7 @@ def convert_body_to_qmd(title: str, body: str, stem: str) -> str:
         "  fig.height = 3.6,",
         "  fig.align = \"center\",",
         "  dpi = 120,",
+        "  error = TRUE,",
         f'  fig.path = "_figs/{stem}/"',
         ")",
         "library(tidyverse)",
@@ -195,19 +191,33 @@ def convert_body_to_qmd(title: str, body: str, stem: str) -> str:
             parts.append(list_to_md(m.group(9), ordered=True))
             parts.append("")
         elif m.group(10) is not None:
-            parts.append(html_inline_to_md(m.group(10)))
-            parts.append("")
+            phtml = m.group(10)
+            imgs = re.findall(
+                r'<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>',
+                phtml,
+                flags=re.I,
+            )
+            if imgs:
+                for src, alt in imgs:
+                    alt = alt or ""
+                    parts.append(f"![{alt}]({src})")
+                    parts.append("")
+            else:
+                parts.append(html_inline_to_md(phtml))
+                parts.append("")
         elif m.group(11) is not None:
             parts.append(f"> {html_inline_to_md(m.group(11))}")
             parts.append("")
         elif m.group(12) is not None:
-            # keep images if present
-            imgs = re.findall(r'<img[^>]+src="([^"]+)"[^>]*>', m.group(12), flags=re.I)
-            for src in imgs:
-                parts.append(f"![]({src})")
+            imgs = re.findall(
+                r'<img[^>]+src="([^"]+)"[^>]*(?:alt="([^"]*)")?[^>]*>',
+                m.group(12),
+                flags=re.I,
+            )
+            for src, alt in imgs:
+                parts.append(f"![{alt or ''}]({src})")
                 parts.append("")
         elif m.group(13) is not None:
-            # skip generic divs but keep inner text lightly
             inner = html_inline_to_md(m.group(13))
             if inner:
                 parts.append(inner)
@@ -225,9 +235,12 @@ def convert_body_to_qmd(title: str, body: str, stem: str) -> str:
     return "\n".join(parts).rstrip() + "\n"
 
 
-def main() -> None:
+def main(stems: list[str] | None = None) -> None:
+    import sys
+
     LECTURES.mkdir(parents=True, exist_ok=True)
-    for stem in LECTURE_STEMS:
+    targets = stems or (sys.argv[1:] if len(sys.argv) > 1 else LECTURE_STEMS)
+    for stem in targets:
         if stem in SKIP_IF_EXISTS:
             continue
         html_path = ROOT / f"data-612-{stem}.html"
@@ -237,6 +250,13 @@ def main() -> None:
             continue
         title, body = extract_body(html_path.read_text(encoding="utf-8"))
         qmd = convert_body_to_qmd(title, body, stem)
+        # Avoid duplicate setup labels from lecture content that documents setup chunks
+        parts = qmd.split("#| label: setup")
+        if len(parts) > 2:
+            rebuilt = parts[0] + "#| label: setup"
+            for i, p in enumerate(parts[1:], 1):
+                rebuilt += p if i == 1 else f"#| label: setup-doc-{i}" + p
+            qmd = rebuilt
         qmd_path.write_text(qmd, encoding="utf-8", newline="\n")
         n_chunks = qmd.count("```{r}")
         print(f"wrote {qmd_path.name} ({n_chunks} r blocks) title={title!r}")

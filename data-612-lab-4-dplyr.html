@@ -111,71 +111,63 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 4: dplyr, Part 1</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-4.html">Week 4</a> &middot;
                             <a href="files/data-612/lab-4-dplyr.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Filter, slice, arrange, select, mutate, and summarize flights.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Number the exercises. Do <strong>4.1</strong> through <strong>4.3</strong> first.</p>
+                         &middot; <a href="files/data-612/lectures/lab-4-dplyr.qmd">Source (.qmd)</a></p>
+<p>Filter, slice, arrange, select, mutate, and summarize flights.</p>
+<p>Work in a <strong>Quarto</strong> document. Number the exercises. Do
+<strong>4.1</strong> through <strong>4.3</strong> first.</p>
 <pre><code class="language-r">library(tidyverse)
 library(nycflights13)
-data(&quot;flights&quot;)
-</code></pre>
+data(&quot;flights&quot;)</code></pre>
 <hr />
+<div id="filter-and-slice" class="section level2">
 <h2>1. Filter and slice</h2>
-<ol>
-<li>
-<p>Flights in odd months, or on even days of even months.</p>
-</li>
-<li>
-<p>Flights to Houston (<code>IAH</code> or <code>HOU</code>), on UA, AA, or DL, in July–September, that arrived more than 15 minutes late and did not leave late.</p>
-</li>
-<li>
-<p>Rows 10, 100, 1000, 10000, and 100000.</p>
-</li>
-<li>
-<p>The last 10 of the first 30 Newark (<code>EWR</code>) flights.</p>
-</li>
-<li>
-<p><code>set.seed(1)</code>. A random 1% sample, and a sample of 3367 rows. Are the last 10 rows the same? Why?</p>
-</li>
-<li>
-<p>The 50 longest <code>air_time</code>s, then the 10 smallest <code>arr_delay</code>s among those. Repeat after <code>filter(air_time &lt; 300)</code>. What does <code>with_ties = FALSE</code> change?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Flights in odd months, or on even days of even months.</li>
+<li>Flights to Houston (<code>IAH</code> or <code>HOU</code>), on UA,
+AA, or DL, in July–September, that arrived more than 15 minutes late and
+did not leave late.</li>
+<li>Rows 10, 100, 1000, 10000, and 100000.</li>
+<li>The last 10 of the first 30 Newark (<code>EWR</code>) flights.</li>
+<li><code>set.seed(1)</code>. A random 1% sample, and a sample of 3367
+rows. Are the last 10 rows the same? Why?</li>
+<li>The 50 longest <code>air_time</code>s, then the 10 smallest
+<code>arr_delay</code>s among those. Repeat after
+<code>filter(air_time &lt; 300)</code>. What does
+<code>with_ties = FALSE</code> change?</li>
 </ol>
 <hr />
+</div>
+<div id="arrange-select-mutate" class="section level2">
 <h2>2. Arrange, select, mutate</h2>
-<ol>
-<li>
-<p>Longest <code>distance</code>, ties broken by <code>air_time</code>.</p>
-</li>
-<li>
-<p>Keep every arrival column plus <code>year</code>, <code>month</code>, and <code>day</code>.</p>
-</li>
-<li>
-<p>Convert <code>dep_time</code> and <code>sched_dep_time</code> to minutes past midnight.</p>
-</li>
-<li>
-<p>Move columns ending in <code>"time"</code> to just before <code>flight</code>. Then put <code>sched</code> columns before the actual times.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Longest <code>distance</code>, ties broken by
+<code>air_time</code>.</li>
+<li>Keep every arrival column plus <code>year</code>,
+<code>month</code>, and <code>day</code>.</li>
+<li>Convert <code>dep_time</code> and <code>sched_dep_time</code> to
+minutes past midnight.</li>
+<li>Move columns ending in <code>"time"</code> to just before
+<code>flight</code>. Then put <code>sched</code> columns before the
+actual times.</li>
 </ol>
 <hr />
+</div>
+<div id="summarize-and-group" class="section level2">
 <h2>3. Summarize and group</h2>
-<ol>
-<li>
-<p>Standard deviation of <code>dep_delay</code>.</p>
-</li>
-<li>
-<p>Maximum <code>dep_delay</code> by <code>origin</code> in one pipeline.</p>
-</li>
-<li>
-<p>For each <code>day</code>, the number and proportion of canceled flights (<code>is.na(dep_delay) | is.na(arr_delay)</code>). Plot the proportion against day, and against average departure delay.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Standard deviation of <code>dep_delay</code>.</li>
+<li>Maximum <code>dep_delay</code> by <code>origin</code> in one
+pipeline.</li>
+<li>For each <code>day</code>, the number and proportion of canceled
+flights (<code>is.na(dep_delay) | is.na(arr_delay)</code>). Plot the
+proportion against day, and against average departure delay.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dplyr-groups.html"><span aria-hidden="true">←</span> 4.3 dplyr: Groups and Summaries</a>
                         <a class="course-page-nav__week" href="data-612-week-4.html">Week 4</a>
                             <a class="course-page-nav__next" href="data-612-lab-4-solutions.html">Lab 4 solutions <span aria-hidden="true">→</span></a>
@@ -188,7 +180,7 @@ data(&quot;flights&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:10:00-04:00">September 23, 2026, 3:10 AM EDT</time></div>
             </footer>
         </div>
 

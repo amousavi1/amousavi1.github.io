@@ -111,77 +111,156 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">5.1 dplyr: rowwise() and across()</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-5.html">Week 5</a> &middot;
                             <a href="files/data-612/dplyr-rowwise-across.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            rowwise() summarizes across columns in one row. across() repeats a function on many columns.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/dplyr-rowwise-across.qmd">Source (.qmd)</a></p>
+<p>rowwise() summarizes across columns in one row. across() repeats a
+function on many columns.</p>
+<div id="rowwise-is-a-group-of-one" class="section level2">
 <h2>1. <code>rowwise()</code> is a group of one</h2>
-<p><code>group_by()</code> groups many rows. <code>rowwise()</code> makes each row its own group so a summary runs <strong>across columns in that row</strong>. <code>ungroup()</code> removes it.</p>
+<p><code>group_by()</code> groups many rows. <code>rowwise()</code>
+makes each row its own group so a summary runs <strong>across columns in
+that row</strong>. <code>ungroup()</code> removes it.</p>
 <pre><code class="language-r">df &lt;- tibble(name = c(&quot;Mara&quot;, &quot;Hadley&quot;), x = 1:2, y = 3:4, z = 5:6)
 
-df |&gt; mutate(m = mean(c(x, y, z)))
-# one mean for the whole table
+df |&gt; mutate(m = mean(c(x, y, z)))</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   name       x     y     z     m
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+## 1 Mara       1     3     5   3.5
+## 2 Hadley     2     4     6   3.5</code></pre>
+<pre><code class="language-r"># one mean for the whole table
 
 df |&gt;
   rowwise(name) |&gt;
-  summarize(m = mean(c(x, y, z)), .groups = &quot;drop&quot;)
-# one mean per row
-</code></pre>
-<p><code>c_across()</code> selects several columns with the same helpers as <code>select()</code>:</p>
+  summarize(m = mean(c(x, y, z)), .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   name       m
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 Mara       3
+## 2 Hadley     4</code></pre>
+<pre><code class="language-r"># one mean per row</code></pre>
+<p><code>c_across()</code> selects several columns with the same helpers
+as <code>select()</code>:</p>
 <pre><code class="language-r">df &lt;- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
 rf &lt;- df |&gt; rowwise(id)
 
-rf |&gt; mutate(total = sum(c_across(w:z)))
-rf |&gt; mutate(total = sum(c_across(where(is.numeric))))
-</code></pre>
-<p>For speed on a whole frame, <code>rowSums()</code> and <code>rowMeans()</code> avoid the split-and-join:</p>
-<pre><code class="language-r">df |&gt; mutate(total = rowSums(across(where(is.numeric))))
-</code></pre>
-<p><code>starwars</code> (in dplyr) is the usual practice table. Without <code>rowwise()</code>, <code>max(height, mass, birth_year)</code> is one number for the whole column stack, repeated on every row.</p>
+rf |&gt; mutate(total = sum(c_across(w:z)))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+## # Rowwise:  id
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1     1    10    20    30    40   100
+## 2     2    11    21    31    41   104
+## 3     3    12    22    32    42   108
+## 4     4    13    23    33    43   112
+## 5     5    14    24    34    44   116
+## 6     6    15    25    35    45   120</code></pre>
+<pre><code class="language-r">rf |&gt; mutate(total = sum(c_across(where(is.numeric))))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+## # Rowwise:  id
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1     1    10    20    30    40   100
+## 2     2    11    21    31    41   104
+## 3     3    12    22    32    42   108
+## 4     4    13    23    33    43   112
+## 5     5    14    24    34    44   116
+## 6     6    15    25    35    45   120</code></pre>
+<p>For speed on a whole frame, <code>rowSums()</code> and
+<code>rowMeans()</code> avoid the split-and-join:</p>
+<pre><code class="language-r">df |&gt; mutate(total = rowSums(across(where(is.numeric))))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+## 1     1    10    20    30    40   101
+## 2     2    11    21    31    41   106
+## 3     3    12    22    32    42   111
+## 4     4    13    23    33    43   116
+## 5     5    14    24    34    44   121
+## 6     6    15    25    35    45   126</code></pre>
+<p><code>starwars</code> (in dplyr) is the usual practice table. Without
+<code>rowwise()</code>, <code>max(height, mass, birth_year)</code> is
+one number for the whole column stack, repeated on every row.</p>
 <hr />
+</div>
+<div id="across-repeats-a-function-on-columns" class="section level2">
 <h2>2. <code>across()</code> repeats a function on columns</h2>
-<p><code>across()</code> lives <strong>inside</strong> <code>mutate()</code>, <code>summarize()</code>, <code>filter()</code>, and the other data-masking verbs. It does not change the data by itself.</p>
+<p><code>across()</code> lives <strong>inside</strong>
+<code>mutate()</code>, <code>summarize()</code>, <code>filter()</code>,
+and the other data-masking verbs. It does not change the data by
+itself.</p>
 <p>Two arguments:</p>
 <ul>
-<li><code>.cols</code>: tidyselect, default <code>everything()</code></li>
-<li><code>.fns</code>: a function, a named list of functions, or a formula <code>~ median(.x, na.rm = TRUE)</code>. <code>.x</code> is the current column.</li>
+<li><code>.cols</code>: tidyselect, default
+<code>everything()</code></li>
+<li><code>.fns</code>: a function, a named list of functions, or a
+formula <code>~ median(.x, na.rm = TRUE)</code>. <code>.x</code> is the
+current column.</li>
 </ul>
 <pre><code class="language-r">starwars |&gt;
-  summarize(across(where(is.numeric), ~ median(.x, na.rm = TRUE)), .groups = &quot;drop&quot;)
-
-starwars |&gt;
+  summarize(across(where(is.numeric), ~ median(.x, na.rm = TRUE)), .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   height  mass birth_year
+##    &lt;int&gt; &lt;dbl&gt;      &lt;dbl&gt;
+## 1    180    79         52</code></pre>
+<pre><code class="language-r">starwars |&gt;
   group_by(species) |&gt;
   filter(n() &gt; 1) |&gt;
   summarize(
     across(c(sex, gender, homeworld), ~ length(unique(.x))),
     n = n()
-  )
-</code></pre>
-<p>Grouping variables are skipped so you do not summarize them by accident.</p>
+  )</code></pre>
+<pre><code>## # A tibble: 9 × 5
+##   species    sex gender homeworld     n
+##   &lt;chr&gt;    &lt;int&gt;  &lt;int&gt;     &lt;int&gt; &lt;int&gt;
+## 1 Droid        1      2         3     6
+## 2 Gungan       1      1         1     3
+## 3 Human        2      2        15    35
+## 4 Kaminoan     2      2         1     2
+## 5 Mirialan     1      1         1     2
+## 6 Twi&#39;lek      2      2         1     2
+## 7 Wookiee      1      1         1     2
+## 8 Zabrak       1      1         2     2
+## 9 &lt;NA&gt;         1      1         3     4</code></pre>
+<p>Grouping variables are skipped so you do not summarize them by
+accident.</p>
 <p>A named list makes several summaries per column:</p>
 <pre><code class="language-r">min_max &lt;- list(
   min = ~ min(.x, na.rm = TRUE),
   max = ~ max(.x, na.rm = TRUE)
 )
-starwars |&gt; summarize(across(where(is.numeric), min_max))
-</code></pre>
-<p>Order matters. If you compute <code>n = n()</code> first, <code>n</code> is numeric, so a later <code>across(where(is.numeric), sd)</code> will try to take the SD of that constant and give <code>NA</code>. Put <code>n = n()</code> last.</p>
-<p><code>across()</code> replaces the old <code>*_if()</code>, <code>*_at()</code>, and <code>*_all</code> helpers. <code>select()</code> and <code>rename()</code> already use tidyselect; use <code>rename_with()</code> to change names with a function.</p>
+starwars |&gt; summarize(across(where(is.numeric), min_max))</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   height_min height_max mass_min mass_max birth_year_min birth_year_max
+##        &lt;int&gt;      &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
+## 1         66        264       15     1358              8            896</code></pre>
+<p>Order matters. If you compute <code>n = n()</code> first,
+<code>n</code> is numeric, so a later
+<code>across(where(is.numeric), sd)</code> will try to take the SD of
+that constant and give <code>NA</code>. Put <code>n = n()</code>
+last.</p>
+<p><code>across()</code> replaces the old <code>*_if()</code>,
+<code>*_at()</code>, and <code>*_all</code> helpers.
+<code>select()</code> and <code>rename()</code> already use tidyselect;
+use <code>rename_with()</code> to change names with a function.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>3. Practice</h2>
-<ol>
-<li>
-<p>For each <code>starwars</code> character, the maximum of <code>height</code>, <code>mass</code>, and <code>birth_year</code> (<code>na.rm = TRUE</code>). Who is largest? Try it with and without <code>rowwise()</code>.</p>
-</li>
-<li>
-<p>Median of every numeric column, by <code>species</code> and <code>gender</code>, plus <code>n()</code>, sorted by <code>n</code> descending.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>For each <code>starwars</code> character, the maximum of
+<code>height</code>, <code>mass</code>, and <code>birth_year</code>
+(<code>na.rm = TRUE</code>). Who is largest? Try it with and without
+<code>rowwise()</code>.</li>
+<li>Median of every numeric column, by <code>species</code> and
+<code>gender</code>, plus <code>n()</code>, sorted by <code>n</code>
+descending.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lab-4-solutions.html"><span aria-hidden="true">←</span> Lab 4 solutions</a>
                         <a class="course-page-nav__week" href="data-612-week-5.html">Week 5</a>
                             <a class="course-page-nav__next" href="data-612-dplyr-case-when.html">5.2 dplyr: case_when() and Distinct Rows <span aria-hidden="true">→</span></a>
@@ -194,7 +273,7 @@ starwars |&gt; summarize(across(where(is.numeric), min_max))
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:00:00-04:00">September 23, 2026, 3:00 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:10:00-04:00">September 23, 2026, 3:10 AM EDT</time></div>
             </footer>
         </div>
 
