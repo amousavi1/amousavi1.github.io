@@ -111,42 +111,94 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">8.2 dplyr: Filtering Joins</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-8.html">Week 8</a> &middot;
                             <a href="files/data-612/dplyr-filtering-joins.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            semi_join() and anti_join() keep or drop rows of x. They do not add columns.
-                        </p>
-<p><img alt="semi_join keeps x rows that match y" src="files/data-612/graphics/join-semi.png" /></p>
-<p><img alt="anti_join keeps x rows that do not match y" src="files/data-612/graphics/join-anti.png" /></p>
-<p><img alt="One-to-many: a key that repeats in x" src="files/data-612/graphics/join-one-to-many.png" /></p>
-<p><img alt="Many-to-many: the same key repeats in both tables" src="files/data-612/graphics/join-many-to-many.png" /></p>
+                         &middot; <a href="files/data-612/lectures/dplyr-filtering-joins.qmd">Source (.qmd)</a></p>
+<p>semi_join() and anti_join() keep or drop rows of x. They do not add
+columns.</p>
+<p><img src="files/data-612/graphics/join-semi.png" /></p>
+<p><img src="files/data-612/graphics/join-anti.png" /></p>
+<p><img src="files/data-612/graphics/join-one-to-many.png" /></p>
+<p><img src="files/data-612/graphics/join-many-to-many.png" /></p>
+<div id="semi_join-and-anti_join" class="section level2">
 <h2>1. <code>semi_join()</code> and <code>anti_join()</code></h2>
-<p>A mutating join <strong>adds columns</strong>. A filtering join <strong>keeps or drops rows</strong> of <code>x</code> and leaves the columns of <code>x</code> alone.</p>
+<p>A mutating join <strong>adds columns</strong>. A filtering join
+<strong>keeps or drops rows</strong> of <code>x</code> and leaves the
+columns of <code>x</code> alone.</p>
 <ul>
-<li><code>semi_join(x, y)</code> — rows of <code>x</code> that have a match in <code>y</code></li>
-<li><code>anti_join(x, y)</code> — rows of <code>x</code> that do <strong>not</strong> have a match in <code>y</code></li>
+<li><code>semi_join(x, y)</code> — rows of <code>x</code> that have a
+match in <code>y</code></li>
+<li><code>anti_join(x, y)</code> — rows of <code>x</code> that do
+<strong>not</strong> have a match in <code>y</code></li>
 </ul>
 <pre><code class="language-r">library(tidyverse)
 library(nycflights13)
 
 flights |&gt;
-  semi_join(planes, by = &quot;tailnum&quot;)
-
-flights |&gt;
-  anti_join(planes, by = &quot;tailnum&quot;)
-</code></pre>
-<p><code>inner_join(x, y)</code> also drops unmatched <code>x</code> rows, but it <strong>duplicates</strong> an <code>x</code> row once per match in <code>y</code>. <code>semi_join()</code> never duplicates <code>x</code>. If you only want "does a match exist?", use <code>semi_join()</code>.</p>
-<p><code>anti_join()</code> is the diagnostic: destinations with no airport row, planes that never flew, weather hours with no flights.</p>
+  semi_join(planes, by = &quot;tailnum&quot;)</code></pre>
+<pre><code>## # A tibble: 284,170 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      849            851
+## # ℹ 284,160 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre><code class="language-r">flights |&gt;
+  anti_join(planes, by = &quot;tailnum&quot;)</code></pre>
+<pre><code>## # A tibble: 52,606 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      558            600        -2      753            745
+##  2  2013     1     1      559            600        -1      941            910
+##  3  2013     1     1      600            600         0      837            825
+##  4  2013     1     1      602            605        -3      821            805
+##  5  2013     1     1      608            600         8      807            735
+##  6  2013     1     1      611            600        11      945            931
+##  7  2013     1     1      623            610        13      920            915
+##  8  2013     1     1      624            630        -6      840            830
+##  9  2013     1     1      628            630        -2     1137           1140
+## 10  2013     1     1      629            630        -1      824            810
+## # ℹ 52,596 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<p><code>inner_join(x, y)</code> also drops unmatched <code>x</code>
+rows, but it <strong>duplicates</strong> an <code>x</code> row once per
+match in <code>y</code>. <code>semi_join()</code> never duplicates
+<code>x</code>. If you only want “does a match exist?”, use
+<code>semi_join()</code>.</p>
+<p><code>anti_join()</code> is the diagnostic: destinations with no
+airport row, planes that never flew, weather hours with no flights.</p>
 <pre><code class="language-r">flights |&gt;
   anti_join(airports, by = c(&quot;dest&quot; = &quot;faa&quot;)) |&gt;
-  distinct(dest)
-</code></pre>
+  distinct(dest)</code></pre>
+<pre><code>## # A tibble: 4 × 1
+##   dest 
+##   &lt;chr&gt;
+## 1 BQN  
+## 2 SJU  
+## 3 STT  
+## 4 PSE</code></pre>
 <hr />
+</div>
+<div id="duplicate-keys-and-many-to-many" class="section level2">
 <h2>2. Duplicate keys and many-to-many</h2>
-<p>If a key appears twice in <code>x</code> and three times in <code>y</code>, an inner or left join returns six rows for that key. That is a many-to-many join. Sometimes it is what you want; often it is a bad key.</p>
+<p>If a key appears twice in <code>x</code> and three times in
+<code>y</code>, an inner or left join returns six rows for that key.
+That is a many-to-many join. Sometimes it is what you want; often it is
+a bad key.</p>
 <pre><code class="language-r">x &lt;- tribble(
   ~key, ~val_x,
      1, &quot;x1&quot;,
@@ -158,25 +210,63 @@ y &lt;- tribble(
      1, &quot;y2&quot;
 )
 
-left_join(x, y, by = &quot;key&quot;)
-semi_join(x, y, by = &quot;key&quot;)
-</code></pre>
-<p>The left join has four rows. The semi join still has two — the original <code>x</code>. Check keys with <code>count()</code> before you join (note 8.1).</p>
+left_join(x, y, by = &quot;key&quot;)</code></pre>
+<pre><code>## # A tibble: 4 × 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     1 x1    y2   
+## 3     1 x2    y1   
+## 4     1 x2    y2</code></pre>
+<pre><code class="language-r">semi_join(x, y, by = &quot;key&quot;)</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##     key val_x
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1     1 x1   
+## 2     1 x2</code></pre>
+<p>The left join has four rows. The semi join still has two — the
+original <code>x</code>. Check keys with <code>count()</code> before you
+join (note 8.1).</p>
 <hr />
+</div>
+<div id="worst-delay-days-then-those-flights" class="section level2">
 <h2>3. Worst delay days, then those flights</h2>
-<p>Ten days with the highest median <code>dep_delay</code>, then every flight on those days. Build a small table of keys, then <code>semi_join()</code>.</p>
+<p>Ten days with the highest median <code>dep_delay</code>, then every
+flight on those days. Build a small table of keys, then
+<code>semi_join()</code>.</p>
 <pre><code class="language-r">worst &lt;- flights |&gt;
   group_by(year, month, day) |&gt;
   summarize(med_del = median(dep_delay, na.rm = TRUE), .groups = &quot;drop&quot;) |&gt;
   slice_max(med_del, n = 10)
 
 flights |&gt;
-  semi_join(worst, by = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;))
-</code></pre>
-<p><code>filter()</code> with a long <code>%in%</code> list is clumsier once the key has several columns.</p>
+  semi_join(worst, by = c(&quot;year&quot;, &quot;month&quot;, &quot;day&quot;))</code></pre>
+<pre><code>## # A tibble: 9,806 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013    12    17        4           2359         5      459            437
+##  2  2013    12    17        8           2159       129      155           2322
+##  3  2013    12    17       10           1930       280      313           2238
+##  4  2013    12    17       12           1740       392      135           1900
+##  5  2013    12    17       14           2130       164      313             18
+##  6  2013    12    17       14           2250        84      122           2356
+##  7  2013    12    17       29           2055       214      303           2332
+##  8  2013    12    17       36           2150       166      212           2311
+##  9  2013    12    17       38           2250       108      206              8
+## 10  2013    12    17       38           2035       243      140           2210
+## # ℹ 9,796 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<p><code>filter()</code> with a long <code>%in%</code> list is clumsier
+once the key has several columns.</p>
 <hr />
+</div>
+<div id="plane-age-and-delay" class="section level2">
 <h2>4. Plane age and delay</h2>
-<p><code>planes$year</code> is the year of manufacture. Age in 2013 is <code>2013 - year</code>. Join, then plot. Rename <code>year</code> first so it does not clash with <code>flights$year</code>.</p>
+<p><code>planes$year</code> is the year of manufacture. Age in 2013 is
+<code>2013 - year</code>. Join, then plot. Rename <code>year</code>
+first so it does not clash with <code>flights$year</code>.</p>
 <pre><code class="language-r">flights |&gt;
   left_join(
     planes |&gt; select(tailnum, plane_year = year),
@@ -187,26 +277,25 @@ flights |&gt;
   ggplot(aes(x = age, y = dep_delay)) +
   geom_hex() +
   geom_smooth(se = FALSE) +
-  theme_bw()
-</code></pre>
-<p><code>geom_hex()</code> needs the <code>hexbin</code> package. <code>geom_smooth()</code> alone is enough if you do not want the bins.</p>
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/dplyr-filtering-joins/chunk-5-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>geom_hex()</code> needs the <code>hexbin</code> package.
+<code>geom_smooth()</code> alone is enough if you do not want the
+bins.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>5. Practice</h2>
-<ol>
-<li>
-<p>Destinations in <code>flights</code> that are missing from <code>airports</code>. How many flights is that?</p>
-</li>
-<li>
-<p>Airports that never appear as a <code>dest</code>.</p>
-</li>
-<li>
-<p>The ten days with the highest median <code>dep_delay</code>, then all flights on those days.</p>
-</li>
-<li>
-<p>A plot of plane age against <code>dep_delay</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Destinations in <code>flights</code> that are missing from
+<code>airports</code>. How many flights is that?</li>
+<li>Airports that never appear as a <code>dest</code>.</li>
+<li>The ten days with the highest median <code>dep_delay</code>, then
+all flights on those days.</li>
+<li>A plot of plane age against <code>dep_delay</code>.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dplyr-joins.html"><span aria-hidden="true">←</span> 8.1 dplyr: Keys and Mutating Joins</a>
                         <a class="course-page-nav__week" href="data-612-week-8.html">Week 8</a>
                             <a class="course-page-nav__next" href="data-612-dbplyr-databases.html">8.3 dbplyr: Databases <span aria-hidden="true">→</span></a>
@@ -219,7 +308,7 @@ flights |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
             </footer>
         </div>
 

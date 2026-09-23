@@ -1,0 +1,56 @@
+
+
+
+<p>Reshape a factor, then parse the WMATA ridership dates.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>10.1</strong>
+and <strong>10.2</strong> first. Put <code>wmata_ridership.csv</code> in
+a <code>data/</code> folder of your project (see the Data section of the
+course page).</p>
+<pre class="r"><code>library(tidyverse)
+library(lubridate)</code></pre>
+<hr />
+<div id="factors" class="section level2">
+<h2>1. Factors</h2>
+<pre class="r"><code>fc &lt;- factor(c(&quot;D&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;D&quot;,&quot;A&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;))</code></pre>
+<ol style="list-style-type: decimal">
+<li>Add level <code>"E"</code> without adding any observations.</li>
+<li>Bar chart of <code>fc</code> by frequency, most frequent on the
+<strong>right</strong>.</li>
+<li>Put the levels in reverse alphabetical order.</li>
+<li>Remove the observations that are <code>"C"</code>, then drop the
+unused level.</li>
+<li>Collapse <code>"A"</code> and <code>"B"</code> into
+<code>"z"</code>.</li>
+</ol>
+<hr />
+</div>
+<div id="dates" class="section level2">
+<h2>2. Dates</h2>
+<p>Use <code>data/wmata_ridership.csv</code>.</p>
+<ol style="list-style-type: decimal">
+<li>Parse <code>Date</code>. Add <code>year</code>, <code>month</code>,
+and <code>wday</code> columns with <code>label = TRUE</code> where it
+applies.</li>
+<li>Drop 2004.</li>
+<li>Boxplot of daily <code>Total</code> by weekday.</li>
+<li>How long is the span as a duration and as an interval?</li>
+</ol>
+<hr />
+</div>
+<div id="capital-bikeshare-sample" class="section level2">
+<h2>3. Capital Bikeshare (sample)</h2>
+<p>Use <code>data/capital_trips_sample.csv</code> (a short extract of
+the 2016 trips file). Column names have spaces.</p>
+<ol style="list-style-type: decimal">
+<li><code>glimpse()</code> the file. Rename columns so they have no
+spaces.</li>
+<li>Parse start and end with <code>mdy_hm()</code>.</li>
+<li>Compute trip duration from start and end. Compare it to
+<code>duration_ms</code>. Where do they disagree by about an hour?</li>
+<li>Those hour-scale gaps sit on 13 March 2016 (spring-forward).
+<code>force_tz(..., tzone = "America/New_York")</code> on both times,
+then recompute.</li>
+<li>Time from the first start to the last end, as a duration.</li>
+<li>Plot duration against hour of day.</li>
+</ol>
+</div>

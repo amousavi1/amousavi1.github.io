@@ -111,54 +111,45 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 9: Strings and Regex</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-9.html">Week 9</a> &middot;
                             <a href="files/data-612/lab-9-strings.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Build a quote from pieces, then write a few patterns.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Do <strong>9.1</strong> and <strong>9.2</strong> first. <code>words</code> comes with stringr.</p>
-<pre><code class="language-r">library(tidyverse)
-</code></pre>
+                         &middot; <a href="files/data-612/lectures/lab-9-strings.qmd">Source (.qmd)</a></p>
+<p>Build a quote from pieces, then write a few patterns.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>9.1</strong>
+and <strong>9.2</strong> first. <code>words</code> comes with
+stringr.</p>
+<pre><code class="language-r">library(tidyverse)</code></pre>
 <hr />
+<div id="pieces-and-replacement" class="section level2">
 <h2>1. Pieces and replacement</h2>
-<ol>
-<li>
-<p>From <code>full &lt;- "To be or not to be, that is the question."</code>, use <code>str_sub()</code> to pull two pieces and <code>str_c()</code> to join them so <code>writeLines()</code> prints a two-line quote.</p>
-</li>
-<li>
-<p>Replace <code>"back"</code> and <code>"lack"</code> with <code>"foo"</code> in one call. Run it on <code>c("back", "lack")</code> and on <code>c("back", "lack", "black")</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>From
+<code>full &lt;- "To be or not to be, that is the question."</code>, use
+<code>str_sub()</code> to pull two pieces and <code>str_c()</code> to
+join them so <code>writeLines()</code> prints a two-line quote.</li>
+<li>Replace <code>"back"</code> and <code>"lack"</code> with
+<code>"foo"</code> in one call. Run it on <code>c("back", "lack")</code>
+and on <code>c("back", "lack", "black")</code>.</li>
 </ol>
 <hr />
+</div>
+<div id="regular-expressions" class="section level2">
 <h2>2. Regular expressions</h2>
 <p>Use <code>words</code>. For each item, print the matching words.</p>
-<ol>
-<li>
-<p>Four-letter words that start with <code>a</code>.</p>
-</li>
-<li>
-<p>Words that start with a vowel.</p>
-</li>
-<li>
-<p>Words that end in <code>ed</code> but not <code>eed</code>.</p>
-</li>
-<li>
-<p>Words that start with three consonants.</p>
-</li>
-<li>
-<p>Words that end in a consonant.</p>
-</li>
-<li>
-<p>Words that end in <code>ing</code> or <code>ise</code>.</p>
-</li>
-<li>
-<p>Words with two or more vowel-consonant pairs in a row (<code>[aeiou][^aeiou]</code> twice).</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Four-letter words that start with <code>a</code>.</li>
+<li>Words that start with a vowel.</li>
+<li>Words that end in <code>ed</code> but not <code>eed</code>.</li>
+<li>Words that start with three consonants.</li>
+<li>Words that end in a consonant.</li>
+<li>Words that end in <code>ing</code> or <code>ise</code>.</li>
+<li>Words with two or more vowel-consonant pairs in a row
+(<code>[aeiou][^aeiou]</code> twice).</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-stringr-regex.html"><span aria-hidden="true">←</span> 9.2 stringr: Regular Expressions</a>
                         <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
                             <a class="course-page-nav__next" href="data-612-lab-9-solutions.html">Lab 9 solutions <span aria-hidden="true">→</span></a>
@@ -171,7 +162,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
             </footer>
         </div>
 

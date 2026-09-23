@@ -111,63 +111,85 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 8: Relational Data</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-8.html">Week 8</a> &middot;
                             <a href="files/data-612/lab-8-joins.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Join flights to airports, weather days, and planes.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Do <strong>8.1</strong> and <strong>8.2</strong> first.</p>
+                         &middot; <a href="files/data-612/lectures/lab-8-joins.qmd">Source (.qmd)</a></p>
+<p>Join flights to airports, weather days, and planes.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>8.1</strong>
+and <strong>8.2</strong> first.</p>
 <pre><code class="language-r">library(tidyverse)
-library(nycflights13)
-</code></pre>
+library(nycflights13)</code></pre>
 <hr />
+<div id="the-five-tables" class="section level2">
 <h2>1. The five tables</h2>
-<p>Load <code>flights</code>, <code>planes</code>, <code>airlines</code>, <code>airports</code>, and <code>weather</code>. For each table, name a primary key (or say that there is none). Check uniqueness with <code>count()</code> and <code>filter(n &gt; 1)</code>.</p>
+<p>Load <code>flights</code>, <code>planes</code>,
+<code>airlines</code>, <code>airports</code>, and <code>weather</code>.
+For each table, name a primary key (or say that there is none). Check
+uniqueness with <code>count()</code> and
+<code>filter(n &gt; 1)</code>.</p>
 <hr />
+</div>
+<div id="destinations-and-airports" class="section level2">
 <h2>2. Destinations and airports</h2>
-<ol>
-<li>
-<p>How many distinct <code>dest</code> values are in <code>flights</code>?</p>
-</li>
-<li>
-<p>Destinations that do not appear in <code>airports</code> (<code>anti_join</code> with <code>dest</code> = <code>faa</code>). How many flights is that?</p>
-</li>
-<li>
-<p>Airports that never appear as a destination.</p>
-</li>
-<li>
-<p>The ten most common destinations: FAA code, airport name, and flight count.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>How many distinct <code>dest</code> values are in
+<code>flights</code>?</li>
+<li>Destinations that do not appear in <code>airports</code>
+(<code>anti_join</code> with <code>dest</code> = <code>faa</code>). How
+many flights is that?</li>
+<li>Airports that never appear as a destination.</li>
+<li>The ten most common destinations: FAA code, airport name, and flight
+count.</li>
 </ol>
 <hr />
+</div>
+<div id="delay-by-timezone" class="section level2">
 <h2>3. Delay by timezone</h2>
-<p>Join <code>airports</code> onto <code>flights</code> by destination. Mean <code>arr_delay</code> by <code>tzone</code>. Plot it.</p>
+<p>Join <code>airports</code> onto <code>flights</code> by destination.
+Mean <code>arr_delay</code> by <code>tzone</code>. Plot it.</p>
 <hr />
+</div>
+<div id="worst-delay-days" class="section level2">
 <h2>4. Worst delay days</h2>
-<p>The ten days with the highest median <code>dep_delay</code>. Then <code>semi_join()</code> to keep every flight on those days.</p>
+<p>The ten days with the highest median <code>dep_delay</code>. Then
+<code>semi_join()</code> to keep every flight on those days.</p>
 <hr />
+</div>
+<div id="plane-age-and-delay" class="section level2">
 <h2>5. Plane age and delay</h2>
-<p>Join <code>planes</code>. Age is <code>2013 - year</code> of manufacture. Plot age against <code>dep_delay</code> (<code>geom_hex()</code> or <code>geom_smooth()</code>).</p>
+<p>Join <code>planes</code>. Age is <code>2013 - year</code> of
+manufacture. Plot age against <code>dep_delay</code>
+(<code>geom_hex()</code> or <code>geom_smooth()</code>).</p>
 <hr />
+</div>
+<div id="distance-from-nyc" class="section level2">
 <h2>6. Distance from NYC</h2>
-<ol>
-<li>
-<p>Mean longitude and latitude of the three NYC airports (<code>EWR</code>, <code>JFK</code>, <code>LGA</code>). Treat that as the location of NYC.</p>
-</li>
-<li>
-<p>Write a function <code>dist_nyc(lon, lat, nyclon, nyclat)</code> that returns great-circle distance from NYC using <code>geosphere::distm()</code>. What unit does <code>distm()</code> use?</p>
-</li>
-<li>
-<p>Add that distance to every row of <code>airports</code>. Is mean arrival delay at a destination associated with distance from NYC?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Mean longitude and latitude of the three NYC airports
+(<code>EWR</code>, <code>JFK</code>, <code>LGA</code>). Treat that as
+the location of NYC.</li>
+<li>Write a function <code>dist_nyc(lon, lat, nyclon, nyclat)</code>
+that returns great-circle distance from NYC using
+<code>geosphere::distm()</code>. What unit does <code>distm()</code>
+use?</li>
+<li>Add that distance to every row of <code>airports</code>. Is mean
+arrival delay at a destination associated with distance from NYC?</li>
 </ol>
 <hr />
+</div>
+<div id="fair-weather-takeoffs" class="section level2">
 <h2>7. Fair-weather takeoffs</h2>
-<p>For each <code>tailnum</code>, the proportion of takeoffs in fair weather: <code>precip == 0</code>, <code>wind_speed &lt; 20</code>, and <code>visib &gt;= 10</code>. Join <code>weather</code> on <code>origin</code>, <code>year</code>, <code>month</code>, <code>day</code>, and <code>hour</code> (<code>hour</code> from <code>dep_time %/% 100</code>). Is that proportion associated with plane age?</p>
-                        <nav class="course-page-nav" aria-label="Page">
+<p>For each <code>tailnum</code>, the proportion of takeoffs in fair
+weather: <code>precip == 0</code>, <code>wind_speed &lt; 20</code>, and
+<code>visib &gt;= 10</code>. Join <code>weather</code> on
+<code>origin</code>, <code>year</code>, <code>month</code>,
+<code>day</code>, and <code>hour</code> (<code>hour</code> from
+<code>dep_time %/% 100</code>). Is that proportion associated with plane
+age?</p>
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dbplyr-databases.html"><span aria-hidden="true">←</span> 8.3 dbplyr: Databases</a>
                         <a class="course-page-nav__week" href="data-612-week-8.html">Week 8</a>
                             <a class="course-page-nav__next" href="data-612-lab-8-solutions.html">Lab 8 solutions <span aria-hidden="true">→</span></a>
@@ -180,7 +202,7 @@ library(nycflights13)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
             </footer>
         </div>
 

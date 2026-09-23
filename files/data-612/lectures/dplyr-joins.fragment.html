@@ -1,0 +1,326 @@
+
+
+
+<p>Primary keys identify rows. inner_join() and left_join() add columns
+from a second table.</p>
+<div id="several-tables-one-system" class="section level2">
+<h2>1. Several tables, one system</h2>
+<p>One table is rarely the whole story. <code>nycflights13</code> is
+five tables about the same flights. Install the package once, then:</p>
+<pre class="r"><code>library(tidyverse)
+library(nycflights13)
+
+flights</code></pre>
+<pre><code>## # A tibble: 336,776 × 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 11 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<pre class="r"><code>planes</code></pre>
+<pre><code>## # A tibble: 3,322 × 9
+##    tailnum  year type              manufacturer model engines seats speed engine
+##    &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;             &lt;chr&gt;        &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; 
+##  1 N10156   2004 Fixed wing multi… EMBRAER      EMB-…       2    55    NA Turbo…
+##  2 N102UW   1998 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  3 N103US   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  4 N104UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  5 N10575   2002 Fixed wing multi… EMBRAER      EMB-…       2    55    NA Turbo…
+##  6 N105UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  7 N107US   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  8 N108UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+##  9 N109UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+## 10 N110UW   1999 Fixed wing multi… AIRBUS INDU… A320…       2   182    NA Turbo…
+## # ℹ 3,312 more rows</code></pre>
+<pre class="r"><code>airlines</code></pre>
+<pre><code>## # A tibble: 16 × 2
+##    carrier name                       
+##    &lt;chr&gt;   &lt;chr&gt;                      
+##  1 9E      Endeavor Air Inc.          
+##  2 AA      American Airlines Inc.     
+##  3 AS      Alaska Airlines Inc.       
+##  4 B6      JetBlue Airways            
+##  5 DL      Delta Air Lines Inc.       
+##  6 EV      ExpressJet Airlines Inc.   
+##  7 F9      Frontier Airlines Inc.     
+##  8 FL      AirTran Airways Corporation
+##  9 HA      Hawaiian Airlines Inc.     
+## 10 MQ      Envoy Air                  
+## 11 OO      SkyWest Airlines Inc.      
+## 12 UA      United Air Lines Inc.      
+## 13 US      US Airways Inc.            
+## 14 VX      Virgin America             
+## 15 WN      Southwest Airlines Co.     
+## 16 YV      Mesa Airlines Inc.</code></pre>
+<pre class="r"><code>airports</code></pre>
+<pre><code>## # A tibble: 1,458 × 8
+##    faa   name                             lat    lon   alt    tz dst   tzone    
+##    &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+##  1 04G   Lansdowne Airport               41.1  -80.6  1044    -5 A     America/…
+##  2 06A   Moton Field Municipal Airport   32.5  -85.7   264    -6 A     America/…
+##  3 06C   Schaumburg Regional             42.0  -88.1   801    -6 A     America/…
+##  4 06N   Randall Airport                 41.4  -74.4   523    -5 A     America/…
+##  5 09J   Jekyll Island Airport           31.1  -81.4    11    -5 A     America/…
+##  6 0A9   Elizabethton Municipal Airport  36.4  -82.2  1593    -5 A     America/…
+##  7 0G6   Williams County Airport         41.5  -84.5   730    -5 A     America/…
+##  8 0G7   Finger Lakes Regional Airport   42.9  -76.8   492    -5 A     America/…
+##  9 0P2   Shoestring Aviation Airfield    39.8  -76.6  1000    -5 U     America/…
+## 10 0S9   Jefferson County Intl           48.1 -123.    108    -8 A     America/…
+## # ℹ 1,448 more rows</code></pre>
+<pre class="r"><code>weather</code></pre>
+<pre><code>## # A tibble: 26,115 × 15
+##    origin  year month   day  hour  temp  dewp humid wind_dir wind_speed
+##    &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+##  1 EWR     2013     1     1     1  39.0  26.1  59.4      270      10.4 
+##  2 EWR     2013     1     1     2  39.0  27.0  61.6      250       8.06
+##  3 EWR     2013     1     1     3  39.0  28.0  64.4      240      11.5 
+##  4 EWR     2013     1     1     4  39.9  28.0  62.2      250      12.7 
+##  5 EWR     2013     1     1     5  39.0  28.0  64.4      260      12.7 
+##  6 EWR     2013     1     1     6  37.9  28.0  67.2      240      11.5 
+##  7 EWR     2013     1     1     7  39.0  28.0  64.4      240      15.0 
+##  8 EWR     2013     1     1     8  39.9  28.0  62.2      250      10.4 
+##  9 EWR     2013     1     1     9  39.9  28.0  62.2      260      15.0 
+## 10 EWR     2013     1     1    10  41    28.0  59.6      260      13.8 
+## # ℹ 26,105 more rows
+## # ℹ 5 more variables: wind_gust &lt;dbl&gt;, precip &lt;dbl&gt;, pressure &lt;dbl&gt;,
+## #   visib &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<ul>
+<li><code>flights</code> — one row per flight out of NYC in 2013</li>
+<li><code>planes</code> — one row per tail number</li>
+<li><code>airlines</code> — carrier code and full name</li>
+<li><code>airports</code> — one row per FAA code</li>
+<li><code>weather</code> — hourly weather at the three NYC airports</li>
+</ul>
+<p>A <strong>primary key</strong> uniquely identifies a row in its own
+table (<code>planes$tailnum</code>, <code>airlines$carrier</code>,
+<code>airports$faa</code>). A <strong>foreign key</strong> points at a
+primary key in another table (<code>flights$tailnum</code>,
+<code>flights$carrier</code>, <code>flights$dest</code>).</p>
+<p><code>weather</code> is identified by <code>origin</code>,
+<code>year</code>, <code>month</code>, <code>day</code>, and
+<code>hour</code> together. That is a compound key.</p>
+<p><img src="files/data-612/graphics/relational-nycflights.png" /></p>
+<hr />
+</div>
+<div id="check-the-keys" class="section level2">
+<h2>2. Check the keys</h2>
+<p><code>count()</code> then <code>filter(n &gt; 1)</code> finds
+duplicate keys. A real primary key has no such rows and no missing
+values.</p>
+<pre class="r"><code>planes |&gt;
+  count(tailnum) |&gt;
+  filter(n &gt; 1)</code></pre>
+<pre><code>## # A tibble: 0 × 2
+## # ℹ 2 variables: tailnum &lt;chr&gt;, n &lt;int&gt;</code></pre>
+<pre class="r"><code>weather |&gt;
+  count(origin, year, month, day, hour) |&gt;
+  filter(n &gt; 1)</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   origin  year month   day  hour     n
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 EWR     2013    11     3     1     2
+## 2 JFK     2013    11     3     1     2
+## 3 LGA     2013    11     3     1     2</code></pre>
+<pre class="r"><code>flights |&gt;
+  count(year, month, day, flight, tailnum) |&gt;
+  filter(n &gt; 1)</code></pre>
+<pre><code>## # A tibble: 11 × 6
+##     year month   day flight tailnum     n
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;chr&gt;   &lt;int&gt;
+##  1  2013     2     9    303 &lt;NA&gt;        2
+##  2  2013     2     9    655 &lt;NA&gt;        2
+##  3  2013     2     9   1623 &lt;NA&gt;        2
+##  4  2013     6     8   2269 N487WN      2
+##  5  2013     6    15   2269 N230WN      2
+##  6  2013     6    22   2269 N440LV      2
+##  7  2013     6    29   2269 N707SA      2
+##  8  2013     7     6   2269 N259WN      2
+##  9  2013     8     3   2269 N446WN      2
+## 10  2013     8    10   2269 N478WN      2
+## 11  2013    12    15    398 &lt;NA&gt;        2</code></pre>
+<p><code>flights</code> has no natural primary key. Add a surrogate if
+you need one:</p>
+<pre class="r"><code>flights |&gt;
+  mutate(id = row_number())</code></pre>
+<pre><code>## # A tibble: 336,776 × 20
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, id &lt;int&gt;</code></pre>
+<hr />
+</div>
+<div id="mutating-joins-add-columns" class="section level2">
+<h2>3. Mutating joins add columns</h2>
+<p>The first argument is <code>x</code>, the second is <code>y</code>.
+The join matches rows by key and pastes columns from <code>y</code> onto
+<code>x</code>.</p>
+<ul>
+<li><code>inner_join(x, y)</code> — only keys in both</li>
+<li><code>left_join(x, y)</code> — every row of <code>x</code> (the
+default you will use)</li>
+<li><code>right_join(x, y)</code> — every row of <code>y</code></li>
+<li><code>full_join(x, y)</code> — every key in either</li>
+</ul>
+<pre class="r"><code>x &lt;- tribble(
+  ~key, ~val_x,
+     1, &quot;x1&quot;,
+     2, &quot;x2&quot;,
+     3, &quot;x3&quot;
+)
+y &lt;- tribble(
+  ~key, ~val_y,
+     1, &quot;y1&quot;,
+     2, &quot;y2&quot;,
+     4, &quot;y4&quot;
+)
+
+inner_join(x, y, by = &quot;key&quot;)</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2</code></pre>
+<pre class="r"><code>left_join(x, y, by = &quot;key&quot;)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2   
+## 3     3 x3    &lt;NA&gt;</code></pre>
+<pre class="r"><code>right_join(x, y, by = &quot;key&quot;)</code></pre>
+<pre><code>## # A tibble: 3 × 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2   
+## 3     4 &lt;NA&gt;  y4</code></pre>
+<pre class="r"><code>full_join(x, y, by = &quot;key&quot;)</code></pre>
+<pre><code>## # A tibble: 4 × 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2   
+## 3     3 x3    &lt;NA&gt; 
+## 4     4 &lt;NA&gt;  y4</code></pre>
+<p>Unmatched rows get <code>NA</code> in the new columns
+(<code>left_join</code> / <code>right_join</code> /
+<code>full_join</code>).</p>
+<p><img src="files/data-612/graphics/join-inner.png" /></p>
+<p><img src="files/data-612/graphics/join-outer.png" /></p>
+<p><code>nest_join(x, y)</code> is the primitive: each row of
+<code>x</code> gets a list-column of the matching rows of
+<code>y</code>. The other joins are that idea plus
+<code>unnest()</code>. You will use <code>left_join()</code> day to day.
+Know <code>nest_join()</code> exists when you want the matches as a list
+instead of extra rows.</p>
+<hr />
+</div>
+<div id="by" class="section level2">
+<h2>4. <code>by</code></h2>
+<p>Same name in both tables: <code>by = "carrier"</code>. Different
+names: a named vector, left name first.</p>
+<pre class="r"><code>flights |&gt;
+  left_join(airlines, by = &quot;carrier&quot;)</code></pre>
+<pre><code>## # A tibble: 336,776 × 20
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;</code></pre>
+<pre class="r"><code>flights |&gt;
+  left_join(airports, by = c(&quot;dest&quot; = &quot;faa&quot;))</code></pre>
+<pre><code>## # A tibble: 336,776 × 26
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 18 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;,
+## #   lon &lt;dbl&gt;, alt &lt;dbl&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;</code></pre>
+<p>Several keys:
+<code>by = c("origin", "year", "month", "day", "hour")</code> for
+weather. If you omit <code>by</code>, dplyr uses every shared name and
+tells you which.</p>
+<p>When both tables have a <code>year</code> (flights and planes), the
+join suffixes the clash: <code>year.x</code> and <code>year.y</code>, or
+set <code>suffix</code>. Safer: rename before you join.</p>
+<pre class="r"><code>flights |&gt;
+  left_join(
+    planes |&gt; select(tailnum, plane_year = year),
+    by = &quot;tailnum&quot;
+  )</code></pre>
+<pre><code>## # A tibble: 336,776 × 20
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;
+##  1  2013     1     1      517            515         2      830            819
+##  2  2013     1     1      533            529         4      850            830
+##  3  2013     1     1      542            540         2      923            850
+##  4  2013     1     1      544            545        -1     1004           1022
+##  5  2013     1     1      554            600        -6      812            837
+##  6  2013     1     1      554            558        -4      740            728
+##  7  2013     1     1      555            600        -5      913            854
+##  8  2013     1     1      557            600        -3      709            723
+##  9  2013     1     1      557            600        -3      838            846
+## 10  2013     1     1      558            600        -2      753            745
+## # ℹ 336,766 more rows
+## # ℹ 12 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;, flight &lt;int&gt;,
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
+## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, plane_year &lt;int&gt;</code></pre>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>5. Practice</h2>
+<ol style="list-style-type: decimal">
+<li>Add the airline name to every flight.</li>
+<li>Keep only flights that have a matching row in <code>planes</code>.
+How many flights are dropped?</li>
+<li>Name a primary key for <code>ggplot2::diamonds</code>. If there is
+none, say so. Optional: the same question for
+<code>Lahman::Batting</code> or <code>babynames::babynames</code> if you
+install those packages.</li>
+</ol>
+</div>

@@ -111,71 +111,115 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">8.3 dbplyr: Databases</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-8.html">Week 8</a> &middot;
                             <a href="files/data-612/dbplyr-databases.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            tbl() is lazy SQL. collect() brings a result into R. Use an in-memory SQLite.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/dbplyr-databases.qmd">Source (.qmd)</a></p>
+<p>tbl() is lazy SQL. collect() brings a result into R. Use an in-memory
+SQLite.</p>
+<div id="when-a-data-frame-is-not-enough" class="section level2">
 <h2>1. When a data frame is not enough</h2>
-<p>A tibble lives in memory. That is fine for <code>flights</code>. It is not fine for a table that is larger than RAM, or that several people query at once, or that already lives in SQL.</p>
-<p>A <strong>database</strong> stores the tables on disk and runs the filter <strong>there</strong>. You pull back only the rows you need.</p>
-<p><code>dbplyr</code> translates dplyr verbs into SQL. It does <strong>not</strong> load with <code>library(tidyverse)</code>. Install <code>dbplyr</code>, <code>DBI</code>, and a backend (<code>RSQLite</code> is enough for this course).</p>
-<p>We will use an in-memory SQLite copy of <code>flights</code>. Skip large local <code>.sqlite</code> files; <code>":memory:"</code> is enough to see the translation.</p>
+<p>A tibble lives in memory. That is fine for <code>flights</code>. It
+is not fine for a table that is larger than RAM, or that several people
+query at once, or that already lives in SQL.</p>
+<p>A <strong>database</strong> stores the tables on disk and runs the
+filter <strong>there</strong>. You pull back only the rows you need.</p>
+<p><code>dbplyr</code> translates dplyr verbs into SQL. It does
+<strong>not</strong> load with <code>library(tidyverse)</code>. Install
+<code>dbplyr</code>, <code>DBI</code>, and a backend
+(<code>RSQLite</code> is enough for this course).</p>
+<p>We will use an in-memory SQLite copy of <code>flights</code>. Skip
+large local <code>.sqlite</code> files; <code>":memory:"</code> is
+enough to see the translation.</p>
 <hr />
+</div>
+<div id="connect-copy-tbl" class="section level2">
 <h2>2. Connect, copy, <code>tbl()</code></h2>
 <pre><code class="language-r">library(tidyverse)
 library(DBI)
-library(RSQLite)
-library(dbplyr)
+library(RSQLite)</code></pre>
+<pre><code>## Error in `library()`:
+## ! there is no package called &#39;RSQLite&#39;</code></pre>
+<pre><code class="language-r">library(dbplyr)
 library(nycflights13)
 
-con &lt;- dbConnect(SQLite(), &quot;:memory:&quot;)
-copy_to(con, nycflights13::flights, &quot;flights&quot;, temporary = FALSE)
-flights_db &lt;- tbl(con, &quot;flights&quot;)
-</code></pre>
-<p><code>":memory:"</code> is a database that exists only in this R session. <code>copy_to()</code> writes a local data frame into that database. <code>tbl(con, "flights")</code> is a <strong>lazy</strong> handle: it looks like a tibble when you print it, but the rows are still in SQLite.</p>
+con &lt;- dbConnect(SQLite(), &quot;:memory:&quot;)</code></pre>
+<pre><code>## Error in `h()`:
+## ! error in evaluating the argument &#39;drv&#39; in selecting a method for function &#39;dbConnect&#39;: could not find function &quot;SQLite&quot;</code></pre>
+<pre><code class="language-r">copy_to(con, nycflights13::flights, &quot;flights&quot;, temporary = FALSE)</code></pre>
+<pre><code>## Error:
+## ! object &#39;con&#39; not found</code></pre>
+<pre><code class="language-r">flights_db &lt;- tbl(con, &quot;flights&quot;)</code></pre>
+<pre><code>## Error:
+## ! object &#39;con&#39; not found</code></pre>
+<p><code>":memory:"</code> is a database that exists only in this R
+session. <code>copy_to()</code> writes a local data frame into that
+database. <code>tbl(con, "flights")</code> is a <strong>lazy</strong>
+handle: it looks like a tibble when you print it, but the rows are still
+in SQLite.</p>
 <p><code>dbDisconnect(con)</code> when you are done.</p>
 <hr />
+</div>
+<div id="lazy-verbs-then-collect" class="section level2">
 <h2>3. Lazy verbs, then <code>collect()</code></h2>
-<p>dplyr verbs on <code>flights_db</code> do not run immediately. They build a query. Printing shows a preview (often 10 rows). <code>show_query()</code> prints the SQL. <code>collect()</code> pulls the result into a local tibble.</p>
+<p>dplyr verbs on <code>flights_db</code> do not run immediately. They
+build a query. Printing shows a preview (often 10 rows).
+<code>show_query()</code> prints the SQL. <code>collect()</code> pulls
+the result into a local tibble.</p>
 <pre><code class="language-r">flights_db |&gt;
   filter(month == 1) |&gt;
-  select(year:dep_delay)
-
-flights_db |&gt;
+  select(year:dep_delay)</code></pre>
+<pre><code>## Error:
+## ! object &#39;flights_db&#39; not found</code></pre>
+<pre><code class="language-r">flights_db |&gt;
   filter(month == 1) |&gt;
-  show_query()
-
-jan &lt;- flights_db |&gt;
+  show_query()</code></pre>
+<pre><code>## Error:
+## ! object &#39;flights_db&#39; not found</code></pre>
+<pre><code class="language-r">jan &lt;- flights_db |&gt;
   filter(month == 1) |&gt;
-  collect()
-</code></pre>
-<p><code>jan</code> is an ordinary tibble. Everything after <code>collect()</code> is local. Printing <code>flights_db</code> is only a preview; it is not the full table in memory.</p>
-<p>Not every tidyverse verb is SQL. <code>pivot_longer()</code>, <code>separate()</code>, and most tidyr helpers need a local frame. <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>arrange()</code>, <code>group_by()</code>, <code>summarize()</code>, and the joins usually translate.</p>
+  collect()</code></pre>
+<pre><code>## Error:
+## ! object &#39;flights_db&#39; not found</code></pre>
+<p><code>jan</code> is an ordinary tibble. Everything after
+<code>collect()</code> is local. Printing <code>flights_db</code> is
+only a preview; it is not the full table in memory.</p>
+<p>Not every tidyverse verb is SQL. <code>pivot_longer()</code>,
+<code>separate()</code>, and most tidyr helpers need a local frame.
+<code>filter()</code>, <code>select()</code>, <code>mutate()</code>,
+<code>arrange()</code>, <code>group_by()</code>,
+<code>summarize()</code>, and the joins usually translate.</p>
 <pre><code class="language-r">flights_db |&gt;
   group_by(carrier) |&gt;
-  summarize(mean_del = mean(dep_delay, na.rm = TRUE), n = n())
-</code></pre>
-<p>That summary still lives in the database until you <code>collect()</code>. ggplot2 needs a local data frame, so plot only after <code>collect()</code>.</p>
+  summarize(mean_del = mean(dep_delay, na.rm = TRUE), n = n())</code></pre>
+<pre><code>## Error:
+## ! object &#39;flights_db&#39; not found</code></pre>
+<p>That summary still lives in the database until you
+<code>collect()</code>. ggplot2 needs a local data frame, so plot only
+after <code>collect()</code>.</p>
 <hr />
+</div>
+<div id="close-the-connection" class="section level2">
 <h2>4. Close the connection</h2>
-<pre><code class="language-r">dbDisconnect(con)
-</code></pre>
-<p>If you skip this, R will close it when the session ends. Close it yourself so you do not leave a lock on a file-backed database later.</p>
+<pre><code class="language-r">dbDisconnect(con)</code></pre>
+<pre><code>## Error in `h()`:
+## ! error in evaluating the argument &#39;conn&#39; in selecting a method for function &#39;dbDisconnect&#39;: object &#39;con&#39; not found</code></pre>
+<p>If you skip this, R will close it when the session ends. Close it
+yourself so you do not leave a lock on a file-backed database later.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>5. Practice</h2>
-<ol>
-<li>
-<p>Copy <code>flights</code> into an in-memory SQLite database. Mean <code>dep_delay</code> by <code>carrier</code> from the remote table. <code>collect()</code>, then plot.</p>
-</li>
-<li>
-<p>On the same remote table, <code>filter(month == 1)</code> and <code>show_query()</code>. What SQL did dbplyr write?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Copy <code>flights</code> into an in-memory SQLite database. Mean
+<code>dep_delay</code> by <code>carrier</code> from the remote table.
+<code>collect()</code>, then plot.</li>
+<li>On the same remote table, <code>filter(month == 1)</code> and
+<code>show_query()</code>. What SQL did dbplyr write?</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dplyr-filtering-joins.html"><span aria-hidden="true">←</span> 8.2 dplyr: Filtering Joins</a>
                         <a class="course-page-nav__week" href="data-612-week-8.html">Week 8</a>
                             <a class="course-page-nav__next" href="data-612-lab-8-joins.html">Lab 8: Relational Data <span aria-hidden="true">→</span></a>
@@ -188,7 +232,7 @@ jan &lt;- flights_db |&gt;
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
             </footer>
         </div>
 

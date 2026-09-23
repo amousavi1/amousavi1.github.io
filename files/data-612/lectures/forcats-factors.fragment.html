@@ -1,0 +1,211 @@
+
+
+
+<p>A factor is an integer plus labels. Reorder, recode, collapse, and
+drop levels.</p>
+<div id="a-factor-is-an-integer-plus-labels" class="section level2">
+<h2>1. A factor is an integer plus labels</h2>
+<p>A factor stores a categorical vector as integer codes plus a
+<code>levels</code> attribute. What prints is the label. What sits
+underneath is <code>1</code>, <code>2</code>, <code>3</code>, … in the
+order of the levels.</p>
+<p>A useful longer read: McNamara and Horton, <a
+href="https://doi.org/10.7287/peerj.preprints.3163v2">Wrangling
+Categorical Data in R</a>.</p>
+<p>That is why <code>as.numeric()</code> on a factor of numbers is the
+<strong>index</strong>, not the printed value.</p>
+<pre class="r"><code>library(tidyverse)
+
+xf &lt;- factor(c(10, 11, 13, 10))
+xf</code></pre>
+<pre><code>## [1] 10 11 13 10
+## Levels: 10 11 13</code></pre>
+<pre class="r"><code>as.numeric(xf)</code></pre>
+<pre><code>## [1] 1 2 3 1</code></pre>
+<pre class="r"><code>parse_number(as.character(xf))</code></pre>
+<pre><code>## [1] 10 11 13 10</code></pre>
+<pre class="r"><code>parse_number(levels(xf)[xf])</code></pre>
+<pre><code>## [1] 10 11 13 10</code></pre>
+<p><code>as.character()</code> (or <code>levels(xf)[xf]</code>) gets the
+labels back. <code>parse_number()</code> turns them into numbers.</p>
+<p>Create a factor with <code>factor()</code>. Set <code>levels</code>
+yourself when the order is not alphabetical.</p>
+<pre class="r"><code>month_levels &lt;- c(&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;,
+                  &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;)
+factor(c(&quot;Dec&quot;, &quot;Apr&quot;, &quot;Jan&quot;, &quot;Mar&quot;), levels = month_levels)</code></pre>
+<pre><code>## [1] Dec Apr Jan Mar
+## Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</code></pre>
+<p>Values that are not in <code>levels</code> become <code>NA</code>.
+Extra levels stay in the attribute even if no row uses them.</p>
+<hr />
+</div>
+<div id="gss_cat" class="section level2">
+<h2>2. <code>gss_cat</code></h2>
+<p><code>gss_cat</code> is a General Social Survey slice that ships with
+forcats. <code>?gss_cat</code>. Useful factors: <code>marital</code>,
+<code>rincome</code>, <code>partyid</code>, <code>relig</code>.</p>
+<pre class="r"><code>gss_cat</code></pre>
+<pre><code>## # A tibble: 21,483 × 9
+##     year marital         age race  rincome        partyid    relig denom tvhours
+##    &lt;int&gt; &lt;fct&gt;         &lt;int&gt; &lt;fct&gt; &lt;fct&gt;          &lt;fct&gt;      &lt;fct&gt; &lt;fct&gt;   &lt;int&gt;
+##  1  2000 Never married    26 White $8000 to 9999  Ind,near … Prot… Sout…      12
+##  2  2000 Divorced         48 White $8000 to 9999  Not str r… Prot… Bapt…      NA
+##  3  2000 Widowed          67 White Not applicable Independe… Prot… No d…       2
+##  4  2000 Never married    39 White Not applicable Ind,near … Orth… Not …       4
+##  5  2000 Divorced         25 White Not applicable Not str d… None  Not …       1
+##  6  2000 Married          25 White $20000 - 24999 Strong de… Prot… Sout…      NA
+##  7  2000 Never married    36 White $25000 or more Not str r… Chri… Not …       3
+##  8  2000 Divorced         44 White $7000 to 7999  Ind,near … Prot… Luth…      NA
+##  9  2000 Married          44 White $25000 or more Not str d… Prot… Other       0
+## 10  2000 Married          47 White $25000 or more Strong re… Prot… Sout…       3
+## # ℹ 21,473 more rows</code></pre>
+<pre class="r"><code>count(gss_cat, partyid)</code></pre>
+<pre><code>## # A tibble: 10 × 2
+##    partyid                n
+##    &lt;fct&gt;              &lt;int&gt;
+##  1 No answer            154
+##  2 Don&#39;t know             1
+##  3 Other party          393
+##  4 Strong republican   2314
+##  5 Not str republican  3032
+##  6 Ind,near rep        1791
+##  7 Independent         4119
+##  8 Ind,near dem        2499
+##  9 Not str democrat    3690
+## 10 Strong democrat     3490</code></pre>
+<p><code>forcats</code> comes with <code>library(tidyverse)</code>.
+Every helper starts with <code>fct_</code>.</p>
+<hr />
+</div>
+<div id="reorder-levels" class="section level2">
+<h2>3. Reorder levels</h2>
+<p>Plots follow the level order. Change the order, not the data.</p>
+<ul>
+<li><code>fct_reorder(f, x)</code> — order <code>f</code> by a summary
+of <code>x</code> (median by default). The usual choice for a scatter or
+bar of a summary.</li>
+<li><code>fct_infreq(f)</code> — most common level first.</li>
+<li><code>fct_rev(f)</code> — reverse the current levels.</li>
+<li><code>fct_relevel(f, ...)</code> — move named levels to the front
+(or pass a function).</li>
+</ul>
+<pre class="r"><code>gss_cat |&gt;
+  group_by(relig) |&gt;
+  summarize(tv = mean(tvhours, na.rm = TRUE), n = n()) |&gt;
+  mutate(relig = fct_reorder(relig, tv)) |&gt;
+  ggplot(aes(x = tv, y = relig)) +
+  geom_point() +
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/forcats-factors/chunk-4-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(partyid = fct_relevel(partyid, &quot;Independent&quot;)) |&gt;
+  count(partyid)</code></pre>
+<pre><code>## # A tibble: 10 × 2
+##    partyid                n
+##    &lt;fct&gt;              &lt;int&gt;
+##  1 Independent         4119
+##  2 No answer            154
+##  3 Don&#39;t know             1
+##  4 Other party          393
+##  5 Strong republican   2314
+##  6 Not str republican  3032
+##  7 Ind,near rep        1791
+##  8 Ind,near dem        2499
+##  9 Not str democrat    3690
+## 10 Strong democrat     3490</code></pre>
+<p><code>fct_infreq()</code> then <code>fct_rev()</code> puts the most
+common level on the <strong>right</strong> of a bar chart.</p>
+<hr />
+</div>
+<div id="recode-collapse-lump" class="section level2">
+<h2>4. Recode, collapse, lump</h2>
+<p><code>fct_recode()</code> renames levels. Old name on the right. Drop
+a level with <code>NULL = "old"</code>.</p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(partyid = fct_recode(
+    partyid,
+    &quot;Rep, strong&quot; = &quot;Strong republican&quot;,
+    &quot;Rep, weak&quot;   = &quot;Not str republican&quot;,
+    &quot;Dem, weak&quot;   = &quot;Not str democrat&quot;,
+    &quot;Dem, strong&quot; = &quot;Strong democrat&quot;
+  )) |&gt;
+  count(partyid)</code></pre>
+<pre><code>## # A tibble: 10 × 2
+##    partyid          n
+##    &lt;fct&gt;        &lt;int&gt;
+##  1 No answer      154
+##  2 Don&#39;t know       1
+##  3 Other party    393
+##  4 Rep, strong   2314
+##  5 Rep, weak     3032
+##  6 Ind,near rep  1791
+##  7 Independent   4119
+##  8 Ind,near dem  2499
+##  9 Dem, weak     3690
+## 10 Dem, strong   3490</code></pre>
+<p><code>fct_collapse()</code> is recode for many-to-one.
+<code>fct_lump()</code> folds rare levels into <code>Other</code>.
+<code>n</code> keeps the most common; <code>prop</code> keeps levels
+above a share.</p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(partyid = fct_collapse(
+    partyid,
+    other = c(&quot;No answer&quot;, &quot;Don&#39;t know&quot;, &quot;Other party&quot;),
+    rep   = c(&quot;Strong republican&quot;, &quot;Not str republican&quot;),
+    ind   = c(&quot;Ind,near rep&quot;, &quot;Independent&quot;, &quot;Ind,near dem&quot;),
+    dem   = c(&quot;Not str democrat&quot;, &quot;Strong democrat&quot;)
+  )) |&gt;
+  count(partyid)</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   partyid     n
+##   &lt;fct&gt;   &lt;int&gt;
+## 1 other     548
+## 2 rep      5346
+## 3 ind      8409
+## 4 dem      7180</code></pre>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(relig = fct_lump(relig, n = 5)) |&gt;
+  count(relig)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   relig          n
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 Christian    689
+## 2 None        3523
+## 3 Jewish       388
+## 4 Catholic    5124
+## 5 Protestant 10846
+## 6 Other        913</code></pre>
+<hr />
+</div>
+<div id="add-drop-and-missing-levels" class="section level2">
+<h2>5. Add, drop, and missing levels</h2>
+<pre class="r"><code>f &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;), levels = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
+fct_drop(f)</code></pre>
+<pre><code>## [1] A B A
+## Levels: A B</code></pre>
+<pre class="r"><code>g &lt;- factor(c(&quot;A&quot;, &quot;B&quot;))
+fct_expand(g, &quot;C&quot;, &quot;D&quot;)</code></pre>
+<pre><code>## [1] A B
+## Levels: A B C D</code></pre>
+<pre class="r"><code>h &lt;- factor(c(&quot;A&quot;, NA, &quot;B&quot;))
+fct_explicit_na(h, na_level = &quot;(Missing)&quot;)</code></pre>
+<pre><code>## [1] A         (Missing) B        
+## Levels: A B (Missing)</code></pre>
+<p><code>fct_drop()</code> removes unused levels.
+<code>fct_expand()</code> adds empty ones.
+<code>fct_explicit_na()</code> turns <code>NA</code> into a real level
+so it appears in tables and plots. Filtering out rows does
+<strong>not</strong> drop the level; call <code>fct_drop()</code>
+after.</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>6. Practice</h2>
+<p>Use <code>gss_cat</code>.</p>
+<ol style="list-style-type: decimal">
+<li>Reorder <code>partyid</code> alphabetically.</li>
+<li>Move <code>rincome</code> level <code>"Not applicable"</code> to the
+front.</li>
+<li>Abbreviate <code>marital</code> with <code>fct_recode()</code>.</li>
+</ol>
+</div>

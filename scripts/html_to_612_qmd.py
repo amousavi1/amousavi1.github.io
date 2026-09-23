@@ -10,14 +10,17 @@ LECTURES = ROOT / "files" / "data-612" / "lectures"
 
 # html filename stem (after data-612-) -> qmd stem / fig folder
 LECTURE_STEMS = [
-    # weeks 4–5
-    "dplyr-rows",
-    "dplyr-columns",
-    "dplyr-groups",
-    "lab-4-dplyr",
-    "dplyr-rowwise-across",
-    "dplyr-case-when",
-    "lab-5-dplyr",
+    # weeks 8–10
+    "dplyr-joins",
+    "dplyr-filtering-joins",
+    "dbplyr-databases",
+    "lab-8-joins",
+    "stringr-basics",
+    "stringr-regex",
+    "lab-9-strings",
+    "forcats-factors",
+    "lubridate-dates",
+    "lab-10-factors-dates",
 ]
 
 SKIP_IF_EXISTS = {

@@ -1,0 +1,169 @@
+
+
+
+<p>Parse with ymd(), pull pieces out, and know duration vs period vs
+interval.</p>
+<div id="load-lubridate-and-look-at-the-class" class="section level2">
+<h2>1. Load lubridate and look at the class</h2>
+<p>tidyverse attaches lubridate, but load it yourself so the parsers are
+obvious.</p>
+<pre class="r"><code>library(tidyverse)
+library(lubridate)</code></pre>
+<p>Two classes matter. A <strong>Date</strong> is a calendar day. A
+<strong>POSIXct</strong> is a datetime: a Date plus a time of day,
+stored as seconds since 1970-01-01 UTC. <code>class()</code> tells you
+which you have.</p>
+<pre class="r"><code>ymd(&quot;2017-01-31&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
+<pre class="r"><code>ymd_hms(&quot;2017-01-31 20:11:59&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
+<hr />
+</div>
+<div id="parsers-and-constructors" class="section level2">
+<h2>2. Parsers and constructors</h2>
+<p>Name the function after the order of the pieces. The separators can
+vary.</p>
+<pre class="r"><code>ymd(&quot;2017-01-31&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
+<pre class="r"><code>mdy(&quot;January 31st, 2017&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
+<pre class="r"><code>dmy(&quot;31-Jan-2017&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
+<pre class="r"><code>ymd_hms(&quot;2017-01-31 20:11:59&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
+<pre class="r"><code>mdy_hm(&quot;01/31/2017 08:15&quot;)</code></pre>
+<pre><code>## [1] &quot;2017-01-31 08:15:00 UTC&quot;</code></pre>
+<p><code>make_date()</code> and <code>make_datetime()</code> build a
+date from numeric columns.</p>
+<pre class="r"><code>make_date(2017, 1, 31)</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
+<pre class="r"><code>make_datetime(2017, 1, 31, 20, 11, 59)</code></pre>
+<pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
+<p>Put the CSV files from the Data section of the course page in a
+<code>data/</code> folder of your project.
+<code>wmata_ridership.csv</code> has a <code>Date</code> column (ISO
+text) and a <code>Total</code> column (daily Metro rail rides).</p>
+<pre class="r"><code>wmata &lt;- read_csv(&quot;data/wmata_ridership.csv&quot;)
+wmata &lt;- wmata |&gt;
+  mutate(Date = ymd(Date))</code></pre>
+<hr />
+</div>
+<div id="pull-pieces-out" class="section level2">
+<h2>3. Pull pieces out</h2>
+<pre class="r"><code>dt &lt;- ymd_hms(&quot;2016-07-08 12:34:56&quot;)
+year(dt)</code></pre>
+<pre><code>## [1] 2016</code></pre>
+<pre class="r"><code>month(dt)</code></pre>
+<pre><code>## [1] 7</code></pre>
+<pre class="r"><code>month(dt, label = TRUE)</code></pre>
+<pre><code>## [1] Jul
+## 12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; ... &lt; Dec</code></pre>
+<pre class="r"><code>day(dt)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<pre class="r"><code>wday(dt)</code></pre>
+<pre><code>## [1] 6</code></pre>
+<pre class="r"><code>wday(dt, label = TRUE)</code></pre>
+<pre><code>## [1] Fri
+## Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat</code></pre>
+<pre class="r"><code>hour(dt)</code></pre>
+<pre><code>## [1] 12</code></pre>
+<p><code>label = TRUE</code> on <code>month()</code> and
+<code>wday()</code> returns an ordered factor. <code>abbr = FALSE</code>
+spells the name out.</p>
+<pre class="r"><code>wmata |&gt;
+  mutate(
+    year = year(Date),
+    month = month(Date, label = TRUE),
+    wday = wday(Date, label = TRUE)
+  )</code></pre>
+<pre><code>## Error:
+## ! object &#39;wmata&#39; not found</code></pre>
+<hr />
+</div>
+<div id="durations-periods-and-intervals" class="section level2">
+<h2>4. Durations, periods, and intervals</h2>
+<p>A <strong>duration</strong> is an exact number of seconds.
+<code>ddays(1)</code> is always 86,400 seconds.</p>
+<p>A <strong>period</strong> is a human unit. <code>days(1)</code> is
+“one calendar day,” which can be 23 or 25 hours when clocks change.</p>
+<p>An <strong>interval</strong> is the span between two instants.</p>
+<pre class="r"><code>ddays(1)</code></pre>
+<pre><code>## [1] &quot;86400s (~1 days)&quot;</code></pre>
+<pre class="r"><code>days(1)</code></pre>
+<pre><code>## [1] &quot;1d 0H 0M 0S&quot;</code></pre>
+<pre class="r"><code>years(1)</code></pre>
+<pre><code>## [1] &quot;1y 0m 0d 0H 0M 0S&quot;</code></pre>
+<pre class="r"><code>ymd(&quot;2016-01-01&quot;) + ddays(365)</code></pre>
+<pre><code>## [1] &quot;2016-12-31&quot;</code></pre>
+<pre class="r"><code>ymd(&quot;2016-01-01&quot;) + days(365)</code></pre>
+<pre><code>## [1] &quot;2016-12-31&quot;</code></pre>
+<pre class="r"><code>ymd(&quot;2016-01-01&quot;) + years(1)</code></pre>
+<pre><code>## [1] &quot;2017-01-01&quot;</code></pre>
+<pre class="r"><code>int &lt;- interval(ymd(&quot;2004-01-01&quot;), ymd(&quot;2018-12-21&quot;))
+int</code></pre>
+<pre><code>## [1] 2004-01-01 UTC--2018-12-21 UTC</code></pre>
+<pre class="r"><code>as.duration(int)</code></pre>
+<pre><code>## [1] &quot;472435200s (~14.97 years)&quot;</code></pre>
+<p>2016 is a leap year, so <code>ddays(365)</code> and
+<code>days(365)</code> land on different days. Use a duration when you
+want elapsed time. Use a period when you want “same date next month.”
+Use an interval when you have two endpoints.</p>
+<hr />
+</div>
+<div id="time-zones" class="section level2">
+<h2>5. Time zones</h2>
+<p>Datetimes default to <strong>UTC</strong>. <code>force_tz()</code>
+keeps the clock face and changes the zone (the instant moves).
+<code>with_tz()</code> keeps the instant and redraws the clock in
+another zone.</p>
+<pre class="r"><code>x &lt;- ymd_hms(&quot;2020-03-08 01:30:00&quot;)
+x</code></pre>
+<pre><code>## [1] &quot;2020-03-08 01:30:00 UTC&quot;</code></pre>
+<pre class="r"><code>force_tz(x, &quot;America/New_York&quot;)</code></pre>
+<pre><code>## [1] &quot;2020-03-08 01:30:00 EST&quot;</code></pre>
+<pre class="r"><code>with_tz(x, &quot;America/New_York&quot;)</code></pre>
+<pre><code>## [1] &quot;2020-03-07 20:30:00 EST&quot;</code></pre>
+<p><code>OlsonNames()</code> lists the zone names.
+<code>"America/New_York"</code> is Eastern time, daylight saving
+included.</p>
+<p>A clock that is missing a timezone is often stored as UTC by
+accident. On the spring-forward Sunday the computed duration can jump by
+an hour. <code>force_tz()</code> is the fix when the numbers on the
+clock were already Eastern.</p>
+<pre class="r"><code>toy &lt;- tibble(
+  start = mdy_hm(c(&quot;3/13/2016 1:30&quot;, &quot;3/13/2016 1:30&quot;)),
+  end   = mdy_hm(c(&quot;3/13/2016 3:30&quot;, &quot;3/13/2016 3:30&quot;))
+)
+toy |&gt;
+  mutate(
+    start_ny = force_tz(start, &quot;America/New_York&quot;),
+    end_ny = force_tz(end, &quot;America/New_York&quot;),
+    hours_utc = as.numeric(end - start) / 3600,
+    hours_ny = as.numeric(end_ny - start_ny) / 3600
+  )</code></pre>
+<pre><code>## # A tibble: 2 × 6
+##   start               end                 start_ny           
+##   &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
+## 1 2016-03-13 01:30:00 2016-03-13 03:30:00 2016-03-13 01:30:00
+## 2 2016-03-13 01:30:00 2016-03-13 03:30:00 2016-03-13 01:30:00
+## # ℹ 3 more variables: end_ny &lt;dttm&gt;, hours_utc &lt;dbl&gt;, hours_ny &lt;dbl&gt;</code></pre>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>6. Practice</h2>
+<ol style="list-style-type: decimal">
+<li>Parse <code>"2010-02-01"</code>, <code>"February 1, 2010"</code>,
+<code>"01-02-2010"</code>, and <code>"2010-02-01 08:15:00"</code>.
+<code>"01-02-2010"</code> is <code>dmy</code> or <code>mdy</code>
+depending on the country.</li>
+<li>Build dates from this tribble and keep the rows before
+<code>2010-02-01</code>.</li>
+</ol>
+<pre class="r"><code>events &lt;- tribble(
+  ~year, ~month, ~day,
+  2009,     12,   31,
+  2010,      1,   15,
+  2010,      2,    1,
+  2010,      3,   10
+)</code></pre>
+</div>

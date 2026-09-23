@@ -111,80 +111,65 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 10: Factors and Dates</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-10.html">Week 10</a> &middot;
                             <a href="files/data-612/lab-10-factors-dates.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Reshape a factor, then parse the WMATA ridership dates.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Do <strong>10.1</strong> and <strong>10.2</strong> first. Put <code>wmata_ridership.csv</code> in a <code>data/</code> folder of your project (see the Data section of the course page).</p>
+                         &middot; <a href="files/data-612/lectures/lab-10-factors-dates.qmd">Source (.qmd)</a></p>
+<p>Reshape a factor, then parse the WMATA ridership dates.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>10.1</strong>
+and <strong>10.2</strong> first. Put <code>wmata_ridership.csv</code> in
+a <code>data/</code> folder of your project (see the Data section of the
+course page).</p>
 <pre><code class="language-r">library(tidyverse)
-library(lubridate)
-</code></pre>
+library(lubridate)</code></pre>
 <hr />
+<div id="factors" class="section level2">
 <h2>1. Factors</h2>
-<pre><code class="language-r">fc &lt;- factor(c(&quot;D&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;D&quot;,&quot;A&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;))
-</code></pre>
-<ol>
-<li>
-<p>Add level <code>"E"</code> without adding any observations.</p>
-</li>
-<li>
-<p>Bar chart of <code>fc</code> by frequency, most frequent on the <strong>right</strong>.</p>
-</li>
-<li>
-<p>Put the levels in reverse alphabetical order.</p>
-</li>
-<li>
-<p>Remove the observations that are <code>"C"</code>, then drop the unused level.</p>
-</li>
-<li>
-<p>Collapse <code>"A"</code> and <code>"B"</code> into <code>"z"</code>.</p>
-</li>
+<pre><code class="language-r">fc &lt;- factor(c(&quot;D&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;D&quot;,&quot;A&quot;,&quot;C&quot;,&quot;C&quot;,&quot;A&quot;,&quot;A&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;,&quot;C&quot;,&quot;A&quot;,&quot;C&quot;,&quot;B&quot;))</code></pre>
+<ol style="list-style-type: decimal">
+<li>Add level <code>"E"</code> without adding any observations.</li>
+<li>Bar chart of <code>fc</code> by frequency, most frequent on the
+<strong>right</strong>.</li>
+<li>Put the levels in reverse alphabetical order.</li>
+<li>Remove the observations that are <code>"C"</code>, then drop the
+unused level.</li>
+<li>Collapse <code>"A"</code> and <code>"B"</code> into
+<code>"z"</code>.</li>
 </ol>
 <hr />
+</div>
+<div id="dates" class="section level2">
 <h2>2. Dates</h2>
 <p>Use <code>data/wmata_ridership.csv</code>.</p>
-<ol>
-<li>
-<p>Parse <code>Date</code>. Add <code>year</code>, <code>month</code>, and <code>wday</code> columns with <code>label = TRUE</code> where it applies.</p>
-</li>
-<li>
-<p>Drop 2004.</p>
-</li>
-<li>
-<p>Boxplot of daily <code>Total</code> by weekday.</p>
-</li>
-<li>
-<p>How long is the span as a duration and as an interval?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Parse <code>Date</code>. Add <code>year</code>, <code>month</code>,
+and <code>wday</code> columns with <code>label = TRUE</code> where it
+applies.</li>
+<li>Drop 2004.</li>
+<li>Boxplot of daily <code>Total</code> by weekday.</li>
+<li>How long is the span as a duration and as an interval?</li>
 </ol>
 <hr />
+</div>
+<div id="capital-bikeshare-sample" class="section level2">
 <h2>3. Capital Bikeshare (sample)</h2>
-<p>Use <code>data/capital_trips_sample.csv</code> (a short extract of the 2016 trips file). Column names have spaces.</p>
-<ol>
-<li>
-<p><code>glimpse()</code> the file. Rename columns so they have no spaces.</p>
-</li>
-<li>
-<p>Parse start and end with <code>mdy_hm()</code>.</p>
-</li>
-<li>
-<p>Compute trip duration from start and end. Compare it to <code>duration_ms</code>. Where do they disagree by about an hour?</p>
-</li>
-<li>
-<p>Those hour-scale gaps sit on 13 March 2016 (spring-forward). <code>force_tz(..., tzone = "America/New_York")</code> on both times, then recompute.</p>
-</li>
-<li>
-<p>Time from the first start to the last end, as a duration.</p>
-</li>
-<li>
-<p>Plot duration against hour of day.</p>
-</li>
+<p>Use <code>data/capital_trips_sample.csv</code> (a short extract of
+the 2016 trips file). Column names have spaces.</p>
+<ol style="list-style-type: decimal">
+<li><code>glimpse()</code> the file. Rename columns so they have no
+spaces.</li>
+<li>Parse start and end with <code>mdy_hm()</code>.</li>
+<li>Compute trip duration from start and end. Compare it to
+<code>duration_ms</code>. Where do they disagree by about an hour?</li>
+<li>Those hour-scale gaps sit on 13 March 2016 (spring-forward).
+<code>force_tz(..., tzone = "America/New_York")</code> on both times,
+then recompute.</li>
+<li>Time from the first start to the last end, as a duration.</li>
+<li>Plot duration against hour of day.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lubridate-dates.html"><span aria-hidden="true">←</span> 10.2 lubridate: Dates and Times</a>
                         <a class="course-page-nav__week" href="data-612-week-10.html">Week 10</a>
                             <a class="course-page-nav__next" href="data-612-lab-10-solutions.html">Lab 10 solutions <span aria-hidden="true">→</span></a>
@@ -197,7 +182,7 @@ library(lubridate)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:20:00-04:00">September 23, 2026, 3:20 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
             </footer>
         </div>
 
