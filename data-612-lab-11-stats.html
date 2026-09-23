@@ -111,48 +111,65 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 11: Tests and Models</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-11.html">Week 11</a> &middot;
                             <a href="files/data-612/lab-11-stats.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            A t-test, an ANOVA, a linear model, and a column summary.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Do <strong>11.1</strong> and <strong>11.2</strong> first. Prefer <code>mtcars</code>, <code>palmerpenguins</code>, or <code>iris</code> so the lab runs without extra files. <code>Sleuth3</code> is optional.</p>
+                         &middot; <a href="files/data-612/lectures/lab-11-stats.qmd">Source (.qmd)</a></p>
+<p>A t-test, an ANOVA, a linear model, and a column summary.</p>
+<p>Work in a <strong>Quarto</strong> document. Do <strong>11.1</strong>
+and <strong>11.2</strong> first. Prefer <code>mtcars</code>,
+<code>palmerpenguins</code>, or <code>iris</code> so the lab runs
+without extra files. <code>Sleuth3</code> is optional.</p>
 <pre><code class="language-r">library(tidyverse)
-library(palmerpenguins)
-</code></pre>
+library(palmerpenguins)</code></pre>
 <hr />
+<div id="two-sample-t-test" class="section level2">
 <h2>1. Two-sample t-test</h2>
-<ol>
-<li>
-<p>Boxplot of a numeric variable by a <strong>two-level</strong> group.</p>
-</li>
-<li>
-<p><code>t.test()</code> with the formula <code>y ~ group</code>. Save the object.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Boxplot of a numeric variable by a <strong>two-level</strong>
+group.</li>
+<li><code>t.test()</code> with the formula <code>y ~ group</code>. Save
+the object.</li>
 </ol>
-<p>Use <code>mpg</code> by <code>am</code> in <code>mtcars</code>, or Adelie vs Gentoo bill length in <code>penguins</code> after <code>filter()</code> and <code>droplevels()</code>. State H0 in words. Report the p-value as evidence against that H0.</p>
+<p>Use <code>mpg</code> by <code>am</code> in <code>mtcars</code>, or
+Adelie vs Gentoo bill length in <code>penguins</code> after
+<code>filter()</code> and <code>droplevels()</code>. State H0 in words.
+Report the p-value as evidence against that H0.</p>
 <hr />
+</div>
+<div id="anova" class="section level2">
 <h2>2. ANOVA</h2>
-<p><code>aov()</code> of a numeric variable by a factor with <strong>three or more</strong> levels. Save the fit and <code>summary()</code> it.</p>
-<p><code>bill_length_mm ~ species</code> in <code>penguins</code>, <code>mpg ~ factor(cyl)</code> in <code>mtcars</code>, or <code>Sepal.Length ~ Species</code> in <code>iris</code> are all fine. State H0 in words.</p>
+<p><code>aov()</code> of a numeric variable by a factor with
+<strong>three or more</strong> levels. Save the fit and
+<code>summary()</code> it.</p>
+<p><code>bill_length_mm ~ species</code> in <code>penguins</code>,
+<code>mpg ~ factor(cyl)</code> in <code>mtcars</code>, or
+<code>Sepal.Length ~ Species</code> in <code>iris</code> are all fine.
+State H0 in words.</p>
 <hr />
+</div>
+<div id="regression" class="section level2">
 <h2>3. Regression</h2>
-<p><code>lm()</code> with <strong>two</strong> predictors. Interpret one coefficient in a sentence (holding the other predictor fixed). Glance at the residual-versus-fitted plot (<code>plot(fit, which = 1)</code> or <code>broom::augment()</code>).</p>
-<p><code>mpg ~ wt + hp</code> in <code>mtcars</code> is the intended default.</p>
+<p><code>lm()</code> with <strong>two</strong> predictors. Interpret one
+coefficient in a sentence (holding the other predictor fixed). Glance at
+the residual-versus-fitted plot (<code>plot(fit, which = 1)</code> or
+<code>broom::augment()</code>).</p>
+<p><code>mpg ~ wt + hp</code> in <code>mtcars</code> is the intended
+default.</p>
 <hr />
+</div>
+<div id="column-summaries" class="section level2">
 <h2>4. Column summaries</h2>
-<ol>
-<li>
-<p><code>across()</code> on every numeric column: mean and sd, <code>.names = "{.col}_{.fn}"</code>, <code>na.rm</code> via a formula <code>~ mean(.x, na.rm = TRUE)</code>.</p>
-</li>
-<li>
-<p>If <code>skimr</code> is installed, <code>skimr::skim()</code> on the same table.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li><code>across()</code> on every numeric column: mean and sd,
+<code>.names = "{.col}_{.fn}"</code>, <code>na.rm</code> via a formula
+<code>~ mean(.x, na.rm = TRUE)</code>.</li>
+<li>If <code>skimr</code> is installed, <code>skimr::skim()</code> on
+the same table.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-stats-regression-summaries.html"><span aria-hidden="true">←</span> 11.2 Statistics: Regression and Summaries</a>
                         <a class="course-page-nav__week" href="data-612-week-11.html">Week 11</a>
                             <a class="course-page-nav__next" href="data-612-lab-11-solutions.html">Lab 11 solutions <span aria-hidden="true">→</span></a>
@@ -165,7 +182,7 @@ library(palmerpenguins)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

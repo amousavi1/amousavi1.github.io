@@ -1,0 +1,152 @@
+
+
+
+<p>Plot first. Save t.test() and aov(). The p-value is evidence against
+H0.</p>
+<div id="question-then-evidence" class="section level2">
+<h2>1. Question, then evidence</h2>
+<p>A test is the last step, not the first. A useful order:</p>
+<ol style="list-style-type: decimal">
+<li>a question you can say in words</li>
+<li>EDA (a plot, a table)</li>
+<li>a model that matches the question</li>
+<li>a test saved as an object</li>
+<li>a sentence a reader can use</li>
+</ol>
+<p>Always assign the test. Printing it once is not enough if you later
+want the p-value or the interval.</p>
+<pre class="r"><code>library(tidyverse)
+library(palmerpenguins)
+
+tt &lt;- t.test(mpg ~ factor(am), data = mtcars)
+tt</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  mpg by factor(am)
+## t = -3.7671, df = 18.332, p-value = 0.001374
+## alternative hypothesis: true difference in means between group 0 and group 1 is not equal to 0
+## 95 percent confidence interval:
+##  -11.280194  -3.209684
+## sample estimates:
+## mean in group 0 mean in group 1 
+##        17.14737        24.39231</code></pre>
+<pre class="r"><code>tt$p.value</code></pre>
+<pre><code>## [1] 0.001373638</code></pre>
+<pre class="r"><code>tt$estimate</code></pre>
+<pre><code>## mean in group 0 mean in group 1 
+##        17.14737        24.39231</code></pre>
+<p><code>Sleuth3</code> has the classic two-sample tables from <em>The
+Statistical Sleuth</em>. Install once in the console, then load a table
+by name:</p>
+<pre class="r"><code>install.packages(&quot;Sleuth3&quot;)
+data(&quot;case0201&quot;, package = &quot;Sleuth3&quot;)</code></pre>
+<p><code>case0201</code> is wide: <code>Cross</code> and
+<code>Self</code> are two numeric columns.
+<code>t.test(Cross, Self)</code> is the two-vector form. The formula
+form needs a long table. If <code>Sleuth3</code> is not installed, use
+<code>palmerpenguins</code> or <code>mtcars</code>. Those are the
+fallbacks for the rest of this note.</p>
+<hr />
+</div>
+<div id="two-sample-t.test" class="section level2">
+<h2>2. Two-sample <code>t.test()</code></h2>
+<p>Plot first. A boxplot of the numeric variable by the two-level group
+tells you whether the question is even interesting.</p>
+<pre class="r"><code>ggplot(mtcars, aes(x = factor(am), y = mpg)) +
+  geom_boxplot() +
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-tests/chunk-3-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>Then the test. The formula is <code>y ~ group</code>. The grouping
+variable should have <strong>exactly two</strong> levels.</p>
+<pre class="r"><code>tt &lt;- t.test(mpg ~ factor(am), data = mtcars)</code></pre>
+<p><code>species</code> in <code>penguins</code> has three levels.
+Filter to a pair, then <code>droplevels()</code> so the unused level is
+gone. Without that, <code>t.test()</code> stops.</p>
+<pre class="r"><code>penguins2 &lt;- penguins |&gt;
+  filter(species %in% c(&quot;Adelie&quot;, &quot;Gentoo&quot;)) |&gt;
+  droplevels()
+
+ggplot(penguins2, aes(x = species, y = bill_length_mm)) +
+  geom_boxplot() +
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-tests/chunk-5-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tt_bill &lt;- t.test(bill_length_mm ~ species, data = penguins2)</code></pre>
+<p><code>case0201</code> after a pivot is the same pattern:</p>
+<pre class="r"><code>case0201 |&gt;
+  pivot_longer(everything(), names_to = &quot;type&quot;, values_to = &quot;height&quot;) |&gt;
+  t.test(height ~ type, data = _)</code></pre>
+<pre><code>## Error:
+## ! object &#39;case0201&#39; not found</code></pre>
+<p>Default <code>t.test()</code> does not assume equal variances
+(Welch). That is the usual choice.</p>
+<hr />
+</div>
+<div id="h0-and-the-p-value" class="section level2">
+<h2>3. H0 and the p-value</h2>
+<p>State H0 in words before you look at the number.</p>
+<p>For the penguin pair: <em>mean bill length is the same for Adelie and
+Gentoo.</em> For <code>mtcars</code>: <em>mean <code>mpg</code> is the
+same for the two transmission codes.</em></p>
+<p>The p-value is evidence <strong>against</strong> that H0. A small
+p-value means the data would be surprising if H0 were true. It is not a
+stamp that the result is “real,” and <code>0.05</code> is not a magic
+cutoff. Report the p-value, the estimates, and the interval. Then write
+the sentence.</p>
+<hr />
+</div>
+<div id="anova-and-nested-models" class="section level2">
+<h2>4. ANOVA and nested models</h2>
+<p>Three or more groups: <code>aov(y ~ factor)</code>, then
+<code>summary()</code>. Save the object.</p>
+<pre class="r"><code>fit_aov &lt;- aov(bill_length_mm ~ species, data = penguins)
+summary(fit_aov)</code></pre>
+<pre><code>##              Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## species       2   7194    3597   410.6 &lt;2e-16 ***
+## Residuals   339   2970       9                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 2 observations deleted due to missingness</code></pre>
+<p>H0 in words: <em>mean bill length is the same for Adelie, Chinstrap,
+and Gentoo.</em> <code>iris</code> (<code>Sepal.Length ~ Species</code>)
+and <code>mtcars</code> (<code>mpg ~ factor(cyl)</code>) are the
+no-package backups. <code>Sleuth3</code> <code>case0501</code> is
+<code>Lifetime ~ Treatment</code> if you have the package.</p>
+<p><code>anova()</code> compares <strong>nested</strong> models. The
+smaller model is a special case of the larger one.</p>
+<pre class="r"><code>m1 &lt;- lm(mpg ~ wt, data = mtcars)
+m2 &lt;- lm(mpg ~ wt + hp, data = mtcars)
+cmp &lt;- anova(m1, m2)
+cmp</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: mpg ~ wt
+## Model 2: mpg ~ wt + hp
+##   Res.Df    RSS Df Sum of Sq      F   Pr(&gt;F)   
+## 1     30 278.32                                
+## 2     29 195.05  1    83.274 12.381 0.001451 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>H0: <em>once <code>wt</code> is in the model, <code>hp</code> does
+not improve the fit.</em> Same rule: save <code>cmp</code>, read the
+p-value as evidence against that H0, not as a 0.05 switch.</p>
+<p><code>aov()</code> is the one-factor (or multi-factor) fit.
+<code>anova()</code> is the comparison. Do not mix the two names by
+accident.</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>5. Practice</h2>
+<ol style="list-style-type: decimal">
+<li>Boxplot and two-sample <code>t.test()</code> for a numeric variable
+by a two-level group. Use <code>mpg ~ factor(am)</code> in
+<code>mtcars</code>, or Adelie vs Gentoo bill length in
+<code>penguins</code> (filter, then <code>droplevels()</code>). If you
+have <code>Sleuth3</code>, do <code>case0201</code> as well. State H0 in
+words. Save the test object.</li>
+<li><code>aov()</code> of a numeric variable by a factor with three or
+more levels (<code>bill_length_mm ~ species</code>, or
+<code>mpg ~ factor(cyl)</code>, or <code>Sepal.Length ~ Species</code>).
+Save the fit. State H0 in words.</li>
+</ol>
+</div>

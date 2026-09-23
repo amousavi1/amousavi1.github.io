@@ -111,92 +111,115 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">13.2 R Markdown: Citations and Cross-References</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-13.html">Week 13</a> &middot;
                             <a href="files/data-612/rmd-citations-bookdown.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Number figures with bookdown or Quarto. Cite with @key and a .bib file.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/rmd-citations-bookdown.qmd">Source (.qmd)</a></p>
+<p>Number figures with bookdown or Quarto. Cite with <span
+class="citation">@key</span> and a .bib file.</p>
+<div id="numbered-figures-and-tables" class="section level2">
 <h2>1. Numbered figures and tables</h2>
-<p>A caption on a plot is ordinary text until the document format knows how to number it. Two routes:</p>
+<p>A caption on a plot is ordinary text until the document format knows
+how to number it. Two routes:</p>
 <ul>
-<li>R Markdown: <code>bookdown::html_document2</code> (or <code>pdf_document2</code>) instead of <code>html_document</code></li>
-<li>Quarto: <code>format: html</code> already numbers figures and tables that have captions</li>
+<li>R Markdown: <code>bookdown::html_document2</code> (or
+<code>pdf_document2</code>) instead of <code>html_document</code></li>
+<li>Quarto: <code>format: html</code> already numbers figures and tables
+that have captions</li>
 </ul>
-<pre><code class="language-markdown">output:
-  bookdown::html_document2:
-    toc: true
-</code></pre>
-<p>Install <code>bookdown</code> once in the console if you are knitting an <code>.Rmd</code>. A <code>.qmd</code> does not need that package for numbers.</p>
+<p>output: bookdown::html_document2: toc: true</p>
+<p>Install <code>bookdown</code> once in the console if you are knitting
+an <code>.Rmd</code>. A <code>.qmd</code> does not need that package for
+numbers.</p>
 <p>Put a caption on the chunk. In Quarto:</p>
-<pre><code class="language-markdown">```{r}
-#| label: fig-bills
-#| fig-cap: &quot;Bill length vs bill depth.&quot;
-
-ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+<pre><code class="language-r">ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
   geom_point() +
-  theme_bw()
-```
-</code></pre>
-<p>The HTML then prints <strong>Figure 1:</strong> in front of that sentence. <code>knitr::kable(caption = "...")</code> gets <strong>Table 1:</strong> the same way.</p>
+  theme_bw()</code></pre>
+<div class="lecture-figure" style="text-align: center">
+<img src="files/data-612/lectures/_figs/rmd-citations-bookdown/fig-bills-1.png" alt="Bill length vs bill depth." width="720" />
+<p class="caption">
+Bill length vs bill depth.
+</p>
+</div>
+<p>The HTML then prints <strong>Figure 1:</strong> in front of that
+sentence. <code>knitr::kable(caption = "...")</code> gets <strong>Table
+1:</strong> the same way.</p>
 <hr />
+</div>
+<div id="cross-references" class="section level2">
 <h2>2. Cross-references</h2>
-<p>Once the figure has a label and a caption, you can point at it in the prose.</p>
-<p>Quarto: <code>Figure @fig-bills</code> or <code>@fig-bills</code>.</p>
-<p>bookdown: <code>\@ref(fig:bills)</code> when the chunk is labeled <code>bills</code> and has <code>fig.cap</code>.</p>
-<p>A heading can have a label too. Quarto uses <code>{#sec-methods}</code> after the heading. bookdown uses <code>{#methods}</code>. You do not need either for Lab 13.</p>
+<p>Once the figure has a label and a caption, you can point at it in the
+prose.</p>
+<p>Quarto: <code>Figure @fig-bills</code> or
+<code>@fig-bills</code>.</p>
+<p>bookdown: <code>\@ref(fig:bills)</code> when the chunk is labeled
+<code>bills</code> and has <code>fig.cap</code>.</p>
+<p>A heading can have a label too. Quarto uses
+<code>{#sec-methods}</code> after the heading. bookdown uses
+<code>{#methods}</code>. You do not need either for Lab 13.</p>
 <hr />
+</div>
+<div id="a-.bib-file" class="section level2">
 <h2>3. A <code>.bib</code> file</h2>
-<p>Citations come from a BibTeX file, not from typing the reference by hand. A small <code>refs.bib</code> looks like this:</p>
-<pre><code class="language-text">@Manual{horst2020palmerpenguins,
-  title = {palmerpenguins: Palmer Archipelago penguin data},
-  author = {Allison Horst and Alison Hill and Kristen Gorman},
-  year = {2020},
-  url = {https://allisonhorst.github.io/palmerpenguins/},
-}
-</code></pre>
-<p>The word after <code>{</code> is the <strong>key</strong>. You cite the key, not the title.</p>
+<p>Citations come from a BibTeX file, not from typing the reference by
+hand. A small <code>refs.bib</code> looks like this:</p>
+<p><span class="citation">@Manual</span>{horst2020palmerpenguins, title
+= {palmerpenguins: Palmer Archipelago penguin data}, author = {Allison
+Horst and Alison Hill and Kristen Gorman}, year = {2020}, url = {<a
+href="https://allisonhorst.github.io/palmerpenguins/"
+class="uri">https://allisonhorst.github.io/palmerpenguins/</a>}, }</p>
+<p>The word after <code>{</code> is the <strong>key</strong>. You cite
+the key, not the title.</p>
 <p>Point the document at the file. Quarto and R Markdown both use:</p>
-<pre><code class="language-markdown">bibliography: refs.bib
-</code></pre>
-<p>Put that line in the YAML, at the same indent as <code>title:</code>.</p>
+<p>bibliography: refs.bib</p>
+<p>Put that line in the YAML, at the same indent as
+<code>title:</code>.</p>
 <hr />
+</div>
+<div id="cite-in-the-text" class="section level2">
 <h2>4. Cite in the text</h2>
-<p><code>@horst2020palmerpenguins</code> becomes an in-text citation when you Render. Wrapping it, <code>[@horst2020palmerpenguins]</code>, puts the citation in parentheses.</p>
-<p><code>nocite: '@*'</code> in the YAML lists <strong>every</strong> entry in the <code>.bib</code>, even keys you never typed. Useful for a reading list. Leave it out if you only want the sources you cited.</p>
-<p>Add a heading <code># References</code> (or <code># Bibliography</code>) at the end. Quarto and pandoc write the list there.</p>
+<p><code>@horst2020palmerpenguins</code> becomes an in-text citation
+when you Render. Wrapping it, <code>[@horst2020palmerpenguins]</code>,
+puts the citation in parentheses.</p>
+<p><code>nocite: '@*'</code> in the YAML lists <strong>every</strong>
+entry in the <code>.bib</code>, even keys you never typed. Useful for a
+reading list. Leave it out if you only want the sources you cited.</p>
+<p>Add a heading <code># References</code> (or
+<code># Bibliography</code>) at the end. Quarto and pandoc write the
+list there.</p>
 <hr />
+</div>
+<div id="style-with-csl" class="section level2">
 <h2>5. Style with CSL</h2>
-<p>The default author–year look is fine for this course. To match a journal, add a Citation Style Language file:</p>
-<pre><code class="language-markdown">bibliography: refs.bib
-csl: apa.csl
-</code></pre>
-<p>Download a <code>.csl</code> from <a href="https://www.zotero.org/styles">zotero.org/styles</a> and keep it next to the <code>.qmd</code>. You do not write CSL by hand.</p>
+<p>The default author–year look is fine for this course. To match a
+journal, add a Citation Style Language file:</p>
+<p>bibliography: refs.bib csl: apa.csl</p>
+<p>Download a <code>.csl</code> from <a
+href="https://www.zotero.org/styles">zotero.org/styles</a> and keep it
+next to the <code>.qmd</code>. You do not write CSL by hand.</p>
 <hr />
+</div>
+<div id="the-same-idea-in-quarto" class="section level2">
 <h2>6. The same idea in Quarto</h2>
 <p>A compact header:</p>
-<pre><code class="language-markdown">---
-title: &quot;Penguin bills&quot;
-author: &quot;Your Name&quot;
-format: html
-bibliography: refs.bib
----
-</code></pre>
-<p>No <code>bookdown::</code> output. Captions still get numbers. <code>@key</code> still cites. The <code>.bib</code> format does not change.</p>
-<p>If you are handed an <code>.Rmd</code> that already uses <code>bookdown::html_document2</code>, knit it. Do not rewrite it as Quarto just to get a citation.</p>
+<p>No <code>bookdown::</code> output. Captions still get numbers.
+<code>@key</code> still cites. The <code>.bib</code> format does not
+change.</p>
+<p>If you are handed an <code>.Rmd</code> that already uses
+<code>bookdown::html_document2</code>, knit it. Do not rewrite it as
+Quarto just to get a citation.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>7. Practice</h2>
-<ol>
-<li>
-<p>Sketch a four-line BibTeX entry for a package or a paper (type, key, title, author or year).</p>
-</li>
-<li>
-<p>Write one sentence that cites that key with <code>@</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Sketch a four-line BibTeX entry for a package or a paper (type, key,
+title, author or year).</li>
+<li>Write one sentence that cites that key with <code>@</code>.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-rmd-chunks-tables.html"><span aria-hidden="true">←</span> 13.1 R Markdown: Chunks and Tables</a>
                         <a class="course-page-nav__week" href="data-612-week-13.html">Week 13</a>
                             <a class="course-page-nav__next" href="data-612-lab-13-rmarkdown.html">Lab 13: A Short Report <span aria-hidden="true">→</span></a>
@@ -209,7 +232,7 @@ bibliography: refs.bib
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

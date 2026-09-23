@@ -111,46 +111,55 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 13: A Short Report</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-13.html">Week 13</a> &middot;
                             <a href="files/data-612/lab-13-rmarkdown.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            A penguin table, a captioned plot, and a citation.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Do notes <strong>13.1</strong> and <strong>13.2</strong> first. Render to HTML. You will need <code>tidyverse</code>, <code>palmerpenguins</code>, and <code>knitr</code>.</p>
+                         &middot; <a href="files/data-612/lectures/lab-13-rmarkdown.qmd">Source (.qmd)</a></p>
+<p>A penguin table, a captioned plot, and a citation.</p>
+<p>Work in a <strong>Quarto</strong> document. Do notes
+<strong>13.1</strong> and <strong>13.2</strong> first. Render to HTML.
+You will need <code>tidyverse</code>, <code>palmerpenguins</code>, and
+<code>knitr</code>.</p>
 <hr />
+<div id="setup-and-packages" class="section level2">
 <h2>1. Setup and packages</h2>
-<ol>
-<li>
-<p>A setup chunk that calls <code>knitr::opts_chunk$set()</code> with <code>echo = TRUE</code> and <code>message = FALSE</code>. Hide the setup chunk itself (<code>include: false</code>).</p>
-</li>
-<li>
-<p>Load <code>tidyverse</code> and <code>palmerpenguins</code> without printing package startup text. <code>data(penguins)</code> if the tibble is not already attached.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>A setup chunk that calls <code>knitr::opts_chunk$set()</code> with
+<code>echo = TRUE</code> and <code>message = FALSE</code>. Hide the
+setup chunk itself (<code>include: false</code>).</li>
+<li>Load <code>tidyverse</code> and <code>palmerpenguins</code> without
+printing package startup text. <code>data(penguins)</code> if the tibble
+is not already attached.</li>
 </ol>
 <hr />
+</div>
+<div id="a-table-and-a-plot" class="section level2">
 <h2>2. A table and a plot</h2>
-<ol>
-<li>
-<p>A <code>kable</code> of a <strong>three-column</strong> summary of bill length by species (species, mean bill length, and <code>n</code> is enough). Give the table a caption.</p>
-</li>
-<li>
-<p>A scatterplot of <code>bill_length_mm</code> vs <code>bill_depth_mm</code>, colored by <code>species</code>. Give the figure a caption.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>A <code>kable</code> of a <strong>three-column</strong> summary of
+bill length by species (species, mean bill length, and <code>n</code> is
+enough). Give the table a caption.</li>
+<li>A scatterplot of <code>bill_length_mm</code> vs
+<code>bill_depth_mm</code>, colored by <code>species</code>. Give the
+figure a caption.</li>
 </ol>
 <hr />
+</div>
+<div id="a-citation-and-folding" class="section level2">
 <h2>3. A citation and folding</h2>
-<ol>
-<li>
-<p>Download <code>test_rmd_file.bib</code> from the Data section into a <code>bib/</code> folder. Point YAML at it (<code>bibliography: bib/test_rmd_file.bib</code>). Cite the palmerpenguins entry with <code>@</code> plus the key from the file.</p>
-</li>
-<li>
-<p>Optional: fold the code in the YAML (<code>code-fold: true</code> in Quarto, or <code>code_folding: hide</code> in an <code>.Rmd</code>).</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Download <code>test_rmd_file.bib</code> from the Data section into a
+<code>bib/</code> folder. Point YAML at it
+(<code>bibliography: bib/test_rmd_file.bib</code>). Cite the
+palmerpenguins entry with <code>@</code> plus the key from the
+file.</li>
+<li>Optional: fold the code in the YAML (<code>code-fold: true</code> in
+Quarto, or <code>code_folding: hide</code> in an
+<code>.Rmd</code>).</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-rmd-citations-bookdown.html"><span aria-hidden="true">←</span> 13.2 R Markdown: Citations and Cross-References</a>
                         <a class="course-page-nav__week" href="data-612-week-13.html">Week 13</a>
                             <a class="course-page-nav__next" href="data-612-lab-13-solutions.html">Lab 13 solutions <span aria-hidden="true">→</span></a>
@@ -163,7 +172,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

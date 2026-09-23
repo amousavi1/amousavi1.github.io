@@ -111,32 +111,39 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">14.2 Iteration: Loops and purrr</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-14.html">Week 14</a> &middot;
                             <a href="files/data-612/purrr-iteration.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Pre-allocate a for-loop. map() walks a list. across() often replaces a column loop.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/purrr-iteration.qmd">Source (.qmd)</a></p>
+<p>Pre-allocate a for-loop. map() walks a list. across() often replaces
+a column loop.</p>
+<div id="a-for-loop-pre-allocated" class="section level2">
 <h2>1. A for-loop, pre-allocated</h2>
 <pre><code class="language-r">for (i in seq_along(x)) {
   # use x[[i]]
-}
-</code></pre>
-<p><code>seq_along(x)</code> is <code>1, 2, …, length(x)</code>. Prefer it to <code>1:length(x)</code>, which misbehaves on an empty <code>x</code>. Growing a vector with <code>c()</code> inside the loop is slow. Make the output first, then fill it.</p>
+}</code></pre>
+<pre><code>## Error:
+## ! object &#39;x&#39; not found</code></pre>
+<p><code>seq_along(x)</code> is <code>1, 2, …, length(x)</code>. Prefer
+it to <code>1:length(x)</code>, which misbehaves on an empty
+<code>x</code>. Growing a vector with <code>c()</code> inside the loop
+is slow. Make the output first, then fill it.</p>
 <pre><code class="language-r">x &lt;- 1:5
 cumvec &lt;- vector(&quot;double&quot;, length(x))
 total &lt;- 0
 for (i in seq_along(x)) {
   total &lt;- total + x[[i]]
   cumvec[[i]] &lt;- total
-}
-</code></pre>
-<p><code>vector("double", n)</code> is <code>n</code> zeros. You overwrite them.</p>
+}</code></pre>
+<p><code>vector("double", n)</code> is <code>n</code> zeros. You
+overwrite them.</p>
 <hr />
+</div>
+<div id="while-when-n-is-unknown" class="section level2">
 <h2>2. <code>while</code> when <code>n</code> is unknown</h2>
-<p>A <code>for</code> loop needs the sequence up front. A <code>while</code> loop keeps going until a condition is false:</p>
+<p>A <code>for</code> loop needs the sequence up front. A
+<code>while</code> loop keeps going until a condition is false:</p>
 <pre><code class="language-r">nheads &lt;- 0
 flips &lt;- 0
 while (nheads &lt; 3) {
@@ -144,79 +151,129 @@ while (nheads &lt; 3) {
   if (rbinom(1, size = 1, prob = 0.5) == 1) {
     nheads &lt;- nheads + 1
   }
-}
-</code></pre>
-<p>Use <code>while</code> when you cannot say how many steps you need.</p>
+}</code></pre>
+<p>Use <code>while</code> when you cannot say how many steps you
+need.</p>
 <hr />
+</div>
+<div id="across-often-replaces-a-column-loop" class="section level2">
 <h2>3. <code>across()</code> often replaces a column loop</h2>
-<p>Looping over <code>mtcars</code> columns to take a mean works. <code>across()</code> is the dplyr version, and it stays in a pipeline:</p>
+<p>Looping over <code>mtcars</code> columns to take a mean works.
+<code>across()</code> is the dplyr version, and it stays in a
+pipeline:</p>
 <pre><code class="language-r">means &lt;- vector(&quot;double&quot;, ncol(mtcars))
 for (i in seq_along(mtcars)) {
   means[[i]] &lt;- mean(mtcars[[i]], na.rm = TRUE)
 }
 
 mtcars |&gt;
-  summarize(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
-</code></pre>
-<p>Reach for a loop when the result is not one number per column: a model, a plot, a file.</p>
+  summarize(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))</code></pre>
+<pre><code>##        mpg    cyl     disp       hp     drat      wt     qsec     vs      am
+## 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625
+##     gear   carb
+## 1 3.6875 2.8125</code></pre>
+<p>Reach for a loop when the result is not one number per column: a
+model, a plot, a file.</p>
 <hr />
+</div>
+<div id="purrrmap" class="section level2">
 <h2>4. <code>purrr::map</code></h2>
-<p><code>map()</code> applies a function to each element and returns a list. Typed variants return an atomic vector: <code>map_dbl()</code>, <code>map_chr()</code>, <code>map_lgl()</code>.</p>
-<p><code>.f</code> is a function name, <strong>not</strong> a call. <code>map_dbl(mtcars, mean)</code> works. <code>map_dbl(mtcars, mean())</code> does not.</p>
-<pre><code class="language-r">map_dbl(mtcars, mean)
-map_dbl(mtcars, mean, na.rm = TRUE)
-</code></pre>
-<p>A formula <code>~</code> is a short anonymous function. <code>.x</code> is the current element:</p>
-<pre><code class="language-r">map_dbl(mtcars, ~ mean(.x, na.rm = TRUE))
-</code></pre>
+<p><code>map()</code> applies a function to each element and returns a
+list. Typed variants return an atomic vector: <code>map_dbl()</code>,
+<code>map_chr()</code>, <code>map_lgl()</code>.</p>
+<p><code>.f</code> is a function name, <strong>not</strong> a call.
+<code>map_dbl(mtcars, mean)</code> works.
+<code>map_dbl(mtcars, mean())</code> does not.</p>
+<pre><code class="language-r">map_dbl(mtcars, mean)</code></pre>
+<pre><code>##        mpg        cyl       disp         hp       drat         wt       qsec 
+##  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
+##         vs         am       gear       carb 
+##   0.437500   0.406250   3.687500   2.812500</code></pre>
+<pre><code class="language-r">map_dbl(mtcars, mean, na.rm = TRUE)</code></pre>
+<pre><code>##        mpg        cyl       disp         hp       drat         wt       qsec 
+##  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
+##         vs         am       gear       carb 
+##   0.437500   0.406250   3.687500   2.812500</code></pre>
+<p>A formula <code>~</code> is a short anonymous function.
+<code>.x</code> is the current element:</p>
+<pre><code class="language-r">map_dbl(mtcars, ~ mean(.x, na.rm = TRUE))</code></pre>
+<pre><code>##        mpg        cyl       disp         hp       drat         wt       qsec 
+##  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
+##         vs         am       gear       carb 
+##   0.437500   0.406250   3.687500   2.812500</code></pre>
 <hr />
+</div>
+<div id="map2-and-pmap" class="section level2">
 <h2>5. <code>map2</code> and <code>pmap</code></h2>
-<p><code>map2(.x, .y, .f)</code> walks two vectors together. <code>pmap()</code> walks a list of arguments:</p>
+<p><code>map2(.x, .y, .f)</code> walks two vectors together.
+<code>pmap()</code> walks a list of arguments:</p>
 <pre><code class="language-r">mu &lt;- c(-10, 0, 10)
 sigma &lt;- c(1, 1, 2)
-map2(mu, sigma, rnorm, n = 5)
-
-args &lt;- list(n = 5, mean = mu, sd = sigma)
-pmap(args, rnorm)
-</code></pre>
+map2(mu, sigma, rnorm, n = 5)</code></pre>
+<pre><code>## [[1]]
+## [1] -10.385849  -9.948049  -9.872957  -8.765055  -9.292933
+## 
+## [[2]]
+## [1]  0.12053990  0.57957222  0.42511028 -1.51520107  0.04904086
+## 
+## [[3]]
+## [1] 11.693601  6.693857 10.557797 12.044683  5.717007</code></pre>
+<pre><code class="language-r">args &lt;- list(n = 5, mean = mu, sd = sigma)
+pmap(args, rnorm)</code></pre>
+<pre><code>## [[1]]
+## [1]  -7.253338  -8.717668 -10.459492 -11.343773 -10.509500
+## 
+## [[2]]
+## [1] -0.4296248  0.2900308  0.1374587  0.4737093  0.7913126
+## 
+## [[3]]
+## [1]  9.377468  9.243811  7.911468  8.600905 11.002417</code></pre>
 <hr />
+</div>
+<div id="keep-discard-and-split-plus-map" class="section level2">
 <h2>6. <code>keep</code> / <code>discard</code> and split-plus-map</h2>
-<p><code>keep()</code> holds the elements where a test is true. <code>discard()</code> drops them.</p>
+<p><code>keep()</code> holds the elements where a test is true.
+<code>discard()</code> drops them.</p>
 <pre><code class="language-r">iris |&gt;
   keep(is.numeric) |&gt;
-  map_dbl(mean)
-</code></pre>
-<p><code>split()</code> turns a data frame into a list of data frames, one per group. Then <code>map()</code> fits a model on each:</p>
+  map_dbl(mean)</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+##     5.843333     3.057333     3.758000     1.199333</code></pre>
+<p><code>split()</code> turns a data frame into a list of data frames,
+one per group. Then <code>map()</code> fits a model on each:</p>
 <pre><code class="language-r">mtcars |&gt;
   split(mtcars$cyl) |&gt;
   map(~ lm(mpg ~ wt, data = .x)) |&gt;
   map(summary) |&gt;
-  map_dbl(&quot;r.squared&quot;)
-</code></pre>
-<p>A string (or an integer) as <code>.f</code> extracts that name (or position) from each list element.</p>
+  map_dbl(&quot;r.squared&quot;)</code></pre>
+<pre><code>##         4         6         8 
+## 0.5086326 0.4645102 0.4229655</code></pre>
+<p>A string (or an integer) as <code>.f</code> extracts that name (or
+position) from each list element.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>7. Practice</h2>
-<ol>
-<li>
-<p>The first two Fibonacci numbers are 0 and 1. Each later number is the sum of the previous two. Use a loop to compute the first 100. Sanity check: <code>log2()</code> of the 100th number is about 67.57.</p>
-</li>
-<li>
-<p><code>map_dbl()</code> means of every column of <code>mtcars</code>.</p>
-</li>
-<li>
-<p>Number of unique values in each column of <code>iris</code>. Repeat with <code>across()</code>. <code>typeof()</code> of each column of <code>nycflights13::flights</code> with <code>map_chr()</code>, then with <code>across()</code>.</p>
-</li>
-<li>
-<p>p-value of <code>t.test(mpg ~ am)</code> within each <code>cyl</code> group of <code>mtcars</code>.</p>
-</li>
-<li>
-<p>In three lines, keep the <code>mtcars</code> columns whose mean is greater than 10 and report those means (<code>keep()</code> then <code>map_dbl()</code>). You should get four variables.</p>
-</li>
-<li>
-<p>Standard deviation of each numeric column of <code>iris</code> with a for-loop, then with <code>across()</code>.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>The first two Fibonacci numbers are 0 and 1. Each later number is
+the sum of the previous two. Use a loop to compute the first 100. Sanity
+check: <code>log2()</code> of the 100th number is about 67.57.</li>
+<li><code>map_dbl()</code> means of every column of
+<code>mtcars</code>.</li>
+<li>Number of unique values in each column of <code>iris</code>. Repeat
+with <code>across()</code>. <code>typeof()</code> of each column of
+<code>nycflights13::flights</code> with <code>map_chr()</code>, then
+with <code>across()</code>.</li>
+<li>p-value of <code>t.test(mpg ~ am)</code> within each
+<code>cyl</code> group of <code>mtcars</code>.</li>
+<li>In three lines, keep the <code>mtcars</code> columns whose mean is
+greater than 10 and report those means (<code>keep()</code> then
+<code>map_dbl()</code>). You should get four variables.</li>
+<li>Standard deviation of each numeric column of <code>iris</code> with
+a for-loop, then with <code>across()</code>.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-vectors-lists.html"><span aria-hidden="true">←</span> 14.1 Vectors and Lists</a>
                         <a class="course-page-nav__week" href="data-612-week-14.html">Week 14</a>
                             <a class="course-page-nav__next" href="data-612-course-wrap.html">14.3 Course Wrap <span aria-hidden="true">→</span></a>
@@ -229,7 +286,7 @@ pmap(args, rnorm)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

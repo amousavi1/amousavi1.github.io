@@ -111,29 +111,45 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 12: A Short Presentation</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-12.html">Week 12</a> &middot;
                             <a href="files/data-612/lab-12-presentations.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Three slides: a title, a daily delay table, and a line plot.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. A Quarto <code>revealjs</code> deck or an R Markdown HTML presentation (<code>ioslides_presentation</code> or <code>slidy_presentation</code>) are both fine. Do <strong>12.1</strong> first.</p>
-<p>Load packages <strong>silently</strong> (<code>include = FALSE</code> or <code>#| include: false</code>). You will need <code>tidyverse</code> and <code>nycflights13</code>. <code>flights</code> is already 2013.</p>
+                         &middot; <a href="files/data-612/lectures/lab-12-presentations.qmd">Source (.qmd)</a></p>
+<p>Three slides: a title, a daily delay table, and a line plot.</p>
+<p>Work in a <strong>Quarto</strong> document. A Quarto
+<code>revealjs</code> deck or an R Markdown HTML presentation
+(<code>ioslides_presentation</code> or <code>slidy_presentation</code>)
+are both fine. Do <strong>12.1</strong> first.</p>
+<p>Load packages <strong>silently</strong> (<code>include = FALSE</code>
+or <code>#| include: false</code>). You will need <code>tidyverse</code>
+and <code>nycflights13</code>. <code>flights</code> is already 2013.</p>
 <pre><code class="language-r">library(tidyverse)
-library(nycflights13)
-</code></pre>
+library(nycflights13)</code></pre>
 <hr />
+<div id="cover" class="section level2">
 <h2>1. Cover</h2>
-<p>A title slide. YAML <code>title</code> and <code>author</code> are enough. Add a subtitle if you want.</p>
+<p>A title slide. YAML <code>title</code> and <code>author</code> are
+enough. Add a subtitle if you want.</p>
 <hr />
+</div>
+<div id="mean-arrival-delay-by-day" class="section level2">
 <h2>2. Mean arrival delay by day</h2>
-<p>A slide that <strong>shows the code</strong> that computes mean <code>arr_delay</code> by calendar day from <code>nycflights13::flights</code>. Use <code>make_date(year, month, day)</code> (lubridate, loaded with tidyverse), then <code>group_by(date)</code> and <code>summarize()</code>. Save the summary tibble. Print it or <code>head()</code> it so a table appears on the slide.</p>
+<p>A slide that <strong>shows the code</strong> that computes mean
+<code>arr_delay</code> by calendar day from
+<code>nycflights13::flights</code>. Use
+<code>make_date(year, month, day)</code> (lubridate, loaded with
+tidyverse), then <code>group_by(date)</code> and
+<code>summarize()</code>. Save the summary tibble. Print it or
+<code>head()</code> it so a table appears on the slide.</p>
 <hr />
+</div>
+<div id="the-line-plot-no-code" class="section level2">
 <h2>3. The line plot, no code</h2>
-<p>A slide that shows a line plot of that daily mean against date. Hide the code (<code>echo = FALSE</code>). The plot is the slide.</p>
-                        <nav class="course-page-nav" aria-label="Page">
+<p>A slide that shows a line plot of that daily mean against date. Hide
+the code (<code>echo = FALSE</code>). The plot is the slide.</p>
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-rmd-presentations.html"><span aria-hidden="true">←</span> 12.1 Presentations from R Markdown</a>
                         <a class="course-page-nav__week" href="data-612-week-12.html">Week 12</a>
                             <a class="course-page-nav__next" href="data-612-lab-12-solutions.html">Lab 12 solutions <span aria-hidden="true">→</span></a>
@@ -146,7 +162,7 @@ library(nycflights13)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

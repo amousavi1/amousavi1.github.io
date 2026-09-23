@@ -111,66 +111,171 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">11.2 Statistics: Regression and Summaries</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-11.html">Week 11</a> &middot;
                             <a href="files/data-612/stats-regression-summaries.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            lm() with two predictors, residual plots, then across() summaries.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/stats-regression-summaries.qmd">Source (.qmd)</a></p>
+<p>lm() with two predictors, residual plots, then across()
+summaries.</p>
+<div id="fit-a-linear-model" class="section level2">
 <h2>1. Fit a linear model</h2>
-<p><code>lm(y ~ x1 + x2)</code> is ordinary least squares. Save the fit. The same lifecycle as note 11.1 still applies: question, plot, model, then a sentence.</p>
+<p><code>lm(y ~ x1 + x2)</code> is ordinary least squares. Save the fit.
+The same lifecycle as note 11.1 still applies: question, plot, model,
+then a sentence.</p>
 <pre><code class="language-r">library(tidyverse)
 library(palmerpenguins)
 
-fit &lt;- lm(mpg ~ wt + hp, data = mtcars)
-</code></pre>
-<p><code>wt</code> is weight; <code>hp</code> is horsepower. Both are in <code>mtcars</code>, which is built in. <code>palmerpenguins</code> is the other table this note uses (<code>bill_length_mm ~ flipper_length_mm + body_mass_g</code>). If <code>Sleuth3</code> is installed you can load a Sleuth regression table the same way as in 11.1 (<code>install.packages("Sleuth3")</code> once, then <code>data("case0201", package = "Sleuth3")</code> is the two-sample table; pick a later <code>case*</code> with a numeric response for regression). The examples below stay on <code>mtcars</code> and <code>penguins</code> so they run without extra files.</p>
+fit &lt;- lm(mpg ~ wt + hp, data = mtcars)</code></pre>
+<p><code>wt</code> is weight; <code>hp</code> is horsepower. Both are in
+<code>mtcars</code>, which is built in. <code>palmerpenguins</code> is
+the other table this note uses
+(<code>bill_length_mm ~ flipper_length_mm + body_mass_g</code>). If
+<code>Sleuth3</code> is installed you can load a Sleuth regression table
+the same way as in 11.1 (<code>install.packages("Sleuth3")</code> once,
+then <code>data("case0201", package = "Sleuth3")</code> is the
+two-sample table; pick a later <code>case*</code> with a numeric
+response for regression). The examples below stay on <code>mtcars</code>
+and <code>penguins</code> so they run without extra files.</p>
 <p>Plot the main relationship before you trust the coefficients:</p>
 <pre><code class="language-r">ggplot(mtcars, aes(x = wt, y = mpg)) +
   geom_point() +
   geom_smooth(method = lm, se = FALSE) +
-  theme_bw()
-</code></pre>
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-regression-summaries/chunk-2-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
 <hr />
+</div>
+<div id="read-the-fit" class="section level2">
 <h2>2. Read the fit</h2>
 <p>Four things you will actually use:</p>
-<pre><code class="language-r">summary(fit)
-coef(fit)
-confint(fit)
-broom::tidy(fit, conf.int = TRUE)
-</code></pre>
-<p><code>summary()</code> is the printed report: coefficients, standard errors, t statistics, p-values, and R-squared. <code>coef()</code> is just the estimates. <code>confint()</code> is the interval for each coefficient. <code>broom::tidy()</code> puts the same numbers in a tibble you can pipe.</p>
-<p>Install <code>broom</code> once in the console if it is missing. Do not put <code>install.packages()</code> in the Quarto file.</p>
-<p>Read one coefficient in words. For <code>mpg ~ wt + hp</code>, the <code>wt</code> number is the change in fitted <code>mpg</code> associated with a one-unit change in <code>wt</code> <strong>holding <code>hp</code> fixed</strong>. The p-value on that row is evidence against "this coefficient is zero," not a quality stamp for the whole model.</p>
+<pre><code class="language-r">summary(fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ wt + hp, data = mtcars)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -3.941 -1.600 -0.182  1.050  5.854 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 37.22727    1.59879  23.285  &lt; 2e-16 ***
+## wt          -3.87783    0.63273  -6.129 1.12e-06 ***
+## hp          -0.03177    0.00903  -3.519  0.00145 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.593 on 29 degrees of freedom
+## Multiple R-squared:  0.8268, Adjusted R-squared:  0.8148 
+## F-statistic: 69.21 on 2 and 29 DF,  p-value: 9.109e-12</code></pre>
+<pre><code class="language-r">coef(fit)</code></pre>
+<pre><code>## (Intercept)          wt          hp 
+## 37.22727012 -3.87783074 -0.03177295</code></pre>
+<pre><code class="language-r">confint(fit)</code></pre>
+<pre><code>##                   2.5 %      97.5 %
+## (Intercept) 33.95738245 40.49715778
+## wt          -5.17191604 -2.58374544
+## hp          -0.05024078 -0.01330512</code></pre>
+<pre><code class="language-r">broom::tidy(fit, conf.int = TRUE)</code></pre>
+<pre><code>## # A tibble: 3 × 7
+##   term        estimate std.error statistic  p.value conf.low conf.high
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)  37.2      1.60        23.3  2.57e-20  34.0      40.5   
+## 2 wt           -3.88     0.633       -6.13 1.12e- 6  -5.17     -2.58  
+## 3 hp           -0.0318   0.00903     -3.52 1.45e- 3  -0.0502   -0.0133</code></pre>
+<p><code>summary()</code> is the printed report: coefficients, standard
+errors, t statistics, p-values, and R-squared. <code>coef()</code> is
+just the estimates. <code>confint()</code> is the interval for each
+coefficient. <code>broom::tidy()</code> puts the same numbers in a
+tibble you can pipe.</p>
+<p>Install <code>broom</code> once in the console if it is missing. Do
+not put <code>install.packages()</code> in the Quarto file.</p>
+<p>Read one coefficient in words. For <code>mpg ~ wt + hp</code>, the
+<code>wt</code> number is the change in fitted <code>mpg</code>
+associated with a one-unit change in <code>wt</code> <strong>holding
+<code>hp</code> fixed</strong>. The p-value on that row is evidence
+against “this coefficient is zero,” not a quality stamp for the whole
+model.</p>
 <hr />
+</div>
+<div id="residual-plots" class="section level2">
 <h2>3. Residual plots</h2>
-<p>A residual is observed minus fitted. If the model is a good description, residuals look like unstructured noise around zero.</p>
-<pre><code class="language-r">plot(fit, which = 1)
-plot(fit, which = 2)
-</code></pre>
-<p><code>which = 1</code> is residuals versus fitted. <code>which = 2</code> is the normal QQ plot. The ggplot version of the first one:</p>
+<p>A residual is observed minus fitted. If the model is a good
+description, residuals look like unstructured noise around zero.</p>
+<pre><code class="language-r">plot(fit, which = 1)</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-regression-summaries/chunk-4-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<pre><code class="language-r">plot(fit, which = 2)</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-regression-summaries/chunk-4-2.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p><code>which = 1</code> is residuals versus fitted.
+<code>which = 2</code> is the normal QQ plot. The ggplot version of the
+first one:</p>
 <pre><code class="language-r">aug &lt;- broom::augment(fit)
 
 ggplot(aug, aes(x = .fitted, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0) +
   geom_smooth(se = FALSE) +
-  theme_bw()
-</code></pre>
-<p>If the residual cloud <strong>fans out</strong> (small spread on the left, wide on the right), the variance is not constant. A transform of the response is the first thing to try, often <code>log(y)</code>:</p>
+  theme_bw()</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-regression-summaries/chunk-5-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>If the residual cloud <strong>fans out</strong> (small spread on the
+left, wide on the right), the variance is not constant. A transform of
+the response is the first thing to try, often <code>log(y)</code>:</p>
 <pre><code class="language-r">fit_log &lt;- lm(log(mpg) ~ wt + hp, data = mtcars)
-plot(fit_log, which = 1)
-</code></pre>
-<p>Refit, then look at the residual plot again. Do not transform only because a p-value looked nicer.</p>
+plot(fit_log, which = 1)</code></pre>
+<p><img src="files/data-612/lectures/_figs/stats-regression-summaries/chunk-6-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+<p>Refit, then look at the residual plot again. Do not transform only
+because a p-value looked nicer.</p>
 <hr />
+</div>
+<div id="numerical-summaries" class="section level2">
 <h2>4. Numerical summaries</h2>
-<p><code>summary()</code> on a data frame is the base-R scan: min, quartiles, mean, max, and a count of <code>NA</code>s for each column.</p>
-<pre><code class="language-r">summary(penguins)
-summary(mtcars)
-</code></pre>
-<p>For a tibble of chosen summaries, use <code>across()</code> with a named list. <code>{.col}_{.fn}</code> builds the output names. <code>na.rm</code> belongs on the function, so pass a formula <code>~ mean(.x, na.rm = TRUE)</code> rather than the bare <code>mean</code>:</p>
+<p><code>summary()</code> on a data frame is the base-R scan: min,
+quartiles, mean, max, and a count of <code>NA</code>s for each
+column.</p>
+<pre><code class="language-r">summary(penguins)</code></pre>
+<pre><code>##       species          island    bill_length_mm  bill_depth_mm  
+##  Adelie   :152   Biscoe   :168   Min.   :32.10   Min.   :13.10  
+##  Chinstrap: 68   Dream    :124   1st Qu.:39.23   1st Qu.:15.60  
+##  Gentoo   :124   Torgersen: 52   Median :44.45   Median :17.30  
+##                                  Mean   :43.92   Mean   :17.15  
+##                                  3rd Qu.:48.50   3rd Qu.:18.70  
+##                                  Max.   :59.60   Max.   :21.50  
+##                                  NAs    :2       NAs    :2      
+##  flipper_length_mm  body_mass_g       sex           year     
+##  Min.   :172.0     Min.   :2700   female:165   Min.   :2007  
+##  1st Qu.:190.0     1st Qu.:3550   male  :168   1st Qu.:2007  
+##  Median :197.0     Median :4050   NAs   : 11   Median :2008  
+##  Mean   :200.9     Mean   :4202                Mean   :2008  
+##  3rd Qu.:213.0     3rd Qu.:4750                3rd Qu.:2009  
+##  Max.   :231.0     Max.   :6300                Max.   :2009  
+##  NAs    :2         NAs    :2</code></pre>
+<pre><code class="language-r">summary(mtcars)</code></pre>
+<pre><code>##       mpg             cyl             disp             hp       
+##  Min.   :10.40   Min.   :4.000   Min.   : 71.1   Min.   : 52.0  
+##  1st Qu.:15.43   1st Qu.:4.000   1st Qu.:120.8   1st Qu.: 96.5  
+##  Median :19.20   Median :6.000   Median :196.3   Median :123.0  
+##  Mean   :20.09   Mean   :6.188   Mean   :230.7   Mean   :146.7  
+##  3rd Qu.:22.80   3rd Qu.:8.000   3rd Qu.:326.0   3rd Qu.:180.0  
+##  Max.   :33.90   Max.   :8.000   Max.   :472.0   Max.   :335.0  
+##       drat             wt             qsec             vs        
+##  Min.   :2.760   Min.   :1.513   Min.   :14.50   Min.   :0.0000  
+##  1st Qu.:3.080   1st Qu.:2.581   1st Qu.:16.89   1st Qu.:0.0000  
+##  Median :3.695   Median :3.325   Median :17.71   Median :0.0000  
+##  Mean   :3.597   Mean   :3.217   Mean   :17.85   Mean   :0.4375  
+##  3rd Qu.:3.920   3rd Qu.:3.610   3rd Qu.:18.90   3rd Qu.:1.0000  
+##  Max.   :4.930   Max.   :5.424   Max.   :22.90   Max.   :1.0000  
+##        am              gear            carb      
+##  Min.   :0.0000   Min.   :3.000   Min.   :1.000  
+##  1st Qu.:0.0000   1st Qu.:3.000   1st Qu.:2.000  
+##  Median :0.0000   Median :4.000   Median :2.000  
+##  Mean   :0.4062   Mean   :3.688   Mean   :2.812  
+##  3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:4.000  
+##  Max.   :1.0000   Max.   :5.000   Max.   :8.000</code></pre>
+<p>For a tibble of chosen summaries, use <code>across()</code> with a
+named list. <code>{.col}_{.fn}</code> builds the output names.
+<code>na.rm</code> belongs on the function, so pass a formula
+<code>~ mean(.x, na.rm = TRUE)</code> rather than the bare
+<code>mean</code>:</p>
 <pre><code class="language-r">penguins |&gt;
   summarize(
     across(
@@ -181,23 +286,40 @@ summary(mtcars)
       ),
       .names = &quot;{.col}_{.fn}&quot;
     )
-  )
-</code></pre>
-<p><code>list(mean = mean, sd = sd)</code> is the same idea without <code>na.rm</code>. On <code>penguins</code> that will propagate <code>NA</code>s. Prefer the formula form.</p>
-<p><code>skimr::skim()</code> is a compact one-function scan (types, missingness, mean, sd, quantiles). Install <code>skimr</code> once if you want it. It does not replace a plot.</p>
-<pre><code class="language-r">skimr::skim(penguins)
-</code></pre>
+  )</code></pre>
+<pre><code>## # A tibble: 1 × 10
+##   bill_length_mm_mean bill_length_mm_sd bill_depth_mm_mean bill_depth_mm_sd
+##                 &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;            &lt;dbl&gt;
+## 1                43.9              5.46               17.2             1.97
+## # ℹ 6 more variables: flipper_length_mm_mean &lt;dbl&gt;, flipper_length_mm_sd &lt;dbl&gt;,
+## #   body_mass_g_mean &lt;dbl&gt;, body_mass_g_sd &lt;dbl&gt;, year_mean &lt;dbl&gt;,
+## #   year_sd &lt;dbl&gt;</code></pre>
+<p><code>list(mean = mean, sd = sd)</code> is the same idea without
+<code>na.rm</code>. On <code>penguins</code> that will propagate
+<code>NA</code>s. Prefer the formula form.</p>
+<p><code>skimr::skim()</code> is a compact one-function scan (types,
+missingness, mean, sd, quantiles). Install <code>skimr</code> once if
+you want it. It does not replace a plot.</p>
+<pre><code class="language-r">skimr::skim(penguins)</code></pre>
+<pre><code>## Error in `loadNamespace()`:
+## ! there is no package called &#39;skimr&#39;</code></pre>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>5. Practice</h2>
-<ol>
-<li>
-<p><code>fit &lt;- lm(mpg ~ wt + hp, data = mtcars)</code>. Read <code>summary(fit)</code> and <code>confint(fit)</code>. Write one sentence that interprets the <code>wt</code> coefficient. Glance at <code>plot(fit, which = 1)</code>.</p>
-</li>
-<li>
-<p><code>across()</code> summaries of every numeric column in <code>penguins</code> or <code>mtcars</code>: mean and sd, <code>.names = "{.col}_{.fn}"</code>, <code>na.rm</code> via <code>~ mean(.x, na.rm = TRUE)</code>. If <code>skimr</code> is installed, run <code>skim()</code> on the same table.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li><code>fit &lt;- lm(mpg ~ wt + hp, data = mtcars)</code>. Read
+<code>summary(fit)</code> and <code>confint(fit)</code>. Write one
+sentence that interprets the <code>wt</code> coefficient. Glance at
+<code>plot(fit, which = 1)</code>.</li>
+<li><code>across()</code> summaries of every numeric column in
+<code>penguins</code> or <code>mtcars</code>: mean and sd,
+<code>.names = "{.col}_{.fn}"</code>, <code>na.rm</code> via
+<code>~ mean(.x, na.rm = TRUE)</code>. If <code>skimr</code> is
+installed, run <code>skim()</code> on the same table.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-stats-tests.html"><span aria-hidden="true">←</span> 11.1 Statistics: Tests</a>
                         <a class="course-page-nav__week" href="data-612-week-11.html">Week 11</a>
                             <a class="course-page-nav__next" href="data-612-lab-11-stats.html">Lab 11: Tests and Models <span aria-hidden="true">→</span></a>
@@ -210,7 +332,7 @@ summary(mtcars)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

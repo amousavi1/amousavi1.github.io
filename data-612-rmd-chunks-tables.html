@@ -111,79 +111,63 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">13.1 R Markdown: Chunks and Tables</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-13.html">Week 13</a> &middot;
                             <a href="files/data-612/rmd-chunks-tables.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Label chunks, set options, kable() a table, and include a child document.
-                        </p>
+                         &middot; <a href="files/data-612/lectures/rmd-chunks-tables.qmd">Source (.qmd)</a></p>
+<p>Label chunks, set options, kable() a table, and include a child
+document.</p>
+<div id="label-every-chunk" class="section level2">
 <h2>1. Label every chunk</h2>
-<p>Note 1.4 covered Render, YAML, and <code>echo</code> / <code>eval</code> / <code>include</code>. This note is the next layer: names, defaults, tables, child files.</p>
-<p>Give each chunk a unique <strong>label</strong>. Letters, digits, and hyphens are fine. The older fence <code>{r bill-summary}</code> is the same idea.</p>
-<pre><code class="language-markdown">```{r}
-#| label: bill-summary
-
-penguins |&gt; summarize(n = n())
-```
-</code></pre>
+<p>Note 1.4 covered Render, YAML, and <code>echo</code> /
+<code>eval</code> / <code>include</code>. This note is the next layer:
+names, defaults, tables, child files.</p>
+<p>Give each chunk a unique <strong>label</strong>. Letters, digits, and
+hyphens are fine. The older fence <code>{r bill-summary}</code> is the
+same idea.</p>
+<pre><code class="language-r">penguins |&gt; summarize(n = n())</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1   344</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Options that hide or skip work</li>
+</ol>
+<p>Option What it hides or skips</p>
+<p><code>eval</code> If <code>false</code>, R does not run the chunk.
+The reader can still see the code.</p>
+<p><code>echo</code> If <code>false</code>, the reader does not see the
+code. Results still appear.</p>
+<p><code>include</code> If <code>false</code>, nothing from the chunk is
+printed. The code still runs if <code>eval</code> is true.</p>
+<p><code>warning</code> If <code>false</code>, warnings are hidden.</p>
+<p><code>message</code> If <code>false</code>, messages are hidden
+(<code>library()</code> chatter, <code>read_csv()</code> types).</p>
+<p><code>cache</code> If <code>true</code>, knitr stores the result and
+skips a rerun when the chunk has not changed.</p>
+<p><code>include: false</code> is the usual setup chunk: load packages,
+read data. Later chunks need those objects. The reader does not need
+that boilerplate.</p>
+<p><code>cache: true</code> is a speed trick. Turn it off for a final
+Render so you are not looking at a stale object.</p>
 <hr />
-<h2>2. Options that hide or skip work</h2>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>Option</th>
-<th>What it hides or skips</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>eval</code></td>
-<td>If <code>false</code>, R does not run the chunk. The reader can still see the code.</td>
-</tr>
-<tr>
-<td><code>echo</code></td>
-<td>If <code>false</code>, the reader does not see the code. Results still appear.</td>
-</tr>
-<tr>
-<td><code>include</code></td>
-<td>If <code>false</code>, nothing from the chunk is printed. The code still runs if <code>eval</code> is true.</td>
-</tr>
-<tr>
-<td><code>warning</code></td>
-<td>If <code>false</code>, warnings are hidden.</td>
-</tr>
-<tr>
-<td><code>message</code></td>
-<td>If <code>false</code>, messages are hidden (<code>library()</code> chatter, <code>read_csv()</code> types).</td>
-</tr>
-<tr>
-<td><code>cache</code></td>
-<td>If <code>true</code>, knitr stores the result and skips a rerun when the chunk has not changed.</td>
-</tr>
-</tbody>
-</table></div>
-<p><code>include: false</code> is the usual setup chunk: load packages, read data. Later chunks need those objects. The reader does not need that boilerplate.</p>
-<p><code>cache: true</code> is a speed trick. Turn it off for a final Render so you are not looking at a stale object.</p>
-<hr />
+</div>
+<div id="defaults-in-a-setup-chunk" class="section level2">
 <h2>3. Defaults in a setup chunk</h2>
-<p>Set the usual rules once with <code>knitr::opts_chunk$set()</code>. A later chunk can override one option.</p>
-<pre><code class="language-markdown">```{r}
-#| label: setup
-#| include: false
-
-knitr::opts_chunk$set(
-  echo = TRUE,
-  message = FALSE,
-  warning = FALSE
-)
-```
-</code></pre>
-<p>Quarto's YAML <code>execute:</code> block (note 1.4) does the same job. Either is fine. This week we use <code>opts_chunk$set()</code> so the habit works in an old <code>.Rmd</code> as well as a <code>.qmd</code>.</p>
+<p>Set the usual rules once with <code>knitr::opts_chunk$set()</code>. A
+later chunk can override one option.</p>
+<p>Quarto’s YAML <code>execute:</code> block (note 1.4) does the same
+job. Either is fine. This week we use <code>opts_chunk$set()</code> so
+the habit works in an old <code>.Rmd</code> as well as a
+<code>.qmd</code>.</p>
 <hr />
+</div>
+<div id="tables-with-kable" class="section level2">
 <h2>4. Tables with <code>kable()</code></h2>
-<p><code>print()</code> of a tibble is readable in the console. In a report, pass the table to <code>knitr::kable()</code> and give it a caption.</p>
+<p><code>print()</code> of a tibble is readable in the console. In a
+report, pass the table to <code>knitr::kable()</code> and give it a
+caption.</p>
 <pre><code class="language-r">penguins |&gt;
   group_by(species) |&gt;
   summarize(
@@ -191,50 +175,81 @@ knitr::opts_chunk$set(
     n = n(),
     .groups = &quot;drop&quot;
   ) |&gt;
-  knitr::kable(caption = &quot;Mean bill length (mm) by species.&quot;, digits = 1)
-</code></pre>
-<p><code>digits</code> rounds numbers. <code>{kableExtra}</code> can style rows; we do not need it this week.</p>
+  knitr::kable(caption = &quot;Mean bill length (mm) by species.&quot;, digits = 1)</code></pre>
+<table>
+<caption>Mean bill length (mm) by species.</caption>
+<thead>
+<tr class="header">
+<th align="left">species</th>
+<th align="right">mean_bill</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Adelie</td>
+<td align="right">38.8</td>
+<td align="right">152</td>
+</tr>
+<tr class="even">
+<td align="left">Chinstrap</td>
+<td align="right">48.8</td>
+<td align="right">68</td>
+</tr>
+<tr class="odd">
+<td align="left">Gentoo</td>
+<td align="right">47.5</td>
+<td align="right">124</td>
+</tr>
+</tbody>
+</table>
+<p><code>digits</code> rounds numbers. <code>{kableExtra}</code> can
+style rows; we do not need it this week.</p>
 <hr />
+</div>
+<div id="folding-code-in-the-yaml" class="section level2">
 <h2>5. Folding code in the YAML</h2>
 <p>R Markdown:</p>
-<pre><code class="language-markdown">output:
-  html_document:
-    code_folding: hide
-</code></pre>
+<p>output: html_document: code_folding: hide</p>
 <p>Quarto:</p>
-<pre><code class="language-markdown">format:
-  html:
-    code-fold: true
-</code></pre>
-<p><code>hide</code> / <code>true</code> starts with the chunks collapsed. The reader can open one.</p>
+<p>format: html: code-fold: true</p>
+<p><code>hide</code> / <code>true</code> starts with the chunks
+collapsed. The reader can open one.</p>
 <hr />
+</div>
+<div id="child-documents" class="section level2">
 <h2>6. Child documents</h2>
-<p>A long report can pull in another file:</p>
-<pre><code class="language-markdown">```{r, child = &quot;helper.qmd&quot;}
-```
-</code></pre>
-<p>The child's YAML is <strong>ignored</strong>. Title, author, and <code>format:</code> live only in the parent. The child is just Markdown plus chunks, run in the parent's session.</p>
-<p>Labels must stay unique across parent and child. If a helper also has a chunk named <code>setup</code>, rename one of them.</p>
+<p>A long report can pull in another file with a chunk option such as
+<code>child = "helper.qmd"</code> (R Markdown) or
+<code>#| child: helper.qmd</code> (Quarto). That helper file is not knit
+as its own document here — it is only an example of the syntax.</p>
+<p>The child’s YAML is <strong>ignored</strong>. Title, author, and
+<code>format:</code> live only in the parent. The child is just Markdown
+plus chunks, run in the parent’s session.</p>
+<p>Labels must stay unique across parent and child. If a helper also has
+a chunk named <code>setup</code>, rename one of them.</p>
 <hr />
+</div>
+<div id="load-a-package-only-if-it-is-missing" class="section level2">
 <h2>7. Load a package only if it is missing</h2>
-<p>When a child (or a chunk you rerun) would call <code>library(tidyverse)</code> a second time, skip it:</p>
-<pre><code class="language-markdown">```{r, eval = !&quot;tidyverse&quot; %in% .packages()}
-library(tidyverse)
-```
-</code></pre>
-<p><code>.packages()</code> is the character vector of attached packages. The <code>!</code> flips the test: evaluate the chunk only when tidyverse is <strong>not</strong> already loaded.</p>
+<p>When a child (or a chunk you rerun) would call
+<code>library(tidyverse)</code> a second time, skip it:</p>
+<pre><code class="language-r">library(tidyverse)</code></pre>
+<p><code>.packages()</code> is the character vector of attached
+packages. The <code>!</code> flips the test: evaluate the chunk only
+when tidyverse is <strong>not</strong> already loaded.</p>
 <p>The same idea for data: <code>eval = !exists("penguins")</code>.</p>
 <hr />
+</div>
+<div id="practice" class="section level2">
 <h2>8. Practice</h2>
-<ol>
-<li>
-<p>List four chunk options and say what each one hides (or skips).</p>
-</li>
-<li>
-<p>Write a setup chunk that sets <code>echo = TRUE</code> and <code>message = FALSE</code> for the whole document.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>List four chunk options and say what each one hides (or skips).</li>
+<li>Write a setup chunk that sets <code>echo = TRUE</code> and
+<code>message = FALSE</code> for the whole document.</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lab-12-solutions.html"><span aria-hidden="true">←</span> Lab 12 solutions</a>
                         <a class="course-page-nav__week" href="data-612-week-13.html">Week 13</a>
                             <a class="course-page-nav__next" href="data-612-rmd-citations-bookdown.html">13.2 R Markdown: Citations and Cross-References <span aria-hidden="true">→</span></a>
@@ -247,7 +262,7 @@ library(tidyverse)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

@@ -1,0 +1,119 @@
+
+
+
+<p>[ keeps structure. [[ extracts one. A data frame is a list of
+columns.</p>
+<div id="two-kinds-of-vectors" class="section level2">
+<h2>1. Two kinds of vectors</h2>
+<p>R has two kinds of vectors: <strong>atomic</strong> vectors and
+<strong>lists</strong>.</p>
+<p><img
+src="files/data-612/graphics/data-structures-overview.png" /></p>
+<p>An atomic vector holds one type: logical, integer, double, character
+(plus complex and raw, which we will not use). A list can hold mixed
+types, including other lists.</p>
+<pre class="r"><code>x &lt;- c(1L, 10L, 2L)
+typeof(x)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>length(x)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p><code>c(1, 10, 2)</code> is double. The <code>L</code> makes an
+integer. <code>typeof()</code> is the storage type.
+<code>length()</code> is how many elements.</p>
+<p>A factor is an integer with labels. A <code>Date</code> is a double.
+Both still behave like atomic vectors when you subset them.</p>
+<hr />
+</div>
+<div id="keeps-structure-extracts-one" class="section level2">
+<h2>2. <code>[</code> keeps structure; <code>[[</code> extracts one</h2>
+<p><code>[</code> returns the same kind of object, names included.
+<code>[[</code> pulls out <strong>one</strong> element and drops the
+wrapper. <code>$</code> is <code>[[</code> for a name.</p>
+<pre class="r"><code>x &lt;- c(horse = 7, man = 1, dog = 8)
+x[2:3]</code></pre>
+<pre><code>## man dog 
+##   1   8</code></pre>
+<pre class="r"><code>x[c(&quot;man&quot;, &quot;horse&quot;)]</code></pre>
+<pre><code>##   man horse 
+##     1     7</code></pre>
+<pre class="r"><code>x[-3]</code></pre>
+<pre><code>## horse   man 
+##     7     1</code></pre>
+<pre class="r"><code>x[[3]]</code></pre>
+<pre><code>## [1] 8</code></pre>
+<p><code>x[3]</code> is still a named vector of length 1.
+<code>x[[3]]</code> is the number <code>8</code>.</p>
+<p>A logical vector of the same length picks the <code>TRUE</code>
+positions:</p>
+<pre class="r"><code>x[c(TRUE, FALSE, TRUE)]</code></pre>
+<pre><code>## horse   dog 
+##     7     8</code></pre>
+<hr />
+</div>
+<div id="recycling-and-names" class="section level2">
+<h2>3. Recycling and names</h2>
+<p>R recycles a shorter vector to the length of the longer one:</p>
+<pre class="r"><code>x &lt;- c(1, 2, 3, 4)
+x + 10</code></pre>
+<pre><code>## [1] 11 12 13 14</code></pre>
+<pre class="r"><code># same idea as x + c(10, 10, 10, 10)</code></pre>
+<p>Recycling a non-scalar (<code>x + c(10, 20)</code>) is legal and easy
+to misread. Prefer a scalar, or write a vector of the same length.</p>
+<p><code>names(x)</code> is a character vector. You can set names when
+you create the object:</p>
+<pre class="r"><code>c(Yoshi = 10L, Mario = 31L)</code></pre>
+<pre><code>## Yoshi Mario 
+##    10    31</code></pre>
+<hr />
+</div>
+<div id="lists-hold-mixed-types" class="section level2">
+<h2>4. Lists hold mixed types</h2>
+<pre class="r"><code>my_list &lt;- list(
+  x = &quot;a&quot;,
+  y = 1,
+  z = c(1L, 2L, 3L)
+)</code></pre>
+<p><code>[</code> on a list returns a <strong>list</strong>.
+<code>[[</code> or <code>$</code> returns the element inside.</p>
+<pre class="r"><code>my_list[1]</code></pre>
+<pre><code>## $x
+## [1] &quot;a&quot;</code></pre>
+<pre class="r"><code>my_list[[1]]</code></pre>
+<pre><code>## [1] &quot;a&quot;</code></pre>
+<pre class="r"><code>my_list$y</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Remove an element by assigning <code>NULL</code>:</p>
+<pre class="r"><code>my_list$x &lt;- NULL</code></pre>
+<hr />
+</div>
+<div id="a-data-frame-is-a-list-of-columns" class="section level2">
+<h2>5. A data frame is a list of columns</h2>
+<p>A tibble is a list. Each element is a column. That is why
+<code>df[[2]]</code> is the second column and <code>df$species</code> is
+the <code>species</code> column.</p>
+<p>A list can also hold a tibble as one of its elements. Subset the list
+to get the tibble; then use dplyr on that tibble.</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>6. Practice</h2>
+<ol style="list-style-type: decimal">
+<li>Create</li>
+</ol>
+<pre class="r"><code>x &lt;- c(
+  Yoshi = 10L,
+  Mario = 31L,
+  Luigi = 72L,
+  Peach = 11L,
+  Toad  = 38L
+)</code></pre>
+<p>Extract Yoshi and Peach four ways: positive integers, negative
+integers, a logical vector, and names.</p>
+<ol style="list-style-type: decimal">
+<li>Build a wedding-style list: a <code>venue</code>, a
+<code>guest</code> tibble (name, meal, age), a <code>bride</code>, a
+<code>groom</code>, and a <code>date</code>. Remove one guest row from
+the embedded tibble. Add a named vector that decodes the meal codes.
+Extract the venue two ways.</li>
+</ol>
+</div>

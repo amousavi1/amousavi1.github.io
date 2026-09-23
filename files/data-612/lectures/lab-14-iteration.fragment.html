@@ -1,0 +1,39 @@
+
+
+
+<p>Simulate a sampling distribution, then map models over diamonds.</p>
+<p>Work in a <strong>Quarto</strong> document. Do notes
+<strong>14.1</strong> and <strong>14.2</strong> first.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<p><code>diamonds</code> is in ggplot2. <code>geom_hex()</code> needs
+the <code>hexbin</code> package for the optional plot.</p>
+<hr />
+<div id="a-sampling-distribution" class="section level2">
+<h2>1. A sampling distribution</h2>
+<ol style="list-style-type: decimal">
+<li>Draw 1000 samples of size 30 from
+<code>rexp(n = 30, rate = 1)</code>. Store the mean of each sample. Use
+a <strong>for-loop</strong> and pre-allocate the vector of means.
+Histogram the 1000 means.</li>
+<li>The same 1000 means with <code>map_dbl()</code>.</li>
+<li>The same 1000 means with <code>replicate()</code>.</li>
+<li>Repeat the <code>replicate()</code> version for <code>n</code> in
+<code>c(5, 50, 100, 500)</code>. Histogram each set of means. Write two
+sentences about how the shape changes as <code>n</code> grows.</li>
+</ol>
+<hr />
+</div>
+<div id="diamonds" class="section level2">
+<h2>2. Diamonds</h2>
+<ol style="list-style-type: decimal">
+<li>Summary of every numeric column of <code>diamonds</code> with purrr,
+then again with <code>across()</code>. What is different about the two
+results?</li>
+<li><code>split()</code> by <code>color</code>. Fit
+<code>lm(price ~ depth)</code> in each piece. Extract the p-value for
+<code>depth</code> and the adjusted R-squared.</li>
+<li>Optional: a hex plot of <code>depth</code> vs <code>price</code>,
+faceted by <code>color</code>, with an OLS line. Do the p-values and
+R-squared values match what the panels look like?</li>
+</ol>
+</div>

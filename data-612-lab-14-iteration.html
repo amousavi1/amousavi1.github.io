@@ -111,48 +111,48 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 14: Vectors and Iteration</h1>
                     </header>
-                    <section class="page__content" itemprop="text">
+                                        <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-14.html">Week 14</a> &middot;
                             <a href="files/data-612/lab-14-iteration.pdf" target="_blank" rel="noopener">PDF</a>
-                        </p>
-                        <p>
-                            Simulate a sampling distribution, then map models over diamonds.
-                        </p>
-<p>Work in a <strong>Quarto</strong> document. Do notes <strong>14.1</strong> and <strong>14.2</strong> first.</p>
-<pre><code class="language-r">library(tidyverse)
-</code></pre>
-<p><code>diamonds</code> is in ggplot2. <code>geom_hex()</code> needs the <code>hexbin</code> package for the optional plot.</p>
+                         &middot; <a href="files/data-612/lectures/lab-14-iteration.qmd">Source (.qmd)</a></p>
+<p>Simulate a sampling distribution, then map models over diamonds.</p>
+<p>Work in a <strong>Quarto</strong> document. Do notes
+<strong>14.1</strong> and <strong>14.2</strong> first.</p>
+<pre><code class="language-r">library(tidyverse)</code></pre>
+<p><code>diamonds</code> is in ggplot2. <code>geom_hex()</code> needs
+the <code>hexbin</code> package for the optional plot.</p>
 <hr />
+<div id="a-sampling-distribution" class="section level2">
 <h2>1. A sampling distribution</h2>
-<ol>
-<li>
-<p>Draw 1000 samples of size 30 from <code>rexp(n = 30, rate = 1)</code>. Store the mean of each sample. Use a <strong>for-loop</strong> and pre-allocate the vector of means. Histogram the 1000 means.</p>
-</li>
-<li>
-<p>The same 1000 means with <code>map_dbl()</code>.</p>
-</li>
-<li>
-<p>The same 1000 means with <code>replicate()</code>.</p>
-</li>
-<li>
-<p>Repeat the <code>replicate()</code> version for <code>n</code> in <code>c(5, 50, 100, 500)</code>. Histogram each set of means. Write two sentences about how the shape changes as <code>n</code> grows.</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Draw 1000 samples of size 30 from
+<code>rexp(n = 30, rate = 1)</code>. Store the mean of each sample. Use
+a <strong>for-loop</strong> and pre-allocate the vector of means.
+Histogram the 1000 means.</li>
+<li>The same 1000 means with <code>map_dbl()</code>.</li>
+<li>The same 1000 means with <code>replicate()</code>.</li>
+<li>Repeat the <code>replicate()</code> version for <code>n</code> in
+<code>c(5, 50, 100, 500)</code>. Histogram each set of means. Write two
+sentences about how the shape changes as <code>n</code> grows.</li>
 </ol>
 <hr />
+</div>
+<div id="diamonds" class="section level2">
 <h2>2. Diamonds</h2>
-<ol>
-<li>
-<p>Summary of every numeric column of <code>diamonds</code> with purrr, then again with <code>across()</code>. What is different about the two results?</p>
-</li>
-<li>
-<p><code>split()</code> by <code>color</code>. Fit <code>lm(price ~ depth)</code> in each piece. Extract the p-value for <code>depth</code> and the adjusted R-squared.</p>
-</li>
-<li>
-<p>Optional: a hex plot of <code>depth</code> vs <code>price</code>, faceted by <code>color</code>, with an OLS line. Do the p-values and R-squared values match what the panels look like?</p>
-</li>
+<ol style="list-style-type: decimal">
+<li>Summary of every numeric column of <code>diamonds</code> with purrr,
+then again with <code>across()</code>. What is different about the two
+results?</li>
+<li><code>split()</code> by <code>color</code>. Fit
+<code>lm(price ~ depth)</code> in each piece. Extract the p-value for
+<code>depth</code> and the adjusted R-squared.</li>
+<li>Optional: a hex plot of <code>depth</code> vs <code>price</code>,
+faceted by <code>color</code>, with an OLS line. Do the p-values and
+R-squared values match what the panels look like?</li>
 </ol>
-                        <nav class="course-page-nav" aria-label="Page">
+</div>
+<nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-course-wrap.html"><span aria-hidden="true">←</span> 14.3 Course Wrap</a>
                         <a class="course-page-nav__week" href="data-612-week-14.html">Week 14</a>
                             <a class="course-page-nav__next" href="data-612-lab-14-solutions.html">Lab 14 solutions <span aria-hidden="true">→</span></a>
@@ -165,7 +165,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:30:00-04:00">September 23, 2026, 3:30 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-23T03:40:00-04:00">September 23, 2026, 3:40 AM EDT</time></div>
             </footer>
         </div>
 

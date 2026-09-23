@@ -1,0 +1,46 @@
+
+
+
+<p>A penguin table, a captioned plot, and a citation.</p>
+<p>Work in a <strong>Quarto</strong> document. Do notes
+<strong>13.1</strong> and <strong>13.2</strong> first. Render to HTML.
+You will need <code>tidyverse</code>, <code>palmerpenguins</code>, and
+<code>knitr</code>.</p>
+<hr />
+<div id="setup-and-packages" class="section level2">
+<h2>1. Setup and packages</h2>
+<ol style="list-style-type: decimal">
+<li>A setup chunk that calls <code>knitr::opts_chunk$set()</code> with
+<code>echo = TRUE</code> and <code>message = FALSE</code>. Hide the
+setup chunk itself (<code>include: false</code>).</li>
+<li>Load <code>tidyverse</code> and <code>palmerpenguins</code> without
+printing package startup text. <code>data(penguins)</code> if the tibble
+is not already attached.</li>
+</ol>
+<hr />
+</div>
+<div id="a-table-and-a-plot" class="section level2">
+<h2>2. A table and a plot</h2>
+<ol style="list-style-type: decimal">
+<li>A <code>kable</code> of a <strong>three-column</strong> summary of
+bill length by species (species, mean bill length, and <code>n</code> is
+enough). Give the table a caption.</li>
+<li>A scatterplot of <code>bill_length_mm</code> vs
+<code>bill_depth_mm</code>, colored by <code>species</code>. Give the
+figure a caption.</li>
+</ol>
+<hr />
+</div>
+<div id="a-citation-and-folding" class="section level2">
+<h2>3. A citation and folding</h2>
+<ol style="list-style-type: decimal">
+<li>Download <code>test_rmd_file.bib</code> from the Data section into a
+<code>bib/</code> folder. Point YAML at it
+(<code>bibliography: bib/test_rmd_file.bib</code>). Cite the
+palmerpenguins entry with <code>@</code> plus the key from the
+file.</li>
+<li>Optional: fold the code in the YAML (<code>code-fold: true</code> in
+Quarto, or <code>code_folding: hide</code> in an
+<code>.Rmd</code>).</li>
+</ol>
+</div>

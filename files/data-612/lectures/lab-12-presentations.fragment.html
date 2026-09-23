@@ -1,0 +1,36 @@
+
+
+
+<p>Three slides: a title, a daily delay table, and a line plot.</p>
+<p>Work in a <strong>Quarto</strong> document. A Quarto
+<code>revealjs</code> deck or an R Markdown HTML presentation
+(<code>ioslides_presentation</code> or <code>slidy_presentation</code>)
+are both fine. Do <strong>12.1</strong> first.</p>
+<p>Load packages <strong>silently</strong> (<code>include = FALSE</code>
+or <code>#| include: false</code>). You will need <code>tidyverse</code>
+and <code>nycflights13</code>. <code>flights</code> is already 2013.</p>
+<pre class="r"><code>library(tidyverse)
+library(nycflights13)</code></pre>
+<hr />
+<div id="cover" class="section level2">
+<h2>1. Cover</h2>
+<p>A title slide. YAML <code>title</code> and <code>author</code> are
+enough. Add a subtitle if you want.</p>
+<hr />
+</div>
+<div id="mean-arrival-delay-by-day" class="section level2">
+<h2>2. Mean arrival delay by day</h2>
+<p>A slide that <strong>shows the code</strong> that computes mean
+<code>arr_delay</code> by calendar day from
+<code>nycflights13::flights</code>. Use
+<code>make_date(year, month, day)</code> (lubridate, loaded with
+tidyverse), then <code>group_by(date)</code> and
+<code>summarize()</code>. Save the summary tibble. Print it or
+<code>head()</code> it so a table appears on the slide.</p>
+<hr />
+</div>
+<div id="the-line-plot-no-code" class="section level2">
+<h2>3. The line plot, no code</h2>
+<p>A slide that shows a line plot of that daily mean against date. Hide
+the code (<code>echo = FALSE</code>). The plot is the slide.</p>
+</div>

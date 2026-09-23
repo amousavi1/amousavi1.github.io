@@ -1,0 +1,114 @@
+
+
+
+<p>Knit slides from code. ioslides, slidy, beamer, or Quarto reveal.</p>
+<div id="why-knit-slides-from-code" class="section level2">
+<h2>1. Why knit slides from code</h2>
+<p>A slide deck that is also a source file has one job: the numbers and
+plots on the slide come from the same code you would put in a homework
+file. Knit (or Render) again after a data fix and the deck updates. You
+are not pasting a screenshot of a plot you can no longer reproduce.</p>
+<p>The file is still Markdown plus chunks. The output is slides instead
+of a scrolling report. Note 1.5 is the document system; this note is the
+slide formats.</p>
+<hr />
+</div>
+<div id="formats" class="section level2">
+<h2>2. Formats</h2>
+<p>R Markdown presentation outputs you will see:</p>
+<p>Output What you get</p>
+<p><code>ioslides_presentation</code> HTML slides (the usual starting
+point)</p>
+<p><code>slidy_presentation</code> HTML slides, W3C Slidy</p>
+<p><code>beamer_presentation</code> PDF slides. Needs LaTeX</p>
+<p><code>powerpoint_presentation</code> A <code>.pptx</code> file</p>
+<p><code>xaringan::moon_reader</code> HTML slides (remark.js). Needs the
+<code>xaringan</code> package</p>
+<p>Quarto’s HTML slide format is <code>format: revealjs</code>. Lab 12
+accepts that as well.</p>
+<p>Pick <strong>one</strong> HTML format and stay with it for the lab.
+Beamer is for when you already have LaTeX and want a PDF. PowerPoint is
+for a file someone else will click through in PowerPoint.</p>
+<hr />
+</div>
+<div id="yaml-and-slide-breaks" class="section level2">
+<h2>3. YAML and slide breaks</h2>
+<p>R Markdown uses <code>output:</code>. A minimal ioslides header:</p>
+<p>The title slide is built from <code>title</code> and
+<code>author</code>. Every later slide starts with <code>##</code>.</p>
+</div>
+<div id="a-slide-title" class="section level2">
+<h2>A slide title</h2>
+<p>A sentence.</p>
+<pre class="r"><code>mean(mtcars$mpg)</code></pre>
+<pre><code>## [1] 20.09062</code></pre>
+<p><code>#</code> is a section (ioslides can turn it into a divider).
+The slides you write are <code>##</code>.</p>
+<p>xaringan is the exception: slides are separated by a line with only
+<code>---</code>, not by <code>##</code>. If you pick xaringan, follow a
+xaringan template. If you pick ioslides or slidy, use
+<code>##</code>.</p>
+<p>Quarto reveal uses <code>format: revealjs</code> and the same
+<code>##</code> slide titles.</p>
+<hr />
+</div>
+<div id="what-to-show" class="section level2">
+<h2>4. What to show</h2>
+<p>Do <strong>not</strong> show package-load code. Put
+<code>library()</code> in a setup chunk with <code>echo = FALSE</code>
+(R Markdown) or <code>#| echo: false</code> /
+<code>#| include: false</code> (Quarto). The reader came for the table
+and the plot.</p>
+<p>A chunk that <strong>computes</strong> a table can show the code
+(<code>echo = TRUE</code>). A chunk that <strong>draws</strong> the plot
+the audience should look at often hides the code
+(<code>echo = FALSE</code>). Both chunks still run.</p>
+<p>HTML widgets (an interactive <code>plotly</code> chart, a
+<code>DT</code> table) need an <strong>HTML</strong> format: ioslides,
+slidy, xaringan, or Quarto reveal. They will not appear in Beamer or
+PowerPoint.</p>
+<p>PowerPoint is one-way. Knit writes a <code>.pptx</code>. Edits you
+then make in PowerPoint do not come back into the <code>.Rmd</code>. If
+you need to change a number, change the source and knit again.</p>
+<hr />
+</div>
+<div id="one-idea-per-slide" class="section level2">
+<h2>5. One idea per slide</h2>
+<p>A slide is not a report page. One claim, one table, or one plot. If
+you need a second plot, it is a second slide.</p>
+<p>A few habits that keep a short deck readable:</p>
+<ul>
+<li>title the slide with the claim, not the function name</li>
+<li>show the code only when the code is the point</li>
+<li>give the plot room; drop <code>theme_bw()</code> legends you do not
+need</li>
+<li>end with a sentence the audience can repeat</li>
+</ul>
+<hr />
+<p>Starter <code>.Rmd</code> files are in the Data / templates list on
+the course page: ioslides, slidy, Beamer, PowerPoint, xaringan, and
+Shiny. Download one and knit it. Do not vendor a 10 MB knitted deck.</p>
+<p>xaringan uses <code>---</code> between slides, not <code>##</code>.
+RStudio: <strong>File → New File → R Markdown → From Template → Ninja
+Presentation</strong>. <code>{xaringanExtra}</code> adds tile view
+(press <code>o</code>). <code>{xaringanthemer}</code> sets colors.
+<code>{plotly}</code> and <code>{DiagrammeR}</code> are HTML widgets:
+they need an HTML format.</p>
+<p>A Shiny presentation is not a static file. The viewer needs R
+running. Use it for a live demo, not for a PDF you email.</p>
+<p><code>{revealjs}</code> and <code>{rmdshower}</code> are other HTML
+decks. Quarto <code>revealjs</code> is the current default if you are
+starting fresh.</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>6. Practice</h2>
+<p>Outline a 3-slide deck (do not spend the hour polishing fonts):</p>
+<ol style="list-style-type: decimal">
+<li>Title slide (YAML <code>title</code> / <code>author</code>).</li>
+<li>A slide with a small table (a <code>summarize()</code> of a built-in
+table, or <code>mtcars</code> / <code>penguins</code>).</li>
+<li>A slide with a plot and <strong>no</strong> code
+(<code>echo = FALSE</code>).</li>
+</ol>
+</div>
