@@ -21,9 +21,71 @@ library(tidyverse)
 
 rowwise() summarizes across columns in one row. across() repeats a function on many columns.
 
-## 1. `rowwise()` is a group of one
+## 1. `mutate()` works on whole columns
 
-`group_by()` groups many rows. `rowwise()` makes each row its own group so a summary runs **across columns in that row**. `ungroup()` removes it.
+Before `rowwise()`, look at what `mutate()` normally does.
+
+```{r}
+#| label: exams
+exams <- tibble(
+  student = c("A", "B", "C"),
+  exam1 = c(80, 70, 90),
+  exam2 = c(90, 85, 95),
+  exam3 = c(70, 75, 85)
+)
+
+exams |> mutate(difference = exam1 - exam2, total = exam1 + exam2 + exam3)
+```
+
+It looks as if `mutate()` subtracts row by row. It does not. Inside `mutate()`, `exam1` and `exam2` are **whole columns**, so R computes
+
+```{r}
+#| label: vector-minus
+c(80, 70, 90) - c(90, 85, 95)
+```
+
+`-` and `+` are **vectorized**: they already work element by element. No `rowwise()` is needed.
+
+---
+
+## 2. Why `mean()` needs `rowwise()`
+
+Now try the average score of each student:
+
+```{r}
+#| label: mean-wrong
+exams |> mutate(avg = mean(c(exam1, exam2, exam3)))
+```
+
+Every row gets the same number. `c(exam1, exam2, exam3)` glues the three **whole columns** into one vector of nine values,
+
+```{r}
+#| label: nine-values
+c(exams$exam1, exams$exam2, exams$exam3)
+```
+
+and `mean()` returns one mean of all nine, repeated on every row.
+
+`rowwise()` changes the context: the next verbs run **once per row**.
+
+```{r}
+#| label: mean-right
+exams |>
+  rowwise() |>
+  mutate(avg = mean(c(exam1, exam2, exam3))) |>
+  ungroup()
+```
+
+Row 1 is `mean(c(80, 90, 70)) = 80`, row 2 is `mean(c(70, 85, 75)) = 76.67`, row 3 is `mean(c(90, 95, 85)) = 90`.
+
+### `rowwise()` is a group of one
+
+`group_by(carrier)` makes one group per carrier, each with many rows. `rowwise()` makes **each row its own group**. So:
+
+- `group_by()`: the context is a group of rows.
+- `rowwise()`: the context is one row.
+
+`rowwise(name)` also keeps `name` as an identifier when you `summarize()`:
 
 ```{r}
 #| label: chunk-1
@@ -38,7 +100,28 @@ df |>
 # one mean per row
 ```
 
-`c_across()` selects several columns with the same helpers as `select()`:
+Finish with `ungroup()` (or `.groups = "drop"`). Otherwise later verbs keep working one row at a time.
+
+---
+
+## 3. `c_across()`: the values of the current row
+
+Typing `c(exam1, exam2, exam3)` gets long. Inside `rowwise()`, `c_across(exam1:exam3)` collects the values of those columns **in the current row** into a vector. For student A it is `c(80, 90, 70)`.
+
+```{r}
+#| label: c-across-exams
+exams |>
+  rowwise() |>
+  mutate(
+    avg_score = mean(c_across(exam1:exam3)),
+    max_score = max(c_across(exam1:exam3)),
+    min_score = min(c_across(exam1:exam3)),
+    sd_score = sd(c_across(exam1:exam3))
+  ) |>
+  ungroup()
+```
+
+`c_across()` selects columns with the same helpers as `select()`:
 
 ```{r}
 #| label: chunk-2
@@ -48,6 +131,27 @@ rf <- df |> rowwise(id)
 rf |> mutate(total = sum(c_across(w:z)))
 rf |> mutate(total = sum(c_across(where(is.numeric))))
 ```
+
+### Missing values
+
+`na.rm = TRUE` works as usual. It drops the `NA`s in that row only.
+
+```{r}
+#| label: c-across-na
+quizzes <- tibble(
+  student = c("A", "B", "C"),
+  quiz1 = c(80, 90, NA),
+  quiz2 = c(70, NA, 85),
+  quiz3 = c(90, 80, 95)
+)
+
+quizzes |>
+  rowwise() |>
+  mutate(quiz_avg = mean(c_across(quiz1:quiz3), na.rm = TRUE)) |>
+  ungroup()
+```
+
+For B this is `mean(c(90, NA, 80), na.rm = TRUE) = 85`.
 
 For speed on a whole frame, `rowSums()` and `rowMeans()` avoid the split-and-join:
 
@@ -60,7 +164,7 @@ df |> mutate(total = rowSums(across(where(is.numeric))))
 
 ---
 
-## 2. `across()` repeats a function on columns
+## 4. `across()` repeats a function on columns
 
 `across()` lives **inside** `mutate()`, `summarize()`, `filter()`, and the other data-masking verbs. It does not change the data by itself.
 
@@ -102,7 +206,73 @@ Order matters. If you compute `n = n()` first, `n` is numeric, so a later `acros
 
 ---
 
-## 3. Practice
+## 5. `across()` vs `c_across()`
+
+The names are close, the jobs are not.
+
+- `across()` applies a function to **each selected column separately**.
+- `c_across()` **combines** the selected values **within the current row**.
+
+```{r}
+#| label: xyz
+xyz <- tibble(name = c("A", "B", "C"), x = c(10, 20, 30), y = c(20, 40, 60), z = c(30, 60, 90))
+```
+
+One mean **per column** (`mean(x)`, `mean(y)`, `mean(z)`):
+
+```{r}
+#| label: across-cols
+xyz |> summarize(across(x:z, mean))
+
+xyz |> mutate(across(x:z, ~ .x * 2))
+```
+
+One mean **per row** (`mean(c(10, 20, 30))`, `mean(c(20, 40, 60))`, ...):
+
+```{r}
+#| label: c-across-rows
+xyz |>
+  rowwise() |>
+  mutate(row_mean = mean(c_across(x:z))) |>
+  ungroup()
+```
+
+A picture to remember:
+
+```
+          x     y     z
+        ----------------
+Row 1    10    20    30   ->  c_across()
+Row 2    20    40    60   ->  c_across()
+Row 3    30    60    90   ->  c_across()
+         |     |     |
+         v     v     v
+            across()
+```
+
+`across()` goes down the columns. `c_across()` goes along a row. The `c` is for **combine**, as in `c()`.
+
+---
+
+## 6. When you do not need `rowwise()`
+
+Using several columns does not by itself call for `rowwise()`. These are all vectorized:
+
+```{r}
+#| label: no-rowwise
+xyz |> mutate(total = x + y + z, difference = x - y, ratio = x / y, bigger = x > y)
+```
+
+`rowwise()` is for functions like `mean()`, `max()`, `min()`, `sd()` that take a vector and return **one** value, when you want that value for each row.
+
+So do not ask "Am I using several columns?" Ask:
+
+- Same function on **each column separately**? Use `across()`.
+- **Combine values from several columns within each row**? Use `rowwise()` with `c_across()` (or `rowSums()` / `rowMeans()` for sums and means).
+
+---
+
+## 7. Practice
 
 1. For each `starwars` character, the maximum of `height`, `mass`, and `birth_year` (`na.rm = TRUE`). Who is largest? Try it with and without `rowwise()`.
 2. Median of every numeric column, by `species` and `gender`, plus `n()`, sorted by `n` descending.

@@ -3,11 +3,77 @@
 
 <p>rowwise() summarizes across columns in one row. across() repeats a
 function on many columns.</p>
-<div id="rowwise-is-a-group-of-one" class="section level2">
-<h2>1. <code>rowwise()</code> is a group of one</h2>
-<p><code>group_by()</code> groups many rows. <code>rowwise()</code>
-makes each row its own group so a summary runs <strong>across columns in
-that row</strong>. <code>ungroup()</code> removes it.</p>
+<div id="mutate-works-on-whole-columns" class="section level2">
+<h2>1. <code>mutate()</code> works on whole columns</h2>
+<p>Before <code>rowwise()</code>, look at what <code>mutate()</code>
+normally does.</p>
+<pre class="r"><code>exams &lt;- tibble(
+  student = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;),
+  exam1 = c(80, 70, 90),
+  exam2 = c(90, 85, 95),
+  exam3 = c(70, 75, 85)
+)
+
+exams |&gt; mutate(difference = exam1 - exam2, total = exam1 + exam2 + exam3)</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   student exam1 exam2 exam3 difference total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70        -10   240
+## 2 B          70    85    75        -15   230
+## 3 C          90    95    85         -5   270</code></pre>
+<p>It looks as if <code>mutate()</code> subtracts row by row. It does
+not. Inside <code>mutate()</code>, <code>exam1</code> and
+<code>exam2</code> are <strong>whole columns</strong>, so R computes</p>
+<pre class="r"><code>c(80, 70, 90) - c(90, 85, 95)</code></pre>
+<pre><code>## [1] -10 -15  -5</code></pre>
+<p><code>-</code> and <code>+</code> are <strong>vectorized</strong>:
+they already work element by element. No <code>rowwise()</code> is
+needed.</p>
+<hr />
+</div>
+<div id="why-mean-needs-rowwise" class="section level2">
+<h2>2. Why <code>mean()</code> needs <code>rowwise()</code></h2>
+<p>Now try the average score of each student:</p>
+<pre class="r"><code>exams |&gt; mutate(avg = mean(c(exam1, exam2, exam3)))</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3   avg
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70  82.2
+## 2 B          70    85    75  82.2
+## 3 C          90    95    85  82.2</code></pre>
+<p>Every row gets the same number. <code>c(exam1, exam2, exam3)</code>
+glues the three <strong>whole columns</strong> into one vector of nine
+values,</p>
+<pre class="r"><code>c(exams$exam1, exams$exam2, exams$exam3)</code></pre>
+<pre><code>## [1] 80 70 90 90 85 95 70 75 85</code></pre>
+<p>and <code>mean()</code> returns one mean of all nine, repeated on
+every row.</p>
+<p><code>rowwise()</code> changes the context: the next verbs run
+<strong>once per row</strong>.</p>
+<pre class="r"><code>exams |&gt;
+  rowwise() |&gt;
+  mutate(avg = mean(c(exam1, exam2, exam3))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3   avg
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70  80  
+## 2 B          70    85    75  76.7
+## 3 C          90    95    85  90</code></pre>
+<p>Row 1 is <code>mean(c(80, 90, 70)) = 80</code>, row 2 is
+<code>mean(c(70, 85, 75)) = 76.67</code>, row 3 is
+<code>mean(c(90, 95, 85)) = 90</code>.</p>
+<div id="rowwise-is-a-group-of-one" class="section level3">
+<h3><code>rowwise()</code> is a group of one</h3>
+<p><code>group_by(carrier)</code> makes one group per carrier, each with
+many rows. <code>rowwise()</code> makes <strong>each row its own
+group</strong>. So:</p>
+<ul>
+<li><code>group_by()</code>: the context is a group of rows.</li>
+<li><code>rowwise()</code>: the context is one row.</li>
+</ul>
+<p><code>rowwise(name)</code> also keeps <code>name</code> as an
+identifier when you <code>summarize()</code>:</p>
 <pre class="r"><code>df &lt;- tibble(name = c(&quot;Mara&quot;, &quot;Hadley&quot;), x = 1:2, y = 3:4, z = 5:6)
 
 df |&gt; mutate(m = mean(c(x, y, z)))</code></pre>
@@ -27,8 +93,35 @@ df |&gt;
 ## 1 Mara       3
 ## 2 Hadley     4</code></pre>
 <pre class="r"><code># one mean per row</code></pre>
-<p><code>c_across()</code> selects several columns with the same helpers
-as <code>select()</code>:</p>
+<p>Finish with <code>ungroup()</code> (or
+<code>.groups = "drop"</code>). Otherwise later verbs keep working one
+row at a time.</p>
+<hr />
+</div>
+</div>
+<div id="c_across-the-values-of-the-current-row" class="section level2">
+<h2>3. <code>c_across()</code>: the values of the current row</h2>
+<p>Typing <code>c(exam1, exam2, exam3)</code> gets long. Inside
+<code>rowwise()</code>, <code>c_across(exam1:exam3)</code> collects the
+values of those columns <strong>in the current row</strong> into a
+vector. For student A it is <code>c(80, 90, 70)</code>.</p>
+<pre class="r"><code>exams |&gt;
+  rowwise() |&gt;
+  mutate(
+    avg_score = mean(c_across(exam1:exam3)),
+    max_score = max(c_across(exam1:exam3)),
+    min_score = min(c_across(exam1:exam3)),
+    sd_score = sd(c_across(exam1:exam3))
+  ) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 8
+##   student exam1 exam2 exam3 avg_score max_score min_score sd_score
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A          80    90    70      80          90        70    10   
+## 2 B          70    85    75      76.7        85        70     7.64
+## 3 C          90    95    85      90          95        85     5</code></pre>
+<p><code>c_across()</code> selects columns with the same helpers as
+<code>select()</code>:</p>
 <pre class="r"><code>df &lt;- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
 rf &lt;- df |&gt; rowwise(id)
 
@@ -54,6 +147,29 @@ rf |&gt; mutate(total = sum(c_across(w:z)))</code></pre>
 ## 4     4    13    23    33    43   112
 ## 5     5    14    24    34    44   116
 ## 6     6    15    25    35    45   120</code></pre>
+<div id="missing-values" class="section level3">
+<h3>Missing values</h3>
+<p><code>na.rm = TRUE</code> works as usual. It drops the
+<code>NA</code>s in that row only.</p>
+<pre class="r"><code>quizzes &lt;- tibble(
+  student = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;),
+  quiz1 = c(80, 90, NA),
+  quiz2 = c(70, NA, 85),
+  quiz3 = c(90, 80, 95)
+)
+
+quizzes |&gt;
+  rowwise() |&gt;
+  mutate(quiz_avg = mean(c_across(quiz1:quiz3), na.rm = TRUE)) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student quiz1 quiz2 quiz3 quiz_avg
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A          80    70    90       80
+## 2 B          90    NA    80       85
+## 3 C          NA    85    95       90</code></pre>
+<p>For B this is
+<code>mean(c(90, NA, 80), na.rm = TRUE) = 85</code>.</p>
 <p>For speed on a whole frame, <code>rowSums()</code> and
 <code>rowMeans()</code> avoid the split-and-join:</p>
 <pre class="r"><code>df |&gt; mutate(total = rowSums(across(where(is.numeric))))</code></pre>
@@ -71,8 +187,9 @@ rf |&gt; mutate(total = sum(c_across(w:z)))</code></pre>
 one number for the whole column stack, repeated on every row.</p>
 <hr />
 </div>
+</div>
 <div id="across-repeats-a-function-on-columns" class="section level2">
-<h2>2. <code>across()</code> repeats a function on columns</h2>
+<h2>4. <code>across()</code> repeats a function on columns</h2>
 <p><code>across()</code> lives <strong>inside</strong>
 <code>mutate()</code>, <code>summarize()</code>, <code>filter()</code>,
 and the other data-masking verbs. It does not change the data by
@@ -133,8 +250,84 @@ last.</p>
 use <code>rename_with()</code> to change names with a function.</p>
 <hr />
 </div>
+<div id="across-vs-c_across" class="section level2">
+<h2>5. <code>across()</code> vs <code>c_across()</code></h2>
+<p>The names are close, the jobs are not.</p>
+<ul>
+<li><code>across()</code> applies a function to <strong>each selected
+column separately</strong>.</li>
+<li><code>c_across()</code> <strong>combines</strong> the selected
+values <strong>within the current row</strong>.</li>
+</ul>
+<pre class="r"><code>xyz &lt;- tibble(name = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;), x = c(10, 20, 30), y = c(20, 40, 60), z = c(30, 60, 90))</code></pre>
+<p>One mean <strong>per column</strong> (<code>mean(x)</code>,
+<code>mean(y)</code>, <code>mean(z)</code>):</p>
+<pre class="r"><code>xyz |&gt; summarize(across(x:z, mean))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##       x     y     z
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    20    40    60</code></pre>
+<pre class="r"><code>xyz |&gt; mutate(across(x:z, ~ .x * 2))</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   name      x     y     z
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A        20    40    60
+## 2 B        40    80   120
+## 3 C        60   120   180</code></pre>
+<p>One mean <strong>per row</strong> (<code>mean(c(10, 20, 30))</code>,
+<code>mean(c(20, 40, 60))</code>, …):</p>
+<pre class="r"><code>xyz |&gt;
+  rowwise() |&gt;
+  mutate(row_mean = mean(c_across(x:z))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   name      x     y     z row_mean
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A        10    20    30       20
+## 2 B        20    40    60       40
+## 3 C        30    60    90       60</code></pre>
+<p>A picture to remember:</p>
+<pre><code>          x     y     z
+        ----------------
+Row 1    10    20    30   -&gt;  c_across()
+Row 2    20    40    60   -&gt;  c_across()
+Row 3    30    60    90   -&gt;  c_across()
+         |     |     |
+         v     v     v
+            across()</code></pre>
+<p><code>across()</code> goes down the columns. <code>c_across()</code>
+goes along a row. The <code>c</code> is for <strong>combine</strong>, as
+in <code>c()</code>.</p>
+<hr />
+</div>
+<div id="when-you-do-not-need-rowwise" class="section level2">
+<h2>6. When you do not need <code>rowwise()</code></h2>
+<p>Using several columns does not by itself call for
+<code>rowwise()</code>. These are all vectorized:</p>
+<pre class="r"><code>xyz |&gt; mutate(total = x + y + z, difference = x - y, ratio = x / y, bigger = x &gt; y)</code></pre>
+<pre><code>## # A tibble: 3 × 8
+##   name      x     y     z total difference ratio bigger
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; 
+## 1 A        10    20    30    60        -10   0.5 FALSE 
+## 2 B        20    40    60   120        -20   0.5 FALSE 
+## 3 C        30    60    90   180        -30   0.5 FALSE</code></pre>
+<p><code>rowwise()</code> is for functions like <code>mean()</code>,
+<code>max()</code>, <code>min()</code>, <code>sd()</code> that take a
+vector and return <strong>one</strong> value, when you want that value
+for each row.</p>
+<p>So do not ask “Am I using several columns?” Ask:</p>
+<ul>
+<li>Same function on <strong>each column separately</strong>? Use
+<code>across()</code>.</li>
+<li><strong>Combine values from several columns within each
+row</strong>? Use <code>rowwise()</code> with <code>c_across()</code>
+(or <code>rowSums()</code> / <code>rowMeans()</code> for sums and
+means).</li>
+</ul>
+<hr />
+</div>
 <div id="practice" class="section level2">
-<h2>3. Practice</h2>
+<h2>7. Practice</h2>
 <ol style="list-style-type: decimal">
 <li>For each <code>starwars</code> character, the maximum of
 <code>height</code>, <code>mass</code>, and <code>birth_year</code>
