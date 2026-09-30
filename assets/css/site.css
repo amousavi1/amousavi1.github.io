@@ -436,7 +436,8 @@ ul.news-list > li:last-child {
 }
 
 ul.news-list .news-date {
-  flex: 0 0 6.5em;
+  flex: 0 0 8.5em;
+  white-space: nowrap;
   font-weight: 700;
   color: #1a73e8;
 }
