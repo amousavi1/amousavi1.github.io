@@ -111,13 +111,20 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">5.1 dplyr: rowwise() and across()</h1>
                     </header>
-                                                                                                                        <section class="page__content" itemprop="text">
+                                                                                                                                            <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-5.html">Week 5</a> &middot;
                             <a href="files/data-612/dplyr-rowwise-across.pdf" target="_blank" rel="noopener">PDF</a>
                          &middot; <a href="files/data-612/lectures/dplyr-rowwise-across.qmd">Source (.qmd)</a></p>
 <p>rowwise() summarizes across columns in one row. across() repeats a
 function on many columns.</p>
+<p>Most calculations on a data frame go one of two ways: <strong>down a
+column</strong> (the mean of <code>exam1</code> over all students) or
+<strong>across a row</strong> (one student’s mean over three exams).
+Knowing which one you want tells you whether to reach for
+<code>across()</code>, <code>rowwise()</code> with
+<code>c_across()</code>, or <code>rowSums()</code> /
+<code>rowMeans()</code>.</p>
 <div id="mutate-works-on-whole-columns" class="section level2">
 <h2>1. <code>mutate()</code> works on whole columns</h2>
 <p>Before <code>rowwise()</code>, look at what <code>mutate()</code>
@@ -285,18 +292,6 @@ quizzes |&gt;
 ## 3 C          NA    85    95       90</code></pre>
 <p>For B this is
 <code>mean(c(90, NA, 80), na.rm = TRUE) = 85</code>.</p>
-<p>For speed on a whole frame, <code>rowSums()</code> and
-<code>rowMeans()</code> avoid the split-and-join:</p>
-<pre><code class="language-r">df |&gt; mutate(total = rowSums(across(where(is.numeric))))</code></pre>
-<pre><code>## # A tibble: 6 × 6
-##      id     w     x     y     z total
-##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
-## 1     1    10    20    30    40   101
-## 2     2    11    21    31    41   106
-## 3     3    12    22    32    42   111
-## 4     4    13    23    33    43   116
-## 5     5    14    24    34    44   121
-## 6     6    15    25    35    45   126</code></pre>
 <p><code>starwars</code> (in dplyr) is the usual practice table. Without
 <code>rowwise()</code>, <code>max(height, mass, birth_year)</code> is
 one number for the whole column stack, repeated on every row.</p>
@@ -317,6 +312,9 @@ itself.</p>
 formula <code>~ median(.x, na.rm = TRUE)</code>. <code>.x</code> is the
 current column.</li>
 </ul>
+<p>Write <code>where(is.numeric)</code>, not
+<code>where(is.numeric())</code>. <code>where()</code> wants the
+<strong>function itself</strong>, not the result of calling it.</p>
 <pre><code class="language-r">starwars |&gt;
   summarize(across(where(is.numeric), ~ median(.x, na.rm = TRUE)), .groups = &quot;drop&quot;)</code></pre>
 <pre><code>## # A tibble: 1 × 3
@@ -354,6 +352,13 @@ starwars |&gt; summarize(across(where(is.numeric), min_max))</code></pre>
 ##   height_min height_max mass_min mass_max birth_year_min birth_year_max
 ##        &lt;int&gt;      &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
 ## 1         66        264       15     1358              8            896</code></pre>
+<p>The new columns are named <code>column_function</code>:
+<code>height_min</code>, <code>height_max</code>, <code>mass_min</code>,
+and so on.</p>
+<p>Here <code>across()</code> is the right tool because we want
+statistics for <strong>each column separately</strong>. Combining one
+character’s height, mass, and birth year with <code>c_across()</code>
+would not mean anything.</p>
 <p>Order matters. If you compute <code>n = n()</code> first,
 <code>n</code> is numeric, so a later
 <code>across(where(is.numeric), sd)</code> will try to take the SD of
@@ -415,8 +420,73 @@ goes along a row. The <code>c</code> is for <strong>combine</strong>, as
 in <code>c()</code>.</p>
 <hr />
 </div>
+<div id="rowsums-and-rowmeans" class="section level2">
+<h2>6. <code>rowSums()</code> and <code>rowMeans()</code></h2>
+<p>For sums and means across a row, base R already has vectorized
+functions. They take a set of columns, and <code>across()</code> hands
+them over. <strong>No <code>rowwise()</code> is needed.</strong></p>
+<p>Two ways to get each student’s total:</p>
+<pre><code class="language-r">exams |&gt;
+  rowwise() |&gt;
+  mutate(total = sum(c_across(exam1:exam3))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3 total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70   240
+## 2 B          70    85    75   230
+## 3 C          90    95    85   270</code></pre>
+<pre><code class="language-r">exams |&gt; mutate(total = rowSums(across(exam1:exam3)))</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3 total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70   240
+## 2 B          70    85    75   230
+## 3 C          90    95    85   270</code></pre>
+<p>Same answer. The second is shorter and much faster on a big table,
+because it does not split the data into one group per row.
+<code>rowMeans()</code> works the same way, and both take
+<code>na.rm = TRUE</code>:</p>
+<pre><code class="language-r">quizzes |&gt;
+  mutate(
+    quiz_avg = rowMeans(across(quiz1:quiz3), na.rm = TRUE),
+    quiz_total = rowSums(across(quiz1:quiz3), na.rm = TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   student quiz1 quiz2 quiz3 quiz_avg quiz_total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+## 1 A          80    70    90       80        240
+## 2 B          90    NA    80       85        170
+## 3 C          NA    85    95       90        180</code></pre>
+<p>It also works with <code>where()</code>:</p>
+<pre><code class="language-r">df |&gt; mutate(total = rowSums(across(where(is.numeric))))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+## 1     1    10    20    30    40   101
+## 2     2    11    21    31    41   106
+## 3     3    12    22    32    42   111
+## 4     4    13    23    33    43   116
+## 5     5    14    24    34    44   121
+## 6     6    15    25    35    45   126</code></pre>
+<p>So why learn <code>rowwise()</code>? Because there is no
+<code>rowSd()</code> or <code>rowMax()</code> in base R. For any other
+per-row statistic, <code>rowwise()</code> with <code>c_across()</code>
+is the general tool:</p>
+<pre><code class="language-r">exams |&gt;
+  rowwise() |&gt;
+  mutate(highest = max(c_across(exam1:exam3)), spread = sd(c_across(exam1:exam3))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   student exam1 exam2 exam3 highest spread
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 A          80    90    70      90  10   
+## 2 B          70    85    75      85   7.64
+## 3 C          90    95    85      95   5</code></pre>
+<hr />
+</div>
 <div id="when-you-do-not-need-rowwise" class="section level2">
-<h2>6. When you do not need <code>rowwise()</code></h2>
+<h2>7. When you do not need <code>rowwise()</code></h2>
 <p>Using several columns does not by itself call for
 <code>rowwise()</code>. These are all vectorized:</p>
 <pre><code class="language-r">xyz |&gt; mutate(total = x + y + z, difference = x - y, ratio = x / y, bigger = x &gt; y)</code></pre>
@@ -441,8 +511,62 @@ means).</li>
 </ul>
 <hr />
 </div>
+<div id="choosing-the-right-tool" class="section level2">
+<h2>8. Choosing the right tool</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Typical code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>One statistic of one column</td>
+<td><code>summarize(avg = mean(exam1))</code></td>
+</tr>
+<tr class="even">
+<td>The same statistic for several columns</td>
+<td><code>summarize(across(exam1:exam3, mean))</code></td>
+</tr>
+<tr class="odd">
+<td>The same change to several columns</td>
+<td><code>mutate(across(exam1:exam3, ~ .x + 5))</code></td>
+</tr>
+<tr class="even">
+<td>Arithmetic that combines columns</td>
+<td><code>mutate(total = exam1 + exam2 + exam3)</code></td>
+</tr>
+<tr class="odd">
+<td>Sum across each row</td>
+<td><code>mutate(total = rowSums(across(exam1:exam3)))</code></td>
+</tr>
+<tr class="even">
+<td>Mean across each row</td>
+<td><code>mutate(avg = rowMeans(across(exam1:exam3)))</code></td>
+</tr>
+<tr class="odd">
+<td>Any other statistic across each row</td>
+<td><code>rowwise()</code>, then
+<code>mutate(top = max(c_across(exam1:exam3)))</code>, then
+<code>ungroup()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Remember: <code>across()</code> keeps the selected columns
+<strong>separate</strong>. <code>c_across()</code>
+<strong>combines</strong> the selected values of the current row into
+one vector. And before you type <code>rowwise()</code>, check whether
+the operation is already vectorized, or whether <code>rowSums()</code> /
+<code>rowMeans()</code> already does the job.</p>
+<hr />
+</div>
 <div id="practice" class="section level2">
-<h2>7. Practice</h2>
+<h2>9. Practice</h2>
 <ol style="list-style-type: decimal">
 <li>For each <code>starwars</code> character, the maximum of
 <code>height</code>, <code>mass</code>, and <code>birth_year</code>
@@ -466,7 +590,7 @@ descending.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-30T16:30:00-04:00">September 30, 2026, 4:30 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-30T16:50:00-04:00">September 30, 2026, 4:50 PM EDT</time></div>
             </footer>
         </div>
 

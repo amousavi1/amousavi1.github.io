@@ -21,6 +21,8 @@ library(tidyverse)
 
 rowwise() summarizes across columns in one row. across() repeats a function on many columns.
 
+Most calculations on a data frame go one of two ways: **down a column** (the mean of `exam1` over all students) or **across a row** (one student's mean over three exams). Knowing which one you want tells you whether to reach for `across()`, `rowwise()` with `c_across()`, or `rowSums()` / `rowMeans()`.
+
 ## 1. `mutate()` works on whole columns
 
 Before `rowwise()`, look at what `mutate()` normally does.
@@ -153,13 +155,6 @@ quizzes |>
 
 For B this is `mean(c(90, NA, 80), na.rm = TRUE) = 85`.
 
-For speed on a whole frame, `rowSums()` and `rowMeans()` avoid the split-and-join:
-
-```{r}
-#| label: chunk-3
-df |> mutate(total = rowSums(across(where(is.numeric))))
-```
-
 `starwars` (in dplyr) is the usual practice table. Without `rowwise()`, `max(height, mass, birth_year)` is one number for the whole column stack, repeated on every row.
 
 ---
@@ -172,6 +167,8 @@ Two arguments:
 
 - `.cols`: tidyselect, default `everything()`
 - `.fns`: a function, a named list of functions, or a formula `~ median(.x, na.rm = TRUE)`. `.x` is the current column.
+
+Write `where(is.numeric)`, not `where(is.numeric())`. `where()` wants the **function itself**, not the result of calling it.
 
 ```{r}
 #| label: chunk-4
@@ -199,6 +196,10 @@ min_max <- list(
 )
 starwars |> summarize(across(where(is.numeric), min_max))
 ```
+
+The new columns are named `column_function`: `height_min`, `height_max`, `mass_min`, and so on.
+
+Here `across()` is the right tool because we want statistics for **each column separately**. Combining one character's height, mass, and birth year with `c_across()` would not mean anything.
 
 Order matters. If you compute `n = n()` first, `n` is numeric, so a later `across(where(is.numeric), sd)` will try to take the SD of that constant and give `NA`. Put `n = n()` last.
 
@@ -254,7 +255,53 @@ Row 3    30    60    90   ->  c_across()
 
 ---
 
-## 6. When you do not need `rowwise()`
+## 6. `rowSums()` and `rowMeans()`
+
+For sums and means across a row, base R already has vectorized functions. They take a set of columns, and `across()` hands them over. **No `rowwise()` is needed.**
+
+Two ways to get each student's total:
+
+```{r}
+#| label: row-sum-two-ways
+exams |>
+  rowwise() |>
+  mutate(total = sum(c_across(exam1:exam3))) |>
+  ungroup()
+
+exams |> mutate(total = rowSums(across(exam1:exam3)))
+```
+
+Same answer. The second is shorter and much faster on a big table, because it does not split the data into one group per row. `rowMeans()` works the same way, and both take `na.rm = TRUE`:
+
+```{r}
+#| label: row-means-na
+quizzes |>
+  mutate(
+    quiz_avg = rowMeans(across(quiz1:quiz3), na.rm = TRUE),
+    quiz_total = rowSums(across(quiz1:quiz3), na.rm = TRUE)
+  )
+```
+
+It also works with `where()`:
+
+```{r}
+#| label: chunk-3
+df |> mutate(total = rowSums(across(where(is.numeric))))
+```
+
+So why learn `rowwise()`? Because there is no `rowSd()` or `rowMax()` in base R. For any other per-row statistic, `rowwise()` with `c_across()` is the general tool:
+
+```{r}
+#| label: row-sd-max
+exams |>
+  rowwise() |>
+  mutate(highest = max(c_across(exam1:exam3)), spread = sd(c_across(exam1:exam3))) |>
+  ungroup()
+```
+
+---
+
+## 7. When you do not need `rowwise()`
 
 Using several columns does not by itself call for `rowwise()`. These are all vectorized:
 
@@ -272,7 +319,23 @@ So do not ask "Am I using several columns?" Ask:
 
 ---
 
-## 7. Practice
+## 8. Choosing the right tool
+
+| Goal | Typical code |
+|---|---|
+| One statistic of one column | `summarize(avg = mean(exam1))` |
+| The same statistic for several columns | `summarize(across(exam1:exam3, mean))` |
+| The same change to several columns | `mutate(across(exam1:exam3, ~ .x + 5))` |
+| Arithmetic that combines columns | `mutate(total = exam1 + exam2 + exam3)` |
+| Sum across each row | `mutate(total = rowSums(across(exam1:exam3)))` |
+| Mean across each row | `mutate(avg = rowMeans(across(exam1:exam3)))` |
+| Any other statistic across each row | `rowwise()`, then `mutate(top = max(c_across(exam1:exam3)))`, then `ungroup()` |
+
+Remember: `across()` keeps the selected columns **separate**. `c_across()` **combines** the selected values of the current row into one vector. And before you type `rowwise()`, check whether the operation is already vectorized, or whether `rowSums()` / `rowMeans()` already does the job.
+
+---
+
+## 9. Practice
 
 1. For each `starwars` character, the maximum of `height`, `mass`, and `birth_year` (`na.rm = TRUE`). Who is largest? Try it with and without `rowwise()`.
 2. Median of every numeric column, by `species` and `gender`, plus `n()`, sorted by `n` descending.
