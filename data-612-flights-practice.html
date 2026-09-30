@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Flights Related Questions - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="assets/css/main.css" />
+        <link rel="stylesheet" href="assets/css/site.css" />
+        <link rel="stylesheet" href="assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Flights Related Questions</h1>
+                    </header>
+                                                                                                                                            <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-5.html">Week 5</a>
+                         &middot; <a href="files/data-612/lectures/flights-practice.qmd">Source (.qmd)</a></p>
+<pre><code class="language-r">library(tidyverse)
+library(nycflights13)</code></pre>
+<div id="question-1-flight-volume-and-arrival-delays"
+class="section level3">
+<h3>Question 1 — Flight Volume and Arrival Delays</h3>
+<p>Using the <code>flights</code> dataset, investigate whether the
+<strong>number of flights an airline operates on a given day is related
+to its average arrival delay that day</strong>. Restrict your analysis
+to airline-days with at least <strong>20 flights</strong> and exclude
+flights with missing arrival-delay information.</p>
+<p>Create an appropriate visualization showing this relationship for the
+different airlines.</p>
+<pre><code class="language-r">flights %&gt;%
+  
+  # Remove flights with missing arrival delay values
+  filter(!is.na(arr_delay)) %&gt;%
+  
+  # Group flights by airline and calendar day
+  group_by(carrier, month, day) %&gt;%
+  
+  # Calculate the number of flights and average arrival delay
+  # for each airline on each day
+  summarise(
+    n_flights = n(),
+    ave_arr_delay = mean(arr_delay),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  
+  # Keep only airline-days with at least 20 flights
+  filter(n_flights &gt;= 20) %&gt;%
+  
+  # Sort from highest to lowest average arrival delay
+  arrange(desc(ave_arr_delay)) %&gt;%
+  
+  # Plot number of flights against average arrival delay
+  ggplot(aes(
+    x = n_flights,
+    y = ave_arr_delay,
+    colour = carrier
+  )) +
+  
+  # Add scatter plot points with some transparency
+  geom_point(alpha = 0.5) +
+  
+  # Add axis labels and a title
+  xlab(&quot;Number of Flights&quot;) +
+  ylab(&quot;Average Arrival Delay&quot;) +
+  ggtitle(&quot;Number of Flights vs. Average Arrival Delay by Carrier&quot;) +
+  
+  # Create a separate panel for each airline
+  facet_wrap(~ carrier)</code></pre>
+<p><img src="files/data-612/lectures/_figs/flights-practice/unnamed-chunk-2-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="question-2-worst-month-for-each-airline"
+class="section level3">
+<h3>Question 2 — Worst Month for Each Airline</h3>
+<p>Using the <code>flights</code> dataset, determine the <strong>worst
+month for each airline based on departure delays</strong>. Define an
+airline’s worst month as the month having its <strong>highest average
+departure delay</strong>. Exclude flights with missing departure-delay
+information.</p>
+<p>Create a bar chart comparing the airlines, where the <strong>height
+of each bar represents the maximum monthly average departure
+delay</strong> and the color identifies the corresponding worst
+month.</p>
+<pre><code class="language-r">flights %&gt;%
+  
+  # Remove flights with missing departure delay values
+  filter(!is.na(dep_delay)) %&gt;%
+  
+  # Group flights by airline and month
+  group_by(carrier, month) %&gt;%
+  
+  # Calculate the average departure delay for each
+  # airline in each month
+  summarise(
+    avg_dep_delay = mean(dep_delay),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  
+  # Group the monthly averages by airline
+  group_by(carrier) %&gt;%
+  
+  # Find the maximum monthly average departure delay
+  # for each airline
+  mutate(
+    max_avg_dep_delay = max(avg_dep_delay)
+  ) %&gt;%
+  
+  # Keep only the month with the maximum average
+  # departure delay for each airline
+  filter(avg_dep_delay == max_avg_dep_delay) %&gt;%
+  
+  # Remove the grouping
+  ungroup() %&gt;%
+  
+  # Create a bar plot of the worst monthly delay
+  # for each airline
+  ggplot(aes(
+    x = carrier,
+    y = max_avg_dep_delay,
+    fill = factor(month)
+  )) +
+  
+  # Create one bar for each airline
+  geom_col() +
+  
+  # Add axis labels, legend title, and plot title
+  labs(
+    x = &quot;Carrier&quot;,
+    y = &quot;Maximum Monthly Average Departure Delay (minutes)&quot;,
+    fill = &quot;Worst Month&quot;,
+    title = &quot;Worst Month for Each Airline Based on Departure Delay&quot;
+  ) +
+  
+  # Apply a minimal theme
+  theme_minimal()</code></pre>
+<p><img src="files/data-612/lectures/_figs/flights-practice/unnamed-chunk-3-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div
+id="question-3-what-is-the-worst-working-day-to-fly-with-each-airline"
+class="section level3">
+<h3>Question 3 — What Is the Worst Working Day to Fly with Each
+Airline?</h3>
+<p>Using the <code>flights</code> dataset, determine the <strong>worst
+working day of the week to fly with each airline based on departure
+delays</strong>. Consider only <strong>Monday through Friday</strong>,
+and exclude flights for which departure-delay information is
+missing.</p>
+<p>Define the <strong>worst working day</strong> for an airline as the
+weekday with the <strong>highest average departure delay</strong> for
+that airline.</p>
+<p>Create a bar chart comparing the airlines, where the <strong>height
+of each bar represents the maximum average departure delay across the
+five working days</strong>, and the <strong>color of the bar identifies
+the corresponding worst weekday</strong>.</p>
+<pre><code class="language-r">flights %&gt;%
+  filter(!is.na(dep_delay)) %&gt;%
+  
+  # Create date and weekday
+  mutate(
+    date = make_date(year, month, day),
+    weekday = wday(date, label = TRUE, abbr = FALSE)
+  ) %&gt;%
+  
+  # Keep Monday through Friday
+  filter(weekday %in% c(
+    &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;
+  )) %&gt;%
+  
+  # Average delay for each airline and weekday
+  group_by(carrier, weekday) %&gt;%
+  summarise(
+    avg_dep_delay = mean(dep_delay),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  
+  # Maximum weekday average for each airline
+  group_by(carrier) %&gt;%
+  mutate(
+    max_avg_dep_delay = max(avg_dep_delay)
+  ) %&gt;%
+  
+  # Keep the worst weekday
+  filter(avg_dep_delay == max_avg_dep_delay) %&gt;%
+  ungroup() %&gt;%
+  
+  # Plot
+  ggplot(aes(
+    x = carrier,
+    y = max_avg_dep_delay,
+    fill = weekday
+  )) +
+  geom_col() +
+  labs(
+    x = &quot;Carrier&quot;,
+    y = &quot;Maximum Average Departure Delay (minutes)&quot;,
+    fill = &quot;Worst Weekday&quot;,
+    title = &quot;Worst Working Day to Fly for Each Airline&quot;
+  ) +
+  theme_minimal()</code></pre>
+<p><img src="files/data-612/lectures/_figs/flights-practice/unnamed-chunk-4-1.png" alt="" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-lab-5-solutions.html"><span aria-hidden="true">←</span> Lab 5 solutions</a>
+                            <a class="course-page-nav__week" href="data-612-week-5.html">Week 5</a>
+                            <a class="course-page-nav__next" href="data-612-readr-import.html">6.1 readr: Import and Export <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-09-30T15:40:00-04:00">September 30, 2026, 3:40 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="assets/js/site.js"></script>
+    </body>
+</html>
