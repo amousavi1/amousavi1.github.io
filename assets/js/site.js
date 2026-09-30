@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-09-30T16:50:00-04:00';
+  const SITE_LAST_UPDATED = '2026-09-30T16:55:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -559,6 +559,75 @@
     selectTab(fromHash || tabs[0]);
   }
 
+  const CODE_RULES = {
+    r: [
+      ['comment', /#[^\n]*/y],
+      ['string', /"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'|`[^`\n]*`/y],
+      ['number', /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?L?\b/y],
+      ['keyword', /\b(?:function|if|else|for|while|repeat|in|next|break|return|TRUE|FALSE|NULL|NA|NaN|Inf|NA_real_|NA_integer_|NA_character_)\b/y],
+      ['func', /[A-Za-z.][\w.]*(?=\s*\()/y],
+      ['operator', /\|>|%[^%\n]*%|<-|->|~|==|!=|<=|>=|&&|\|\|/y],
+    ],
+    python: [
+      ['comment', /#[^\n]*/y],
+      ['string', /"""[\s\S]*?"""|'''[\s\S]*?'''|[rbfu]?"(?:[^"\\\n]|\\.)*"|[rbfu]?'(?:[^'\\\n]|\\.)*'/y],
+      ['number', /\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b/y],
+      ['keyword', /\b(?:def|return|import|from|as|for|in|if|elif|else|while|class|with|lambda|try|except|finally|raise|yield|pass|break|continue|and|or|not|is|None|True|False|self)\b/y],
+      ['func', /@?[A-Za-z_]\w*(?=\s*\()/y],
+      ['operator', /==|!=|<=|>=|->|\*\*|\/\/|[=+\-*/%<>]/y],
+    ],
+  };
+
+  function escapeHtml(text) {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function highlightCode(text, rules) {
+    let html = '';
+    let plain = '';
+    let i = 0;
+    while (i < text.length) {
+      let matched = null;
+      for (const [kind, re] of rules) {
+        re.lastIndex = i;
+        const m = re.exec(text);
+        if (m && m[0].length) {
+          matched = [kind, m[0]];
+          break;
+        }
+      }
+      if (matched) {
+        html += escapeHtml(plain) + `<span class="tok-${matched[0]}">${escapeHtml(matched[1])}</span>`;
+        plain = '';
+        i += matched[1].length;
+      } else {
+        const wordMatch = /[A-Za-z_.][\w.]*/y;
+        wordMatch.lastIndex = i;
+        const w = wordMatch.exec(text);
+        const step = w ? w[0].length : 1;
+        plain += text.slice(i, i + step);
+        i += step;
+      }
+    }
+    return html + escapeHtml(plain);
+  }
+
+  function initLectureCode() {
+    if (!document.body.classList.contains('page-lecture')) return;
+    document.querySelectorAll('.page__content pre > code').forEach((code) => {
+      const pre = code.parentElement;
+      const lang = (code.className.match(/language-(\w+)/) || [])[1];
+      const text = code.textContent;
+      if (lang && CODE_RULES[lang]) {
+        pre.classList.add(`code-${lang}`);
+        code.innerHTML = highlightCode(text, CODE_RULES[lang]);
+      } else if (!lang && /^##/.test(text)) {
+        pre.classList.add('code-output');
+        code.innerHTML = escapeHtml(text).replace(/^## ?/gm, '<span class="tok-prompt">$&</span>');
+      }
+    });
+  }
+
   // Run early.
   setHtmlJsClass();
 
@@ -570,5 +639,6 @@
     initSiteLastUpdated();
     initPageToc();
     initCourseWeekTabs();
+    initLectureCode();
   });
 })();

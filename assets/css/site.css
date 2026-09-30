@@ -1392,3 +1392,216 @@ html[data-theme="dark"] .course-page-nav__week {
 html[data-theme="dark"] .course-page-nav {
   border-top-color: #5e5e5e;
 }
+
+/* ==========================================================================
+   LECTURE READABILITY
+   Softer text, colored headings, and distinct code / output blocks.
+   Code classes (code-r, code-python, code-output) and tok-* spans are
+   added by initLectureCode() in site.js.
+   ========================================================================== */
+
+body.page-lecture .page__content {
+  color: #2d3139;
+}
+
+body.page-lecture #main > .page .page__content p,
+body.page-lecture #main > .page .page__content li {
+  line-height: 1.72;
+  text-align: left !important;
+  hyphens: manual;
+}
+
+body.page-lecture .page__content h2 {
+  margin-top: 2.1em;
+  padding-bottom: 0.3em;
+  color: #0b4f8a;
+  border-bottom: 2px solid #d6e4f5;
+}
+
+body.page-lecture .page__content h3 {
+  margin-top: 1.6em;
+  color: #1f6f6b;
+}
+
+body.page-lecture .page__content strong {
+  color: #1b1f24;
+  background: linear-gradient(transparent 64%, #fff0a6 64%);
+}
+
+body.page-lecture .page__content :not(pre) > code {
+  color: #9a3412;
+  background: #fdf3ec;
+  border: 1px solid #f5dcc8;
+  border-radius: 4px;
+}
+
+body.page-lecture .page__content a code {
+  color: inherit;
+}
+
+body.page-lecture .page__content h2 > code:not(pre),
+body.page-lecture .page__content h3 > code:not(pre),
+html[data-theme="dark"] body.page-lecture .page__content h2 > code:not(pre),
+html[data-theme="dark"] body.page-lecture .page__content h3 > code:not(pre) {
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+body.page-lecture .page__content pre.code-r,
+body.page-lecture .page__content pre.code-python,
+body.page-lecture .page__content pre.code-output {
+  border-radius: 6px;
+  border-left-width: 4px;
+}
+
+body.page-lecture .page__content pre.code-r,
+body.page-lecture .page__content pre.code-python {
+  background: #f5f8fc;
+  border-color: #dbe5f0;
+  border-left-color: #3b82c4;
+  color: #24292f;
+}
+
+body.page-lecture .page__content pre.code-python {
+  border-left-color: #d9a400;
+}
+
+body.page-lecture .page__content pre.code-output {
+  background: #fbfbf8;
+  border-color: #e6e6df;
+  border-left-color: #9aa5b1;
+  color: #3d4450;
+}
+
+body.page-lecture .page__content pre.code-r::before,
+body.page-lecture .page__content pre.code-python::before,
+body.page-lecture .page__content pre.code-output::before {
+  display: block;
+  margin-bottom: 0.5em;
+  font-family: var(--font-body);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.page-lecture .page__content pre.code-r::before {
+  content: "R";
+  color: #3b82c4;
+}
+
+body.page-lecture .page__content pre.code-python::before {
+  content: "Python";
+  color: #b08500;
+}
+
+body.page-lecture .page__content pre.code-output::before {
+  content: "Output";
+  color: #7b8591;
+}
+
+body.page-lecture .page__content pre.code-r + pre.code-output,
+body.page-lecture .page__content pre.code-python + pre.code-output {
+  margin-top: -0.55em;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+body.page-lecture .page__content .tok-comment { color: #6a737d; font-style: italic; }
+body.page-lecture .page__content .tok-string { color: #0a7a3d; }
+body.page-lecture .page__content .tok-number { color: #b35900; }
+body.page-lecture .page__content .tok-keyword { color: #8250df; font-weight: 600; }
+body.page-lecture .page__content .tok-func { color: #0b57d0; }
+body.page-lecture .page__content .tok-operator { color: #c2185b; font-weight: 600; }
+body.page-lecture .page__content .tok-prompt { color: #b3bac2; }
+
+body.page-lecture .page__content th {
+  background: #eef3fa;
+  color: #0b4f8a;
+}
+
+body.page-lecture .page__content tbody tr:nth-child(even) td {
+  background: #fafbfd;
+}
+
+body.page-lecture .page__content blockquote {
+  padding: 0.5em 0.9em;
+  background: #f3f7fd;
+  border-radius: 0 6px 6px 0;
+}
+
+body.page-lecture .page__content img {
+  border-radius: 6px;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content,
+html[data-theme="dark"] body.page-lecture .page__content p,
+html[data-theme="dark"] body.page-lecture .page__content li {
+  color: #e8e8e8;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content h2 {
+  color: #8cc4ff;
+  border-bottom-color: #5a6b80;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content h3 {
+  color: #7fd6cf;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content strong {
+  color: #fff;
+  background: linear-gradient(transparent 64%, rgba(255, 214, 102, 0.28) 64%);
+}
+
+html[data-theme="dark"] body.page-lecture .page__content :not(pre) > code {
+  color: #ffb38a;
+  background: #4a3f38;
+  border-color: #6a5548;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content pre.code-r,
+html[data-theme="dark"] body.page-lecture .page__content pre.code-python {
+  background: #33383f;
+  border-color: #4d5560;
+  border-left-color: #58a6ff;
+  color: #eef1f4;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content pre.code-python {
+  border-left-color: #e3b341;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content pre.code-output {
+  background: #3b3b38;
+  border-color: #55554f;
+  border-left-color: #8b949e;
+  color: #d6d6d0;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content pre.code-r::before { color: #58a6ff; }
+html[data-theme="dark"] body.page-lecture .page__content pre.code-python::before { color: #e3b341; }
+html[data-theme="dark"] body.page-lecture .page__content pre.code-output::before { color: #a0a8b2; }
+
+html[data-theme="dark"] body.page-lecture .page__content .tok-comment { color: #9aa4ae; }
+html[data-theme="dark"] body.page-lecture .page__content .tok-string { color: #7ee2a8; }
+html[data-theme="dark"] body.page-lecture .page__content .tok-number { color: #ffb86b; }
+html[data-theme="dark"] body.page-lecture .page__content .tok-keyword { color: #c9a7ff; }
+html[data-theme="dark"] body.page-lecture .page__content .tok-func { color: #79c0ff; }
+html[data-theme="dark"] body.page-lecture .page__content .tok-operator { color: #ff7ab6; }
+html[data-theme="dark"] body.page-lecture .page__content .tok-prompt { color: #6f7680; }
+
+html[data-theme="dark"] body.page-lecture .page__content th {
+  background: #3a4350;
+  color: #cfe3ff;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content tbody tr:nth-child(even) td {
+  background: #4d4d4d;
+}
+
+html[data-theme="dark"] body.page-lecture .page__content blockquote {
+  background: #3d4552;
+}
