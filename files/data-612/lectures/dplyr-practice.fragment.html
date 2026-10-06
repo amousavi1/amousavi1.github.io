@@ -1,0 +1,576 @@
+
+
+
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<p>We will use the <code>flights</code> dataset from the
+<code>nycflights13</code> package.</p>
+<pre class="r"><code>library(dplyr)
+library(nycflights13)</code></pre>
+</div>
+<div id="question-1-unique-destinations-by-origin"
+class="section level2">
+<h2>Question 1: Unique Destinations by Origin</h2>
+<p>Using <code>distinct()</code>, <code>group_by()</code>, and
+<code>summarise()</code>, find the number of unique destination airports
+served by each origin airport (<code>JFK</code>, <code>LGA</code>, and
+<code>EWR</code>).</p>
+<p>Your output should contain exactly three rows and two columns:
+<code>origin</code> and <code>n_destinations</code>.</p>
+<div id="solution" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  distinct(origin, dest) %&gt;%
+  group_by(origin) %&gt;%
+  summarise(
+    n_destinations = n(),
+    .groups = &quot;drop&quot;
+  )</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   origin n_destinations
+##   &lt;chr&gt;           &lt;int&gt;
+## 1 EWR                86
+## 2 JFK                70
+## 3 LGA                68</code></pre>
+<p><strong>Explanation:</strong> <code>distinct(origin, dest)</code>
+keeps unique origin-destination pairs. After grouping by origin,
+<code>n()</code> counts the number of destinations for each airport.</p>
+<hr />
+</div>
+</div>
+<div id="question-2-airport-names-and-departure-status"
+class="section level2">
+<h2>Question 2: Airport Names and Departure Status</h2>
+<p>Using <code>mutate()</code> and <code>case_when()</code>, create two
+new columns:</p>
+<ul>
+<li><code>origin_name</code>: “John F. Kennedy” for JFK, “LaGuardia” for
+LGA, and “Newark Liberty” for EWR.</li>
+<li><code>delay_status</code>: “Early” for negative departure delays,
+“On time” for zero, “Delayed” for positive, and <code>NA</code> for
+missing delays.</li>
+</ul>
+<p>Display only <code>origin</code>, <code>origin_name</code>,
+<code>dep_delay</code>, and <code>delay_status</code>.</p>
+<div id="solution-1" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  mutate(
+    origin_name = case_when(
+      origin == &quot;JFK&quot; ~ &quot;John F. Kennedy&quot;,
+      origin == &quot;LGA&quot; ~ &quot;LaGuardia&quot;,
+      origin == &quot;EWR&quot; ~ &quot;Newark Liberty&quot;,
+      TRUE ~ NA_character_
+    ),
+    delay_status = case_when(
+      is.na(dep_delay) ~ NA_character_,
+      dep_delay &lt; 0 ~ &quot;Early&quot;,
+      dep_delay == 0 ~ &quot;On time&quot;,
+      dep_delay &gt; 0 ~ &quot;Delayed&quot;
+    )
+  ) %&gt;%
+  select(origin, origin_name, dep_delay, delay_status)</code></pre>
+<pre><code>## # A tibble: 336,776 × 4
+##    origin origin_name     dep_delay delay_status
+##    &lt;chr&gt;  &lt;chr&gt;               &lt;dbl&gt; &lt;chr&gt;       
+##  1 EWR    Newark Liberty          2 Delayed     
+##  2 LGA    LaGuardia               4 Delayed     
+##  3 JFK    John F. Kennedy         2 Delayed     
+##  4 JFK    John F. Kennedy        -1 Early       
+##  5 LGA    LaGuardia              -6 Early       
+##  6 EWR    Newark Liberty         -4 Early       
+##  7 EWR    Newark Liberty         -5 Early       
+##  8 LGA    LaGuardia              -3 Early       
+##  9 JFK    John F. Kennedy        -3 Early       
+## 10 LGA    LaGuardia              -2 Early       
+## # ℹ 336,766 more rows</code></pre>
+<p><strong>Explanation:</strong> <code>case_when()</code> evaluates
+conditions in order. <code>NA_character_</code> explicitly represents a
+missing character value.</p>
+<hr />
+</div>
+</div>
+<div id="question-3-filtering-and-sorting-flights"
+class="section level2">
+<h2>Question 3: Filtering and Sorting Flights</h2>
+<p>Find flights satisfying all the following conditions:</p>
+<ul>
+<li>Departed from JFK or LGA.</li>
+<li>Flew to LAX, SFO, or MIA.</li>
+<li>Had a departure delay greater than 30 minutes.</li>
+<li>Took place in July or August.</li>
+</ul>
+<p>Display <code>month</code>, <code>day</code>, <code>origin</code>,
+<code>dest</code>, <code>carrier</code>, and <code>dep_delay</code>,
+sorted by departure delay from highest to lowest.</p>
+<div id="solution-2" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  filter(
+    origin %in% c(&quot;JFK&quot;, &quot;LGA&quot;),
+    dest %in% c(&quot;LAX&quot;, &quot;SFO&quot;, &quot;MIA&quot;),
+    dep_delay &gt; 30,
+    month %in% c(7, 8)
+  ) %&gt;%
+  select(month, day, origin, dest, carrier, dep_delay) %&gt;%
+  arrange(desc(dep_delay))</code></pre>
+<pre><code>## # A tibble: 689 × 6
+##    month   day origin dest  carrier dep_delay
+##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1     7    10 JFK    LAX   VX            634
+##  2     7     7 JFK    SFO   VX            629
+##  3     7     6 JFK    SFO   DL            589
+##  4     7    10 JFK    SFO   B6            453
+##  5     8    28 JFK    MIA   DL            436
+##  6     7    10 JFK    SFO   VX            432
+##  7     7    10 JFK    LAX   VX            413
+##  8     7     7 JFK    SFO   VX            396
+##  9     8    18 JFK    LAX   VX            392
+## 10     7     9 JFK    SFO   AA            364
+## # ℹ 679 more rows</code></pre>
+<p><strong>Explanation:</strong> <code>%in%</code> tests whether a value
+belongs to a specified set. Multiple conditions inside
+<code>filter()</code> are combined using AND.</p>
+<hr />
+</div>
+</div>
+<div id="question-4-airline-performance-summary" class="section level2">
+<h2>Question 4: Airline Performance Summary</h2>
+<p>For each airline (<code>carrier</code>), calculate:</p>
+<ol style="list-style-type: decimal">
+<li>Total number of flights.</li>
+<li>Number of distinct destinations served.</li>
+<li>Average departure delay, excluding missing values.</li>
+<li>Percentage of flights departing more than 15 minutes late, excluding
+missing departure delays from the denominator.</li>
+</ol>
+<p>Sort by average departure delay from highest to lowest.</p>
+<div id="solution-3" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  group_by(carrier) %&gt;%
+  summarise(
+    n_flights = n(),
+    n_destinations = n_distinct(dest),
+    avg_dep_delay = mean(dep_delay, na.rm = TRUE),
+    pct_late = 100 * mean(dep_delay &gt; 15, na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  arrange(desc(avg_dep_delay))</code></pre>
+<pre><code>## # A tibble: 16 × 5
+##    carrier n_flights n_destinations avg_dep_delay pct_late
+##    &lt;chr&gt;       &lt;int&gt;          &lt;int&gt;         &lt;dbl&gt;    &lt;dbl&gt;
+##  1 F9            685              1         20.2     28.2 
+##  2 EV          54173             61         20.0     30.5 
+##  3 YV            601              3         19.0     28.6 
+##  4 FL           3260              3         18.7     26.7 
+##  5 WN          12275             11         17.7     26.9 
+##  6 9E          18460             49         16.7     25.7 
+##  7 B6          54635             42         13.0     22.8 
+##  8 VX           5162              5         12.9     17.4 
+##  9 OO             32              5         12.6     20.7 
+## 10 UA          58665             47         12.1     21.0 
+## 11 MQ          26397             20         10.6     21.1 
+## 12 DL          48110             40          9.26    16.3 
+## 13 AA          32729             19          8.59    15.9 
+## 14 AS            714              1          5.80    13.2 
+## 15 HA            342              1          4.90     7.02
+## 16 US          20536              6          3.78    12.2</code></pre>
+<p><strong>Explanation:</strong> <code>n_distinct()</code> counts unique
+values directly. The logical expression <code>dep_delay &gt; 15</code>
+produces TRUE/FALSE values, treated as 1/0 by <code>mean()</code>. Using
+<code>na.rm = TRUE</code> excludes missing delays.</p>
+<hr />
+</div>
+</div>
+<div id="question-5-arrival-delay-categories" class="section level2">
+<h2>Question 5: Arrival Delay Categories</h2>
+<p>Create a column called <code>arrival_category</code> using
+<code>case_when()</code>:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Arrival delay</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Less than 0</td>
+<td>Early</td>
+</tr>
+<tr class="even">
+<td>Exactly 0</td>
+<td>On time</td>
+</tr>
+<tr class="odd">
+<td>1–30 minutes</td>
+<td>Minor delay</td>
+</tr>
+<tr class="even">
+<td>31–60 minutes</td>
+<td>Moderate delay</td>
+</tr>
+<tr class="odd">
+<td>More than 60 minutes</td>
+<td>Severe delay</td>
+</tr>
+<tr class="even">
+<td>Missing</td>
+<td>Unknown</td>
+</tr>
+</tbody>
+</table>
+<p>Then count the number of flights in each category, sorted from most
+frequent to least frequent.</p>
+<div id="solution-4" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  mutate(
+    arrival_category = case_when(
+      is.na(arr_delay) ~ &quot;Unknown&quot;,
+      arr_delay &lt; 0 ~ &quot;Early&quot;,
+      arr_delay == 0 ~ &quot;On time&quot;,
+      arr_delay &lt;= 30 ~ &quot;Minor delay&quot;,
+      arr_delay &lt;= 60 ~ &quot;Moderate delay&quot;,
+      TRUE ~ &quot;Severe delay&quot;
+    )
+  ) %&gt;%
+  count(arrival_category, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   arrival_category      n
+##   &lt;chr&gt;             &lt;int&gt;
+## 1 Early            188933
+## 2 Minor delay       81505
+## 3 Severe delay      27789
+## 4 Moderate delay    23710
+## 5 Unknown            9430
+## 6 On time            5409</code></pre>
+<p><strong>Explanation:</strong> Conditions in <code>case_when()</code>
+are checked from top to bottom. Because earlier conditions already
+exclude delays of 30 minutes or less, <code>arr_delay &lt;= 60</code>
+correctly identifies moderate delays.</p>
+<hr />
+</div>
+</div>
+<div id="question-6-destinations-served-by-multiple-airlines"
+class="section level2">
+<h2>Question 6: Destinations Served by Multiple Airlines</h2>
+<p>Find destinations served by at least three different airlines.</p>
+<p>For each qualifying destination, display:</p>
+<ul>
+<li>Destination airport.</li>
+<li>Number of distinct airlines.</li>
+<li>Total number of flights.</li>
+<li>Average arrival delay, excluding missing values.</li>
+</ul>
+<p>Only include destinations with at least 500 flights. Sort by average
+arrival delay from highest to lowest.</p>
+<div id="solution-5" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  group_by(dest) %&gt;%
+  summarise(
+    n_carriers = n_distinct(carrier),
+    n_flights = n(),
+    avg_arr_delay = mean(arr_delay, na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  filter(
+    n_carriers &gt;= 3,
+    n_flights &gt;= 500
+  ) %&gt;%
+  arrange(desc(avg_arr_delay))</code></pre>
+<pre><code>## # A tibble: 52 × 4
+##    dest  n_carriers n_flights avg_arr_delay
+##    &lt;chr&gt;      &lt;int&gt;     &lt;int&gt;         &lt;dbl&gt;
+##  1 CVG            4      3941          15.4
+##  2 OMA            3       849          14.7
+##  3 MCI            3      2008          14.5
+##  4 MKE            4      2802          14.2
+##  5 IAD            6      5700          13.9
+##  6 SDF            3      1157          12.7
+##  7 JAX            4      2720          11.8
+##  8 BNA            5      6333          11.8
+##  9 PWM            3      2352          11.7
+## 10 ROC            3      2416          11.6
+## # ℹ 42 more rows</code></pre>
+<p><strong>Explanation:</strong> <code>summarise()</code> creates one
+row per destination. We then use <code>filter()</code> to keep only
+destinations meeting both conditions.</p>
+<hr />
+</div>
+</div>
+<div id="question-7-using-across-for-multiple-statistics"
+class="section level2">
+<h2>Question 7: Using across() for Multiple Statistics</h2>
+<p>For each origin airport, calculate the mean and median of:</p>
+<ul>
+<li><code>dep_delay</code></li>
+<li><code>arr_delay</code></li>
+<li><code>air_time</code></li>
+</ul>
+<p>Use a single <code>across()</code> statement with a list of
+functions. Ignore missing values.</p>
+<div id="solution-6" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  group_by(origin) %&gt;%
+  summarise(
+    across(
+      c(dep_delay, arr_delay, air_time),
+      .fns = list(
+        mean = ~ mean(.x, na.rm = TRUE),
+        median = ~ median(.x, na.rm = TRUE)
+      ),
+      .names = &quot;{.col}_{.fn}&quot;
+    ),
+    .groups = &quot;drop&quot;
+  )</code></pre>
+<pre><code>## # A tibble: 3 × 7
+##   origin dep_delay_mean dep_delay_median arr_delay_mean arr_delay_median
+##   &lt;chr&gt;           &lt;dbl&gt;            &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+## 1 EWR              15.1               -1           9.11               -4
+## 2 JFK              12.1               -1           5.55               -6
+## 3 LGA              10.3               -3           5.78               -5
+## # ℹ 2 more variables: air_time_mean &lt;dbl&gt;, air_time_median &lt;dbl&gt;</code></pre>
+<p><strong>Explanation:</strong> <code>across()</code> applies multiple
+functions to multiple columns. The <code>.names</code> argument
+determines the names of the output columns.</p>
+<hr />
+</div>
+</div>
+<div id="question-8-performance-relative-to-airline-average"
+class="section level2">
+<h2>Question 8: Performance Relative to Airline Average</h2>
+<p>For each airline, create:</p>
+<ul>
+<li><code>carrier_avg_delay</code>: the airline’s average departure
+delay, excluding missing values.</li>
+<li><code>relative_status</code>:
+<ul>
+<li>“Better than average” if a flight’s delay is below its airline’s
+average.</li>
+<li>“Worse than average” if above.</li>
+<li>“Exactly average” if equal.</li>
+<li><code>NA</code> if the flight delay or airline average is
+missing.</li>
+</ul></li>
+</ul>
+<p>Display <code>carrier</code>, <code>dep_delay</code>,
+<code>carrier_avg_delay</code>, and <code>relative_status</code>.</p>
+<div id="solution-7" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  group_by(carrier) %&gt;%
+  mutate(
+    carrier_avg_delay = mean(dep_delay, na.rm = TRUE),
+    relative_status = case_when(
+      is.na(dep_delay) | is.na(carrier_avg_delay) ~ NA_character_,
+      dep_delay &lt; carrier_avg_delay ~ &quot;Better than average&quot;,
+      dep_delay &gt; carrier_avg_delay ~ &quot;Worse than average&quot;,
+      TRUE ~ &quot;Exactly average&quot;
+    )
+  ) %&gt;%
+  ungroup() %&gt;%
+  select(carrier, dep_delay, carrier_avg_delay, relative_status)</code></pre>
+<pre><code>## # A tibble: 336,776 × 4
+##    carrier dep_delay carrier_avg_delay relative_status    
+##    &lt;chr&gt;       &lt;dbl&gt;             &lt;dbl&gt; &lt;chr&gt;              
+##  1 UA              2             12.1  Better than average
+##  2 UA              4             12.1  Better than average
+##  3 AA              2              8.59 Better than average
+##  4 B6             -1             13.0  Better than average
+##  5 DL             -6              9.26 Better than average
+##  6 UA             -4             12.1  Better than average
+##  7 B6             -5             13.0  Better than average
+##  8 EV             -3             20.0  Better than average
+##  9 B6             -3             13.0  Better than average
+## 10 AA             -2              8.59 Better than average
+## # ℹ 336,766 more rows</code></pre>
+<p><strong>Explanation:</strong> Unlike <code>summarise()</code>,
+<code>mutate()</code> preserves the original rows. Because the data is
+grouped by <code>carrier</code>, the mean is calculated separately for
+each airline and assigned to all of its flights.</p>
+<hr />
+</div>
+</div>
+<div id="question-9-three-worst-days-for-each-airline"
+class="section level2">
+<h2>Question 9: Three Worst Days for Each Airline</h2>
+<p>Find the three worst days for each airline based on average arrival
+delay.</p>
+<p>Define a day using <code>year</code>, <code>month</code>, and
+<code>day</code>.</p>
+<p>Only consider airline-day combinations with at least 10 flights
+having nonmissing arrival delays.</p>
+<p>Return <code>carrier</code>, <code>year</code>, <code>month</code>,
+<code>day</code>, <code>n_flights</code>, and
+<code>avg_arr_delay</code>.</p>
+<p>Use <code>slice_max()</code> and return no more than three rows per
+airline.</p>
+<div id="solution-8" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  filter(!is.na(arr_delay)) %&gt;%
+  group_by(carrier, year, month, day) %&gt;%
+  summarise(
+    n_flights = n(),
+    avg_arr_delay = mean(arr_delay),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  filter(n_flights &gt;= 10) %&gt;%
+  group_by(carrier) %&gt;%
+  slice_max(
+    order_by = avg_arr_delay,
+    n = 3,
+    with_ties = FALSE
+  ) %&gt;%
+  ungroup() %&gt;%
+  arrange(carrier, desc(avg_arr_delay)) %&gt;%
+  select(carrier, year, month, day, n_flights, avg_arr_delay)</code></pre>
+<pre><code>## # A tibble: 33 × 6
+##    carrier  year month   day n_flights avg_arr_delay
+##    &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;int&gt;         &lt;dbl&gt;
+##  1 9E       2013     7    22        31         105. 
+##  2 9E       2013    12    14        35         101. 
+##  3 9E       2013     1    16        32         101. 
+##  4 AA       2013     3     8        91          78.4
+##  5 AA       2013     6    13        94          61.1
+##  6 AA       2013     5    23        86          60.3
+##  7 B6       2013     3     8       154          92.7
+##  8 B6       2013     7     1       144          90.0
+##  9 B6       2013     7    10       159          71.7
+## 10 DL       2013     3     8       131          69.1
+## # ℹ 23 more rows</code></pre>
+<p><strong>Explanation:</strong> We first remove missing arrival delays,
+calculate daily airline averages, and then use <code>slice_max()</code>
+within each airline. <code>with_ties = FALSE</code> ensures at most
+three rows per airline.</p>
+<hr />
+</div>
+</div>
+<div id="question-10-comprehensive-destination-analysis"
+class="section level2">
+<h2>Question 10: Comprehensive Destination Analysis</h2>
+<p>Among destinations with at least 1,000 scheduled flights, identify
+the five destinations with the worst departure-delay performance.</p>
+<p>For each destination, calculate:</p>
+<ol style="list-style-type: decimal">
+<li><code>n_flights</code>: total scheduled flights.</li>
+<li><code>n_delayed</code>: flights with
+<code>dep_delay &gt; 0</code>.</li>
+<li><code>pct_delayed</code>: percentage of flights delayed, excluding
+missing departure delays from the denominator.</li>
+<li><code>avg_delay</code>: average departure delay among delayed
+flights only.</li>
+<li><code>n_carriers</code>: number of distinct airlines serving the
+destination.</li>
+</ol>
+<p>Rank by <code>pct_delayed</code> (highest first), breaking ties by
+<code>avg_delay</code> (highest first), then destination code
+alphabetically.</p>
+<p>Return exactly five destinations.</p>
+<div id="solution-9" class="section level3">
+<h3>Solution</h3>
+<pre class="r"><code>flights %&gt;%
+  group_by(dest) %&gt;%
+  summarise(
+    n_flights = n(),
+    n_delayed = sum(dep_delay &gt; 0, na.rm = TRUE),
+    pct_delayed = 100 * mean(dep_delay &gt; 0, na.rm = TRUE),
+    avg_delay = mean(dep_delay[dep_delay &gt; 0 &amp; !is.na(dep_delay)]),
+    n_carriers = n_distinct(carrier),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  filter(n_flights &gt;= 1000) %&gt;%
+  arrange(
+    desc(pct_delayed),
+    desc(avg_delay),
+    dest
+  ) %&gt;%
+  slice_head(n = 5)</code></pre>
+<pre><code>## # A tibble: 5 × 6
+##   dest  n_flights n_delayed pct_delayed avg_delay n_carriers
+##   &lt;chr&gt;     &lt;int&gt;     &lt;int&gt;       &lt;dbl&gt;     &lt;dbl&gt;      &lt;int&gt;
+## 1 MDW        4113      2251        55.7      35.5          1
+## 2 PDX        1354       681        50.5      35.4          3
+## 3 DEN        7266      3624        50.3      33.7          5
+## 4 MHT        1009       458        49.1      47.8          2
+## 5 MKE        2802      1312        48.3      43.1          4</code></pre>
+<p><strong>Explanation:</strong> We calculate statistics for each
+destination. The percentage excludes missing departure delays. The
+average delay includes only flights that actually departed late.
+Finally, we filter, sort, and select the five worst destinations.</p>
+<hr />
+</div>
+</div>
+<div id="summary-of-functions-practiced" class="section level2">
+<h2>Summary of Functions Practiced</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Questions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>distinct()</code></td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td><code>n_distinct()</code></td>
+<td>4, 6, 10</td>
+</tr>
+<tr class="odd">
+<td><code>filter()</code></td>
+<td>3, 6, 9, 10</td>
+</tr>
+<tr class="even">
+<td><code>mutate()</code></td>
+<td>2, 5, 8</td>
+</tr>
+<tr class="odd">
+<td><code>case_when()</code></td>
+<td>2, 5, 8</td>
+</tr>
+<tr class="even">
+<td><code>group_by()</code></td>
+<td>1, 4, 6, 7, 8, 9, 10</td>
+</tr>
+<tr class="odd">
+<td><code>summarise()</code></td>
+<td>1, 4, 6, 7, 9, 10</td>
+</tr>
+<tr class="even">
+<td><code>across()</code></td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td><code>arrange()</code></td>
+<td>3, 4, 6, 9, 10</td>
+</tr>
+<tr class="even">
+<td><code>count()</code></td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td><code>slice_max()</code></td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td><code>slice_head()</code></td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td><code>is.na()</code></td>
+<td>2, 5, 8, 9</td>
+</tr>
+<tr class="even">
+<td><code>%in%</code></td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+</div>

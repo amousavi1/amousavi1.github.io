@@ -1,0 +1,386 @@
+---
+title: "Dplyr Practice: 10 Exercises with Solutions"
+subtitle: "Working with the nycflights13 Dataset"
+format:
+  html:
+    toc: true
+    code-fold: false
+    code-tools: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: knitr-opts
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+## Setup
+
+We will use the `flights` dataset from the `nycflights13` package.
+
+```{r}
+#| label: setup
+
+library(dplyr)
+library(nycflights13)
+```
+
+## Question 1: Unique Destinations by Origin
+
+Using `distinct()`, `group_by()`, and `summarise()`, find the number of unique destination airports served by each origin airport (`JFK`, `LGA`, and `EWR`).
+
+Your output should contain exactly three rows and two columns: `origin` and `n_destinations`.
+
+### Solution
+
+```{r}
+flights %>%
+  distinct(origin, dest) %>%
+  group_by(origin) %>%
+  summarise(
+    n_destinations = n(),
+    .groups = "drop"
+  )
+```
+
+**Explanation:** `distinct(origin, dest)` keeps unique origin-destination pairs. After grouping by origin, `n()` counts the number of destinations for each airport.
+
+---
+
+## Question 2: Airport Names and Departure Status
+
+Using `mutate()` and `case_when()`, create two new columns:
+
+- `origin_name`: "John F. Kennedy" for JFK, "LaGuardia" for LGA, and "Newark Liberty" for EWR.
+- `delay_status`: "Early" for negative departure delays, "On time" for zero, "Delayed" for positive, and `NA` for missing delays.
+
+Display only `origin`, `origin_name`, `dep_delay`, and `delay_status`.
+
+### Solution
+
+```{r}
+flights %>%
+  mutate(
+    origin_name = case_when(
+      origin == "JFK" ~ "John F. Kennedy",
+      origin == "LGA" ~ "LaGuardia",
+      origin == "EWR" ~ "Newark Liberty",
+      TRUE ~ NA_character_
+    ),
+    delay_status = case_when(
+      is.na(dep_delay) ~ NA_character_,
+      dep_delay < 0 ~ "Early",
+      dep_delay == 0 ~ "On time",
+      dep_delay > 0 ~ "Delayed"
+    )
+  ) %>%
+  select(origin, origin_name, dep_delay, delay_status)
+```
+
+**Explanation:** `case_when()` evaluates conditions in order. `NA_character_` explicitly represents a missing character value.
+
+---
+
+## Question 3: Filtering and Sorting Flights
+
+Find flights satisfying all the following conditions:
+
+- Departed from JFK or LGA.
+- Flew to LAX, SFO, or MIA.
+- Had a departure delay greater than 30 minutes.
+- Took place in July or August.
+
+Display `month`, `day`, `origin`, `dest`, `carrier`, and `dep_delay`, sorted by departure delay from highest to lowest.
+
+### Solution
+
+```{r}
+flights %>%
+  filter(
+    origin %in% c("JFK", "LGA"),
+    dest %in% c("LAX", "SFO", "MIA"),
+    dep_delay > 30,
+    month %in% c(7, 8)
+  ) %>%
+  select(month, day, origin, dest, carrier, dep_delay) %>%
+  arrange(desc(dep_delay))
+```
+
+**Explanation:** `%in%` tests whether a value belongs to a specified set. Multiple conditions inside `filter()` are combined using AND.
+
+---
+
+## Question 4: Airline Performance Summary
+
+For each airline (`carrier`), calculate:
+
+1. Total number of flights.
+2. Number of distinct destinations served.
+3. Average departure delay, excluding missing values.
+4. Percentage of flights departing more than 15 minutes late, excluding missing departure delays from the denominator.
+
+Sort by average departure delay from highest to lowest.
+
+### Solution
+
+```{r}
+flights %>%
+  group_by(carrier) %>%
+  summarise(
+    n_flights = n(),
+    n_destinations = n_distinct(dest),
+    avg_dep_delay = mean(dep_delay, na.rm = TRUE),
+    pct_late = 100 * mean(dep_delay > 15, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(avg_dep_delay))
+```
+
+**Explanation:** `n_distinct()` counts unique values directly. The logical expression `dep_delay > 15` produces TRUE/FALSE values, treated as 1/0 by `mean()`. Using `na.rm = TRUE` excludes missing delays.
+
+---
+
+## Question 5: Arrival Delay Categories
+
+Create a column called `arrival_category` using `case_when()`:
+
+| Arrival delay | Category |
+|---|---|
+| Less than 0 | Early |
+| Exactly 0 | On time |
+| 1–30 minutes | Minor delay |
+| 31–60 minutes | Moderate delay |
+| More than 60 minutes | Severe delay |
+| Missing | Unknown |
+
+Then count the number of flights in each category, sorted from most frequent to least frequent.
+
+### Solution
+
+```{r}
+flights %>%
+  mutate(
+    arrival_category = case_when(
+      is.na(arr_delay) ~ "Unknown",
+      arr_delay < 0 ~ "Early",
+      arr_delay == 0 ~ "On time",
+      arr_delay <= 30 ~ "Minor delay",
+      arr_delay <= 60 ~ "Moderate delay",
+      TRUE ~ "Severe delay"
+    )
+  ) %>%
+  count(arrival_category, sort = TRUE)
+```
+
+**Explanation:** Conditions in `case_when()` are checked from top to bottom. Because earlier conditions already exclude delays of 30 minutes or less, `arr_delay <= 60` correctly identifies moderate delays.
+
+---
+
+## Question 6: Destinations Served by Multiple Airlines
+
+Find destinations served by at least three different airlines.
+
+For each qualifying destination, display:
+
+- Destination airport.
+- Number of distinct airlines.
+- Total number of flights.
+- Average arrival delay, excluding missing values.
+
+Only include destinations with at least 500 flights. Sort by average arrival delay from highest to lowest.
+
+### Solution
+
+```{r}
+flights %>%
+  group_by(dest) %>%
+  summarise(
+    n_carriers = n_distinct(carrier),
+    n_flights = n(),
+    avg_arr_delay = mean(arr_delay, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(
+    n_carriers >= 3,
+    n_flights >= 500
+  ) %>%
+  arrange(desc(avg_arr_delay))
+```
+
+**Explanation:** `summarise()` creates one row per destination. We then use `filter()` to keep only destinations meeting both conditions.
+
+---
+
+## Question 7: Using across() for Multiple Statistics
+
+For each origin airport, calculate the mean and median of:
+
+- `dep_delay`
+- `arr_delay`
+- `air_time`
+
+Use a single `across()` statement with a list of functions. Ignore missing values.
+
+### Solution
+
+```{r}
+flights %>%
+  group_by(origin) %>%
+  summarise(
+    across(
+      c(dep_delay, arr_delay, air_time),
+      .fns = list(
+        mean = ~ mean(.x, na.rm = TRUE),
+        median = ~ median(.x, na.rm = TRUE)
+      ),
+      .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
+  )
+```
+
+**Explanation:** `across()` applies multiple functions to multiple columns. The `.names` argument determines the names of the output columns.
+
+---
+
+## Question 8: Performance Relative to Airline Average
+
+For each airline, create:
+
+- `carrier_avg_delay`: the airline's average departure delay, excluding missing values.
+- `relative_status`:
+  - "Better than average" if a flight's delay is below its airline's average.
+  - "Worse than average" if above.
+  - "Exactly average" if equal.
+  - `NA` if the flight delay or airline average is missing.
+
+Display `carrier`, `dep_delay`, `carrier_avg_delay`, and `relative_status`.
+
+### Solution
+
+```{r}
+flights %>%
+  group_by(carrier) %>%
+  mutate(
+    carrier_avg_delay = mean(dep_delay, na.rm = TRUE),
+    relative_status = case_when(
+      is.na(dep_delay) | is.na(carrier_avg_delay) ~ NA_character_,
+      dep_delay < carrier_avg_delay ~ "Better than average",
+      dep_delay > carrier_avg_delay ~ "Worse than average",
+      TRUE ~ "Exactly average"
+    )
+  ) %>%
+  ungroup() %>%
+  select(carrier, dep_delay, carrier_avg_delay, relative_status)
+```
+
+**Explanation:** Unlike `summarise()`, `mutate()` preserves the original rows. Because the data is grouped by `carrier`, the mean is calculated separately for each airline and assigned to all of its flights.
+
+---
+
+## Question 9: Three Worst Days for Each Airline
+
+Find the three worst days for each airline based on average arrival delay.
+
+Define a day using `year`, `month`, and `day`.
+
+Only consider airline-day combinations with at least 10 flights having nonmissing arrival delays.
+
+Return `carrier`, `year`, `month`, `day`, `n_flights`, and `avg_arr_delay`.
+
+Use `slice_max()` and return no more than three rows per airline.
+
+### Solution
+
+```{r}
+flights %>%
+  filter(!is.na(arr_delay)) %>%
+  group_by(carrier, year, month, day) %>%
+  summarise(
+    n_flights = n(),
+    avg_arr_delay = mean(arr_delay),
+    .groups = "drop"
+  ) %>%
+  filter(n_flights >= 10) %>%
+  group_by(carrier) %>%
+  slice_max(
+    order_by = avg_arr_delay,
+    n = 3,
+    with_ties = FALSE
+  ) %>%
+  ungroup() %>%
+  arrange(carrier, desc(avg_arr_delay)) %>%
+  select(carrier, year, month, day, n_flights, avg_arr_delay)
+```
+
+**Explanation:** We first remove missing arrival delays, calculate daily airline averages, and then use `slice_max()` within each airline. `with_ties = FALSE` ensures at most three rows per airline.
+
+---
+
+## Question 10: Comprehensive Destination Analysis
+
+Among destinations with at least 1,000 scheduled flights, identify the five destinations with the worst departure-delay performance.
+
+For each destination, calculate:
+
+1. `n_flights`: total scheduled flights.
+2. `n_delayed`: flights with `dep_delay > 0`.
+3. `pct_delayed`: percentage of flights delayed, excluding missing departure delays from the denominator.
+4. `avg_delay`: average departure delay among delayed flights only.
+5. `n_carriers`: number of distinct airlines serving the destination.
+
+Rank by `pct_delayed` (highest first), breaking ties by `avg_delay` (highest first), then destination code alphabetically.
+
+Return exactly five destinations.
+
+### Solution
+
+```{r}
+flights %>%
+  group_by(dest) %>%
+  summarise(
+    n_flights = n(),
+    n_delayed = sum(dep_delay > 0, na.rm = TRUE),
+    pct_delayed = 100 * mean(dep_delay > 0, na.rm = TRUE),
+    avg_delay = mean(dep_delay[dep_delay > 0 & !is.na(dep_delay)]),
+    n_carriers = n_distinct(carrier),
+    .groups = "drop"
+  ) %>%
+  filter(n_flights >= 1000) %>%
+  arrange(
+    desc(pct_delayed),
+    desc(avg_delay),
+    dest
+  ) %>%
+  slice_head(n = 5)
+```
+
+**Explanation:** We calculate statistics for each destination. The percentage excludes missing departure delays. The average delay includes only flights that actually departed late. Finally, we filter, sort, and select the five worst destinations.
+
+---
+
+## Summary of Functions Practiced
+
+| Function | Questions |
+|---|---|
+| `distinct()` | 1 |
+| `n_distinct()` | 4, 6, 10 |
+| `filter()` | 3, 6, 9, 10 |
+| `mutate()` | 2, 5, 8 |
+| `case_when()` | 2, 5, 8 |
+| `group_by()` | 1, 4, 6, 7, 8, 9, 10 |
+| `summarise()` | 1, 4, 6, 7, 9, 10 |
+| `across()` | 7 |
+| `arrange()` | 3, 4, 6, 9, 10 |
+| `count()` | 5 |
+| `slice_max()` | 9 |
+| `slice_head()` | 10 |
+| `is.na()` | 2, 5, 8, 9 |
+| `%in%` | 3 |
