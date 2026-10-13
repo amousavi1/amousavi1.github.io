@@ -42,7 +42,7 @@ Render to HTML (the default). PDF is fine too. Submit the \texttt{.qmd} and the 
   \item You may use your notes, the R help files, and the internet.
   \item You may not communicate with anyone else.
   \item Use the tidyverse where a tidyverse verb exists. Question 1 is a function and a pipe; base R is appropriate there.
-  \item \texttt{library(tidyverse)} is enough. \texttt{mpg} and \texttt{diamonds} are in ggplot2. \texttt{starwars} is in dplyr. \texttt{mtcars} is in base R.
+  \item \texttt{library(tidyverse)} is enough. \texttt{mpg} is in ggplot2. \texttt{starwars} is in dplyr. \texttt{mtcars} is in base R.
   \item Either pipe is fine: \texttt{|>} or \texttt{\%>\%}.
   \item Partial credit is given for code that runs. If you are stuck, go to the next part.
 \end{itemize}
@@ -105,36 +105,31 @@ Use \texttt{mpg}. Answer each part with one pipeline.
   \end{itemize}
 \end{enumerate}
 
-\item \textbf{Pictures and what they say} (20 points, about 15 minutes)
+\item \textbf{One picture} (20 points, about 12 minutes)
 
-\begin{enumerate}[label=\alph*., leftmargin=1.7em, itemsep=0.55em]
-  \item (6 points) From \texttt{diamonds}, plot a histogram of \texttt{carat} with 40 bins and \texttt{theme\_bw()}. Label the horizontal axis \texttt{Carat}. In one sentence, describe the shape. ``It is a histogram of carat'' is not a description.
-  \item (10 points) From \texttt{mpg}, plot highway mileage against engine displacement.
-  \begin{itemize}
-    \item Points: map \texttt{class} to color inside \texttt{geom\_point()} only, and set an alpha so overlapping points stay visible.
-    \item One straight smooth in black, dashed, with no gray band. The smooth is not colored by \texttt{class}.
-    \item Facet by \texttt{drv}.
-    \item Use \texttt{theme\_bw()}. Label the axes \texttt{Displacement (litres)} and \texttt{Highway mpg}.
-  \end{itemize}
-  \item (4 points) In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every \texttt{drv} panel. Name one difference you can see between panels.
-\end{enumerate}
+From \texttt{mpg}, plot highway mileage against engine displacement.
+\begin{itemize}
+  \item Points: map \texttt{class} to color inside \texttt{geom\_point()} only, and set an alpha so overlapping points stay visible.
+  \item One straight smooth in black, dashed, with no gray band. The smooth is not colored by \texttt{class}.
+  \item Facet by \texttt{drv}.
+  \item Use \texttt{theme\_bw()}. Label the axes \texttt{Displacement (litres)} and \texttt{Highway mpg}.
+\end{itemize}
+In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every \texttt{drv} panel. Name one difference you can see between panels.
 
-\item \textbf{Parse a table, then \texttt{across()}} (20 points, about 10 minutes)
+\item \textbf{A small table, then \texttt{across()}} (20 points, about 8 minutes)
 
-\texttt{halls} is already in \texttt{midterm-1.qmd}. Do not read a file.
+\texttt{halls} is already in \texttt{midterm-1.qmd}. Do not read a file. There is no CSV.
 
 \begin{lstlisting}
 halls <- tibble(
-  name = c("Maple Hall", "Oak Court", "Pine Lofts", "Elm Annex", "Cedar Row"),
-  opened = c("March 4 2018", "July 1 2019", "August 15 2016", NA, "January 9 2020"),
-  rent = c("$1,250", "980", "$2,100.50", "missing", "$875"),
-  units = c("40", "25", "12", NA, "18"),
-  occupied = c("TRUE", "FALSE", "TRUE", "N-A", "TRUE")
+  name = c("Maple Hall", "Oak Court", "Elm Annex"),
+  rent = c("1,250", "980", "missing"),
+  occupied = c("TRUE", "FALSE", "N-A")
 )
 \end{lstlisting}
 
 \begin{enumerate}[label=\alph*., leftmargin=1.7em, itemsep=0.55em]
-  \item (12 points) Clean the table. \texttt{opened} is a date written like \texttt{March 4 2018}. \texttt{rent} is a number even when it contains \texttt{\$} or a comma. \texttt{units} is an integer. \texttt{occupied} is logical. Treat \texttt{"missing"} and \texttt{"N-A"} as missing. Print the cleaned table.
+  \item (12 points) \texttt{rent} is a number even when it contains a comma. \texttt{occupied} is logical. Treat \texttt{"missing"} and \texttt{"N-A"} as missing. Print the cleaned table.
   \item (8 points) With one \texttt{across()}, report how many missing values are in each column of the cleaned table.
 \end{enumerate}
 

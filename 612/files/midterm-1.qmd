@@ -18,7 +18,7 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 - You may use your notes, the R help files, and the internet.
 - You may not communicate with anyone else.
 - Use the tidyverse where a tidyverse verb exists. Question 1 is a function and a pipe; base R is appropriate there.
-- `library(tidyverse)` is enough. `mpg` and `diamonds` are in ggplot2. `starwars` is in dplyr. `mtcars` is in base R.
+- `library(tidyverse)` is enough. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
 
@@ -145,23 +145,7 @@ Two short pipelines.
 
 ```
 
-# 4. Pictures and what they say (20 points, about 15 minutes)
-
-## (a) A histogram (6 points)
-
-From `diamonds`, plot a histogram of `carat` with 40 bins and `theme_bw()`. Label the horizontal axis `Carat`.
-
-```{r}
-#| label: q4a
-#| fig-width: 6
-#| fig-height: 3.6
-
-
-```
-
-In one sentence, describe the shape. "It is a histogram of carat" is not a description.
-
-## (b) Points, one smooth, and facets (10 points)
+# 4. One picture (20 points, about 12 minutes)
 
 From `mpg`, plot highway mileage against engine displacement.
 
@@ -171,37 +155,33 @@ From `mpg`, plot highway mileage against engine displacement.
 - Use `theme_bw()`. Label the axes `Displacement (litres)` and `Highway mpg`.
 
 ```{r}
-#| label: q4b
+#| label: q4
 #| fig-width: 7
 #| fig-height: 4
 
 
 ```
 
-## (c) What the picture says (4 points)
-
 In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
 
-# 5. Parse a table, then `across()` (20 points, about 10 minutes)
+# 5. A small table, then `across()` (20 points, about 8 minutes)
 
-`halls` is defined in the next chunk. Do not read a file.
+`halls` is already in the chunk below. Do not read a file. There is no CSV.
 
 ```{r}
 #| label: halls
 
 halls <- tibble(
-  name = c("Maple Hall", "Oak Court", "Pine Lofts", "Elm Annex", "Cedar Row"),
-  opened = c("March 4 2018", "July 1 2019", "August 15 2016", NA, "January 9 2020"),
-  rent = c("$1,250", "980", "$2,100.50", "missing", "$875"),
-  units = c("40", "25", "12", NA, "18"),
-  occupied = c("TRUE", "FALSE", "TRUE", "N-A", "TRUE")
+  name = c("Maple Hall", "Oak Court", "Elm Annex"),
+  rent = c("1,250", "980", "missing"),
+  occupied = c("TRUE", "FALSE", "N-A")
 )
 halls
 ```
 
-## (a) Clean the columns (12 points)
+## (a) Clean two columns (12 points)
 
-Clean the table. `opened` is a date written like `March 4 2018`. `rent` is a number even when it contains `$` or a comma. `units` is an integer. `occupied` is logical. Treat `"missing"` and `"N-A"` as missing. Print the cleaned table.
+`rent` is a number even when it contains a comma. `occupied` is logical. Treat `"missing"` and `"N-A"` as missing. Print the cleaned table.
 
 ```{r}
 #| label: q5a
