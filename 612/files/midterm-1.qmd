@@ -40,7 +40,7 @@ Write a function of two arguments, `x` and `y`.
 - Drop every position where `x` or `y` is not finite. `NA`, `NaN`, `Inf`, and `-Inf` are not finite.
 - If fewer than 2 positions remain, return `NA_real_`.
 - If the mean of the remaining `y` is 0, return `Inf`.
-- Otherwise return the mean of the remaining `x` divided by the mean of the remaining `y`. Use a pipe for that ratio.
+- Otherwise return the mean of the remaining `x` divided by the mean of the remaining `y`. 
 
 Write the function in this chunk, then run it on these four pairs. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
 
@@ -155,13 +155,13 @@ In two sentences, say what happens to highway mileage as displacement increases,
 
 # 5. Airline delays by month (20 points)
 
-Use `flights`. Do this in one pipeline.
+Use `flights`.
 
-For each airline and each month, average `dep_delay` and `arr_delay` together over the flights that airline has in that month. Ignore missing delays. That one number is the average delay.
+Find the five airlines with the highest average delay. Average `dep_delay` and `arr_delay` together over all of that airline's flights, and ignore missing delays.
 
-Plot the month on the horizontal axis and the log of the average delay on the vertical axis. Draw one line for each airline. Color the lines by airline.
+For those five airlines only, do that average again for each month. Plot the month on the horizontal axis and the log of the monthly average on the vertical axis. Draw one line for each of those five airlines. Color the lines by airline.
 
-Leave out an airline-month whose average delay is not positive. The log of a negative number is not defined.
+Leave out a month whose average is not positive. The log of a negative number is not defined.
 
 ```{r}
 #| label: q5
