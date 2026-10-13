@@ -20,7 +20,7 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 - The only website you may use is <https://amousavi1.github.io/612/data-612.html>.
 - You may not use Google, any other website, or an LLM.
 - You may not communicate with anyone else.
-- Use the tidyverse where a tidyverse verb exists. Question 1 is a function and a pipe; base R is appropriate there.
+- Use the tidyverse where a tidyverse verb exists. Question 1 is a function; base R is appropriate there.
 - `library(tidyverse)` is enough. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
@@ -32,11 +32,9 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 library(tidyverse)
 ```
 
-# 1. A function and a pipe (20 points)
+# 1. A function (20 points)
 
-## (a) `finite_ratio()` (14 points)
-
-Write a function `finite_ratio(x, y)`.
+Write a function of two arguments, `x` and `y`.
 
 - If `x` or `y` is not numeric, or the two lengths differ, stop with the message `x and y must be numeric and the same length`.
 - Drop every position where `x` or `y` is not finite. `NA`, `NaN`, `Inf`, and `-Inf` are not finite.
@@ -44,29 +42,19 @@ Write a function `finite_ratio(x, y)`.
 - If the mean of the remaining `y` is 0, return `Inf`.
 - Otherwise return the mean of the remaining `x` divided by the mean of the remaining `y`. Use a pipe for that ratio.
 
-Write the function in this chunk, then remove the `#` from the four calls. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
+Write the function in this chunk, then run it on these four pairs. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
+
+- `c(1, NA, 4, Inf)` and `c(2, 3, 6, 1)`
+- `c(1, 2)` and `c(0, 0)`
+- `c(1, NA_real_)` and `c(NA_real_, 4)`
+- `c(1, 2)` and `"a"`
 
 ```{r}
-#| label: q1a
+#| label: q1
 #| error: true
 
-# finite_ratio(c(1, NA, 4, Inf), c(2, 3, 6, 1))
-# finite_ratio(c(1, 2), c(0, 0))
-# finite_ratio(c(1, NA_real_), c(NA_real_, 4))
-# finite_ratio(c(1, 2), "a")
-```
-
-## (b) One pipe (6 points)
-
-Using one pipe and no intermediate objects, start from `c(2, 4, 8, NA, 16)`, drop the missing value, take the natural log, take the mean, then exp. Report the number.
-
-```{r}
-#| label: q1b
-
 
 ```
-
-In one sentence, say what goes wrong if the `NA` is still in the vector when you call `log()`.
 
 # 2. Rows, columns, and groups (20 points)
 
@@ -102,11 +90,11 @@ Add a column `economy` equal to `(cty + hwy) / 2`. Place it immediately after `m
 
 ```
 
-# 3. `case_when`, `across`, and distinct rows (20 points)
+# 3. Sizes, species, and car names (20 points)
 
-## (a) `case_when()` (8 points)
+## (a) A size column (8 points)
 
-Add a `size` column to `starwars` with `case_when()`, in this order:
+Add a `size` column to `starwars`. Assign each character one of these labels, in this order:
 
 - `"missing"` if `height` is missing
 - `"large"` if `height` is at least 200 or `mass` is at least 200
@@ -123,9 +111,9 @@ Report how many characters fall in each size, largest count first.
 
 In one sentence, say what would change about the droid count if `"large"` were not checked before `"droid"`. Name the character.
 
-## (b) `across()` inside a summary (7 points)
+## (b) One summary per species (7 points)
 
-Drop characters whose `species` is missing. Keep species that appear more than once. For each of those species, use `across()` for the median `height` and the median `mass` (ignore missing values inside the medians), and report `n()` as well. `n()` counts every row in the species, including rows whose height or mass is missing. Arrange by `n()`, largest first.
+Drop characters whose `species` is missing. Keep species that appear more than once. For each of those species, report the median `height` and the median `mass` (ignore missing values inside the medians), and how many rows that species has. Count every row in the species, including rows whose height or mass is missing. Arrange by that count, largest first.
 
 ```{r}
 #| label: q3b
@@ -133,11 +121,11 @@ Drop characters whose `species` is missing. Keep species that appear more than o
 
 ```
 
-## (c) Distinct pairs, and row names (5 points)
+## (c) Color pairs and car names (5 points)
 
 Two short pipelines.
 
-- Drop `starwars` rows where `hair_color` or `skin_color` is missing, then report how many distinct pairs of those two columns remain.
+- Drop `starwars` rows where `hair_color` or `skin_color` is missing, then report how many different pairs of those two columns remain.
 - `mtcars` stores the car name as a row name. Make that a column called `car`. Keep cars with `mpg` of at least 30. Return `car`, `mpg`, and `cyl`, arranged by `mpg`, highest first.
 
 ```{r}
@@ -165,7 +153,7 @@ From `mpg`, plot highway mileage against engine displacement.
 
 In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
 
-# 5. A small table, then `across()` (20 points)
+# 5. A small table (20 points)
 
 `halls` is already in the chunk below. Do not read a file. There is no CSV.
 
@@ -190,7 +178,7 @@ halls
 
 ```
 
-## (b) Missing values with `across()` (8 points)
+## (b) Missing values (8 points)
 
 With one `across()`, report how many missing values are in each column of the cleaned table.
 
