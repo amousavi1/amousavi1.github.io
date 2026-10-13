@@ -21,7 +21,7 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 - You may not use Google, any other website, or an LLM.
 - You may not communicate with anyone else.
 - Use the tidyverse where a tidyverse verb exists. Question 1 is a function; base R is appropriate there.
-- `library(tidyverse)` is enough. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R.
+- `library(tidyverse)` covers questions 1 to 4. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R. For question 5, also load `nycflights13`. `flights` is in that package.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
 
@@ -153,37 +153,20 @@ From `mpg`, plot highway mileage against engine displacement.
 
 In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
 
-# 5. A small table (20 points)
+# 5. Airline delays by month (20 points)
 
-`halls` is already in the chunk below. Do not read a file. There is no CSV.
+Use `flights`. Do this in one pipeline.
 
-```{r}
-#| label: halls
+For each airline and each month, average `dep_delay` and `arr_delay` together over the flights that airline has in that month. Ignore missing delays. That one number is the average delay.
 
-halls <- tibble(
-  name = c("Maple Hall", "Oak Court", "Elm Annex"),
-  rent = c("1,250", "980", "missing"),
-  occupied = c("TRUE", "FALSE", "N-A")
-)
-halls
-```
+Plot the month on the horizontal axis and the log of the average delay on the vertical axis. Draw one line for each airline. Color the lines by airline.
 
-## (a) Clean two columns (12 points)
-
-`rent` is a number even when it contains a comma. `occupied` is logical. Treat `"missing"` and `"N-A"` as missing. Print the cleaned table.
+Leave out an airline-month whose average delay is not positive. The log of a negative number is not defined.
 
 ```{r}
-#| label: q5a
-
-
-```
-
-## (b) Missing values (8 points)
-
-With one `across()`, report how many missing values are in each column of the cleaned table.
-
-```{r}
-#| label: q5b
+#| label: q5
+#| fig-width: 7
+#| fig-height: 4.5
 
 
 ```
