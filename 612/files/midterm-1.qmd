@@ -4,25 +4,26 @@ subtitle: "Put your name here"
 author: "DATA 412/612"
 date: "October 14, 2026"
 format:
-  html:
+  pdf:
     embed-resources: true
+    keep-tex: false
 execute:
   echo: true
   warning: true
 ---
 
-October 14, 2026. 75 minutes. 100 points.
+October 14, 2026. You have 75 minutes. 100 points.
 
-Put your name in the subtitle at the top of this file. Write each answer in the chunk under that part. Render to HTML. PDF is fine too: change `html` to `pdf` in the header. Submit this `.qmd` and the rendered file before the 75 minutes are up.
+Put your name in the subtitle at the top of this file. Write each answer in the chunk under that part. Render to PDF. Submit this `.qmd` and the PDF before the 75 minutes are up.
 
-- You may use your notes, the R help files, and the internet.
+- You may use your notes and the R help files inside RStudio.
+- The only website you may use is <https://amousavi1.github.io/612/data-612.html>.
+- You may not use Google, any other website, or an LLM.
 - You may not communicate with anyone else.
 - Use the tidyverse where a tidyverse verb exists. Question 1 is a function and a pipe; base R is appropriate there.
 - `library(tidyverse)` is enough. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
-
-The suggested times are a guide. You have 75 minutes.
 
 ```{r}
 #| label: setup
@@ -31,7 +32,7 @@ The suggested times are a guide. You have 75 minutes.
 library(tidyverse)
 ```
 
-# 1. A function and a pipe (20 points, about 14 minutes)
+# 1. A function and a pipe (20 points)
 
 ## (a) `finite_ratio()` (14 points)
 
@@ -67,7 +68,7 @@ Using one pipe and no intermediate objects, start from `c(2, 4, 8, NA, 16)`, dro
 
 In one sentence, say what goes wrong if the `NA` is still in the vector when you call `log()`.
 
-# 2. Rows, columns, and groups (20 points, about 15 minutes)
+# 2. Rows, columns, and groups (20 points)
 
 Use `mpg`. Answer each part with one pipeline.
 
@@ -101,7 +102,7 @@ Add a column `economy` equal to `(cty + hwy) / 2`. Place it immediately after `m
 
 ```
 
-# 3. `case_when`, `across`, and distinct rows (20 points, about 16 minutes)
+# 3. `case_when`, `across`, and distinct rows (20 points)
 
 ## (a) `case_when()` (8 points)
 
@@ -145,7 +146,7 @@ Two short pipelines.
 
 ```
 
-# 4. One picture (20 points, about 12 minutes)
+# 4. One picture (20 points)
 
 From `mpg`, plot highway mileage against engine displacement.
 
@@ -164,7 +165,7 @@ From `mpg`, plot highway mileage against engine displacement.
 
 In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
 
-# 5. A small table, then `across()` (20 points, about 8 minutes)
+# 5. A small table, then `across()` (20 points)
 
 `halls` is already in the chunk below. Do not read a file. There is no CSV.
 
