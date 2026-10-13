@@ -1,0 +1,220 @@
+---
+title: "Midterm 1"
+subtitle: "Put your name here"
+author: "DATA 412/612"
+date: "October 14, 2026"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: true
+  warning: true
+---
+
+October 14, 2026. 75 minutes. 100 points.
+
+Put your name in the subtitle at the top of this file. Write each answer in the chunk under that part. Render to HTML. PDF is fine too: change `html` to `pdf` in the header. Submit this `.qmd` and the rendered file before the 75 minutes are up.
+
+- You may use your notes, the R help files, and the internet.
+- You may not communicate with anyone else.
+- Use the tidyverse where a tidyverse verb exists. Question 1 is a function and a pipe; base R is appropriate there.
+- `library(tidyverse)` is enough. `mpg` and `diamonds` are in ggplot2. `starwars` is in dplyr. `mtcars` is in base R.
+- Either pipe is fine: `|>` or `%>%`.
+- Partial credit is given for code that runs. If you are stuck, go to the next part.
+
+The suggested times are a guide. You have 75 minutes.
+
+```{r}
+#| label: setup
+#| include: false
+
+library(tidyverse)
+```
+
+# 1. A function and a pipe (20 points, about 14 minutes)
+
+## (a) `finite_ratio()` (14 points)
+
+Write a function `finite_ratio(x, y)`.
+
+- If `x` or `y` is not numeric, or the two lengths differ, stop with the message `x and y must be numeric and the same length`.
+- Drop every position where `x` or `y` is not finite. `NA`, `NaN`, `Inf`, and `-Inf` are not finite.
+- If fewer than 2 positions remain, return `NA_real_`.
+- If the mean of the remaining `y` is 0, return `Inf`.
+- Otherwise return the mean of the remaining `x` divided by the mean of the remaining `y`. Use a pipe for that ratio.
+
+Write the function in this chunk, then remove the `#` from the four calls. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
+
+```{r}
+#| label: q1a
+#| error: true
+
+# finite_ratio(c(1, NA, 4, Inf), c(2, 3, 6, 1))
+# finite_ratio(c(1, 2), c(0, 0))
+# finite_ratio(c(1, NA_real_), c(NA_real_, 4))
+# finite_ratio(c(1, 2), "a")
+```
+
+## (b) One pipe (6 points)
+
+Using one pipe and no intermediate objects, start from `c(2, 4, 8, NA, 16)`, drop the missing value, take the natural log, take the mean, then exp. Report the number.
+
+```{r}
+#| label: q1b
+
+
+```
+
+In one sentence, say what goes wrong if the `NA` is still in the vector when you call `log()`.
+
+# 2. Rows, columns, and groups (20 points, about 15 minutes)
+
+Use `mpg`. Answer each part with one pipeline.
+
+## (a) A filtered list (8 points)
+
+Keep cars from `year` 2008 in class `compact` or `midsize` with `hwy` at least 30. How many cars is that? Show the five with the highest `hwy`. Break remaining ties by `cty`, highest first. Keep only `manufacturer`, `model`, `year`, `cyl`, `cty`, and `hwy`.
+
+```{r}
+#| label: q2a
+
+
+```
+
+## (b) A grouped summary (7 points)
+
+For each `class`, report the number of cars, the mean of `hwy`, and the median of `cty`. Arrange by mean highway mileage, highest first.
+
+```{r}
+#| label: q2b
+
+
+```
+
+## (c) A new column, then the names (5 points)
+
+Add a column `economy` equal to `(cty + hwy) / 2`. Place it immediately after `model`. Drop `trans` and `fl`. Show the column names of the result, in order.
+
+```{r}
+#| label: q2c
+
+
+```
+
+# 3. `case_when`, `across`, and distinct rows (20 points, about 16 minutes)
+
+## (a) `case_when()` (8 points)
+
+Add a `size` column to `starwars` with `case_when()`, in this order:
+
+- `"missing"` if `height` is missing
+- `"large"` if `height` is at least 200 or `mass` is at least 200
+- `"droid"` if `species` is `"Droid"`
+- `"other"` otherwise
+
+Report how many characters fall in each size, largest count first.
+
+```{r}
+#| label: q3a
+
+
+```
+
+In one sentence, say what would change about the droid count if `"large"` were not checked before `"droid"`. Name the character.
+
+## (b) `across()` inside a summary (7 points)
+
+Drop characters whose `species` is missing. Keep species that appear more than once. For each of those species, use `across()` for the median `height` and the median `mass` (ignore missing values inside the medians), and report `n()` as well. `n()` counts every row in the species, including rows whose height or mass is missing. Arrange by `n()`, largest first.
+
+```{r}
+#| label: q3b
+
+
+```
+
+## (c) Distinct pairs, and row names (5 points)
+
+Two short pipelines.
+
+- Drop `starwars` rows where `hair_color` or `skin_color` is missing, then report how many distinct pairs of those two columns remain.
+- `mtcars` stores the car name as a row name. Make that a column called `car`. Keep cars with `mpg` of at least 30. Return `car`, `mpg`, and `cyl`, arranged by `mpg`, highest first.
+
+```{r}
+#| label: q3c
+
+
+```
+
+# 4. Pictures and what they say (20 points, about 15 minutes)
+
+## (a) A histogram (6 points)
+
+From `diamonds`, plot a histogram of `carat` with 40 bins and `theme_bw()`. Label the horizontal axis `Carat`.
+
+```{r}
+#| label: q4a
+#| fig-width: 6
+#| fig-height: 3.6
+
+
+```
+
+In one sentence, describe the shape. "It is a histogram of carat" is not a description.
+
+## (b) Points, one smooth, and facets (10 points)
+
+From `mpg`, plot highway mileage against engine displacement.
+
+- Points: map `class` to color inside `geom_point()` only, and set an alpha so overlapping points stay visible.
+- One straight smooth in black, dashed, with no gray band. The smooth is not colored by `class`.
+- Facet by `drv`.
+- Use `theme_bw()`. Label the axes `Displacement (litres)` and `Highway mpg`.
+
+```{r}
+#| label: q4b
+#| fig-width: 7
+#| fig-height: 4
+
+
+```
+
+## (c) What the picture says (4 points)
+
+In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
+
+# 5. Parse a table, then `across()` (20 points, about 10 minutes)
+
+`halls` is defined in the next chunk. Do not read a file.
+
+```{r}
+#| label: halls
+
+halls <- tibble(
+  name = c("Maple Hall", "Oak Court", "Pine Lofts", "Elm Annex", "Cedar Row"),
+  opened = c("March 4 2018", "July 1 2019", "August 15 2016", NA, "January 9 2020"),
+  rent = c("$1,250", "980", "$2,100.50", "missing", "$875"),
+  units = c("40", "25", "12", NA, "18"),
+  occupied = c("TRUE", "FALSE", "TRUE", "N-A", "TRUE")
+)
+halls
+```
+
+## (a) Clean the columns (12 points)
+
+Clean the table. `opened` is a date written like `March 4 2018`. `rent` is a number even when it contains `$` or a comma. `units` is an integer. `occupied` is logical. Treat `"missing"` and `"N-A"` as missing. Print the cleaned table.
+
+```{r}
+#| label: q5a
+
+
+```
+
+## (b) Missing values with `across()` (8 points)
+
+With one `across()`, report how many missing values are in each column of the cleaned table.
+
+```{r}
+#| label: q5b
+
+
+```
