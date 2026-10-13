@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Page moved</title>
+        <script>
+            (function () {
+                var path = location.pathname;
+                var root = path;
+                var markers = ["/website-only/", "/612/", "/641/", "/642/", "/643/", "/files/", "/assets/"];
+                for (var i = 0; i < markers.length; i++) {
+                    var at = path.indexOf(markers[i]);
+                    if (at !== -1) {
+                        root = path.slice(0, at);
+                        break;
+                    }
+                }
+                if (root === path) root = path.replace(/\/[^/]*$/, "");
+                function go(rel) {
+                    location.replace(root + "/" + rel.replace(/^\//, ""));
+                }
+                var files = path.match(/\/files\/data-(612|641|642|643)\/(.*)$/);
+                if (files) {
+                    go(files[1] + "/files/" + files[2]);
+                    return;
+                }
+                var personal = path.match(/\/files\/([^/]+)$/);
+                if (personal) {
+                    go("website-only/files/" + personal[1]);
+                    return;
+                }
+                var asset = path.match(/\/assets\/(.*)$/);
+                if (asset && path.indexOf("/website-only/") === -1) {
+                    go("website-only/assets/" + asset[1]);
+                    return;
+                }
+                var file = decodeURIComponent(path.split("/").pop() || "");
+                var courses = ["612", "641", "642", "643"];
+                for (var c = 0; c < courses.length; c++) {
+                    if (file.indexOf("data-" + courses[c]) === 0) {
+                        go(courses[c] + "/" + file + location.search + location.hash);
+                        return;
+                    }
+                }
+                var site = {
+                    "index.html": 1,
+                    "bio.html": 1,
+                    "news.html": 1,
+                    "research.html": 1,
+                    "publications.html": 1,
+                    "teaching.html": 1,
+                    "courses.html": 1,
+                    "cv.html": 1,
+                    "credits.html": 1,
+                    "favicon.ico": 1
+                };
+                if (site[file]) {
+                    var folder = file === "favicon.ico" ? "website-only/" : "website-only/";
+                    go(folder + file + location.search + location.hash);
+                    return;
+                }
+            })();
+        </script>
+    </head>
+    <body>
+        <p>That page has moved. <a href="website-only/index.html">Continue to the site</a>.</p>
+    </body>
+</html>

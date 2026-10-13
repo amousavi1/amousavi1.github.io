@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Lab 1: Looking Under the Hood of R - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Lab 1: Looking Under the Hood of R</h1>
+                    </header>
+                                                                                                                                            <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-1.html">Week 1</a> &middot;
+                            <a href="files/lab-1-looking-under-the-hood.pdf" target="_blank" rel="noopener">PDF</a>
+                         &middot; <a href="files/lectures/lab-1-looking-under-the-hood.qmd">Source (.qmd)</a></p>
+<p>Predict, then run. The point is to catch R in the act.</p>
+<p>Work in an <strong>R script</strong>, not only in the console. Save
+the predict-run work as <code>lab01.R</code>. Section G is a short
+Quarto document.</p>
+<p>Do <strong>1.1</strong> through <strong>1.5</strong> first. You will
+need <code>tidyverse</code> installed as in note 1.2, and you will
+import <code>students.csv</code> as in note 1.3. Note
+<strong>1.5</strong> is for section G.</p>
+<p>Download <a href="files/students.csv">students.csv</a> and
+put it in your working directory (<code>getwd()</code> should see it),
+or use a relative path from note 1.3.</p>
+<p>For every item marked <strong>Predict</strong>, do the following in
+order:</p>
+<ol style="list-style-type: decimal">
+<li>Write your prediction in a comment, <em>before</em> you run the
+code.</li>
+<li>Run the code.</li>
+<li>Write a short explanation of <em>why</em> R did that, using the
+rules from the notes. “R printed that” is not an explanation.</li>
+</ol>
+<p>The notes give you the rules. The lab asks you to apply them
+<em>before</em> you see the output. Some results will surprise you. That
+is the point. You should not need material that is not in 1.1–1.5.</p>
+<p>Do not look up the answer until you have a written prediction.</p>
+<hr />
+<div id="a.-what-c-actually-builds" class="section level2">
+<h2>A. What <code>c()</code> actually builds</h2>
+<p>R’s atomic vectors are not “lists of values of any type.” They are
+typed objects. <code>c()</code> is willing to rewrite your values in
+order to keep that true.</p>
+<div id="a1.-predict" class="section level3">
+<h3>A1. Predict</h3>
+<pre><code class="language-r">typeof(c(1, TRUE))</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre><code class="language-r">typeof(c(1L, TRUE))</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre><code class="language-r">typeof(c(1, &quot;2&quot;, TRUE))</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<p>Why are the three answers not the same? What did <code>TRUE</code>
+become in each case?</p>
+</div>
+<div id="a2.-predict" class="section level3">
+<h3>A2. Predict</h3>
+<pre><code class="language-r">TRUE + TRUE + TRUE</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre><code class="language-r">c(TRUE, FALSE, TRUE) * 2</code></pre>
+<pre><code>## [1] 2 0 2</code></pre>
+<p>If <code>TRUE</code> is a logical value, why is arithmetic legal?</p>
+</div>
+<div id="a3.-predict" class="section level3">
+<h3>A3. Predict</h3>
+<pre><code class="language-r">1 == 1L</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">typeof(1)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre><code class="language-r">typeof(1L)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre><code class="language-r">is.numeric(1L)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><code>1</code> and <code>1L</code> compare as equal. Are they the
+same type? What does <code>is.numeric()</code> say about an integer?</p>
+</div>
+<div id="a4.-predict" class="section level3">
+<h3>A4. Predict</h3>
+<pre><code class="language-r">f &lt;- factor(c(&quot;10&quot;, &quot;2&quot;, &quot;2&quot;))
+as.numeric(f)</code></pre>
+<pre><code>## [1] 1 2 2</code></pre>
+<pre><code class="language-r">as.numeric(as.character(f))</code></pre>
+<pre><code>## [1] 10  2  2</code></pre>
+<p>Note 1.4 treats factors as categorical data with levels. What is
+<code>as.numeric()</code> looking at when the object is a factor?</p>
+<hr />
+</div>
+</div>
+<div id="b.-three-kinds-of-nothing" class="section level2">
+<h2>B. Three kinds of nothing</h2>
+<p><code>NA</code>, <code>NaN</code>, and <code>NULL</code> are not
+three names for the same idea.</p>
+<div id="b1.-predict" class="section level3">
+<h3>B1. Predict</h3>
+<pre><code class="language-r">x &lt;- c(NA, NaN, Inf, NULL)
+x</code></pre>
+<pre><code>## [1]  NA NaN Inf</code></pre>
+<pre><code class="language-r">length(x)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre><code class="language-r">typeof(x)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<p>You passed four things to <code>c()</code>. Why does <code>x</code>
+not have length 4?</p>
+</div>
+<div id="b2.-predict" class="section level3">
+<h3>B2. Predict</h3>
+<pre><code class="language-r">NA == NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre><code class="language-r">NaN == NaN</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre><code class="language-r">NULL == NULL</code></pre>
+<pre><code>## logical(0)</code></pre>
+<p>Then:</p>
+<pre><code class="language-r">is.na(NA)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">is.nan(NaN)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">is.null(NULL)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>Why is <code>==</code> a poor way to test for these values? Which
+<code>is.*()</code> function matches which kind of nothing?</p>
+</div>
+<div id="b3.-predict" class="section level3">
+<h3>B3. Predict</h3>
+<pre><code class="language-r">is.na(NaN)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">is.nan(NA)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre><code class="language-r">typeof(NA)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre><code class="language-r">typeof(c(NA, 1))</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre><code class="language-r">typeof(c(NA, &quot;a&quot;))</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<p><code>NA</code> looks like one object. Use the coercion hierarchy
+from note 1.4. What happened to <code>NA</code> when it entered those
+two vectors?</p>
+<hr />
+</div>
+</div>
+<div id="c.-indexing-is-a-language" class="section level2">
+<h2>C. Indexing is a language</h2>
+<p><code>[</code> is not “get the nth thing.” It is a function with
+rules for integers, negatives, logicals, and names.</p>
+<div id="c1.-predict" class="section level3">
+<h3>C1. Predict</h3>
+<pre><code class="language-r">x &lt;- 10:13
+x[c(1, 1, 1)]</code></pre>
+<pre><code>## [1] 10 10 10</code></pre>
+<pre><code class="language-r">x[-c(1, 1)]</code></pre>
+<pre><code>## [1] 11 12 13</code></pre>
+<p>Positive indices select. Negative indices drop. Why does repeating
+<code>1</code> mean two different things in these two lines?</p>
+</div>
+<div id="c2.-predict" class="section level3">
+<h3>C2. Predict</h3>
+<pre><code class="language-r">x &lt;- c(10, 20, 30, 40)
+x[c(TRUE, FALSE)]</code></pre>
+<pre><code>## [1] 10 30</code></pre>
+<pre><code class="language-r">x[c(TRUE, FALSE, TRUE)]</code></pre>
+<pre><code>## [1] 10 30 40</code></pre>
+<p>Note 1.4 says R recycles the shorter vector in arithmetic. What rule
+is R using here, and where does the extra <code>TRUE</code> go?</p>
+</div>
+<div id="c3.-predict" class="section level3">
+<h3>C3. Predict</h3>
+<pre><code class="language-r">record &lt;- list(
+  info = list(name = &quot;Ada&quot;, year = 1L),
+  scores = c(90, 85)
+)
+record[1]</code></pre>
+<pre><code>## $info
+## $info$name
+## [1] &quot;Ada&quot;
+## 
+## $info$year
+## [1] 1</code></pre>
+<pre><code class="language-r">record[[1]]</code></pre>
+<pre><code>## $name
+## [1] &quot;Ada&quot;
+## 
+## $year
+## [1] 1</code></pre>
+<pre><code class="language-r">record$info$name</code></pre>
+<pre><code>## [1] &quot;Ada&quot;</code></pre>
+<pre><code class="language-r">record[[&quot;info&quot;]][1]</code></pre>
+<pre><code>## $name
+## [1] &quot;Ada&quot;</code></pre>
+<pre><code class="language-r">record[[&quot;info&quot;]][[1]]</code></pre>
+<pre><code>## [1] &quot;Ada&quot;</code></pre>
+<p>Note 1.4 distinguishes <code>[</code>, <code>[[</code>, and
+<code>$</code>. <code>info</code> is a list inside a list. What does
+each line return, and which results are still lists?</p>
+</div>
+<div id="c4.-predict" class="section level3">
+<h3>C4. Predict</h3>
+<pre><code class="language-r">students &lt;- data.frame(name = c(&quot;Ada&quot;, &quot;Bob&quot;), grade = c(91, 74))
+typeof(students)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre><code class="language-r">is.list(students)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">is.data.frame(students)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code class="language-r">class(students[, &quot;grade&quot;])</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre><code class="language-r">class(students[, &quot;grade&quot;, drop = FALSE])</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre><code class="language-r">class(students[&quot;grade&quot;])</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre><code class="language-r">class(students[[&quot;grade&quot;]])</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<p><code>typeof()</code> and <code>is.list()</code> are from note 1.4.
+Why can a data frame be a list and a data frame at the same time? Which
+extractions are still data frames, and what is <code>drop</code>
+for?</p>
+</div>
+<div id="c5.-predict" class="section level3">
+<h3>C5. Predict</h3>
+<pre><code class="language-r">m &lt;- matrix(1:6, nrow = 2)
+m</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    3    5
+## [2,]    2    4    6</code></pre>
+<pre><code class="language-r">m[2, 1]</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>Fill in the matrix on paper before you run this, using
+<code>matrix(1:6, nrow = 2)</code> from note 1.4. In what order does R
+fill the matrix, and why is <code>m[2, 1]</code> equal to 2 rather than
+4?</p>
+<hr />
+</div>
+</div>
+<div id="d.-packages-names-and-what-r-is-searching"
+class="section level2">
+<h2>D. Packages, names, and what R is searching</h2>
+<p>A function name is not a unique identity. It is a name R looks up on
+a search path.</p>
+<div id="d1.-explain-then-try-only-the-quoted-form-for-installation"
+class="section level3">
+<h3>D1. Explain, then try only the quoted form for installation</h3>
+<p>Why does this fail (do not keep running it):</p>
+<pre><code class="language-r">install.packages(ggplot2)</code></pre>
+<p>while this is the intended form:</p>
+<pre><code class="language-r">install.packages(&quot;ggplot2&quot;)</code></pre>
+<p>and yet both of these can succeed:</p>
+<pre><code class="language-r">library(ggplot2)
+library(&quot;ggplot2&quot;)</code></pre>
+<p>What is <code>library()</code> doing with an unquoted name that
+<code>install.packages()</code> will not do?</p>
+</div>
+<div id="d2.-predict-in-a-session-where-you-have-not-yet-loaded-dplyr"
+class="section level3">
+<h3>D2. Predict, in a session where you have not yet loaded dplyr</h3>
+<pre><code class="language-r">students &lt;- data.frame(name = c(&quot;Ada&quot;, &quot;Bob&quot;), grade = c(91, 74))
+filter</code></pre>
+<pre><code>## function (.data, ..., .by = NULL, .preserve = FALSE) 
+## {
+##     check_by_typo(...)
+##     check_not_both_by_and_preserve({
+##         {
+##             .by
+##         }
+##     }, .preserve)
+##     UseMethod(&quot;filter&quot;)
+## }
+## &lt;bytecode: 0x000001950d577fc8&gt;
+## &lt;environment: namespace:dplyr&gt;</code></pre>
+<pre><code class="language-r">filter(students, grade &gt; 80)</code></pre>
+<pre><code>##   name grade
+## 1  Ada    91</code></pre>
+<p>Then load dplyr and run the same two lines again.</p>
+<pre><code class="language-r">library(dplyr)
+filter</code></pre>
+<pre><code>## function (.data, ..., .by = NULL, .preserve = FALSE) 
+## {
+##     check_by_typo(...)
+##     check_not_both_by_and_preserve({
+##         {
+##             .by
+##         }
+##     }, .preserve)
+##     UseMethod(&quot;filter&quot;)
+## }
+## &lt;bytecode: 0x000001950d577fc8&gt;
+## &lt;environment: namespace:dplyr&gt;</code></pre>
+<pre><code class="language-r">filter(students, grade &gt; 80)</code></pre>
+<pre><code>##   name grade
+## 1  Ada    91</code></pre>
+<p>Note 1.2 covers <code>library()</code>, <code>search()</code>, and
+<code>dplyr::filter()</code>. There is already a <code>filter()</code>
+in Base R / stats. What changed after <code>library(dplyr)</code>? How
+can two functions share a name? How do you call the older one
+anyway?</p>
+</div>
+<div id="d3.-predict" class="section level3">
+<h3>D3. Predict</h3>
+<pre><code class="language-r">x &lt;- c(10, 20, 30)
+x |&gt; mean()</code></pre>
+<pre><code>## [1] 20</code></pre>
+<pre><code class="language-r">x %&gt;% mean()</code></pre>
+<pre><code>## [1] 20</code></pre>
+<p>Run this <em>before</em> loading tidyverse. Why does one pipe exist
+in Base R and the other does not? After <code>library(tidyverse)</code>,
+run both lines again.</p>
+</div>
+<div id="d4.-predict" class="section level3">
+<h3>D4. Predict</h3>
+<pre><code class="language-r">search()</code></pre>
+<pre><code>##  [1] &quot;.GlobalEnv&quot;        &quot;package:lubridate&quot; &quot;package:forcats&quot;  
+##  [4] &quot;package:stringr&quot;   &quot;package:dplyr&quot;     &quot;package:purrr&quot;    
+##  [7] &quot;package:readr&quot;     &quot;package:tidyr&quot;     &quot;package:tibble&quot;   
+## [10] &quot;package:ggplot2&quot;   &quot;package:tidyverse&quot; &quot;package:stats&quot;    
+## [13] &quot;package:graphics&quot;  &quot;package:grDevices&quot; &quot;package:utils&quot;    
+## [16] &quot;package:datasets&quot;  &quot;package:methods&quot;   &quot;Autoloads&quot;        
+## [19] &quot;package:base&quot;</code></pre>
+<pre><code class="language-r">library(ggplot2)
+search()</code></pre>
+<pre><code>##  [1] &quot;.GlobalEnv&quot;        &quot;package:lubridate&quot; &quot;package:forcats&quot;  
+##  [4] &quot;package:stringr&quot;   &quot;package:dplyr&quot;     &quot;package:purrr&quot;    
+##  [7] &quot;package:readr&quot;     &quot;package:tidyr&quot;     &quot;package:tibble&quot;   
+## [10] &quot;package:ggplot2&quot;   &quot;package:tidyverse&quot; &quot;package:stats&quot;    
+## [13] &quot;package:graphics&quot;  &quot;package:grDevices&quot; &quot;package:utils&quot;    
+## [16] &quot;package:datasets&quot;  &quot;package:methods&quot;   &quot;Autoloads&quot;        
+## [19] &quot;package:base&quot;</code></pre>
+<p>Where did <code>ggplot2</code> go on the search path, and why does
+that position matter when two packages contain the same function
+name?</p>
+<hr />
+</div>
+</div>
+<div id="e.-arithmetic-that-is-not-always-the-arithmetic-you-expect"
+class="section level2">
+<h2>E. Arithmetic that is not always the arithmetic you expect</h2>
+<div id="e1.-predict" class="section level3">
+<h3>E1. Predict</h3>
+<pre><code class="language-r">seq(from = 1, to = 3) + c(10, 20, 30, 40, 50, 60)</code></pre>
+<pre><code>## [1] 11 22 33 41 52 63</code></pre>
+<pre><code class="language-r">seq(1, 6, 2) * c(TRUE, FALSE)</code></pre>
+<pre><code>## [1] 1 0 5</code></pre>
+<p>Note 1.4 covers <code>seq()</code>, named arguments, and recycling.
+Write the recycled vectors out by hand. When does R warn, and when does
+it stay silent? What did <code>TRUE</code> and <code>FALSE</code>
+become?</p>
+</div>
+<div id="e2.-predict" class="section level3">
+<h3>E2. Predict</h3>
+<pre><code class="language-r">1 / 0</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre><code class="language-r">0 / 0</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre><code class="language-r">TRUE / FALSE</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre><code class="language-r">Inf - Inf</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre><code class="language-r">NA + 1</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre><code class="language-r">NULL + 1</code></pre>
+<pre><code>## numeric(0)</code></pre>
+<p>Which of these are <code>Inf</code>, <code>NaN</code>,
+<code>NA</code>, and which is an error? What coercion makes
+<code>TRUE / FALSE</code> legal?</p>
+<hr />
+</div>
+</div>
+<div id="f.-files-data-frames-and-shape" class="section level2">
+<h2>F. Files, data frames, and shape</h2>
+<p>Place <code>students.csv</code> in your working directory.</p>
+<div id="f1.-run-and-compare" class="section level3">
+<h3>F1. Run and compare</h3>
+<pre><code class="language-r">file.exists(&quot;students.csv&quot;)
+file.exists(file.path(&quot;.&quot;, &quot;students.csv&quot;))
+
+base_students &lt;- read.csv(&quot;students.csv&quot;)
+tidy_students &lt;- readr::read_csv(&quot;students.csv&quot;)
+
+class(base_students)
+class(tidy_students)
+str(base_students)
+str(tidy_students)</code></pre>
+<p>Note 1.3: <code>.</code> is the current directory, and
+<code>file.path()</code> builds a path. Why are the two existence checks
+the same? Both read the same file. Why are the objects not the same
+class? What extra classes does <code>read_csv()</code> attach, and what
+is a tibble claiming to be besides a data frame?</p>
+</div>
+<div id="f2.-predict" class="section level3">
+<h3>F2. Predict</h3>
+<pre><code class="language-r">base_students$grade * 0.01</code></pre>
+<pre><code>## Error:
+## ! object &#39;base_students&#39; not found</code></pre>
+<pre><code class="language-r">base_students[, &quot;grade&quot;]</code></pre>
+<pre><code>## Error:
+## ! object &#39;base_students&#39; not found</code></pre>
+<pre><code class="language-r">base_students[&quot;grade&quot;]</code></pre>
+<pre><code>## Error:
+## ! object &#39;base_students&#39; not found</code></pre>
+<p>One of these uses the vectorized arithmetic from note 1.4. Which
+extraction still has two dimensions?</p>
+<hr />
+</div>
+</div>
+<div id="g.-a-document-not-a-script" class="section level2">
+<h2>G. A document, not a script</h2>
+<p>A script is the right tool for A–F. Note 1.5 is the right tool for a
+short writeup.</p>
+<p>Create <code>lab01_practice.qmd</code> as in note 1.5: YAML with a
+title, your name, and <code>format: html</code>. Put this chunk in
+it:</p>
+<pre><code class="language-r">students &lt;- read.csv(&quot;students.csv&quot;)</code></pre>
+<pre><code>## Error in `file()`:
+## ! cannot open the connection</code></pre>
+<pre><code class="language-r">typeof(students)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre><code class="language-r">is.list(students)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>Render it. Then set <code>#| echo: false</code> and render again.</p>
+<p>What disappeared from the HTML, and why? Write one sentence in the
+Quarto file (ordinary prose, not a comment) answering that. The
+<code>typeof()</code> / <code>is.list()</code> lines are the same idea
+as C4.</p>
+<hr />
+</div>
+<div id="h.-source-drills" class="section level2">
+<h2>H. Source drills</h2>
+<p>These are the original Week 1 lab items. Work in the Quarto file from
+G, or in a second <code>.qmd</code>. Number them.</p>
+<ol style="list-style-type: decimal">
+<li>Sum the even numbers from 10 to 1002. Use <code>seq()</code> and
+<code>sum()</code>.</li>
+<li><code>c("Hello", "world!", "How", "are", "you?")</code>, then one
+string with underscores between the words (<code>paste()</code> and
+<code>collapse</code>).</li>
+<li>What happens with <code>"1" + 2</code>?</li>
+<li>Comment that line out and rerun.</li>
+<li>Sum of the multiples of 3 or 5 that are less than 1000. Build
+<code>1:999</code>, then subset with <code>%%</code> and
+<code>|</code>.</li>
+<li>Render the document to HTML (Quarto) or knit an <code>.Rmd</code> to
+PDF.</li>
+</ol>
+<hr />
+</div>
+<div id="what-to-submit" class="section level2">
+<h2>What to submit</h2>
+<p>Submit <code>lab01.R</code> and <code>lab01_practice.qmd</code>
+with:</p>
+<ul>
+<li>a prediction comment above every <strong>Predict</strong> block</li>
+<li>the code</li>
+<li>a short explanation comment below the output of each block</li>
+<li>for G, the Quarto file you ended with (<code>#| echo: false</code>)
+and the sentence about what disappeared</li>
+</ul>
+<p>If a result still feels impossible after you have explained it, write
+down the question you now have. That question is part of the lab.</p>
+</div>
+<nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-r-markdown-and-quarto.html"><span aria-hidden="true">←</span> 1.5 R Markdown and Quarto</a>
+                        <a class="course-page-nav__week" href="data-612-week-1.html">Week 1</a>
+                            <a class="course-page-nav__next" href="data-612-lab-1-solutions.html">Lab 1 solutions <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>7.2 Mixture of Experts - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">7.2 Mixture of Experts</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; <a href="data-643-week-7.html">Week 7</a> &middot; <a href="files/mixture-of-experts.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/slides/7.2-mixture-of-experts.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Mixtral: 8 experts stored, top-2 active. Collapse is a dense net in disguise.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>A dense transformer uses <strong>every</strong> MLP on every token. A <strong>mixture of experts (MoE)</strong> keeps many MLPs (<strong>experts</strong>) and runs only a few of them per token. Capacity grows with the expert count; FLOPs per token stay closer to a small dense net.</p>
+<hr />
+<h2>1. What a mixture of experts (MoE) is</h2>
+<p>A dense transformer pays every feedforward block on every token. A <strong>mixture of experts (MoE)</strong> stores many copies of that MLP—the <strong>experts</strong>—and, for each token, runs only a few of them. A <strong>router</strong> (a linear map plus a softmax or a noisy top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>) picks which experts fire. Capacity, meaning stored parameters, grows with the expert count <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math>. Compute per token stays closer to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> dense MLPs, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math>.</p>
+<p>The name is literal. You still have attention. You still have a residual stream. You have replaced “one MLP” with “<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> MLPs and a gate.” Mixtral’s row to memorize: <strong>8 routed experts, top-2 active, no shared expert.</strong> Switch Transformer used <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. DeepSeek-style 256-expert nets wait; this hour is stored versus active.</p>
+<p><strong>Sparse</strong> means most experts are idle for a given token. That is the point: you can store 8<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> the MLP weights and still pay about 2 experts of compute. If the router always picks the same two, you stored six idle copies and trained a dense net in disguise. Collapse is a failure of the method, not a different architecture.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>Dense nets pay every MLP on every token. If you want more capacity, a dense recipe grows both the parameter file and the FLOPs per token. MoE tries to buy <strong>width in parameters without width in compute</strong>: more experts on disk, roughly <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> experts in the FLOP count.</p>
+<p>That split matters for a project. A dense 7B is one weight file and a dense GEMM. An 8-expert Mixtral-style net is about eight MLP shards plus attention. You use an MoE if you need more capacity at a similar <strong>token-FLOP</strong> budget and you can host the weights. You use a dense 7B if you need simple deployment. Week 7.3 is how you shrink whatever you picked.</p>
+<p>Serving is why “same active FLOPs” is not “same ops team.” Tokens in one sequence may go to different experts, so batching is harder. RAM still holds all experts even if only two run. A “small” Mixtral still has a large footprint.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Attention stays dense. The sparse part is the feedforward path, where most parameters already live (note <strong>3.3</strong>). Replace the block MLP with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> experts <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>E</mi><mn>1</mn></msub><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo>&#x0002C;</mo><msub><mi>E</mi><mi>E</mi></msub></mrow></math> and a <strong>router</strong>. For token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">x</mi></mrow></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>y</mi><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x02208;</mo><mi>&#x1D4AF;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></munder><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<p>where <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4AF;</mi></mrow></math> is the set of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> selected experts (often <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> or <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn></mrow></math>) and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math> are the gate scores. After top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>2</mn></mrow></math>, you typically renormalize the two <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math> to sum to 1 so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> is a weighted mix, not a raw sum of two MLPs.</p>
+<p><img alt="A router sending tokens to a few experts" src="files/graphics/7.2-mixture-of-experts/moe.png" /></p>
+<p><img alt="Load collapse on eight experts" src="files/graphics/7.2-mixture-of-experts/moe-collapse.png" /></p>
+<p>If each expert has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi></mrow></math> weights, you store about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mi>P</mi></mrow></math> MLP weights plus a tiny router, but you <strong>compute</strong> only <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> experts. Active MLP FLOPs scale with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math>. Mixtral-style: 8 stored, top-2 active, no shared expert. There is no extra transformer family here; there is a router sitting where the dense MLP used to sit.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>Take one token and eight experts.</p>
+<ol>
+<li><strong>Router logits.</strong> A linear map produces a vector <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>E</mi></mrow></msup></mrow></math>. Example: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>3.0</mn><mo>&#x0002C;</mo><mn>0.1</mn><mo>&#x0002C;</mo><mn>2.5</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>.</li>
+<li><strong>Select.</strong> Softmax (or noisy top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>) then keep the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math> largest. Top-2 on that <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math> picks experts 1 and 3.</li>
+<li><strong>Run those experts</strong> and mix with gate scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math>. Renormalize the shortlist so the gates sum to 1.</li>
+<li><strong>Load-balance.</strong> If 100 tokens each pick <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, you have 200 expert-slots to fill. A uniform load is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>200</mn><mo>&#x0002F;</mo><mi>E</mi></mrow></math> tokens per expert. If expert 0 gets 150 of them, you trained a dense net in disguise and left seven experts cold. Switch-style load-balancing losses add a term that encourages the average gate to be <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn><mo>&#x0002F;</mo><mi>E</mi></mrow></math>. You do not need the formula in this course; you need to say <strong>whether</strong> you used one.</li>
+<li><strong>Capacity.</strong> A per-expert <strong>capacity</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi></mrow></math> (tokens per batch) is the other knob. Over capacity <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> those tokens skip the expert or fall back to a residual. Cartoon: 16 tokens, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>. If the router sends 6 tokens to expert 0, four of them are <strong>dropped</strong>.</li>
+</ol>
+<p>Routing is discrete. Gradients flow through the chosen experts and through the gate (straight-through or a softmax over a shortlist). Expert collapse and token dropping are the usual failure modes. If every token has the same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4AF;</mi></mrow></math> is always <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>3</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>: you trained <strong>two</strong> MLPs and stored six idle copies.</p>
+<p>At inference, experts must sit in RAM or be paged. Fine-tuning one expert with a frozen router and claiming “the MoE learned” is a report bug: say whether you trained the router.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Sparse mix of selected experts:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>y</mi><mo>&#x0003D;</mo><munder><mo>&#x02211;</mo><mrow><mi>i</mi><mo>&#x02208;</mo><mi>&#x1D4AF;</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo></mrow></munder><msub><mi>g</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mspace width="0.167em" /><msub><mi>E</mi><mi>i</mi></msub><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">x</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Stored MLP weights scale as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mi>P</mi></mrow></math>; active FLOPs scale with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>. Per token you pay about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0002F;</mo><mi>E</mi></mrow></math> of “run every expert” compute, plus cheap routing. Parameter storage is still about <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x000D7;</mo></mrow></math> the dense MLP (plus attention, which stayed dense).</p>
+<p>Uniform-load cartoon: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>T</mi></mrow></math> tokens, top-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> experts. Expected tokens per expert if routing is uniform:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mfrac><mrow><mi>T</mi><mi>k</mi></mrow><mrow><mi>E</mi></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>If expert 0 receives far more than that, and capacity is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi></mrow></math>, overflow is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>max</mo><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><msub><mi>n</mi><mn>0</mn></msub><mo>&#x02212;</mo><mi>c</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. Load-balancing tries to stop that before it starts.</p>
+<p>For a typical block, each expert has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>12</mn><msup><mi>d</mi><mn>2</mn></msup></mrow></math> weights and attention has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msup><mi>d</mi><mn>2</mn></msup></mrow></math>. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math>, most of the <strong>stored</strong> block weights sit in the experts. That fraction is the homework; the lecture claim is simpler: stored <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02260;</mo></mrow></math> active.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>You can store many more MLP parameters than you run per token, so capacity grows without a matching FLOP tax.</li>
+<li>Mixtral-style <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> of 8 is a concrete stored-versus-active picture: 8 MLPs on disk, 2 MLPs in the FLOP count.</li>
+<li>Attention can stay dense; you only sparsify the path that already held most of the weights.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>RAM (or paging) still holds all experts. A “small” Mixtral is not a small file.</li>
+<li>Batching is harder because tokens in one sequence may go to different experts. Same active FLOPs is not the same ops team.</li>
+<li>Router collapse trains a dense net in disguise and leaves experts cold.</li>
+<li>Token dropping at capacity is a silent quality hit unless you log it.</li>
+<li>Fine-tuning one expert with a frozen router is not “the mixture improved.”</li>
+</ul>
+<p><strong>When not to.</strong> Use a dense 7B if you need simple deployment. Do not pick MoE only because the marketing number sounds like a 56B dense model; Mixtral-style 8<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math>7B is not 56B dense at decode.</p>
+<hr />
+<h2>7. Teaching this note</h2>
+<p>About <strong>35 minutes</strong> at the board: draw one token, eight experts, top-2, then a collapse example (all mass on expert 2). Play the Deep Dive <strong>internals</strong> excerpt so the dense MLP is on screen, then say Mixtral routing is the board picture. Lab 7 is scaling-fit and quantization, not an MoE train.</p>
+<p>End with stored vs active: 8 MLPs on disk, 2 MLPs in the FLOP count. If that sentence is not said out loud, Mixtral-style marketing will win.</p>
+<hr />
+<h2>8. Worked example</h2>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math> experts, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, each expert an MLP with the same FLOPs as a dense block MLP. Per token you pay <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>2</mn><mo>&#x0002F;</mo><mn>8</mn><mo>&#x0003D;</mo><mn>25</mn><mi>&#x00025;</mi></mrow></math> of “run every expert” compute, plus cheap routing. Parameter storage is still <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02248;</mo><mn>8</mn><mo>&#x000D7;</mo></mrow></math> the dense MLP (plus attention, which stayed dense).</p>
+<p>Router logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>3.0</mn><mo>&#x0002C;</mo><mn>0.1</mn><mo>&#x0002C;</mo><mn>2.5</mn><mo>&#x0002C;</mo><mn>0</mn><mo>&#x0002C;</mo><mi>&#x02026;</mi><mo stretchy="false">&#x00029;</mo></mrow></math>. Softmax then top-2 picks experts 1 and 3. If every token has the same <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>z</mi></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x1D4AF;</mi></mrow></math> is always <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>3</mn><mo stretchy="false">&#x0007D;</mo></mrow></math>: you trained <strong>two</strong> MLPs and stored six idle copies.</p>
+<p>Capacity, cartoon: 16 tokens, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>, expert capacity <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> tokens. If the router sends 6 tokens to expert 0, four of them are <strong>dropped</strong> (or overflowed to a residual). Load-balancing tries to stop that before it starts.</p>
+<p>Gate scores: after top-2, renormalize the two <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>g</mi><mi>i</mi></msub></mrow></math> to sum to 1 so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> is a weighted mix, not a raw sum of two MLPs. Mixtral-style <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math> is that mix.</p>
+<hr />
+<h2>9. Where students get stuck</h2>
+<ul>
+<li>Counting <strong>stored</strong> parameters as <strong>active</strong> FLOPs. Mixtral-style 8<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math>7B is not 56B dense at decode.</li>
+<li>Fine-tuning one expert with a frozen router and claiming “the MoE learned.”</li>
+<li>Forgetting RAM: all experts must be loaded even if only two run.</li>
+</ul>
+<hr />
+<h2>10. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Karpathy — Deep Dive into LLMs like ChatGPT</a>. Assigned excerpt: <strong>20:11–26:01</strong> (neural-net internals: the dense MLP). The Deep Dive does not isolate Mixtral; <strong>routing is the board hour</strong>. Pause on the feedforward block and replace it, in chalk, with a router and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi></mrow></math> copies.</p>
+<hr />
+<h2>11. Practice</h2>
+<ol>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math> and the router always picks expert 2, what did you just train?</p>
+</li>
+<li>
+<p>Why can an MoE with 8 experts have roughly the compute of 2 dense MLPs per token, not 8?</p>
+</li>
+<li>
+<p>Name one reason Mixtral-style serving is harder than a dense model with the same active FLOPs.</p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>k</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, 32 tokens, uniform routing. Expected tokens per expert? If expert 0 receives 20 tokens and capacity is 6, how many overflow?</p>
+</li>
+<li>
+<p>Each expert has <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>12</mn><msup><mi>d</mi><mn>2</mn></msup></mrow></math> weights (a typical MLP). Attention is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>4</mn><msup><mi>d</mi><mn>2</mn></msup></mrow></math>. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi><mo>&#x0003D;</mo><mn>4096</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x0003D;</mo><mn>8</mn></mrow></math>, what fraction of <strong>stored</strong> block weights sit in the experts? (Ignore biases and the router.)</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>9.3 Direct Preference Optimization - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">9.3 Direct Preference Optimization</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; <a href="data-643-week-9.html">Week 9</a> &middot; <a href="files/dpo.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/slides/9.3-dpo.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Same pairs. Implicit r = β log(π/π_ref). Z(x) cancels. Offline.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p><strong>Direct Preference Optimization (DPO)</strong> (Rafailov et al., 2023) fits a policy to chosen/rejected pairs <strong>without</strong> training an RM and <strong>without</strong> PPO. The reward is written in closed form from the policy and a frozen reference, then the Bradley–Terry model becomes a classification loss on logits.</p>
+<hr />
+<h2>1. What DPO is</h2>
+<p>RLHF solves <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mo>max</mo><mi>&#x003C0;</mi></msub><mi>&#x1D53C;</mi><mo stretchy="false">[</mo><mi>r</mi><mo stretchy="false">]</mo><mo>&#x02212;</mo><mi>&#x003B2;</mi><mrow><mi mathvariant="normal">K</mi><mi mathvariant="normal">L</mi></mrow><mo stretchy="false">&#x00028;</mo><mi>&#x003C0;</mi><mo fence="false" stretchy="false">&#x02016;</mo><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math> with a learned RM and an on-policy loop. <strong>DPO</strong> uses the same preference pairs and skips both the RM and PPO. Under Bradley–Terry, the optimal reward can be written from the policy and a frozen reference,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x003B2;</mi><mi>log</mi><mfrac><mrow><mi>&#x003C0;</mi><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002B;</mo><mtext>const</mtext><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Plug that into the RM logistic loss and the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi></mrow></math> parameters disappear. You train <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> directly, offline. The derived reward has a <strong>partition <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>Z</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></math></strong> that cancels because Bradley–Terry only sees a difference. KTO and IPO sit in the same family; this hour is DPO.</p>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub></mrow></math>, both log-ratios are 0, the argument of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> is 0, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mn>2</mn></mrow></math>. Then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>DPO</mtext></mrow></msub><mo>&#x0003D;</mo><mi>log</mi><mn>2</mn><mo>&#x02248;</mo><mn>0.693</mn></mrow></math>. That is the <strong>start</strong> of training, not a bug. Lab 9 will compute this on toy scalar logits, not on an LLM.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>RLHF’s PPO stage is heavy: sampling, a critic, a moving policy, stale rollouts. DPO is a classification loss on logits of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>l</mi></msub></mrow></math>. You have pairs, a GPU, and no appetite for a PPO stack. Offline: the pair set is fixed, so you do not explore new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> unless you collect more.</p>
+<p>That is also the limit. If the SFT model never proposed good <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math>, DPO cannot invent them from nothing. PPO can <strong>sample new</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> that were not in the pair file; offline DPO cannot. Implicit reward can still overfit the pair set. Report <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi></mrow></math>, the reference checkpoint, and a held-out preference accuracy (how often <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> assigns higher log-prob to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math> than to <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>l</mi></msub></mrow></math>). That number is not “the model is aligned”; it is “the model copied this rater.”</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>Two networks, one frozen: policy <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> and reference <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math> (usually SFT). No critic. No sampling-in-the-loop required. You need log-probabilities of <strong>both</strong> completions under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> and under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math>. The reference stays frozen. Dropping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math> because “there is no RM” removes the leash; the reference <strong>is</strong> the leash.</p>
+<p><img alt="DPO: pairs in, policy out, no RM loop" src="files/graphics/9.3-dpo/dpo.png" /></p>
+<p>The data path is the same pair file as note <strong>9.1</strong>. The compute path is a forward on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math> and a forward on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>l</mi></msub></mrow></math> for each of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math> (four logprob sums, or two if you cache the frozen reference). There is no RM head.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<ol>
+<li>Start from SFT. Freeze that checkpoint as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math>. Copy it as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math>.</li>
+<li>For each pair <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><msub><mi>y</mi><mi>w</mi></msub><mo>&#x0002C;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></math>, compute log-prob of both completions under both models.</li>
+<li>Form the two log-ratios <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mo stretchy="false">&#x00028;</mo><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0002F;</mo><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00029;</mo></mrow></math> and subtract loser from winner. Scale by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi></mrow></math>.</li>
+<li>Push that difference through <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> and take <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi></mrow></math>. Gradient raises relative mass on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>w</mi></msub></mrow></math> versus <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>y</mi><mi>l</mi></msub></mrow></math>, compared with the reference.</li>
+<li>Absolute log-prob can fall on both sequences; <strong>relative</strong> log-prob is what DPO scores. Write the argument of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math> as <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>&#x00394;</mi><mi>log</mi><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x02212;</mo><mi>&#x00394;</mi><mi>log</mi><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo></mrow></math> if it helps.</li>
+</ol>
+<p>At init, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math> and the loss is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mn>2</mn></mrow></math>. After a few steps the winner log-ratio should exceed the loser log-ratio. The frozen reference is still there: without it, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> can raise both log-probs or collapse. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi></mrow></math> is the same kind of leash as in RLHF: it scales how hard you push away from <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math>.</p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Closed-form reward, then DPO loss:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>r</mi><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo>&#x0002C;</mo><mi>y</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>&#x003B2;</mi><mi>log</mi><mfrac><mrow><mi>&#x003C0;</mi><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002B;</mo><mtext>const</mtext><mo stretchy="false">&#x00028;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo></mrow></math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>DPO</mtext></mrow></msub><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">(</mo><mi>&#x003B2;</mi><mi>log</mi><mfrac><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x02212;</mo><mi>&#x003B2;</mi><mi>log</mi><mfrac><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo>&#x02223;</mo><mi>x</mi><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo stretchy="true" fence="true" minsize="2.470em" maxsize="2.470em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub></mrow></math>, both log-ratios vanish and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>DPO</mtext></mrow></msub><mo>&#x0003D;</mo><mi>log</mi><mn>2</mn></mrow></math>. After a few steps, toy log-probs (sums over tokens): <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2.0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2.5</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>3.0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2.0</mn></mrow></math>. Log-ratio winner: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>2.0</mn><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2.5</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>. Log-ratio loser: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>3.0</mn><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2.0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1.0</mn></mrow></math>. Difference <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1.0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1.5</mn></mrow></math>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>1.5</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.818</mn></mrow></math>, loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mn>0.818</mn><mo>&#x02248;</mo><mn>0.201</mn></mrow></math>.</p>
+<p><img alt="Init loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mn>2</mn></mrow></math>, then a 1.5 logit gap" src="files/graphics/9.3-dpo/dpo-init.png" /></p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Offline classification loss: no RM head, no PPO loop, no on-policy sampling.</li>
+<li>Same pair file as the RM lecture; the closed-form <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi></mrow></math> is why the RM can disappear.</li>
+<li>Init loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mn>2</mn></mrow></math> is a checkable number (Lab 9).</li>
+<li><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi></mrow></math> is still an explicit leash toward <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math>.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Still needs pairs and a frozen reference. Dropping the reference is not a simplification.</li>
+<li>Can overfit the pair set. Held-out preference accuracy is “copied this rater,” not “aligned.”</li>
+<li>Not magic if the pairs are noisy. Two wrong answers still define an order.</li>
+<li>Offline: cannot invent replies the SFT model never wrote. PPO can sample new <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math>.</li>
+<li>Absolute log-prob can fall on both sequences; if you only watch that, you will think training failed.</li>
+</ul>
+<p><strong>When not to.</strong> If you need on-policy exploration of completions that are not in the file, stay with RLHF. If you have no SFT reference, you do not have DPO’s leash.</p>
+<hr />
+<h2>7. Teaching this note</h2>
+<p>About <strong>35–40 minutes</strong> at the board: write implicit <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>r</mi></mrow></math>, plug into <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>, compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mn>2</mn></mrow></math>. Play the Deep Dive <strong>preference / RLHF</strong> segment <strong>2:48:26–3:09:39</strong>. Lab 9 section 2 is the toy DPO scalar.</p>
+<hr />
+<h2>8. Worked example</h2>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi><mo>&#x0003D;</mo><mn>1</mn></mrow></math>. Suppose at init <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math>. Then</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>log</mi><mfrac><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x02212;</mo><mi>log</mi><mfrac><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0003D;</mo><mn>0</mn><mo>&#x0002C;</mo></mrow></math>
+<p>so <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x02112;</mi><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mi>log</mi><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002F;</mo><mn>2</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>log</mi><mn>2</mn></mrow></math>.</p>
+<p>After a few steps, toy log-probs (sums over tokens): <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2.0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>w</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2.5</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>3.0</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>l</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>2.0</mn></mrow></math>. Log-ratio winner: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>2.0</mn><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2.5</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>0.5</mn></mrow></math>. Log-ratio loser: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>3.0</mn><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>2.0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mo>&#x02212;</mo><mn>1.0</mn></mrow></math>. Difference <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn><mo>&#x02212;</mo><mo stretchy="false">&#x00028;</mo><mo>&#x02212;</mo><mn>1.0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1.5</mn></mrow></math>. <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>1.5</mn><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mn>0.818</mn></mrow></math>, loss <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mi>log</mi><mn>0.818</mn><mo>&#x02248;</mo><mn>0.201</mn></mrow></math>.</p>
+<p>The frozen reference is still there: without it, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> can raise both log-probs or collapse. PPO can <strong>sample new</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>y</mi></mrow></math> that were not in the pair file; offline DPO cannot.</p>
+<hr />
+<h2>9. Where students get stuck</h2>
+<ul>
+<li>Forgetting <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mn>1</mn><mo>&#x0002F;</mo><mn>2</mn></mrow></math> when <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math> at step 0.</li>
+<li>Dropping <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math> because “there is no RM.” The reference <strong>is</strong> the leash.</li>
+<li>Expecting DPO to invent replies the SFT model never wrote.</li>
+</ul>
+<hr />
+<h2>10. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Karpathy — Deep Dive into LLMs like ChatGPT</a>. Play the <strong>preference</strong> segment <strong>2:48:26–3:09:39</strong> (RLHF). Pause on comparison data: DPO uses those same pairs, without the PPO loop. The closed-form loss is the board.</p>
+<hr />
+<h2>11. Practice</h2>
+<ol>
+<li>
+<p>If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub><mo>&#x0003D;</mo><msub><mi>&#x003C0;</mi><mrow><mtext>ref</mtext></mrow></msub></mrow></math>, what is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x02112;</mi><mrow><mtext>DPO</mtext></mrow></msub></mrow></math>? (Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>.)</p>
+</li>
+<li>
+<p>Why do you still keep a frozen reference if there is no RM?</p>
+</li>
+<li>
+<p>Name one thing PPO can do that offline DPO cannot, given a fixed pair file.</p>
+</li>
+<li>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003B2;</mi><mo>&#x0003D;</mo><mn>2</mn></mrow></math>, winner log-ratio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.4</mn></mrow></math>, loser log-ratio <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.1</mn></mrow></math>. What is the argument of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>&#x003C3;</mi></mrow></math>, and is the loss smaller or larger than <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>log</mi><mn>2</mn></mrow></math>?</p>
+</li>
+<li>
+<p>Both completions have log-prob <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02212;</mo><mn>10</mn></mrow></math> under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mi>&#x003B8;</mi></msub></mrow></math> and under <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>&#x003C0;</mi><mrow><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi></mrow></mrow></msub></mrow></math>. What is the DPO loss, and what did the policy fail to learn yet?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

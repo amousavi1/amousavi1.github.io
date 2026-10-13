@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>6.2 Audio Encoders and Speech Models - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">6.2 Audio Encoders and Speech Models</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; <a href="data-643-week-6.html">Week 6</a> &middot; <a href="files/audio-encoders.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/slides/6.2-audio-encoders.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Whisper transcribes (GPT-style decoder, no CTC). CLAP retrieves. Same spectrogram, different head.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>Two audio systems you will cite: <strong>Whisper</strong> transcribes (encoder–decoder), <strong>CLAP</strong> retrieves (two towers, like CLIP). Same spectrogram tokens, different heads. Whisper takes log-mel in, two convs, a transformer encoder, a GPT-style decoder, 30-second chunks, and no CTC. If someone says “both take spectrograms so they are the same,” point at the head.</p>
+<hr />
+<h2>1. What Whisper and CLAP are</h2>
+<p><strong>Whisper</strong> transcribes speech. <strong>CLAP</strong> retrieves audio against text. Same spectrogram, different head.</p>
+<p>Whisper (Radford et al., 2022) is an encoder on audio tokens plus a <strong>GPT-style decoder</strong> that writes text. There is <strong>no CTC loss</strong> in this course’s picture. The encoder is a transformer on log-mel spectrogram patches (note <strong>6.1</strong>). Encoder input is the log-mel plus <strong>two convolutional layers</strong>, then positional embeddings, then standard transformer blocks. The decoder is causal and <strong>cross-attends</strong> to the encoder, like translation in note <strong>3.3</strong>.</p>
+<p><img alt="Whisper encoder on audio, decoder on text" src="files/graphics/6.2-audio-encoders/whisper.png" /></p>
+<p>The output is text, plus special tokens for language, timestamps, and task (transcribe versus translate).</p>
+<p><strong>CLAP</strong> (Contrastive Language–Audio Pretraining) is coordinated, not joint. An audio encoder (CNN or transformer on the spectrogram) and a text encoder emit vectors in one space. InfoNCE on audio–caption pairs. After training you keep both towers. It is CLIP with sound instead of pixels.</p>
+<p><img alt="CLAP audio and text towers" src="files/graphics/6.2-audio-encoders/clap.png" /></p>
+<p>Zero-shot tagging: encode <code>"a dog barking"</code>, rank clips by cosine. Retrieval both ways. It is not a transcriber. If you need words, use Whisper (or a CTC ASR). If you need “find the clip that matches this sentence,” use CLAP.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>ASR needs a decoder. Retrieval needs a score. Do not use Whisper as a search index or CLAP as a transcriber.</p>
+<p>Whisper’s pretraining is weakly supervised: a huge pile of audio paired with transcripts from the web, filtered rather than hand-labeled (on the order of 680{,}000 hours). Multilingual is the point. You do not train this from scratch in the lab; you would load a checkpoint. The architecture is what you need to draw.</p>
+<p>CLAP exists because a transcript is the wrong object for search. A gallery of podcast clips plus a typed query wants a cosine, not a decoder. The text tower can be bidirectional (BERT-style) because you encode a <strong>whole</strong> caption as one vector. Whisper’s decoder is causal because it <strong>emits</strong> tokens left to right.</p>
+<p>Fusing audio with vision or text is next (note <strong>6.3</strong>). Do not concatenate a Whisper hidden state into CLIP and call it a paper; say how you aligned the rates and the losses.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p><strong>Whisper.</strong> Spectrogram, then conv/embed, then encoder blocks, then a decoder with cross-attention. Default front end: 25 ms windows, 10 ms hop, 80 mel bins, <strong>30-second</strong> chunks. Thirty seconds at a 10 ms hop is 3000 frames before conv downsampling. The decoder never sees raw samples; it sees encoder states.</p>
+<p><img alt="30 seconds is 480k samples or 3000 frames" src="files/graphics/6.2-audio-encoders/whisper-chunk.png" /></p>
+<p>Draw the two arrows: encoder self-attention over time–frequency tokens, decoder causal self-attention plus <strong>cross-attention</strong> into those states. That is the same picture as translation (note <strong>3.3</strong>), with a spectrogram instead of a source sentence.</p>
+<p>Long-form audio: Whisper only sees 30 s at a time. Timestamp tokens tell it when to shift the window. That is a product detail, not a new architecture.</p>
+<p><strong>CLAP.</strong> Audio encoder <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>f</mi></mrow></math>, text encoder <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>g</mi></mrow></math>, cosine. InfoNCE on a batch of <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi></mrow></math> pairs is the CLIP loss from note <strong>4.3</strong>: one audio vector per clip, one text vector per caption, a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>B</mi><mo>&#x000D7;</mo><mi>B</mi></mrow></math> cosine matrix, positives on the diagonal. After training you throw away the matrix and keep the two encoders.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p><strong>Whisper.</strong></p>
+<ol>
+<li>Cut audio into 30 s chunks. Compute log-mel (80 bands, 25 ms window, 10 ms hop).</li>
+<li>Two convolutional layers downsample time; then the encoder attends over those tokens.</li>
+<li>The decoder is teacher-forced on transcripts, special tokens included (<code>&lt;|transcribe|&gt;</code>, language, timestamps). Loss is next-token, <strong>conditioned</strong> on the encoder. No CTC.</li>
+<li>At test, generate text. Timestamp tokens are just more vocabulary; they are not a separate model.</li>
+</ol>
+<p><strong>CLAP.</strong></p>
+<ol>
+<li>Encode a batch of audio–caption pairs.</li>
+<li>Fill the cosine matrix. InfoNCE wants the diagonal.</li>
+<li>Keep both towers. Rank clips by cosine to a query string, or captions by cosine to a clip.</li>
+<li>No decoder ran. If the user wanted a transcript of the top clip, you would call Whisper on the waveform, not on the audio embedding.</li>
+</ol>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Whisper’s decoder is a language model conditioned on audio encoder states:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo stretchy="false">&#x00028;</mo><mi>y</mi><mo>&#x02223;</mo><mi>a</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><munder><mo>&#x0220F;</mo><mi>t</mi></munder><mi>p</mi><mo stretchy="false">&#x00028;</mo><msub><mi>y</mi><mi>t</mi></msub><mo>&#x02223;</mo><msub><mi>y</mi><mrow><mo>&#x0003C;</mo><mi>t</mi></mrow></msub><mo>&#x0002C;</mo><mtext>audio</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>CLAP scores a clip <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>a</mi></mrow></math> and a text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math> with the same cosine as CLIP:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>s</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo>&#x0002C;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mi>cos</mi><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">(</mo><mi>f</mi><mo stretchy="false">&#x00028;</mo><mi>a</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mi>g</mi><mo stretchy="false">&#x00028;</mo><mi>t</mi><mo stretchy="false">&#x00029;</mo><mo stretchy="true" fence="true" minsize="1.2em" maxsize="1.2em">)</mo><mo>&#x0002E;</mo></mrow></math>
+<p>A 30 s chunk at a 10 ms hop is <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>30</mn><mo>&#x0002F;</mo><mn>0.010</mn><mo>&#x0003D;</mo><mn>3000</mn></mrow></math> mel frames. After a stride-2 conv stem you are on the order of 1500 encoder time-steps, not <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>30</mn><mo>&#x000D7;</mo><mn>16000</mn><mo>&#x0003D;</mo><mn>480</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn></mrow></math> waveform samples. That is why the spectrogram exists.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Whisper is a generator: transcripts, subtitles, timestamps from one decoder.</li>
+<li>CLAP is cheap retrieval and zero-shot tags without decoding words.</li>
+<li>Same spectrogram front end (note <strong>6.1</strong>); the head is the task.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Whisper is not a general audio tagger and is a poor search index.</li>
+<li>CLAP does not decode words; a high cosine is not a transcript.</li>
+<li>Paired audio–text is scarce (note <strong>6.3</strong>).</li>
+<li>Stuffing Whisper encoder states into a CLIP image slot without resampling time ignores the 10 ms frame rate.</li>
+</ul>
+<p><strong>When not to.</strong> Do not call CLAP a speech-to-text model because both take spectrograms. Do not assume Whisper still uses CTC.</p>
+<hr />
+<h2>7. Which one in a project</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Need</th>
+<th>Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transcript, subtitles, timestamps</td>
+<td>Whisper</td>
+</tr>
+<tr>
+<td>Search / zero-shot tags / audio–text retrieval</td>
+<td>CLAP</td>
+</tr>
+<tr>
+<td>Generate a caption in free text</td>
+<td>a decoder with an audio encoder (Whisper-like, or a BLIP-style audio LM)</td>
+</tr>
+</tbody>
+</table></div>
+<p>You should leave the hour able to pick Whisper vs CLAP without hedging. If someone says “both take spectrograms so they are the same,” stop and point at the head: causal decoder vs a cosine.</p>
+<hr />
+<h2>8. Teaching this note</h2>
+<p>About <strong>30–35 minutes</strong> at the board: draw the Whisper encoder–decoder (cross-attention arrows, 30 s chunk, special tokens), then the CLAP two-tower picture, then fill the table with a project prompt from the room. Play the Whisper video <strong>in full</strong> (~5–12 min). This is not Lab 6; the lab stays on a sine STFT and toy fusion.</p>
+<p>Board order: (1) 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02192;</mo></mrow></math> 3000 frames, (2) decoder special tokens and “no CTC,” (3) CLAP cosine rank, (4) “which model for this app?”</p>
+<hr />
+<h2>9. Worked example</h2>
+<p>Whisper chunk: 30 s, hop 10 ms <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x021D2;</mo></mrow></math> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>30</mn><mo>&#x0002F;</mo><mn>0.010</mn><mo>&#x0003D;</mo><mn>3000</mn></mrow></math> mel frames, 80 bands. After a stride-2 conv (as in the paper’s stem, two convs), you are on the order of 1500 encoder time-steps, not 30 s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x000D7;</mo></mrow></math> 16 kHz <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>480</mn><mrow><mo>&#x0002C;</mo></mrow><mn>000</mn></mrow></math> waveform samples. That is why the spectrogram exists.</p>
+<p>Decoder: special token <code>&lt;|transcribe|&gt;</code> then English text. The loss is next-token on those text tokens, <strong>conditioned</strong> on the encoder. Timestamp tokens are just more vocabulary; they are not a separate model.</p>
+<p>CLAP retrieval: three clips with audio embeddings <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>a</mi><mn>1</mn></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mn>2</mn></msub><mo>&#x0002C;</mo><msub><mi>a</mi><mn>3</mn></msub></mrow></math> and a query text <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>t</mi></mrow></math>. Cosines <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.11</mn><mo>&#x0002C;</mo><mn>0.72</mn><mo>&#x0002C;</mo><mn>0.40</mn></mrow></math>. Rank is clip 2, then 3, then 1. No decoder ran. If the user wanted a transcript of clip 2, you would call Whisper on the waveform, not on <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>a</mi><mn>2</mn></msub></mrow></math>.</p>
+<p><img alt="CLAP ranks; it does not transcribe" src="files/graphics/6.2-audio-encoders/clap-rank.png" /></p>
+<hr />
+<h2>10. Where students get stuck</h2>
+<ul>
+<li>Calling CLAP a “speech-to-text model” because both take spectrograms. The head is the task.</li>
+<li>Forgetting Whisper’s decoder is <strong>causal</strong> and CLAP’s text tower need not be.</li>
+<li>Stuffing Whisper encoder states into a CLIP image slot without resampling time. Rates (10 ms frames vs patch tokens) have to be named.</li>
+<li>Assuming Whisper still uses CTC. Whisper’s decoder is GPT-2 style; there is no CTC.</li>
+</ul>
+<hr />
+<h2>11. Video</h2>
+<p><a href="https://www.youtube.com/watch?v=uFOkMme19Zs">What's AI — OpenAI's Whisper Model Explained</a>. Play <strong>0:00–end</strong>. Pause on the encoder–decoder sketch and on the 30-second chunk. CLAP is the board comparison; this clip is Whisper only.</p>
+<hr />
+<h2>12. Practice</h2>
+<ol>
+<li>
+<p>Whisper’s decoder is causal. Why can CLAP’s text tower be bidirectional like BERT?</p>
+</li>
+<li>
+<p>You have a gallery of podcast clips and a typed query. Whisper or CLAP? Why?</p>
+</li>
+<li>
+<p>Name one special token Whisper uses that CLIP never needed.</p>
+</li>
+<li>
+<p>A 10 s clip, 10 ms hop, 80 mel bins, no extra pooling. How many time frames hit the encoder? If you then cut non-overlapping 2-frame patches along time only, how many patch tokens?</p>
+</li>
+<li>
+<p>Two captions score <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.9</mn></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.1</mn></mrow></math> cosine against one clip. You want words that were actually spoken. Which model, and what does the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.9</mn></mrow></math> number <strong>not</strong> tell you?</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

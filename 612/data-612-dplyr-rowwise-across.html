@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>5.1 dplyr: rowwise() and across() - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">5.1 dplyr: rowwise() and across()</h1>
+                    </header>
+                                                                                                                                            <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-5.html">Week 5</a> &middot;
+                            <a href="files/dplyr-rowwise-across.pdf" target="_blank" rel="noopener">PDF</a>
+                         &middot; <a href="files/lectures/dplyr-rowwise-across.qmd">Source (.qmd)</a></p>
+<p>rowwise() summarizes across columns in one row. across() repeats a
+function on many columns.</p>
+<p>Most calculations on a data frame go one of two ways: <strong>down a
+column</strong> (the mean of <code>exam1</code> over all students) or
+<strong>across a row</strong> (one student’s mean over three exams).
+Knowing which one you want tells you whether to reach for
+<code>across()</code>, <code>rowwise()</code> with
+<code>c_across()</code>, or <code>rowSums()</code> /
+<code>rowMeans()</code>.</p>
+<div id="mutate-works-on-whole-columns" class="section level2">
+<h2>1. <code>mutate()</code> works on whole columns</h2>
+<p>Before <code>rowwise()</code>, look at what <code>mutate()</code>
+normally does.</p>
+<pre><code class="language-r">exams &lt;- tibble(
+  student = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;),
+  exam1 = c(80, 70, 90),
+  exam2 = c(90, 85, 95),
+  exam3 = c(70, 75, 85)
+)
+
+exams |&gt; mutate(difference = exam1 - exam2, total = exam1 + exam2 + exam3)</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   student exam1 exam2 exam3 difference total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70        -10   240
+## 2 B          70    85    75        -15   230
+## 3 C          90    95    85         -5   270</code></pre>
+<p>It looks as if <code>mutate()</code> subtracts row by row. It does
+not. Inside <code>mutate()</code>, <code>exam1</code> and
+<code>exam2</code> are <strong>whole columns</strong>, so R computes</p>
+<pre><code class="language-r">c(80, 70, 90) - c(90, 85, 95)</code></pre>
+<pre><code>## [1] -10 -15  -5</code></pre>
+<p><code>-</code> and <code>+</code> are <strong>vectorized</strong>:
+they already work element by element. No <code>rowwise()</code> is
+needed.</p>
+<hr />
+</div>
+<div id="why-mean-needs-rowwise" class="section level2">
+<h2>2. Why <code>mean()</code> needs <code>rowwise()</code></h2>
+<p>Now try the average score of each student:</p>
+<pre><code class="language-r">exams |&gt; mutate(avg = mean(c(exam1, exam2, exam3)))</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3   avg
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70  82.2
+## 2 B          70    85    75  82.2
+## 3 C          90    95    85  82.2</code></pre>
+<p>Every row gets the same number. <code>c(exam1, exam2, exam3)</code>
+glues the three <strong>whole columns</strong> into one vector of nine
+values,</p>
+<pre><code class="language-r">c(exams$exam1, exams$exam2, exams$exam3)</code></pre>
+<pre><code>## [1] 80 70 90 90 85 95 70 75 85</code></pre>
+<p>and <code>mean()</code> returns one mean of all nine, repeated on
+every row.</p>
+<p><code>rowwise()</code> changes the context: the next verbs run
+<strong>once per row</strong>.</p>
+<pre><code class="language-r">exams |&gt;
+  rowwise() |&gt;
+  mutate(avg = mean(c(exam1, exam2, exam3))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3   avg
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70  80  
+## 2 B          70    85    75  76.7
+## 3 C          90    95    85  90</code></pre>
+<p>Row 1 is <code>mean(c(80, 90, 70)) = 80</code>, row 2 is
+<code>mean(c(70, 85, 75)) = 76.67</code>, row 3 is
+<code>mean(c(90, 95, 85)) = 90</code>.</p>
+<div id="rowwise-is-a-group-of-one" class="section level3">
+<h3><code>rowwise()</code> is a group of one</h3>
+<p><code>group_by(carrier)</code> makes one group per carrier, each with
+many rows. <code>rowwise()</code> makes <strong>each row its own
+group</strong>. So:</p>
+<ul>
+<li><code>group_by()</code>: the context is a group of rows.</li>
+<li><code>rowwise()</code>: the context is one row.</li>
+</ul>
+<p><code>rowwise(name)</code> also keeps <code>name</code> as an
+identifier when you <code>summarize()</code>:</p>
+<pre><code class="language-r">df &lt;- tibble(name = c(&quot;Mara&quot;, &quot;Hadley&quot;), x = 1:2, y = 3:4, z = 5:6)
+
+df |&gt; mutate(m = mean(c(x, y, z)))</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   name       x     y     z     m
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+## 1 Mara       1     3     5   3.5
+## 2 Hadley     2     4     6   3.5</code></pre>
+<pre><code class="language-r"># one mean for the whole table
+
+df |&gt;
+  rowwise(name) |&gt;
+  summarize(m = mean(c(x, y, z)), .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   name       m
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 Mara       3
+## 2 Hadley     4</code></pre>
+<pre><code class="language-r"># one mean per row</code></pre>
+<p>Finish with <code>ungroup()</code> (or
+<code>.groups = "drop"</code>). Otherwise later verbs keep working one
+row at a time.</p>
+<hr />
+</div>
+</div>
+<div id="c_across-the-values-of-the-current-row" class="section level2">
+<h2>3. <code>c_across()</code>: the values of the current row</h2>
+<p>Typing <code>c(exam1, exam2, exam3)</code> gets long. Inside
+<code>rowwise()</code>, <code>c_across(exam1:exam3)</code> collects the
+values of those columns <strong>in the current row</strong> into a
+vector. For student A it is <code>c(80, 90, 70)</code>.</p>
+<pre><code class="language-r">exams |&gt;
+  rowwise() |&gt;
+  mutate(
+    avg_score = mean(c_across(exam1:exam3)),
+    max_score = max(c_across(exam1:exam3)),
+    min_score = min(c_across(exam1:exam3)),
+    sd_score = sd(c_across(exam1:exam3))
+  ) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 8
+##   student exam1 exam2 exam3 avg_score max_score min_score sd_score
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A          80    90    70      80          90        70    10   
+## 2 B          70    85    75      76.7        85        70     7.64
+## 3 C          90    95    85      90          95        85     5</code></pre>
+<p><code>c_across()</code> selects columns with the same helpers as
+<code>select()</code>:</p>
+<pre><code class="language-r">df &lt;- tibble(id = 1:6, w = 10:15, x = 20:25, y = 30:35, z = 40:45)
+rf &lt;- df |&gt; rowwise(id)
+
+rf |&gt; mutate(total = sum(c_across(w:z)))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+## # Rowwise:  id
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1     1    10    20    30    40   100
+## 2     2    11    21    31    41   104
+## 3     3    12    22    32    42   108
+## 4     4    13    23    33    43   112
+## 5     5    14    24    34    44   116
+## 6     6    15    25    35    45   120</code></pre>
+<pre><code class="language-r">rf |&gt; mutate(total = sum(c_across(where(is.numeric))))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+## # Rowwise:  id
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1     1    10    20    30    40   100
+## 2     2    11    21    31    41   104
+## 3     3    12    22    32    42   108
+## 4     4    13    23    33    43   112
+## 5     5    14    24    34    44   116
+## 6     6    15    25    35    45   120</code></pre>
+<div id="missing-values" class="section level3">
+<h3>Missing values</h3>
+<p><code>na.rm = TRUE</code> works as usual. It drops the
+<code>NA</code>s in that row only.</p>
+<pre><code class="language-r">quizzes &lt;- tibble(
+  student = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;),
+  quiz1 = c(80, 90, NA),
+  quiz2 = c(70, NA, 85),
+  quiz3 = c(90, 80, 95)
+)
+
+quizzes |&gt;
+  rowwise() |&gt;
+  mutate(quiz_avg = mean(c_across(quiz1:quiz3), na.rm = TRUE)) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student quiz1 quiz2 quiz3 quiz_avg
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A          80    70    90       80
+## 2 B          90    NA    80       85
+## 3 C          NA    85    95       90</code></pre>
+<p>For B this is
+<code>mean(c(90, NA, 80), na.rm = TRUE) = 85</code>.</p>
+<p><code>starwars</code> (in dplyr) is the usual practice table. Without
+<code>rowwise()</code>, <code>max(height, mass, birth_year)</code> is
+one number for the whole column stack, repeated on every row.</p>
+<hr />
+</div>
+</div>
+<div id="across-repeats-a-function-on-columns" class="section level2">
+<h2>4. <code>across()</code> repeats a function on columns</h2>
+<p><code>across()</code> lives <strong>inside</strong>
+<code>mutate()</code>, <code>summarize()</code>, <code>filter()</code>,
+and the other data-masking verbs. It does not change the data by
+itself.</p>
+<p>Two arguments:</p>
+<ul>
+<li><code>.cols</code>: tidyselect, default
+<code>everything()</code></li>
+<li><code>.fns</code>: a function, a named list of functions, or a
+formula <code>~ median(.x, na.rm = TRUE)</code>. <code>.x</code> is the
+current column.</li>
+</ul>
+<p>Write <code>where(is.numeric)</code>, not
+<code>where(is.numeric())</code>. <code>where()</code> wants the
+<strong>function itself</strong>, not the result of calling it.</p>
+<pre><code class="language-r">starwars |&gt;
+  summarize(across(where(is.numeric), ~ median(.x, na.rm = TRUE)), .groups = &quot;drop&quot;)</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   height  mass birth_year
+##    &lt;int&gt; &lt;dbl&gt;      &lt;dbl&gt;
+## 1    180    79         52</code></pre>
+<pre><code class="language-r">starwars |&gt;
+  group_by(species) |&gt;
+  filter(n() &gt; 1) |&gt;
+  summarize(
+    across(c(sex, gender, homeworld), ~ length(unique(.x))),
+    n = n()
+  )</code></pre>
+<pre><code>## # A tibble: 9 × 5
+##   species    sex gender homeworld     n
+##   &lt;chr&gt;    &lt;int&gt;  &lt;int&gt;     &lt;int&gt; &lt;int&gt;
+## 1 Droid        1      2         3     6
+## 2 Gungan       1      1         1     3
+## 3 Human        2      2        15    35
+## 4 Kaminoan     2      2         1     2
+## 5 Mirialan     1      1         1     2
+## 6 Twi&#39;lek      2      2         1     2
+## 7 Wookiee      1      1         1     2
+## 8 Zabrak       1      1         2     2
+## 9 &lt;NA&gt;         1      1         3     4</code></pre>
+<p>Grouping variables are skipped so you do not summarize them by
+accident.</p>
+<p>A named list makes several summaries per column:</p>
+<pre><code class="language-r">min_max &lt;- list(
+  min = ~ min(.x, na.rm = TRUE),
+  max = ~ max(.x, na.rm = TRUE)
+)
+starwars |&gt; summarize(across(where(is.numeric), min_max))</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   height_min height_max mass_min mass_max birth_year_min birth_year_max
+##        &lt;int&gt;      &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
+## 1         66        264       15     1358              8            896</code></pre>
+<p>The new columns are named <code>column_function</code>:
+<code>height_min</code>, <code>height_max</code>, <code>mass_min</code>,
+and so on.</p>
+<p>Here <code>across()</code> is the right tool because we want
+statistics for <strong>each column separately</strong>. Combining one
+character’s height, mass, and birth year with <code>c_across()</code>
+would not mean anything.</p>
+<p>Order matters. If you compute <code>n = n()</code> first,
+<code>n</code> is numeric, so a later
+<code>across(where(is.numeric), sd)</code> will try to take the SD of
+that constant and give <code>NA</code>. Put <code>n = n()</code>
+last.</p>
+<p><code>across()</code> replaces the old <code>*_if()</code>,
+<code>*_at()</code>, and <code>*_all</code> helpers.
+<code>select()</code> and <code>rename()</code> already use tidyselect;
+use <code>rename_with()</code> to change names with a function.</p>
+<hr />
+</div>
+<div id="across-vs-c_across" class="section level2">
+<h2>5. <code>across()</code> vs <code>c_across()</code></h2>
+<p>The names are close, the jobs are not.</p>
+<ul>
+<li><code>across()</code> applies a function to <strong>each selected
+column separately</strong>.</li>
+<li><code>c_across()</code> <strong>combines</strong> the selected
+values <strong>within the current row</strong>.</li>
+</ul>
+<pre><code class="language-r">xyz &lt;- tibble(name = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;), x = c(10, 20, 30), y = c(20, 40, 60), z = c(30, 60, 90))</code></pre>
+<p>One mean <strong>per column</strong> (<code>mean(x)</code>,
+<code>mean(y)</code>, <code>mean(z)</code>):</p>
+<pre><code class="language-r">xyz |&gt; summarize(across(x:z, mean))</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##       x     y     z
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    20    40    60</code></pre>
+<pre><code class="language-r">xyz |&gt; mutate(across(x:z, ~ .x * 2))</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   name      x     y     z
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A        20    40    60
+## 2 B        40    80   120
+## 3 C        60   120   180</code></pre>
+<p>One mean <strong>per row</strong> (<code>mean(c(10, 20, 30))</code>,
+<code>mean(c(20, 40, 60))</code>, …):</p>
+<pre><code class="language-r">xyz |&gt;
+  rowwise() |&gt;
+  mutate(row_mean = mean(c_across(x:z))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   name      x     y     z row_mean
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 A        10    20    30       20
+## 2 B        20    40    60       40
+## 3 C        30    60    90       60</code></pre>
+<p>A picture to remember:</p>
+<pre><code>          x     y     z
+        ----------------
+Row 1    10    20    30   -&gt;  c_across()
+Row 2    20    40    60   -&gt;  c_across()
+Row 3    30    60    90   -&gt;  c_across()
+         |     |     |
+         v     v     v
+            across()</code></pre>
+<p><code>across()</code> goes down the columns. <code>c_across()</code>
+goes along a row. The <code>c</code> is for <strong>combine</strong>, as
+in <code>c()</code>.</p>
+<hr />
+</div>
+<div id="rowsums-and-rowmeans" class="section level2">
+<h2>6. <code>rowSums()</code> and <code>rowMeans()</code></h2>
+<p>For sums and means across a row, base R already has vectorized
+functions. They take a set of columns, and <code>across()</code> hands
+them over. <strong>No <code>rowwise()</code> is needed.</strong></p>
+<p>Two ways to get each student’s total:</p>
+<pre><code class="language-r">exams |&gt;
+  rowwise() |&gt;
+  mutate(total = sum(c_across(exam1:exam3))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3 total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70   240
+## 2 B          70    85    75   230
+## 3 C          90    95    85   270</code></pre>
+<pre><code class="language-r">exams |&gt; mutate(total = rowSums(across(exam1:exam3)))</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   student exam1 exam2 exam3 total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A          80    90    70   240
+## 2 B          70    85    75   230
+## 3 C          90    95    85   270</code></pre>
+<p>Same answer. The second is shorter and much faster on a big table,
+because it does not split the data into one group per row.
+<code>rowMeans()</code> works the same way, and both take
+<code>na.rm = TRUE</code>:</p>
+<pre><code class="language-r">quizzes |&gt;
+  mutate(
+    quiz_avg = rowMeans(across(quiz1:quiz3), na.rm = TRUE),
+    quiz_total = rowSums(across(quiz1:quiz3), na.rm = TRUE)
+  )</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   student quiz1 quiz2 quiz3 quiz_avg quiz_total
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+## 1 A          80    70    90       80        240
+## 2 B          90    NA    80       85        170
+## 3 C          NA    85    95       90        180</code></pre>
+<p>It also works with <code>where()</code>:</p>
+<pre><code class="language-r">df |&gt; mutate(total = rowSums(across(where(is.numeric))))</code></pre>
+<pre><code>## # A tibble: 6 × 6
+##      id     w     x     y     z total
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;
+## 1     1    10    20    30    40   101
+## 2     2    11    21    31    41   106
+## 3     3    12    22    32    42   111
+## 4     4    13    23    33    43   116
+## 5     5    14    24    34    44   121
+## 6     6    15    25    35    45   126</code></pre>
+<p>So why learn <code>rowwise()</code>? Because there is no
+<code>rowSd()</code> or <code>rowMax()</code> in base R. For any other
+per-row statistic, <code>rowwise()</code> with <code>c_across()</code>
+is the general tool:</p>
+<pre><code class="language-r">exams |&gt;
+  rowwise() |&gt;
+  mutate(highest = max(c_across(exam1:exam3)), spread = sd(c_across(exam1:exam3))) |&gt;
+  ungroup()</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   student exam1 exam2 exam3 highest spread
+##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 A          80    90    70      90  10   
+## 2 B          70    85    75      85   7.64
+## 3 C          90    95    85      95   5</code></pre>
+<hr />
+</div>
+<div id="when-you-do-not-need-rowwise" class="section level2">
+<h2>7. When you do not need <code>rowwise()</code></h2>
+<p>Using several columns does not by itself call for
+<code>rowwise()</code>. These are all vectorized:</p>
+<pre><code class="language-r">xyz |&gt; mutate(total = x + y + z, difference = x - y, ratio = x / y, bigger = x &gt; y)</code></pre>
+<pre><code>## # A tibble: 3 × 8
+##   name      x     y     z total difference ratio bigger
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; 
+## 1 A        10    20    30    60        -10   0.5 FALSE 
+## 2 B        20    40    60   120        -20   0.5 FALSE 
+## 3 C        30    60    90   180        -30   0.5 FALSE</code></pre>
+<p><code>rowwise()</code> is for functions like <code>mean()</code>,
+<code>max()</code>, <code>min()</code>, <code>sd()</code> that take a
+vector and return <strong>one</strong> value, when you want that value
+for each row.</p>
+<p>So do not ask “Am I using several columns?” Ask:</p>
+<ul>
+<li>Same function on <strong>each column separately</strong>? Use
+<code>across()</code>.</li>
+<li><strong>Combine values from several columns within each
+row</strong>? Use <code>rowwise()</code> with <code>c_across()</code>
+(or <code>rowSums()</code> / <code>rowMeans()</code> for sums and
+means).</li>
+</ul>
+<hr />
+</div>
+<div id="choosing-the-right-tool" class="section level2">
+<h2>8. Choosing the right tool</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Typical code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>One statistic of one column</td>
+<td><code>summarize(avg = mean(exam1))</code></td>
+</tr>
+<tr class="even">
+<td>The same statistic for several columns</td>
+<td><code>summarize(across(exam1:exam3, mean))</code></td>
+</tr>
+<tr class="odd">
+<td>The same change to several columns</td>
+<td><code>mutate(across(exam1:exam3, ~ .x + 5))</code></td>
+</tr>
+<tr class="even">
+<td>Arithmetic that combines columns</td>
+<td><code>mutate(total = exam1 + exam2 + exam3)</code></td>
+</tr>
+<tr class="odd">
+<td>Sum across each row</td>
+<td><code>mutate(total = rowSums(across(exam1:exam3)))</code></td>
+</tr>
+<tr class="even">
+<td>Mean across each row</td>
+<td><code>mutate(avg = rowMeans(across(exam1:exam3)))</code></td>
+</tr>
+<tr class="odd">
+<td>Any other statistic across each row</td>
+<td><code>rowwise()</code>, then
+<code>mutate(top = max(c_across(exam1:exam3)))</code>, then
+<code>ungroup()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Remember: <code>across()</code> keeps the selected columns
+<strong>separate</strong>. <code>c_across()</code>
+<strong>combines</strong> the selected values of the current row into
+one vector. And before you type <code>rowwise()</code>, check whether
+the operation is already vectorized, or whether <code>rowSums()</code> /
+<code>rowMeans()</code> already does the job.</p>
+<hr />
+</div>
+<div id="practice" class="section level2">
+<h2>9. Practice</h2>
+<ol style="list-style-type: decimal">
+<li>For each <code>starwars</code> character, the maximum of
+<code>height</code>, <code>mass</code>, and <code>birth_year</code>
+(<code>na.rm = TRUE</code>). Who is largest? Try it with and without
+<code>rowwise()</code>.</li>
+<li>Median of every numeric column, by <code>species</code> and
+<code>gender</code>, plus <code>n()</code>, sorted by <code>n</code>
+descending.</li>
+</ol>
+</div>
+<nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-lab-4-solutions.html"><span aria-hidden="true">←</span> Lab 4 solutions</a>
+                        <a class="course-page-nav__week" href="data-612-week-5.html">Week 5</a>
+                            <a class="course-page-nav__next" href="data-612-dplyr-case-when.html">5.2 dplyr: case_when() and Distinct Rows <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

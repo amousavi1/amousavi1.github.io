@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>DATA 412/612: Statistical Programming in R - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/Course">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">DATA 412/612: Statistical Programming in R</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="course-meta">American University</p>
+                        <p>
+                            This is a complementary course hub. Canvas is the official site for this semester.
+                            Questions: <a href="mailto:mousavi@american.edu">mousavi@american.edu</a>.
+                        </p>
+                        <p><a href="../website-only/courses.html">All courses</a></p>
+
+                        <h2>Syllabus</h2>
+                        <ul class="course-materials">
+                            <li>
+                                <a
+                                    class="course-material__title"
+                                    href="files/syllabus.pdf"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >Syllabus</a
+                                ><a
+                                    class="course-material__pdf"
+                                    href="files/syllabus.pdf"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >(PDF)</a
+                                >
+                            </li>
+                        </ul>
+
+                        <h2>Class meetings</h2>
+                        <p>
+                            Wednesday class meetings, 5:30–8:00 PM. Canvas is official for submissions and any date changes.
+                        </p>
+                        <table class="course-schedule">
+                            <thead>
+                                <tr>
+                                    <th>Week</th>
+                                    <th>Date</th>
+                                    <th>Topic</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="data-612-week-1.html">1</a></td>
+                                    <td>September 2</td>
+                                    <td>R, RStudio, and tidyverse basics</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-2.html">2</a></td>
+                                    <td>September 9</td>
+                                    <td>Pipes, functions, and scripts</td>
+                                    <td>Homework 1 due September 13</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-3.html">3</a></td>
+                                    <td>September 16</td>
+                                    <td>ggplot2</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-4.html">4</a></td>
+                                    <td>September 23</td>
+                                    <td>dplyr: rows, columns, and groups</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-5.html">5</a></td>
+                                    <td>September 30</td>
+                                    <td>dplyr: rowwise, across, and case_when</td>
+                                    <td>Quiz 1</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-6.html">6</a></td>
+                                    <td>October 7</td>
+                                    <td>readr and exploratory data analysis</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-7.html">7</a></td>
+                                    <td>October 14</td>
+                                    <td>tidyr</td>
+                                    <td>Midterm 1</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-8.html">8</a></td>
+                                    <td>October 21</td>
+                                    <td>Joins and databases</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-9.html">9</a></td>
+                                    <td>October 28</td>
+                                    <td>Strings and regular expressions</td>
+                                    <td>Quiz 2</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-10.html">10</a></td>
+                                    <td>November 4</td>
+                                    <td>Factors and dates</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-11.html">11</a></td>
+                                    <td>November 11</td>
+                                    <td>Statistics in R</td>
+                                    <td>Midterm 2</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-12.html">12</a></td>
+                                    <td>November 18</td>
+                                    <td>R Markdown presentations</td>
+                                    <td>Initial project presentation</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>November 25</td>
+                                    <td>No class (Thanksgiving)</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-13.html">13</a></td>
+                                    <td>December 2</td>
+                                    <td>R Markdown: chunks, tables, and citations</td>
+                                    <td>Quiz 3</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-14.html">14</a></td>
+                                    <td>December 9</td>
+                                    <td>Iteration, purrr, and wrap-up</td>
+                                    <td>Final project presentations</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h2>Weekly materials</h2>
+                        <p class="course-weeks-intro">
+                            Open a week for its lectures, labs, readings, and discussion prompts.
+                            Canvas remains the official list of required reading.
+                        </p>
+                        <table class="course-schedule">
+                            <thead>
+                                <tr>
+                                    <th>Week</th>
+                                    <th>Date</th>
+                                    <th>Topic</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="data-612-week-1.html">1</a></td>
+                                    <td>September 2</td>
+                                    <td><a href="data-612-week-1.html">R, RStudio, and tidyverse basics</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-2.html">2</a></td>
+                                    <td>September 9</td>
+                                    <td><a href="data-612-week-2.html">Pipes, functions, and scripts</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-3.html">3</a></td>
+                                    <td>September 16</td>
+                                    <td><a href="data-612-week-3.html">ggplot2</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-4.html">4</a></td>
+                                    <td>September 23</td>
+                                    <td><a href="data-612-week-4.html">dplyr: rows, columns, and groups</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-5.html">5</a></td>
+                                    <td>September 30</td>
+                                    <td><a href="data-612-week-5.html">dplyr: rowwise, across, and case_when</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-6.html">6</a></td>
+                                    <td>October 7</td>
+                                    <td><a href="data-612-week-6.html">readr and exploratory data analysis</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-7.html">7</a></td>
+                                    <td>October 14</td>
+                                    <td><a href="data-612-week-7.html">tidyr</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-8.html">8</a></td>
+                                    <td>October 21</td>
+                                    <td><a href="data-612-week-8.html">Joins and databases</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-9.html">9</a></td>
+                                    <td>October 28</td>
+                                    <td><a href="data-612-week-9.html">Strings and regular expressions</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-10.html">10</a></td>
+                                    <td>November 4</td>
+                                    <td><a href="data-612-week-10.html">Factors and dates</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-11.html">11</a></td>
+                                    <td>November 11</td>
+                                    <td><a href="data-612-week-11.html">Statistics in R</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-12.html">12</a></td>
+                                    <td>November 18</td>
+                                    <td><a href="data-612-week-12.html">R Markdown presentations</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-13.html">13</a></td>
+                                    <td>December 2</td>
+                                    <td><a href="data-612-week-13.html">R Markdown: chunks, tables, and citations</a></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="data-612-week-14.html">14</a></td>
+                                    <td>December 9</td>
+                                    <td><a href="data-612-week-14.html">Iteration, purrr, and wrap-up</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h2>Project</h2>
+                        <ul class="course-materials">
+                            <li>
+                                <a
+                                    class="course-material__title"
+                                    href="files/project.pdf"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >Final project</a
+                                ><a
+                                    class="course-material__pdf"
+                                    href="files/project.pdf"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >(PDF)</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    class="course-material__title"
+                                    href="files/eda-guide.pdf"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >A short guide to exploratory data analysis</a
+                                ><a
+                                    class="course-material__pdf"
+                                    href="files/eda-guide.pdf"
+                                    target="_blank"
+                                    rel="noopener"
+                                    >(PDF)</a
+                                >
+                            </li>
+                        </ul>
+
+                        <h2>Sample quizzes and exams</h2>
+                        <table class="course-schedule">
+                            <thead>
+                                <tr>
+                                    <th>Assessment</th>
+                                    <th>Samples</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Quiz 1</td>
+                                    <td>
+                                        <a href="files/sample-quiz-1.pdf" target="_blank" rel="noopener">Sample 1</a>,
+                                        <a href="files/sample-quiz-2.pdf" target="_blank" rel="noopener">Sample 2</a>,
+                                        <a href="files/sample-quiz-3.pdf" target="_blank" rel="noopener">Sample 3</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Midterm 1</td>
+                                    <td>
+                                        <a href="files/sample-midterm-1-1.pdf" target="_blank" rel="noopener">Sample 1</a>,
+                                        <a href="files/sample-midterm-1-2.pdf" target="_blank" rel="noopener">Sample 2</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Quiz 2</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Midterm 2</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Quiz 3</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h2>Data</h2>
+                        <table class="course-schedule">
+                            <thead>
+                                <tr>
+                                    <th>Dataset</th>
+                                    <th>Files</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Capital trips</td>
+                                    <td><a href="files/capital_trips_sample.csv">capital_trips_sample.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Estate</td>
+                                    <td><a href="files/estate.csv">estate.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Flowers</td>
+                                    <td>
+                                        <a href="files/flowers1.csv">flowers1.csv</a>,
+                                        <a href="files/flowers2.csv">flowers2.csv</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Hate crimes</td>
+                                    <td>
+                                        <a href="files/hate_crimes1.csv">hate_crimes1.csv</a>,
+                                        <a href="files/hate_crimes_1a.csv">hate_crimes_1a.csv</a>,
+                                        <a href="files/hate_crimes2.csv">hate_crimes2.csv</a>,
+                                        <a href="files/hate_crimes3.csv">hate_crimes3.csv</a>,
+                                        <a href="files/hate_crimes4.csv">hate_crimes4.csv</a>,
+                                        <a href="files/hate_crimes4a.csv">hate_crimes4a.csv</a>,
+                                        <a href="files/hate_crimes4b.csv">hate_crimes4b.csv</a>,
+                                        <a href="files/hate_crimes5.csv">hate_crimes5.csv</a>,
+                                        <a href="files/hate_crimes6.csv">hate_crimes6.csv</a>,
+                                        <a href="files/hate_crimes7.csv">hate_crimes7.csv</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Meteorite landings</td>
+                                    <td><a href="files/meteorite_landings.csv">meteorite_landings.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Monkey memory</td>
+                                    <td><a href="files/monkeymem.csv">monkeymem.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Students</td>
+                                    <td><a href="files/students.csv">students.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>WMATA ridership</td>
+                                    <td><a href="files/wmata_ridership.csv">wmata_ridership.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>z-scores</td>
+                                    <td><a href="files/z_scores.csv">z_scores.csv</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Bibliography</td>
+                                    <td><a href="files/test_rmd_file.bib">test_rmd_file.bib</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h2>Resources</h2>
+                        <table class="course-schedule">
+                            <thead>
+                                <tr>
+                                    <th>Resource</th>
+                                    <th>What it is for</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="https://www.r-project.org/" target="_blank" rel="noopener">The R Project</a></td>
+                                    <td>Install R</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://posit.co/download/rstudio-desktop/" target="_blank" rel="noopener">RStudio Desktop</a></td>
+                                    <td>The editor we use in class</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://r4ds.hadley.nz/" target="_blank" rel="noopener">R for Data Science</a></td>
+                                    <td>Main textbook</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://stat545.com/" target="_blank" rel="noopener">STAT 545</a></td>
+                                    <td>Extra tidyverse practice</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://rstats.wtf/" target="_blank" rel="noopener">What They Forgot to Teach You About R</a></td>
+                                    <td>Projects, files, and debugging</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://rmarkdown.rstudio.com/" target="_blank" rel="noopener">R Markdown</a></td>
+                                    <td>Older report format</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="https://quarto.org/" target="_blank" rel="noopener">Quarto</a></td>
+                                    <td>Reports this semester</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>1.4 Word Embeddings and Semantic Geometry - DATA 443/643 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">1.4 Word Embeddings and Semantic Geometry</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-643.html">DATA 443/643</a> &middot; <a href="data-643-week-1.html">Week 1</a> &middot; <a href="files/embeddings.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/slides/1.4-embeddings.pdf" target="_blank" rel="noopener">Slides</a>
+                        </p>
+                        <p>
+                            Dense vectors from a corpus window, skip-gram softmax, analogies, and a signed-projection bias probe.
+                        </p>
+<p>These notes match the lecture slides. Use <strong>(slides)</strong> on the course hub for the deck.</p>
+<p>A language model does not read characters as characters. It reads <strong>vectors</strong>. This week those vectors are word embeddings. From Week 3 they are token embeddings inside a transformer. The geometry is the same idea. By the end you should be able to write skip-gram’s softmax, compute a cosine, and run Lab 1’s occupation probe.</p>
+<hr />
+<h2>1. What an embedding is</h2>
+<p>An <strong>embedding</strong> is a map from a token id to a dense vector. Give each word its own one-hot coordinate and <em>film</em> and <em>movie</em> are orthogonal: inner product 0. The vector is sparse, as long as the vocabulary, and a new word has no coordinate at all.</p>
+<p>A <strong>distributed</strong> representation is short and dense (50–300 dimensions is a classical size; transformer hidden sizes are larger). Meaning is spread across coordinates. Similar usage produces nearby vectors. That is the geometry you can learn.</p>
+<p><img alt="One-hot rows versus dense embedding rows" src="files/graphics/1.4-embeddings/onehot-vs-embed.png" /></p>
+<p><strong>Distributional</strong> is about the data: words that occur in similar contexts mean similar things (Harris). <strong>Distributed</strong> is about the code: a dense vector. An <strong>embedding</strong> is the map from a token id into that vector. Write those three words on the board as a triangle. Mixing them is the most common exam slip this week.</p>
+<p>If the map is good, <strong>direction means something</strong>. The Mikolov analogy is the slogan:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02248;</mo><mover><mrow><mtext>queen</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002E;</mo></mrow></math>
+<p>The same offset can look like gender, tense, or capital-of. Week 3 will replace static rows with contextual states; the inner-product geometry does not go away.</p>
+<hr />
+<h2>2. Why we use it</h2>
+<p>One-hot geometry cannot say that <em>film</em> and <em>movie</em> are similar. You need a space where cosine is a useful neighbor query, analogies are a debug tool, and a downstream classifier can use a short vector instead of a <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi></mrow></math>-dimensional sparse indicator.</p>
+<p>You do not type a definition. You <strong>count or predict company</strong>. Firth: you shall know a word by the company it keeps. Counting co-occurrences and then factoring the matrix is one distributional story. This course uses the predictive story (skip-gram) because it is the same training loop as an LLM.</p>
+<p>Nearest neighbors are how you debug. If <em>Paris</em> sits next to <em>France</em> and <em>Rome</em>, training learned something. If it sits next to punctuation, the corpus or the window is wrong.</p>
+<hr />
+<h2>3. Architecture</h2>
+<p>The embedding is a table <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>E</mi><mo>&#x02208;</mo><msup><mi>&#x0211D;</mi><mrow><mi>V</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></msup></mrow></math>. Row <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math> is the vector for token <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>i</mi></mrow></math>. Input is a token id. <code>nn.Embedding(V, d)</code> is a lookup: row <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>c</mi></mrow></math> of that matrix. A one-hot times the matrix is the same map.</p>
+<p><strong>Word2Vec</strong> trains a small two-layer net on a fake task. <strong>Skip-gram:</strong> from the center word, predict each neighbor in a window. <strong>CBOW:</strong> from the neighbors, predict the center. After training, <strong>keep the center rows</strong>. Those rows are the embeddings. Throw away the softmax classifier (<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>U</mi></mrow></math>).</p>
+<p><img alt="A skip-gram window around sat" src="files/graphics/1.4-embeddings/skipgram-window.png" /></p>
+<p>Let <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>v</mi><mi>c</mi></msub></mrow></math> be the <strong>input</strong> (center) embedding of the center word, and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>u</mi><mi>o</mi></msub></mrow></math> the <strong>output</strong> embedding of a neighbor. You do not build a huge co-occurrence matrix and then factor it (that is LSA / GloVe; we do not assign SVD this week). A full softmax over 100,000 words is slow. Negative sampling (Mikolov 2013b) replaces it. We cite that paper; we do not derive it this week.</p>
+<p>A transformer does not throw the rest of the net away: it <em>keeps</em> transforming those vectors. Word2Vec is the geometry without the rest of the stack.</p>
+<hr />
+<h2>4. How it works, step by step</h2>
+<p>How a distributional embedding is obtained from a corpus:</p>
+<ol>
+<li>Take a corpus of running text.</li>
+<li>At each position, treat one word as the <strong>center</strong> and the nearby words as <strong>context</strong> (a window).</li>
+<li>Train a fake task: from the center, predict a neighbor (skip-gram), or the reverse (CBOW). Words that appear in similar windows get similar vectors.</li>
+<li>After training, <strong>keep the center rows</strong>. Throw away the softmax classifier.</li>
+</ol>
+<p>That is why <em>cat</em> sits near <em>dog</em>: they kept similar neighbors, not because someone labeled them as animals.</p>
+<p><img alt="From a corpus window to a vector" src="files/graphics/1.4-embeddings/how-obtained.png" /></p>
+<p>You measure similarity with <strong>cosine</strong>, not Euclidean distance (length is partly frequency):</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">v</mi></mrow></mrow><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x02016;</mo><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>It ignores length. That is why a frequent word with a long vector can still sit next to a rare synonym.</p>
+<p><img alt="A parallelogram in embedding space" src="files/graphics/1.4-embeddings/semantic-geometry.png" /></p>
+<p>The same offsets that encode “capital of” can encode stereotypes. Occupation words often sit along a she/he direction in older embeddings. That is not a bug in cosine; it is a property of the training text.</p>
+<p><img alt="Occupation words shifted along a gender offset" src="files/graphics/1.4-embeddings/bias-geometry.png" /></p>
+<p>Lab 1’s probe is the signed projection onto <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x0003D;</mo><mover><mrow><mtext>he</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>she</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>score</mo><mo stretchy="false">&#x00028;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><msup><mi>v</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">o</mi></mrow></mrow><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>A larger score sits closer to <em>he</em> in this constructed space. Debiasing is incomplete; reporting the probe is part of the project writeup when your system ranks people, jobs, or medical outcomes.</p>
+<p><strong>Tiny vocabulary</strong> <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo stretchy="false">&#x0007B;</mo><mtext>cat</mtext><mo>&#x0002C;</mo><mtext>mat</mtext><mo>&#x0002C;</mo><mtext>sat</mtext><mo stretchy="false">&#x0007D;</mo></mrow></math>. Take center <em>the</em> with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>v</mi><mi>c</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, and output vectors <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>u</mi><mrow><mtext>cat</mtext></mrow></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>u</mi><mrow><mtext>mat</mtext></mrow></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>0.5</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>u</mi><mrow><mtext>sat</mtext></mrow></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>. The three scores are <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0.5</mn></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>0</mn></mrow></math>. Softmax:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>p</mi><mo>&#x0221D;</mo><mo stretchy="false">&#x00028;</mo><msup><mi>e</mi><mrow><mn>1</mn></mrow></msup><mo>&#x0002C;</mo><msup><mi>e</mi><mrow><mn>0.5</mn></mrow></msup><mo>&#x0002C;</mo><msup><mi>e</mi><mrow><mn>0</mn></mrow></msup><mo stretchy="false">&#x00029;</mo><mo>&#x02248;</mo><mo stretchy="false">&#x00028;</mo><mn>2.718</mn><mo>&#x0002C;</mo><mn>1.649</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002C;</mo><mspace width="2em" /><mi>p</mi><mo>&#x02248;</mo><mo stretchy="false">&#x00028;</mo><mn>0.51</mn><mo>&#x0002C;</mo><mn>0.31</mn><mo>&#x0002C;</mo><mn>0.19</mn><mo stretchy="false">&#x00029;</mo><mo>&#x0002E;</mo></mrow></math>
+<p><img alt="Three-word skip-gram softmax" src="files/graphics/1.4-embeddings/skipgram-softmax.png" /></p>
+<hr />
+<h2>5. Mathematical formulas</h2>
+<p>Skip-gram’s softmax (Mikolov §§1–3) is the same softmax as note 1.2, with logits <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>z</mi><mi>w</mi></msub><mo>&#x0003D;</mo><msubsup><mi>u</mi><mi>w</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><msub><mi>v</mi><mi>c</mi></msub></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><msub><mi>w</mi><mi>o</mi></msub><mo>&#x02223;</mo><msub><mi>w</mi><mi>c</mi></msub><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mi>exp</mi><mo stretchy="false">&#x00028;</mo><msubsup><mi>u</mi><mi>o</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><msub><mi>v</mi><mi>c</mi></msub><mo stretchy="false">&#x00029;</mo></mrow><mrow><msub><mo>&#x02211;</mo><mrow><mi>w</mi></mrow></msub><mi>exp</mi><mo stretchy="false">&#x00028;</mo><msubsup><mi>u</mi><mi>w</mi><mrow><mo>&#x022A4;</mo></mrow></msubsup><msub><mi>v</mi><mi>c</mi></msub><mo stretchy="false">&#x00029;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Cosine similarity:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi>cos</mi><mo stretchy="false">&#x00028;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x0002C;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><msup><mrow><mi mathvariant="bold-italic">u</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">v</mi></mrow></mrow><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">u</mi></mrow><mo>&#x02016;</mo><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">v</mi></mrow><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>Bias probe used in Lab 1, with <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x0003D;</mo><mover><mrow><mtext>he</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>she</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>score</mo><mo stretchy="false">&#x00028;</mo><mi>v</mi><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><msup><mi>v</mi><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">o</mi></mrow></mrow><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x02016;</mo></mrow></mfrac><mo>&#x0002E;</mo></mrow></math>
+<p>The analogy arithmetic is vector addition in the same space: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02248;</mo><mover><mrow><mtext>queen</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>.</p>
+<hr />
+<h2>6. Positive points and negative points</h2>
+<p><strong>Positive.</strong></p>
+<ul>
+<li>Analogies and nearest neighbors are a cheap debug tool: if <em>Paris</em> sits next to <em>France</em>, training learned something.</li>
+<li>Cosine ignores length, so frequency-driven vector magnitude does not dominate a neighbor query.</li>
+<li>Skip-gram uses the same softmax-and-loss loop as an LLM, so this week is not a dead-end method.</li>
+<li>A <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi><mo>&#x000D7;</mo><mi>d</mi></mrow></math> lookup is the token embedding table inside a transformer as well.</li>
+</ul>
+<p><strong>Negative.</strong></p>
+<ul>
+<li>Static vectors: one vector per word type, so <em>bank</em> (river) and <em>bank</em> (money) share a row. Week 3 replaces this with contextual states.</li>
+<li>Bias in the corpus becomes geometry. Occupation probes along <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>he</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>she</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math> are a property of the text, not a cosine bug.</li>
+<li>Euclidean distance makes frequent (long) vectors look far from rare synonyms.</li>
+<li>Analogy accuracy is an intrinsic score; it need not predict your project’s downstream metric.</li>
+<li>A full softmax over a large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi></mrow></math> is slow (negative sampling exists; we do not derive it this week).</li>
+</ul>
+<p><strong>When not to.</strong> If you need a vector that depends on the sentence, a static table is the wrong object. That is why Week 3’s contextual states exist.</p>
+<hr />
+<h2>7. Intrinsic versus extrinsic evaluation</h2>
+<p><strong>Intrinsic:</strong> does the space look right on its own? Analogies, word similarity datasets, clustering of synsets.</p>
+<p><strong>Extrinsic:</strong> plug the vectors into a downstream model (sentiment, retrieval, NER). If the task score moves, the embedding helped that task.</p>
+<p><img alt="Intrinsic versus extrinsic evaluation" src="files/graphics/1.4-embeddings/intrinsic-extrinsic.png" /></p>
+<p>They need not agree. A space that wins analogies can still be a weak feature for your classifier. For a project, extrinsic is the number that matters. Intrinsic is how you debug.</p>
+<hr />
+<h2>8. Teaching this note</h2>
+<p><strong>~18 minutes.</strong> One-hot vs dense, then the four-box pipeline (corpus → window → fake task → keep the rows), then skip-gram’s <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>P</mi><mo stretchy="false">&#x00028;</mo><mi>o</mi><mo>&#x02223;</mo><mi>c</mi><mo stretchy="false">&#x00029;</mo></mrow></math> on the <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>V</mi><mo>&#x0003D;</mo><mn>3</mn></mrow></math> softmax, then cosine, then the occupation projection so Lab 1’s probe is not a surprise. StatQuest Word2Vec is <strong>homework</strong> (<strong>0:00–12:00</strong>, skip-gram vs. CBOW).</p>
+<hr />
+<h2>9. Worked example</h2>
+<p>Three 2-D vectors:</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mover><mrow><mtext>movie</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>1</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="1em" /><mover><mrow><mtext>film</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0.8</mn></mtd></mtr><mtr><mtd><mn>0.2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002C;</mo><mspace width="1em" /><mover><mrow><mtext>pizza</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>1</mn></mtd></mtr></mtable><mo>&#x0005D;</mo><mo>&#x0002E;</mo></mrow></math>
+<p>Cosine(<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>movie</mtext><mo>&#x0002C;</mo><mtext>film</mtext></mrow></math>) <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>0.8</mn><mo>&#x0002F;</mo><msqrt><mrow><mn>0.68</mn></mrow></msqrt><mo>&#x02248;</mo><mn>0.97</mn></mrow></math>. Cosine(<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mtext>movie</mtext><mo>&#x0002C;</mo><mtext>pizza</mtext></mrow></math>) <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x0003D;</mo><mn>0</mn></mrow></math>. One-hot versions of the same three words would all be orthogonal.</p>
+<p>Bias probe aligned with Lab 1: <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x0003D;</mo><mover><mrow><mtext>he</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>she</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>. If <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>he</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>she</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>0</mn><mo>&#x0002C;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math>, then <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mo>&#x02212;</mo><mn>1</mn><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mo>&#x02016;</mo><mrow><mi mathvariant="bold-italic">o</mi></mrow><mo>&#x02016;</mo><mo>&#x0003D;</mo><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></math>. For <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>engineer</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>0.9</mn><mo>&#x0002C;</mo><mn>0.1</mn><mo stretchy="false">&#x00029;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>nurse</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>0.1</mn><mo>&#x0002C;</mo><mn>0.8</mn><mo stretchy="false">&#x00029;</mo></mrow></math>,</p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mo>score</mo><mo stretchy="false">&#x00028;</mo><mtext>engineer</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>0.9</mn><mo>&#x02212;</mo><mn>0.1</mn></mrow><mrow><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></mfrac><mo>&#x02248;</mo><mn>0.57</mn><mo>&#x0002C;</mo><mspace width="2em" /><mo>score</mo><mo stretchy="false">&#x00028;</mo><mtext>nurse</mtext><mo stretchy="false">&#x00029;</mo><mo>&#x0003D;</mo><mfrac><mrow><mn>0.1</mn><mo>&#x02212;</mo><mn>0.8</mn></mrow><mrow><msqrt><mrow><mn>2</mn></mrow></msqrt></mrow></mfrac><mo>&#x02248;</mo><mo>&#x02212;</mo><mn>0.49</mn><mo>&#x0002E;</mo></mrow></math>
+<p>Engineer sits toward <em>he</em>; nurse sits toward <em>she</em>. The CSV in Lab 1 was built to make that split visible. On a real model you report the same probe, not this cartoon.</p>
+<hr />
+<h2>10. Where students get stuck</h2>
+<ul>
+<li>Using Euclidean distance and then “the frequent word is never nearest.”</li>
+<li>Calling the one-hot vector an embedding because it is a vector.</li>
+<li>Treating analogy accuracy as the project metric.</li>
+<li>Thinking an embedding file appeared without a corpus: skip the four-box pipeline.</li>
+</ul>
+<hr />
+<h2>11. Video</h2>
+<p>Watch <a href="https://www.youtube.com/watch?v=viZrOnJclY0">StatQuest: Word Embedding and Word2Vec, Clearly Explained</a>.</p>
+<p>Pause on skip-gram vs. CBOW, and on the moment the hidden weights become the embedding table. You can skip the neural-net-from-scratch recap if note 1.2 already landed.</p>
+<hr />
+<h2>12. Practice</h2>
+<ol>
+<li>
+<p>In one sentence each: distributional, distributed, embedding.</p>
+</li>
+<li>
+<p>Why is cosine the default similarity?</p>
+</li>
+<li>
+<p>Give one intrinsic and one extrinsic test for a word embedding. Which one would you put in a project report?</p>
+</li>
+<li>
+<p>Compute cosine between <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">a</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>3</mn></mtd></mtr><mtr><mtd><mn>4</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math> and <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>4</mn></mtd></mtr><mtr><mtd><mn>3</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Then compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mrow><mi mathvariant="bold-italic">a</mi></mrow><mrow><mo>&#x022A4;</mo></mrow></msup><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math>. Which number changed more when you replace <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math> by <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>10</mn><mrow><mi mathvariant="bold-italic">b</mi></mrow></mrow></math>?</p>
+</li>
+<li>
+<p>In 2-D, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>2</mn></mtd></mtr><mtr><mtd><mn>0</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>, <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0003D;</mo><mo>&#x0005B;</mo><mtable><mtr><mtd><mn>0</mn></mtd></mtr><mtr><mtd><mn>2</mn></mtd></mtr></mtable><mo>&#x0005D;</mo></mrow></math>. Compute <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>king</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x02212;</mo><mover><mrow><mtext>man</mtext></mrow><mo>&#x02192;</mo></mover><mo>&#x0002B;</mo><mover><mrow><mtext>woman</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math>. What point would you hope <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mover><mrow><mtext>queen</mtext></mrow><mo>&#x02192;</mo></mover></mrow></math> near?</p>
+</li>
+<li>
+<p>With <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msub><mi>v</mi><mi>c</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> and scores <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><msup><mi>u</mi><mrow><mo>&#x022A4;</mo></mrow></msup><msub><mi>v</mi><mi>c</mi></msub><mo>&#x0003D;</mo><mo stretchy="false">&#x00028;</mo><mn>1</mn><mo>&#x0002C;</mo><mn>0.5</mn><mo>&#x0002C;</mo><mn>0</mn><mo stretchy="false">&#x00029;</mo></mrow></math> for cat, mat, sat, which word does skip-gram call most likely? Write the three softmax probabilities to two decimals.</p>
+</li>
+<li>
+<p>In four short lines: how is a distributional embedding obtained from a corpus? (Corpus, window, fake task, what you keep.)</p>
+</li>
+</ol>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T15:39:03-04:00">October 13, 2026, 3:39 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>
