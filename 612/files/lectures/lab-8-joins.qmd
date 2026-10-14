@@ -33,7 +33,7 @@ library(nycflights13)
 
 ## 1. The five tables
 
-Load `flights`, `planes`, `airlines`, `airports`, and `weather`. For each table, name a primary key (or say that there is none). Check uniqueness with `count()` and `filter(n > 1)`.
+Load `flights`, `planes`, `airlines`, `airports`, and `weather`. For each table, name a primary key (or say that there is none). A primary key is unique and never missing. It may be several columns. A foreign key points at another table's primary key and may repeat. Check uniqueness with `count()` and `filter(n > 1)`, and check for missing values. If rows come back, say whether those columns are not a key or are a key with an exception.
 
 ---
 

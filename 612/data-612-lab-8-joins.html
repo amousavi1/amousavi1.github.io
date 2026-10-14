@@ -111,7 +111,7 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 8: Relational Data</h1>
                     </header>
-                                                            <section class="page__content" itemprop="text">
+                                                                                <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-8.html">Week 8</a> &middot;
                             <a href="files/lab-8-joins.pdf" target="_blank" rel="noopener">PDF</a>
@@ -126,9 +126,13 @@ library(nycflights13)</code></pre>
 <h2>1. The five tables</h2>
 <p>Load <code>flights</code>, <code>planes</code>,
 <code>airlines</code>, <code>airports</code>, and <code>weather</code>.
-For each table, name a primary key (or say that there is none). Check
+For each table, name a primary key (or say that there is none). A
+primary key is unique and never missing. It may be several columns. A
+foreign key points at another table's primary key and may repeat. Check
 uniqueness with <code>count()</code> and
-<code>filter(n &gt; 1)</code>.</p>
+<code>filter(n &gt; 1)</code>, and check for missing values. If rows
+come back, say whether those columns are not a key or are a key with an
+exception.</p>
 <hr />
 </div>
 <div id="destinations-and-airports" class="section level2">
@@ -202,7 +206,7 @@ age?</p>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-13T22:13:40-04:00">October 13, 2026, 10:13 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-14T01:29:45-04:00">October 14, 2026, 1:29 AM EDT</time></div>
             </footer>
         </div>
 

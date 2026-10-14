@@ -199,7 +199,7 @@ NOTES = [
         "slug": "dplyr-joins",
         "week": 8,
         "title": "8.1 dplyr: Keys and Mutating Joins",
-        "lead": "Primary keys identify rows. inner_join() and left_join() add columns from a second table.",
+        "lead": "A primary key identifies each row. A foreign key points at that key in another table. inner_join() and left_join() add columns.",
     },
     {
         "slug": "dplyr-filtering-joins",
