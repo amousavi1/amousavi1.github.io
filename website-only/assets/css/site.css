@@ -1069,11 +1069,11 @@ html[data-theme="dark"] strong {
 
 body.page-lecture .page__content img {
   display: block;
-  margin: 0.4em auto 0.55em;
+  margin: 0.55em auto 0.7em;
   width: auto;
   height: auto;
-  max-width: min(100%, 22rem);
-  max-height: 11.5rem;
+  max-width: min(100%, 30rem);
+  max-height: 16.5rem;
   object-fit: contain;
 }
 
