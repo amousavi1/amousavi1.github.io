@@ -2,7 +2,8 @@
 
 
 <p>One variable per column, one observation per row. pivot_longer()
-turns wide week columns into rows.</p>
+turns wide columns into rows, and can strip a prefix, set a type, and
+drop missing cells.</p>
 <div id="tidy-data" class="section level2">
 <h2>1. Tidy data</h2>
 <p>A table is <strong>tidy</strong> when:</p>
@@ -86,8 +87,8 @@ variable, so those names are values in disguise. You cannot
 ## 5 China       1999  212258
 ## 6 China       2000  213766</code></pre>
 <p>The result has one row per country-year. <code>year</code> is
-character because it came from names.
-<code>mutate(year = as.integer(year))</code> if you need a number.</p>
+character because it came from names. Section 6 turns that text into an
+integer inside the pivot.</p>
 <p><code>cols</code> uses the same helpers as <code>select()</code>.
 <code>cols = -country</code> is the usual shortcut when every other
 column should lengthen.</p>
@@ -122,32 +123,254 @@ a <strong>position</strong>, not a name. Column 1999 does not exist.</p>
 ## ✖ Problematic argument:
 ## • ..1 = 2000
 ## ℹ Did you misspell an argument name?</code></pre>
-<p>Write <code>1999</code> so R treats it as a name, and wrap the names
-in <code>c()</code>. The same backtick rule applies in
+<p>Write <code>`1999`</code> so R treats it as a name, and wrap the
+names in <code>c()</code>. The same backtick rule applies in
 <code>select()</code> and <code>mutate()</code>.</p>
-<p><code>values_drop_na = TRUE</code> drops rows whose cell was
-<code>NA</code>. Use it when a missing cell means “this combination was
-never measured,” not “the value is unknown.”</p>
-<pre class="r"><code>table4a |&gt;
+<hr />
+</div>
+<div id="a-small-table-with-a-prefix-and-missing-cells"
+class="section level2">
+<h2>5. A small table with a prefix and missing cells</h2>
+<p>The next arguments are easier to see when the names share a prefix
+and some cells are <code>NA</code>.</p>
+<pre class="r"><code>sales &lt;- tribble(
+  ~region, ~FY2021, ~FY2022, ~FY2023,
+  &quot;East&quot;,   100L,    120L,    NA,
+  &quot;West&quot;,    80L,    NA,      95L,
+  &quot;North&quot;,   NA,     NA,      NA
+)
+sales</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   region FY2021 FY2022 FY2023
+##   &lt;chr&gt;   &lt;int&gt;  &lt;int&gt;  &lt;int&gt;
+## 1 East      100    120     NA
+## 2 West       80     NA     95
+## 3 North      NA     NA     NA</code></pre>
+<p><code>FY2021</code> is a year with the letters <code>FY</code> glued
+on. Year is the variable. <code>FY</code> is a label in the name.</p>
+<hr />
+</div>
+<div id="names_prefix-strips-text-from-the-start-of-each-name"
+class="section level2">
+<h2>6. <code>names_prefix</code> strips text from the start of each
+name</h2>
+<pre class="r"><code>sales |&gt;
   pivot_longer(
-    cols = -country,
+    cols = starts_with(&quot;FY&quot;),
     names_to = &quot;year&quot;,
-    values_to = &quot;cases&quot;,
+    values_to = &quot;revenue&quot;,
+    names_prefix = &quot;FY&quot;
+  )</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   region year  revenue
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt;
+## 1 East   2021      100
+## 2 East   2022      120
+## 3 East   2023       NA
+## 4 West   2021       80
+## 5 West   2022       NA
+## 6 West   2023       95
+## 7 North  2021       NA
+## 8 North  2022       NA
+## 9 North  2023       NA</code></pre>
+<p><code>FY2021</code> becomes <code>"2021"</code>. <code>year</code> is
+still <strong>character</strong>. <code>names_prefix</code> is a regular
+expression, and it is matched only at the start of the name.</p>
+<hr />
+</div>
+<div id="names_transform-changes-the-type-of-the-name-column"
+class="section level2">
+<h2>7. <code>names_transform</code> changes the type of the name
+column</h2>
+<p>Pass a named list of functions. The name in the list is the new
+column. The function runs after the prefix is removed.</p>
+<pre class="r"><code>sales |&gt;
+  pivot_longer(
+    cols = starts_with(&quot;FY&quot;),
+    names_to = &quot;year&quot;,
+    values_to = &quot;revenue&quot;,
+    names_prefix = &quot;FY&quot;,
+    names_transform = list(year = as.integer)
+  )</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   region  year revenue
+##   &lt;chr&gt;  &lt;int&gt;   &lt;int&gt;
+## 1 East    2021     100
+## 2 East    2022     120
+## 3 East    2023      NA
+## 4 West    2021      80
+## 5 West    2022      NA
+## 6 West    2023      95
+## 7 North   2021      NA
+## 8 North   2022      NA
+## 9 North   2023      NA</code></pre>
+<p><code>year</code> is now an integer. <code>values_transform</code>
+does that job for the cells.
+<code>values_transform = list(revenue = as.numeric)</code> stores
+revenue as double.</p>
+<hr />
+</div>
+<div id="names_ptypes-and-values_ptypes-check-the-result"
+class="section level2">
+<h2>8. <code>names_ptypes</code> and <code>values_ptypes</code> check
+the result</h2>
+<p>A <strong>prototype</strong> (the “ptype”) is an empty vector that
+already has the type, class, and attributes you expect.
+<code>pivot_longer()</code> casts the new column to that template. If
+the cast fails, you get an error.</p>
+<p>This call passes. <code>year</code> is character, and
+<code>revenue</code> is integer.</p>
+<pre class="r"><code>sales |&gt;
+  pivot_longer(
+    cols = starts_with(&quot;FY&quot;),
+    names_to = &quot;year&quot;,
+    values_to = &quot;revenue&quot;,
+    names_prefix = &quot;FY&quot;,
+    names_ptypes = list(year = character()),
+    values_ptypes = list(revenue = integer())
+  )</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   region year  revenue
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt;
+## 1 East   2021      100
+## 2 East   2022      120
+## 3 East   2023       NA
+## 4 West   2021       80
+## 5 West   2022       NA
+## 6 West   2023       95
+## 7 North  2021       NA
+## 8 North  2022       NA
+## 9 North  2023       NA</code></pre>
+<p>This call fails. The year labels are still text, and a prototype of
+<code>integer()</code> cannot accept them.</p>
+<pre class="r"><code>sales |&gt;
+  pivot_longer(
+    cols = starts_with(&quot;FY&quot;),
+    names_to = &quot;year&quot;,
+    values_to = &quot;revenue&quot;,
+    names_prefix = &quot;FY&quot;,
+    names_ptypes = list(year = integer())
+  )</code></pre>
+<pre><code>## Error in `pivot_longer()`:
+## ! Can&#39;t convert `year` &lt;character&gt; to &lt;integer&gt;.</code></pre>
+<p><code>names_transform</code> performs the conversion.
+<code>names_ptypes</code> requires the result to match a template.</p>
+<hr />
+</div>
+<div id="an-attribute-is-metadata-on-the-vector" class="section level2">
+<h2>9. An attribute is metadata on the vector</h2>
+<p>In R, an <strong>attribute</strong> is extra information attached to
+a vector, beyond the values themselves. The class is one attribute.
+Others you will meet:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Object</th>
+<th>Attribute</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>factor</td>
+<td><code>levels</code></td>
+<td><code>c("low", "medium", "high")</code></td>
+</tr>
+<tr class="even">
+<td>Date</td>
+<td><code>class</code></td>
+<td><code>"Date"</code></td>
+</tr>
+<tr class="odd">
+<td>date-time</td>
+<td><code>tzone</code></td>
+<td><code>"America/New_York"</code></td>
+</tr>
+<tr class="even">
+<td>time difference</td>
+<td><code>units</code></td>
+<td><code>"days"</code></td>
+</tr>
+<tr class="odd">
+<td>matrix</td>
+<td><code>dim</code></td>
+<td><code>c(2, 3)</code></td>
+</tr>
+<tr class="even">
+<td>any vector</td>
+<td><code>names</code></td>
+<td><code>c("a", "b")</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>attributes()</code> prints them.</p>
+<pre class="r"><code>f &lt;- factor(c(&quot;low&quot;, &quot;high&quot;), levels = c(&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;))
+attributes(f)</code></pre>
+<pre><code>## $levels
+## [1] &quot;low&quot;    &quot;medium&quot; &quot;high&quot;  
+## 
+## $class
+## [1] &quot;factor&quot;</code></pre>
+<p>A prototype has to match the type and those attributes. This one asks
+for a factor whose levels are <code>2021</code>, <code>2022</code>, and
+<code>2023</code>, in that order:</p>
+<pre class="r"><code>sales_years &lt;- sales |&gt;
+  pivot_longer(
+    cols = starts_with(&quot;FY&quot;),
+    names_to = &quot;year&quot;,
+    values_to = &quot;revenue&quot;,
+    names_prefix = &quot;FY&quot;,
+    names_ptypes = list(year = factor(levels = c(&quot;2021&quot;, &quot;2022&quot;, &quot;2023&quot;)))
+  )
+sales_years</code></pre>
+<pre><code>## # A tibble: 9 × 3
+##   region year  revenue
+##   &lt;chr&gt;  &lt;fct&gt;   &lt;int&gt;
+## 1 East   2021      100
+## 2 East   2022      120
+## 3 East   2023       NA
+## 4 West   2021       80
+## 5 West   2022       NA
+## 6 West   2023       95
+## 7 North  2021       NA
+## 8 North  2022       NA
+## 9 North  2023       NA</code></pre>
+<pre class="r"><code>levels(sales_years$year)</code></pre>
+<pre><code>## [1] &quot;2021&quot; &quot;2022&quot; &quot;2023&quot;</code></pre>
+<p>The cells print as <code>2021</code>, and the column type is
+<code>&lt;fct&gt;</code>. <code>levels()</code> is the attribute the
+prototype required. That check is stricter than “the column should be a
+factor.”</p>
+<hr />
+</div>
+<div id="values_drop_na-drops-rows-whose-cell-is-na"
+class="section level2">
+<h2>10. <code>values_drop_na</code> drops rows whose cell is
+<code>NA</code></h2>
+<pre class="r"><code>sales |&gt;
+  pivot_longer(
+    cols = starts_with(&quot;FY&quot;),
+    names_to = &quot;year&quot;,
+    values_to = &quot;revenue&quot;,
+    names_prefix = &quot;FY&quot;,
     values_drop_na = TRUE
   )</code></pre>
-<pre><code>## # A tibble: 6 × 3
-##   country     year   cases
-##   &lt;chr&gt;       &lt;chr&gt;  &lt;dbl&gt;
-## 1 Afghanistan 1999     745
-## 2 Afghanistan 2000    2666
-## 3 Brazil      1999   37737
-## 4 Brazil      2000   80488
-## 5 China       1999  212258
-## 6 China       2000  213766</code></pre>
+<pre><code>## # A tibble: 4 × 3
+##   region year  revenue
+##   &lt;chr&gt;  &lt;chr&gt;   &lt;int&gt;
+## 1 East   2021      100
+## 2 East   2022      120
+## 3 West   2021       80
+## 4 West   2023       95</code></pre>
+<p>Four rows remain. North disappears, because every revenue cell for
+North was <code>NA</code>. East in 2023 and West in 2022 drop out for
+the same reason. Use this when a missing cell means that combination was
+never measured. Leave the <code>NA</code> in when the value is unknown
+but the row should stay.</p>
 <hr />
 </div>
 <div id="practice" class="section level2">
-<h2>5. Practice</h2>
+<h2>11. Practice</h2>
 <p>Put course CSV files in a <code>data/</code> folder of your project
 (see the Data section of the course page).</p>
 <ol style="list-style-type: decimal">
@@ -157,5 +380,12 @@ them longer so each row is one monkey-week.</li>
 <li>On <code>table4a</code>, explain why
 <code>pivot_longer(cols = 1999, 2000, names_to = "year", values_to = "cases")</code>
 fails. Write the version that works.</li>
+<li>Pivot <code>monkeymem.csv</code> again with
+<code>names_prefix = "Week"</code> and <code>names_transform</code> so
+the week column is an integer.</li>
+<li>Rebuild <code>sales</code> from section 5. Pivot it with
+<code>values_drop_na = TRUE</code>. Which region disappears, and why?
+Then say why <code>names_ptypes = list(year = integer())</code> fails if
+you leave out <code>names_transform</code>.</li>
 </ol>
 </div>

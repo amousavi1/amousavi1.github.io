@@ -13,6 +13,8 @@ library(nycflights13)
 
 2. On `table4a`, show a `pivot_longer()` call that fails because the year names are written as numbers, then the call that works. In a sentence, why the first one fails.
 
+3. Pivot `monkeymem.csv` again with `names_prefix = "Week"` and `names_transform` so the week column is an integer. In a sentence, what type was that column before the transform?
+
 ---
 
 ## 2. Wider, separate, unite

@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-13T21:30:00-04:00"
-LAST_UPDATED_TEXT = "October 13, 2026, 9:30 PM EDT"
+LAST_UPDATED_ISO = "2026-10-14T04:16:00-04:00"
+LAST_UPDATED_TEXT = "October 14, 2026, 4:16 AM EDT"
 
 NOTES = [
     {
@@ -181,7 +181,7 @@ NOTES = [
         "slug": "tidyr-tidy-longer",
         "week": 7,
         "title": "7.1 tidyr: Tidy Data and pivot_longer()",
-        "lead": "One variable per column, one observation per row. pivot_longer() turns wide week columns into rows.",
+        "lead": "One variable per column, one observation per row. pivot_longer() turns wide columns into rows, and can strip a prefix, set a type, and drop missing cells.",
     },
     {
         "slug": "tidyr-wider-separate",

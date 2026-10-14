@@ -111,7 +111,7 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 7: Tidying Data</h1>
                     </header>
-                                                                                <section class="page__content" itemprop="text">
+                                                                                                    <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-7.html">Week 7</a> &middot;
                             <a href="files/lab-7-tidyr.pdf" target="_blank" rel="noopener">PDF</a>
@@ -133,6 +133,10 @@ names go in one column; accuracy goes in another.</li>
 <li>On <code>table4a</code>, show a <code>pivot_longer()</code> call
 that fails because the year names are written as numbers, then the call
 that works. In a sentence, why the first one fails.</li>
+<li>Pivot <code>monkeymem.csv</code> again with
+<code>names_prefix = "Week"</code> and <code>names_transform</code> so
+the week column is an integer. In a sentence, what type was that column
+before the transform?</li>
 </ol>
 <hr />
 </div>
@@ -168,7 +172,7 @@ digits.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-14T04:08:24-04:00">October 14, 2026, 4:08 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-14T04:16:00-04:00">October 14, 2026, 4:16 AM EDT</time></div>
             </footer>
         </div>
 
