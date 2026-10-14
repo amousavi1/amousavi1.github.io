@@ -1,5 +1,7 @@
 These notes match the lecture slides. Use **(slides)** on the course hub for the deck.
 
+A yellow bar on the left is Python code. A gray bar is the output.
+
 DATA 443/643, *Advanced Concepts in Large Language Models*, is a **self-contained** course on how language systems are built, trained, adapted, and checked. The listed prerequisite is DATA 427/627. DATA 441/641 and DATA 442/642 are **not** required: when this course uses a neural net or an embedding, it teaches it here. The semester job is a **measured project**. This note is the map for that job: four modules, one stack, the loss that trained the weights, and a project sentence that names one layer you will change.
 
 ---

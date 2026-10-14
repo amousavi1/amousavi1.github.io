@@ -1,5 +1,7 @@
 These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
 
+A yellow bar on the left is Python code. A gray bar is the output.
+
 The figures follow Géron, *Hands-On Machine Learning*, Ch. 1. *Mathematics for Machine Learning* is the math source for the rest of Module 1.
 
 ## 1. Types of machine learning systems

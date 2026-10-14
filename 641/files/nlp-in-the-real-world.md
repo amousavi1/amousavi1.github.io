@@ -1,5 +1,7 @@
 These notes walk through the lecture slides. The original deck is unchanged; use **(slides)** on the course hub if you want that PDF.
 
+A yellow bar on the left is Python code. A gray bar is the output.
+
 ## 1. What NLP is
 
 Natural language processing (NLP) is how we get a computer to work with **human language**: read it, write it, search it, translate it, or answer a question about it.

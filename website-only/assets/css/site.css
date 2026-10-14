@@ -1506,33 +1506,6 @@ body.page-lecture .page__content pre.code-output {
   color: #3d4450;
 }
 
-body.page-lecture .page__content pre.code-r::before,
-body.page-lecture .page__content pre.code-python::before,
-body.page-lecture .page__content pre.code-output::before {
-  display: block;
-  margin-bottom: 0.5em;
-  font-family: var(--font-body);
-  font-size: 0.72em;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-body.page-lecture .page__content pre.code-r::before {
-  content: "R";
-  color: #3b82c4;
-}
-
-body.page-lecture .page__content pre.code-python::before {
-  content: "Python";
-  color: #b08500;
-}
-
-body.page-lecture .page__content pre.code-output::before {
-  content: "Output";
-  color: #7b8591;
-}
-
 body.page-lecture .page__content pre.code-r + pre.code-output,
 body.page-lecture .page__content pre.code-python + pre.code-output {
   margin-top: -0.55em;
@@ -1611,10 +1584,6 @@ html[data-theme="dark"] body.page-lecture .page__content pre.code-output {
   border-left-color: #8b949e;
   color: #d6d6d0;
 }
-
-html[data-theme="dark"] body.page-lecture .page__content pre.code-r::before { color: #58a6ff; }
-html[data-theme="dark"] body.page-lecture .page__content pre.code-python::before { color: #e3b341; }
-html[data-theme="dark"] body.page-lecture .page__content pre.code-output::before { color: #a0a8b2; }
 
 html[data-theme="dark"] body.page-lecture .page__content .tok-comment { color: #9aa4ae; }
 html[data-theme="dark"] body.page-lecture .page__content .tok-string { color: #7ee2a8; }

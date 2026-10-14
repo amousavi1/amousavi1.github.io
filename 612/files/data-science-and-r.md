@@ -1,3 +1,5 @@
+A blue bar on the left is R code. A gray bar is the output.
+
 ## 1. What this course is for
 
 DATA 612 is statistical programming in R, inside a data-science workflow. You will import data, tidy it, plot it, summarize it, and write the work so someone else (or you, next month) can rerun it.
