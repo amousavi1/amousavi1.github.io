@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-10-14T03:47:05-04:00';
+  const SITE_LAST_UPDATED = '2026-10-14T04:08:24-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -612,16 +612,37 @@
     return html + escapeHtml(plain);
   }
 
+  function lectureLang(code) {
+    const fromLanguage = (code.className.match(/language-(\w+)/) || [])[1];
+    if (fromLanguage) return fromLanguage;
+    const names = `${code.className} ${code.parentElement ? code.parentElement.className : ''}`;
+    if (/(?:^|\s)r(?:\s|$)/.test(names)) return 'r';
+    if (/(?:^|\s)(?:python|py)(?:\s|$)/.test(names)) return 'python';
+    return null;
+  }
+
+  function unmarkedKind(text) {
+    const trimmed = text.trim();
+    if (/^(?:import |from |def |class |for |while |if |with |@)/.test(trimmed)) return 'python';
+    if (/^[A-Za-z_][\w]*\s*=/.test(trimmed)) return 'python';
+    return 'output';
+  }
+
   function initLectureCode() {
     if (!document.body.classList.contains('page-lecture')) return;
     document.querySelectorAll('.page__content pre > code').forEach((code) => {
       const pre = code.parentElement;
-      const lang = (code.className.match(/language-(\w+)/) || [])[1];
       const text = code.textContent;
+      let lang = lectureLang(code);
+      if (!lang) {
+        const nestedOutput = Boolean(pre.closest('.cell-output'));
+        const kind = nestedOutput || /^##/.test(text) ? 'output' : unmarkedKind(text);
+        lang = kind === 'output' ? null : kind;
+      }
       if (lang && CODE_RULES[lang]) {
         pre.classList.add(`code-${lang}`);
         code.innerHTML = highlightCode(text, CODE_RULES[lang]);
-      } else if (!lang && /^##/.test(text)) {
+      } else {
         pre.classList.add('code-output');
         code.innerHTML = escapeHtml(text).replace(/^## ?/gm, '<span class="tok-prompt">$&</span>');
       }
