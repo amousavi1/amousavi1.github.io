@@ -1072,7 +1072,7 @@ body.page-lecture .page__content img {
   margin: 0.55em auto 0.7em;
   width: auto;
   height: auto;
-  max-width: min(100%, 30rem);
+  max-width: min(100%, 36rem);
   max-height: 16.5rem;
   object-fit: contain;
 }
