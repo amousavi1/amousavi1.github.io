@@ -127,6 +127,28 @@ body {
   white-space: nowrap;
 }
 
+/* Course notes keep the name and the theme button. The site menu stays on the personal pages. */
+body.page-courses:not(.site-nav-full) #site-nav.masthead-nav-bar .visible-links {
+  display: none !important;
+}
+
+body.page-courses:not(.site-nav-full) #site-nav.masthead-nav-bar {
+  justify-content: space-between;
+}
+
+body.page-courses:not(.site-nav-full) #site-nav.masthead-nav-bar #theme-toggle {
+  margin-left: auto;
+}
+
+body.page-courses:not(.site-nav-full) .masthead__inner-wrap {
+  padding: 0.2em 1em;
+}
+
+body.page-courses:not(.site-nav-full) #site-nav.greedy-nav.masthead-nav-bar {
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
 /*
   Wide layout: three columns —
   left sidebar (profile), middle content (full-width justified lines),
