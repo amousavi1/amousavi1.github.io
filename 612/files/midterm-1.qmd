@@ -24,7 +24,6 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 - `library(tidyverse)` covers questions 1 to 3. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R. For question 4, also load `nycflights13`. `flights` is in that package.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
-- Extra credit replaces points missed on questions 1 to 4. The exam score cannot go above 100.
 
 ```{r}
 #| label: setup
