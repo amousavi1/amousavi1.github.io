@@ -12,7 +12,7 @@ execute:
   warning: true
 ---
 
-October 14, 2026. You have 75 minutes. Questions 1 to 4 are 80 points. Question 5 is a bonus of 10 points.
+October 14, 2026. You have 75 minutes. Questions 1 to 4 are 100 points, 25 each. Question 5 is 10 points of extra credit.
 
 Put your name in the subtitle at the top of this file. Write each answer in the chunk under that part. Render to PDF. Submit this `.qmd` and the PDF before the 75 minutes are up.
 
@@ -20,11 +20,11 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 - The only website you may use is <https://amousavi1.github.io/612/data-612.html>.
 - You may not use Google, any other website, or an LLM.
 - You may not communicate with anyone else.
-- Use the tidyverse where a tidyverse verb exists. Question 1 is a function; base R is appropriate there.
-- `library(tidyverse)` covers questions 1 to 4. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R. For the bonus, also load `nycflights13`. `flights` is in that package.
+- Use the tidyverse where a tidyverse verb exists. Question 5 is a function; base R is appropriate there.
+- `library(tidyverse)` covers questions 1 to 3. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R. For question 4, also load `nycflights13`. `flights` is in that package.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
-- Bonus points replace points missed on questions 1 to 4. The exam score cannot go above 80.
+- Extra credit replaces points missed on questions 1 to 4. The exam score cannot go above 100.
 
 ```{r}
 #| label: setup
@@ -33,67 +33,43 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 library(tidyverse)
 ```
 
-# 1. A function (20 points)
-
-Write a function of two arguments, `x` and `y`.
-
-- If `x` or `y` is not numeric, or the two lengths differ, stop with the message `x and y must be numeric and the same length`.
-- Drop every position where `x` or `y` is not finite. `NA`, `NaN`, `Inf`, and `-Inf` are not finite.
-- If fewer than 2 positions remain, return `NA_real_`.
-- If the mean of the remaining `y` is 0, return `Inf`.
-- Otherwise return the mean of the remaining `x` divided by the mean of the remaining `y`. 
-
-Write the function in this chunk, then run it on these four pairs. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
-
-- `c(1, NA, 4, Inf)` and `c(2, 3, 6, 1)`
-- `c(1, 2)` and `c(0, 0)`
-- `c(1, NA_real_)` and `c(NA_real_, 4)`
-- `c(1, 2)` and `"a"`
-
-```{r}
-#| label: q1
-#| error: true
-
-
-```
-
-# 2. Rows, columns, and groups (20 points)
+# 1. Rows, columns, and groups (25 points)
 
 Use `mpg`. Answer each part with one pipeline.
 
-## (a) A filtered list (8 points)
+## (a) A filtered list (10 points)
 
 Keep cars from `year` 2008 in class `compact` or `midsize` with `hwy` at least 30. How many cars is that? Show the five with the highest `hwy`. Break remaining ties by `cty`, highest first. Keep only `manufacturer`, `model`, `year`, `cyl`, `cty`, and `hwy`.
 
 ```{r}
-#| label: q2a
+#| label: q1a
 
 
 ```
 
-## (b) A grouped summary (7 points)
+## (b) A grouped summary (8 points)
 
 For each `class`, report the number of cars, the mean of `hwy`, and the median of `cty`. Arrange by mean highway mileage, highest first.
 
 ```{r}
-#| label: q2b
+#| label: q1b
 
 
 ```
 
-## (c) A new column, then the names (5 points)
+## (c) A new column, then the names (7 points)
 
 Add a column `economy` equal to `(cty + hwy) / 2`. Place it immediately after `model`. Drop `trans` and `fl`. Show the column names of the result, in order.
 
 ```{r}
-#| label: q2c
+#| label: q1c
 
 
 ```
 
-# 3. Sizes, species, and car names (20 points)
+# 2. Sizes, species, and car names (25 points)
 
-## (a) A size column (8 points)
+## (a) A size column (10 points)
 
 Add a `size` column to `starwars`. Assign each character one of these labels, in this order:
 
@@ -105,24 +81,24 @@ Add a `size` column to `starwars`. Assign each character one of these labels, in
 Report how many characters fall in each size, largest count first.
 
 ```{r}
-#| label: q3a
+#| label: q2a
 
 
 ```
 
 In one sentence, say what would change about the droid count if `"large"` were not checked before `"droid"`. Name the character.
 
-## (b) One summary per species (7 points)
+## (b) One summary per species (8 points)
 
 Drop characters whose `species` is missing. Keep species that appear more than once. For each of those species, report the median `height` and the median `mass` (ignore missing values inside the medians), and how many rows that species has. Count every row in the species, including rows whose height or mass is missing. Arrange by that count, largest first.
 
 ```{r}
-#| label: q3b
+#| label: q2b
 
 
 ```
 
-## (c) Color pairs and car names (5 points)
+## (c) Color pairs and car names (7 points)
 
 Two short pipelines.
 
@@ -130,12 +106,12 @@ Two short pipelines.
 - `mtcars` stores the car name as a row name. Make that a column called `car`. Keep cars with `mpg` of at least 30. Return `car`, `mpg`, and `cyl`, arranged by `mpg`, highest first.
 
 ```{r}
-#| label: q3c
+#| label: q2c
 
 
 ```
 
-# 4. One picture (20 points)
+# 3. One picture (25 points)
 
 From `mpg`, plot highway mileage against engine displacement.
 
@@ -145,7 +121,7 @@ From `mpg`, plot highway mileage against engine displacement.
 - Use `theme_bw()`. Label the axes `Displacement (litres)` and `Highway mpg`.
 
 ```{r}
-#| label: q4
+#| label: q3
 #| fig-width: 7
 #| fig-height: 4
 
@@ -154,7 +130,7 @@ From `mpg`, plot highway mileage against engine displacement.
 
 In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
 
-# 5. Airline delays by month (10 bonus points)
+# 4. Airline delays by month (25 points)
 
 Use `flights`.
 
@@ -165,9 +141,33 @@ For those five airlines only, do that average again for each month. Plot the mon
 Leave out a month whose average is not positive. The log of a negative number is not defined.
 
 ```{r}
-#| label: q5
+#| label: q4
 #| fig-width: 7
 #| fig-height: 4.5
+
+
+```
+
+# 5. A function (10 extra credit)
+
+Write a function of two arguments, `x` and `y`.
+
+- If `x` or `y` is not numeric, or the two lengths differ, stop with the message `x and y must be numeric and the same length`.
+- Drop every position where `x` or `y` is not finite. `NA`, `NaN`, `Inf`, and `-Inf` are not finite.
+- If fewer than 2 positions remain, return `NA_real_`.
+- If the mean of the remaining `y` is 0, return `Inf`.
+- Otherwise return the mean of the remaining `x` divided by the mean of the remaining `y`.
+
+Write the function in this chunk, then run it on these four pairs. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
+
+- `c(1, NA, 4, Inf)` and `c(2, 3, 6, 1)`
+- `c(1, 2)` and `c(0, 0)`
+- `c(1, NA_real_)` and `c(NA_real_, 4)`
+- `c(1, 2)` and `"a"`
+
+```{r}
+#| label: q5
+#| error: true
 
 
 ```
