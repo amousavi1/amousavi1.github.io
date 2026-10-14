@@ -132,13 +132,67 @@ ggplot(diamonds, aes(x = cut, y = price)) +
 
 ## 4. Mosaic plots: `geom_mosaic()`
 
+`geom_mosaic()` lives in `ggmosaic`, which is not part of the tidyverse. Install it once in the console with `install.packages("ggmosaic")`. Do not put that call in a document.
+
+Start with a small table whose areas you can check by hand. Two hundred people. Each row is one combination, and `n` is how many people sit in it. `weight = n` tells the mosaic to use those counts. Without it, every row would count as one person.
+
+```{r}
+#| label: chunk-6-area
+#| fig-height: 4
+#| fig-width: 6.5
+library(ggmosaic)
+
+df_counts <- tribble(
+  ~Exercise, ~Smoker,      ~n,
+  "Low",     "Smoker",     40,
+  "Low",     "Non-smoker", 30,
+  "Medium",  "Smoker",     20,
+  "Medium",  "Non-smoker", 50,
+  "High",    "Smoker",     10,
+  "High",    "Non-smoker", 50
+) |>
+  mutate(Exercise = factor(Exercise, levels = c("Low", "Medium", "High")))
+
+ggplot(df_counts) +
+  geom_mosaic(aes(weight = n, x = product(Smoker, Exercise), fill = Smoker)) +
+  scale_x_productlist(name = "Exercise level") +
+  scale_y_productlist(name = "Smoking status") +
+  labs(title = "Area of each tile = number of people in both categories") +
+  theme_bw()
+```
+
+A `product()` axis ignores `labs(x = ...)` and `labs(y = ...)`. `scale_x_productlist()` and `scale_y_productlist()` set those titles.
+
+`Exercise` is the last argument of `product()`, so the columns are Low, Medium, and High. `Smoker` is both the first argument and the `fill`, so it is one split: the heights inside each column. The area of a tile is width times height.
+
+- width = (people in that exercise group) / 200
+- height = (people in that cell) / (people in that exercise group)
+- area = width times height = (people in that cell) / 200
+
+**Low exercise (70 people).** Width = 70/200 = 0.35. Smoker: height = 40/70 = 0.571, so area = 0.35 × 0.571 = 0.20, which is 40/200. Non-smoker: height = 30/70 = 0.429, so area = 0.35 × 0.429 = 0.15, which is 30/200.
+
+**Medium exercise (70 people).** Width = 70/200 = 0.35. Smoker: height = 20/70 = 0.286, so area = 0.35 × 0.286 = 0.10, which is 20/200. Non-smoker: height = 50/70 = 0.714, so area = 0.35 × 0.714 = 0.25, which is 50/200.
+
+**High exercise (60 people).** Width = 60/200 = 0.30. Smoker: height = 10/60 = 0.167, so area = 0.30 × 0.167 = 0.05, which is 10/200. Non-smoker: height = 50/60 = 0.833, so area = 0.30 × 0.833 = 0.25, which is 50/200.
+
+| Exercise | Smoking status | Width | Height | Area | Count |
+|----------|----------------|-------|--------|------|-------|
+| Low | Smoker | 0.35 | 0.571 | 0.20 | 40 |
+| Low | Non-smoker | 0.35 | 0.429 | 0.15 | 30 |
+| Medium | Smoker | 0.35 | 0.286 | 0.10 | 20 |
+| Medium | Non-smoker | 0.35 | 0.714 | 0.25 | 50 |
+| High | Smoker | 0.30 | 0.167 | 0.05 | 10 |
+| High | Non-smoker | 0.30 | 0.833 | 0.25 | 50 |
+
+Check: 0.20 + 0.15 + 0.10 + 0.25 + 0.05 + 0.25 = 1. The six tiles fill the whole rectangle, and each area equals that cell's count divided by 200.
+
+The default `offset` is 0.01, a small gap between tiles. The drawn areas are slightly smaller than these exact values. The proportions are the same.
+
 A bar chart of one categorical variable shows how many observations sit in each level. It throws away every other variable. A mosaic keeps two or more categorical variables in one rectangle. The **area** of each tile is the count of that combination. You read three facts at once:
 
 - the **width** of a column is the share of observations in that level of the x variable
 - the **height** of a tile inside the column is the share of the fill variable inside that level
 - the **area** is the joint share, width times height
-
-`geom_mosaic()` lives in `ggmosaic`, which is not part of the tidyverse. Install it once in the console with `install.packages("ggmosaic")`. Do not put that call in a document.
 
 ```{r}
 #| label: chunk-6
@@ -192,18 +246,24 @@ With two variables in `product()`, there is a third split, and the direction goe
 
 ```{r}
 #| label: chunk-6d
-#| fig-height: 3.8
+#| fig-height: 5
 #| fig-width: 7
 ggplot(ucb) +
   geom_mosaic(aes(weight = n, x = product(Gender, Dept), fill = Admit)) +
-  theme_bw()
+  scale_x_productlist(name = "Admit and Dept") +
+  scale_y_productlist(name = "Gender") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggplot(ucb) +
   geom_mosaic(aes(weight = n, x = product(Dept, Gender), fill = Admit)) +
-  theme_bw()
+  scale_x_productlist(name = "Admit and Gender") +
+  scale_y_productlist(name = "Dept") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
-In the first plot `Dept` is last, so the x-axis groups are departments. `Admit` is drawn **beside** each department, not as a height: the labels are `Admitted:A`, `Rejected:A`, and so on. `Gender` is the earlier argument, so it is the y-axis. The female band is short because fewer women applied.
+In the first plot `Dept` is last, so the x-axis groups are departments. `Admit` is drawn **beside** each department, not as a height: the labels are `Admitted:A`, `Rejected:A`, and so on. `Gender` is the earlier argument, so it is the y-axis. The female band is short because fewer women applied. When the x labels are pairs, rotate them 90 degrees so they do not overlap.
 
 In the second plot the arguments are swapped. `Gender` is last, so the x-axis is `Admitted:Female`, `Rejected:Female`, `Admitted:Male`, `Rejected:Male`. `Dept` is now the y-axis. A tall band is a department with many applicants. Same `fill`. Different question.
 
