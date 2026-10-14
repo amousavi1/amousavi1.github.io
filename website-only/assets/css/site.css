@@ -1412,6 +1412,28 @@ body.page-lecture #main > .page .page__content li {
   hyphens: manual;
 }
 
+/* Tighter reading on 1.0 Data Science and R only (body.page-compact). */
+body.page-lecture.page-compact #main > .page .page__content p,
+body.page-lecture.page-compact #main > .page .page__content li {
+  line-height: 1.45;
+}
+
+body.page-lecture.page-compact .page__content p {
+  margin-bottom: 0.75em;
+}
+
+body.page-lecture.page-compact .page__content li {
+  margin-bottom: 0.28em;
+}
+
+body.page-lecture.page-compact .page__content h2 {
+  margin-top: 1.35em;
+}
+
+body.page-lecture.page-compact .page__content h3 {
+  margin-top: 1.05em;
+}
+
 body.page-lecture .page__content h2 {
   margin-top: 2.1em;
   padding-bottom: 0.3em;
