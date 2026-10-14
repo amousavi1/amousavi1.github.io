@@ -12,7 +12,7 @@ execute:
   warning: true
 ---
 
-October 14, 2026. You have 75 minutes. 100 points.
+October 14, 2026. You have 75 minutes. Questions 1 to 4 are 80 points. Question 5 is a bonus of 10 points.
 
 Put your name in the subtitle at the top of this file. Write each answer in the chunk under that part. Render to PDF. Submit this `.qmd` and the PDF before the 75 minutes are up.
 
@@ -21,9 +21,10 @@ Put your name in the subtitle at the top of this file. Write each answer in the 
 - You may not use Google, any other website, or an LLM.
 - You may not communicate with anyone else.
 - Use the tidyverse where a tidyverse verb exists. Question 1 is a function; base R is appropriate there.
-- `library(tidyverse)` covers questions 1 to 4. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R. For question 5, also load `nycflights13`. `flights` is in that package.
+- `library(tidyverse)` covers questions 1 to 4. `mpg` is in ggplot2. `starwars` is in dplyr. `mtcars` is in base R. For the bonus, also load `nycflights13`. `flights` is in that package.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next part.
+- Bonus points replace points missed on questions 1 to 4. The exam score cannot go above 80.
 
 ```{r}
 #| label: setup
@@ -153,7 +154,7 @@ From `mpg`, plot highway mileage against engine displacement.
 
 In two sentences, say what happens to highway mileage as displacement increases, and whether that pattern shows up in every `drv` panel. Name one difference you can see between panels.
 
-# 5. Airline delays by month (20 points)
+# 5. Airline delays by month (10 bonus points)
 
 Use `flights`.
 
