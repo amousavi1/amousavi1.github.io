@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-09-16T05:30:00-04:00"
-LAST_UPDATED_TEXT = "September 16, 2026, 5:30 AM EDT"
+LAST_UPDATED_ISO = "2026-10-13T21:30:00-04:00"
+LAST_UPDATED_TEXT = "October 13, 2026, 9:30 PM EDT"
 
 NOTES = [
     {
