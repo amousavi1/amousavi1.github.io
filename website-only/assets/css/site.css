@@ -1412,7 +1412,7 @@ body.page-lecture #main > .page .page__content li {
   hyphens: manual;
 }
 
-/* Tighter reading on 1.0 Data Science and R only (body.page-compact). */
+/* Tighter reading on selected notes (body.page-compact). */
 body.page-lecture.page-compact #main > .page .page__content p,
 body.page-lecture.page-compact #main > .page .page__content li {
   line-height: 1.45;
