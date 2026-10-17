@@ -34,12 +34,14 @@ DATA 412/612
 
 \vspace{0.25em}
 
-Cumulative through December 2 (weeks 1--13). The new material is
-R Markdown presentations, chunk options, tables, and citations.
+Weeks 1--13. The new material is R Markdown presentations,
+chunk options, tables, and citations.
 
 Write your answers in an R script or a short \texttt{.Rmd}.
 You may use R and RStudio.
-You may \textbf{not} use the internet or your notes.
+You may use your notes and the course website
+(\texttt{https://amousavi1.github.io/612/data-612.html}).
+You may not use Google, any other website, or an LLM.
 You do not have to knit. Write the YAML, the chunk headers, and the
 code you would put in the file.
 
@@ -60,9 +62,12 @@ Say which heading level starts a slide in ioslides.
   \item a plot chunk whose code is hidden, whose messages are hidden,
         and whose figure still appears.
 \end{itemize}
-Write the chunk options for each. Set the shared defaults in the
-setup chunk with \texttt{knitr::opts\_chunk\$set()}, and override
-them only where a chunk differs.
+Write the chunk options for each.
+Set the shared defaults in the setup chunk with
+
+\texttt{knitr::opts\_chunk\$set()}.
+
+Override them only where a chunk differs.
 
 \item Point the document at a bibliography file \texttt{refs.bib}.
 In the body, cite the key \texttt{wickham2017r4ds} in parentheses,
