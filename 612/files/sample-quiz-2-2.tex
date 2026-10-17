@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Quiz 2 --- Sample 2}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.4em}
+
+Write your answers in an R script. Use the tidyverse.
+Load \texttt{nycflights13} and the \texttt{flights} data.
+This is a second practice quiz. It is not a solution key.
+
+\begin{enumerate}
+\item In \texttt{flights}, for every \texttt{carrier}, find the number of
+\texttt{NA}s in each column that is numeric and starts with \texttt{dep},
+or that is character and contains \texttt{er} or \texttt{il}.
+
+\item Restrict attention to winter flights (December, January, or February)
+with \texttt{air\_time} greater than 180 minutes.
+Find the carrier that operated the fewest of these flights.
+Then, for every \texttt{origin}, count how many of that carrier's
+winter long flights departed from that origin.
+
+\item Among origin--destination pairs with at least 100 flights, which pair
+has the highest average \texttt{distance}?
+Report the origin, the destination, the number of flights, and the
+average distance.
+
+\item Which three months have the highest proportion of flights with
+\texttt{arr\_delay} greater than 30 minutes?
+Report the month, the number of flights, the number of those flights
+that were delayed, and the proportion.
+When you count delayed flights, ignore missing \texttt{arr\_delay}.
+Keep every flight in the denominator.
+
+\item Use \texttt{readr} parse functions to correct the type of each column
+below. The column names are a hint.
+\begin{itemize}
+  \item \texttt{date} is year, month, day, with \texttt{..} between the pieces.
+        The string \texttt{NA} means missing.
+  \item \texttt{time} is hours, minutes, seconds, with \texttt{..} between the pieces.
+  \item \texttt{num} is a number that may contain commas.
+        The string \texttt{n/a} means missing.
+  \item \texttt{log} is logical. The string \texttt{missing} means missing.
+  \item \texttt{char} is stored as a factor. It should end up as character.
+        The string \texttt{miss} means missing.
+  \item \texttt{fac} should be a factor.
+\end{itemize}
+
+\begin{lstlisting}
+df <- data.frame(
+  date = c("2024..03..15", "2022..12..01", "NA"),
+  time = c("09..15..00", "21..40..30", "07..05..05"),
+  num  = c("1,200", "850", "n/a"),
+  log  = c("TRUE", "missing", "FALSE"),
+  char = as.factor(c("red", "blue", "miss")),
+  fac  = c("X", "Y", "Z")
+)
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,111 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.75em, topsep=0.35em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.2em, topsep=0.25em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Quiz 3 --- Sample 2}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.3em}
+
+Write your answers in an R script. Load the tidyverse and use
+\texttt{stringr}. This is a second practice quiz, with questions only.
+You do not need lookahead or lookbehind.
+Vowels are \texttt{a}, \texttt{e}, \texttt{i}, \texttt{o}, and \texttt{u}
+(either case). Every other letter is a consonant.
+
+\begin{enumerate}
+\item Use \texttt{str\_c()} on
+\begin{lstlisting}
+x <- c("Ada", "Lin")
+y <- c("Lovelace", "Chen")
+\end{lstlisting}
+so the result is the single string
+\texttt{Ada Lovelace; Lin Chen}.
+
+\item Produce a character string whose value is the ten characters
+\begin{lstlisting}
+*^2$?9.|
+\end{lstlisting}
+Call \texttt{str\_replace()} once so that whole string becomes
+\texttt{abcdefghij}. The pattern must match those characters as
+themselves, not as metacharacters.
+Then start again from the original string and, with one
+\texttt{str\_replace()} and capture groups, reverse the ten characters
+so the value is
+\begin{lstlisting}
+|.9?$2^*
+\end{lstlisting}
+
+\item Find any six-letter word that starts with \texttt{s} or \texttt{b}
+(either case) and ends with \texttt{ing} or \texttt{ers}.
+Check your pattern on
+\begin{lstlisting}
+c("Singers", "bakers", "baking", "STRING",
+  "brings", "sing", "Singer")
+\end{lstlisting}
+
+\item Find any string that is three letters, a hyphen, one or two spaces,
+and then exactly four digits. Check your pattern on the vector below.
+\verb|bos-  221| has two spaces after the hyphen. The \texttt{NYC} and
+\texttt{DC} strings have one.
+\begin{lstlisting}
+c("NYC- 1021", "la -44", "DC- 2001", "bos-  221", "MIA-33101")
+\end{lstlisting}
+
+\item Find any run of at least four vowels in a row.
+The match should ignore case. Check your pattern on
+\begin{lstlisting}
+c("queueing", "AeIoUxx", "strength", "cooeed", "myth", "BOOOK")
+\end{lstlisting}
+
+\item Find any run of at least three consonants in which the first is
+lowercase and the next two are uppercase. Later consonants in a longer
+run may be either case. Check your pattern on
+\begin{lstlisting}
+c("aBcD", "xYYzz", "MNO", "bCDefg", "aei", "qRRs")
+\end{lstlisting}
+
+\item If a word ends in a vowel, move that vowel to the front.
+Leave the other words unchanged. Apply this to
+\begin{lstlisting}
+c("time", "audio", "chart", "Ivy", "queue")
+\end{lstlisting}
+
+\item Find any word that starts with one capital letter, is 4 to 8 letters
+long, and ends with \texttt{ed} or \texttt{ly}.
+The letters after the first one are lowercase.
+Check your pattern on
+\begin{lstlisting}
+c("Played", "Happy", "slowly", "A",
+  "MARKEDLY", "Loved", "Ly", "Joined")
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}

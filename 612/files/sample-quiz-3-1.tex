@@ -1,0 +1,155 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.75em, topsep=0.35em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.2em, topsep=0.25em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Quiz 3 --- Sample 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.3em}
+
+Write your answers in an R script. Load the tidyverse and use
+\texttt{stringr}. This sample has questions only.
+
+A few metacharacters you may need:
+\begin{itemize}
+  \item \texttt{.} matches any character except a newline.
+  \item \texttt{\^{}} matches the start of a string.
+  \item \texttt{\$} matches the end of a string.
+  \item \texttt{*} matches zero or more of the preceding piece;
+        \texttt{+} matches one or more;
+        \texttt{?} matches zero or one.
+  \item \texttt{[]} is a character class.
+        \texttt{|} means ``or''.
+        \texttt{()} is a capture group.
+  \item \texttt{\textbackslash} escapes a metacharacter, or starts a
+        special class such as \texttt{\textbackslash d} or
+        \texttt{\textbackslash w}.
+\end{itemize}
+
+\begin{enumerate}
+\item Use \texttt{str\_c()} on
+\begin{lstlisting}
+x <- c("Sam", "John")
+y <- c("Sampson", "Johnson")
+\end{lstlisting}
+so the result is the single string
+\texttt{Sam Sampson and John Johnson}.
+
+\item First produce a character string whose value is
+\begin{lstlisting}
+\.?3^!*7+[
+\end{lstlisting}
+(the leading backslash is one character).
+Then replace that whole string with \texttt{0123456789}.
+Next, start again from the original string and reverse the order of
+those ten characters, so the value becomes
+\begin{lstlisting}
+[+7*!^3?.\
+\end{lstlisting}
+
+\item In a character vector, find any seven- or eight-letter word that
+ends with \texttt{sion}, \texttt{tion}, or \texttt{tory}, and starts
+with \texttt{p}, \texttt{f}, or \texttt{d} (either case).
+Check your pattern on
+\begin{lstlisting}
+c("Passion", "satisfactory", "factory",
+  "satisfaction", "devotion", "pa12tion")
+\end{lstlisting}
+
+\item Find any string that starts with any two letters, then a comma,
+then at least one space and at most two spaces, and ends with any five
+digits. Check your pattern on
+\begin{lstlisting}
+c("MD 21228", "WA, 76731", "VA: 34124", "FL, 21225", "ca, 45691")
+\end{lstlisting}
+
+\item Find any string in which at least three consonants are in a row.
+Treat this as case-insensitive. Check your pattern on
+\begin{lstlisting}
+c("HHHonorsion", "DBBELIcious", "Prio5ity", "HIROSHIMA",
+  "Uinicasion", "Cat", "Catsion", "Dog", "FininGdg",
+  "Extension", "SsSktinger")
+\end{lstlisting}
+
+\item Find any string in which at least three consonants are in a row,
+where the first and third of those consonants are uppercase and the
+second is lowercase. If the run is longer than three consonants, do not
+restrict the case of the later ones. Check your pattern on
+\begin{lstlisting}
+c("H2norsion", "DELIcious", "Priority", "HIROSHIMA",
+  "Uinicasion", "CATti", "CASIONnNbd", "Dog", "Fishing",
+  "Extension", "Singer")
+\end{lstlisting}
+
+\item Suppose a word starts with a consonant. Switch that first letter
+with the first vowel in the word. Apply this to
+\begin{lstlisting}
+c("DELIcious", "Priority", "HIROSHIMA", "Dog",
+  "Fishing", "Extension", "Singer")
+\end{lstlisting}
+\end{enumerate}
+
+The next three items are harder pattern problems from the original sample.
+The real quiz will not require lookahead or lookbehind.
+
+\begin{enumerate}[resume]
+\item Find any word that starts with a capital letter, does not end with
+\texttt{ing}, \texttt{ity}, or \texttt{sion}, and has at most nine letters.
+Check your pattern on
+\begin{lstlisting}
+c("H2norsion", "DElicious", "Prio5ity", "HIROSHIMA",
+  "Uinicasion", "Cat", "Catsion", "Dog", "Fishing",
+  "Extension", "Singer")
+\end{lstlisting}
+
+\item Give a regular expression that validates an email with these rules:
+at least one uppercase letter, one lowercase letter, and one digit;
+the local part uses only \texttt{[a-zA-Z0-9\_]};
+the domain is \texttt{gmail.com} or \texttt{yahoo.com}.
+There is no limit on the length of the local part.
+Check it on
+\begin{lstlisting}
+c("sam34A23@gmail.com", "Su1ut49@yahoo.com",
+  "Su1@ut49@yahoo.com", "Su1-ut49@yahoo.com",
+  "jer71d@american.edu")
+\end{lstlisting}
+
+\item Give a regular expression that validates a password-style id with
+these rules: at least two uppercase letters, exactly one lowercase letter,
+at least three digits, and at most 10 characters in the id.
+Check it on
+\begin{lstlisting}
+c("sA34A2376@gmail.com", "SuBB149@yahoo.com",
+  "Su1@ut49@yahoo.com", "Su1-ut49@yahoo.com",
+  "JEr78_1U@yahoo.com")
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}

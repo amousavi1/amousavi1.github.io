@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Quiz 2 --- Sample 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.4em}
+
+Write your answers in an R script. Use the tidyverse.
+Load \texttt{nycflights13} and the \texttt{flights} data.
+This practice quiz has questions only.
+
+\begin{enumerate}
+\item In \texttt{flights}, for every \texttt{origin}, find the number of
+\texttt{NA}s in each column that is numeric and starts with \texttt{arr},
+or that is character and contains \texttt{ca} or \texttt{il}.
+
+\item In \texttt{flights}, for every destination, find the number of flights
+that were delayed by more than 2 hours on arrival in the fall
+(September, October, or November) and that were operated by the least
+popular airline.
+
+\item Between which two airports did the worst delayed flights occur?
+Treat a flight as delayed when \texttt{arr\_delay > 0} and
+\texttt{dep\_delay > 0}. How many delayed flights occurred between
+those two airports?
+
+\item Which three carriers have the highest rates of departure delays
+exceeding 15 minutes? What are those proportions, compared with the
+total number of flights each carrier operated?
+
+\item Use \texttt{readr} parse functions to correct the type of each column
+in the data frame below. The column names are a hint.
+Treat the strings \verb|N--a| and \verb|N-a| as missing.
+
+\begin{lstlisting}
+df <- data.frame(
+  date = c("2023--11-21", "2023--09-02", "2020--01-30"),
+  time = c("01::00-00", "13::58-01", "23::00-09"),
+  num  = c("10.5", "20.3", "15.8"),
+  log  = c("TRUE", "N--a", "FALSE"),
+  char = as.factor(c("Apple", "Banana", "N-a")),
+  fac  = c("A", "B", "C")
+)
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}

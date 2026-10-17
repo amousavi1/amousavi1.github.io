@@ -1,0 +1,195 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{needspace}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.6em,
+  belowskip=0.6em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.9em, topsep=0.4em}
+\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.45em, topsep=0.3em, label=\arabic*.}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.2em, topsep=0.25em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Midterm 2 --- Sample 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.3em}
+
+Practice exam, questions only. Put your answers in an R Markdown document,
+and make sure code is visible when you knit
+(\texttt{knitr::opts\_chunk\$set(echo = TRUE)} in the first chunk).
+Use the tidyverse rather than base R where you can.
+You may use your notes, the R help files, and the internet.
+Do not discuss the exam with anyone else.
+
+\begin{enumerate}
+\item \textbf{NBA} (8 pts).
+The data frames below are a small slice of 2019 NBA statistics.
+
+\texttt{teams}: \texttt{Team} (name), \texttt{W} (wins), \texttt{L} (losses),
+\texttt{PSG} (points scored per game), \texttt{PAG} (points allowed per game).
+
+\texttt{players}: \texttt{Name}, \texttt{teamID}, \texttt{Age},
+\texttt{G} (games played), \texttt{GS} (games started),
+\texttt{MP} (minutes per game), \texttt{FG} (field goals per game),
+\texttt{FGA} (field-goal attempts per game).
+
+\texttt{games}: \texttt{date\_time} (date and tip-off, stored as text),
+\texttt{location}, \texttt{bulls} (Bulls points), \texttt{cavs} (Cavaliers points).
+
+\begin{lstlisting}
+library(tidyverse)
+
+teams <- tribble(
+  ~Team, ~W, ~L, ~PSG, ~PAG,
+  "Cavaliers", 17, 53, 104, 113,
+  "Bulls",     19, 52, 105, 113
+)
+
+players <- tribble(
+  ~Name, ~teamID, ~Age, ~G, ~GS, ~MP, ~FG, ~FGA,
+  "Zach LaVine",      "Bulls",     23, 62, 61, 34.5, 8.5, 18.1,
+  "Lauri Markkanen",  "Bulls",     21, 48, 47, 32.7, 6.6, 15.2,
+  "Otto Porter",      "Bulls",     25, 15, 15, 32.8, 6.5, 13.4,
+  "Kevin Love",       "Cavaliers", 30, 16, 16, 27.4, 5.0, 13.0,
+  "Jordan Clarkson",  "Cavaliers", 26, 69,  0, 27.1, 6.5, 14.7,
+  "Collin Sexton",    "Cavaliers", 20, 70, 60, 31.0, 6.0, 14.3
+)
+
+games <- tribble(
+  ~date_time, ~location, ~bulls, ~cavs,
+  "Nov 10, 2018 8:00pm", "Bulls",      99,  98,
+  "Dec 23, 2018 6:00pm", "Cavaliers", 112,  92,
+  "Jan 21, 2019 1:00pm", "Cavaliers", 104,  88,
+  "Jan 27, 2019 3:30pm", "Bulls",     101, 104
+)
+\end{lstlisting}
+
+\begin{enumerate}
+\item (4 pts) Use \texttt{parse\_datetime()} from \texttt{readr} to parse
+\texttt{date\_time} in \texttt{games}, and assign the result back to
+\texttt{games}.
+
+\item (4 pts) Add the columns from \texttt{teams} onto \texttt{players}.
+\end{enumerate}
+
+\item \textbf{Strings} (10 pts).
+Use only functions from the tidyverse. Your code should work for strings
+of this shape in general, not only for the rows below.
+
+\Needspace{14\baselineskip}
+\begin{lstlisting}
+dfdat <- tribble(
+  ~frac, ~words,
+  "4/5",  "Not",
+  "7/8",  "all",
+  "2/3",  "those",
+  "4/7",  "who",
+  "2/11", "wander",
+  "8/13", "are",
+  "4/6",  "lost."
+)
+\end{lstlisting}
+
+\begin{enumerate}
+\item (4 pts) Convert \texttt{frac} from a character vector of fractions
+to a numeric vector of decimal values. For example, \texttt{"4/5"} should
+become \texttt{0.8}. No \texttt{stringr} functions and no regular expressions.
+
+\item (4 pts) Use a single regular expression to find every word in
+\texttt{words} that begins with \texttt{wh} or \texttt{wa}, and replace
+that prefix with \texttt{te}. So \texttt{who} becomes \texttt{teo}, and
+\texttt{wander} becomes \texttt{tender}.
+
+\item (2 pts) \textbf{Challenge.} Pig Latin moves the first consonant
+cluster (consonants up to the first vowel) to the end of the word, then
+appends \texttt{ay}. Examples: \texttt{hello} becomes \texttt{ellohay},
+\texttt{study} becomes \texttt{udystay}, and \texttt{aloe} becomes
+\texttt{aloeay}. Build the Pig Latin version of each string in
+\texttt{words}.
+
+For a little extra credit: keep an initial capital as a capital on the
+new first letter (\texttt{John} becomes \texttt{Ohnjay}, not
+\texttt{ohnJay}), and keep a trailing period in place
+(\texttt{goodbye.} becomes \texttt{oodbyegay.}).
+\end{enumerate}
+
+\item \textbf{Tidying simulation output} (22 pts).
+The file \texttt{mse\_mat.csv} is on the course page under Data.
+It is a small extract of simulation output. Each row is one iteration.
+The first six columns are the conditions:
+\texttt{current\_seed}, \texttt{nullpi}, \texttt{Nsamp},
+\texttt{ncontrols}, \texttt{cor}, and \texttt{poisthin}.
+
+\texttt{cor} is a string. It holds either one number in parentheses,
+such as \texttt{(0.5)}, or two numbers in parentheses separated by a
+comma and a space, such as \texttt{(0.25, 0.25)}.
+
+Every other column is a mean squared error for one combination of a
+mean method and a variance method. The nine mean methods are
+\texttt{ols}, \texttt{ruv2}, \texttt{ruv3}, \texttt{ruv4}, \texttt{cate},
+\texttt{ruvbn}, \texttt{ruvbnl}, \texttt{ruvbnn}, and \texttt{ruvb}.
+The variance methods are \texttt{o}, \texttt{m}, \texttt{c}, \texttt{l},
+\texttt{lm}, and \texttt{lc}, plus a few longer labels that appear on
+\texttt{ruv3} and \texttt{cate}. You do not need to know what the methods do.
+Not every mean method has a variance method. The two pieces of the name
+are separated by an underscore. For example, \texttt{ols\_m} is the
+\texttt{ols} mean method with the \texttt{m} variance method, and
+\texttt{ruvb\_} is the \texttt{ruvb} mean method with no variance method.
+
+For each part, print the first six rows with \texttt{head()}.
+The only non-tidyverse functions you may use in this question are
+\texttt{head()} and \texttt{c()}.
+
+\begin{enumerate}
+\item (2 pts) Use \texttt{readr} to load the file, and view the first six rows.
+
+\item (4 pts) Reshape the data so that, besides the six condition columns,
+one column holds the mean/variance method name and another column holds
+the mse for that method on that iteration.
+
+\item (4 pts) From that method name, make two columns: the mean method and
+the variance method. For \texttt{ruvbn}, \texttt{ruvbnl}, \texttt{ruvbnn},
+and \texttt{ruvb}, the variance method should be the empty string
+\texttt{""}.
+
+\item (6 pts) Clean \texttt{cor}:
+\begin{itemize}
+  \item Remove every parenthesis.
+  \item Replace the first number with that same number followed by an underscore.
+  \item Remove every comma and the space after it.
+\end{itemize}
+For example, \texttt{(0.25, 0.25)} becomes \texttt{0.25\_0.25}, and
+\texttt{(0.25)} becomes \texttt{0.25\_}.
+
+\item (4 pts) Using the cleaned \texttt{cor}, make two numeric columns:
+the first correlation and the second correlation. If \texttt{cor} had
+only one value, the second correlation is \texttt{NA}.
+
+\item (2 pts) Make an appropriate plot of how \texttt{Nsamp} and the mean
+method relate to mean squared error.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}
