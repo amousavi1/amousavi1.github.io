@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.5em,
+  belowskip=0.5em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.32em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.65em, topsep=0.25em}
+\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.28em, topsep=0.2em, label=\alph*.}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.12em, topsep=0.15em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Final exam --- Sample 2}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.2em}
+
+Practice exam, questions only. Cumulative through December 9
+(weeks 1--14). The newest material is lists, loops, and
+\texttt{purrr} (\texttt{pmap}, \texttt{keep}, \texttt{discard}).
+Earlier weeks stay in scope, including a report chunk.
+
+Put your answers in an R Markdown document and keep the code visible
+except where a chunk option below says to hide it.
+You may use your notes, the R help files, and the internet.
+Do not discuss the exam with anyone else.
+Load the tidyverse.
+
+\begin{enumerate}
+\item \textbf{A loop and a map} (8 pts).
+\texttt{bases} is \texttt{c(2, 3, 4)}.
+With a pre-allocated \texttt{for} loop, fill a numeric vector with
+the square of each entry.
+Then do the same job with \texttt{map\_dbl()}.
+The two results should match.
+
+\item \textbf{\texttt{pmap}} (6 pts).
+Using the same means and standard deviations as
+\texttt{mu = c(0, 10)} and \texttt{sigma = c(1, 2)}, draw 4 normal
+values from each pair with \texttt{pmap()} and a list of arguments.
+Set the seed to \texttt{612} first.
+
+\item \textbf{\texttt{keep} and \texttt{discard}} (6 pts).
+From \texttt{mpg}, \texttt{keep} the numeric columns and report how
+many there are.
+Then \texttt{discard} every column that is not a character column,
+and print the names that remain.
+
+\item \textbf{Tidy, then test} (12 pts).
+Reshape \texttt{wide} to a \texttt{year} column and a \texttt{sales}
+column. \texttt{year} is numeric. Drop the missing sales.
+Turn \texttt{store} into a factor ordered by total sales, largest
+first.
+Run a two-sample \texttt{t.test()} of \texttt{sales} for store
+\texttt{A} against store \texttt{B}. State the null hypothesis in
+one sentence.
+
+\begin{lstlisting}
+wide <- tibble(
+  store = c("A", "B", "A"),
+  y2022 = c(5, 9, NA),
+  y2023 = c(7, 4, 6)
+)
+\end{lstlisting}
+
+\item \textbf{The report around that test} (8 pts).
+Put the test in a chunk labeled \texttt{store-test} with
+\texttt{echo = TRUE}.
+Put the reshape in a setup-style chunk with \texttt{include = FALSE}.
+Send the store totals to \texttt{knitr::kable()} with a caption.
+In YAML, set a bibliography file \texttt{refs.bib}, and in the text
+cite \texttt{wickham2017r4ds} in parentheses.
+\end{enumerate}
+
+\end{document}

@@ -15,16 +15,16 @@
   frame=single,
   xleftmargin=0.4em,
   xrightmargin=0.4em,
-  aboveskip=0.6em,
-  belowskip=0.6em
+  aboveskip=0.5em,
+  belowskip=0.5em
 }
 
 \pagestyle{empty}
-\setlength{\parskip}{0.4em}
+\setlength{\parskip}{0.32em}
 \setlength{\parindent}{0pt}
-\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.9em, topsep=0.4em}
-\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.45em, topsep=0.3em, label=\arabic*.}
-\setlist[itemize]{leftmargin=1.3em, itemsep=0.2em, topsep=0.25em}
+\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.65em, topsep=0.25em}
+\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.28em, topsep=0.2em, label=\alph*.}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.12em, topsep=0.15em}
 
 \begin{document}
 
@@ -33,139 +33,59 @@
 DATA 412/612
 \end{center}
 
-\vspace{0.3em}
+\vspace{0.2em}
 
-Practice exam, questions only. Put your answers in an R Markdown document,
-and make sure code is visible when you knit
-(\texttt{knitr::opts\_chunk\$set(echo = TRUE)} in the first chunk).
-Use the tidyverse rather than base R where you can.
+Practice exam, questions only. Cumulative through November 11
+(weeks 1--11). The material since Midterm 1 is joins, strings,
+factors, dates, and statistics (a nested model comparison and
+numerical summaries).
+
+Put your answers in an R Markdown document and keep the code visible
+(\texttt{knitr::opts\_chunk\$set(echo = TRUE)} in the setup chunk).
 You may use your notes, the R help files, and the internet.
 Do not discuss the exam with anyone else.
-
-This sample covers the same ground as Sample~1 (joins, strings, and
-tidying), and it also uses factors and dates.
+Load the tidyverse. \texttt{mpg} comes with \texttt{ggplot2}.
 
 \begin{enumerate}
-\item \textbf{Library visits} (10 pts).
+\item \textbf{Recode a factor} (8 pts).
+In \texttt{mpg}, collapse \texttt{drv} so that \texttt{"f"} and
+\texttt{"r"} become \texttt{"two"} and \texttt{"4"} stays
+\texttt{"four"}.
+Drop unused levels. Report how many cars are in each new level.
 
-\texttt{branches}: \texttt{branch} (name), \texttt{city}, \texttt{seats}.
-
-\texttt{visits}: \texttt{patron}, \texttt{branch},
-\texttt{check\_in} (date and time, stored as text),
-\texttt{minutes} (length of the visit).
+\item \textbf{Periods and zones} (8 pts).
+\texttt{start} is a date-time in \texttt{America/New\_York}.
+Build the instant two weeks and three hours later, using a period.
+Also report the length of the interval from \texttt{start} to that
+later instant in hours.
+Show \texttt{start} again in \texttt{UTC}.
 
 \begin{lstlisting}
-library(tidyverse)
-
-branches <- tribble(
-  ~branch,    ~city, ~seats,
-  "Shaw",     "DC",  80,
-  "Petworth", "DC",  45,
-  "Rosslyn",  "VA",  60
-)
-
-visits <- tribble(
-  ~patron, ~branch,    ~check_in,             ~minutes,
-  "Ari",   "Shaw",     "Mar 03, 2024 9:15am",  40,
-  "Bea",   "Rosslyn",  "Mar 03, 2024 2:05pm",  15,
-  "Cal",   "Petworth", "Mar 04, 2024 11:00am", 90,
-  "Dee",   "Shaw",     "Mar 04, 2024 6:40pm",  25
-)
+start <- ymd_hm("2024-11-03 01:15", tz = "America/New_York")
 \end{lstlisting}
 
-\begin{enumerate}
-\item (3 pts) Use \texttt{parse\_datetime()} to parse \texttt{check\_in},
-and assign the result back to \texttt{visits}.
+\item \textbf{Nested models} (10 pts).
+Fit two models on \texttt{mpg}: \texttt{hwy} on \texttt{class} alone,
+and \texttt{hwy} on \texttt{class} plus \texttt{displ}.
+Compare them with \texttt{anova()}.
+In one sentence, say whether \texttt{displ} improves the fit after
+\texttt{class} is already in the model. Use the p-value from that
+comparison.
 
-\item (3 pts) Add \texttt{city} and \texttt{seats} from \texttt{branches}
-onto \texttt{visits}.
+\item \textbf{Summaries} (8 pts).
+For each \texttt{class} in \texttt{mpg}, report the number of cars,
+the median \texttt{hwy}, and the interquartile range of \texttt{hwy}.
+Sort by the median, highest first.
 
-\item (4 pts) Add a column \texttt{weekday}: an ordered factor for the
-weekday of \texttt{check\_in}, with levels Monday through Sunday in that
-order.
-\end{enumerate}
-
-\item \textbf{Strings} (10 pts).
-Use only functions from the tidyverse. Your code should work for strings
-of this shape in general, not only for the rows below.
+\item \textbf{Strings, then a date} (6 pts).
+The vector below uses a dot between the pieces and a trailing
+letter that is not part of the date.
+Remove that letter and parse what remains as a date.
+Print the dates.
 
 \begin{lstlisting}
-notes <- tribble(
-  ~ratio, ~words,
-  "3/4",  "Undo",
-  "5/2",  "into",
-  "1/8",  "pretty",
-  "9/9",  "ready",
-  "2/5",  "inner",
-  "7/10", "are.",
-  "4/4",  "Lost"
-)
+c("2024.03.15x", "2023.12.01x", "2022.07.04x")
 \end{lstlisting}
-
-\begin{enumerate}
-\item (4 pts) Convert \texttt{ratio} from a character vector of fractions
-to a numeric vector of decimal values. For example, \texttt{"3/4"} should
-become \texttt{0.75}. No \texttt{stringr} functions and no regular expressions.
-
-\item (4 pts) Use a single regular expression to find every word in
-\texttt{words} that begins with \texttt{un} or \texttt{in}, ignoring case,
-and replace that prefix with \texttt{re}. So \texttt{Undo} becomes
-\texttt{redo}, and \texttt{into} becomes \texttt{reto}.
-
-\item (2 pts) \textbf{Challenge.} Move the first character of each word to
-the end, then append \texttt{ay}. Examples: \texttt{study} becomes
-\texttt{tudysay}, and \texttt{aloe} becomes \texttt{loeaay}.
-Build that version of each string in \texttt{words}.
-
-For a little extra credit: keep an initial capital as a capital on the
-new first letter (\texttt{John} becomes \texttt{Ohnjay}), and keep a
-trailing period in place (\texttt{goodbye.} becomes \texttt{oodbyegay.}).
-\end{enumerate}
-
-\item \textbf{Tidying a score file} (20 pts).
-The file \texttt{survey\_scores.csv} is on the course page under Data.
-Each row is one person. The condition columns are
-\texttt{respondent}, \texttt{city}, \texttt{year}, and \texttt{arm}.
-
-\texttt{arm} is a string. It holds either one letter in parentheses,
-such as \texttt{(A)}, or two letters in parentheses separated by a comma
-and a space, such as \texttt{(A, B)}.
-
-The other columns are scores. The name is a time, an underscore, and a
-subject: \texttt{pre\_math}, \texttt{pre\_read}, \texttt{post\_math},
-\texttt{post\_read}, \texttt{follow\_math}, and \texttt{follow\_read}.
-The column \texttt{drop\_} is a score with no subject.
-
-For each part, print the first six rows with \texttt{head()}.
-The only non-tidyverse functions you may use in this question are
-\texttt{head()} and \texttt{c()}.
-
-\begin{enumerate}
-\item (2 pts) Use \texttt{readr} to load the file, and view the first six rows.
-
-\item (4 pts) Reshape the data so that, besides the four condition columns,
-one column holds the score-column name and another column holds the score.
-
-\item (3 pts) Split that name into a time column and a subject column.
-For \texttt{drop\_}, the subject should be the empty string \texttt{""}.
-
-\item (5 pts) Clean \texttt{arm}:
-\begin{itemize}
-  \item Remove every parenthesis.
-  \item Replace the first letter with that same letter followed by an underscore.
-  \item Remove every comma and the space after it.
-\end{itemize}
-For example, \texttt{(A, B)} becomes \texttt{A\_B}, and
-\texttt{(A)} becomes \texttt{A\_}.
-
-\item (3 pts) Using the cleaned \texttt{arm}, make two columns:
-the first letter and the second letter. If \texttt{arm} had only one
-letter, the second is \texttt{NA}. Keep both columns as character, not
-numbers.
-
-\item (3 pts) Make an appropriate plot of how time and subject relate to
-the score. Leave out the \texttt{drop} rows, which have no subject.
-\end{enumerate}
 \end{enumerate}
 
 \end{document}

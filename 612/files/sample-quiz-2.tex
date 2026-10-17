@@ -15,15 +15,15 @@
   frame=single,
   xleftmargin=0.4em,
   xrightmargin=0.4em,
-  aboveskip=0.7em,
-  belowskip=0.7em
+  aboveskip=0.6em,
+  belowskip=0.6em
 }
 
 \pagestyle{empty}
-\setlength{\parskip}{0.45em}
+\setlength{\parskip}{0.4em}
 \setlength{\parindent}{0pt}
-\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
-\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.7em, topsep=0.35em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.2em, topsep=0.25em}
 
 \begin{document}
 
@@ -32,22 +32,43 @@
 DATA 412/612
 \end{center}
 
-\vspace{0.4em}
+\vspace{0.3em}
+
+Cumulative through September 23 (weeks 1--4): R and the tidyverse,
+pipes and functions, ggplot2, and dplyr rows, columns, and groups.
 
 Write your answers in an R script. You may use R and RStudio.
 You may \textbf{not} use the internet or your notes.
+Load the tidyverse. \texttt{mpg} is in \texttt{ggplot2}.
 
 \begin{enumerate}
-\item Write a function named \texttt{column\_check} in an R script. It takes a
-data frame \texttt{df} with exactly two columns.
-\begin{itemize}
-  \item Return \texttt{FALSE} if either column is not numeric
-        (\texttt{is.numeric}).
-  \item If both columns are numeric, compute their maximum values and return
-        \texttt{1} if the maximum of the first column is greater than or equal
-        to the maximum of the second column.
-  \item Otherwise, return \texttt{Second Column}.
-\end{itemize}
+\item Build this data frame and, with tidyverse verbs, report the type
+of each column and how many \texttt{NA}s each column contains.
+
+\begin{lstlisting}
+scores <- tibble(
+  name  = c("Ada", "Lin", "Grace", "Alan"),
+  lab   = c("8", "10", "NA", "7"),
+  score = c(9.5, NA, 8, 10)
+)
+\end{lstlisting}
+
+\item Write a function \texttt{late\_flag} that takes \textbf{one} number.
+Return \texttt{"on time"} when the number is less than or equal to 0,
+\texttt{"late"} when it is greater than 0 and at most 30,
+\texttt{"very late"} when it is greater than 30,
+and \texttt{NA} when the input is \texttt{NA}.
+Try it on \texttt{-5}, \texttt{10}, \texttt{45}, and \texttt{NA}.
+
+\item Using \texttt{mpg}, keep only the classes \texttt{compact} and
+\texttt{midsize}. Make a boxplot of highway mileage (\texttt{hwy})
+by drive (\texttt{drv}). Label the axes in words and use
+\texttt{theme\_bw()}.
+
+\item Add a column \texttt{total} equal to \texttt{cty + hwy}.
+For each manufacturer, report the number of cars and the mean of
+\texttt{total}. Keep only manufacturers with at least 5 cars, and
+sort by that mean, highest first.
 \end{enumerate}
 
 \end{document}

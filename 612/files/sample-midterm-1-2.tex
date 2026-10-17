@@ -1,0 +1,102 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.55em,
+  belowskip=0.55em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.75em, topsep=0.3em}
+\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.35em, topsep=0.25em, label=\alph*.}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.15em, topsep=0.2em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Midterm 1 --- Sample 2}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.25em}
+
+Practice exam, questions only. Cumulative through October 14
+(weeks 1--7): the Quiz 1 material, plus \texttt{rowwise()} and
+\texttt{across()}, \texttt{case\_when()}, \texttt{readr},
+exploratory plots, and tidyr.
+
+Put your answers in an R Markdown document and keep the code visible
+(\texttt{knitr::opts\_chunk\$set(echo = TRUE)} in the setup chunk).
+You may use your notes, the R help files, and the internet.
+Do not discuss the exam with anyone else.
+Load the tidyverse.
+
+\begin{enumerate}
+\item \textbf{A function} (8 pts).
+Write \texttt{finite\_mean(x)}. Drop every \texttt{NA} and every
+non-finite value, then return the mean of what remains.
+If nothing remains, return \texttt{NA}.
+Use a pipe inside the function.
+Try it on \texttt{c(1, NA, Inf, 3, NaN)}.
+
+\item \textbf{\texttt{case\_when()} and \texttt{distinct()}} (8 pts).
+In \texttt{mpg}, add \texttt{drive}: \texttt{"front"} when
+\texttt{drv} is \texttt{"f"}, \texttt{"rear"} when it is \texttt{"r"},
+and \texttt{"four"} when it is \texttt{"4"}.
+Return the distinct pairs of \texttt{class} and \texttt{drive}, and
+the number of cars in each pair.
+
+\item \textbf{Import} (10 pts).
+Read the text below with \texttt{read\_csv()}.
+Keep \texttt{id} as character, including the leading zeros.
+Parse \texttt{when} as a date. Leave \texttt{amount} numeric.
+Show the problems \texttt{readr} reports, and print the tibble
+after a successful parse of the rows that do have a real date.
+
+\begin{lstlisting}
+id,when,amount
+007,2024-01-05,12
+008,2024-02-11,NA
+009,not-a-date,4
+\end{lstlisting}
+
+\item \textbf{Separate and widen} (10 pts).
+
+\begin{enumerate}
+\item Split \texttt{place} into \texttt{city} and \texttt{state}.
+\item Turn \texttt{long} into a table with one row per city and one
+column per quarter.
+\end{enumerate}
+
+\begin{lstlisting}
+places <- tibble(place = c("Austin, TX", "Boise, ID", "Tampa, FL"))
+
+long <- tibble(
+  city = c("Austin", "Austin", "Boise", "Boise"),
+  quarter = c("Q1", "Q2", "Q1", "Q2"),
+  sales = c(10, 12, 7, 9)
+)
+\end{lstlisting}
+
+\item \textbf{A faceted plot} (4 pts).
+From \texttt{mpg}, plot \texttt{displ} against \texttt{hwy},
+with one panel per \texttt{drv}. Color is not required.
+Title the figure.
+\end{enumerate}
+
+\end{document}

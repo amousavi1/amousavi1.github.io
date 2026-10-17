@@ -15,15 +15,15 @@
   frame=single,
   xleftmargin=0.4em,
   xrightmargin=0.4em,
-  aboveskip=0.7em,
-  belowskip=0.7em
+  aboveskip=0.55em,
+  belowskip=0.55em
 }
 
 \pagestyle{empty}
-\setlength{\parskip}{0.4em}
+\setlength{\parskip}{0.35em}
 \setlength{\parindent}{0pt}
-\setlist[enumerate]{leftmargin=1.4em, itemsep=0.75em, topsep=0.35em}
-\setlist[itemize]{leftmargin=1.3em, itemsep=0.2em, topsep=0.25em}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.65em, topsep=0.3em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.15em, topsep=0.2em}
 
 \begin{document}
 
@@ -32,80 +32,52 @@
 DATA 412/612
 \end{center}
 
-\vspace{0.3em}
+\vspace{0.25em}
 
-Write your answers in an R script. Load the tidyverse and use
-\texttt{stringr}. This is a second practice quiz, with questions only.
-You do not need lookahead or lookbehind.
-Vowels are \texttt{a}, \texttt{e}, \texttt{i}, \texttt{o}, and \texttt{u}
-(either case). Every other letter is a consonant.
+Cumulative through December 2 (weeks 1--13). The new material is
+R Markdown presentations, chunk options, tables, and citations.
+
+Write your answers in an R script or a short \texttt{.Rmd}.
+You may use R and RStudio.
+You may \textbf{not} use the internet or your notes.
+You do not have to knit.
 
 \begin{enumerate}
-\item Use \texttt{str\_c()} on
-\begin{lstlisting}
-x <- c("Ada", "Lin")
-y <- c("Lovelace", "Chen")
-\end{lstlisting}
-so the result is the single string
-\texttt{Ada Lovelace; Lin Chen}.
+\item For each goal, name the output format from this course and write
+the YAML \texttt{output} (or Quarto \texttt{format}) line you would use.
+\begin{itemize}
+  \item HTML slides you can open in a browser.
+  \item A PDF slide deck that needs LaTeX.
+  \item A file someone else will click through in PowerPoint.
+\end{itemize}
+For the HTML choice, say what marks the start of a new slide.
+If you choose xaringan instead of ioslides, say that slides are
+separated by a line that contains only \texttt{---}.
 
-\item Produce a character string whose value is the ten characters
-\begin{lstlisting}
-*^2$?9.|
-\end{lstlisting}
-Call \texttt{str\_replace()} once so that whole string becomes
-\texttt{abcdefghij}. The pattern must match those characters as
-themselves, not as metacharacters.
-Then start again from the original string and, with one
-\texttt{str\_replace()} and capture groups, reverse the ten characters
-so the value is
-\begin{lstlisting}
-|.9?$2^*
-\end{lstlisting}
+\item Match each goal to one of \texttt{eval = FALSE},
+\texttt{echo = FALSE}, or \texttt{include = FALSE}.
+\begin{itemize}
+  \item The reader must see the code, and R must not run it.
+  \item R must run the chunk, and the reader must see the plot but
+        not the code.
+  \item R must load the packages, and the reader must see nothing
+        from that chunk.
+\end{itemize}
 
-\item Find any six-letter word that starts with \texttt{s} or \texttt{b}
-(either case) and ends with \texttt{ing} or \texttt{ers}.
-Check your pattern on
-\begin{lstlisting}
-c("Singers", "bakers", "baking", "STRING",
-  "brings", "sing", "Singer")
-\end{lstlisting}
+\item Write a Quarto plot chunk labeled \texttt{fig-hwy} that draws
+highway mileage against engine size for \texttt{mpg}, with the
+caption \texttt{Highway mileage and engine size}.
+In the next paragraph, refer to that figure with a Quarto
+cross-reference.
+Then write the bookdown equivalent: the chunk option \texttt{fig.cap}
+and the \texttt{\textbackslash @ref} call, for a chunk labeled
+\texttt{hwy}.
 
-\item Find any string that is three letters, a hyphen, one or two spaces,
-and then exactly four digits. Check your pattern on the vector below.
-\verb|bos-  221| has two spaces after the hyphen. The \texttt{NYC} and
-\texttt{DC} strings have one.
-\begin{lstlisting}
-c("NYC- 1021", "la -44", "DC- 2001", "bos-  221", "MIA-33101")
-\end{lstlisting}
-
-\item Find any run of at least four vowels in a row.
-The match should ignore case. Check your pattern on
-\begin{lstlisting}
-c("queueing", "AeIoUxx", "strength", "cooeed", "myth", "BOOOK")
-\end{lstlisting}
-
-\item Find any run of at least three consonants in which the first is
-lowercase and the next two are uppercase. Later consonants in a longer
-run may be either case. Check your pattern on
-\begin{lstlisting}
-c("aBcD", "xYYzz", "MNO", "bCDefg", "aei", "qRRs")
-\end{lstlisting}
-
-\item If a word ends in a vowel, move that vowel to the front.
-Leave the other words unchanged. Apply this to
-\begin{lstlisting}
-c("time", "audio", "chart", "Ivy", "queue")
-\end{lstlisting}
-
-\item Find any word that starts with one capital letter, is 4 to 8 letters
-long, and ends with \texttt{ed} or \texttt{ly}.
-The letters after the first one are lowercase.
-Check your pattern on
-\begin{lstlisting}
-c("Played", "Happy", "slowly", "A",
-  "MARKEDLY", "Loved", "Ly", "Joined")
-\end{lstlisting}
+\item In \texttt{mpg}, reorder \texttt{class} by median \texttt{hwy}
+and make a boxplot of \texttt{hwy} by that factor.
+Put the plot in a chunk that has a caption, and send a one-row
+count of the reordered levels to \texttt{knitr::kable()} with a
+caption. The count table should be visible. The plot code should not.
 \end{enumerate}
 
 \end{document}

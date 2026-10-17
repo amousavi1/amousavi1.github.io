@@ -15,15 +15,15 @@
   frame=single,
   xleftmargin=0.4em,
   xrightmargin=0.4em,
-  aboveskip=0.7em,
-  belowskip=0.7em
+  aboveskip=0.55em,
+  belowskip=0.55em
 }
 
 \pagestyle{empty}
-\setlength{\parskip}{0.45em}
+\setlength{\parskip}{0.35em}
 \setlength{\parindent}{0pt}
-\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
-\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.65em, topsep=0.3em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.15em, topsep=0.2em}
 
 \begin{document}
 
@@ -32,44 +32,43 @@
 DATA 412/612
 \end{center}
 
-\vspace{0.4em}
+\vspace{0.25em}
 
-Write your answers in an R script. Use the tidyverse.
-Load \texttt{nycflights13} and the \texttt{flights} data.
-This practice quiz has questions only.
+Cumulative through October 28 (weeks 1--9). The new material is
+tidyr, mutating and filtering joins, databases, and strings.
+
+Write your answers in an R script. You may use R and RStudio.
+You may \textbf{not} use the internet or your notes.
+Load the tidyverse, \texttt{nycflights13}, \texttt{DBI},
+\texttt{RSQLite}, and \texttt{dbplyr}.
 
 \begin{enumerate}
-\item In \texttt{flights}, for every \texttt{origin}, find the number of
-\texttt{NA}s in each column that is numeric and starts with \texttt{arr},
-or that is character and contains \texttt{ca} or \texttt{il}.
+\item Add the airline name from \texttt{airlines} onto \texttt{flights}.
+How many flights still have a missing airline name?
 
-\item In \texttt{flights}, for every destination, find the number of flights
-that were delayed by more than 2 hours on arrival in the fall
-(September, October, or November) and that were operated by the least
-popular airline.
+\item How many flights have a \texttt{tailnum} that does not appear in
+\texttt{planes}? Use a filtering join, not a \texttt{filter()} on a
+hand-built list of tail numbers.
 
-\item Between which two airports did the worst delayed flights occur?
-Treat a flight as delayed when \texttt{arr\_delay > 0} and
-\texttt{dep\_delay > 0}. How many delayed flights occurred between
-those two airports?
-
-\item Which three carriers have the highest rates of departure delays
-exceeding 15 minutes? What are those proportions, compared with the
-total number of flights each carrier operated?
-
-\item Use \texttt{readr} parse functions to correct the type of each column
-in the data frame below. The column names are a hint.
-Treat the strings \verb|N--a| and \verb|N-a| as missing.
+\item Use an in-memory SQLite database, as in the databases lecture.
+Copy the tibble below into the database, then from that remote table
+keep rows with \texttt{score} of at least 8, show the SQL, collect
+the result into a local tibble, and disconnect.
 
 \begin{lstlisting}
-df <- data.frame(
-  date = c("2023--11-21", "2023--09-02", "2020--01-30"),
-  time = c("01::00-00", "13::58-01", "23::00-09"),
-  num  = c("10.5", "20.3", "15.8"),
-  log  = c("TRUE", "N--a", "FALSE"),
-  char = as.factor(c("Apple", "Banana", "N-a")),
-  fac  = c("A", "B", "C")
+labs <- tibble(
+  name = c("Ada", "Lin", "Grace", "Alan"),
+  score = c(9, 7, 8, 6)
 )
+\end{lstlisting}
+
+\item On the character vector below, use one regular expression to
+replace every token that starts with \texttt{AA} or \texttt{DL},
+followed by a dash and three digits, with the word \texttt{hit}.
+Leave the other strings unchanged.
+
+\begin{lstlisting}
+c("AA-101", "UA-22", "DL-303", "B6-1", "aa-404")
 \end{lstlisting}
 \end{enumerate}
 

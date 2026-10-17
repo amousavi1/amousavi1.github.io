@@ -1,0 +1,110 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.55em,
+  belowskip=0.55em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.75em, topsep=0.3em}
+\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.35em, topsep=0.25em, label=\alph*.}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.15em, topsep=0.2em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Midterm 1 --- Sample 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.25em}
+
+Practice exam, questions only. Cumulative through October 14
+(weeks 1--7): the Quiz 1 material, plus \texttt{rowwise()} and
+\texttt{across()}, \texttt{case\_when()}, \texttt{readr},
+exploratory plots, and \texttt{pivot\_longer()}.
+
+Put your answers in an R Markdown document and keep the code visible
+(\texttt{knitr::opts\_chunk\$set(echo = TRUE)} in the setup chunk).
+You may use your notes, the R help files, and the internet.
+Do not discuss the exam with anyone else.
+Load the tidyverse. \texttt{mpg} comes with \texttt{ggplot2}.
+
+\begin{enumerate}
+\item \textbf{\texttt{case\_when()}} (8 pts).
+In \texttt{mpg}, add \texttt{efficiency}: \texttt{"high"} when
+\texttt{hwy} is at least 30, \texttt{"mid"} when \texttt{hwy} is at
+least 20, and \texttt{"low"} otherwise.
+Then, for each \texttt{class} and \texttt{efficiency}, report the
+number of cars. Arrange so the largest counts come first.
+
+\item \textbf{Row-wise and \texttt{across()}} (8 pts).
+Use this tibble.
+
+\begin{lstlisting}
+quizzes <- tibble(
+  student = c("Ada", "Lin", "Grace"),
+  q1 = c(8, NA, 9),
+  q2 = c(7, 10, NA),
+  q3 = c(9, 8, 8)
+)
+\end{lstlisting}
+
+\begin{enumerate}
+\item With \texttt{across()}, count the \texttt{NA}s in each quiz column.
+\item With \texttt{rowwise()} and \texttt{c\_across()}, add each
+student's mean of \texttt{q1}, \texttt{q2}, and \texttt{q3}, ignoring
+missing quizzes.
+\end{enumerate}
+
+\item \textbf{\texttt{readr} and a plot} (12 pts).
+
+\begin{enumerate}
+\item Parse this frame. \texttt{when} should be a date, \texttt{price}
+a number (the dollar sign and the word \texttt{n/a} are not numbers),
+and \texttt{ok} logical, with the string \verb|NA| meaning missing.
+\begin{lstlisting}
+raw <- tibble(
+  when  = c("2024-03-01", "2024-03-18", "2024-04-02", "2024-04-09"),
+  price = c("$12.50", "8", "n/a", "$15"),
+  ok    = c("TRUE", "FALSE", "NA", "TRUE")
+)
+\end{lstlisting}
+\item Using \texttt{mpg}, make one plot that compares highway mileage
+across \texttt{class}. State which class has the highest median
+\texttt{hwy}, and give that median.
+\end{enumerate}
+
+\item \textbf{\texttt{pivot\_longer()}} (12 pts).
+Reshape \texttt{wide} so there is one row per country and year, a
+numeric \texttt{year} column, and a \texttt{cases} column.
+Strip the \texttt{y} from the year names. Drop rows whose case count
+is missing. Then report the country and year with the most cases.
+
+\begin{lstlisting}
+wide <- tibble(
+  country = c("A", "B"),
+  y2021 = c(10, NA),
+  y2022 = c(12, 7),
+  y2023 = c(9, 15)
+)
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}

@@ -15,15 +15,15 @@
   frame=single,
   xleftmargin=0.4em,
   xrightmargin=0.4em,
-  aboveskip=0.7em,
-  belowskip=0.7em
+  aboveskip=0.55em,
+  belowskip=0.55em
 }
 
 \pagestyle{empty}
-\setlength{\parskip}{0.45em}
+\setlength{\parskip}{0.35em}
 \setlength{\parindent}{0pt}
-\setlist[enumerate]{leftmargin=1.4em, itemsep=0.85em, topsep=0.4em}
-\setlist[itemize]{leftmargin=1.3em, itemsep=0.25em, topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.4em, itemsep=0.65em, topsep=0.3em}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.15em, topsep=0.2em}
 
 \begin{document}
 
@@ -32,57 +32,63 @@
 DATA 412/612
 \end{center}
 
-\vspace{0.4em}
+\vspace{0.25em}
 
-Write your answers in an R script. Use the tidyverse.
-Load \texttt{nycflights13} and the \texttt{flights} data.
-This is a second practice quiz. It is not a solution key.
+Cumulative through October 28 (weeks 1--9). The new material is
+tidyr, mutating and filtering joins, databases, and strings.
+
+Write your answers in an R script. You may use R and RStudio.
+You may \textbf{not} use the internet or your notes.
+Load the tidyverse and \texttt{nycflights13}.
 
 \begin{enumerate}
-\item In \texttt{flights}, for every \texttt{carrier}, find the number of
-\texttt{NA}s in each column that is numeric and starts with \texttt{dep},
-or that is character and contains \texttt{er} or \texttt{il}.
-
-\item Restrict attention to winter flights (December, January, or February)
-with \texttt{air\_time} greater than 180 minutes.
-Find the carrier that operated the fewest of these flights.
-Then, for every \texttt{origin}, count how many of that carrier's
-winter long flights departed from that origin.
-
-\item Among origin--destination pairs with at least 100 flights, which pair
-has the highest average \texttt{distance}?
-Report the origin, the destination, the number of flights, and the
-average distance.
-
-\item Which three months have the highest proportion of flights with
-\texttt{arr\_delay} greater than 30 minutes?
-Report the month, the number of flights, the number of those flights
-that were delayed, and the proportion.
-When you count delayed flights, ignore missing \texttt{arr\_delay}.
-Keep every flight in the denominator.
-
-\item Use \texttt{readr} parse functions to correct the type of each column
-below. The column names are a hint.
-\begin{itemize}
-  \item \texttt{date} is year, month, day, with \texttt{..} between the pieces.
-        The string \texttt{NA} means missing.
-  \item \texttt{time} is hours, minutes, seconds, with \texttt{..} between the pieces.
-  \item \texttt{num} is a number that may contain commas.
-        The string \texttt{n/a} means missing.
-  \item \texttt{log} is logical. The string \texttt{missing} means missing.
-  \item \texttt{char} is stored as a factor. It should end up as character.
-        The string \texttt{miss} means missing.
-  \item \texttt{fac} should be a factor.
-\end{itemize}
+\item Compute both an inner join and a left join of \texttt{visits}
+to \texttt{branches} by \texttt{branch}.
+In one sentence each, say which rows of \texttt{visits} the inner
+join drops and which columns the left join still contains for an
+unmatched branch.
 
 \begin{lstlisting}
-df <- data.frame(
-  date = c("2024..03..15", "2022..12..01", "NA"),
-  time = c("09..15..00", "21..40..30", "07..05..05"),
-  num  = c("1,200", "850", "n/a"),
-  log  = c("TRUE", "missing", "FALSE"),
-  char = as.factor(c("red", "blue", "miss")),
-  fac  = c("X", "Y", "Z")
+branches <- tibble(
+  branch = c("Shaw", "Rosslyn"),
+  seats = c(80, 60)
+)
+visits <- tibble(
+  patron = c("Ari", "Bea", "Cal"),
+  branch = c("Shaw", "Petworth", "Rosslyn")
+)
+\end{lstlisting}
+
+\item From \texttt{flights}, keep only the January rows, and from
+those keep the distinct \texttt{carrier} values.
+Then use a filtering join so that \texttt{airlines} contains only
+carriers that flew in January.
+How many airlines remain?
+
+\item From each string below, extract the five-digit ZIP code when
+the string is two letters, a comma, one space, and then five digits.
+Otherwise the result for that string should be missing.
+
+\begin{lstlisting}
+c("MD 21228", "WA, 76731", "VA: 34124", "FL, 21225", "ca, 45691")
+\end{lstlisting}
+
+\item Split \texttt{code} into \texttt{carrier} and \texttt{flight}.
+\texttt{flight} should be an integer.
+
+\begin{lstlisting}
+codes <- tibble(code = c("AA-101", "DL-303", "UA-22"))
+\end{lstlisting}
+
+\item Reshape \texttt{wide} to one row per carrier and month, with a
+numeric \texttt{month} and a \texttt{delays} column. Drop missing
+delay counts.
+
+\begin{lstlisting}
+wide <- tibble(
+  carrier = c("AA", "DL"),
+  m1 = c(4, NA),
+  m2 = c(1, 3)
 )
 \end{lstlisting}
 \end{enumerate}

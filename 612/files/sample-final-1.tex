@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[T1]{fontenc}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  xleftmargin=0.4em,
+  xrightmargin=0.4em,
+  aboveskip=0.5em,
+  belowskip=0.5em
+}
+
+\pagestyle{empty}
+\setlength{\parskip}{0.32em}
+\setlength{\parindent}{0pt}
+\setlist[enumerate,1]{leftmargin=1.4em, itemsep=0.65em, topsep=0.25em}
+\setlist[enumerate,2]{leftmargin=1.5em, itemsep=0.28em, topsep=0.2em, label=\alph*.}
+\setlist[itemize]{leftmargin=1.3em, itemsep=0.12em, topsep=0.15em}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Final exam --- Sample 1}\\[0.35em]
+DATA 412/612
+\end{center}
+
+\vspace{0.2em}
+
+Practice exam, questions only. Cumulative through December 9
+(weeks 1--14). The newest material is lists and \texttt{purrr}
+(\texttt{map}, \texttt{map2}, \texttt{keep}, and split-plus-map).
+Earlier weeks stay in scope.
+
+Put your answers in an R Markdown document and keep the code visible
+(\texttt{knitr::opts\_chunk\$set(echo = TRUE)} in the setup chunk).
+You may use your notes, the R help files, and the internet.
+Do not discuss the exam with anyone else.
+Load the tidyverse.
+
+\begin{enumerate}
+\item \textbf{Lists} (6 pts).
+Build a named list \texttt{fit} with components \texttt{n = 10} and
+\texttt{center = c(1, 2)}.
+Extract \texttt{center} so the result is the numeric vector, not a
+length-one list.
+Then replace \texttt{n} with \texttt{12} without rebuilding the list.
+
+\item \textbf{\texttt{map}} (8 pts).
+Keep only the numeric columns of \texttt{mpg} and, with
+\texttt{map\_dbl()}, return the mean of each.
+Pass \texttt{na.rm = TRUE}.
+The function argument must be a function, not a call.
+
+\item \textbf{\texttt{map2}} (8 pts).
+\texttt{mu} is \texttt{c(0, 10, 20)} and \texttt{sigma} is
+\texttt{c(1, 1, 2)}.
+Use \texttt{map2()} and \texttt{rnorm} to draw 5 values from each
+pair. Set the seed to \texttt{612} first.
+Return a list of three numeric vectors.
+
+\item \textbf{Split, then map} (10 pts).
+Split \texttt{mpg} by \texttt{drv}.
+On each piece, fit \texttt{hwy} on \texttt{displ} and return the
+slope on \texttt{displ}.
+The result should be a named numeric vector, one slope per drive.
+
+\item \textbf{One pipeline from earlier weeks} (8 pts).
+Load \texttt{nycflights13}.
+Add the airline name onto \texttt{flights}.
+For each name, report the number of flights and the mean arrival
+delay, ignoring missing delays.
+Keep names with at least 1000 flights.
+Make a bar plot of that mean delay, with the names ordered by the
+mean. Title the plot.
+\end{enumerate}
+
+\end{document}
