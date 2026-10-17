@@ -556,6 +556,13 @@ body.page-courses a.course-card:hover .course-card__title {
   font-weight: 600;
 }
 
+.course-data th:first-child,
+.course-data td:first-child {
+  width: 1%;
+  white-space: nowrap;
+  padding-right: 1.6em;
+}
+
 .page-courses .course-due-list {
   margin: 0.15em 0 1.1em;
   padding-left: 1.25em;
