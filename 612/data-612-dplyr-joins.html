@@ -454,8 +454,10 @@ inner_join(x, y, by = "key")</code></pre>
 4     4 &lt;NA&gt;  y4   </code></pre>
 </div>
 <p>Unmatched rows get <code>NA</code> in the new columns (<code>left_join</code> / <code>right_join</code> / <code>full_join</code>).</p>
-<p><img src="files/graphics/join-inner.png" class="img-fluid"></p>
-<p><img src="files/graphics/join-outer.png" class="img-fluid"></p>
+<p><img src="files/graphics/join-inner.png" alt="Inner join keeps matching keys only" class="img-fluid"></p>
+<p><img src="files/graphics/join-left.png" alt="Left join keeps every row of x" class="img-fluid"></p>
+<p><img src="files/graphics/join-right.png" alt="Right join keeps every row of y" class="img-fluid"></p>
+<p><img src="files/graphics/join-full.png" alt="Full join keeps every key in either table" class="img-fluid"></p>
 <p><code>nest_join(x, y)</code> is the primitive: each row of <code>x</code> gets a list-column of the matching rows of <code>y</code>. The other joins are that idea plus <code>unnest()</code>. You will use <code>left_join()</code> day to day. Know <code>nest_join()</code> exists when you want the matches as a list instead of extra rows.</p>
 <hr>
 </div>
@@ -555,7 +557,7 @@ inner_join(x, y, by = "key")</code></pre>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-20T16:02:00-04:00">October 20, 2026, 4:02 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-20T19:02:00-04:00">October 20, 2026, 7:02 PM EDT</time></div>
             </footer>
         </div>
 

@@ -178,7 +178,11 @@ Unmatched rows get `NA` in the new columns (`left_join` / `right_join` / `full_j
 
 ![Inner join keeps matching keys only](files/graphics/join-inner.png)
 
-![Outer joins keep unmatched rows and fill with NA](files/graphics/join-outer.png)
+![Left join keeps every row of x](files/graphics/join-left.png)
+
+![Right join keeps every row of y](files/graphics/join-right.png)
+
+![Full join keeps every key in either table](files/graphics/join-full.png)
 
 `nest_join(x, y)` is the primitive: each row of `x` gets a list-column of the matching rows of `y`. The other joins are that idea plus `unnest()`. You will use `left_join()` day to day. Know `nest_join()` exists when you want the matches as a list instead of extra rows.
 
