@@ -1079,18 +1079,9 @@ body.page-lecture .page__content img {
   margin: 0.55em auto 0.7em;
   width: auto;
   height: auto;
-  max-width: min(100%, 36rem);
-  max-height: 16.5rem;
-  object-fit: contain;
-}
-
-body.page-lecture .page__content img.lecture-stack {
   max-width: min(100%, 40rem);
   max-height: none;
-}
-
-body.page-lecture .page__content img.lecture-stack.lecture-flow {
-  max-width: min(70%, 28rem);
+  object-fit: contain;
 }
 
 body.page-lecture .page__content pre,
@@ -1126,12 +1117,17 @@ body.page-lecture .page__content :not(pre) > code {
 }
 
 body.page-lecture .page__content .table-wrap {
+  width: min(100%, 40rem);
+  max-width: 100%;
+  margin: 0.5em auto;
   overflow-x: auto;
-  margin: 0.5em 0;
 }
 
 body.page-lecture .page__content table {
   width: 100%;
+  max-width: min(100%, 40rem);
+  margin-left: auto;
+  margin-right: auto;
   border-collapse: collapse;
   font-size: 0.95em;
 }

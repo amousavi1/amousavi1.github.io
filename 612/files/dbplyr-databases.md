@@ -156,7 +156,7 @@ The same sequence applies when `soccer.sqlite` is not available. `dbConnect(SQLi
 
 Many dplyr verbs belong before `collect()`. That is one of the main advantages of dbplyr.
 
-<img src="files/graphics/db-workflow-sequence.png" alt="Eight steps for a database analysis. Steps 1 to 5 run before collect(), while the rows stay in SQLite. collect() brings the result into R. Steps 7 and 8 analyze that tibble and close the connection." class="lecture-stack lecture-flow">
+<img src="files/graphics/db-workflow-sequence.png" alt="Eight steps for a database analysis. Steps 1 to 5 run before collect(), while the rows stay in SQLite. collect() brings the result into R. Steps 7 and 8 analyze that tibble and close the connection." class="lecture-stack">
 
 Steps 1–5 build a query and leave the rows in SQLite. `collect()` copies the result into R. Steps 7 and 8 use that tibble and then close the connection.
 

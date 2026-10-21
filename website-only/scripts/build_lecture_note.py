@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-21T13:05:00-04:00"
-LAST_UPDATED_TEXT = "October 21, 2026, 1:05 PM EDT"
+LAST_UPDATED_ISO = "2026-10-21T13:15:00-04:00"
+LAST_UPDATED_TEXT = "October 21, 2026, 1:15 PM EDT"
 
 NOTES = [
     {
@@ -430,20 +430,11 @@ p, li { margin: 0.45em 0; }
 img {
   display: block;
   margin: 0.8em auto;
-  max-width: 5.8in;
-  max-height: 3.4in;
+  max-width: 6.4in;
   width: auto;
   height: auto;
   object-fit: contain;
   page-break-inside: avoid;
-}
-img.lecture-stack {
-  max-width: 6.4in;
-  max-height: 9.4in;
-}
-img.lecture-stack.lecture-flow {
-  max-width: 4.46in;
-  max-height: 5.05in;
 }
 ul, ol { padding-left: 1.25em; }
 pre {
@@ -465,10 +456,11 @@ code {
   padding: 0.05em 0.25em;
 }
 table {
-  width: 100%;
+  width: min(100%, 6.4in);
+  max-width: 6.4in;
+  margin: 0.7em auto;
   border-collapse: collapse;
   font-size: 10pt;
-  margin: 0.7em 0;
   page-break-inside: avoid;
 }
 th, td {
