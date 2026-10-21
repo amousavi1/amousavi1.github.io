@@ -1089,6 +1089,10 @@ body.page-lecture .page__content img.lecture-stack {
   max-height: none;
 }
 
+body.page-lecture .page__content img.lecture-stack.lecture-flow {
+  max-width: min(70%, 28rem);
+}
+
 body.page-lecture .page__content pre,
 body.page-lecture .page__content table,
 body.page-lecture .page__content th,
