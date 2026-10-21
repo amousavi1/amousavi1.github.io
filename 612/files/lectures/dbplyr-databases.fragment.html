@@ -151,13 +151,27 @@ WHERE season = '2010/2011'
 <p>The connection should be closed explicitly. Otherwise R closes it when the session ends, and a file-backed database may remain locked until then.</p>
 <p>The same sequence applies when <code>soccer.sqlite</code> is not available. <code>dbConnect(SQLite(), ":memory:")</code> creates a database that exists only for the current session, and <code>copy_to()</code> writes a local data frame, such as <code>nycflights13::flights</code>, into that database. <code>tbl()</code>, the dplyr verbs, <code>show_query()</code>, and <code>collect()</code> are unchanged.</p>
 <hr />
-<h2>6. Why <code>collect()</code> is required</h2>
+<h2>6. The sequence</h2>
+<p>Many dplyr verbs belong before <code>collect()</code>. That is one of the main advantages of dbplyr.</p>
+<p><img src="files/graphics/db-workflow-sequence.png" alt="Eight steps for a database analysis. Steps 1 to 5 run before collect(), while the rows stay in SQLite. collect() brings the result into R. Steps 7 and 8 analyze that tibble and close the connection." class="lecture-stack"></p>
+<p>Steps 1–5 build a query and leave the rows in SQLite. <code>collect()</code> copies the result into R. Steps 7 and 8 use that tibble and then close the connection.</p>
+<p><strong>1. <code>library()</code>.</strong> Load DBI, RSQLite, dplyr, and dbplyr.</p>
+<p><strong>2. <code>dbConnect()</code>.</strong> Open <code>soccer.sqlite</code>. The object <code>con</code> is the connection.</p>
+<p><strong>3. <code>dbListTables()</code>.</strong> List the tables in the file, such as <code>Match</code>, <code>Team</code>, and <code>Country</code>.</p>
+<p><strong>4. <code>tbl()</code>.</strong> Point at a table. <code>Match_db</code> describes a query, and the rows stay in SQLite.</p>
+<p><strong>5. dplyr operations.</strong> <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>arrange()</code>, <code>group_by()</code>, <code>summarize()</code>, and the join functions are translated into SQL by dbplyr. SQLite evaluates them when the query runs. <code>show_query()</code> prints that SQL and leaves the rows in the database.</p>
+<p><strong>6. <code>collect()</code>.</strong> Execute the query. Only the requested rows return, as a tibble in R's memory.</p>
+<p><strong>7. R operations.</strong> Plots, <code>pivot_longer()</code>, <code>separate()</code>, and any other function without an SQL translation run on that tibble.</p>
+<p><strong>8. <code>dbDisconnect()</code>.</strong> Close the connection when the query is finished. A file-backed database can remain locked until then.</p>
+<p>Filter and summarize a large table before <code>collect()</code>, so only the needed rows enter R. After <code>collect()</code>, the full set of applicable R functions is available, including operations that cannot be translated into SQL.</p>
+<hr />
+<h2>7. Why <code>collect()</code> is required</h2>
 <p><strong>Before <code>collect()</code>.</strong> The query remains associated with the database. Supported operations are executed by SQLite when the query runs. Printing a lazy table displays a preview, commonly the first rows, rather than the full table.</p>
 <p><strong>After <code>collect()</code>.</strong> The selected rows form a tibble in RAM. Subsequent operations run locally in R. ggplot2 requires a local data frame, so a plot is constructed only after <code>collect()</code>.</p>
 <p>Not every tidyverse verb has an SQL translation. <code>pivot_longer()</code>, <code>separate()</code>, and most tidyr operations require a local data frame. <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>arrange()</code>, <code>group_by()</code>, <code>summarize()</code>, and the join functions generally translate.</p>
 <p>The purpose of dbplyr is to filter, join, and summarize large tables inside the database, and to transfer only the required result.</p>
 <hr />
-<h2>7. Key takeaway</h2>
+<h2>8. Key takeaway</h2>
 <p>The path of a query is:</p>
 <p>R, then dplyr, then dbplyr, then DBI and RSQLite, then SQLite, then <code>soccer.sqlite</code>.</p>
 <ul>
@@ -171,7 +185,7 @@ WHERE season = '2010/2011'
 </ul>
 <p>The analyst writes ordinary dplyr code and does not load the entire database into memory.</p>
 <hr />
-<h2>8. Practice</h2>
+<h2>9. Practice</h2>
 <ol>
 <li>Name the seven components from R to <code>soccer.sqlite</code>. Which component is a language rather than a program?</li>
 <li>Connect to <code>soccer.sqlite</code>. From <code>Match</code>, retain the 2010/2011 season and the columns <code>date</code>, <code>home_team_goal</code>, and <code>away_team_goal</code>. Call <code>show_query()</code>, then <code>collect()</code>. State how <code>matches</code> differs from <code>Match_db</code>.</li>

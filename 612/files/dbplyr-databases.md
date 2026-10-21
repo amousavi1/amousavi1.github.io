@@ -152,7 +152,35 @@ The same sequence applies when `soccer.sqlite` is not available. `dbConnect(SQLi
 
 ---
 
-## 6. Why `collect()` is required
+## 6. The sequence
+
+Many dplyr verbs belong before `collect()`. That is one of the main advantages of dbplyr.
+
+<img src="files/graphics/db-workflow-sequence.png" alt="Eight steps for a database analysis. Steps 1 to 5 run before collect(), while the rows stay in SQLite. collect() brings the result into R. Steps 7 and 8 analyze that tibble and close the connection." class="lecture-stack">
+
+Steps 1–5 build a query and leave the rows in SQLite. `collect()` copies the result into R. Steps 7 and 8 use that tibble and then close the connection.
+
+**1. `library()`.** Load DBI, RSQLite, dplyr, and dbplyr.
+
+**2. `dbConnect()`.** Open `soccer.sqlite`. The object `con` is the connection.
+
+**3. `dbListTables()`.** List the tables in the file, such as `Match`, `Team`, and `Country`.
+
+**4. `tbl()`.** Point at a table. `Match_db` describes a query, and the rows stay in SQLite.
+
+**5. dplyr operations.** `filter()`, `select()`, `mutate()`, `arrange()`, `group_by()`, `summarize()`, and the join functions are translated into SQL by dbplyr. SQLite evaluates them when the query runs. `show_query()` prints that SQL and leaves the rows in the database.
+
+**6. `collect()`.** Execute the query. Only the requested rows return, as a tibble in R's memory.
+
+**7. R operations.** Plots, `pivot_longer()`, `separate()`, and any other function without an SQL translation run on that tibble.
+
+**8. `dbDisconnect()`.** Close the connection when the query is finished. A file-backed database can remain locked until then.
+
+Filter and summarize a large table before `collect()`, so only the needed rows enter R. After `collect()`, the full set of applicable R functions is available, including operations that cannot be translated into SQL.
+
+---
+
+## 7. Why `collect()` is required
 
 **Before `collect()`.** The query remains associated with the database. Supported operations are executed by SQLite when the query runs. Printing a lazy table displays a preview, commonly the first rows, rather than the full table.
 
@@ -164,7 +192,7 @@ The purpose of dbplyr is to filter, join, and summarize large tables inside the 
 
 ---
 
-## 7. Key takeaway
+## 8. Key takeaway
 
 The path of a query is:
 
@@ -182,7 +210,7 @@ The analyst writes ordinary dplyr code and does not load the entire database int
 
 ---
 
-## 8. Practice
+## 9. Practice
 
 1. Name the seven components from R to `soccer.sqlite`. Which component is a language rather than a program?
 2. Connect to `soccer.sqlite`. From `Match`, retain the 2010/2011 season and the columns `date`, `home_team_goal`, and `away_team_goal`. Call `show_query()`, then `collect()`. State how `matches` differs from `Match_db`.
