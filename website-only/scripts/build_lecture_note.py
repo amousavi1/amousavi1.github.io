@@ -211,7 +211,7 @@ NOTES = [
         "slug": "dbplyr-databases",
         "week": 8,
         "title": "8.3 dbplyr: Databases",
-        "lead": "tbl() is lazy SQL. collect() brings a result into R. Use an in-memory SQLite.",
+        "lead": "A database keeps the tables on disk. dplyr states the request, dbplyr turns it into SQL, and collect() brings back only the rows you need.",
     },
     {
         "slug": "lab-8-joins",
@@ -436,6 +436,10 @@ img {
   height: auto;
   object-fit: contain;
   page-break-inside: avoid;
+}
+img.lecture-stack {
+  max-width: 6.4in;
+  max-height: 9.4in;
 }
 ul, ol { padding-left: 1.25em; }
 pre {

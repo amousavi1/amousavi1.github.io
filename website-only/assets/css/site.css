@@ -1084,6 +1084,11 @@ body.page-lecture .page__content img {
   object-fit: contain;
 }
 
+body.page-lecture .page__content img.lecture-stack {
+  max-width: min(100%, 40rem);
+  max-height: none;
+}
+
 body.page-lecture .page__content pre,
 body.page-lecture .page__content table,
 body.page-lecture .page__content th,
