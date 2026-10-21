@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-10-21T03:15:00-04:00';
+  const SITE_LAST_UPDATED = '2026-10-21T03:26:00-04:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -453,7 +453,11 @@
     const content = document.querySelector('#main > .page .page__content');
     if (!main || !content) return;
 
-    const headingSelector = document.body.classList.contains('page-lecture') ? 'h2' : 'h2, h3';
+    const headingSelector =
+      document.body.classList.contains('page-lecture') &&
+      !document.body.classList.contains('page-toc-deep')
+        ? 'h2'
+        : 'h2, h3';
     const headings = Array.from(content.querySelectorAll(headingSelector));
     const currentWeek = currentData612Week();
     const aside = document.createElement('aside');

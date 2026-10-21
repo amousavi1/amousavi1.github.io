@@ -1,0 +1,247 @@
+<h2>Learning objectives</h2>
+<p>By the end of this worksheet, you should be able to connect to a SQLite database, inspect its tables, use <code>dplyr</code> verbs on database-backed tables, understand lazy queries, use <code>collect()</code> appropriately, join tables by identifiers, and produce a time-series visualization.</p>
+<h3>Preparation</h3>
+<p>Download and unzip the European soccer database from Canvas (or the <a href="https://dcgerard.github.io/stat_412_612/data.html">course data page</a>). Place <code>soccer.sqlite</code> under <code>data/soccer/</code> relative to your <code>.qmd</code> file, or update the path below. Install the packages once if necessary.</p>
+<pre><code class="language-r"># Install once in the R console, if needed:
+# install.packages(c(&quot;DBI&quot;, &quot;RSQLite&quot;, &quot;dplyr&quot;, &quot;dbplyr&quot;, &quot;tidyr&quot;, &quot;readr&quot;, &quot;ggplot2&quot;))
+
+library(DBI)
+library(RSQLite)
+library(dplyr)   # tbl(), select(), filter(), etc.
+library(dbplyr) # translation of dplyr commands to SQL
+library(tidyr)  # pivot_longer()
+library(readr)  # parse_date()
+library(ggplot2)
+
+db_path &lt;- &quot;data/soccer/soccer.sqlite&quot;
+stopifnot(file.exists(db_path))  # Avoid silently creating an empty SQLite file.
+con &lt;- dbConnect(SQLite(), dbname = db_path)
+</code></pre>
+<p><strong>Key idea:</strong> R/RStudio → <code>dplyr</code> → <code>dbplyr</code> (SQL translation) → DBI / RSQLite (connection) → SQLite (query engine) → <code>soccer.sqlite</code> (data file). A database-backed <code>tbl()</code> is a lazy table reference, <em>not</em> an ordinary in-memory data frame.</p>
+<h2>Part A. Connect to and inspect the database</h2>
+<h3>Question 1 — Understand the components</h3>
+<p>In one or two sentences each, distinguish <strong>SQLite</strong>, <strong><code>soccer.sqlite</code></strong>, <strong>RSQLite</strong>, <strong>DBI</strong>, <strong>dbplyr</strong>, and <strong>dplyr</strong>. Which component actually executes SQL queries?</p>
+<p><strong>Answer:</strong> SQLite is the database engine; <code>soccer.sqlite</code> is the file containing the tables; <code>RSQLite</code> implements the SQLite driver in R; <code>DBI</code> supplies the database interface; <code>dbplyr</code> translates <code>dplyr</code> operations into SQL; and <code>dplyr</code> provides data manipulation functions. <strong>SQLite executes the SQL.</strong></p>
+<h3>Question 2 — Explore available tables</h3>
+<p>Using the connection <code>con</code>:</p>
+<ol>
+<li>List the names of all tables in the soccer database.</li>
+<li>Check whether the tables <code>Team</code>, <code>Match</code>, and <code>Country</code> exist.</li>
+<li>How many tables does the database report? (Include SQLite's internal tables, if present.)</li>
+</ol>
+<p>Use <code>dbListTables()</code> and R operations on its result. Do <strong>not</strong> import whole tables.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">tables &lt;- dbListTables(con)
+tables
+all(c(&quot;Team&quot;, &quot;Match&quot;, &quot;Country&quot;) %in% tables)
+length(tables)
+</code></pre>
+<p>The lecture database typically includes the seven soccer tables and the internal <code>sqlite_sequence</code> table. The exact count comes from <code>dbListTables(con)</code>.</p>
+<h3>Question 3 — Make lazy references</h3>
+<p>Create the following objects using <code>tbl()</code>:</p>
+<ul>
+<li><code>Team_db</code> referring to <code>Team</code></li>
+<li><code>Country_db</code> referring to <code>Country</code></li>
+<li><code>League_db</code> referring to <code>League</code></li>
+<li><code>Match_db</code> referring to <code>Match</code></li>
+</ul>
+<p>Then display the first six rows of <code>Country_db</code>. Explain why <code>Match_db</code> is <strong>not</strong> a regular data frame.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">Team_db    &lt;- tbl(con, &quot;Team&quot;)
+Country_db &lt;- tbl(con, &quot;Country&quot;)
+League_db  &lt;- tbl(con, &quot;League&quot;)
+Match_db   &lt;- tbl(con, &quot;Match&quot;)
+head(Country_db)
+</code></pre>
+<p><code>tbl(con, ...)</code> creates a lazy reference to a database table. It does not download the entire table into R.</p>
+<h3>Question 4 — Investigate columns</h3>
+<p>Without calling <code>collect()</code> on the complete table:</p>
+<ol>
+<li>Display the column names of <code>Match_db</code>.</li>
+<li>Select columns from <code>id</code> through <code>away_team_goal</code> (inclusive).</li>
+<li>Display the first ten rows of that selection.</li>
+</ol>
+<p>Do not access undocumented internal fields such as <code>$ops$vars</code>; use a supported function for column names.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">colnames(Match_db)
+match_cols &lt;- Match_db %&gt;% select(id:away_team_goal)
+head(match_cols, 10)
+</code></pre>
+<h2>Part B. Query the database with dplyr</h2>
+<h3>Question 5 — Filter without downloading</h3>
+<p>Using <strong>only the database-backed</strong> <code>Match_db</code>, select <code>season</code>, <code>date</code>, <code>home_team_goal</code>, and <code>away_team_goal</code> for matches from the <code>2010/2011</code> season in which the home team scored <strong>strictly more</strong> than the away team. Save this as <code>home_wins_db</code>.</p>
+<ol>
+<li>Display the query object.</li>
+<li>Use <code>show_query()</code> to inspect the SQL generated by <code>dbplyr</code>.</li>
+<li>Is the full result already in R's memory? Briefly explain.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">home_wins_db &lt;- Match_db %&gt;%
+  filter(season == &quot;2010/2011&quot;, home_team_goal &gt; away_team_goal) %&gt;%
+  select(season, date, home_team_goal, away_team_goal)
+home_wins_db
+show_query(home_wins_db)
+</code></pre>
+<p><code>home_wins_db</code> represents a database query, not an in-memory copy of its full result. Displaying it fetches only a preview; <code>show_query()</code> displays the generated SQL.</p>
+<h3>Question 6 — Summarize inside SQLite</h3>
+<p>Using <code>Match_db</code>, calculate for each <code>season</code>:</p>
+<ul>
+<li><code>n_matches</code>: number of matches;</li>
+<li><code>avg_home_goals</code>: mean home-team goals;</li>
+<li><code>avg_away_goals</code>: mean away-team goals.</li>
+</ul>
+<p>Sort by <code>season</code> and display the result. Keep the work in the database until you actually need the result in R.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">Match_db %&gt;%
+  group_by(season) %&gt;%
+  summarise(
+    n_matches = n(),
+    avg_home_goals = mean(home_team_goal, na.rm = TRUE),
+    avg_away_goals = mean(away_team_goal, na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  arrange(season)
+</code></pre>
+<h3>Question 7 — Understand collect()</h3>
+<p>Starting from <code>home_wins_db</code> in Question 5:</p>
+<ol>
+<li>Retrieve the results into R as <code>home_wins</code>.</li>
+<li>Verify that <code>home_wins</code> is a data frame.</li>
+<li>Report the number of rows in <code>home_wins</code>.</li>
+<li>Explain the practical difference between <code>home_wins_db</code> and <code>home_wins</code>.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">home_wins &lt;- home_wins_db %&gt;% collect()
+is.data.frame(home_wins)
+nrow(home_wins)
+</code></pre>
+<p><code>home_wins_db</code> is a database-backed query. <code>home_wins</code> is a local tibble created when <code>collect()</code> runs the query and returns its results.</p>
+<h2>Part C. Connect the tables</h2>
+<h3>Question 8 — Find England's Premier League ID</h3>
+<p>Using <code>League_db</code> and <code>Country_db</code>, find the <code>id</code> and <code>name</code> of the <strong>England Premier League</strong>, together with its country name.</p>
+<p>Hint: The league table includes <code>country_id</code>, which corresponds to <code>id</code> in the country table. Join on these columns and be careful about duplicate <code>name</code> fields.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">england_league_db &lt;- League_db %&gt;%
+  inner_join(
+    Country_db %&gt;%
+      select(country_id = id, country_name = name),
+    by = &quot;country_id&quot;
+  ) %&gt;%
+  filter(country_name == &quot;England&quot;, name == &quot;England Premier League&quot;) %&gt;%
+  select(league_id = id, league_name = name, country_name)
+
+england_league_db %&gt;% collect()
+</code></pre>
+<h3>Question 9 — Match IDs to team names</h3>
+<p>For matches in the <code>2010/2011</code> season, create a table with the following five columns:</p>
+<ul>
+<li><code>date</code></li>
+<li><code>home_team</code> (full name)</li>
+<li><code>away_team</code> (full name)</li>
+<li><code>home_team_goal</code></li>
+<li><code>away_team_goal</code></li>
+</ul>
+<p>Join <code>Match_db</code> with <code>Team_db</code> <strong>twice</strong>, once for each team identifier. Display the first ten records. Can these joins be completed before <code>collect()</code>?</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">home_teams_db &lt;- Team_db %&gt;%
+  select(home_team_api_id = team_api_id, home_team = team_long_name)
+away_teams_db &lt;- Team_db %&gt;%
+  select(away_team_api_id = team_api_id, away_team = team_long_name)
+
+named_matches_db &lt;- Match_db %&gt;%
+  filter(season == &quot;2010/2011&quot;) %&gt;%
+  inner_join(home_teams_db, by = &quot;home_team_api_id&quot;) %&gt;%
+  inner_join(away_teams_db, by = &quot;away_team_api_id&quot;) %&gt;%
+  select(date, home_team, away_team, home_team_goal, away_team_goal)
+
+named_matches_db %&gt;% head(10)
+</code></pre>
+<p>Yes. The two joins can be executed by SQLite before transferring data to R.</p>
+<h3>Question 10 — Country for each team</h3>
+<p>Starting with <code>Match_db</code>, identify all distinct pairs of <code>country_id</code> and team ID appearing as a home or away team. Join these IDs to <code>Team_db</code> and <code>Country_db</code> and return one row per unique combination of team name and country name, sorted alphabetically by team name.</p>
+<p><strong>Hint:</strong> In this question, first select only <code>country_id</code>, <code>home_team_api_id</code>, and <code>away_team_api_id</code> from <code>Match_db</code>, then use <code>collect()</code> and <code>pivot_longer()</code>. (We are deliberately practicing an in-memory reshape.)</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">Match_db %&gt;%
+  select(country_id, home_team_api_id, away_team_api_id) %&gt;%
+  collect() %&gt;%
+  pivot_longer(
+    cols = c(home_team_api_id, away_team_api_id),
+    names_to = &quot;home_away&quot;,
+    values_to = &quot;team_api_id&quot;
+  ) %&gt;%
+  distinct(country_id, team_api_id) %&gt;%
+  left_join(Team_db %&gt;% collect(), by = &quot;team_api_id&quot;) %&gt;%
+  left_join(Country_db %&gt;% collect(), by = c(&quot;country_id&quot; = &quot;id&quot;)) %&gt;%
+  transmute(team_long_name, country_name = name) %&gt;%
+  distinct() %&gt;%
+  arrange(team_long_name) %&gt;%
+  head()
+</code></pre>
+<h2>Part D. Premier League time-series exercise</h2>
+<h3>Question 11 — Daily goal difference, 2010/2011</h3>
+<p>Using the England Premier League matches in the <code>2010/2011</code> season:</p>
+<ol>
+<li>Identify the Premier League's <code>league_id</code> from the database; do not hard-code it.</li>
+<li>Keep <code>date</code>, <code>home_team_goal</code>, and <code>away_team_goal</code> for its matches.</li>
+<li>Create <code>goal_diff = home_team_goal - away_team_goal</code>.</li>
+<li>Convert the date-time string to a calendar <code>Date</code> (using <code>parse_date()</code> after extracting the date portion).</li>
+<li>For <strong>each calendar day</strong>, calculate <code>mean_goal_diff</code>, the mean of <code>goal_diff</code> across matches on that day. Exclude missing goal differences if any occur.</li>
+<li>Plot <code>mean_goal_diff</code> against <code>date</code> using points and a line, with an informative title and axis labels.</li>
+</ol>
+<p><strong>Interpretation:</strong> A positive daily value indicates that home teams scored more goals on average than away teams on that date. This is a <strong>mean goal difference</strong>, not a proportion.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">premier_league_id &lt;- england_league_db %&gt;%
+  select(league_id) %&gt;%
+  collect() %&gt;%
+  pull(league_id)
+
+stopifnot(length(premier_league_id) == 1)
+
+premier_matches &lt;- Match_db %&gt;%
+  filter(league_id == !!premier_league_id, season == &quot;2010/2011&quot;) %&gt;%
+  select(date, home_team_goal, away_team_goal) %&gt;%
+  collect()
+
+daily_goal_diff &lt;- premier_matches %&gt;%
+  mutate(
+    date = readr::parse_date(substr(date, 1, 10), format = &quot;%Y-%m-%d&quot;),
+    goal_diff = home_team_goal - away_team_goal
+  ) %&gt;%
+  group_by(date) %&gt;%
+  summarise(mean_goal_diff = mean(goal_diff, na.rm = TRUE), .groups = &quot;drop&quot;) %&gt;%
+  arrange(date)
+
+ggplot(daily_goal_diff, aes(x = date, y = mean_goal_diff)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = &quot;Premier League: Daily Mean Home–Away Goal Difference (2010/2011)&quot;,
+    x = &quot;Match date&quot;,
+    y = &quot;Mean home goals minus away goals&quot;
+  ) +
+  theme_minimal()
+</code></pre>
+<p>Positive mean goal difference means that home teams scored more goals on average on that date; negative means away teams scored more. It is not a proportion.</p>
+<h3>Question 12 — Reason about performance</h3>
+<p>Suppose the <code>Match</code> table grows to tens of millions of rows.</p>
+<ol>
+<li>Why might <code>Match_db %&gt;% collect() %&gt;% filter(season == "2010/2011")</code> be inefficient?</li>
+<li>Rewrite it so that filtering occurs before downloading.</li>
+<li>Which operations from Question 11 would you push to the database to reduce transferred data?</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">small_result &lt;- Match_db %&gt;%
+  filter(season == &quot;2010/2011&quot;) %&gt;%
+  select(date, home_team_goal, away_team_goal) %&gt;%
+  collect()
+</code></pre>
+<p>Collecting before filtering transfers unnecessary records. Apply <code>filter()</code> and <code>select()</code> in the database before <code>collect()</code>. When possible, also perform joins and summaries remotely.</p>
+<h3>Clean up</h3>
+<pre><code class="language-r">dbDisconnect(con)
+</code></pre>
+<h3>References</h3>
+<ul>
+<li><a href="https://dbplyr.tidyverse.org/articles/dbplyr.html">dbplyr introduction</a></li>
+<li><a href="https://dbi.r-dbi.org/">DBI documentation</a></li>
+<li><a href="https://dcgerard.github.io/stat_412_612/data.html">Course soccer dataset</a></li>
+</ul>
