@@ -65,9 +65,9 @@ str_c("prefix-", c("a", "b", "c"), "-suffix")
 str_c(c("x", "y", "z"), collapse = ", ")
 ```
 
-`sep` and `collapse` are easy to mix up. `sep` is for several arguments. `collapse` is for one vector.
+`sep` and `collapse` control different operations. `sep` is the separator placed between several arguments. `collapse` combines the elements of one vector into a single string.
 
-If any piece is `NA`, the whole result is `NA`. That is not how `paste()` works. Turn the missing value into text first if you want it to stay in the string:
+If any argument is `NA`, `str_c()` returns `NA`. `paste()` instead converts a missing value to the characters `NA`. Convert the missing value to text first when it should remain in the string:
 
 ```{r}
 #| label: chunk-5

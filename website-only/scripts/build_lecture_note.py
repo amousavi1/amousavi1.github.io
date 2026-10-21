@@ -211,7 +211,7 @@ NOTES = [
         "slug": "dbplyr-databases",
         "week": 8,
         "title": "8.3 dbplyr: Databases",
-        "lead": "A database keeps the tables on disk. dplyr states the request, dbplyr turns it into SQL, and collect() brings back only the rows you need.",
+        "lead": "A database stores tables for efficient retrieval. dplyr specifies the manipulation, dbplyr translates it into SQL, and collect() returns only the requested rows.",
     },
     {
         "slug": "lab-8-joins",

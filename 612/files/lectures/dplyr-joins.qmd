@@ -23,7 +23,7 @@ A primary key identifies each row of its own table. A foreign key points at a pr
 
 ## 1. Several tables, one system
 
-One table is rarely the whole story. A relational dataset splits the facts across tables. A **key** is the column, or the set of columns, that links them.
+A single table rarely contains every variable required for an analysis. A relational dataset distributes the facts across tables. A **key** is the column, or the set of columns, that links them.
 
 `nycflights13` is five tables about the same flights. Install the package once, then:
 
@@ -55,7 +55,7 @@ A **primary key** uniquely identifies each row in its own table.
 
 `planes$tailnum`, `airlines$carrier`, and `airports$faa` are primary keys. The value picks out one row.
 
-A name is a poor primary key. Two students can share one.
+A name is an unsuitable primary key, because two students can share the same name.
 
 ```{r}
 #| label: chunk-students
@@ -100,11 +100,11 @@ In `nycflights13` the foreign keys on `flights` are:
 - `dest` points at `airports$faa`. Four codes are not: `BQN`, `SJU`, `STT`, and `PSE`.
 - `tailnum` points at `planes$tailnum`. Some flights have a missing tail number. Some tail numbers are not in `planes`.
 
-The package stores the links. It does not enforce them. A later join is where the gaps show up.
+The package records the links. It does not enforce referential integrity. A subsequent join is where the unmatched keys appear.
 
 ### Why split the tables
 
-Ana's name and major are stored once, not copied onto every enrollment. A new major is one edit. You join when a question needs columns from both tables.
+Ana's name and major are stored once, rather than copied onto every enrollment. A change of major is then a single edit. A join is required when a question needs columns from both tables.
 
 ### Relationships
 
@@ -112,7 +112,7 @@ Ana's name and major are stored once, not copied onto every enrollment. A new ma
 
 ![One-to-many: a key that repeats in x](files/graphics/join-one-to-many.png)
 
-- **Many-to-many.** Students take many courses, and a course has many students. Store that with a linking table. `enrollments` is that table: `student_id` refers to `students`, and `course` refers to a courses table whose primary key is the course id. Each foreign key is then one-to-many. Joining two tables that both repeat the key is a different problem, and lecture 8.2 treats it as a bad key.
+- **Many-to-many.** Students take many courses, and a course has many students. Store that with a linking table. `enrollments` is that table: `student_id` refers to `students`, and `course` refers to a courses table whose primary key is the course id. Each foreign key is then one-to-many. Joining two tables that both repeat the key is a separate problem. Lecture 8.2 treats that repetition as a failure of the key to identify rows uniquely.
 - **One-to-one.** Each row in one table matches at most one row in the other.
 
 ### Composite key
@@ -160,7 +160,7 @@ flights |>
 
 The `students` check returns 0 rows, and `student_id` has no missing values, so it is a valid primary key. The join repeats Ana once per enrollment. That repeat is correct: the foreign key repeats, and the primary key does not.
 
-If `count()` had returned rows, `student_id` would not be a primary key. The join would duplicate Ana for the wrong reason. That is a common silent error.
+If `count()` had returned rows, `student_id` would not be a primary key. The join would duplicate Ana for the wrong reason. That duplication is a common error, and it does not raise a warning.
 
 `planes$tailnum` passes the same check. `weather` does not. Hour 1 on November 3, 2013 appears twice at each NYC airport, because daylight saving time repeated that hour. Those five columns are still the intended composite key. The three extra rows are the exception.
 
@@ -196,7 +196,7 @@ y <- tribble(
 
 ### `inner_join()`
 
-Only keys that appear in both tables.
+`inner_join()` retains only the keys that appear in both tables.
 
 ![](files/graphics/join-inner.png)
 
@@ -207,7 +207,7 @@ inner_join(x, y, by = "key")
 
 ### `left_join()`
 
-Every row of `x`. This is the join you will use most often. A key that is only in `x` gets `NA` in the columns from `y`.
+`left_join()` retains every row of `x`. It is the join used in most analyses. A key present only in `x` is filled with `NA` in the columns taken from `y`.
 
 ![](files/graphics/join-left.png)
 
@@ -218,7 +218,7 @@ left_join(x, y, by = "key")
 
 ### `right_join()`
 
-Every row of `y`. A key that is only in `y` gets `NA` in the columns from `x`.
+`right_join()` retains every row of `y`. A key present only in `y` is filled with `NA` in the columns taken from `x`.
 
 ![](files/graphics/join-right.png)
 
@@ -229,7 +229,7 @@ right_join(x, y, by = "key")
 
 ### `full_join()`
 
-Every key in either table. Unmatched rows get `NA`.
+`full_join()` retains every key that appears in either table. Unmatched rows are filled with `NA`.
 
 ![](files/graphics/join-full.png)
 
@@ -242,7 +242,7 @@ Unmatched rows get `NA` in the new columns (`left_join` / `right_join` / `full_j
 
 ### `nest_join()`
 
-`nest_join(x, y)` is the primitive: each row of `x` gets a list-column of the matching rows of `y`. The other joins are that idea plus `unnest()`. You will use `left_join()` day to day. Know `nest_join()` exists when you want the matches as a list instead of extra rows.
+`nest_join(x, y)` is the primitive form of a mutating join. Each row of `x` receives a list-column containing the matching rows of `y`. The other mutating joins equal that construction followed by `unnest()`. `left_join()` is the form used for routine combination of rows. `nest_join()` is appropriate when the matches should remain a list rather than additional rows.
 
 ![](files/graphics/join-nest.png)
 

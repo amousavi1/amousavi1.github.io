@@ -21,9 +21,9 @@ flights |>
   anti_join(planes, by = "tailnum")
 ```
 
-`inner_join(x, y)` also drops unmatched `x` rows, but it **duplicates** an `x` row once per match in `y`. `semi_join()` never duplicates `x`. If you only want "does a match exist?", use `semi_join()`.
+`inner_join(x, y)` also drops unmatched rows of `x`, but it **duplicates** a row of `x` once for each match in `y`. `semi_join()` never duplicates rows of `x`. When the question is only whether a match exists, use `semi_join()`.
 
-`anti_join()` is the diagnostic: destinations with no airport row, planes that never flew, weather hours with no flights.
+`anti_join()` identifies the unmatched rows: destinations with no airport record, aircraft that never flew, and weather hours with no flights.
 
 ```r
 flights |>
@@ -35,7 +35,7 @@ flights |>
 
 ## 2. Duplicate keys and many-to-many
 
-If a key appears twice in `x` and three times in `y`, an inner or left join returns six rows for that key. That is a many-to-many join. Sometimes it is what you want; often it is a bad key.
+If a key appears twice in `x` and three times in `y`, an inner or left join returns six rows for that key. The result is a many-to-many join. The expansion is sometimes the intended result. It often indicates that the key does not identify rows uniquely.
 
 ![Many-to-many: the same key repeats in both tables](files/graphics/join-many-to-many.png)
 

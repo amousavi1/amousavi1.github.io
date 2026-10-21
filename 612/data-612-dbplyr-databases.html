@@ -116,22 +116,22 @@
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-8.html">Week 8</a> &middot;
                             <a href="files/dbplyr-databases.pdf" target="_blank" rel="noopener">PDF</a>
                          &middot; <a href="files/lectures/dbplyr-databases.qmd">Source (.qmd)</a></p>
-<p>A database keeps the tables on disk. dplyr states the request, dbplyr turns it into SQL, and <code>collect()</code> brings back only the rows you need.</p>
+<p>A database stores tables for efficient retrieval. dplyr specifies the manipulation, dbplyr translates it into SQL, and <code>collect()</code> returns only the requested rows.</p>
 <h2>1. What is a database?</h2>
-<p>A <strong>database</strong> is an organized collection of data, built for storage, retrieval, and management.</p>
-<p>In R, a data frame lives in RAM. That is fine for <code>flights</code>. It is a poor plan when the table is larger than memory, when several people query it at once, or when the data already lives in a database. Loading every row into R can be slow or impossible.</p>
-<p>A <strong>relational database</strong> splits the data into tables and connects them with keys. One soccer database might hold:</p>
+<p>A <strong>database</strong> is an organized collection of data designed for efficient storage, retrieval, and management.</p>
+<p>In R, analysis usually begins with a data frame stored in RAM. That representation is appropriate for a table such as <code>flights</code>. When the data are very large, when several users query them concurrently, or when they already reside in an external database, loading the entire collection into R may be inefficient or impossible.</p>
+<p>A <strong>relational database</strong> organizes data into multiple tables that are connected by common identifiers (keys). A soccer database, for example, may contain the following tables.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Table</th>
-<th>What it stores</th>
+<th>Information</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Country</td>
-<td>Country names and ids</td>
+<td>Country names and identifiers</td>
 </tr>
 <tr>
 <td>League</td>
@@ -139,11 +139,11 @@
 </tr>
 <tr>
 <td>Match</td>
-<td>Dates, scores, and the teams that played</td>
+<td>Match results, dates, and scores</td>
 </tr>
 <tr>
 <td>Team</td>
-<td>Team names and ids</td>
+<td>Team names and identifiers</td>
 </tr>
 <tr>
 <td>Player</td>
@@ -151,145 +151,150 @@
 </tr>
 </tbody>
 </table></div>
-<p>These tables stay together in one database. You ask for the rows you need. You do not load the whole database into R first.</p>
+<p>Unlike an ordinary data frame, these tables are stored together and can be queried without loading the entire database into memory.</p>
 <hr />
 <h2>2. What is SQLite?</h2>
-<p><strong>SQLite</strong> is a lightweight relational database management system, a DBMS. It is the program that stores and queries the data.</p>
-<p><code>soccer.sqlite</code> is not the program. It is the <strong>file</strong> that holds the soccer tables. SQLite reads that file, runs queries, and returns rows.</p>
-<p>One <code>.sqlite</code> file can hold many tables, plus indexes and other database information.</p>
-<p>Other database systems include MySQL, MariaDB, PostgreSQL, Microsoft SQL Server, and Google BigQuery. The idea is the same. The program that talks to each one from R is different.</p>
+<p><strong>SQLite</strong> is a lightweight relational database management system (DBMS).</p>
+<ul>
+<li><code>soccer.sqlite</code> is a database file that contains the soccer data.</li>
+<li>SQLite is the software that reads, manages, and queries that file.</li>
+<li>A single <code>.sqlite</code> file can contain multiple tables, indexes, and other database objects.</li>
+</ul>
+<p>Other database management systems include MySQL, MariaDB, PostgreSQL, Microsoft SQL Server, and Google BigQuery. The relational model is shared; the software that manages the data differs.</p>
 <hr />
-<h2>3. The packages, and what each one does</h2>
-<p>These pieces are easy to mix up. Each one has one job.</p>
+<h2>3. Understanding the R packages</h2>
+<p>Each component in the workflow has a distinct role.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Piece</th>
-<th>What it is</th>
+<th>Component</th>
+<th>Role</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>R / RStudio</td>
-<td>Where you write and run R code</td>
+<td>The environment in which R code is written and executed</td>
 </tr>
 <tr>
 <td>dplyr</td>
-<td>The verbs: <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, and the rest</td>
+<td>Provides <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, and related verbs</td>
 </tr>
 <tr>
 <td>dbplyr</td>
-<td>Translates those verbs into SQL</td>
+<td>Translates dplyr operations into SQL</td>
 </tr>
 <tr>
 <td>SQL</td>
-<td>The language a relational database understands</td>
+<td>The language used to query a relational database</td>
 </tr>
 <tr>
 <td>DBI</td>
-<td>A standard interface between R and database systems</td>
+<td>Defines a standard interface between R and database systems</td>
 </tr>
 <tr>
 <td>RSQLite</td>
-<td>The DBI backend for SQLite</td>
+<td>Implements the DBI interface for SQLite</td>
 </tr>
 <tr>
 <td>SQLite</td>
-<td>The program that runs the SQL and manages the file</td>
+<td>Executes SQL and manages the stored data</td>
 </tr>
 <tr>
 <td>soccer.sqlite</td>
-<td>The file that holds the tables</td>
+<td>The file that contains the database</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>dbplyr</code>, <code>DBI</code>, and <code>RSQLite</code> do <strong>not</strong> load with <code>library(tidyverse)</code>. Install them, then load them.</p>
-<p>SQL is a language, not another program in the stack. <code>dbplyr</code> writes it. SQLite runs it.</p>
-<p>Other packages play the role of <code>RSQLite</code> for other systems: <code>RMariaDB</code>, <code>RPostgres</code>, <code>odbc</code>, and <code>bigrquery</code>. You still use DBI and, usually, dbplyr. Only the backend changes.</p>
+<p><code>dbplyr</code>, <code>DBI</code>, and <code>RSQLite</code> are not attached by <code>library(tidyverse)</code>. They must be installed and loaded explicitly.</p>
+<p>SQL is the language generated by <code>dbplyr</code> and executed by SQLite. It is not a separate software layer. DBI and RSQLite together establish the connection and submit the query.</p>
+<p>Other packages that implement database connections include <code>RMariaDB</code>, <code>RPostgres</code>, <code>odbc</code>, and <code>bigrquery</code>. They allow R to communicate with other database systems. DBI remains the common interface, and dbplyr can still translate the dplyr code. Only the backend package changes.</p>
 <hr />
 <h2>4. From the front end to the back end</h2>
-<p>Read the picture from top to bottom. That is the path of a request. The green path is the way back.</p>
+<p>The figure orders the components from the code written in R to the file on disk. The downward arrows are the query. The green path is the return of the result.</p>
 <p><img src="files/graphics/db-front-to-back.png" alt="From R and dplyr, through dbplyr, DBI, and RSQLite, to SQLite and the soccer.sqlite file. collect() brings the rows back to R." class="lecture-stack"></p>
-<p>The front end is what you touch in R. The back end is the database program and the file on disk.</p>
+<p>The front end is the R session. The back end is the database engine and the file stored on disk.</p>
 <ul>
-<li><strong>R / RStudio.</strong> You write the code here.</li>
-<li><strong>dplyr.</strong> You say <code>filter()</code>, <code>select()</code>, <code>group_by()</code>, <code>summarize()</code>.</li>
-<li><strong>dbplyr.</strong> It turns that pipeline into SQL. This is the step students miss. dplyr does not talk to the file itself.</li>
-<li><strong>DBI.</strong> One set of functions for connecting, listing tables, and sending queries. The same calls work for SQLite and for other databases.</li>
-<li><strong>RSQLite.</strong> The SQLite-specific piece of DBI. It knows how to open a <code>.sqlite</code> file.</li>
-<li><strong>SQLite.</strong> The engine. It runs the SQL.</li>
-<li><strong>soccer.sqlite.</strong> The file. <code>Match</code>, <code>Team</code>, <code>Player</code>, <code>League</code>, and <code>Country</code> live here, not in R's memory.</li>
+<li><strong>R / RStudio.</strong> The environment in which the analysis is written and executed.</li>
+<li><strong>dplyr.</strong> Specifies the manipulation through <code>filter()</code>, <code>select()</code>, <code>group_by()</code>, and <code>summarize()</code>.</li>
+<li><strong>dbplyr.</strong> Translates those dplyr operations into SQL. dplyr does not communicate with the database file directly.</li>
+<li><strong>DBI.</strong> Provides a standard set of functions for connecting, listing tables, and submitting queries. The same calls apply to SQLite and to other database systems.</li>
+<li><strong>RSQLite.</strong> The SQLite implementation of DBI. It opens the <code>.sqlite</code> file.</li>
+<li><strong>SQLite.</strong> Executes the SQL and processes the records.</li>
+<li><strong>soccer.sqlite.</strong> The physical database file. <code>Match</code>, <code>Team</code>, <code>Player</code>, <code>League</code>, and <code>Country</code> are stored in that file, not in R's memory.</li>
 </ul>
-<p><code>collect()</code> is the return trip. SQLite has already done the work. Only the result comes back into R.</p>
+<p><code>collect()</code> is the return path. SQLite has performed the computation. Only the requested rows are transferred into R.</p>
 <hr />
-<h2>5. Work through the soccer database</h2>
-<p>The file in this example is <code>./data/soccer/soccer.sqlite</code>, inside the project.</p>
-<p><strong>Step 1. Load the packages.</strong></p>
+<h2>5. Example: working with the soccer database</h2>
+<p>The database file in this example is <code>./data/soccer/soccer.sqlite</code>, relative to the project directory.</p>
+<p>The pipe <code>|&gt;</code> passes the current table into the next function. The same pipelines are often written with <code>%&gt;%</code>.</p>
+<p><strong>Step 1. Load the required packages.</strong></p>
 <pre><code class="language-r">library(DBI)
 library(RSQLite)
 library(dplyr)
 library(dbplyr)
 </code></pre>
-<p><strong>Step 2. Connect.</strong> <code>dbConnect()</code> opens the file. <code>con</code> is the connection, not the data.</p>
+<p><strong>Step 2. Connect to the database.</strong> <code>dbConnect()</code> opens the file. The object <code>con</code> is the connection, not a data frame.</p>
 <pre><code class="language-r">con &lt;- dbConnect(
   SQLite(),
   dbname = &quot;./data/soccer/soccer.sqlite&quot;
 )
 </code></pre>
-<p><strong>Step 3. See the tables.</strong></p>
+<p><strong>Step 3. Identify the available tables.</strong></p>
 <pre><code class="language-r">dbListTables(con)
 </code></pre>
-<p><strong>Step 4. Point at <code>Match</code>.</strong> <code>tbl()</code> does not download <code>Match</code>. <code>Match_db</code> is a lazy reference: a promise of a query, not a data frame in RAM.</p>
+<p><strong>Step 4. Create a reference to the Match table.</strong> <code>tbl()</code> does not download <code>Match</code>. <code>Match_db</code> is a lazy reference: a description of a query, not a data frame in RAM.</p>
 <pre><code class="language-r">Match_db &lt;- tbl(con, &quot;Match&quot;)
 </code></pre>
-<p><strong>Step 5. Use dplyr.</strong> These verbs are recorded. SQLite has not run them yet.</p>
+<p><strong>Step 5. Manipulate the table with dplyr.</strong> The verbs are recorded. SQLite has not yet executed them.</p>
 <pre><code class="language-r">result &lt;- Match_db |&gt;
   filter(season == &quot;2010/2011&quot;) |&gt;
   select(date, home_team_goal, away_team_goal)
 </code></pre>
-<p><strong>Step 6. Read the SQL.</strong> <code>show_query()</code> prints the translation dbplyr will send.</p>
+<p><strong>Step 6. Examine the SQL translation.</strong> <code>show_query()</code> prints the SQL that dbplyr will submit.</p>
 <pre><code class="language-r">show_query(result)
 </code></pre>
-<p>The SQL looks like this:</p>
+<p>The generated SQL has this form:</p>
 <pre><code class="language-sql">SELECT date, home_team_goal, away_team_goal
 FROM Match
 WHERE season = '2010/2011'
 </code></pre>
-<p><strong>Step 7. Bring the rows into R.</strong> <code>collect()</code> runs the query and returns a tibble.</p>
+<p><strong>Step 7. Retrieve the result into R.</strong> <code>collect()</code> executes the query and returns a tibble.</p>
 <pre><code class="language-r">matches &lt;- result |&gt;
   collect()
 </code></pre>
-<p><code>matches</code> is an ordinary tibble in memory. <code>Match_db</code> and <code>result</code> are still just queries.</p>
+<p><code>matches</code> is then a local tibble stored in R's memory. <code>Match_db</code> and <code>result</code> remain query descriptions.</p>
 <p><strong>Step 8. Close the connection.</strong></p>
 <pre><code class="language-r">dbDisconnect(con)
 </code></pre>
-<p>Close it yourself. If you forget, R closes it when the session ends. A file-backed database can stay locked until you do.</p>
-<p>The same pattern works without <code>soccer.sqlite</code>. <code>dbConnect(SQLite(), ":memory:")</code> builds a database that lasts for this session, and <code>copy_to()</code> writes a data frame such as <code>nycflights13::flights</code> into it. Then <code>tbl()</code>, dplyr, <code>show_query()</code>, and <code>collect()</code> are unchanged.</p>
+<p>The connection should be closed explicitly. Otherwise R closes it when the session ends, and a file-backed database may remain locked until then.</p>
+<p>The same sequence applies when <code>soccer.sqlite</code> is not available. <code>dbConnect(SQLite(), ":memory:")</code> creates a database that exists only for the current session, and <code>copy_to()</code> writes a local data frame, such as <code>nycflights13::flights</code>, into that database. <code>tbl()</code>, the dplyr verbs, <code>show_query()</code>, and <code>collect()</code> are unchanged.</p>
 <hr />
-<h2>6. Why <code>collect()</code> matters</h2>
-<p><strong>Before <code>collect()</code>.</strong> The query stays on the database. <code>filter()</code>, <code>select()</code>, joins, and <code>summarize()</code> run in SQLite when the query is executed. Printing the lazy table shows a small preview, not the whole table.</p>
-<p><strong>After <code>collect()</code>.</strong> The selected rows are a tibble in RAM. Later verbs run in R. ggplot2 needs that local tibble, so plot only after <code>collect()</code>.</p>
-<p>Not every tidyverse verb has a SQL translation. <code>pivot_longer()</code> and most tidyr helpers need a local data frame. <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>arrange()</code>, <code>group_by()</code>, <code>summarize()</code>, and the joins usually translate.</p>
-<p>The point of dbplyr is to filter, join, and summarize inside the database, then transfer only the result.</p>
+<h2>6. Why <code>collect()</code> is required</h2>
+<p><strong>Before <code>collect()</code>.</strong> The query remains associated with the database. Supported operations are executed by SQLite when the query runs. Printing a lazy table displays a preview, commonly the first rows, rather than the full table.</p>
+<p><strong>After <code>collect()</code>.</strong> The selected rows form a tibble in RAM. Subsequent operations run locally in R. ggplot2 requires a local data frame, so a plot is constructed only after <code>collect()</code>.</p>
+<p>Not every tidyverse verb has an SQL translation. <code>pivot_longer()</code>, <code>separate()</code>, and most tidyr operations require a local data frame. <code>filter()</code>, <code>select()</code>, <code>mutate()</code>, <code>arrange()</code>, <code>group_by()</code>, <code>summarize()</code>, and the join functions generally translate.</p>
+<p>The purpose of dbplyr is to filter, join, and summarize large tables inside the database, and to transfer only the required result.</p>
 <hr />
-<h2>7. The path, in one line</h2>
+<h2>7. Key takeaway</h2>
+<p>The path of a query is:</p>
 <p>R, then dplyr, then dbplyr, then DBI and RSQLite, then SQLite, then <code>soccer.sqlite</code>.</p>
 <ul>
-<li>R is where you work.</li>
-<li>dplyr is how you say the manipulation.</li>
-<li>dbplyr turns that into SQL.</li>
-<li>DBI and RSQLite open the connection and send the query.</li>
-<li>SQLite does the computation.</li>
-<li><code>soccer.sqlite</code> stores the tables.</li>
-<li><code>collect()</code> brings the result back.</li>
+<li>R is the environment in which the analysis is conducted.</li>
+<li>dplyr expresses the data manipulation.</li>
+<li>dbplyr converts that manipulation into SQL.</li>
+<li>DBI and RSQLite provide the connection and submit the query.</li>
+<li>SQLite performs the computation.</li>
+<li><code>soccer.sqlite</code> stores the data.</li>
+<li><code>collect()</code> returns the result to R.</li>
 </ul>
-<p>You use ordinary dplyr. You do not load the whole database into memory.</p>
+<p>The analyst writes ordinary dplyr code and does not load the entire database into memory.</p>
 <hr />
 <h2>8. Practice</h2>
 <ol>
-<li>Name the seven stops from R to <code>soccer.sqlite</code>. Which stop is a language, not a program?</li>
-<li>Connect to <code>soccer.sqlite</code>. From <code>Match</code>, keep the 2010/2011 season and the columns <code>date</code>, <code>home_team_goal</code>, and <code>away_team_goal</code>. Run <code>show_query()</code>, then <code>collect()</code>. How is <code>matches</code> different from <code>Match_db</code>?</li>
-<li>Disconnect. If you do not have the soccer file, do the same steps with <code>nycflights13::flights</code> copied into an in-memory SQLite database, and filter to <code>month == 1</code>.</li>
+<li>Name the seven components from R to <code>soccer.sqlite</code>. Which component is a language rather than a program?</li>
+<li>Connect to <code>soccer.sqlite</code>. From <code>Match</code>, retain the 2010/2011 season and the columns <code>date</code>, <code>home_team_goal</code>, and <code>away_team_goal</code>. Call <code>show_query()</code>, then <code>collect()</code>. State how <code>matches</code> differs from <code>Match_db</code>.</li>
+<li>Disconnect. If <code>soccer.sqlite</code> is not in the project, repeat the procedure with <code>nycflights13::flights</code> copied into an in-memory SQLite database, and restrict the rows to <code>month == 1</code>.</li>
 </ol>
 <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-dplyr-filtering-joins.html"><span aria-hidden="true">←</span> 8.2 dplyr: Filtering Joins</a>
@@ -304,7 +309,7 @@ WHERE season = '2010/2011'
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-21T01:01:00-04:00">October 21, 2026, 1:01 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-21T02:00:00-04:00">October 21, 2026, 2:00 AM EDT</time></div>
             </footer>
         </div>
 

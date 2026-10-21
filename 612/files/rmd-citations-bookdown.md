@@ -71,7 +71,7 @@ Put that line in the YAML, at the same indent as `title:`.
 
 `@horst2020palmerpenguins` becomes an in-text citation when you Render. Wrapping it, `[@horst2020palmerpenguins]`, puts the citation in parentheses.
 
-`nocite: '@*'` in the YAML lists **every** entry in the `.bib`, even keys you never typed. Useful for a reading list. Leave it out if you only want the sources you cited.
+`nocite: '@*'` in the YAML lists **every** entry in the `.bib`, even keys you never typed. The option is appropriate when the document should include a full reading list. Omit it when the bibliography should contain only the sources that were cited.
 
 Add a heading `# References` (or `# Bibliography`) at the end. Quarto and pandoc write the list there.
 

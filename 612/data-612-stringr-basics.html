@@ -162,12 +162,8 @@ elements of one vector into a single string.</p>
 <pre><code>## [1] &quot;prefix-a-suffix&quot; &quot;prefix-b-suffix&quot; &quot;prefix-c-suffix&quot;</code></pre>
 <pre><code class="language-r">str_c(c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;), collapse = &quot;, &quot;)</code></pre>
 <pre><code>## [1] &quot;x, y, z&quot;</code></pre>
-<p><code>sep</code> and <code>collapse</code> are easy to mix up.
-<code>sep</code> is for several arguments. <code>collapse</code> is for
-one vector.</p>
-<p>If any piece is <code>NA</code>, the whole result is <code>NA</code>.
-That is not how <code>paste()</code> works. Turn the missing value into
-text first if you want it to stay in the string:</p>
+<p><code>sep</code> and <code>collapse</code> control different operations. <code>sep</code> is the separator placed between several arguments. <code>collapse</code> combines the elements of one vector into a single string.</p>
+<p>If any argument is <code>NA</code>, <code>str_c()</code> returns <code>NA</code>. <code>paste()</code> instead converts a missing value to the characters <code>NA</code>. Convert the missing value to text first when it should remain in the string:</p>
 <pre><code class="language-r">str_c(&quot;prefix-&quot;, c(&quot;a&quot;, NA, &quot;c&quot;), &quot;-suffix&quot;)</code></pre>
 <pre><code>## [1] &quot;prefix-a-suffix&quot; NA                &quot;prefix-c-suffix&quot;</code></pre>
 <pre><code class="language-r">str_c(&quot;prefix-&quot;, str_replace_na(c(&quot;a&quot;, NA, &quot;c&quot;)), &quot;-suffix&quot;)</code></pre>
@@ -244,7 +240,7 @@ then <code>c("back", "lack", "black")</code>.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-20T16:02:00-04:00">October 20, 2026, 4:02 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-21T02:00:00-04:00">October 21, 2026, 2:00 AM EDT</time></div>
             </footer>
         </div>
 

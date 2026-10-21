@@ -2,7 +2,7 @@
 <p>A primary key identifies each row of its own table. A foreign key points at a primary key in another table. <code>inner_join()</code> and <code>left_join()</code> add columns from that second table.</p>
 <div id="several-tables-one-system" class="section level2">
 <h2>1. Several tables, one system</h2>
-<p>One table is rarely the whole story. A relational dataset splits the facts across tables. A <strong>key</strong> is the column, or the set of columns, that links them.</p>
+<p>A single table rarely contains every variable required for an analysis. A relational dataset distributes the facts across tables. A <strong>key</strong> is the column, or the set of columns, that links them.</p>
 <p><code>nycflights13</code> is five tables about the same flights. Install the package once, then:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">library(tidyverse)
@@ -120,7 +120,7 @@ flights</code></pre></div>
 <li>It should not change over time.</li>
 </ul>
 <p><code>planes$tailnum</code>, <code>airlines$carrier</code>, and <code>airports$faa</code> are primary keys. The value picks out one row.</p>
-<p>A name is a poor primary key. Two students can share one.</p>
+<p>A name is an unsuitable primary key, because two students can share the same name.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">students &lt;- tribble(
   ~student_id, ~name,  ~major,
@@ -175,11 +175,11 @@ enrollments</code></pre></div>
 <li><code>dest</code> points at <code>airports$faa</code>. Four codes are not: <code>BQN</code>, <code>SJU</code>, <code>STT</code>, and <code>PSE</code>.</li>
 <li><code>tailnum</code> points at <code>planes$tailnum</code>. Some flights have a missing tail number. Some tail numbers are not in <code>planes</code>.</li>
 </ul>
-<p>The package stores the links. It does not enforce them. A later join is where the gaps show up.</p>
+<p>The package records the links. It does not enforce referential integrity. A subsequent join is where the unmatched keys appear.</p>
 </div>
 <div id="why-split-the-tables" class="section level3">
 <h3>Why split the tables</h3>
-<p>Ana’s name and major are stored once, not copied onto every enrollment. A new major is one edit. You join when a question needs columns from both tables.</p>
+<p>Ana’s name and major are stored once, rather than copied onto every enrollment. A change of major is then a single edit. A join is required when a question needs columns from both tables.</p>
 </div>
 <div id="relationships" class="section level3">
 <h3>Relationships</h3>
@@ -188,7 +188,7 @@ enrollments</code></pre></div>
 </ul>
 <p><img src="files/graphics/join-one-to-many.png" alt="One-to-many: a key that repeats in x" class="img-fluid"></p>
 <ul>
-<li><strong>Many-to-many.</strong> Students take many courses, and a course has many students. Store that with a linking table. <code>enrollments</code> is that table: <code>student_id</code> refers to <code>students</code>, and <code>course</code> refers to a courses table whose primary key is the course id. Each foreign key is then one-to-many. Joining two tables that both repeat the key is a different problem, and lecture 8.2 treats it as a bad key.</li>
+<li><strong>Many-to-many.</strong> Students take many courses, and a course has many students. Store that with a linking table. <code>enrollments</code> is that table: <code>student_id</code> refers to <code>students</code>, and <code>course</code> refers to a courses table whose primary key is the course id. Each foreign key is then one-to-many. Joining two tables that both repeat the key is a different problem, and Lecture 8.2 treats that repetition as a failure of the key to identify rows uniquely.</li>
 <li><strong>One-to-one.</strong> Each row in one table matches at most one row in the other.</li>
 </ul>
 </div>
@@ -269,7 +269,7 @@ enrollments</code></pre></div>
 </div>
 </div>
 <p>The <code>students</code> check returns 0 rows, and <code>student_id</code> has no missing values, so it is a valid primary key. The join repeats Ana once per enrollment. That repeat is correct: the foreign key repeats, and the primary key does not.</p>
-<p>If <code>count()</code> had returned rows, <code>student_id</code> would not be a primary key. The join would duplicate Ana for the wrong reason. That is a common silent error.</p>
+<p>If <code>count()</code> had returned rows, <code>student_id</code> would not be a primary key. The join would duplicate Ana for the wrong reason. That duplication is a common error, and it does not raise a warning.</p>
 <p><code>planes$tailnum</code> passes the same check. <code>weather</code> does not. Hour 1 on November 3, 2013 appears twice at each NYC airport, because daylight saving time repeated that hour. Those five columns are still the intended composite key. The three extra rows are the exception.</p>
 <p>The <code>flights</code> combination is not a key either. Those rows are different flights that share <code>year</code>, <code>month</code>, <code>day</code>, <code>flight</code>, and <code>tailnum</code>. On June 8, flight 2269 with tail number <code>N487WN</code> is both an LGA–STL departure and an EWR–DEN departure. When <code>tailnum</code> is missing, two unrelated flights collapse to the same key. <code>flights</code> has no natural primary key. Add a surrogate if you need one:</p>
 <div class="cell" data-layout-align="center">
@@ -301,7 +301,7 @@ enrollments</code></pre></div>
 <h2>3. Mutating joins add columns</h2>
 <p>The first argument is <code>x</code>, the second is <code>y</code>. The join matches rows by key and pastes columns from <code>y</code> onto <code>x</code>.</p>
 <h3><code>inner_join()</code></h3>
-<p>Only keys that appear in both tables.</p>
+<p><code>inner_join()</code> retains only the keys that appear in both tables.</p>
 <p><img src="files/graphics/join-inner.png" alt="Inner join keeps matching keys only" class="img-fluid"></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">x &lt;- tribble(
@@ -327,7 +327,7 @@ inner_join(x, y, by = "key")</code></pre></div>
 </div>
 </div>
 <h3><code>left_join()</code></h3>
-<p>Every row of <code>x</code>. This is the join you will use most often. A key that is only in <code>x</code> gets <code>NA</code> in the columns from <code>y</code>.</p>
+<p><code>left_join()</code> retains every row of <code>x</code>. It is the join used in most analyses. A key present only in <code>x</code> is filled with <code>NA</code> in the columns taken from <code>y</code>.</p>
 <p><img src="files/graphics/join-left.png" alt="Left join keeps every row of x" class="img-fluid"></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">left_join(x, y, by = "key")</code></pre></div>
@@ -341,7 +341,7 @@ inner_join(x, y, by = "key")</code></pre></div>
 </div>
 </div>
 <h3><code>right_join()</code></h3>
-<p>Every row of <code>y</code>. A key that is only in <code>y</code> gets <code>NA</code> in the columns from <code>x</code>.</p>
+<p><code>right_join()</code> retains every row of <code>y</code>. A key present only in <code>y</code> is filled with <code>NA</code> in the columns taken from <code>x</code>.</p>
 <p><img src="files/graphics/join-right.png" alt="Right join keeps every row of y" class="img-fluid"></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">right_join(x, y, by = "key")</code></pre></div>
@@ -355,7 +355,7 @@ inner_join(x, y, by = "key")</code></pre></div>
 </div>
 </div>
 <h3><code>full_join()</code></h3>
-<p>Every key in either table. Unmatched rows get <code>NA</code>.</p>
+<p><code>full_join()</code> retains every key that appears in either table. Unmatched rows are filled with <code>NA</code>.</p>
 <p><img src="files/graphics/join-full.png" alt="Full join keeps every key in either table" class="img-fluid"></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">full_join(x, y, by = "key")</code></pre></div>
@@ -371,7 +371,7 @@ inner_join(x, y, by = "key")</code></pre></div>
 </div>
 <p>Unmatched rows get <code>NA</code> in the new columns (<code>left_join</code> / <code>right_join</code> / <code>full_join</code>).</p>
 <h3><code>nest_join()</code></h3>
-<p><code>nest_join(x, y)</code> is the primitive: each row of <code>x</code> gets a list-column of the matching rows of <code>y</code>. The other joins are that idea plus <code>unnest()</code>. You will use <code>left_join()</code> day to day. Know <code>nest_join()</code> exists when you want the matches as a list instead of extra rows.</p>
+<p><code>nest_join(x, y)</code> is the primitive form of a mutating join. Each row of <code>x</code> receives a list-column containing the matching rows of <code>y</code>. The other mutating joins equal that construction followed by <code>unnest()</code>. <code>left_join()</code> is the form used for routine combination of rows. <code>nest_join()</code> is appropriate when the matches should remain a list rather than additional rows.</p>
 <p><img src="files/graphics/join-nest.png" alt="Nest join stores the matching rows of y in a list-column" class="img-fluid"></p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code"><pre class="r"><code class="r">nest_join(x, y, by = "key")</code></pre></div>
