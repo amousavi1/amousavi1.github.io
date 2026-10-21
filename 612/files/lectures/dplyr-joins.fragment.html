@@ -370,7 +370,20 @@ inner_join(x, y, by = "key")</code></pre></div>
 </div>
 </div>
 <p>Unmatched rows get <code>NA</code> in the new columns (<code>left_join</code> / <code>right_join</code> / <code>full_join</code>).</p>
+<h3><code>nest_join()</code></h3>
 <p><code>nest_join(x, y)</code> is the primitive: each row of <code>x</code> gets a list-column of the matching rows of <code>y</code>. The other joins are that idea plus <code>unnest()</code>. You will use <code>left_join()</code> day to day. Know <code>nest_join()</code> exists when you want the matches as a list instead of extra rows.</p>
+<p><img src="files/graphics/join-nest.png" alt="Nest join stores the matching rows of y in a list-column" class="img-fluid"></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code"><pre class="r"><code class="r">nest_join(x, y, by = "key")</code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+    key val_x y               
+  &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;          
+1     1 x1    &lt;tibble [1 × 1]&gt;
+2     2 x2    &lt;tibble [1 × 1]&gt;
+3     3 x3    &lt;tibble [0 × 1]&gt;</code></pre>
+</div>
+</div>
 <hr>
 </div>
 <div id="by" class="section level2">

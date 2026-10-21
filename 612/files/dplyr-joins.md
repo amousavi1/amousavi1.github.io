@@ -209,7 +209,15 @@ full_join(x, y, by = "key")
 
 Unmatched rows get `NA` in the new columns (`left_join` / `right_join` / `full_join`).
 
+### `nest_join()`
+
 `nest_join(x, y)` is the primitive: each row of `x` gets a list-column of the matching rows of `y`. The other joins are that idea plus `unnest()`. You will use `left_join()` day to day. Know `nest_join()` exists when you want the matches as a list instead of extra rows.
+
+![Nest join stores the matching rows of y in a list-column](files/graphics/join-nest.png)
+
+```r
+nest_join(x, y, by = "key")
+```
 
 ---
 
