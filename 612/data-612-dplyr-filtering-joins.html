@@ -118,10 +118,6 @@
                          &middot; <a href="files/lectures/dplyr-filtering-joins.qmd">Source (.qmd)</a></p>
 <p>semi_join() and anti_join() keep or drop rows of x. They do not add
 columns.</p>
-<p><img src="files/graphics/join-semi.png" /></p>
-<p><img src="files/graphics/join-anti.png" /></p>
-<p><img src="files/graphics/join-one-to-many.png" /></p>
-<p><img src="files/graphics/join-many-to-many.png" /></p>
 <div id="semi_join-and-anti_join" class="section level2">
 <h2>1. <code>semi_join()</code> and <code>anti_join()</code></h2>
 <p>A mutating join <strong>adds columns</strong>. A filtering join
@@ -130,9 +126,13 @@ columns of <code>x</code> alone.</p>
 <ul>
 <li><code>semi_join(x, y)</code> — rows of <code>x</code> that have a
 match in <code>y</code></li>
+</ul>
+<p><img src="files/graphics/join-semi.png" alt="semi_join keeps x rows that match y" class="img-fluid"></p>
+<ul>
 <li><code>anti_join(x, y)</code> — rows of <code>x</code> that do
 <strong>not</strong> have a match in <code>y</code></li>
 </ul>
+<p><img src="files/graphics/join-anti.png" alt="anti_join keeps x rows that do not match y" class="img-fluid"></p>
 <pre><code class="language-r">library(tidyverse)
 library(nycflights13)
 
@@ -199,6 +199,7 @@ airport row, planes that never flew, weather hours with no flights.</p>
 <code>y</code>, an inner or left join returns six rows for that key.
 That is a many-to-many join. Sometimes it is what you want; often it is
 a bad key.</p>
+<p><img src="files/graphics/join-many-to-many.png" alt="Many-to-many: the same key repeats in both tables" class="img-fluid"></p>
 <pre><code class="language-r">x &lt;- tribble(
   ~key, ~val_x,
      1, &quot;x1&quot;,
@@ -308,7 +309,7 @@ all flights on those days.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-20T16:02:00-04:00">October 20, 2026, 4:02 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-20T21:37:00-04:00">October 20, 2026, 9:37 PM EDT</time></div>
             </footer>
         </div>
 

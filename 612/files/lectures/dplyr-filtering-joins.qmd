@@ -21,20 +21,17 @@ library(tidyverse)
 
 semi_join() and anti_join() keep or drop rows of x. They do not add columns.
 
-![](files/graphics/join-semi.png)
-
-![](files/graphics/join-anti.png)
-
-![](files/graphics/join-one-to-many.png)
-
-![](files/graphics/join-many-to-many.png)
-
 ## 1. `semi_join()` and `anti_join()`
 
 A mutating join **adds columns**. A filtering join **keeps or drops rows** of `x` and leaves the columns of `x` alone.
 
 - `semi_join(x, y)` — rows of `x` that have a match in `y`
+
+![](files/graphics/join-semi.png)
+
 - `anti_join(x, y)` — rows of `x` that do **not** have a match in `y`
+
+![](files/graphics/join-anti.png)
 
 ```{r}
 #| label: chunk-1
@@ -64,6 +61,8 @@ flights |>
 ## 2. Duplicate keys and many-to-many
 
 If a key appears twice in `x` and three times in `y`, an inner or left join returns six rows for that key. That is a many-to-many join. Sometimes it is what you want; often it is a bad key.
+
+![](files/graphics/join-many-to-many.png)
 
 ```{r}
 #| label: chunk-3

@@ -85,6 +85,9 @@ Ana's name and major are stored once, not copied onto every enrollment. A new ma
 ### Relationships
 
 - **One-to-many.** One student has many enrollments. The foreign key sits on the many side. One plane has many flights, so the foreign key is `flights$tailnum`.
+
+![One-to-many: a key that repeats in x](files/graphics/join-one-to-many.png)
+
 - **Many-to-many.** Students take many courses, and a course has many students. Store that with a linking table. `enrollments` is that table: `student_id` refers to `students`, and `course` refers to a courses table whose primary key is the course id. Each foreign key is then one-to-many. Joining two tables that both repeat the key is a different problem, and lecture 8.2 treats it as a bad key.
 - **One-to-one.** Each row in one table matches at most one row in the other.
 
@@ -149,11 +152,6 @@ flights |>
 
 The first argument is `x`, the second is `y`. The join matches rows by key and pastes columns from `y` onto `x`.
 
-- `inner_join(x, y)` — only keys in both
-- `left_join(x, y)` — every row of `x` (the default you will use)
-- `right_join(x, y)` — every row of `y`
-- `full_join(x, y)` — every key in either
-
 ```r
 x <- tribble(
   ~key, ~val_x,
@@ -167,22 +165,49 @@ y <- tribble(
      2, "y2",
      4, "y4"
 )
+```
 
+### `inner_join()`
+
+Only keys that appear in both tables.
+
+![Inner join keeps matching keys only](files/graphics/join-inner.png)
+
+```r
 inner_join(x, y, by = "key")
+```
+
+### `left_join()`
+
+Every row of `x`. This is the join you will use most often. A key that is only in `x` gets `NA` in the columns from `y`.
+
+![Left join keeps every row of x](files/graphics/join-left.png)
+
+```r
 left_join(x, y, by = "key")
+```
+
+### `right_join()`
+
+Every row of `y`. A key that is only in `y` gets `NA` in the columns from `x`.
+
+![Right join keeps every row of y](files/graphics/join-right.png)
+
+```r
 right_join(x, y, by = "key")
+```
+
+### `full_join()`
+
+Every key in either table. Unmatched rows get `NA`.
+
+![Full join keeps every key in either table](files/graphics/join-full.png)
+
+```r
 full_join(x, y, by = "key")
 ```
 
 Unmatched rows get `NA` in the new columns (`left_join` / `right_join` / `full_join`).
-
-![Inner join keeps matching keys only](files/graphics/join-inner.png)
-
-![Left join keeps every row of x](files/graphics/join-left.png)
-
-![Right join keeps every row of y](files/graphics/join-right.png)
-
-![Full join keeps every key in either table](files/graphics/join-full.png)
 
 `nest_join(x, y)` is the primitive: each row of `x` gets a list-column of the matching rows of `y`. The other joins are that idea plus `unnest()`. You will use `left_join()` day to day. Know `nest_join()` exists when you want the matches as a list instead of extra rows.
 

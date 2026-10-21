@@ -1,17 +1,14 @@
-![semi_join keeps x rows that match y](files/graphics/join-semi.png)
-
-![anti_join keeps x rows that do not match y](files/graphics/join-anti.png)
-
-![One-to-many: a key that repeats in x](files/graphics/join-one-to-many.png)
-
-![Many-to-many: the same key repeats in both tables](files/graphics/join-many-to-many.png)
-
 ## 1. `semi_join()` and `anti_join()`
 
 A mutating join **adds columns**. A filtering join **keeps or drops rows** of `x` and leaves the columns of `x` alone.
 
 - `semi_join(x, y)` — rows of `x` that have a match in `y`
+
+![semi_join keeps x rows that match y](files/graphics/join-semi.png)
+
 - `anti_join(x, y)` — rows of `x` that do **not** have a match in `y`
+
+![anti_join keeps x rows that do not match y](files/graphics/join-anti.png)
 
 ```r
 library(tidyverse)
@@ -39,6 +36,8 @@ flights |>
 ## 2. Duplicate keys and many-to-many
 
 If a key appears twice in `x` and three times in `y`, an inner or left join returns six rows for that key. That is a many-to-many join. Sometimes it is what you want; often it is a bad key.
+
+![Many-to-many: the same key repeats in both tables](files/graphics/join-many-to-many.png)
 
 ```r
 x <- tribble(
