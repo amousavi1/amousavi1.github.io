@@ -20,7 +20,7 @@ By the end of this worksheet, you should be able to connect to a SQLite database
 
 ### Preparation
 
-Download and unzip [soccer.zip](files/soccer.zip) from the [course data table](data-612.html). Place `soccer.sqlite` under `data/soccer/` relative to your `.qmd` file, or update the path below. Install the packages once if necessary.
+Download and unzip the European soccer database from Canvas (or the [course data page](https://dcgerard.github.io/stat_412_612/data.html)). Place `soccer.sqlite` under `data/soccer/` relative to your `.qmd` file, or update the path below. Install the packages once if necessary.
 
 ```{r}
 # Install once in the R console, if needed:
@@ -337,4 +337,4 @@ dbDisconnect(con)
 
 - [dbplyr introduction](https://dbplyr.tidyverse.org/articles/dbplyr.html)
 - [DBI documentation](https://dbi.r-dbi.org/)
-- [European soccer database](files/soccer.zip)
+- [Course soccer dataset](https://dcgerard.github.io/stat_412_612/data.html)

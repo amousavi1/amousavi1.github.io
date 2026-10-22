@@ -118,7 +118,7 @@
 <h2>Learning objectives</h2>
 <p>By the end of this worksheet, you should be able to connect to a SQLite database, inspect its tables, use <code>dplyr</code> verbs on database-backed tables, understand lazy queries, use <code>collect()</code> appropriately, join tables by identifiers, and produce a time-series visualization.</p>
 <h3>Preparation</h3>
-<p>Download and unzip <a href="files/soccer.zip">soccer.zip</a> from the <a href="data-612.html">course data table</a>. Place <code>soccer.sqlite</code> under <code>data/soccer/</code> relative to your <code>.qmd</code> file, or update the path below. Install the packages once if necessary.</p>
+<p>Download and unzip the European soccer database from Canvas (or the <a href="https://dcgerard.github.io/stat_412_612/data.html">course data page</a>). Place <code>soccer.sqlite</code> under <code>data/soccer/</code> relative to your <code>.qmd</code> file, or update the path below. Install the packages once if necessary.</p>
 <pre><code class="language-r"># Install once in the R console, if needed:
 # install.packages(c(&quot;DBI&quot;, &quot;RSQLite&quot;, &quot;dplyr&quot;, &quot;dbplyr&quot;, &quot;tidyr&quot;, &quot;readr&quot;, &quot;ggplot2&quot;))
 
@@ -360,7 +360,7 @@ ggplot(daily_goal_diff, aes(x = date, y = mean_goal_diff)) +
 <ul>
 <li><a href="https://dbplyr.tidyverse.org/articles/dbplyr.html">dbplyr introduction</a></li>
 <li><a href="https://dbi.r-dbi.org/">DBI documentation</a></li>
-<li><a href="files/soccer.zip">European soccer database</a></li>
+<li><a href="https://dcgerard.github.io/stat_412_612/data.html">Course soccer dataset</a></li>
 </ul>
 <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-lab-8-solutions.html"><span aria-hidden="true">←</span> Lab 8 solutions</a>
@@ -375,7 +375,7 @@ ggplot(daily_goal_diff, aes(x = date, y = mean_goal_diff)) +
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-21T19:27:00-04:00">October 21, 2026, 7:27 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-22T16:35:00-04:00">October 22, 2026, 4:35 PM EDT</time></div>
             </footer>
         </div>
 

@@ -1,0 +1,66 @@
+---
+title: "Midterm 2 --- Sample 4"
+subtitle: "Data 412/612"
+output:
+  pdf_document:
+    number_sections: false
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+**Attention: No internet at all!** You are only allowed to use your notes and RStudio.
+
+The final goal of this exam is to work with a database and create a plot which shows the average potential of those players whose first name is "David" or "Marco", or whose family name is "Silva", against the standard deviation of their sprint speed. The plot is given below:
+
+```{r, out.width="78%", fig.align="center"}
+knitr::include_graphics("graphics/sample-midterm-2-4-plot.pdf")
+```
+
+Follow the following steps:
+
+1. Create a folder called "Midterm_2" on your computer, which includes three folders: "analysis", "data", and "output".
+
+2. Download the soccer database from <https://dcgerard.github.io/stat_412_612/data.html>, unzip it, and save `soccer.sqlite` in the "data" folder.
+
+3. Create an .Rmd file in the "analysis" folder and name it "midterm_2".
+
+4. Have a code chunk at the beginning that loads all the required packages, including tidyverse, RSQLite, and dbplyr. This code chunk **must not** display *any* messages or show any outputs when the .Rmd file is knitted.
+
+5. Create a connection to this unzipped database (`soccer.sqlite`) using a ***relative*** path.
+
+6. You should work with two tables: "Player" and "Player_Attributes". Convert them into data frames and only work with them (*not the original relational tables*)!
+
+7. Demonstrate that `player_api_id` is indeed a *primary key* for the "Player" data frame but it is not a primary key for the "Player_Attributes" data frame.
+
+    **Hint:** *Steps 8 to 12 are a sequence of commands that are done using the pipe operator to create df1.*
+
+8. Start with the "Player" data frame and select the "player_name" and "player_api_id" columns from "Player".
+
+9. Some names have middle names. Remove them, because they make issues later. Do this by filtering on the number of uppercase letters (exactly 2) and spaces (exactly 1) in `player_name`.
+
+    Hint: `str_count(player_name, "[A-Z]")` and `str_count(player_name, " ")`.
+
+10. Separate the first and family names into two columns called "fi_name" and "fa_name".
+
+11. Using these two new columns, keep the rows described at the beginning of this exam, before the plot.
+
+12. Unite the columns "fi_name" and "fa_name" back into a new column called "complete_name". At this point you should have a data frame with only two columns: "player_api_id" and "complete_name". Assign it to `df1`.
+
+    Hint: `df1` has 207 rows.
+
+    **Hint:** *Steps 13 and 14 are connected using a pipe to create a data frame df2.*
+
+13. Start working with "Player_Attributes". Group it by "player_api_id".
+
+14. For each group, compute the average of potential (call the column "potential_avg") and the standard deviation of sprint speed (call the column "sd_speed"). Assign it to `df2`.
+
+15. Use a left join of `df1` and `df2` by "player_api_id".
+
+16. Pipe the joined data frame to plot "potential_avg" against "sd_speed" using `geom_point`. Label and title the graph so that it matches the figure above.
+
+17. Save the final plot in the folder "output" using a *relative* path.
+
+18. Zip the folder Midterm_2 and upload it on Canvas.
