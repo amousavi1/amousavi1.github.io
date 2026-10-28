@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-28T16:42:00-04:00"
-LAST_UPDATED_TEXT = "October 28, 2026, 4:42 PM EDT"
+LAST_UPDATED_ISO = "2026-10-28T17:39:00-04:00"
+LAST_UPDATED_TEXT = "October 28, 2026, 5:39 PM EDT"
 
 NOTES = [
     {
@@ -223,49 +223,49 @@ NOTES = [
         "slug": "stringr-basics",
         "week": 9,
         "title": "9.1 stringr: Strings",
-        "lead": "str_c() combines, str_sub() extracts, and case helpers change letters.",
+        "lead": "Lesson 1. Literal text: cut, paste, and change a string. The summary table is at the end.",
     },
     {
         "slug": "stringr-regex",
         "week": 9,
         "title": "9.2 stringr: Regular Expressions",
-        "lead": "A pattern is a regular expression. Escape in R with two backslashes.",
+        "lead": "Lesson 2. The pieces of a pattern, then the str_ functions. Summary tables are at the end.",
     },
     {
         "slug": "stringr-summary",
         "week": 9,
         "title": "9.3 stringr: Summary",
-        "lead": "A reference for stringr: the string comes first, the pattern second.",
+        "lead": "A catalog. Open it when you forget which str_ function to call.",
     },
     {
         "slug": "regex-rules",
         "week": 9,
         "title": "9.4 Regex: The Complete Rules",
-        "lead": "The shared rules of regular expressions, as stringr uses them.",
+        "lead": "A catalog. Open it when you forget what a symbol means.",
     },
     {
         "slug": "regex-groups",
         "week": 9,
         "title": "9.5 Regex: Groups and Lookaheads",
-        "lead": "Capturing groups, non-capturing groups, and lookaheads, and how str_match() numbers them.",
+        "lead": "Lesson 3. Part A is groups. Part B is a first lookahead. Each part ends with a summary table.",
     },
     {
         "slug": "regex-capture",
         "week": 9,
         "title": "9.6 Regex: Capturing and Backreferences",
-        "lead": "Capturing groups remember text. Numbered and named references reuse it.",
+        "lead": "Lesson 4. Use a captured group again, in the pattern and in a replacement.",
     },
     {
         "slug": "regex-lookahead",
         "week": 9,
         "title": "9.7 Regex: Lookaheads and Lookbehinds",
-        "lead": "A lookahead checks what comes next and does not take it. A lookbehind checks what came before.",
+        "lead": "Lesson 5. Lookaheads and lookbehinds, then a summary table.",
     },
     {
         "slug": "lab-9-strings",
         "week": 9,
         "title": "Lab 9: Strings and Regex",
-        "lead": "Build a quote from pieces, then write a few patterns.",
+        "lead": "One contact list, in the same order as notes 9.1, 9.2, 9.5, 9.6, and 9.7.",
     },
     {
         "slug": "forcats-factors",
@@ -632,6 +632,9 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
     week = note["week"]
     nav = lecture_page_nav(note)
     pdf_href = f"files/{slug}.pdf"
+    qmd_bit = ""
+    if (ROOT / "612" / "files" / "lectures" / f"{slug}.qmd").exists():
+        qmd_bit = f' &middot; <a href="files/lectures/{slug}.qmd">Source (.qmd)</a>'
     page_path = ROOT / "612" / f"data-612-{slug}.html"
     page = f"""<!doctype html>
 <html lang="en" class="no-js">
@@ -639,6 +642,9 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title} - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
         <link rel="stylesheet" href="../website-only/assets/css/main.css" />
         <link rel="stylesheet" href="../website-only/assets/css/site.css" />
         <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
@@ -679,7 +685,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
                     <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-{week}.html">Week {week}</a> &middot;
-                            <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>
+                            <a href="{pdf_href}" target="_blank" rel="noopener">PDF</a>{qmd_bit}
                         </p>
                         <p>
                             {lead}

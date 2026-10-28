@@ -19,6 +19,10 @@ knitr::opts_chunk$set(
 library(tidyverse)
 ```
 
+**Where you are.** Lesson 5 of 5. Read notes 9.5 and 9.6 first. Then do Lab 9.
+
+This note is the lookahead and lookbehind examples, including the case where the engine gives a digit back. The summary table is at the end.
+
 A lookahead checks what comes next without taking those characters. It is a peek, so it is called a zero-width assertion. Note 9.5 introduces the idea. This note is the set of examples, including the backtracking trap and lookbehind.
 
 ## 1. The notation
@@ -257,12 +261,16 @@ str_extract_all("cost $50, qty 20", "(?<=\\$)\\d+")
 
 In stringr the lookbehind must have a bounded length. `(?<=\\d+)` is an error: `Look-Behind pattern matches must have a bounded maximum length`. Use a fixed length, or a range such as `\\d{1,3}`, not `*` or `+`.
 
-## 9. Key points
+## 9. Summary
 
-1. `(?=...)` means “must be followed by.”
-2. `(?!...)` means “must not be followed by.”
-3. Both are zero-width. They test, and they do not take the text.
-4. Put the lookahead after the text you want to keep: `X(?=Y)`.
-5. Put it at the start, `^(?=...)`, when the rule is about the whole string.
-6. `\\d+(?!...)` can succeed on a prefix after the engine backtracks. Add `\\b`, or `(?!\\d)`, so the number has to finish.
-7. `(?<=Y)` looks left. The text it checks must have a bounded length.
+| You want | Type | What is kept |
+|---|---|---|
+| X only when Y follows | `X(?=Y)` | X |
+| X only when Y does not follow | `X(?!Y)` | X |
+| X only when Y is immediately before it | `(?<=Y)X` | X |
+| X only when Y is not immediately before it | `(?<!Y)X` | X |
+| A whole number not followed by `dollars` | `"\\b\\d+\\b(?! dollars)"` | the number |
+| Digits immediately after `$` | `"(?<=\\$)\\d+"` | the digits |
+| Several conditions on the whole string | `"^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$"` | the string, when every check passes |
+
+Put the lookahead after the text you want to keep. Put it at `^` when the rule is about the whole string. `"\\d+(?!...)"` can succeed on a prefix after the engine gives a digit back. Add `"\\b"`, or `"(?!\\d)"`, so the number has to finish. A lookbehind must have a bounded length.

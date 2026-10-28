@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Lab 9: Strings and Regex - DATA 412/612 - Ahmad Mousavi</title>
         <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
         <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <title>Lab 9: Strings and Regex - DATA 412/612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="../website-only/assets/css/main.css" />
         <link rel="stylesheet" href="../website-only/assets/css/site.css" />
         <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
@@ -111,47 +111,89 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">Lab 9: Strings and Regex</h1>
                     </header>
-                                                            <section class="page__content" itemprop="text">
+                    <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-9.html">Week 9</a> &middot;
-                            <a href="files/lab-9-strings.pdf" target="_blank" rel="noopener">PDF</a>
-                         &middot; <a href="files/lectures/lab-9-strings.qmd">Source (.qmd)</a></p>
-<p>Build a quote from pieces, then write a few patterns.</p>
-<p>Work in a <strong>Quarto</strong> document. Do <strong>9.1</strong>
-and <strong>9.2</strong> first. <code>words</code> comes with
-stringr.</p>
-<pre><code class="language-r">library(tidyverse)</code></pre>
-<hr />
-<div id="pieces-and-replacement" class="section level2">
-<h2>1. Pieces and replacement</h2>
-<ol style="list-style-type: decimal">
-<li>From
-<code>full &lt;- "To be or not to be, that is the question."</code>, use
-<code>str_sub()</code> to pull two pieces and <code>str_c()</code> to
-join them so <code>writeLines()</code> prints a two-line quote.</li>
-<li>Replace <code>"back"</code> and <code>"lack"</code> with
-<code>"foo"</code> in one call. Run it on <code>c("back", "lack")</code>
-and on <code>c("back", "lack", "black")</code>.</li>
+                            <a href="files/lab-9-strings.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/lectures/lab-9-strings.qmd">Source (.qmd)</a>
+                        </p>
+                        <p>
+                            One contact list, in the same order as notes 9.1, 9.2, 9.5, 9.6, and 9.7.
+                        </p>
+<p>Work in a <strong>Quarto</strong> document. The parts follow the notes. Do them in order. <code>words</code> comes with stringr.</p>
+<pre><code class="language-r">library(tidyverse)
+
+contacts &lt;- tibble(
+  line = c(
+    &quot;Ada Lovelace &lt;ada@analytical.org&gt; 202-555-0142 born 1815-12-10&quot;,
+    &quot;Alan Turing &lt;alan@bletchley.uk&gt; 202-555-0199 born 1912-06-23&quot;,
+    &quot;Grace Hopper &lt;grace@navy.mil&gt; 301-555-0100 born 1906-12-09&quot;,
+    &quot;notice: do not call 000-000-0000&quot;,
+    &quot;Katherine Johnson &lt;katherine@nasa.gov&gt; 202-555-0177 born 1918-08-26&quot;
+  )
+)
+</code></pre>
+<p>Turn in the rendered HTML. Each answer should show the code and the printed result.</p>
+<h2>Part A. Literal strings (note 9.1)</h2>
+<ol>
+<li>
+<p>From <code>full &lt;- "To be or not to be, that is the question."</code>, use <code>str_sub()</code> to pull two pieces and <code>str_c()</code> to join them so <code>writeLines()</code> prints a two-line quote. The first line is characters 1–18. The second starts at character 21.</p>
+</li>
+<li>
+<p>Replace <code>"back"</code> and <code>"lack"</code> with <code>"foo"</code> in one call. Run it on <code>c("back", "lack")</code> and on <code>c("back", "lack", "black")</code>. In one sentence, say what happens to <code>"black"</code>.</p>
+</li>
 </ol>
-<hr />
-</div>
-<div id="regular-expressions" class="section level2">
-<h2>2. Regular expressions</h2>
-<p>Use <code>words</code>. For each item, print the matching words.</p>
-<ol style="list-style-type: decimal">
-<li>Four-letter words that start with <code>a</code>.</li>
-<li>Words that start with a vowel.</li>
-<li>Words that end in <code>ed</code> but not <code>eed</code>.</li>
-<li>Words that start with three consonants.</li>
-<li>Words that end in a consonant.</li>
-<li>Words that end in <code>ing</code> or <code>ise</code>.</li>
-<li>Words with two or more vowel-consonant pairs in a row
-(<code>[aeiou][^aeiou]</code> twice).</li>
+<h2>Part B. Patterns (note 9.2)</h2>
+<p>Use <code>words</code>. Print the matching words.</p>
+<ol start="3">
+<li>
+<p>Four-letter words that start with <code>a</code>.</p>
+</li>
+<li>
+<p>Words that start with a vowel.</p>
+</li>
+<li>
+<p>Words that end in <code>ed</code> but not <code>eed</code>.</p>
+</li>
+<li>
+<p>Words that start with three consonants.</p>
+</li>
 </ol>
-</div>
-<nav class="course-page-nav" aria-label="Page">
+<p>On <code>contacts</code>:</p>
+<ol start="7">
+<li>
+<p>Which lines contain <code>@</code>? Use <code>str_detect()</code>.</p>
+</li>
+<li>
+<p>Pull the email from each line with <code>str_extract()</code>. The notice line should be <code>NA</code>.</p>
+</li>
+</ol>
+<h2>Part C. Groups (notes 9.5 and 9.6)</h2>
+<ol start="9">
+<li>
+<p>Write one pattern for <code>str_match()</code> that, on a person line, captures the name, the email, the phone, the year, the month, and the day. The notice line should be a row of missing values.</p>
+</li>
+<li>
+<p>With <code>str_replace()</code>, turn each date <code>YYYY-MM-DD</code> into <code>DD/MM/YYYY</code>.</p>
+</li>
+<li>
+<p>From the phone column in question 9, turn <code>202-555-0142</code> into <code>(202) 555-0142</code>.</p>
+</li>
+</ol>
+<h2>Part D. Lookaheads (note 9.7)</h2>
+<ol start="12">
+<li>
+<p>From <code>fees &lt;- "fee $40, tax $2, qty 3"</code>, extract the numbers that follow a <code>$</code>. The <code>3</code> should stay out.</p>
+</li>
+<li>
+<p>Predict, then run <code>str_extract("50 dollars", "\\d+(?! dollars)")</code>. In one sentence, say why the result is not <code>NA</code>. Then write a pattern that returns <code>NA</code> for <code>"50 dollars"</code> and <code>"20"</code> for <code>"50 dollars, 20 euros"</code>.</p>
+</li>
+<li>
+<p>Keep the contact lines that are not a notice. Do it with <code>str_subset()</code> and a negative lookahead. Then do the same job with <code>!str_detect()</code>, and say which form you would use in a pipeline.</p>
+</li>
+</ol>
+                        <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-regex-lookahead.html"><span aria-hidden="true">←</span> 9.7 Regex: Lookaheads and Lookbehinds</a>
-                        <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
+                            <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
                             <a class="course-page-nav__next" href="data-612-lab-9-solutions.html">Lab 9 solutions <span aria-hidden="true">→</span></a>
                         </nav>
                     </section>
@@ -162,7 +204,7 @@ and on <code>c("back", "lack", "black")</code>.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:42:00-04:00">October 28, 2026, 4:42 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T17:39:00-04:00">October 28, 2026, 5:39 PM EDT</time></div>
             </footer>
         </div>
 

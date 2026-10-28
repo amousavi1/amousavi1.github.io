@@ -1,3 +1,7 @@
+**Where you are.** Lesson 3 of 5. Read note 9.2 first. Next is note 9.6.
+
+Part A, sections 1–7, is groups. Part B, sections 8–14, is a first lookahead. Note 9.6 continues groups. Note 9.7 continues lookaheads. Each part ends with a summary table.
+
 Parentheses group a pattern. A capturing group also remembers what it matched. A lookahead only checks what comes next.
 
 By the end of this note you should be able to:
@@ -289,6 +293,16 @@ str_detect(c("cat", "dog", "bird"), "^(?:cat|dog)$")
 ```
 
 The group lets `^` and `$` apply to both alternatives. `str_detect()` only returns `TRUE` or `FALSE`, so there is nothing to capture.
+
+## Summary: groups
+
+| You want | Type | What you get |
+|---|---|---|
+| Group and save | `(...)` | a column in `str_match()` |
+| Group and do not save | `(?:...)` | no extra column |
+| Name the saved piece | `(?<name>...)` | a named column |
+| Which number a group is | count the opening `(` of capturing groups, left to right | column 1 is still the whole match |
+| Or, with a boundary around both choices | a non-capturing group around the two words | `^` and `$` apply to both |
 
 ## 8. A lookahead checks and does not consume
 
@@ -645,14 +659,13 @@ Write one pattern for `str_match()` that:
 
 Say what each group and lookahead is doing.
 
-## Key points
+## Summary: lookaheads
 
-- `(...)` groups and captures.
-- `(?:...)` groups and does not capture. The `?:` comes right after `(`.
-- Capturing groups are numbered by the order of their opening parentheses. Non-capturing groups are skipped.
-- `str_match()` puts the whole match in column 1 and the captured groups in the columns after that.
-- `(?=...)` checks that a pattern is here and does not consume it.
-- `(?!...)` checks that a pattern is not here and does not consume it.
-- A lookahead does not create a capturing group.
-- A non-capturing group still has to match. A lookahead only tests a condition.
-- `!str_detect()` is often the simpler way to drop matches.
+| You want | Type | Does it take that text? |
+|---|---|---|
+| The match must be followed by Y | `X(?=Y)` | no |
+| The match must not be followed by Y | `X(?!Y)` | no |
+| Save a piece and also check what follows | `(\\d+)(?= dollars)` | the check is not a column |
+| Drop rows that contain a word | `^(?!.*error).*$`, or `!str_detect()` | the second form is often enough |
+
+A group, capturing or not, is part of the match. A lookahead only tests a condition. It does not create a capturing group.

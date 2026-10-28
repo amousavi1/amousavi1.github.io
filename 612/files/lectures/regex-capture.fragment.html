@@ -1,4 +1,6 @@
-<p>Note 9.5 is about lookaheads. This note is about groups that remember text, and about using that text again.</p>
+<p><strong>Where you are.</strong> Lesson 4 of 5. Read note 9.5 first. Next is note 9.7.</p>
+<p>This note is how to use a captured group again: inside the pattern, and in a replacement. The summary table is at the end.</p>
+<p>Note 9.5 introduces groups. This note is about groups that remember text, and about using that text again.</p>
 <p>By the end of this note you should be able to:</p>
 <ol>
 <li>Tell a capturing group from a non-capturing group.</li>
@@ -305,12 +307,43 @@ re.sub(r&quot;(\d{4})-(\d{2})-(\d{2})&quot;, r&quot;\3/\2/\1&quot;, &quot;2026-1
 re.sub(r&quot;(?P&lt;y&gt;\d{4})-(?P&lt;m&gt;\d{2})-(?P&lt;d&gt;\d{2})&quot;, r&quot;\g&lt;d&gt;/\g&lt;m&gt;/\g&lt;y&gt;&quot;, &quot;2026-10-27&quot;)
 </code></pre>
 <p>Both return <code>'27/10/2026'</code>. A raw Python string, <code>r"..."</code>, keeps one backslash for the regex engine. That is the same role as R’s doubled backslash.</p>
-<h2>15. Key points</h2>
-<ol>
-<li>Numbering follows the opening parenthesis, left to right. Nested groups count.</li>
-<li>A named group is also numbered, so <code>\\1</code> and <code>\\k&lt;name&gt;</code> can appear in the same pattern.</li>
-<li><code>(?:...)</code> is skipped in the numbering, which keeps <code>\\1</code> and <code>\\2</code> predictable.</li>
-<li>Use a name when there are many groups. Use a number for a short pattern.</li>
-<li>A backreference in the pattern means “match this text again.” A reference in the replacement means “write this text back.”</li>
-<li>Need the text later? Use <code>(...)</code>. Only grouping for <code>|</code> or a quantifier? Use <code>(?:...)</code>.</li>
-</ol>
+<h2>15. Summary</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>You want</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Save a piece</td>
+<td><code>(...)</code></td>
+</tr>
+<tr>
+<td>Group without saving</td>
+<td><code>(?:...)</code></td>
+</tr>
+<tr>
+<td>Name the piece</td>
+<td><code>(?&lt;name&gt;...)</code></td>
+</tr>
+<tr>
+<td>That same text again, inside the pattern</td>
+<td><code>\\1</code>, or <code>\\k&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>That piece in a replacement</td>
+<td><code>"\\1"</code></td>
+</tr>
+<tr>
+<td>The whole match in a replacement</td>
+<td><code>"\\0"</code></td>
+</tr>
+<tr>
+<td>Read the saved pieces</td>
+<td><code>str_match(x, p)</code>. Column 1 is the whole match. Later columns are the groups, numbered from the opening parenthesis.</td>
+</tr>
+</tbody>
+</table></div>
+<p>A named group is also numbered, so <code>\\1</code> and <code>\\k&lt;name&gt;</code> can appear in the same pattern. <code>(?:...)</code> is skipped in the numbering. Use a name when there are many groups. Use a number for a short pattern.</p>

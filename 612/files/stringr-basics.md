@@ -1,3 +1,7 @@
+**Where you are.** Lesson 1 of 5. Next is note 9.2.
+
+This note is literal text. There is no pattern yet. The summary table is after the examples.
+
 ## 1. A string is text in quotes
 
 `stringr` comes with `library(tidyverse)`. Every function starts with `str_`. The first argument is always the string (or a character vector), so the functions pipe.
@@ -91,6 +95,20 @@ str_replace_all(c("back", "lack", "black"), c("back" = "foo", "lack" = "foo"))
 ```
 
 The second line also changes `"black"` to `"bfoo"`, because `"lack"` sits inside it. Patterns that mean “this word only” wait for note 9.2.
+
+## Summary
+
+| You want | Type |
+|---|---|
+| How many characters | `str_length(x)` |
+| Join strings | `str_c(a, b, sep = ", ")` |
+| Join a vector into one string | `str_c(x, collapse = ", ")` |
+| Characters 1 through 5 | `str_sub(x, 1, 5)` |
+| Lower case, upper case, title case | `str_to_lower(x)`, `str_to_upper(x)`, `str_to_title(x)` |
+| Change the first match | `str_replace(x, "old", "new")` |
+| Change every match, or several literals at once | `str_replace_all(x, c("back" = "foo"))` |
+
+A newline inside a string is `"\n"`. A tab is `"\t"`. A quote inside a string is `"\""`. One backslash is `"\\"`.
 
 ---
 

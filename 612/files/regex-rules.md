@@ -1,3 +1,5 @@
+**Where you are.** This is a catalog, not the next lesson. Open it when you forget what a symbol means. The lessons continue with note 9.5. The last section is the one-page sheet.
+
 Regex (regular expressions) describes a *pattern* of text so you can find, match, or replace it. Syntax varies slightly between languages (JavaScript, Python, PCRE, and others). The rules below are the shared core.
 
 Patterns below are written the way you type them in an R string for `stringr`. A digit is `\\d`. A word character is `\\w`. In `str_replace()`, a captured group is `\\1`.

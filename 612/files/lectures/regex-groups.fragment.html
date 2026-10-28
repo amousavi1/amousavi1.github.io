@@ -1,3 +1,5 @@
+<p><strong>Where you are.</strong> Lesson 3 of 5. Read note 9.2 first. Next is note 9.6.</p>
+<p>Part A, sections 1–7, is groups. Part B, sections 8–14, is a first lookahead. Note 9.6 continues groups. Note 9.7 continues lookaheads. Each part ends with a summary table.</p>
 <p>Parentheses group a pattern. A capturing group also remembers what it matched. A lookahead only checks what comes next.</p>
 <p>By the end of this note you should be able to:</p>
 <ol>
@@ -291,6 +293,43 @@ str_match(x, &quot;(red)-(blue)&quot;)
 <pre><code class="language-r">str_detect(c(&quot;cat&quot;, &quot;dog&quot;, &quot;bird&quot;), &quot;^(?:cat|dog)$&quot;)
 </code></pre>
 <p>The group lets <code>^</code> and <code>$</code> apply to both alternatives. <code>str_detect()</code> only returns <code>TRUE</code> or <code>FALSE</code>, so there is nothing to capture.</p>
+<h2>Summary: groups</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>You want</th>
+<th>Type</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Group and save</td>
+<td><code>(...)</code></td>
+<td>a column in <code>str_match()</code></td>
+</tr>
+<tr>
+<td>Group and do not save</td>
+<td><code>(?:...)</code></td>
+<td>no extra column</td>
+</tr>
+<tr>
+<td>Name the saved piece</td>
+<td><code>(?&lt;name&gt;...)</code></td>
+<td>a named column</td>
+</tr>
+<tr>
+<td>Which number a group is</td>
+<td>count the opening <code>(</code> of capturing groups, left to right</td>
+<td>column 1 is still the whole match</td>
+</tr>
+<tr>
+<td>Or, with a boundary around both choices</td>
+<td>a non-capturing group around the two words</td>
+<td>the anchors apply to both words</td>
+</tr>
+</tbody>
+</table></div>
 <h2>8. A lookahead checks and does not consume</h2>
 <p>A capturing or non-capturing group matches text. A lookahead only checks the text at the current position. It does not include that text in the match, and it does not move forward.</p>
 <div class="table-wrap"><table>
@@ -619,15 +658,36 @@ str_detect(x, &quot;^(?!.*ab).*$&quot;)
 <li>Requires the whole string to follow that form.</li>
 </ol>
 <p>Say what each group and lookahead is doing.</p>
-<h2>Key points</h2>
-<ul>
-<li><code>(...)</code> groups and captures.</li>
-<li><code>(?:...)</code> groups and does not capture. The <code>?:</code> comes right after <code>(</code>.</li>
-<li>Capturing groups are numbered by the order of their opening parentheses. Non-capturing groups are skipped.</li>
-<li><code>str_match()</code> puts the whole match in column 1 and the captured groups in the columns after that.</li>
-<li><code>(?=...)</code> checks that a pattern is here and does not consume it.</li>
-<li><code>(?!...)</code> checks that a pattern is not here and does not consume it.</li>
-<li>A lookahead does not create a capturing group.</li>
-<li>A non-capturing group still has to match. A lookahead only tests a condition.</li>
-<li><code>!str_detect()</code> is often the simpler way to drop matches.</li>
-</ul>
+<h2>Summary: lookaheads</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>You want</th>
+<th>Type</th>
+<th>Does it take that text?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The match must be followed by Y</td>
+<td><code>X(?=Y)</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td>The match must not be followed by Y</td>
+<td><code>X(?!Y)</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td>Save a piece and also check what follows</td>
+<td><code>(\\d+)(?= dollars)</code></td>
+<td>the check is not a column</td>
+</tr>
+<tr>
+<td>Drop rows that contain a word</td>
+<td><code>^(?!.*error).*$</code>, or <code>!str_detect()</code></td>
+<td>the second form is often enough</td>
+</tr>
+</tbody>
+</table></div>
+<p>A group, capturing or not, is part of the match. A lookahead only tests a condition. It does not create a capturing group.</p>

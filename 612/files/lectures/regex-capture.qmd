@@ -19,7 +19,11 @@ knitr::opts_chunk$set(
 library(tidyverse)
 ```
 
-Note 9.5 is about lookaheads. This note is about groups that remember text, and about using that text again.
+**Where you are.** Lesson 4 of 5. Read note 9.5 first. Next is note 9.7.
+
+This note is how to use a captured group again: inside the pattern, and in a replacement. The summary table is at the end.
+
+Note 9.5 introduces groups. This note is about groups that remember text, and about using that text again.
 
 By the end of this note you should be able to:
 
@@ -424,11 +428,16 @@ re.sub(r"(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})", r"\g<d>/\g<m>/\g<y>", "2026-10
 
 Both return `'27/10/2026'`. A raw Python string, `r"..."`, keeps one backslash for the regex engine. That is the same role as R’s doubled backslash.
 
-## 15. Key points
+## 15. Summary
 
-1. Numbering follows the opening parenthesis, left to right. Nested groups count.
-2. A named group is also numbered, so `\\1` and `\\k<name>` can appear in the same pattern.
-3. `(?:...)` is skipped in the numbering, which keeps `\\1` and `\\2` predictable.
-4. Use a name when there are many groups. Use a number for a short pattern.
-5. A backreference in the pattern means “match this text again.” A reference in the replacement means “write this text back.”
-6. Need the text later? Use `(...)`. Only grouping for `|` or a quantifier? Use `(?:...)`.
+| You want | Type |
+|---|---|
+| Save a piece | `(...)` |
+| Group without saving | `(?:...)` |
+| Name the piece | `(?<name>...)` |
+| That same text again, inside the pattern | `\\1`, or `\\k<name>` |
+| That piece in a replacement | `"\\1"` |
+| The whole match in a replacement | `"\\0"` |
+| Read the saved pieces | `str_match(x, p)`. Column 1 is the whole match. Later columns are the groups, numbered from the opening parenthesis. |
+
+A named group is also numbered, so `\\1` and `\\k<name>` can appear in the same pattern. `(?:...)` is skipped in the numbering. Use a name when there are many groups. Use a number for a short pattern.

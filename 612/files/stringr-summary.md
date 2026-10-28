@@ -1,3 +1,5 @@
+**Where you are.** This is a catalog, not the next lesson. Open it when you forget which `str_` function to call. The lessons continue with note 9.5.
+
 `stringr` (part of the tidyverse) gives consistent, readable functions for string work. The main functions start with `str_`, take the **string first** and the **pattern second**, and are vectorized. Patterns are regex (via the `stringi`/ICU engine) unless wrapped in a helper.
 
 ```r

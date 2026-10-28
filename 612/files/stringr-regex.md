@@ -1,3 +1,7 @@
+**Where you are.** Lesson 2 of 5. Read note 9.1 first. Next is note 9.5.
+
+Sections 1 and 2 are the pieces of a pattern. Section 3 is a first look at groups and lookaheads. The full lessons are notes 9.5, 9.6, and 9.7. Sections 4 and 5 are the functions you will call. The summary tables are after those examples.
+
 ## 1. A pattern is a regular expression
 
 Note 9.1 used literal text. A **regular expression** describes a set of strings. `stringr` (through `stringi`) uses ICU regex. Type the pattern as an R string: `"\\d"` for a digit, `"\\w"` for a word character, and `"\\."` for a real dot.
@@ -207,6 +211,38 @@ tibble(x = c("a-1", "b.2", "c 3")) |>
 ```
 
 `[^[:alnum:]]` is any character that is not a letter or a digit: a hyphen, a dot, or a space.
+
+## Summary
+
+The pieces. Type the pattern as an R string.
+
+| You want | Type |
+|---|---|
+| Any one character | `.` |
+| A real period | `"\\."` |
+| Start of the string, end of the string | `^`, `$` |
+| One character from a set | `[aeiou]` |
+| One character not in a set | `[^aeiou]` |
+| A digit, a word character, whitespace | `"\\d"`, `"\\w"`, `"\\s"` |
+| Optional, one or more, zero or more | `?`, `+`, `*` |
+| Exactly n, or from n to m | `{n}`, `{n,m}` |
+| Or | one pattern, then another |
+| Save a piece | `(...)`, then `"\\1"` |
+| Group without saving | `(?:...)` |
+| Followed by, not followed by | `(?=...)`, `(?!...)` |
+
+The functions. The string comes first. The pattern comes second.
+
+| You want | Type | You get |
+|---|---|---|
+| Does it match? | `str_detect(x, p)` | `TRUE` or `FALSE` |
+| The matching strings | `str_subset(x, p)` | those strings |
+| The first match | `str_extract(x, p)` | one string |
+| Every match | `str_extract_all(x, p)` | a list |
+| The whole match and the groups | `str_match(x, p)` | a matrix |
+| Change the first match | `str_replace(x, p, r)` | a string |
+| Change every match | `str_replace_all(x, p, r)` | a string |
+| Split | `str_split(x, p)` | a list |
 
 ---
 

@@ -117,6 +117,8 @@
                             <a href="files/stringr-regex.pdf" target="_blank" rel="noopener">PDF</a>
                          &middot; <a href="files/lectures/stringr-regex.qmd">Source (.qmd)</a></p>
 <p>A pattern is a regular expression. Type <code>"\\d"</code> for a digit and <code>"\\w"</code> for a word character.</p>
+<p><strong>Where you are.</strong> Lesson 2 of 5. Read note 9.1 first. Next is note 9.5.</p>
+<p>Sections 1 and 2 are the pieces of a pattern. Section 3 is a first look at groups and lookaheads. The full lessons are notes 9.5, 9.6, and 9.7. Sections 4 and 5 are the functions you will call. The summary tables are after those examples.</p>
 <div id="a-pattern-is-a-regular-expression" class="section level2">
 <h2>1. A pattern is a regular expression</h2>
 <p>Note 9.1 used literal text. A <strong>regular expression</strong>
@@ -386,6 +388,41 @@ matches. <code>"aba"</code> in <code>"abababa"</code> is 2, not 3.</p>
 digit: a hyphen, a dot, or a space.</p>
 <hr />
 </div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>The pieces. Type the pattern as an R string.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>You want</th><th>Type</th></tr></thead>
+<tbody>
+<tr><td>Any one character</td><td><code>.</code></td></tr>
+<tr><td>A real period</td><td><code>"\\."</code></td></tr>
+<tr><td>Start of the string, end of the string</td><td><code>^</code>, <code>$</code></td></tr>
+<tr><td>One character from a set</td><td><code>[aeiou]</code></td></tr>
+<tr><td>One character not in a set</td><td><code>[^aeiou]</code></td></tr>
+<tr><td>A digit, a word character, whitespace</td><td><code>"\\d"</code>, <code>"\\w"</code>, <code>"\\s"</code></td></tr>
+<tr><td>Optional, one or more, zero or more</td><td><code>?</code>, <code>+</code>, <code>*</code></td></tr>
+<tr><td>Exactly n, or from n to m</td><td><code>{n}</code>, <code>{n,m}</code></td></tr>
+<tr><td>Or</td><td>one pattern, then another</td></tr>
+<tr><td>Save a piece</td><td><code>(...)</code>, then <code>"\\1"</code></td></tr>
+<tr><td>Group without saving</td><td><code>(?:...)</code></td></tr>
+<tr><td>Followed by, not followed by</td><td><code>(?=...)</code>, <code>(?!...)</code></td></tr>
+</tbody>
+</table></div>
+<p>The functions. The string comes first. The pattern comes second.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>You want</th><th>Type</th><th>You get</th></tr></thead>
+<tbody>
+<tr><td>Does it match?</td><td><code>str_detect(x, p)</code></td><td><code>TRUE</code> or <code>FALSE</code></td></tr>
+<tr><td>The matching strings</td><td><code>str_subset(x, p)</code></td><td>those strings</td></tr>
+<tr><td>The first match</td><td><code>str_extract(x, p)</code></td><td>one string</td></tr>
+<tr><td>Every match</td><td><code>str_extract_all(x, p)</code></td><td>a list</td></tr>
+<tr><td>The whole match and the groups</td><td><code>str_match(x, p)</code></td><td>a matrix</td></tr>
+<tr><td>Change the first match</td><td><code>str_replace(x, p, r)</code></td><td>a string</td></tr>
+<tr><td>Change every match</td><td><code>str_replace_all(x, p, r)</code></td><td>a string</td></tr>
+<tr><td>Split</td><td><code>str_split(x, p)</code></td><td>a list</td></tr>
+</tbody>
+</table></div>
+</div>
 <div id="practice" class="section level2">
 <h2>6. Practice</h2>
 <p>Use <code>words</code>. Print the matches (or <code>str_view()</code>
@@ -400,7 +437,7 @@ them).</p>
 <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-stringr-basics.html"><span aria-hidden="true">←</span> 9.1 stringr: Strings</a>
                         <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
-                            <a class="course-page-nav__next" href="data-612-stringr-summary.html">9.3 stringr: Summary <span aria-hidden="true">→</span></a>
+                            <a class="course-page-nav__next" href="data-612-regex-groups.html">9.5 Regex: Groups and Lookaheads <span aria-hidden="true">→</span></a>
                         </nav>
                     </section>
                 </div>
@@ -410,7 +447,7 @@ them).</p>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:42:00-04:00">October 28, 2026, 4:42 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T17:39:00-04:00">October 28, 2026, 5:39 PM EDT</time></div>
             </footer>
         </div>
 
