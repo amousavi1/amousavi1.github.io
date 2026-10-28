@@ -4,7 +4,7 @@ Sections 1 and 2 are the pieces of a pattern. Section 3 is a first look at group
 
 ## 1. A pattern is a regular expression
 
-Note 9.1 used literal text. A **regular expression** describes a set of strings. `stringr` (through `stringi`) uses ICU regex. Type the pattern as an R string: `"\\d"` for a digit, `"\\w"` for a word character, and `"\\."` for a real dot.
+Note 9.1 used literal text. A **regular expression** describes a set of strings. `stringr` (through `stringi`) uses ICU regex. Type the pattern as an R string: `"\\d"` for a digit, `"\\w"` for a word character (letters, digits, underscores), and `"\\."` for a real dot.
 
 `words` is 980 common English words that come with stringr. Use it for the examples.
 
@@ -223,7 +223,7 @@ The pieces. Type the pattern as an R string.
 | Start of the string, end of the string | `^`, `$` |
 | One character from a set | `[aeiou]` |
 | One character not in a set | `[^aeiou]` |
-| A digit, a word character, whitespace | `"\\d"`, `"\\w"`, `"\\s"` |
+| A digit, a word character (letters, digits, underscores), whitespace | `"\\d"`, `"\\w"`, `"\\s"` |
 | Optional, one or more, zero or more | `?`, `+`, `*` |
 | Exactly n, or from n to m | `{n}`, `{n,m}` |
 | Or | one pattern, then another |

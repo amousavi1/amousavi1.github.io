@@ -2,7 +2,7 @@
 
 Regex (regular expressions) describes a *pattern* of text so you can find, match, or replace it. Syntax varies slightly between languages (JavaScript, Python, PCRE, and others). The rules below are the shared core.
 
-Patterns below are written the way you type them in an R string for `stringr`. A digit is `\\d`. A word character is `\\w`. In `str_replace()`, a captured group is `\\1`.
+Patterns below are written the way you type them in an R string for `stringr`. A digit is `\\d`. A word character (`\\w`) is letters, digits, and underscores. In `str_replace()`, a captured group is `\\1`.
 
 ## 1. Literals
 
@@ -49,7 +49,7 @@ Inside a class, only `] \ ^ -` are special. Put `-` at the start or end to match
 |---|---|---|
 | `\\d` | digit | `[0-9]` |
 | `\\D` | non-digit | `[^0-9]` |
-| `\\w` | word character | `[A-Za-z0-9_]` |
+| `\\w` | word character (letters, digits, underscores) | `[A-Za-z0-9_]` |
 | `\\W` | non-word character | `[^A-Za-z0-9_]` |
 | `\\s` | whitespace (space, tab, newline) | `[ \\t\\n\\r\\f\\v]` |
 | `\\S` | non-whitespace | |
@@ -204,7 +204,7 @@ Email and HTML are hard to match completely with regex. These patterns are good 
 ```
 .        any character (not a newline)     ^     start
 \\d       digit                             $     end
-\\w       word character                    \\b    word boundary
+\\w       word character (letters, digits, underscores)    \\b    word boundary
 \\s       whitespace                        |     or
 [ ]      one of a set                      ( )   capturing group
 [^ ]     not one of a set                  (?: ) non-capturing group

@@ -399,7 +399,7 @@ str_pad(id, 5, pad = &quot;0&quot;)
 <ol>
 <li><strong>Input first, pattern second</strong>: this makes <code>stringr</code> pipe-friendly (<code>|&gt;</code>).</li>
 <li><strong><code>_all</code> suffix</strong> = every match; no suffix = first match only.</li>
-<li><strong>Type <code>"\\d"</code> for a digit and <code>"\\w"</code> for a word character.</strong></li>
+<li><strong>Type <code>"\\d"</code> for a digit and <code>"\\w"</code> for a word character (letters, digits, underscores).</strong></li>
 <li><strong>Output type hints</strong>: <code>str_detect</code> returns a logical vector, <code>str_extract</code> returns a character vector, <code>str_extract_all</code> and <code>str_split</code> return lists.</li>
 <li><strong><code>NA</code> handling</strong>: most functions return <code>NA</code> for <code>NA</code> input.</li>
 <li><strong>Use <code>fixed()</code></strong> when you want a plain-text match with no regex.</li>

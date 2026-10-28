@@ -1,14 +1,14 @@
 
 
 
-<p>A pattern is a regular expression. Type <code>"\\d"</code> for a digit and <code>"\\w"</code> for a word character.</p>
+<p>A pattern is a regular expression. Type <code>"\\d"</code> for a digit and <code>"\\w"</code> for a word character (letters, digits, underscores).</p>
 <p><strong>Where you are.</strong> Lesson 2 of 5. Read note 9.1 first. Next is note 9.5.</p>
 <p>Sections 1 and 2 are the pieces of a pattern. Section 3 is a first look at groups and lookaheads. The full lessons are notes 9.5, 9.6, and 9.7. Sections 4 and 5 are the functions you will call. The summary tables are after those examples.</p>
 <div id="a-pattern-is-a-regular-expression" class="section level2">
 <h2>1. A pattern is a regular expression</h2>
 <p>Note 9.1 used literal text. A <strong>regular expression</strong>
 describes a set of strings. <code>stringr</code> (through
-<code>stringi</code>) uses ICU regex. Type the pattern as an R string: <code>"\\d"</code> for a digit, <code>"\\w"</code> for a word character, and <code>"\\."</code> for a real dot.</p>
+<code>stringi</code>) uses ICU regex. Type the pattern as an R string: <code>"\\d"</code> for a digit, <code>"\\w"</code> for a word character (letters, digits, underscores), and <code>"\\."</code> for a real dot.</p>
 <p><code>words</code> is 980 common English words that come with
 stringr. Use it for the examples.</p>
 <pre class="r"><code>library(tidyverse)
@@ -284,7 +284,7 @@ digit: a hyphen, a dot, or a space.</p>
 <tr><td>Start of the string, end of the string</td><td><code>^</code>, <code>$</code></td></tr>
 <tr><td>One character from a set</td><td><code>[aeiou]</code></td></tr>
 <tr><td>One character not in a set</td><td><code>[^aeiou]</code></td></tr>
-<tr><td>A digit, a word character, whitespace</td><td><code>"\\d"</code>, <code>"\\w"</code>, <code>"\\s"</code></td></tr>
+<tr><td>A digit, a word character (letters, digits, underscores), whitespace</td><td><code>"\\d"</code>, <code>"\\w"</code>, <code>"\\s"</code></td></tr>
 <tr><td>Optional, one or more, zero or more</td><td><code>?</code>, <code>+</code>, <code>*</code></td></tr>
 <tr><td>Exactly n, or from n to m</td><td><code>{n}</code>, <code>{n,m}</code></td></tr>
 <tr><td>Or</td><td>one pattern, then another</td></tr>

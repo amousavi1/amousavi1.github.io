@@ -146,7 +146,7 @@ str_pad(id, 5, pad = "0")
 
 1. **Input first, pattern second**: this makes `stringr` pipe-friendly (`|>`).
 2. **`_all` suffix** = every match; no suffix = first match only.
-3. **Type `"\\d"` for a digit and `"\\w"` for a word character.**
+3. **Type `"\\d"` for a digit and `"\\w"` for a word character (letters, digits, underscores).**
 4. **Output type hints**: `str_detect` returns a logical vector, `str_extract` returns a character vector, `str_extract_all` and `str_split` return lists.
 5. **`NA` handling**: most functions return `NA` for `NA` input.
 6. **Use `fixed()`** when you want a plain-text match with no regex.
