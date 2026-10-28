@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-27T22:55:00-04:00"
-LAST_UPDATED_TEXT = "October 27, 2026, 10:55 PM EDT"
+LAST_UPDATED_ISO = "2026-10-27T23:00:00-04:00"
+LAST_UPDATED_TEXT = "October 27, 2026, 11:00 PM EDT"
 
 NOTES = [
     {
@@ -236,6 +236,12 @@ NOTES = [
         "week": 9,
         "title": "9.3 stringr: Summary",
         "lead": "A reference for stringr: the string comes first, the pattern second.",
+    },
+    {
+        "slug": "regex-rules",
+        "week": 9,
+        "title": "9.4 Regex: The Complete Rules",
+        "lead": "The shared rules of regular expressions, as stringr uses them.",
     },
     {
         "slug": "lab-9-strings",

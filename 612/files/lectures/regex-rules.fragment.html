@@ -1,0 +1,371 @@
+<p>Regex (regular expressions) describes a <em>pattern</em> of text so you can find, match, or replace it. Syntax varies slightly between languages (JavaScript, Python, PCRE, and others). The rules below are the shared core.</p>
+<p>This course writes those patterns for <code>stringr</code>, which uses the ICU engine. In an R string a backslash is doubled, so the regex <code>\d</code> is <code>"\\d"</code>. In <code>str_replace()</code>, a captured group comes back as <code>"\\1"</code>.</p>
+<h2>1. Literals</h2>
+<p>Most characters match themselves.</p>
+<ul>
+<li><code>cat</code> matches "cat" inside "concatenate"</li>
+<li>Matching is case-sensitive by default</li>
+</ul>
+<h2>2. Metacharacters (special characters)</h2>
+<p>These have special meaning:</p>
+<pre><code>.  ^  $  *  +  ?  ( )  [ ]  { }  |  \
+</code></pre>
+<p>To match one literally, escape it with a backslash: <code>\.</code> matches a real period, <code>\$</code> matches a dollar sign, <code>\\</code> matches a backslash.</p>
+<h2>3. The dot</h2>
+<p><code>.</code> matches <strong>any single character</strong> except a newline (by default).</p>
+<ul>
+<li><code>c.t</code> matches "cat", "cut", "c9t", "c t"</li>
+</ul>
+<p>In <code>stringr</code>, <code>regex(p, dotall = TRUE)</code> lets <code>.</code> match a newline too.</p>
+<h2>4. Character classes</h2>
+<p>Square brackets match <strong>one character</strong> from a set.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[abc]</code></td>
+<td>a, b, or c</td>
+</tr>
+<tr>
+<td><code>[a-z]</code></td>
+<td>any lowercase letter</td>
+</tr>
+<tr>
+<td><code>[A-Za-z0-9]</code></td>
+<td>any letter or digit</td>
+</tr>
+<tr>
+<td><code>[^abc]</code></td>
+<td>anything <strong>except</strong> a, b, c (the <code>^</code> negates when first)</td>
+</tr>
+<tr>
+<td><code>[.]</code></td>
+<td>a literal dot (most metacharacters lose their power inside <code>[]</code>)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Inside a class, only <code>] \ ^ -</code> are special. Put <code>-</code> at the start or end to match a literal hyphen: <code>[a-z-]</code>.</p>
+<h2>5. Shorthand classes</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Meaning</th>
+<th>ASCII picture</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\d</code></td>
+<td>digit</td>
+<td><code>[0-9]</code></td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td>non-digit</td>
+<td><code>[^0-9]</code></td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td>word character</td>
+<td><code>[A-Za-z0-9_]</code></td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td>non-word character</td>
+<td><code>[^A-Za-z0-9_]</code></td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td>whitespace (space, tab, newline)</td>
+<td><code>[ \t\n\r\f\v]</code></td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td>non-whitespace</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>In <code>stringr</code>, <code>\d</code> and <code>\w</code> are Unicode-aware. <code>\d</code> matches decimal digits beyond <code>0-9</code>, and <code>\w</code> matches letters such as <code>é</code>.</p>
+<h2>6. Anchors and boundaries</h2>
+<p>These match a <strong>position</strong>, not a character.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^</code></td>
+<td>start of string (or line, with multiline flag)</td>
+</tr>
+<tr>
+<td><code>$</code></td>
+<td>end of string (or line)</td>
+</tr>
+<tr>
+<td><code>\b</code></td>
+<td>word boundary (between <code>\w</code> and <code>\W</code>)</td>
+</tr>
+<tr>
+<td><code>\B</code></td>
+<td>not a word boundary</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><code>^\d+$</code> matches a string that is <em>entirely</em> digits</li>
+<li><code>\bcat\b</code> matches "cat" but not "concatenate"</li>
+</ul>
+<h2>7. Quantifiers</h2>
+<p>Quantifiers say <strong>how many times</strong> the preceding item repeats.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code></td>
+<td>0 or more</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>1 or more</td>
+</tr>
+<tr>
+<td><code>?</code></td>
+<td>0 or 1 (optional)</td>
+</tr>
+<tr>
+<td><code>{3}</code></td>
+<td>exactly 3</td>
+</tr>
+<tr>
+<td><code>{3,}</code></td>
+<td>3 or more</td>
+</tr>
+<tr>
+<td><code>{3,5}</code></td>
+<td>between 3 and 5</td>
+</tr>
+</tbody>
+</table></div>
+<p>Examples: <code>colou?r</code> matches "color" and "colour"; <code>\d{3}-\d{4}</code> matches "555-1234".</p>
+<h3>Greedy vs. lazy vs. possessive</h3>
+<ul>
+<li><strong>Greedy</strong> (default): matches as much as possible. <code>&lt;.+&gt;</code> on <code>&lt;b&gt;hi&lt;/b&gt;</code> matches the <strong>whole</strong> string.</li>
+<li><strong>Lazy</strong>: add <code>?</code> to match as little as possible. <code>&lt;.+?&gt;</code> matches just <code>&lt;b&gt;</code>.</li>
+<li><strong>Possessive</strong>: add <code>+</code> (e.g. <code>a++</code>). It matches greedily and never backtracks. ICU, which <code>stringr</code> uses, supports this. JavaScript does not, and Python did not before 3.11.</li>
+</ul>
+<h2>7b. Quantifiers apply to one thing</h2>
+<p>A quantifier only affects the item right before it: <code>ab+</code> means "a" then one or more "b"s. To repeat multiple characters, use a group: <code>(ab)+</code>.</p>
+<h2>8. Alternation (OR)</h2>
+<p><code>|</code> means "or."</p>
+<ul>
+<li><code>cat|dog</code> matches "cat" or "dog"</li>
+<li><code>gr(a|e)y</code> matches "gray" or "grey"</li>
+</ul>
+<p>Alternation has the <strong>lowest precedence</strong>, so <code>^cat|dog$</code> means "starts with cat" OR "ends with dog." Use groups to control scope: <code>^(cat|dog)$</code>.</p>
+<h2>9. Groups</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(...)</code></td>
+<td><strong>Capturing group</strong>: groups items and remembers the match</td>
+</tr>
+<tr>
+<td><code>(?:...)</code></td>
+<td><strong>Non-capturing group</strong>: groups only, does not remember</td>
+</tr>
+<tr>
+<td><code>(?&lt;name&gt;...)</code></td>
+<td><strong>Named capturing group</strong>. <code>stringr</code> accepts this form. Python spells it <code>(?P&lt;name&gt;...)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Capturing groups are numbered left to right by their opening parenthesis: <code>(\d{4})-(\d{2})-(\d{2})</code> on "2026-10-27" gives group 1 = 2026, group 2 = 10, group 3 = 27.</p>
+<h2>10. Backreferences</h2>
+<p>Refer back to what a group already matched.</p>
+<ul>
+<li><code>(\w)\1</code> matches a doubled letter like "ee" or "ll"</li>
+<li><code>(['"]).*?\1</code> matches a quoted string with matching quote types</li>
+<li>Named: <code>\k&lt;name&gt;</code> (JS/PCRE) or <code>(?P=name)</code> (Python)</li>
+</ul>
+<p>In a replacement, reuse a captured group as <code>$1</code> or <code>\1</code>, depending on the language. <code>str_replace()</code> wants <code>"\\1"</code>.</p>
+<h2>11. Lookarounds (zero-width assertions)</h2>
+<p>These check what is nearby <strong>without consuming it</strong>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>X(?=Y)</code></td>
+<td>positive lookahead</td>
+<td>X followed by Y</td>
+</tr>
+<tr>
+<td><code>X(?!Y)</code></td>
+<td>negative lookahead</td>
+<td>X <strong>not</strong> followed by Y</td>
+</tr>
+<tr>
+<td><code>(?&lt;=Y)X</code></td>
+<td>positive lookbehind</td>
+<td>X preceded by Y</td>
+</tr>
+<tr>
+<td><code>(?&lt;!Y)X</code></td>
+<td>negative lookbehind</td>
+<td>X <strong>not</strong> preceded by Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Examples:</p>
+<ul>
+<li><code>\d+(?= dollars)</code> matches the number in "50 dollars" but not the word</li>
+<li><code>(?&lt;=\$)\d+</code> matches digits after a <code>$</code> without including it</li>
+<li><code>^(?=.*\d)(?=.*[A-Z]).{8,}$</code> is a password check: 8+ characters, at least one digit and one capital</li>
+</ul>
+<p>In <code>stringr</code>, a lookbehind must have a bounded maximum length. <code>(?&lt;=\d{2})</code> and <code>(?&lt;=a{1,3})</code> are fine. <code>(?&lt;=a+)</code> is not, because <code>+</code> has no upper bound.</p>
+<h2>12. Flags / modifiers</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>i</code></td>
+<td>case-insensitive</td>
+</tr>
+<tr>
+<td><code>g</code></td>
+<td>global: find all matches, not just the first (JS and others)</td>
+</tr>
+<tr>
+<td><code>m</code></td>
+<td>multiline: <code>^</code> and <code>$</code> match at each line</td>
+</tr>
+<tr>
+<td><code>s</code></td>
+<td>dotall: <code>.</code> also matches newlines</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>extended: allows whitespace and comments in the pattern (Python, PCRE)</td>
+</tr>
+<tr>
+<td><code>u</code></td>
+<td>Unicode mode (JS)</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>stringr</code> sets these with <code>regex()</code>. <code>regex(p, ignore_case = TRUE)</code> is <code>i</code>, <code>multiline = TRUE</code> is <code>m</code>, and <code>dotall = TRUE</code> is <code>s</code>. There is no <code>g</code> flag: <code>str_extract_all()</code> and <code>str_replace_all()</code> find every match. You can also put <code>(?i)</code> at the front of the pattern.</p>
+<h2>13. Unicode</h2>
+<ul>
+<li><code>\p{L}</code> any letter, <code>\p{Lu}</code> uppercase letter, <code>\p{N}</code> any number</li>
+<li><code>\P{L}</code> is the negation</li>
+<li>In some languages <code>\w</code> and <code>\d</code> are ASCII-only unless you turn Unicode on. <code>stringr</code> already treats them as Unicode</li>
+</ul>
+<p>JavaScript needs the <code>u</code> flag for <code>\p{...}</code>. Python's standard <code>re</code> does not support <code>\p{...}</code>; the third-party <code>regex</code> library does.</p>
+<h2>14. Escape sequences</h2>
+<p><code>\n</code> newline, <code>\t</code> tab, <code>\r</code> carriage return, <code>\xHH</code> hex character, <code>\uHHHH</code> Unicode character, <code>\0</code> null.</p>
+<h2>15. How the engine thinks</h2>
+<ol>
+<li><strong>It scans left to right</strong> and returns the first position where the whole pattern matches.</li>
+<li><strong>Backtracking</strong>: if a greedy part overshoots and the rest fails, the engine gives characters back and retries.</li>
+<li><strong>Catastrophic backtracking</strong>: nested quantifiers like <code>(a+)+$</code> can take exponential time on bad input. Avoid them, especially on user input.</li>
+</ol>
+<h2>16. Practical examples</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integer</td>
+<td><code>^-?\d+$</code></td>
+</tr>
+<tr>
+<td>Decimal</td>
+<td><code>^-?\d+(\.\d+)?$</code></td>
+</tr>
+<tr>
+<td>US ZIP code</td>
+<td><code>^\d{5}(-\d{4})?$</code></td>
+</tr>
+<tr>
+<td>Hex color</td>
+<td><code>^#(?:[0-9a-fA-F]{3}){1,2}$</code></td>
+</tr>
+<tr>
+<td>ISO date</td>
+<td><code>^\d{4}-\d{2}-\d{2}$</code></td>
+</tr>
+<tr>
+<td>Simple email</td>
+<td><code>^[\w.+-]+@[\w-]+\.[\w.-]+$</code></td>
+</tr>
+<tr>
+<td>Extra whitespace</td>
+<td><code>\s{2,}</code></td>
+</tr>
+<tr>
+<td>HTML tag (simple)</td>
+<td><code>&lt;([a-z]+)&gt;.*?&lt;/\1&gt;</code></td>
+</tr>
+<tr>
+<td>Repeated word</td>
+<td><code>\b(\w+)\s+\1\b</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Email and HTML are hard to match completely with regex. These patterns are good enough for cleaning and extracting, not for validating every legal address or parsing a page.</p>
+<h2>17. Tips for building patterns</h2>
+<ol>
+<li><strong>Start small</strong>, then build up piece by piece.</li>
+<li><strong>Test interactively</strong> with <a href="https://regex101.com">regex101.com</a>. It explains each part. For this course, choose a flavor close to ICU, or test with <code>str_view()</code>.</li>
+<li><strong>Be specific</strong>: prefer <code>[^"]*</code> over <code>.*</code> when matching inside quotes.</li>
+<li><strong>Anchor</strong> when validating whole strings (<code>^...$</code>).</li>
+<li><strong>Escape</strong> user-provided text before inserting it into a pattern. In R, <code>str_escape()</code> does this.</li>
+<li><strong>Know when not to use regex</strong>: nested structures (HTML, JSON, code) are better handled by a real parser.</li>
+</ol>
+<h2>Quick cheat sheet</h2>
+<pre><code>.        any character (not a newline)     ^     start
+\d       digit                             $     end
+\w       word character                    \b    word boundary
+\s       whitespace                        |     or
+[ ]      one of a set                      ( )   capturing group
+[^ ]     not one of a set                  (?: ) non-capturing group
+*        0 or more                         \1    backreference
++        1 or more                         ?     lazy, after a quantifier
+?        0 or 1                            {n,m} between n and m
+(?=) (?!) (?&lt;=) (?&lt;!)                      lookarounds
+</code></pre>
