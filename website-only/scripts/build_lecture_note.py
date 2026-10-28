@@ -250,6 +250,12 @@ NOTES = [
         "lead": "Capturing groups, non-capturing groups, and lookaheads, and how str_match() numbers them.",
     },
     {
+        "slug": "regex-capture",
+        "week": 9,
+        "title": "9.6 Regex: Capturing and Backreferences",
+        "lead": "Capturing groups remember text. Numbered and named references reuse it.",
+    },
+    {
         "slug": "lab-9-strings",
         "week": 9,
         "title": "Lab 9: Strings and Regex",

@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>9.6 Regex: Capturing and Backreferences - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">9.6 Regex: Capturing and Backreferences</h1>
+                    </header>
+                                                                                                                                            <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-9.html">Week 9</a> &middot;
+                            <a href="files/regex-capture.pdf" target="_blank" rel="noopener">PDF</a>
+                         &middot; <a href="files/lectures/regex-capture.qmd">Source (.qmd)</a></p>
+<p>Note 9.5 is about lookaheads. This note is about groups that remember text, and about using that text again.</p>
+<p>By the end of this note you should be able to:</p>
+<ol>
+<li>Tell a capturing group from a non-capturing group.</li>
+<li>Number groups from the opening parenthesis, including nested groups.</li>
+<li>Use a named group <code>(?&lt;name&gt;...)</code>.</li>
+<li>Backreference a group inside a pattern, and reuse it in a replacement.</li>
+</ol>
+<h2>1. The notation</h2>
+<p>Both kinds of group bundle part of a pattern. The difference is whether the engine remembers what the group matched.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Notation</th>
+<th>Type</th>
+<th>Remembers the match?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(...)</code></td>
+<td>Capturing group</td>
+<td>Yes, numbered 1, 2, 3, ...</td>
+</tr>
+<tr>
+<td><code>(?:...)</code></td>
+<td>Non-capturing group</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>(?&lt;name&gt;...)</code></td>
+<td>Named capturing group</td>
+<td>Yes, by name and by number</td>
+</tr>
+</tbody>
+</table></div>
+<p>Python writes a named group as <code>(?P&lt;name&gt;...)</code>.</p>
+<h2>2. What grouping does</h2>
+<p>A group lets a quantifier or <code>|</code> apply to several characters at once.</p>
+<ul>
+<li><code>ab+</code> is <code>a</code>, then one or more <code>b</code>: <code>ab</code>, <code>abb</code>, <code>abbb</code>.</li>
+<li><code>(ab)+</code> is the pair <code>ab</code> repeated: <code>ab</code>, <code>abab</code>, <code>ababab</code>.</li>
+<li><code>gr(a|e)y</code> matches <code>gray</code> or <code>grey</code>.</li>
+</ul>
+<p>Capturing and non-capturing groups both do this. The next sections are about the extra memory.</p>
+<h2>3. What capturing adds</h2>
+<p>A capturing group saves its matched text so you can:</p>
+<ol>
+<li>Extract the piece afterward.</li>
+<li>Backreference it inside the same pattern (<code>\1</code> in the regex, <code>"\\1"</code> in R).</li>
+<li>Reuse it in a replacement.</li>
+</ol>
+<h2>4. Numbering</h2>
+<p>Groups are numbered by the position of the opening parenthesis, left to right. Nested groups count. Non-capturing groups do not.</p>
+<p>For <code>((\d{4})-(\d{2}))-(\d{2})</code> on <code>"2026-10-27"</code>:</p>
+<ul>
+<li>Group 1 is <code>((\d{4})-(\d{2}))</code>, the text <code>2026-10</code>.</li>
+<li>Group 2 is <code>(\d{4})</code>, the year.</li>
+<li>Group 3 is <code>(\d{2})</code>, the month.</li>
+<li>Group 4 is <code>(\d{2})</code>, the day.</li>
+</ul>
+<pre><code class="language-r">str_match(&quot;2026-10-27&quot;, &quot;((\\d{4})-(\\d{2}))-(\\d{2})&quot;)
+</code></pre>
+<pre><code>     [,1]         [,2]      [,3]   [,4] [,5]
+[1,] &quot;2026-10-27&quot; &quot;2026-10&quot; &quot;2026&quot; &quot;10&quot; &quot;27&quot;
+</code></pre>
+<p>Column 1 is the whole match. Columns 2 through 5 are groups 1 through 4.</p>
+<h2>5. What a non-capturing group does</h2>
+<p><code>(?:...)</code> groups for structure and saves nothing. Use it when you need <code>|</code> or a quantifier and you do not want the text back.</p>
+<p>On <code>"2026-10-27"</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Groups saved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(\d{4})-(\d{2})-(\d{2})</code></td>
+<td>3: <code>2026</code>, <code>10</code>, <code>27</code></td>
+</tr>
+<tr>
+<td><code>(?:\d{4})-(\d{2})-(\d{2})</code></td>
+<td>2: <code>10</code>, <code>27</code></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">str_match(&quot;2026-10-27&quot;, &quot;(\\d{4})-(\\d{2})-(\\d{2})&quot;)
+</code></pre>
+<pre><code>     [,1]         [,2]   [,3] [,4]
+[1,] &quot;2026-10-27&quot; &quot;2026&quot; &quot;10&quot; &quot;27&quot;
+</code></pre>
+<pre><code class="language-r">str_match(&quot;2026-10-27&quot;, &quot;(?:\\d{4})-(\\d{2})-(\\d{2})&quot;)
+</code></pre>
+<pre><code>     [,1]         [,2] [,3]
+[1,] &quot;2026-10-27&quot; &quot;10&quot; &quot;27&quot;
+</code></pre>
+<p>The year is still matched. It is not a column. The month is group 1, and the day is group 2.</p>
+<p>That keeps numbering tidy: structural parentheses do not shift <code>\1</code> and <code>\2</code>. Nothing is stored for the group you skipped. A backreference cannot point at a parenthesis you did not capture.</p>
+<h2>6. The same pattern, two ways</h2>
+<p>Match <code>gray</code> or <code>grey</code>, and capture the whole word:</p>
+<pre><code class="language-r">str_match(&quot;gray&quot;, &quot;(gr(?:a|e)y)&quot;)
+</code></pre>
+<pre><code>     [,1]   [,2]
+[1,] &quot;gray&quot; &quot;gray&quot;
+</code></pre>
+<p>Group 1 is the word. <code>(?:a|e)</code> only makes the choice.</p>
+<pre><code class="language-r">str_match(&quot;gray&quot;, &quot;(gr(a|e)y)&quot;)
+</code></pre>
+<pre><code>     [,1]   [,2]   [,3]
+[1,] &quot;gray&quot; &quot;gray&quot; &quot;a&quot;
+</code></pre>
+<p>Now there are two groups: group 1 is <code>gray</code>, and group 2 is <code>a</code>. The inner group is clutter when you only wanted the word.</p>
+<h2>7. Named groups</h2>
+<p>A name documents the group, and you do not have to count:</p>
+<pre><code class="language-r">(?&lt;year&gt;\d{4})-(?&lt;month&gt;\d{2})-(?&lt;day&gt;\d{2})
+</code></pre>
+<p>In an R string that is <code>"(?&lt;year&gt;\\d{4})-(?&lt;month&gt;\\d{2})-(?&lt;day&gt;\\d{2})"</code>.</p>
+<p>The engine still numbers them: <code>year</code> is group 1, <code>month</code> is group 2, <code>day</code> is group 3. Inside the pattern, the named backreference is <code>\k&lt;year&gt;</code>, written <code>"\\k&lt;year&gt;"</code> in R.</p>
+<h2>8. Groups in <code>str_match()</code> and <code>str_replace()</code></h2>
+<p><code>str_match()</code> returns the full match, then one column per capturing group.</p>
+<pre><code class="language-r">x &lt;- &quot;2026-10-27&quot;
+
+str_match(x, &quot;(\\d{4})-(\\d{2})-(\\d{2})&quot;)
+</code></pre>
+<pre><code>     [,1]         [,2]   [,3] [,4]
+[1,] &quot;2026-10-27&quot; &quot;2026&quot; &quot;10&quot; &quot;27&quot;
+</code></pre>
+<p>A non-capturing group is left out:</p>
+<pre><code class="language-r">str_match(x, &quot;(?:\\d{4})-(\\d{2})-(\\d{2})&quot;)
+</code></pre>
+<pre><code>     [,1]         [,2] [,3]
+[1,] &quot;2026-10-27&quot; &quot;10&quot; &quot;27&quot;
+</code></pre>
+<p>In a replacement, <code>\\1</code> and <code>\\2</code> are the captured text:</p>
+<pre><code class="language-r">str_replace(&quot;John Smith&quot;, &quot;(\\w+) (\\w+)&quot;, &quot;\\2, \\1&quot;)
+</code></pre>
+<pre><code>[1] &quot;Smith, John&quot;
+</code></pre>
+<h2>9. A backreference needs a capturing group</h2>
+<p>You can only refer back to a capturing group.</p>
+<pre><code class="language-r">str_detect(c(&quot;bookkeeper&quot;, &quot;banana&quot;), &quot;(\\w)\\1&quot;)
+</code></pre>
+<pre><code>[1]  TRUE FALSE
+</code></pre>
+<p><code>(\\w)\\1</code> matches a doubled letter. <code>bookkeeper</code> has <code>oo</code> and <code>kk</code>. <code>banana</code> has no doubled letter.</p>
+<pre><code class="language-r">str_detect(&quot;ee&quot;, &quot;(?:\\w)\\1&quot;)
+</code></pre>
+<p>That is an error: <code>Back-reference to a non-existent capture group</code>. <code>(?:\\w)</code> matched a letter and did not store it, so there is no group 1.</p>
+<h2>10. Backreference inside the pattern</h2>
+<p>A backreference means “match this same text again.”</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Style</th>
+<th>In the regex</th>
+<th>In an R string</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Numbered</td>
+<td><code>\1</code>, <code>\2</code></td>
+<td><code>"\\1"</code>, <code>"\\2"</code></td>
+</tr>
+<tr>
+<td>Named</td>
+<td><code>\k&lt;name&gt;</code></td>
+<td><code>"\\k&lt;name&gt;"</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Doubled letter, numbered and named:</p>
+<pre><code class="language-r">x &lt;- c(&quot;bookkeeper&quot;, &quot;banana&quot;)
+
+str_detect(x, &quot;(\\w)\\1&quot;)
+str_detect(x, &quot;(?&lt;ch&gt;\\w)\\k&lt;ch&gt;&quot;)
+</code></pre>
+<pre><code>[1]  TRUE FALSE
+[1]  TRUE FALSE
+</code></pre>
+<p>A repeated word:</p>
+<pre><code class="language-r">y &lt;- &quot;this is is a test&quot;
+
+str_extract(y, &quot;\\b(\\w+)\\s+\\1\\b&quot;)
+str_extract(y, &quot;\\b(?&lt;w&gt;\\w+)\\s+\\k&lt;w&gt;\\b&quot;)
+</code></pre>
+<pre><code>[1] &quot;is is&quot;
+[1] &quot;is is&quot;
+</code></pre>
+<p><code>\\b</code> is a word boundary, so the repeat is a whole word. <code>\\s+</code> is the space between the two copies.</p>
+<p>Matching quotes, where the closer has to be the same mark as the opener:</p>
+<pre><code class="language-r">z &lt;- &quot;She said 'hi' and \&quot;bye\&quot;&quot;
+
+str_extract_all(z, &quot;(['\&quot;]).*?\\1&quot;)
+str_extract_all(z, &quot;(?&lt;q&gt;['\&quot;]).*?\\k&lt;q&gt;&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;'hi'&quot;    &quot;\&quot;bye\&quot;&quot;
+
+[[1]]
+[1] &quot;'hi'&quot;    &quot;\&quot;bye\&quot;&quot;
+</code></pre>
+<p>Group 1 (or <code>q</code>) is the opening quote. <code>\\1</code> requires the same character at the end. <code>.*?</code> takes as little as possible in between, so each pair stops at its own closer.</p>
+<h2>11. Reference in the replacement</h2>
+<p>In stringr, the replacement uses <code>\\1</code>, <code>\\2</code>, and so on. This is the update: put the captured text back in a new arrangement.</p>
+<p>Reorder a date, <code>2026-10-27</code> to <code>27/10/2026</code>:</p>
+<pre><code class="language-r">d &lt;- &quot;2026-10-27&quot;
+
+str_replace(d, &quot;(\\d{4})-(\\d{2})-(\\d{2})&quot;, &quot;\\3/\\2/\\1&quot;)
+</code></pre>
+<pre><code>[1] &quot;27/10/2026&quot;
+</code></pre>
+<p>Swap two names:</p>
+<pre><code class="language-r">str_replace(&quot;John Smith&quot;, &quot;(\\w+) (\\w+)&quot;, &quot;\\2, \\1&quot;)
+</code></pre>
+<pre><code>[1] &quot;Smith, John&quot;
+</code></pre>
+<p>Keep one copy of a duplicated word:</p>
+<pre><code class="language-r">str_replace_all(&quot;this is is a test&quot;, &quot;\\b(\\w+)\\s+\\1\\b&quot;, &quot;\\1&quot;)
+</code></pre>
+<pre><code>[1] &quot;this is a test&quot;
+</code></pre>
+<p>Wrap every number in brackets:</p>
+<pre><code class="language-r">str_replace_all(&quot;a1 b22 c333&quot;, &quot;(\\d+)&quot;, &quot;[\\1]&quot;)
+</code></pre>
+<pre><code>[1] &quot;a[1] b[22] c[333]&quot;
+</code></pre>
+<p><code>\\0</code> is the entire match, not a group:</p>
+<pre><code class="language-r">str_replace_all(&quot;a1 b22&quot;, &quot;\\d+&quot;, &quot;&lt;\\0&gt;&quot;)
+</code></pre>
+<pre><code>[1] &quot;a&lt;1&gt; b&lt;22&gt;&quot;
+</code></pre>
+<h2>12. Named groups in the replacement</h2>
+<p>stringr’s replacement understands numbers. A named group is also numbered, so you can name the groups in the pattern and still write <code>\\1</code> in the replacement:</p>
+<pre><code class="language-r">str_replace(
+  d,
+  &quot;(?&lt;y&gt;\\d{4})-(?&lt;m&gt;\\d{2})-(?&lt;day&gt;\\d{2})&quot;,
+  &quot;\\3/\\2/\\1&quot;
+)
+</code></pre>
+<pre><code>[1] &quot;27/10/2026&quot;
+</code></pre>
+<p>To use the names in the replacement, call <code>stringi</code>. ICU writes a named replacement as <code>${name}</code>:</p>
+<pre><code class="language-r">stringi::stri_replace_first_regex(
+  d,
+  &quot;(?&lt;y&gt;\\d{4})-(?&lt;m&gt;\\d{2})-(?&lt;day&gt;\\d{2})&quot;,
+  &quot;${day}/${m}/${y}&quot;
+)
+</code></pre>
+<pre><code>[1] &quot;27/10/2026&quot;
+</code></pre>
+<p>That call works in stringi 1.8.9. The pattern is still an R string, so the backslashes in <code>\\d</code> are doubled. The replacement <code>${day}</code> has no backslash.</p>
+<h2>13. Extracting groups</h2>
+<p><code>str_match()</code> is the reference without an update. With names, stringr 1.6 labels the group columns:</p>
+<pre><code class="language-r">m &lt;- str_match(d, &quot;(?&lt;y&gt;\\d{4})-(?&lt;m&gt;\\d{2})-(?&lt;day&gt;\\d{2})&quot;)
+m
+colnames(m)
+m[, &quot;y&quot;]
+</code></pre>
+<pre><code>                  y      m    day
+[1,] &quot;2026-10-27&quot; &quot;2026&quot; &quot;10&quot; &quot;27&quot;
+
+[1] &quot;&quot;    &quot;y&quot;   &quot;m&quot;   &quot;day&quot;
+
+[1] &quot;2026&quot;
+</code></pre>
+<p>The first column is the whole match, and its name is blank. <code>"y"</code>, <code>"m"</code>, and <code>"day"</code> are groups 1, 2, and 3, so <code>m[, 2]</code> and <code>m[, "y"]</code> are the same cell.</p>
+<h2>14. The same idea in other languages</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th></th>
+<th>Numbered</th>
+<th>Named</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pattern backreference</td>
+<td><code>\1</code></td>
+<td>JavaScript and PCRE: <code>\k&lt;name&gt;</code>. Python: <code>(?P=name)</code></td>
+</tr>
+<tr>
+<td>Replacement</td>
+<td>JavaScript: <code>$1</code>. Python: <code>\1</code></td>
+<td>JavaScript: <code>$&lt;name&gt;</code>. Python: <code>\g&lt;name&gt;</code></td>
+</tr>
+<tr>
+<td>Define the group</td>
+<td><code>(...)</code></td>
+<td>JavaScript and PCRE: <code>(?&lt;name&gt;...)</code>. Python: <code>(?P&lt;name&gt;...)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>JavaScript:</p>
+<pre><code class="language-js">&quot;2026-10-27&quot;.replace(/(\d{4})-(\d{2})-(\d{2})/, &quot;$3/$2/$1&quot;);
+&quot;2026-10-27&quot;.replace(/(?&lt;y&gt;\d{4})-(?&lt;m&gt;\d{2})-(?&lt;d&gt;\d{2})/, &quot;$&lt;d&gt;/$&lt;m&gt;/$&lt;y&gt;&quot;);
+</code></pre>
+<p>Both return <code>"27/10/2026"</code>. A JavaScript regex literal does not double the backslash.</p>
+<p>Python:</p>
+<pre><code class="language-python">import re
+re.sub(r&quot;(\d{4})-(\d{2})-(\d{2})&quot;, r&quot;\3/\2/\1&quot;, &quot;2026-10-27&quot;)
+re.sub(r&quot;(?P&lt;y&gt;\d{4})-(?P&lt;m&gt;\d{2})-(?P&lt;d&gt;\d{2})&quot;, r&quot;\g&lt;d&gt;/\g&lt;m&gt;/\g&lt;y&gt;&quot;, &quot;2026-10-27&quot;)
+</code></pre>
+<p>Both return <code>'27/10/2026'</code>. A raw Python string, <code>r"..."</code>, keeps one backslash for the regex engine. That is the same role as R’s doubled backslash.</p>
+<h2>15. Key points</h2>
+<ol>
+<li>Numbering follows the opening parenthesis, left to right. Nested groups count.</li>
+<li>A named group is also numbered, so <code>\1</code> and <code>\k&lt;name&gt;</code> can appear in the same pattern.</li>
+<li><code>(?:...)</code> is skipped in the numbering, which keeps <code>\\1</code> and <code>\\2</code> predictable.</li>
+<li>Use a name when there are many groups. Use a number for a short pattern.</li>
+<li>A backreference in the pattern means “match this text again.” A reference in the replacement means “write this text back.”</li>
+<li>Need the text later? Use <code>(...)</code>. Only grouping for <code>|</code> or a quantifier? Use <code>(?:...)</code>.</li>
+</ol>
+<nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-regex-groups.html"><span aria-hidden="true">←</span> 9.5 Regex: Groups and Lookaheads</a>
+                        <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
+                            <a class="course-page-nav__next" href="data-612-lab-9-strings.html">Lab 9: Strings and Regex <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:15:00-04:00">October 28, 2026, 4:15 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>
