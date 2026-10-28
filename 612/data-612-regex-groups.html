@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>9.5 Regex: Groups and Lookaheads - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">9.5 Regex: Groups and Lookaheads</h1>
+                    </header>
+                                                                                                                        <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-9.html">Week 9</a> &middot;
+                            <a href="files/regex-groups.pdf" target="_blank" rel="noopener">PDF</a>
+                         &middot; <a href="files/lectures/regex-groups.qmd">Source (.qmd)</a></p>
+<p>Parentheses group a pattern. A capturing group also remembers what it matched. A lookahead only checks what comes next.</p>
+<p>By the end of this note you should be able to:</p>
+<ol>
+<li>Explain what parentheses do in a regular expression.</li>
+<li>Distinguish a capturing group <code>(...)</code> from a non-capturing group <code>(?:...)</code>.</li>
+<li>Read the matrix that <code>str_match()</code> returns: the whole match, then each captured group.</li>
+<li>Number capturing groups from their opening parentheses.</li>
+<li>Use alternation (<code>|</code>) inside a group.</li>
+<li>Use a positive lookahead <code>(?=...)</code> and a negative lookahead <code>(?!...)</code>.</li>
+<li>Tell a lookahead, which only checks, from a pattern that consumes characters.</li>
+<li>Apply these ideas to realistic text.</li>
+</ol>
+<h2>1. Pattern matching in R</h2>
+<p><code>stringr</code> has several functions for text patterns.</p>
+<pre><code class="language-r">library(stringr)
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_detect()</code></td>
+<td>Does the pattern occur?</td>
+</tr>
+<tr>
+<td><code>str_extract()</code></td>
+<td>First matching substring</td>
+</tr>
+<tr>
+<td><code>str_extract_all()</code></td>
+<td>Every matching substring</td>
+</tr>
+<tr>
+<td><code>str_match()</code></td>
+<td>The whole match and its capturing groups</td>
+</tr>
+<tr>
+<td><code>str_match_all()</code></td>
+<td>Every match and its capturing groups</td>
+</tr>
+<tr>
+<td><code>str_replace()</code></td>
+<td>Replace the first match</td>
+</tr>
+<tr>
+<td><code>str_replace_all()</code></td>
+<td>Replace every match</td>
+</tr>
+<tr>
+<td><code>str_count()</code></td>
+<td>Count non-overlapping matches</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">x &lt;- &quot;John123&quot;
+
+str_detect(x, &quot;[A-Za-z]+&quot;)
+str_extract(x, &quot;[A-Za-z]+&quot;)
+</code></pre>
+<pre><code>[1] TRUE
+[1] &quot;John&quot;
+</code></pre>
+<p><code>str_detect()</code> says whether a match exists. <code>str_extract()</code> returns the matched text.</p>
+<p>Sometimes you want the pieces of one match separately. That is what a capturing group is for.</p>
+<h2>2. A group is parentheses</h2>
+<p>Parentheses group part of a pattern.</p>
+<pre><code class="language-r">&quot;(ab|bcs)&quot;
+</code></pre>
+<p>This matches <code>"ab"</code> or <code>"bcs"</code>. The symbol <code>|</code> means OR.</p>
+<pre><code class="language-r">str_detect(c(&quot;ab&quot;, &quot;bcs&quot;, &quot;abc&quot;, &quot;dog&quot;), &quot;(ab|bcs)&quot;)
+</code></pre>
+<pre><code>[1] TRUE TRUE TRUE FALSE
+</code></pre>
+<p><code>"abc"</code> matches because it contains <code>"ab"</code>.</p>
+<p>To match only the complete strings <code>"ab"</code> or <code>"bcs"</code>:</p>
+<pre><code class="language-r">str_detect(c(&quot;ab&quot;, &quot;bcs&quot;, &quot;abc&quot;, &quot;dog&quot;), &quot;^(ab|bcs)$&quot;)
+</code></pre>
+<pre><code>[1] TRUE TRUE FALSE FALSE
+</code></pre>
+<p><code>^</code> is the start of the string. <code>$</code> is the end.</p>
+<p>Ordinary parentheses <code>(...)</code> do two things: they group, and they capture. Capturing is next.</p>
+<h2>3. Capturing groups <code>(...)</code></h2>
+<p>A capturing group matches a piece and keeps that piece.</p>
+<pre><code class="language-r">x &lt;- &quot;John123&quot;
+
+str_match(x, &quot;([A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1]      [,2]   [,3]
+[1,] &quot;John123&quot; &quot;John&quot; &quot;123&quot;
+</code></pre>
+<p><code>([A-Za-z]+)</code> is one or more English letters. The parentheses capture them. This group matches <code>"John"</code>.</p>
+<p><code>([0-9]+)</code> is one or more digits, captured. This group matches <code>"123"</code>.</p>
+<p>Together, <code>"([A-Za-z]+)([0-9]+)"</code> requires letters followed immediately by digits, so the whole match is <code>"John123"</code>.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Output</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[,1]</code></td>
+<td><code>"John123"</code></td>
+<td>Entire match</td>
+</tr>
+<tr>
+<td><code>[,2]</code></td>
+<td><code>"John"</code></td>
+<td>Capturing group 1</td>
+</tr>
+<tr>
+<td><code>[,3]</code></td>
+<td><code>"123"</code></td>
+<td>Capturing group 2</td>
+</tr>
+</tbody>
+</table></div>
+<p>The first column is always the entire match. Each later column is one capturing group.</p>
+<p><code>str_match()</code> returns one more column than the number of capturing groups. R does not search three times. The engine matches the pattern once and records the groups as it goes.</p>
+<h2>4. Why capture</h2>
+<p>Student identifiers:</p>
+<pre><code class="language-r">students &lt;- c(&quot;John123&quot;, &quot;Alice45&quot;, &quot;Bob789&quot;)
+
+str_match(students, &quot;([A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1]      [,2]    [,3]
+[1,] &quot;John123&quot; &quot;John&quot;  &quot;123&quot;
+[2,] &quot;Alice45&quot; &quot;Alice&quot; &quot;45&quot;
+[3,] &quot;Bob789&quot;  &quot;Bob&quot;   &quot;789&quot;
+</code></pre>
+<pre><code class="language-r">matches &lt;- str_match(students, &quot;([A-Za-z]+)([0-9]+)&quot;)
+names &lt;- matches[, 2]
+numbers &lt;- matches[, 3]
+</code></pre>
+<pre><code class="language-r">names
+</code></pre>
+<pre><code>[1] &quot;John&quot; &quot;Alice&quot; &quot;Bob&quot;
+</code></pre>
+<pre><code class="language-r">numbers
+</code></pre>
+<pre><code>[1] &quot;123&quot; &quot;45&quot; &quot;789&quot;
+</code></pre>
+<p>Those numbers are still character strings. <code>as.numeric()</code> turns them into numbers when you need that.</p>
+<h2>5. Non-capturing groups <code>(?:...)</code></h2>
+<p>A non-capturing group groups without keeping a separate column:</p>
+<pre><code class="language-r">(?:...)
+</code></pre>
+<p>The <code>?:</code> sits immediately after the opening parenthesis. It is not applied to a group that already exists.</p>
+<p>Both groups captured:</p>
+<pre><code class="language-r">str_match(&quot;John123&quot;, &quot;([A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1]      [,2]   [,3]
+[1,] &quot;John123&quot; &quot;John&quot; &quot;123&quot;
+</code></pre>
+<p>First group not captured:</p>
+<pre><code class="language-r">str_match(&quot;John123&quot;, &quot;(?:[A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1]      [,2]
+[1,] &quot;John123&quot; &quot;123&quot;
+</code></pre>
+<p><code>(?:[A-Za-z]+)</code> still matches <code>"John"</code>. It does not get a column. <code>([0-9]+)</code> matches <code>"123"</code> and is capturing group 1, even though it is the second pair of parentheses in the pattern. Non-capturing groups are not numbered.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Output</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[,1]</code></td>
+<td><code>"John123"</code></td>
+<td>Entire match</td>
+</tr>
+<tr>
+<td><code>[,2]</code></td>
+<td><code>"123"</code></td>
+<td>First capturing group</td>
+</tr>
+</tbody>
+</table></div>
+<p>Second group not captured:</p>
+<pre><code class="language-r">str_match(&quot;John123&quot;, &quot;([A-Za-z]+)(?:[0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1]      [,2]
+[1,] &quot;John123&quot; &quot;John&quot;
+</code></pre>
+<p>The digits are matched and not stored.</p>
+<p>Neither group captured:</p>
+<pre><code class="language-r">str_match(&quot;John123&quot;, &quot;(?:[A-Za-z]+)(?:[0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1]
+[1,] &quot;John123&quot;
+</code></pre>
+<p>No capturing groups, so <code>str_match()</code> returns only the whole match.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Capturing groups</th>
+<th>Columns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>([A-Za-z]+)([0-9]+)</code></td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>(?:[A-Za-z]+)([0-9]+)</code></td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>([A-Za-z]+)(?:[0-9]+)</code></td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>(?:[A-Za-z]+)(?:[0-9]+)</code></td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<h2>6. How capturing groups are numbered</h2>
+<p>Capturing groups are numbered by their opening parentheses, left to right. A non-capturing group gets no number.</p>
+<pre><code class="language-r">x &lt;- &quot;John-123-USA&quot;
+
+str_match(x, &quot;([A-Za-z]+)-(?:[0-9]+)-([A-Za-z]+)&quot;)
+</code></pre>
+<pre><code>     [,1]           [,2]   [,3]
+[1,] &quot;John-123-USA&quot; &quot;John&quot; &quot;USA&quot;
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Group in the pattern</th>
+<th>Capturing?</th>
+<th>Number</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>([A-Za-z]+)</code></td>
+<td>Yes</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>(?:[0-9]+)</code></td>
+<td>No</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>([A-Za-z]+)</code></td>
+<td>Yes</td>
+<td>2</td>
+</tr>
+</tbody>
+</table></div>
+<p>Groups can be nested. The outer pair counts too.</p>
+<pre><code class="language-r">str_match(&quot;abc123&quot;, &quot;((abc)(123))&quot;)
+</code></pre>
+<pre><code>     [,1]     [,2]     [,3]  [,4]
+[1,] &quot;abc123&quot; &quot;abc123&quot; &quot;abc&quot; &quot;123&quot;
+</code></pre>
+<p>Column 1 is the whole match. Group 1 captures <code>"abc123"</code>. Group 2 captures <code>"abc"</code>. Group 3 captures <code>"123"</code>.</p>
+<h2>7. Capturing and non-capturing side by side</h2>
+<pre><code class="language-r">x &lt;- &quot;red-blue&quot;
+
+str_match(x, &quot;(red)-(blue)&quot;)
+</code></pre>
+<pre><code>     [,1]       [,2]  [,3]
+[1,] &quot;red-blue&quot; &quot;red&quot; &quot;blue&quot;
+</code></pre>
+<pre><code class="language-r">str_match(x, &quot;(?:red)-(blue)&quot;)
+</code></pre>
+<pre><code>     [,1]       [,2]
+[1,] &quot;red-blue&quot; &quot;blue&quot;
+</code></pre>
+<p>The text that matches does not change. Only the captured columns change.</p>
+<p>Use <code>(...)</code> when you want that piece back. Use <code>(?:...)</code> when you need a group for <code>|</code> or for a quantifier, and you do not need the piece as its own column.</p>
+<pre><code class="language-r">str_detect(c(&quot;cat&quot;, &quot;dog&quot;, &quot;bird&quot;), &quot;^(?:cat|dog)$&quot;)
+</code></pre>
+<p>The group lets <code>^</code> and <code>$</code> apply to both alternatives. <code>str_detect()</code> only returns <code>TRUE</code> or <code>FALSE</code>, so there is nothing to capture.</p>
+<h2>8. A lookahead checks and does not consume</h2>
+<p>A capturing or non-capturing group matches text. A lookahead only checks the text at the current position. It does not include that text in the match, and it does not move forward.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(?=...)</code></td>
+<td>Positive lookahead</td>
+<td>This pattern must appear here</td>
+</tr>
+<tr>
+<td><code>(?!...)</code></td>
+<td>Negative lookahead</td>
+<td>This pattern must not appear here</td>
+</tr>
+</tbody>
+</table></div>
+<h2>9. Positive lookahead <code>(?=...)</code></h2>
+<pre><code class="language-r">x &lt;- c(&quot;cat123&quot;, &quot;dog456&quot;, &quot;catABC&quot;)
+
+str_extract(x, &quot;cat(?=[0-9])&quot;)
+</code></pre>
+<pre><code>[1] &quot;cat&quot; NA NA
+</code></pre>
+<p><code>cat</code> matches the letters. <code>(?=[0-9])</code> checks that the next character is a digit and does not take the digit.</p>
+<pre><code class="language-r">str_extract(&quot;cat123&quot;, &quot;cat(?=[0-9])&quot;)
+</code></pre>
+<pre><code>[1] &quot;cat&quot;
+</code></pre>
+<p>That is <code>"cat"</code>, not <code>"cat1"</code>. Compare a pattern that does consume the digit:</p>
+<pre><code class="language-r">str_extract(&quot;cat123&quot;, &quot;cat[0-9]&quot;)
+</code></pre>
+<pre><code>[1] &quot;cat1&quot;
+</code></pre>
+<h2>10. Negative lookahead <code>(?!...)</code></h2>
+<pre><code class="language-r">x &lt;- c(&quot;cat&quot;, &quot;cats&quot;, &quot;dog&quot;, &quot;catalog&quot;, &quot;bird&quot;)
+
+str_detect(x, &quot;^(?!cat).*$&quot;)
+</code></pre>
+<pre><code>[1] FALSE FALSE TRUE FALSE TRUE
+</code></pre>
+<p>The pattern <code>"^(?!cat).*$"</code> has four pieces.</p>
+<ol>
+<li><code>^</code> is the start of the string.</li>
+<li><code>(?!cat)</code> checks that the next characters are not <code>"cat"</code>.</li>
+<li><code>.*</code> matches the rest of the characters.</li>
+<li><code>$</code> is the end of the string.</li>
+</ol>
+<p>On <code>"cat"</code>, the next three characters are <code>"cat"</code>, so the lookahead fails and the match fails.</p>
+<p>On <code>"dog"</code>, the next characters are not <code>"cat"</code>. The lookahead succeeds, and <code>.*</code> takes the rest.</p>
+<p>On <code>"catalog"</code>, the string starts with <code>"cat"</code>. The extra letters do not save it. The lookahead fails.</p>
+<h2>11. Excluding a whole string or a substring</h2>
+<pre><code class="language-r">x &lt;- c(&quot;ab&quot;, &quot;bcs&quot;, &quot;abc&quot;, &quot;hello&quot;, &quot;xxabyy&quot;, &quot;dog&quot;)
+</code></pre>
+<p>Reject only the complete strings <code>"ab"</code> and <code>"bcs"</code>:</p>
+<pre><code class="language-r">str_detect(x, &quot;^(?!(?:ab|bcs)$).+$&quot;)
+</code></pre>
+<pre><code>[1] FALSE FALSE TRUE TRUE TRUE TRUE
+</code></pre>
+<p><code>^</code> is the start. <code>(?!(?:ab|bcs)$)</code> checks that what remains is not exactly <code>"ab"</code> or <code>"bcs"</code>. The <code>$</code> inside the lookahead means the alternative has to reach the end. <code>(?:ab|bcs)</code> groups the two alternatives and does not capture them. Then <code>.+$</code> matches one or more characters through the end, so the empty string is rejected too.</p>
+<p>Reject any string that contains <code>"ab"</code> or <code>"bcs"</code> anywhere:</p>
+<pre><code class="language-r">str_detect(x, &quot;^(?!.*(?:ab|bcs)).*$&quot;)
+</code></pre>
+<pre><code>[1] FALSE FALSE FALSE TRUE FALSE TRUE
+</code></pre>
+<p><code>.*</code> inside the lookahead allows any characters before the forbidden piece, so the check looks through the whole string.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Exclude the exact string</th>
+<th>Exclude if it contains the piece</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"ab"</code></td>
+<td>FALSE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td><code>"bcs"</code></td>
+<td>FALSE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td><code>"abc"</code></td>
+<td>TRUE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td><code>"hello"</code></td>
+<td>TRUE</td>
+<td>TRUE</td>
+</tr>
+<tr>
+<td><code>"xxabyy"</code></td>
+<td>TRUE</td>
+<td>FALSE</td>
+</tr>
+<tr>
+<td><code>"dog"</code></td>
+<td>TRUE</td>
+<td>TRUE</td>
+</tr>
+</tbody>
+</table></div>
+<h2>12. Often <code>!str_detect()</code> is enough</h2>
+<p>For many problems you do not need a negative lookahead. <code>!</code> reverses <code>str_detect()</code>.</p>
+<pre><code class="language-r">x &lt;- c(&quot;ab&quot;, &quot;bcs&quot;, &quot;abc&quot;, &quot;hello&quot;, &quot;xxabyy&quot;, &quot;dog&quot;)
+
+!str_detect(x, &quot;^(?:ab|bcs)$&quot;)
+!str_detect(x, &quot;ab|bcs&quot;)
+</code></pre>
+<p>The first line drops the complete strings <code>"ab"</code> and <code>"bcs"</code>. The second drops anything that contains either piece. This is usually easier to read.</p>
+<p>One difference: <code>!str_detect(x, "^(?:ab|bcs)$")</code> accepts an empty string. The lookahead pattern in section 11 uses <code>.+</code>, so it rejects the empty string.</p>
+<h2>13. <code>(...)</code>, <code>(?:...)</code>, <code>(?=...)</code>, and <code>(?!...)</code></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Name</th>
+<th>Matches text?</th>
+<th>Captures?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(...)</code></td>
+<td>Capturing group</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>(?:...)</code></td>
+<td>Non-capturing group</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>(?=...)</code></td>
+<td>Positive lookahead</td>
+<td>Checks only</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>(?!...)</code></td>
+<td>Negative lookahead</td>
+<td>Checks only</td>
+<td>No</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">x &lt;- &quot;cat123&quot;
+
+str_match(x, &quot;(cat)&quot;)
+str_match(x, &quot;(?:cat)&quot;)
+str_extract(x, &quot;cat(?=123)&quot;)
+str_extract(x, &quot;cat(?!ABC)&quot;)
+</code></pre>
+<p><code>(cat)</code> returns the whole match and <code>"cat"</code> as a captured group. <code>(?:cat)</code> returns only the whole match, which is <code>"cat"</code> (not the rest of <code>"cat123"</code>). <code>cat(?=123)</code> returns <code>"cat"</code> after checking that <code>"123"</code> follows. <code>cat(?!ABC)</code> returns <code>"cat"</code> because <code>"cat"</code> is not followed by <code>"ABC"</code>.</p>
+<h2>14. A group that does not participate</h2>
+<pre><code class="language-r">str_match(&quot;John&quot;, &quot;([A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<pre><code>     [,1] [,2] [,3]
+[1,] NA   NA   NA
+</code></pre>
+<p>The whole pattern fails: <code>"John"</code> has no digits after the letters.</p>
+<p>A group can be optional.</p>
+<pre><code class="language-r">str_match(&quot;John&quot;, &quot;([A-Za-z]+)([0-9]+)?&quot;)
+</code></pre>
+<pre><code>     [,1]   [,2]   [,3]
+[1,] &quot;John&quot; &quot;John&quot; NA
+</code></pre>
+<p>The whole match succeeds. Group 1 captures <code>"John"</code>. Group 2 does not take part, so that column is <code>NA</code>. That is different from a group that captures an empty string. The number of columns still follows the number of capturing groups, even when one of them does not participate.</p>
+<h2>15. Backreferences</h2>
+<p>A backreference reuses text that an earlier group captured.</p>
+<pre><code class="language-r">str_detect(&quot;hello hello&quot;, &quot;^(\\w+) \\1$&quot;)
+</code></pre>
+<pre><code>[1] TRUE
+</code></pre>
+<p><code>(\\w+)</code> captures the first word. The space matches a space. <code>\\1</code> means “the text group 1 captured.” <code>^</code> and <code>$</code> require the whole string to match, so the second word has to be the same as the first.</p>
+<pre><code class="language-r">str_detect(&quot;hello world&quot;, &quot;^(\\w+) \\1$&quot;)
+</code></pre>
+<pre><code>[1] FALSE
+</code></pre>
+<p>R reads the string before the regex engine does, so a backslash in the pattern is written twice: <code>"\\w"</code> and <code>"\\1"</code>.</p>
+<h2>Practice</h2>
+<p>Predict the result before you run the command.</p>
+<h3>Part A. Capturing and non-capturing groups</h3>
+<ol>
+<li>What is the output?</li>
+</ol>
+<pre><code class="language-r">str_match(&quot;Alice456&quot;, &quot;([A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<ol start="2">
+<li>What is the output?</li>
+</ol>
+<pre><code class="language-r">str_match(&quot;Alice456&quot;, &quot;(?:[A-Za-z]+)([0-9]+)&quot;)
+</code></pre>
+<ol start="3">
+<li>How many columns are returned?</li>
+</ol>
+<pre><code class="language-r">str_match(&quot;abc123&quot;, &quot;([a-z]+)(?:[0-9]+)&quot;)
+</code></pre>
+<ol start="4">
+<li>How many columns are returned?</li>
+</ol>
+<pre><code class="language-r">str_match(&quot;abc123&quot;, &quot;((?:abc)(123))&quot;)
+</code></pre>
+<ol start="5">
+<li>Why do <code>"(cat|dog)"</code> and <code>"(?:cat|dog)"</code> agree under <code>str_detect()</code> and disagree under <code>str_match()</code>?</li>
+</ol>
+<h3>Part B. Lookaheads</h3>
+<ol start="6">
+<li>What does this return?</li>
+</ol>
+<pre><code class="language-r">str_extract(&quot;cat123&quot;, &quot;cat(?=[0-9])&quot;)
+</code></pre>
+<ol start="7">
+<li>What does this return?</li>
+</ol>
+<pre><code class="language-r">str_extract(&quot;catABC&quot;, &quot;cat(?=[0-9])&quot;)
+</code></pre>
+<ol start="8">
+<li>What is the result?</li>
+</ol>
+<pre><code class="language-r">str_detect(&quot;catalog&quot;, &quot;^(?!cat).*$&quot;)
+</code></pre>
+<ol start="9">
+<li>Which strings return <code>TRUE</code>?</li>
+</ol>
+<pre><code class="language-r">x &lt;- c(&quot;ab&quot;, &quot;abc&quot;, &quot;dog&quot;, &quot;xxabyy&quot;)
+
+str_detect(x, &quot;^(?!.*ab).*$&quot;)
+</code></pre>
+<ol start="10">
+<li>What is the difference between <code>"cat[0-9]"</code> and <code>"cat(?=[0-9])"</code>?</li>
+</ol>
+<h3>Part C. Longer questions</h3>
+<ol start="11">
+<li>Predict the whole output.</li>
+</ol>
+<pre><code class="language-r">str_match(
+  &quot;John-123-USA&quot;,
+  &quot;([A-Za-z]+)-(?:[0-9]+)-([A-Za-z]+)&quot;
+)
+</code></pre>
+<ol start="12">
+<li>
+<p>How many capturing groups are in <code>"((?:ab)(cd))(ef)"</code>? Applied to <code>"abcdef"</code>, what does each capturing group return?</p>
+</li>
+<li>
+<p>Write a pattern that matches <code>"cat"</code> or <code>"dog"</code>, and captures only when the match is <code>"cat"</code>. Use <code>str_match()</code>. The input is either <code>"cat"</code> or <code>"dog"</code>.</p>
+</li>
+<li>
+<p>Write a pattern that matches a word only when a digit comes next, and leave the digit out of the match. Use <code>str_extract()</code>.</p>
+</li>
+<li>
+<p>Write a pattern that finds strings that do not contain <code>"error"</code> anywhere. Use <code>str_detect()</code> and a negative lookahead.</p>
+</li>
+<li>
+<p>How many columns does this return, and what changes if the input is <code>"John"</code>?</p>
+</li>
+</ol>
+<pre><code class="language-r">str_match(&quot;John123&quot;, &quot;([A-Za-z]+)([0-9]+)?&quot;)
+</code></pre>
+<ol start="17">
+<li>
+<p>Explain the difference between <code>"(ab|cd)"</code>, <code>"(?:ab|cd)"</code>, and <code>"(?!ab|cd)"</code>.</p>
+</li>
+<li>
+<p>What is the output?</p>
+</li>
+</ol>
+<pre><code class="language-r">str_detect(
+  c(&quot;hello hello&quot;, &quot;hello world&quot;, &quot;abc abc&quot;),
+  &quot;^(\\w+) \\1$&quot;
+)
+</code></pre>
+<ol start="19">
+<li>
+<p>Match an identifier of letters followed by digits, and capture only the digits. For <code>"Alice123"</code>, the whole match is <code>"Alice123"</code> and capturing group 1 is <code>"123"</code>.</p>
+</li>
+<li>
+<p>Suppose</p>
+</li>
+</ol>
+<pre><code class="language-r">x &lt;- c(&quot;user123&quot;, &quot;admin456&quot;, &quot;guest789&quot;, &quot;adminABC&quot;, &quot;hello&quot;)
+</code></pre>
+<p>Write one pattern for <code>str_match()</code> that:</p>
+<ol>
+<li>Matches strings of letters followed by digits.</li>
+<li>Rejects strings that start with <code>"admin"</code>.</li>
+<li>Captures only the digits.</li>
+<li>Requires the whole string to follow that form.</li>
+</ol>
+<p>Say what each group and lookahead is doing.</p>
+<h2>Key points</h2>
+<ul>
+<li><code>(...)</code> groups and captures.</li>
+<li><code>(?:...)</code> groups and does not capture. The <code>?:</code> comes right after <code>(</code>.</li>
+<li>Capturing groups are numbered by the order of their opening parentheses. Non-capturing groups are skipped.</li>
+<li><code>str_match()</code> puts the whole match in column 1 and the captured groups in the columns after that.</li>
+<li><code>(?=...)</code> checks that a pattern is here and does not consume it.</li>
+<li><code>(?!...)</code> checks that a pattern is not here and does not consume it.</li>
+<li>A lookahead does not create a capturing group.</li>
+<li>A non-capturing group still has to match. A lookahead only tests a condition.</li>
+<li><code>!str_detect()</code> is often the simpler way to drop matches.</li>
+</ul>
+<nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-regex-rules.html"><span aria-hidden="true">←</span> 9.4 Regex: The Complete Rules</a>
+                        <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
+                            <a class="course-page-nav__next" href="data-612-lab-9-strings.html">Lab 9: Strings and Regex <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T07:35:00-04:00">October 28, 2026, 7:35 AM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>
