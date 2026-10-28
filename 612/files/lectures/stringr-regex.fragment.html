@@ -1,15 +1,12 @@
 
 
 
-<p>A pattern is a regular expression. Escape in R with two
-backslashes.</p>
+<p>A pattern is a regular expression. Type <code>"\\d"</code> for a digit and <code>"\\w"</code> for a word character.</p>
 <div id="a-pattern-is-a-regular-expression" class="section level2">
 <h2>1. A pattern is a regular expression</h2>
 <p>Note 9.1 used literal text. A <strong>regular expression</strong>
 describes a set of strings. <code>stringr</code> (through
-<code>stringi</code>) uses ICU regex. Write the pattern as an ordinary R
-string, so backslashes double: the regex <code>\.</code> is
-<code>"\\."</code> in R.</p>
+<code>stringi</code>) uses ICU regex. Type the pattern as an R string: <code>"\\d"</code> for a digit, <code>"\\w"</code> for a word character, and <code>"\\."</code> for a real dot.</p>
 <p><code>words</code> is 980 common English words that come with
 stringr. Use it for the examples.</p>
 <pre class="r"><code>library(tidyverse)

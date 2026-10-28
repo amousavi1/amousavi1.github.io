@@ -159,7 +159,7 @@ str_detect(pw, "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$")
 
 Read from the start:
 
-- `(?=.*\d)` means a digit appears somewhere ahead.
+- `(?=.*\\d)` means a digit appears somewhere ahead.
 - `(?=.*[A-Z])` means a capital appears somewhere ahead.
 - `(?=.*[a-z])` means a lowercase letter appears somewhere ahead.
 - `.{8,}` then takes 8 or more characters.
@@ -172,9 +172,9 @@ On `"50 dollars"`:
 
 | Goal | Pattern | Result |
 | --- | --- | --- |
-| Keep the word in the match | `\d+ dollars` | `"50 dollars"` |
-| Keep the whole match, and also save the number | `(\d+) dollars` | whole `"50 dollars"`, group 1 `"50"` |
-| Match only the number | `\d+(?= dollars)` | `"50"` |
+| Keep the word in the match | `\\d+ dollars` | `"50 dollars"` |
+| Keep the whole match, and also save the number | `(\\d+) dollars` | whole `"50 dollars"`, group 1 `"50"` |
+| Match only the number | `\\d+(?= dollars)` | `"50"` |
 
 ```r
 str_match("50 dollars", "(\\d+) dollars")

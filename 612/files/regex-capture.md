@@ -34,19 +34,19 @@ Capturing and non-capturing groups both do this. The next sections are about the
 A capturing group saves its matched text so you can:
 
 1. Extract the piece afterward.
-2. Backreference it inside the same pattern (`\1` in the regex, `"\\1"` in R).
+2. Backreference it inside the same pattern (`\\1` in the regex, `"\\1"` in R).
 3. Reuse it in a replacement.
 
 ## 4. Numbering
 
 Groups are numbered by the position of the opening parenthesis, left to right. Nested groups count. Non-capturing groups do not.
 
-For `((\d{4})-(\d{2}))-(\d{2})` on `"2026-10-27"`:
+For `((\\d{4})-(\\d{2}))-(\\d{2})` on `"2026-10-27"`:
 
-- Group 1 is `((\d{4})-(\d{2}))`, the text `2026-10`.
-- Group 2 is `(\d{4})`, the year.
-- Group 3 is `(\d{2})`, the month.
-- Group 4 is `(\d{2})`, the day.
+- Group 1 is `((\\d{4})-(\\d{2}))`, the text `2026-10`.
+- Group 2 is `(\\d{4})`, the year.
+- Group 3 is `(\\d{2})`, the month.
+- Group 4 is `(\\d{2})`, the day.
 
 ```r
 str_match("2026-10-27", "((\\d{4})-(\\d{2}))-(\\d{2})")
@@ -67,8 +67,8 @@ On `"2026-10-27"`:
 
 | Pattern | Groups saved |
 | --- | --- |
-| `(\d{4})-(\d{2})-(\d{2})` | 3: `2026`, `10`, `27` |
-| `(?:\d{4})-(\d{2})-(\d{2})` | 2: `10`, `27` |
+| `(\\d{4})-(\\d{2})-(\\d{2})` | 3: `2026`, `10`, `27` |
+| `(?:\\d{4})-(\\d{2})-(\\d{2})` | 2: `10`, `27` |
 
 ```r
 str_match("2026-10-27", "(\\d{4})-(\\d{2})-(\\d{2})")
@@ -90,7 +90,7 @@ str_match("2026-10-27", "(?:\\d{4})-(\\d{2})-(\\d{2})")
 
 The year is still matched. It is not a column. The month is group 1, and the day is group 2.
 
-That keeps numbering tidy: structural parentheses do not shift `\1` and `\2`. Nothing is stored for the group you skipped. A backreference cannot point at a parenthesis you did not capture.
+That keeps numbering tidy: structural parentheses do not shift `\\1` and `\\2`. Nothing is stored for the group you skipped. A backreference cannot point at a parenthesis you did not capture.
 
 ## 6. The same pattern, two ways
 
@@ -123,12 +123,12 @@ Now there are two groups: group 1 is `gray`, and group 2 is `a`. The inner group
 A name documents the group, and you do not have to count:
 
 ```r
-(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})
+(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})
 ```
 
 In an R string that is `"(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})"`.
 
-The engine still numbers them: `year` is group 1, `month` is group 2, `day` is group 3. Inside the pattern, the named backreference is `\k<year>`, written `"\\k<year>"` in R.
+The engine still numbers them: `year` is group 1, `month` is group 2, `day` is group 3. Inside the pattern, the named backreference is `\\k<year>`, written `"\\k<year>"` in R.
 
 ## 8. Groups in `str_match()` and `str_replace()`
 
@@ -192,8 +192,8 @@ A backreference means “match this same text again.”
 
 | Style | In the regex | In an R string |
 | --- | --- | --- |
-| Numbered | `\1`, `\2` | `"\\1"`, `"\\2"` |
-| Named | `\k<name>` | `"\\k<name>"` |
+| Numbered | `\\1`, `\\2` | `"\\1"`, `"\\2"` |
+| Named | `\\k<name>` | `"\\k<name>"` |
 
 Doubled letter, numbered and named:
 
@@ -330,7 +330,7 @@ stringi::stri_replace_first_regex(
 [1] "27/10/2026"
 ```
 
-That call works in stringi 1.8.9. The pattern is still an R string, so the backslashes in `\\d` are doubled. The replacement `${day}` has no backslash.
+That call works in stringi 1.8.9. The pattern is typed with `\\d`, like every other pattern in this note. The replacement `${day}` has no backslash.
 
 ## 13. Extracting groups
 
@@ -358,8 +358,8 @@ The first column is the whole match, and its name is blank. `"y"`, `"m"`, and `"
 
 | | Numbered | Named |
 | --- | --- | --- |
-| Pattern backreference | `\1` | JavaScript and PCRE: `\k<name>`. Python: `(?P=name)` |
-| Replacement | JavaScript: `$1`. Python: `\1` | JavaScript: `$<name>`. Python: `\g<name>` |
+| Pattern backreference | `\\1` | JavaScript and PCRE: `\\k<name>`. Python: `(?P=name)` |
+| Replacement | JavaScript: `$1`. Python: `\\1` | JavaScript: `$<name>`. Python: `\g<name>` |
 | Define the group | `(...)` | JavaScript and PCRE: `(?<name>...)`. Python: `(?P<name>...)` |
 
 JavaScript:
@@ -384,7 +384,7 @@ Both return `'27/10/2026'`. A raw Python string, `r"..."`, keeps one backslash f
 ## 15. Key points
 
 1. Numbering follows the opening parenthesis, left to right. Nested groups count.
-2. A named group is also numbered, so `\1` and `\k<name>` can appear in the same pattern.
+2. A named group is also numbered, so `\\1` and `\\k<name>` can appear in the same pattern.
 3. `(?:...)` is skipped in the numbering, which keeps `\\1` and `\\2` predictable.
 4. Use a name when there are many groups. Use a number for a short pattern.
 5. A backreference in the pattern means “match this text again.” A reference in the replacement means “write this text back.”

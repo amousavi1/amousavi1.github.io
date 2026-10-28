@@ -222,7 +222,7 @@ str_detect(pw, &quot;^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$&quot;)
 </code></pre>
 <p>Read from the start:</p>
 <ul>
-<li><code>(?=.*\d)</code> means a digit appears somewhere ahead.</li>
+<li><code>(?=.*\\d)</code> means a digit appears somewhere ahead.</li>
 <li><code>(?=.*[A-Z])</code> means a capital appears somewhere ahead.</li>
 <li><code>(?=.*[a-z])</code> means a lowercase letter appears somewhere ahead.</li>
 <li><code>.{8,}</code> then takes 8 or more characters.</li>
@@ -241,17 +241,17 @@ str_detect(pw, &quot;^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$&quot;)
 <tbody>
 <tr>
 <td>Keep the word in the match</td>
-<td><code>\d+ dollars</code></td>
+<td><code>\\d+ dollars</code></td>
 <td><code>"50 dollars"</code></td>
 </tr>
 <tr>
 <td>Keep the whole match, and also save the number</td>
-<td><code>(\d+) dollars</code></td>
+<td><code>(\\d+) dollars</code></td>
 <td>whole <code>"50 dollars"</code>, group 1 <code>"50"</code></td>
 </tr>
 <tr>
 <td>Match only the number</td>
-<td><code>\d+(?= dollars)</code></td>
+<td><code>\\d+(?= dollars)</code></td>
 <td><code>"50"</code></td>
 </tr>
 </tbody>
@@ -320,7 +320,7 @@ str_extract(&quot;50 dollars&quot;, &quot;\\d+(?= dollars)&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:22:00-04:00">October 28, 2026, 4:22 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:42:00-04:00">October 28, 2026, 4:42 PM EDT</time></div>
             </footer>
         </div>
 

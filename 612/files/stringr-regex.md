@@ -1,6 +1,6 @@
 ## 1. A pattern is a regular expression
 
-Note 9.1 used literal text. A **regular expression** describes a set of strings. `stringr` (through `stringi`) uses ICU regex. Write the pattern as an ordinary R string, so backslashes double: the regex `\.` is `"\\."` in R.
+Note 9.1 used literal text. A **regular expression** describes a set of strings. `stringr` (through `stringi`) uses ICU regex. Type the pattern as an R string: `"\\d"` for a digit, `"\\w"` for a word character, and `"\\."` for a real dot.
 
 `words` is 980 common English words that come with stringr. Use it for the examples.
 

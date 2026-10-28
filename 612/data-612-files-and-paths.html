@@ -359,12 +359,12 @@ possible.</strong></p>
 class="section level2">
 <h2>8. Searching for a Particular Type of File</h2>
 <p>Suppose we want to find CSV files:</p>
-<pre><code class="language-r">list.files(pattern = &quot;\.csv$&quot;)</code></pre>
+<pre><code class="language-r">list.files(pattern = &quot;\\.csv$&quot;)</code></pre>
 <pre><code>## character(0)</code></pre>
 <p>To search inside subfolders as well:</p>
 <pre><code class="language-r">list.files(
   recursive = TRUE,
-  pattern = &quot;\.csv$&quot;
+  pattern = &quot;\\.csv$&quot;
 )</code></pre>
 <pre><code>## character(0)</code></pre>
 <p>This might return:</p>
@@ -372,7 +372,7 @@ class="section level2">
 <p>To return full paths:</p>
 <pre><code class="language-r">list.files(
   recursive = TRUE,
-  pattern = &quot;\.csv$&quot;,
+  pattern = &quot;\\.csv$&quot;,
   full.names = TRUE
 )</code></pre>
 <pre><code>## character(0)</code></pre>
@@ -942,7 +942,7 @@ relative path can see it.</p>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:22:00-04:00">October 28, 2026, 4:22 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:42:00-04:00">October 28, 2026, 4:42 PM EDT</time></div>
             </footer>
         </div>
 

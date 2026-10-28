@@ -47,17 +47,17 @@
 <p>A capturing group saves its matched text so you can:</p>
 <ol>
 <li>Extract the piece afterward.</li>
-<li>Backreference it inside the same pattern (<code>\1</code> in the regex, <code>"\\1"</code> in R).</li>
+<li>Backreference it inside the same pattern (<code>\\1</code> in the regex, <code>"\\1"</code> in R).</li>
 <li>Reuse it in a replacement.</li>
 </ol>
 <h2>4. Numbering</h2>
 <p>Groups are numbered by the position of the opening parenthesis, left to right. Nested groups count. Non-capturing groups do not.</p>
-<p>For <code>((\d{4})-(\d{2}))-(\d{2})</code> on <code>"2026-10-27"</code>:</p>
+<p>For <code>((\\d{4})-(\\d{2}))-(\\d{2})</code> on <code>"2026-10-27"</code>:</p>
 <ul>
-<li>Group 1 is <code>((\d{4})-(\d{2}))</code>, the text <code>2026-10</code>.</li>
-<li>Group 2 is <code>(\d{4})</code>, the year.</li>
-<li>Group 3 is <code>(\d{2})</code>, the month.</li>
-<li>Group 4 is <code>(\d{2})</code>, the day.</li>
+<li>Group 1 is <code>((\\d{4})-(\\d{2}))</code>, the text <code>2026-10</code>.</li>
+<li>Group 2 is <code>(\\d{4})</code>, the year.</li>
+<li>Group 3 is <code>(\\d{2})</code>, the month.</li>
+<li>Group 4 is <code>(\\d{2})</code>, the day.</li>
 </ul>
 <pre><code class="language-r">str_match(&quot;2026-10-27&quot;, &quot;((\\d{4})-(\\d{2}))-(\\d{2})&quot;)
 </code></pre>
@@ -77,11 +77,11 @@
 </thead>
 <tbody>
 <tr>
-<td><code>(\d{4})-(\d{2})-(\d{2})</code></td>
+<td><code>(\\d{4})-(\\d{2})-(\\d{2})</code></td>
 <td>3: <code>2026</code>, <code>10</code>, <code>27</code></td>
 </tr>
 <tr>
-<td><code>(?:\d{4})-(\d{2})-(\d{2})</code></td>
+<td><code>(?:\\d{4})-(\\d{2})-(\\d{2})</code></td>
 <td>2: <code>10</code>, <code>27</code></td>
 </tr>
 </tbody>
@@ -97,7 +97,7 @@
 [1,] &quot;2026-10-27&quot; &quot;10&quot; &quot;27&quot;
 </code></pre>
 <p>The year is still matched. It is not a column. The month is group 1, and the day is group 2.</p>
-<p>That keeps numbering tidy: structural parentheses do not shift <code>\1</code> and <code>\2</code>. Nothing is stored for the group you skipped. A backreference cannot point at a parenthesis you did not capture.</p>
+<p>That keeps numbering tidy: structural parentheses do not shift <code>\\1</code> and <code>\\2</code>. Nothing is stored for the group you skipped. A backreference cannot point at a parenthesis you did not capture.</p>
 <h2>6. The same pattern, two ways</h2>
 <p>Match <code>gray</code> or <code>grey</code>, and capture the whole word:</p>
 <pre><code class="language-r">str_match(&quot;gray&quot;, &quot;(gr(?:a|e)y)&quot;)
@@ -114,10 +114,10 @@
 <p>Now there are two groups: group 1 is <code>gray</code>, and group 2 is <code>a</code>. The inner group is clutter when you only wanted the word.</p>
 <h2>7. Named groups</h2>
 <p>A name documents the group, and you do not have to count:</p>
-<pre><code class="language-r">(?&lt;year&gt;\d{4})-(?&lt;month&gt;\d{2})-(?&lt;day&gt;\d{2})
+<pre><code class="language-r">(?&lt;year&gt;\\d{4})-(?&lt;month&gt;\\d{2})-(?&lt;day&gt;\\d{2})
 </code></pre>
 <p>In an R string that is <code>"(?&lt;year&gt;\\d{4})-(?&lt;month&gt;\\d{2})-(?&lt;day&gt;\\d{2})"</code>.</p>
-<p>The engine still numbers them: <code>year</code> is group 1, <code>month</code> is group 2, <code>day</code> is group 3. Inside the pattern, the named backreference is <code>\k&lt;year&gt;</code>, written <code>"\\k&lt;year&gt;"</code> in R.</p>
+<p>The engine still numbers them: <code>year</code> is group 1, <code>month</code> is group 2, <code>day</code> is group 3. Inside the pattern, the named backreference is <code>\\k&lt;year&gt;</code>, written <code>"\\k&lt;year&gt;"</code> in R.</p>
 <h2>8. Groups in <code>str_match()</code> and <code>str_replace()</code></h2>
 <p><code>str_match()</code> returns the full match, then one column per capturing group.</p>
 <pre><code class="language-r">x &lt;- &quot;2026-10-27&quot;
@@ -161,12 +161,12 @@ str_match(x, &quot;(\\d{4})-(\\d{2})-(\\d{2})&quot;)
 <tbody>
 <tr>
 <td>Numbered</td>
-<td><code>\1</code>, <code>\2</code></td>
+<td><code>\\1</code>, <code>\\2</code></td>
 <td><code>"\\1"</code>, <code>"\\2"</code></td>
 </tr>
 <tr>
 <td>Named</td>
-<td><code>\k&lt;name&gt;</code></td>
+<td><code>\\k&lt;name&gt;</code></td>
 <td><code>"\\k&lt;name&gt;"</code></td>
 </tr>
 </tbody>
@@ -251,7 +251,7 @@ str_replace(d, &quot;(\\d{4})-(\\d{2})-(\\d{2})&quot;, &quot;\\3/\\2/\\1&quot;)
 </code></pre>
 <pre><code>[1] &quot;27/10/2026&quot;
 </code></pre>
-<p>That call works in stringi 1.8.9. The pattern is still an R string, so the backslashes in <code>\\d</code> are doubled. The replacement <code>${day}</code> has no backslash.</p>
+<p>That call works in stringi 1.8.9. The pattern is typed with <code>\\d</code>, like every other pattern in this note. The replacement <code>${day}</code> has no backslash.</p>
 <h2>13. Extracting groups</h2>
 <p><code>str_match()</code> is the reference without an update. With names, stringr 1.6 labels the group columns:</p>
 <pre><code class="language-r">m &lt;- str_match(d, &quot;(?&lt;y&gt;\\d{4})-(?&lt;m&gt;\\d{2})-(?&lt;day&gt;\\d{2})&quot;)
@@ -279,12 +279,12 @@ m[, &quot;y&quot;]
 <tbody>
 <tr>
 <td>Pattern backreference</td>
-<td><code>\1</code></td>
-<td>JavaScript and PCRE: <code>\k&lt;name&gt;</code>. Python: <code>(?P=name)</code></td>
+<td><code>\\1</code></td>
+<td>JavaScript and PCRE: <code>\\k&lt;name&gt;</code>. Python: <code>(?P=name)</code></td>
 </tr>
 <tr>
 <td>Replacement</td>
-<td>JavaScript: <code>$1</code>. Python: <code>\1</code></td>
+<td>JavaScript: <code>$1</code>. Python: <code>\\1</code></td>
 <td>JavaScript: <code>$&lt;name&gt;</code>. Python: <code>\g&lt;name&gt;</code></td>
 </tr>
 <tr>
@@ -308,7 +308,7 @@ re.sub(r&quot;(?P&lt;y&gt;\d{4})-(?P&lt;m&gt;\d{2})-(?P&lt;d&gt;\d{2})&quot;, r&
 <h2>15. Key points</h2>
 <ol>
 <li>Numbering follows the opening parenthesis, left to right. Nested groups count.</li>
-<li>A named group is also numbered, so <code>\1</code> and <code>\k&lt;name&gt;</code> can appear in the same pattern.</li>
+<li>A named group is also numbered, so <code>\\1</code> and <code>\\k&lt;name&gt;</code> can appear in the same pattern.</li>
 <li><code>(?:...)</code> is skipped in the numbering, which keeps <code>\\1</code> and <code>\\2</code> predictable.</li>
 <li>Use a name when there are many groups. Use a number for a short pattern.</li>
 <li>A backreference in the pattern means “match this text again.” A reference in the replacement means “write this text back.”</li>

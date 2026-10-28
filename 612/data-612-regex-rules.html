@@ -117,7 +117,7 @@
                             <a href="files/regex-rules.pdf" target="_blank" rel="noopener">PDF</a>
                          &middot; <a href="files/lectures/regex-rules.qmd">Source (.qmd)</a></p>
 <p>Regex (regular expressions) describes a <em>pattern</em> of text so you can find, match, or replace it. Syntax varies slightly between languages (JavaScript, Python, PCRE, and others). The rules below are the shared core.</p>
-<p>This course writes those patterns for <code>stringr</code>, which uses the ICU engine. In an R string a backslash is doubled, so the regex <code>\d</code> is <code>"\\d"</code>. In <code>str_replace()</code>, a captured group comes back as <code>"\\1"</code>.</p>
+<p>Patterns below are written the way you type them in an R string for <code>stringr</code>. A digit is <code>\\d</code>. A word character is <code>\\w</code>. In <code>str_replace()</code>, a captured group is <code>\\1</code>.</p>
 <h2>1. Literals</h2>
 <p>Most characters match themselves.</p>
 <ul>
@@ -128,7 +128,7 @@
 <p>These have special meaning:</p>
 <pre><code>.  ^  $  *  +  ?  ( )  [ ]  { }  |  \
 </code></pre>
-<p>To match one literally, escape it with a backslash: <code>\.</code> matches a real period, <code>\$</code> matches a dollar sign, <code>\\</code> matches a backslash.</p>
+<p>To match one literally, type it the way R requires: <code>"\\."</code> is a period, <code>"\\$"</code> is a dollar sign, and <code>"\\\\"</code> is one backslash.</p>
 <h2>3. The dot</h2>
 <p><code>.</code> matches <strong>any single character</strong> except a newline (by default).</p>
 <ul>
@@ -179,38 +179,38 @@
 </thead>
 <tbody>
 <tr>
-<td><code>\d</code></td>
+<td><code>\\d</code></td>
 <td>digit</td>
 <td><code>[0-9]</code></td>
 </tr>
 <tr>
-<td><code>\D</code></td>
+<td><code>\\D</code></td>
 <td>non-digit</td>
 <td><code>[^0-9]</code></td>
 </tr>
 <tr>
-<td><code>\w</code></td>
+<td><code>\\w</code></td>
 <td>word character</td>
 <td><code>[A-Za-z0-9_]</code></td>
 </tr>
 <tr>
-<td><code>\W</code></td>
+<td><code>\\W</code></td>
 <td>non-word character</td>
 <td><code>[^A-Za-z0-9_]</code></td>
 </tr>
 <tr>
-<td><code>\s</code></td>
+<td><code>\\s</code></td>
 <td>whitespace (space, tab, newline)</td>
-<td><code>[ \t\n\r\f\v]</code></td>
+<td><code>[ \\t\\n\\r\\f\\v]</code></td>
 </tr>
 <tr>
-<td><code>\S</code></td>
+<td><code>\\S</code></td>
 <td>non-whitespace</td>
 <td></td>
 </tr>
 </tbody>
 </table></div>
-<p>In <code>stringr</code>, <code>\d</code> and <code>\w</code> are Unicode-aware. <code>\d</code> matches decimal digits beyond <code>0-9</code>, and <code>\w</code> matches letters such as <code>é</code>.</p>
+<p>In <code>stringr</code>, <code>\\d</code> and <code>\\w</code> are Unicode-aware. <code>\\d</code> matches decimal digits beyond <code>0-9</code>, and <code>\\w</code> matches letters such as <code>é</code>.</p>
 <h2>6. Anchors and boundaries</h2>
 <p>These match a <strong>position</strong>, not a character.</p>
 <div class="table-wrap"><table>
@@ -230,18 +230,18 @@
 <td>end of string (or line)</td>
 </tr>
 <tr>
-<td><code>\b</code></td>
-<td>word boundary (between <code>\w</code> and <code>\W</code>)</td>
+<td><code>\\b</code></td>
+<td>word boundary (between <code>\\w</code> and <code>\\W</code>)</td>
 </tr>
 <tr>
-<td><code>\B</code></td>
+<td><code>\\B</code></td>
 <td>not a word boundary</td>
 </tr>
 </tbody>
 </table></div>
 <ul>
-<li><code>^\d+$</code> matches a string that is <em>entirely</em> digits</li>
-<li><code>\bcat\b</code> matches "cat" but not "concatenate"</li>
+<li><code>^\\d+$</code> matches a string that is <em>entirely</em> digits</li>
+<li><code>\\bcat\\b</code> matches "cat" but not "concatenate"</li>
 </ul>
 <h2>7. Quantifiers</h2>
 <p>Quantifiers say <strong>how many times</strong> the preceding item repeats.</p>
@@ -279,7 +279,7 @@
 </tr>
 </tbody>
 </table></div>
-<p>Examples: <code>colou?r</code> matches "color" and "colour"; <code>\d{3}-\d{4}</code> matches "555-1234".</p>
+<p>Examples: <code>colou?r</code> matches "color" and "colour"; <code>\\d{3}-\\d{4}</code> matches "555-1234".</p>
 <h3>Greedy vs. lazy vs. possessive</h3>
 <ul>
 <li><strong>Greedy</strong> (default): matches as much as possible. <code>&lt;.+&gt;</code> on <code>&lt;b&gt;hi&lt;/b&gt;</code> matches the <strong>whole</strong> string.</li>
@@ -318,15 +318,15 @@
 </tr>
 </tbody>
 </table></div>
-<p>Capturing groups are numbered left to right by their opening parenthesis: <code>(\d{4})-(\d{2})-(\d{2})</code> on "2026-10-27" gives group 1 = 2026, group 2 = 10, group 3 = 27.</p>
+<p>Capturing groups are numbered left to right by their opening parenthesis: <code>(\\d{4})-(\\d{2})-(\\d{2})</code> on "2026-10-27" gives group 1 = 2026, group 2 = 10, group 3 = 27.</p>
 <h2>10. Backreferences</h2>
 <p>Refer back to what a group already matched.</p>
 <ul>
-<li><code>(\w)\1</code> matches a doubled letter like "ee" or "ll"</li>
-<li><code>(['"]).*?\1</code> matches a quoted string with matching quote types</li>
-<li>Named: <code>\k&lt;name&gt;</code> (JS/PCRE) or <code>(?P=name)</code> (Python)</li>
+<li><code>(\\w)\\1</code> matches a doubled letter like "ee" or "ll"</li>
+<li><code>(['"]).*?\\1</code> matches a quoted string with matching quote types</li>
+<li>In R, type <code>\\k&lt;name&gt;</code>. Python uses <code>(?P=name)</code>.</li>
 </ul>
-<p>In a replacement, reuse a captured group as <code>$1</code> or <code>\1</code>, depending on the language. <code>str_replace()</code> wants <code>"\\1"</code>.</p>
+<p>In <code>str_replace()</code>, type <code>"\\1"</code>. JavaScript uses <code>$1</code> instead.</p>
 <h2>11. Lookarounds (zero-width assertions)</h2>
 <p>These check what is nearby <strong>without consuming it</strong>.</p>
 <div class="table-wrap"><table>
@@ -362,11 +362,11 @@
 </table></div>
 <p>Examples:</p>
 <ul>
-<li><code>\d+(?= dollars)</code> matches the number in "50 dollars" but not the word</li>
-<li><code>(?&lt;=\$)\d+</code> matches digits after a <code>$</code> without including it</li>
-<li><code>^(?=.*\d)(?=.*[A-Z]).{8,}$</code> is a password check: 8+ characters, at least one digit and one capital</li>
+<li><code>\\d+(?= dollars)</code> matches the number in "50 dollars" but not the word</li>
+<li><code>(?&lt;=\\$)\\d+</code> matches digits after a <code>$</code> without including it</li>
+<li><code>^(?=.*\\d)(?=.*[A-Z]).{8,}$</code> is a password check: 8+ characters, at least one digit and one capital</li>
 </ul>
-<p>In <code>stringr</code>, a lookbehind must have a bounded maximum length. <code>(?&lt;=\d{2})</code> and <code>(?&lt;=a{1,3})</code> are fine. <code>(?&lt;=a+)</code> is not, because <code>+</code> has no upper bound.</p>
+<p>In <code>stringr</code>, a lookbehind must have a bounded maximum length. <code>(?&lt;=\\d{2})</code> and <code>(?&lt;=a{1,3})</code> are fine. <code>(?&lt;=a+)</code> is not, because <code>+</code> has no upper bound.</p>
 <h2>12. Flags / modifiers</h2>
 <div class="table-wrap"><table>
 <thead>
@@ -405,13 +405,13 @@
 <p><code>stringr</code> sets these with <code>regex()</code>. <code>regex(p, ignore_case = TRUE)</code> is <code>i</code>, <code>multiline = TRUE</code> is <code>m</code>, and <code>dotall = TRUE</code> is <code>s</code>. There is no <code>g</code> flag: <code>str_extract_all()</code> and <code>str_replace_all()</code> find every match. You can also put <code>(?i)</code> at the front of the pattern.</p>
 <h2>13. Unicode</h2>
 <ul>
-<li><code>\p{L}</code> any letter, <code>\p{Lu}</code> uppercase letter, <code>\p{N}</code> any number</li>
-<li><code>\P{L}</code> is the negation</li>
-<li>In some languages <code>\w</code> and <code>\d</code> are ASCII-only unless you turn Unicode on. <code>stringr</code> already treats them as Unicode</li>
+<li><code>\\p{L}</code> any letter, <code>\\p{Lu}</code> uppercase letter, <code>\\p{N}</code> any number</li>
+<li><code>\\P{L}</code> is the negation</li>
+<li>In some languages <code>\\w</code> and <code>\\d</code> are ASCII-only unless you turn Unicode on. <code>stringr</code> already treats them as Unicode</li>
 </ul>
-<p>JavaScript needs the <code>u</code> flag for <code>\p{...}</code>. Python's standard <code>re</code> does not support <code>\p{...}</code>; the third-party <code>regex</code> library does.</p>
+<p>JavaScript needs the <code>u</code> flag before Unicode properties work. Python's standard <code>re</code> does not support them; the third-party <code>regex</code> library does.</p>
 <h2>14. Escape sequences</h2>
-<p><code>\n</code> newline, <code>\t</code> tab, <code>\r</code> carriage return, <code>\xHH</code> hex character, <code>\uHHHH</code> Unicode character, <code>\0</code> null.</p>
+<p><code>\\n</code> newline, <code>\\t</code> tab, <code>\\r</code> carriage return, <code>\\xHH</code> hex character, <code>\\uHHHH</code> Unicode character, <code>\\0</code> null.</p>
 <h2>15. How the engine thinks</h2>
 <ol>
 <li><strong>It scans left to right</strong> and returns the first position where the whole pattern matches.</li>
@@ -429,15 +429,15 @@
 <tbody>
 <tr>
 <td>Integer</td>
-<td><code>^-?\d+$</code></td>
+<td><code>^-?\\d+$</code></td>
 </tr>
 <tr>
 <td>Decimal</td>
-<td><code>^-?\d+(\.\d+)?$</code></td>
+<td><code>^-?\\d+(\\.\\d+)?$</code></td>
 </tr>
 <tr>
 <td>US ZIP code</td>
-<td><code>^\d{5}(-\d{4})?$</code></td>
+<td><code>^\\d{5}(-\\d{4})?$</code></td>
 </tr>
 <tr>
 <td>Hex color</td>
@@ -445,23 +445,23 @@
 </tr>
 <tr>
 <td>ISO date</td>
-<td><code>^\d{4}-\d{2}-\d{2}$</code></td>
+<td><code>^\\d{4}-\\d{2}-\\d{2}$</code></td>
 </tr>
 <tr>
 <td>Simple email</td>
-<td><code>^[\w.+-]+@[\w-]+\.[\w.-]+$</code></td>
+<td><code>^[\\w.+-]+@[\\w-]+\\.[\\w.-]+$</code></td>
 </tr>
 <tr>
 <td>Extra whitespace</td>
-<td><code>\s{2,}</code></td>
+<td><code>\\s{2,}</code></td>
 </tr>
 <tr>
 <td>HTML tag (simple)</td>
-<td><code>&lt;([a-z]+)&gt;.*?&lt;/\1&gt;</code></td>
+<td><code>&lt;([a-z]+)&gt;.*?&lt;/\\1&gt;</code></td>
 </tr>
 <tr>
 <td>Repeated word</td>
-<td><code>\b(\w+)\s+\1\b</code></td>
+<td><code>\\b(\\w+)\\s+\\1\\b</code></td>
 </tr>
 </tbody>
 </table></div>
@@ -477,12 +477,12 @@
 </ol>
 <h2>Quick cheat sheet</h2>
 <pre><code>.        any character (not a newline)     ^     start
-\d       digit                             $     end
-\w       word character                    \b    word boundary
-\s       whitespace                        |     or
+\\d       digit                             $     end
+\\w       word character                    \\b    word boundary
+\\s       whitespace                        |     or
 [ ]      one of a set                      ( )   capturing group
 [^ ]     not one of a set                  (?: ) non-capturing group
-*        0 or more                         \1    backreference
+*        0 or more                         \\1    backreference
 +        1 or more                         ?     lazy, after a quantifier
 ?        0 or 1                            {n,m} between n and m
 (?=) (?!) (?&lt;=) (?&lt;!)                      lookarounds
@@ -500,7 +500,7 @@
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:22:00-04:00">October 28, 2026, 4:22 PM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:42:00-04:00">October 28, 2026, 4:42 PM EDT</time></div>
             </footer>
         </div>
 
