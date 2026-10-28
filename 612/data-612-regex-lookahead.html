@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>9.7 Regex: Lookaheads and Lookbehinds - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">9.7 Regex: Lookaheads and Lookbehinds</h1>
+                    </header>
+                                                                                                                                                                <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-9.html">Week 9</a> &middot;
+                            <a href="files/regex-lookahead.pdf" target="_blank" rel="noopener">PDF</a>
+                         &middot; <a href="files/lectures/regex-lookahead.qmd">Source (.qmd)</a></p>
+<p>A lookahead checks what comes next without taking those characters. It is a peek, so it is called a zero-width assertion. Note 9.5 introduces the idea. This note is the set of examples, including the backtracking trap and lookbehind.</p>
+<h2>1. The notation</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Name</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>X(?=Y)</code></td>
+<td>Positive lookahead</td>
+<td>X followed by Y</td>
+</tr>
+<tr>
+<td><code>X(?!Y)</code></td>
+<td>Negative lookahead</td>
+<td>X not followed by Y</td>
+</tr>
+</tbody>
+</table></div>
+<p>Read <code>(?=</code> as “is followed by” and <code>(?!</code> as “is not followed by.” The <code>=</code> is a yes check. The <code>!</code> is a no check.</p>
+<h2>2. Why not just match Y?</h2>
+<p>On <code>"50 dollars"</code>:</p>
+<pre><code class="language-r">str_extract(&quot;50 dollars&quot;, &quot;\\d+ dollars&quot;)
+str_extract(&quot;50 dollars&quot;, &quot;\\d+(?= dollars)&quot;)
+</code></pre>
+<pre><code>[1] &quot;50 dollars&quot;
+[1] &quot;50&quot;
+</code></pre>
+<p>The first pattern keeps the word. The second requires the word and does not keep it. Later pieces of a pattern can keep matching from that same position, because the lookahead did not move forward.</p>
+<h2>3. Positive lookahead</h2>
+<p>A number only when <code>dollars</code> follows:</p>
+<pre><code class="language-r">x &lt;- &quot;50 dollars, 20 euros, 75 dollars&quot;
+str_extract_all(x, &quot;\\d+(?= dollars)&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;50&quot; &quot;75&quot;
+</code></pre>
+<p><code>20</code> is followed by <code>euros</code>, so it is left out.</p>
+<p>The username before <code>@</code>:</p>
+<pre><code class="language-r">str_extract(&quot;ann@mail.com&quot;, &quot;\\w+(?=@)&quot;)
+</code></pre>
+<pre><code>[1] &quot;ann&quot;
+</code></pre>
+<p>A word only when a comma follows:</p>
+<pre><code class="language-r">str_extract_all(&quot;red, green blue, pink&quot;, &quot;\\w+(?=,)&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;red&quot;  &quot;blue&quot;
+</code></pre>
+<p><code>green</code> and <code>pink</code> are not followed by a comma.</p>
+<h2>4. Negative lookahead</h2>
+<p>A <code>q</code> that is not followed by <code>u</code>:</p>
+<pre><code class="language-r">str_extract_all(&quot;quick qat Iraq&quot;, &quot;q(?!u)&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;q&quot; &quot;q&quot;
+</code></pre>
+<p>The <code>q</code> in <code>quick</code> is followed by <code>u</code>, so it fails. The <code>q</code> in <code>qat</code> and the <code>q</code> in <code>Iraq</code> are not.</p>
+<p>A string that does not contain <code>error</code>:</p>
+<pre><code class="language-r">x &lt;- c(&quot;all good&quot;, &quot;an error here&quot;, &quot;fine&quot;)
+str_detect(x, &quot;^(?!.*error)&quot;)
+</code></pre>
+<pre><code>[1]  TRUE FALSE  TRUE
+</code></pre>
+<p><code>^</code> is the start. <code>(?!.*error)</code> asks whether <code>error</code> appears anywhere later. If it does, the check fails and the string is rejected. <code>all good</code> and <code>fine</code> pass.</p>
+<p>A file name that is not <code>.txt</code>:</p>
+<pre><code class="language-r">files &lt;- c(&quot;a.csv&quot;, &quot;b.txt&quot;, &quot;c.R&quot;)
+str_subset(files, &quot;^(?!.*\\.txt$)&quot;)
+</code></pre>
+<pre><code>[1] &quot;a.csv&quot; &quot;c.R&quot;
+</code></pre>
+<p><code>.*\\.txt$</code> is “anything, then a literal <code>.txt</code> at the end.” The negative lookahead rejects that shape. <code>b.txt</code> is out. <code>a.csv</code> and <code>c.R</code> stay.</p>
+<h2>5. A trap: the engine backtracks</h2>
+<pre><code class="language-r">str_extract(&quot;50 dollars&quot;, &quot;\\d+(?! dollars)&quot;)
+</code></pre>
+<pre><code>[1] &quot;5&quot;
+</code></pre>
+<p>That is not <code>NA</code>. The engine first tries <code>50</code>. The next text is <code>dollars</code>, so the negative lookahead fails. It then gives back a digit and tries <code>5</code>. The next character is <code>0</code>, not <code>dollars</code>, so the check passes and the match is <code>"5"</code>.</p>
+<p>Require a whole number:</p>
+<pre><code class="language-r">str_extract_all(&quot;50 dollars 20 euros&quot;, &quot;\\b\\d+\\b(?! dollars)&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;20&quot;
+</code></pre>
+<p><code>\\b</code> is a word boundary, so <code>50</code> is one number. It is followed by <code>dollars</code>, so it fails. <code>20</code> is a whole number not followed by <code>dollars</code>.</p>
+<p>The same idea, forbidding another digit instead of using a boundary:</p>
+<pre><code class="language-r">str_extract_all(&quot;50 dollars 20 euros&quot;, &quot;\\d+(?!\\d)(?! dollars)&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;20&quot;
+</code></pre>
+<p><code>(?!\\d)</code> means “not followed by another digit,” so the engine cannot stop in the middle of <code>50</code>.</p>
+<h2>6. Several lookaheads at once</h2>
+<p>Lookaheads at the same position must all be true. This is the usual password check:</p>
+<pre><code class="language-r">pw &lt;- c(&quot;Passw0rd123&quot;, &quot;password&quot;, &quot;PASSWORD1&quot;, &quot;Sh0rt&quot;)
+
+str_detect(pw, &quot;^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$&quot;)
+</code></pre>
+<pre><code>[1]  TRUE FALSE FALSE FALSE
+</code></pre>
+<p>Read from the start:</p>
+<ul>
+<li><code>(?=.*\d)</code> means a digit appears somewhere ahead.</li>
+<li><code>(?=.*[A-Z])</code> means a capital appears somewhere ahead.</li>
+<li><code>(?=.*[a-z])</code> means a lowercase letter appears somewhere ahead.</li>
+<li><code>.{8,}</code> then takes 8 or more characters.</li>
+</ul>
+<p>Each lookahead starts over at <code>^</code>, so they are separate checks. <code>password</code> has no digit and no capital. <code>PASSWORD1</code> has no lowercase letter. <code>Sh0rt</code> is shorter than 8.</p>
+<h2>7. Lookahead or a capturing group</h2>
+<p>On <code>"50 dollars"</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Pattern</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep the word in the match</td>
+<td><code>\d+ dollars</code></td>
+<td><code>"50 dollars"</code></td>
+</tr>
+<tr>
+<td>Keep the whole match, and also save the number</td>
+<td><code>(\d+) dollars</code></td>
+<td>whole <code>"50 dollars"</code>, group 1 <code>"50"</code></td>
+</tr>
+<tr>
+<td>Match only the number</td>
+<td><code>\d+(?= dollars)</code></td>
+<td><code>"50"</code></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">str_match(&quot;50 dollars&quot;, &quot;(\\d+) dollars&quot;)
+str_extract(&quot;50 dollars&quot;, &quot;\\d+(?= dollars)&quot;)
+</code></pre>
+<pre><code>     [,1]         [,2]
+[1,] &quot;50 dollars&quot; &quot;50&quot;
+
+[1] &quot;50&quot;
+</code></pre>
+<p>A lookahead is useful in <code>str_replace_all()</code> when the checked text should stay put, because that text is not part of the match and so it is not replaced.</p>
+<pre><code class="language-r">str_replace_all(&quot;50 dollars, 20 euros&quot;, &quot;\\d+(?= dollars)&quot;, &quot;[\\0]&quot;)
+</code></pre>
+<pre><code>[1] &quot;[50] dollars, 20 euros&quot;
+</code></pre>
+<p><code>\\0</code> is the whole match, which here is only the number. The word <code>dollars</code> is still there.</p>
+<h2>8. Lookbehind</h2>
+<p>A lookahead looks to the right. A lookbehind looks to the left.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Syntax</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(?&lt;=Y)X</code></td>
+<td>X preceded by Y</td>
+</tr>
+<tr>
+<td><code>(?&lt;!Y)X</code></td>
+<td>X not preceded by Y</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">str_extract_all(&quot;cost $50, qty 20&quot;, &quot;(?&lt;=\\$)\\d+&quot;)
+</code></pre>
+<pre><code>[[1]]
+[1] &quot;50&quot;
+</code></pre>
+<p><code>(?&lt;=\\$)</code> checks that a <code>$</code> is immediately before the digits, and it does not take the <code>$</code>. <code>20</code> has no <code>$</code> before it.</p>
+<p>In stringr the lookbehind must have a bounded length. <code>(?&lt;=\\d+)</code> is an error: <code>Look-Behind pattern matches must have a bounded maximum length</code>. Use a fixed length, or a range such as <code>\\d{1,3}</code>, not <code>*</code> or <code>+</code>.</p>
+<h2>9. Key points</h2>
+<ol>
+<li><code>(?=...)</code> means “must be followed by.”</li>
+<li><code>(?!...)</code> means “must not be followed by.”</li>
+<li>Both are zero-width. They test, and they do not take the text.</li>
+<li>Put the lookahead after the text you want to keep: <code>X(?=Y)</code>.</li>
+<li>Put it at the start, <code>^(?=...)</code>, when the rule is about the whole string.</li>
+<li><code>\\d+(?!...)</code> can succeed on a prefix after the engine backtracks. Add <code>\\b</code>, or <code>(?!\\d)</code>, so the number has to finish.</li>
+<li><code>(?&lt;=Y)</code> looks left. The text it checks must have a bounded length.</li>
+</ol>
+<nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-regex-capture.html"><span aria-hidden="true">←</span> 9.6 Regex: Capturing and Backreferences</a>
+                        <a class="course-page-nav__week" href="data-612-week-9.html">Week 9</a>
+                            <a class="course-page-nav__next" href="data-612-lab-9-strings.html">Lab 9: Strings and Regex <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:22:00-04:00">October 28, 2026, 4:22 PM EDT</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

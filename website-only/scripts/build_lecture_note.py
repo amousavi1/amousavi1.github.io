@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-28T16:15:00-04:00"
-LAST_UPDATED_TEXT = "October 28, 2026, 4:15 PM EDT"
+LAST_UPDATED_ISO = "2026-10-28T16:22:00-04:00"
+LAST_UPDATED_TEXT = "October 28, 2026, 4:22 PM EDT"
 
 NOTES = [
     {
@@ -254,6 +254,12 @@ NOTES = [
         "week": 9,
         "title": "9.6 Regex: Capturing and Backreferences",
         "lead": "Capturing groups remember text. Numbered and named references reuse it.",
+    },
+    {
+        "slug": "regex-lookahead",
+        "week": 9,
+        "title": "9.7 Regex: Lookaheads and Lookbehinds",
+        "lead": "A lookahead checks what comes next and does not take it. A lookbehind checks what came before.",
     },
     {
         "slug": "lab-9-strings",
