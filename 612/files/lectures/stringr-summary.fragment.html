@@ -1,0 +1,448 @@
+<p><code>stringr</code> (part of the tidyverse) gives consistent, readable functions for string work. The main functions start with <code>str_</code>, take the <strong>string first</strong> and the <strong>pattern second</strong>, and are vectorized. Patterns are regex (via the <code>stringi</code>/ICU engine) unless wrapped in a helper.</p>
+<pre><code class="language-r">library(stringr)
+</code></pre>
+<h2>1. Detect and count</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_detect(x, p)</code></td>
+<td>TRUE/FALSE: does the pattern occur?</td>
+<td><code>str_detect("apple", "pp")</code> → <code>TRUE</code></td>
+</tr>
+<tr>
+<td><code>str_count(x, p)</code></td>
+<td>Number of matches</td>
+<td><code>str_count("banana", "a")</code> → <code>3</code></td>
+</tr>
+<tr>
+<td><code>str_starts(x, p)</code></td>
+<td>Starts with pattern?</td>
+<td><code>str_starts("apple", "a")</code> → <code>TRUE</code></td>
+</tr>
+<tr>
+<td><code>str_ends(x, p)</code></td>
+<td>Ends with pattern?</td>
+<td><code>str_ends("apple", "e")</code> → <code>TRUE</code></td>
+</tr>
+<tr>
+<td><code>str_which(x, p)</code></td>
+<td>Indices of elements that match</td>
+<td><code>str_which(c("a","b","ab"), "a")</code> → <code>1 3</code></td>
+</tr>
+<tr>
+<td><code>str_equal(x, y)</code></td>
+<td>Compare strings (Unicode-aware)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2>2. Extract and locate</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_extract(x, p)</code></td>
+<td>First match in each string</td>
+<td><code>str_extract("ab12cd34", "\\d+")</code> → <code>"12"</code></td>
+</tr>
+<tr>
+<td><code>str_extract_all(x, p)</code></td>
+<td>All matches (returns a list)</td>
+<td>→ <code>"12" "34"</code></td>
+</tr>
+<tr>
+<td><code>str_match(x, p)</code></td>
+<td>First match <strong>plus capture groups</strong> (matrix)</td>
+<td><code>str_match("2026-10", "(\\d+)-(\\d+)")</code></td>
+</tr>
+<tr>
+<td><code>str_match_all(x, p)</code></td>
+<td>Same, for all matches</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_locate(x, p)</code></td>
+<td>Start and end position of first match</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_locate_all(x, p)</code></td>
+<td>Positions of all matches</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_subset(x, p)</code></td>
+<td>Return only the elements that match</td>
+<td><code>str_subset(c("cat","dog"), "c")</code> → <code>"cat"</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2>3. Replace and remove</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_replace(x, p, r)</code></td>
+<td>Replace first match</td>
+<td><code>str_replace("aaa", "a", "b")</code> → <code>"baa"</code></td>
+</tr>
+<tr>
+<td><code>str_replace_all(x, p, r)</code></td>
+<td>Replace all matches</td>
+<td>→ <code>"bbb"</code></td>
+</tr>
+<tr>
+<td><code>str_remove(x, p)</code></td>
+<td>Delete first match</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_remove_all(x, p)</code></td>
+<td>Delete all matches</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_replace_na(x, r)</code></td>
+<td>Replace <code>NA</code> with a string</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Backreferences in replacements use <code>\\1</code>: <code>str_replace("John Smith", "(\\w+) (\\w+)", "\\2, \\1")</code> → <code>"Smith, John"</code>. You can also pass a named vector for several replacements at once: <code>str_replace_all(x, c("a" = "1", "b" = "2"))</code>.</p>
+<h2>4. Length and subsetting</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_length(x)</code></td>
+<td>Number of characters</td>
+<td><code>str_length("hello")</code> → <code>5</code></td>
+</tr>
+<tr>
+<td><code>str_sub(x, start, end)</code></td>
+<td>Extract by position (negatives count from the end). One character is <code>str_sub(x, i, i)</code></td>
+<td><code>str_sub("hello", 2, 4)</code> → <code>"ell"</code></td>
+</tr>
+<tr>
+<td><code>str_sub(x, 1, 2) &lt;- "XX"</code></td>
+<td>Replace a substring by position</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_trunc(x, width)</code></td>
+<td>Shorten with <code>...</code></td>
+<td><code>str_trunc("abcdefgh", 6)</code> → <code>"abc..."</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2>5. Case</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_to_lower(x)</code></td>
+<td>lowercase</td>
+</tr>
+<tr>
+<td><code>str_to_upper(x)</code></td>
+<td>UPPERCASE</td>
+</tr>
+<tr>
+<td><code>str_to_title(x)</code></td>
+<td>Title Case</td>
+</tr>
+<tr>
+<td><code>str_to_sentence(x)</code></td>
+<td>Sentence case</td>
+</tr>
+</tbody>
+</table></div>
+<h2>6. Whitespace and padding</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_trim(x, side)</code></td>
+<td>Remove leading/trailing whitespace (<code>"both"</code>, <code>"left"</code>, <code>"right"</code>)</td>
+<td><code>str_trim("  hi  ")</code> → <code>"hi"</code></td>
+</tr>
+<tr>
+<td><code>str_squish(x)</code></td>
+<td>Trim <strong>and</strong> collapse inner repeated spaces</td>
+<td><code>str_squish(" a   b ")</code> → <code>"a b"</code></td>
+</tr>
+<tr>
+<td><code>str_pad(x, width, side, pad)</code></td>
+<td>Pad to a fixed width. The default side is <code>"left"</code></td>
+<td><code>str_pad("7", 3, pad = "0")</code> → <code>"007"</code></td>
+</tr>
+<tr>
+<td><code>str_wrap(x, width)</code></td>
+<td>Wrap text into lines of a set width</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_trunc()</code></td>
+<td>See above</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2>7. Combine, split, repeat</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_c(..., sep, collapse)</code></td>
+<td>Concatenate (like <code>paste</code>, but <code>NA</code>-propagating)</td>
+<td><code>str_c("a", "b", sep = "-")</code> → <code>"a-b"</code></td>
+</tr>
+<tr>
+<td><code>str_flatten(x, collapse)</code></td>
+<td>Collapse a vector into one string</td>
+<td><code>str_flatten(c("a","b"), ", ")</code> → <code>"a, b"</code></td>
+</tr>
+<tr>
+<td><code>str_flatten_comma(x, last)</code></td>
+<td>Comma list. <code>last = ", and "</code> inserts “and” before the final item, and skips the extra comma when there are only two</td>
+<td><code>str_flatten_comma(c("a","b","c"), ", and ")</code> → <code>"a, b, and c"</code></td>
+</tr>
+<tr>
+<td><code>str_split(x, p)</code></td>
+<td>Split into pieces (returns a list)</td>
+<td><code>str_split("a,b,c", ",")</code></td>
+</tr>
+<tr>
+<td><code>str_split_fixed(x, p, n)</code></td>
+<td>Split into exactly <code>n</code> columns (matrix)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_split_1(x, p)</code></td>
+<td>Split a single string into a vector</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_dup(x, times)</code></td>
+<td>Repeat a string</td>
+<td><code>str_dup("ab", 3)</code> → <code>"ababab"</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2>8. Interpolation and formatting</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_glue("...{var}...")</code></td>
+<td>Insert R values into text</td>
+<td><code>str_glue("Hi {name}")</code></td>
+</tr>
+<tr>
+<td><code>str_glue_data(.x, ...)</code></td>
+<td>Same, using columns of a data frame</td>
+<td></td>
+</tr>
+<tr>
+<td><code>sprintf()</code></td>
+<td>C-style formatting (base R)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>str_like(x, p)</code></td>
+<td>SQL-style <code>LIKE</code> matching (<code>%</code> and <code>_</code>)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2>9. Sorting, order, viewing, encoding</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_sort(x)</code></td>
+<td>Sort strings (locale-aware)</td>
+</tr>
+<tr>
+<td><code>str_order(x)</code></td>
+<td>Return sort order indices</td>
+</tr>
+<tr>
+<td><code>str_rank(x)</code></td>
+<td>Rank strings</td>
+</tr>
+<tr>
+<td><code>str_view(x, p)</code></td>
+<td>Visually highlight matches (great for debugging regex)</td>
+</tr>
+<tr>
+<td><code>str_conv(x, enc)</code></td>
+<td>Convert encoding</td>
+</tr>
+<tr>
+<td><code>str_escape(x)</code></td>
+<td>Escape regex special characters</td>
+</tr>
+<tr>
+<td><code>str_unique(x)</code></td>
+<td>Unique strings</td>
+</tr>
+</tbody>
+</table></div>
+<h2>10. Pattern helpers (modifiers)</h2>
+<p>Wrap the pattern to change how it is interpreted:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>regex(p, ignore_case = TRUE, multiline = TRUE)</code></td>
+<td>Regex with options</td>
+</tr>
+<tr>
+<td><code>fixed(p)</code></td>
+<td>Literal match, no regex (faster, safe for special characters)</td>
+</tr>
+<tr>
+<td><code>coll(p)</code></td>
+<td>Locale-aware comparison</td>
+</tr>
+<tr>
+<td><code>boundary("word")</code></td>
+<td>Split or match on word, sentence, or character boundaries</td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">str_detect(&quot;A.B&quot;, fixed(&quot;.&quot;))            # literal dot
+str_detect(&quot;Apple&quot;, regex(&quot;apple&quot;, ignore_case = TRUE))
+str_split(&quot;Hello big world&quot;, boundary(&quot;word&quot;))
+</code></pre>
+<h2>11. Handy built-in data</h2>
+<ul>
+<li><code>fruit</code>, <code>words</code>, <code>sentences</code>: sample vectors for practice</li>
+</ul>
+<h2>12. Common patterns in practice</h2>
+<pre><code class="language-r"># Clean messy text
+x |&gt; str_squish() |&gt; str_to_lower()
+
+# Filter a data frame
+df |&gt; filter(str_detect(name, &quot;^A&quot;))
+
+# Extract numbers
+str_extract_all(x, &quot;\\d+&quot;)
+
+# Pull out groups
+str_match(x, &quot;(\\w+)@(\\w+)\\.com&quot;)
+
+# Zero-pad IDs
+str_pad(id, 5, pad = &quot;0&quot;)
+</code></pre>
+<h2>Key points to remember</h2>
+<ol>
+<li><strong>Input first, pattern second</strong>: this makes <code>stringr</code> pipe-friendly (<code>|&gt;</code>).</li>
+<li><strong><code>_all</code> suffix</strong> = every match; no suffix = first match only.</li>
+<li><strong>Backslashes are doubled</strong> in R strings: <code>"\\d"</code> (or use raw strings: <code>r"(\d+)"</code>).</li>
+<li><strong>Output type hints</strong>: <code>str_detect</code> returns a logical vector, <code>str_extract</code> returns a character vector, <code>str_extract_all</code> and <code>str_split</code> return lists.</li>
+<li><strong><code>NA</code> handling</strong>: most functions return <code>NA</code> for <code>NA</code> input.</li>
+<li><strong>Use <code>fixed()</code></strong> when you want a plain-text match with no regex.</li>
+</ol>
+<h2>stringr vs. base R equivalents</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>stringr</th>
+<th>Base R</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>str_detect</code></td>
+<td><code>grepl</code></td>
+</tr>
+<tr>
+<td><code>str_replace_all</code></td>
+<td><code>gsub</code></td>
+</tr>
+<tr>
+<td><code>str_extract</code></td>
+<td><code>regmatches</code> + <code>regexpr</code></td>
+</tr>
+<tr>
+<td><code>str_split</code></td>
+<td><code>strsplit</code></td>
+</tr>
+<tr>
+<td><code>str_sub</code></td>
+<td><code>substr</code></td>
+</tr>
+<tr>
+<td><code>str_length</code></td>
+<td><code>nchar</code></td>
+</tr>
+<tr>
+<td><code>str_c</code></td>
+<td><code>paste0</code></td>
+</tr>
+<tr>
+<td><code>str_to_upper</code></td>
+<td><code>toupper</code></td>
+</tr>
+</tbody>
+</table></div>

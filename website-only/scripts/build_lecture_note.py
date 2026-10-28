@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-21T13:36:00-04:00"
-LAST_UPDATED_TEXT = "October 21, 2026, 1:36 PM EDT"
+LAST_UPDATED_ISO = "2026-10-27T22:55:00-04:00"
+LAST_UPDATED_TEXT = "October 27, 2026, 10:55 PM EDT"
 
 NOTES = [
     {
@@ -230,6 +230,12 @@ NOTES = [
         "week": 9,
         "title": "9.2 stringr: Regular Expressions",
         "lead": "A pattern is a regular expression. Escape in R with two backslashes.",
+    },
+    {
+        "slug": "stringr-summary",
+        "week": 9,
+        "title": "9.3 stringr: Summary",
+        "lead": "A reference for stringr: the string comes first, the pattern second.",
     },
     {
         "slug": "lab-9-strings",
