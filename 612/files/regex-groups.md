@@ -331,6 +331,31 @@ str_extract("cat123", "cat[0-9]")
 [1] "cat1"
 ```
 
+The digits are the match when a word has to follow them:
+
+```r
+str_extract(c("50 dollars", "50 cents", "7 dollars"), "\\d+(?= dollars)")
+```
+
+```
+[1] "50" NA   "7"
+```
+
+`"50"` and `"7"` are kept. The word `dollars` is only a check, so it is not part of the match. `"50 cents"` fails the check.
+
+A file name, without the extension:
+
+```r
+str_extract(c("notes.pdf", "notes.docx", "plot.pdf"), "\\w+(?=\\.pdf)")
+```
+
+```
+[1] "notes" NA      "plot"
+```
+
+`\\w+` takes the name. `(?=\\.pdf)` checks that `.pdf` comes next and does not take it. `"notes.docx"` is a name followed by `.docx`, so it fails.
+
+
 ## 10. Negative lookahead `(?!...)`
 
 ```r
@@ -355,6 +380,31 @@ On `"cat"`, the next three characters are `"cat"`, so the lookahead fails and th
 On `"dog"`, the next characters are not `"cat"`. The lookahead succeeds, and `.*` takes the rest.
 
 On `"catalog"`, the string starts with `"cat"`. The extra letters do not save it. The lookahead fails.
+
+`cat` not followed by `s`:
+
+```r
+str_extract(c("cat", "cats", "dog"), "cat(?!s)")
+```
+
+```
+[1] "cat" NA    NA
+```
+
+`"cat"` is not followed by `s`, so the match is `"cat"`. `"cats"` is `cat` followed by `s`, so the lookahead fails. `"dog"` has no `cat`.
+
+Reject a string that contains `error` anywhere:
+
+```r
+str_detect(c("all good", "an error here", "no problem"), "^(?!.*error).*$")
+```
+
+```
+[1]  TRUE FALSE  TRUE
+```
+
+`(?!.*error)` looks ahead for `error` and fails if it finds it. `.*` after the lookahead then matches the string that passed the check. `"an error here"` fails. The other two match.
+
 
 ## 11. Excluding a whole string or a substring
 

@@ -152,8 +152,70 @@ in <code>select()</code>. That is a repeated character.</p>
 <pre><code>## [1] &quot;paple&quot;</code></pre>
 <hr />
 </div>
+<div id="groups-and-lookaheads" class="section level2">
+<h2>3. Capturing groups, non-capturing groups, and lookaheads</h2>
+<p><a href="data-612-regex-groups.html">Note 9.5</a> is the full lesson, with more cases and practice questions. The examples here are the ones to work in class.</p>
+<h3>Capturing groups <code>(...)</code></h3>
+<p>A capturing group saves the text it matched. <code>str_match()</code> puts the whole match in column 1, then one column for each group, from left to right.</p>
+<pre class="r"><code>str_match(&quot;John123&quot;, &quot;([A-Za-z]+)([0-9]+)&quot;)</code></pre>
+<pre><code>     [,1]      [,2]   [,3] 
+[1,] &quot;John123&quot; &quot;John&quot; &quot;123&quot;</code></pre>
+<p>Column 2 is the letters. Column 3 is the digits.</p>
+<pre class="r"><code>str_match(c(&quot;Alice45&quot;, &quot;Bob789&quot;, &quot;Sam&quot;), &quot;([A-Za-z]+)([0-9]+)&quot;)</code></pre>
+<pre><code>     [,1]      [,2]    [,3] 
+[1,] &quot;Alice45&quot; &quot;Alice&quot; &quot;45&quot; 
+[2,] &quot;Bob789&quot;  &quot;Bob&quot;   &quot;789&quot;
+[3,] NA        NA      NA</code></pre>
+<p><code>"Sam"</code> has letters but no digits, so that row is missing.</p>
+<pre class="r"><code>str_match(&quot;2026-10-28&quot;, &quot;(\\d{4})-(\\d{2})-(\\d{2})&quot;)</code></pre>
+<pre><code>     [,1]         [,2]   [,3] [,4]
+[1,] &quot;2026-10-28&quot; &quot;2026&quot; &quot;10&quot; &quot;28&quot;</code></pre>
+<p>The three groups are the year, the month, and the day.</p>
+<h3>Non-capturing groups <code>(?:...)</code></h3>
+<p><code>(?:...)</code> matches, and it does not get a column. It also does not count when you number <code>\\1</code> and <code>\\2</code>.</p>
+<pre class="r"><code>str_match(&quot;John123&quot;, &quot;(?:[A-Za-z]+)([0-9]+)&quot;)
+str_match(&quot;John123&quot;, &quot;([A-Za-z]+)(?:[0-9]+)&quot;)</code></pre>
+<pre><code>     [,1]      [,2] 
+[1,] &quot;John123&quot; &quot;123&quot;</code></pre>
+<pre><code>     [,1]      [,2]  
+[1,] &quot;John123&quot; &quot;John&quot;</code></pre>
+<p>The first pattern keeps only the digits. The second keeps only the name. The whole match is still <code>"John123"</code>.</p>
+<pre class="r"><code>str_detect(c(&quot;gray&quot;, &quot;grey&quot;, &quot;green&quot;), &quot;gr(?:a|e)y&quot;)</code></pre>
+<pre><code>[1]  TRUE  TRUE FALSE</code></pre>
+<p><code>(?:a|e)</code> is <code>a</code> or <code>e</code>. <code>gray</code> and <code>grey</code> match. <code>green</code> does not. <code>str_detect()</code> returns true or false, so there is no column to capture.</p>
+<h3>Positive lookahead <code>(?=...)</code></h3>
+<p><code>(?=...)</code> checks what comes next. It does not take those characters, and it does not move past them.</p>
+<pre class="r"><code>str_extract(c(&quot;cat123&quot;, &quot;catABC&quot;, &quot;dog9&quot;), &quot;cat(?=[0-9])&quot;)</code></pre>
+<pre><code>[1] &quot;cat&quot; NA    NA</code></pre>
+<p><code>"cat123"</code> is <code>cat</code> followed by a digit, so the match is <code>"cat"</code>. <code>"catABC"</code> is <code>cat</code> followed by a letter, so it fails. <code>"dog9"</code> has no <code>cat</code>.</p>
+<pre class="r"><code>str_extract(c(&quot;50 dollars&quot;, &quot;50 cents&quot;, &quot;7 dollars&quot;), &quot;\\d+(?= dollars)&quot;)</code></pre>
+<pre><code>[1] &quot;50&quot; NA   &quot;7&quot;</code></pre>
+<p>The match is the number. <code>(?= dollars)</code> only checks that the word <code>dollars</code> comes next. <code>"50 cents"</code> fails that check.</p>
+<pre class="r"><code>str_extract(c(&quot;notes.pdf&quot;, &quot;notes.docx&quot;, &quot;plot.pdf&quot;), &quot;\\w+(?=\\.pdf)&quot;)</code></pre>
+<pre><code>[1] &quot;notes&quot; NA      &quot;plot&quot;</code></pre>
+<p>The match is the file name. <code>(?=\\.pdf)</code> checks for a literal <code>.pdf</code> and does not take it. <code>"notes.docx"</code> fails that check.</p>
+<p>A pattern that takes the next character keeps it:</p>
+<pre class="r"><code>str_extract(&quot;cat123&quot;, &quot;cat[0-9]&quot;)
+str_extract(&quot;cat123&quot;, &quot;cat(?=[0-9])&quot;)</code></pre>
+<pre><code>[1] &quot;cat1&quot;</code></pre>
+<pre><code>[1] &quot;cat&quot;</code></pre>
+<p>The first result is <code>"cat1"</code>. The second is <code>"cat"</code>.</p>
+<h3>Negative lookahead <code>(?!...)</code></h3>
+<p><code>(?!...)</code> checks that a pattern does not come next. It does not take any characters.</p>
+<pre class="r"><code>str_detect(c(&quot;cat&quot;, &quot;catalog&quot;, &quot;dog&quot;, &quot;bird&quot;), &quot;^(?!cat)&quot;)</code></pre>
+<pre><code>[1] FALSE FALSE  TRUE  TRUE</code></pre>
+<p><code>FALSE</code> means the string starts with <code>cat</code>. <code>"catalog"</code> fails for the same reason: it starts with <code>cat</code>. <code>"dog"</code> and <code>"bird"</code> do not.</p>
+<pre class="r"><code>str_extract(c(&quot;cat&quot;, &quot;cats&quot;, &quot;dog&quot;), &quot;cat(?!s)&quot;)</code></pre>
+<pre><code>[1] &quot;cat&quot; NA    NA</code></pre>
+<p><code>"cat"</code> is not followed by <code>s</code>, so it matches. <code>"cats"</code> is <code>cat</code> followed by <code>s</code>, so the check fails. <code>"dog"</code> has no <code>cat</code>.</p>
+<pre class="r"><code>str_detect(c(&quot;all good&quot;, &quot;an error here&quot;, &quot;no problem&quot;), &quot;^(?!.*error).*$&quot;)</code></pre>
+<pre><code>[1]  TRUE FALSE  TRUE</code></pre>
+<p><code>(?!.*error)</code> fails when <code>error</code> appears anywhere later in the string. The other two strings match.</p>
+<p>A group, capturing or not, is part of the match. A lookahead only tests a condition.</p>
+<hr />
+</div>
 <div id="detect-count-extract-split-replace" class="section level2">
-<h2>3. Detect, count, extract, split, replace</h2>
+<h2>4. Detect, count, extract, split, replace</h2>
 <p>All of these take the vector first, then the pattern.</p>
 <pre class="r"><code>x &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;, &quot;mango&quot;)
 
@@ -197,7 +259,7 @@ matches. <code>"aba"</code> in <code>"abababa"</code> is 2, not 3.</p>
 <hr />
 </div>
 <div id="separate-with-a-regex" class="section level2">
-<h2>4. <code>separate()</code> with a regex</h2>
+<h2>5. <code>separate()</code> with a regex</h2>
 <p><code>tidyr::separate()</code> splits one column into several.
 <code>sep</code> can be a regex, not only a fixed character.</p>
 <pre class="r"><code>tibble(x = c(&quot;a-1&quot;, &quot;b.2&quot;, &quot;c 3&quot;)) |&gt;
@@ -213,7 +275,7 @@ digit: a hyphen, a dot, or a space.</p>
 <hr />
 </div>
 <div id="practice" class="section level2">
-<h2>5. Practice</h2>
+<h2>6. Practice</h2>
 <p>Use <code>words</code>. Print the matches (or <code>str_view()</code>
 them).</p>
 <ol style="list-style-type: decimal">

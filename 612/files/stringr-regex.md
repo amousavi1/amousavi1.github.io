@@ -67,7 +67,107 @@ str_replace("apple", "(.)(.)", "\\2\\1")
 
 ---
 
-## 3. Detect, count, extract, split, replace
+## 3. Capturing groups, non-capturing groups, and lookaheads
+
+Note 9.5 is the full lesson, with more cases and practice questions. The examples here are the ones to work in class.
+
+### Capturing groups `(...)`
+
+A capturing group saves the text it matched. `str_match()` puts the whole match in column 1, then one column for each group, from left to right.
+
+```r
+str_match("John123", "([A-Za-z]+)([0-9]+)")
+```
+
+Column 2 is the letters. Column 3 is the digits.
+
+```r
+str_match(c("Alice45", "Bob789", "Sam"), "([A-Za-z]+)([0-9]+)")
+```
+
+`"Sam"` has letters but no digits, so that row is missing.
+
+```r
+str_match("2026-10-28", "(\\d{4})-(\\d{2})-(\\d{2})")
+```
+
+The three groups are the year, the month, and the day.
+
+### Non-capturing groups `(?:...)`
+
+`(?:...)` matches, and it does not get a column. It also does not count when you number `\\1` and `\\2`.
+
+```r
+str_match("John123", "(?:[A-Za-z]+)([0-9]+)")
+str_match("John123", "([A-Za-z]+)(?:[0-9]+)")
+```
+
+The first pattern keeps only the digits. The second keeps only the name. The whole match is still `"John123"`.
+
+```r
+str_detect(c("gray", "grey", "green"), "gr(?:a|e)y")
+```
+
+`(?:a|e)` is `a` or `e`. `gray` and `grey` match. `green` does not. `str_detect()` returns true or false, so there is no column to capture.
+
+### Positive lookahead `(?=...)`
+
+`(?=...)` checks what comes next. It does not take those characters, and it does not move past them.
+
+```r
+str_extract(c("cat123", "catABC", "dog9"), "cat(?=[0-9])")
+```
+
+`"cat123"` is `cat` followed by a digit, so the match is `"cat"`. `"catABC"` is `cat` followed by a letter, so it fails. `"dog9"` has no `cat`.
+
+```r
+str_extract(c("50 dollars", "50 cents", "7 dollars"), "\\d+(?= dollars)")
+```
+
+The match is the number. `(?= dollars)` only checks that the word `dollars` comes next. `"50 cents"` fails that check.
+
+```r
+str_extract(c("notes.pdf", "notes.docx", "plot.pdf"), "\\w+(?=\\.pdf)")
+```
+
+The match is the file name. `(?=\\.pdf)` checks for a literal `.pdf` and does not take it. `"notes.docx"` fails that check.
+
+A pattern that takes the next character keeps it:
+
+```r
+str_extract("cat123", "cat[0-9]")
+str_extract("cat123", "cat(?=[0-9])")
+```
+
+The first result is `"cat1"`. The second is `"cat"`.
+
+### Negative lookahead `(?!...)`
+
+`(?!...)` checks that a pattern does not come next. It does not take any characters.
+
+```r
+str_detect(c("cat", "catalog", "dog", "bird"), "^(?!cat)")
+```
+
+`FALSE` means the string starts with `cat`. `"catalog"` fails for the same reason: it starts with `cat`. `"dog"` and `"bird"` do not.
+
+```r
+str_extract(c("cat", "cats", "dog"), "cat(?!s)")
+```
+
+`"cat"` is not followed by `s`, so it matches. `"cats"` is `cat` followed by `s`, so the check fails. `"dog"` has no `cat`.
+
+```r
+str_detect(c("all good", "an error here", "no problem"), "^(?!.*error).*$")
+```
+
+`(?!.*error)` fails when `error` appears anywhere later in the string. The other two strings match.
+
+A group, capturing or not, is part of the match. A lookahead only tests a condition.
+
+---
+
+## 4. Detect, count, extract, split, replace
 
 All of these take the vector first, then the pattern.
 
@@ -97,7 +197,7 @@ str_replace_all(x, "[aeiou]", "-")
 
 ---
 
-## 4. `separate()` with a regex
+## 5. `separate()` with a regex
 
 `tidyr::separate()` splits one column into several. `sep` can be a regex, not only a fixed character.
 
@@ -110,7 +210,7 @@ tibble(x = c("a-1", "b.2", "c 3")) |>
 
 ---
 
-## 5. Practice
+## 6. Practice
 
 Use `words`. Print the matches (or `str_view()` them).
 

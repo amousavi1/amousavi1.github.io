@@ -449,6 +449,18 @@ str_extract(x, &quot;cat(?=[0-9])&quot;)
 </code></pre>
 <pre><code>[1] &quot;cat1&quot;
 </code></pre>
+<p>The digits are the match when a word has to follow them:</p>
+<pre><code class="language-r">str_extract(c(&quot;50 dollars&quot;, &quot;50 cents&quot;, &quot;7 dollars&quot;), &quot;\\d+(?= dollars)&quot;)
+</code></pre>
+<pre><code>[1] &quot;50&quot; NA   &quot;7&quot;
+</code></pre>
+<p><code>"50"</code> and <code>"7"</code> are kept. The word <code>dollars</code> is only a check, so it is not part of the match. <code>"50 cents"</code> fails the check.</p>
+<p>A file name, without the extension:</p>
+<pre><code class="language-r">str_extract(c(&quot;notes.pdf&quot;, &quot;notes.docx&quot;, &quot;plot.pdf&quot;), &quot;\\w+(?=\\.pdf)&quot;)
+</code></pre>
+<pre><code>[1] &quot;notes&quot; NA      &quot;plot&quot;
+</code></pre>
+<p><code>\\w+</code> takes the name. <code>(?=\\.pdf)</code> checks that <code>.pdf</code> comes next and does not take it. <code>"notes.docx"</code> is a name followed by <code>.docx</code>, so it fails.</p>
 <h2>10. Negative lookahead <code>(?!...)</code></h2>
 <pre><code class="language-r">x &lt;- c(&quot;cat&quot;, &quot;cats&quot;, &quot;dog&quot;, &quot;catalog&quot;, &quot;bird&quot;)
 
@@ -466,6 +478,18 @@ str_detect(x, &quot;^(?!cat).*$&quot;)
 <p>On <code>"cat"</code>, the next three characters are <code>"cat"</code>, so the lookahead fails and the match fails.</p>
 <p>On <code>"dog"</code>, the next characters are not <code>"cat"</code>. The lookahead succeeds, and <code>.*</code> takes the rest.</p>
 <p>On <code>"catalog"</code>, the string starts with <code>"cat"</code>. The extra letters do not save it. The lookahead fails.</p>
+<p><code>cat</code> not followed by <code>s</code>:</p>
+<pre><code class="language-r">str_extract(c(&quot;cat&quot;, &quot;cats&quot;, &quot;dog&quot;), &quot;cat(?!s)&quot;)
+</code></pre>
+<pre><code>[1] &quot;cat&quot; NA    NA
+</code></pre>
+<p><code>"cat"</code> is not followed by <code>s</code>, so the match is <code>"cat"</code>. <code>"cats"</code> is <code>cat</code> followed by <code>s</code>, so the lookahead fails. <code>"dog"</code> has no <code>cat</code>.</p>
+<p>Reject a string that contains <code>error</code> anywhere:</p>
+<pre><code class="language-r">str_detect(c(&quot;all good&quot;, &quot;an error here&quot;, &quot;no problem&quot;), &quot;^(?!.*error).*$&quot;)
+</code></pre>
+<pre><code>[1]  TRUE FALSE  TRUE
+</code></pre>
+<p><code>(?!.*error)</code> looks ahead for <code>error</code> and fails if it finds it. <code>.*</code> after the lookahead then matches the string that passed the check. <code>"an error here"</code> fails. The other two match.</p>
 <h2>11. Excluding a whole string or a substring</h2>
 <pre><code class="language-r">x &lt;- c(&quot;ab&quot;, &quot;bcs&quot;, &quot;abc&quot;, &quot;hello&quot;, &quot;xxabyy&quot;, &quot;dog&quot;)
 </code></pre>
@@ -738,7 +762,7 @@ str_detect(x, &quot;^(?!.*ab).*$&quot;)
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T07:35:00-04:00">October 28, 2026, 7:35 AM EDT</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-10-28T16:15:00-04:00">October 28, 2026, 4:15 PM EDT</time></div>
             </footer>
         </div>
 
