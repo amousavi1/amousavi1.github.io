@@ -1,5 +1,5 @@
 ---
-title: "12.1 Presentations from R Markdown"
+title: "12.1 qmd presentations"
 ---
 
 ```{r}
