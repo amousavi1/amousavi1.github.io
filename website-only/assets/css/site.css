@@ -556,9 +556,33 @@ body.page-courses a.course-card:hover .course-card__title {
   font-weight: 600;
 }
 
-.course-data th:first-child,
-.course-data td:first-child {
+/* Week numbers sit in the middle of the column. The "Week" heading stays left, like the other headings. */
+.course-meetings td:first-child {
+  text-align: center;
+}
+
+.course-meetings th:nth-child(2),
+.course-meetings td:nth-child(2) {
   width: 1%;
+  white-space: nowrap;
+  padding-right: 1.45em;
+}
+
+.course-resources {
+  table-layout: fixed;
+}
+
+.course-resources th,
+.course-resources td {
+  width: 50%;
+}
+
+.course-data th:first-child,
+.course-data td:first-child,
+.course-assessments th:first-child,
+.course-assessments td:first-child {
+  width: 1%;
+  min-width: 10.75em;
   white-space: nowrap;
   padding-right: 1.6em;
 }

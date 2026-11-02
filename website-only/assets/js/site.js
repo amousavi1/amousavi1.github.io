@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-10-29T16:56:00-04:00';
+  const SITE_LAST_UPDATED = '2026-11-01T19:15:00-05:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
