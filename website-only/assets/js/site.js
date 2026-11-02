@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-11-01T19:15:00-05:00';
+  const SITE_LAST_UPDATED = '2026-11-01T20:10:00-05:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -370,33 +370,91 @@
     headings.forEach((heading) => observer.observe(heading));
   }
 
-  const DATA_612_WEEKS = [
-    { n: 1, title: 'R, RStudio, and tidyverse basics' },
-    { n: 2, title: 'Pipes, functions, and scripts' },
-    { n: 3, title: 'ggplot2' },
-    { n: 4, title: 'dplyr: rows, columns, and groups' },
-    { n: 5, title: 'dplyr: rowwise, across, and case_when' },
-    { n: 6, title: 'readr and exploratory data analysis' },
-    { n: 7, title: 'tidyr' },
-    { n: 8, title: 'Joins and databases' },
-    { n: 9, title: 'Strings and regular expressions' },
-    { n: 10, title: 'Factors and dates' },
-    { n: 11, title: 'Statistics in R' },
-    { n: 12, title: 'R Markdown presentations' },
-    { n: 13, title: 'R Markdown: chunks, tables, and citations' },
-    { n: 14, title: 'Iteration, purrr, and wrap-up' },
-  ];
+  const COURSE_WEEKS = {
+    612: [
+      { n: 1, title: 'R, RStudio, and tidyverse basics' },
+      { n: 2, title: 'Pipes, functions, and scripts' },
+      { n: 3, title: 'ggplot2' },
+      { n: 4, title: 'dplyr: rows, columns, and groups' },
+      { n: 5, title: 'dplyr: rowwise, across, and case_when' },
+      { n: 6, title: 'readr and exploratory data analysis' },
+      { n: 7, title: 'tidyr' },
+      { n: 8, title: 'Joins and databases' },
+      { n: 9, title: 'Strings and regular expressions' },
+      { n: 10, title: 'Factors and dates' },
+      { n: 11, title: 'Statistics in R' },
+      { n: 12, title: 'qmd presentations' },
+      { n: 13, title: 'R Markdown: chunks, tables, and citations' },
+      { n: 14, title: 'Iteration, purrr, and wrap-up' },
+    ],
+    641: [
+      { n: 1, title: 'NLP in the real world and Python' },
+      { n: 2, title: 'Data acquisition and preprocessing' },
+      { n: 3, title: 'Feature engineering, modeling, and evaluation' },
+      { n: 4, title: 'Text representation' },
+      { n: 5, title: 'Deep learning and Word2Vec' },
+      { n: 6, title: 'Text classification' },
+      { n: 7, title: 'CNNs for text' },
+      { n: 8, title: 'Recurrent neural networks' },
+      { n: 9, title: 'Midterm review' },
+      { n: 10, title: 'Information extraction' },
+      { n: 11, title: 'Named entity recognition' },
+      { n: 12, title: 'Chatbots and dialog systems' },
+      { n: 13, title: 'SVD and topic modeling' },
+      { n: 14, title: 'LDA and NMF topic models' },
+      { n: 15, title: 'Summarization, translation, and recommenders' },
+    ],
+    642: [
+      { n: 1, title: 'Machine learning and vector calculus' },
+      { n: 2, title: 'Unconstrained optimization' },
+      { n: 3, title: 'Constrained optimization, LP, and QP' },
+      { n: 4, title: 'Sparsity-aware learning' },
+      { n: 5, title: 'Hilbert spaces, kernels, and SVMs' },
+      { n: 6, title: 'PCA' },
+      { n: 7, title: 'Multimodal learning, CCA, and IVA' },
+      { n: 8, title: 'Tensors' },
+      { n: 9, title: 'Midterm' },
+      { n: 10, title: 'Clustering' },
+      { n: 11, title: 'GMMs and anomaly detection' },
+      { n: 12, title: 'Perceptrons and multilayer nets' },
+      { n: 13, title: 'Training neural nets' },
+      { n: 14, title: 'Autoencoders and VAEs' },
+      { n: 15, title: 'GANs' },
+    ],
+    643: [
+      { n: 1, title: 'Neural networks and word embeddings' },
+      { n: 2, title: 'Sequence models: RNNs, LSTMs, and GRUs' },
+      { n: 3, title: 'Attention and transformers' },
+      { n: 4, title: 'Multimodal foundations and vision transformers' },
+      { n: 5, title: 'Vision–language models (CLIP and BLIP)' },
+      { n: 6, title: 'Audio and cross-modal integration' },
+      { n: 7, title: 'Scaling, efficiency, and deployment' },
+      { n: 8, title: 'SFT, continual learning, and adapters' },
+      { n: 9, title: 'RLHF and direct preference optimization' },
+      { n: 10, title: 'Safety, editing, and retrieval-augmented training' },
+      { n: 11, title: 'Generative models I: GANs' },
+      { n: 12, title: 'Generative models II: diffusion' },
+      { n: 13, title: 'Reasoning and chain-of-thought' },
+      { n: 14, title: 'Tools, RAG, and final presentations' },
+      { n: 15, title: 'Final exam and remaining talks' },
+    ],
+  };
 
-  function currentData612Week() {
-    const fromPath = window.location.pathname.match(/data-612-week-(\d+)/);
-    if (fromPath) return Number(fromPath[1]);
-    const meta = document.querySelector('.lecture-meta a[href*="data-612-week-"]');
+  function currentCourseWeek() {
+    const pattern = /data-(\d+)-week-(\d+)/;
+    const fromPath = window.location.pathname.match(pattern);
+    if (fromPath && COURSE_WEEKS[fromPath[1]]) {
+      return { course: fromPath[1], week: Number(fromPath[2]) };
+    }
+    const meta = document.querySelector('.lecture-meta a[href*="-week-"]');
     if (!meta) return null;
-    const fromMeta = (meta.getAttribute('href') || '').match(/data-612-week-(\d+)/);
-    return fromMeta ? Number(fromMeta[1]) : null;
+    const fromMeta = (meta.getAttribute('href') || '').match(pattern);
+    if (!fromMeta || !COURSE_WEEKS[fromMeta[1]]) return null;
+    return { course: fromMeta[1], week: Number(fromMeta[2]) };
   }
 
-  function buildData612WeekNav(currentWeek) {
+  function buildCourseWeekNav(courseWeek) {
+    const weeks = COURSE_WEEKS[courseWeek.course];
     const nav = document.createElement('nav');
     nav.className = 'page-toc__weeks';
     nav.setAttribute('aria-label', 'Weeks');
@@ -408,13 +466,13 @@
 
     const list = document.createElement('ul');
     list.className = 'page-toc__list';
-    DATA_612_WEEKS.forEach((week) => {
+    weeks.forEach((week) => {
       const item = document.createElement('li');
       const link = document.createElement('a');
-      link.href = `data-612-week-${week.n}.html`;
+      link.href = `data-${courseWeek.course}-week-${week.n}.html`;
       link.textContent = `Week ${week.n}`;
       link.title = week.title;
-      if (week.n === currentWeek) {
+      if (week.n === courseWeek.week) {
         link.classList.add('is-active');
         link.setAttribute('aria-current', 'page');
       }
@@ -425,21 +483,22 @@
     return nav;
   }
 
-  function initData612WeekJump(currentWeek) {
+  function initCourseWeekJump(courseWeek) {
     if (!document.body.classList.contains('page-week')) return;
     const content = document.querySelector('#main > .page .page__content');
     const meta = content && content.querySelector('.lecture-meta');
     if (!meta) return;
 
+    const weeks = COURSE_WEEKS[courseWeek.course];
     const nav = document.createElement('nav');
     nav.className = 'course-week-jump';
     nav.setAttribute('aria-label', 'Jump to week');
-    DATA_612_WEEKS.forEach((week) => {
+    weeks.forEach((week) => {
       const link = document.createElement('a');
-      link.href = `data-612-week-${week.n}.html`;
+      link.href = `data-${courseWeek.course}-week-${week.n}.html`;
       link.textContent = String(week.n);
       link.title = `Week ${week.n}: ${week.title}`;
-      if (week.n === currentWeek) {
+      if (week.n === courseWeek.week) {
         link.classList.add('is-active');
         link.setAttribute('aria-current', 'page');
       }
@@ -459,7 +518,7 @@
         ? 'h2'
         : 'h2, h3';
     const headings = Array.from(content.querySelectorAll(headingSelector));
-    const currentWeek = currentData612Week();
+    const courseWeek = currentCourseWeek();
     const aside = document.createElement('aside');
     aside.className = 'sidebar-right';
     aside.setAttribute('aria-label', 'On this page');
@@ -467,9 +526,9 @@
     const stack = document.createElement('div');
     stack.className = 'page-toc';
 
-    if (currentWeek) {
-      stack.appendChild(buildData612WeekNav(currentWeek));
-      initData612WeekJump(currentWeek);
+    if (courseWeek) {
+      stack.appendChild(buildCourseWeekNav(courseWeek));
+      initCourseWeekJump(courseWeek);
     }
 
     if (headings.length) {

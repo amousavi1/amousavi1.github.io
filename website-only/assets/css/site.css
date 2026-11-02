@@ -561,8 +561,8 @@ body.page-courses a.course-card:hover .course-card__title {
   text-align: center;
 }
 
-.course-meetings th:nth-child(2),
-.course-meetings td:nth-child(2) {
+.course-meetings.has-date th:nth-child(2),
+.course-meetings.has-date td:nth-child(2) {
   width: 1%;
   white-space: nowrap;
   padding-right: 1.45em;
