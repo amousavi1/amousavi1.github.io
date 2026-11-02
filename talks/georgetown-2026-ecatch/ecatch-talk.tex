@@ -10,7 +10,7 @@
 %   figure2_multimodal_fusion_architecture.pdf    = fusion heatmap
 %   figure2_multimodal_temporal_integration.pdf   = temporal line chart
 %
-% 34 frames. Target: a 45-minute seminar, with time left for questions.
+% 35 frames. Target: a 45-minute seminar, with time left for questions.
 
 \documentclass[aspectratio=169,11pt]{beamer}
 
@@ -123,7 +123,33 @@
 \setbeamercolor{background canvas}{bg=white}
 \setbeamercolor{normal text}{fg=ink,bg=white}
 
-% ----- 2. Problem -----
+% ----- 2. Definitions -----
+\begin{frame}{Misinformation and disinformation are different claims}
+  \textbf{Misinformation.} False or misleading information.
+  The definition does not require an intent to deceive.
+  \vspace{0.45em}
+
+  \textbf{Disinformation.} False information purposely spread to deceive.
+  Intent is part of the definition: the sharer knows the claim is false.
+  \vspace{0.35em}
+
+  {\small\color{muted}
+    Lazer, Baum, Benkler, et al., \emph{Science}, 2018.
+    Wardle and Derakhshan, Council of Europe, 2017, draw the same line.}
+  \vspace{0.7em}
+
+  \textbf{What E-CaTCH catches.}
+  The paper uses ``misinformation detection'' broadly for fake news, rumors, and manipulated media.
+  The label is about the content: real or fake, accurate or misleading.
+  A deliberate lie and an honest mistake receive the same label when the post is false.
+  The model never sees intent, so it does not separate disinformation from misinformation.
+  \note{Say the two definitions first, then the last sentence twice if needed.
+    We catch false or misleading content, including a picture that disagrees with the text.
+    We do not claim to know whether the author meant to deceive.
+    If asked about satire or opinion: those are not a separate class in these datasets.}
+\end{frame}
+
+% ----- 3. Problem -----
 \begin{frame}{The story is larger than one post}
   \begin{itemize}
     \item A caption can read as ordinary until the picture is attached.
@@ -159,7 +185,7 @@
   \end{enumerate}
   \vspace{0.55em}
   {\small\color{muted}
-    Plan for the hour: the vocabulary, the model, the three datasets, then the evidence.}
+    Plan for the hour: the two definitions, the vocabulary, the model, the three datasets, then the evidence.}
 \end{frame}
 
 % ----- 5. Post tuple -----
