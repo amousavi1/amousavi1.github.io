@@ -1,0 +1,2187 @@
+---
+title: "stringr: Lookarounds and Pipelines"
+subtitle: "Challenges, near-miss solutions, and the general rules"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    embed-resources: true
+execute:
+  echo: true
+  warning: false
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(stringr)
+library(knitr)
+
+show <- function(df) kable(df, row.names = FALSE)
+
+same    <- function(got, expected) isTRUE(all.equal(got, expected))
+verdict <- function(ok) ifelse(unname(ok), "pass", "FAIL")
+cell    <- function(x) ifelse(is.na(x), "NA", as.character(x))
+
+# Apply f to a character vector and compare element by element
+check_fn <- function(f, x, expected) {
+  got <- f(x)
+  stopifnot(length(got) == length(expected))
+  ok <- mapply(same, got, expected)
+  show(data.frame(
+    input    = cell(str_trunc(as.character(x), 36)),
+    expected = cell(expected),
+    got      = cell(got),
+    verdict  = verdict(ok)
+  ))
+}
+
+# Compare one object (a vector, a named vector, a string) with the expected one
+check_value <- function(got, expected) {
+  show(data.frame(
+    expected = paste(deparse(expected), collapse = " "),
+    got      = paste(deparse(got), collapse = " "),
+    verdict  = verdict(same(got, expected))
+  ))
+}
+
+check_detect <- function(pattern, x, expected)
+  check_fn(function(x) str_detect(x, pattern), x, expected)
+check_count <- function(pattern, x, expected)
+  check_fn(function(x) str_count(x, pattern), x, expected)
+
+# `replacement` may be a plain string OR a function. A function is called ONCE
+# with a character vector of ALL matches and must return a character vector of
+# the SAME length (stringr aborts otherwise). This helper catches that error so
+# a scalar-returning function is reported in the table instead of stopping the render.
+check_replace <- function(pattern, x, expected, replacement) {
+  got <- tryCatch(
+    str_replace_all(x, pattern, replacement),
+    error = function(e) {
+      rep(paste0("ERROR: ", gsub("\\s+", " ", conditionMessage(e))), length(x))
+    }
+  )
+  ok <- if (length(got) != length(expected)) {
+    rep(FALSE, length(expected))
+  } else {
+    mapply(same, got, expected)
+  }
+  show(data.frame(
+    input    = cell(x),
+    expected = cell(expected),
+    got      = cell(got),
+    verdict  = verdict(ok)
+  ))
+}
+
+# str_extract_all() on ONE string; matches are joined with ", "
+check_extract_all <- function(pattern, x, expected) {
+  hits <- str_extract_all(x, pattern)[[1]]
+  got  <- if (length(hits) == 0) "(nothing)" else paste(hits, collapse = ", ")
+  show(data.frame(
+    input    = x,
+    expected = expected,
+    got      = got,
+    verdict  = verdict(same(got, expected))
+  ))
+}
+
+# str_split_1(); pieces are shown joined with " ¦ "
+check_split <- function(pattern, x, expected) {
+  got <- lapply(x, function(s) str_split_1(s, pattern))
+  ok  <- mapply(function(a, b) identical(a, b), got, expected)
+  show(data.frame(
+    input    = x,
+    expected = vapply(expected, paste, "", collapse = " ¦ "),
+    got      = vapply(got, paste, "", collapse = " ¦ "),
+    verdict  = ifelse(ok, "pass", "FAIL")
+  ))
+}
+```
+
+DATA 412/612, [Week 9](data-612-week-9.html). Download the [Quarto source](files/lectures/stringr-challenges.qmd) and work the empty chunks in RStudio. This page runs the solutions.
+
+# How to use this document
+
+Two parts, one workbook.
+
+- **Part I, Lookarounds.** Checks that look at text without consuming it.
+- **Part II, From pattern to pipeline.** The rest of stringr: matching, counting, extracting, splitting, replacing, cleaning, assembling, and sorting. Challenge 13 reuses the numbers from Challenge 3.
+
+Each challenge has the same layout:
+
+1. **The task**, with test cases (the `expected` column is the truth).
+2. **Your turn**, an empty code chunk. Write your answer there and set `#| eval: false` to `true` to grade it.
+3. **Solution**, collapsed. Try the challenge before opening it.
+4. **Close, but wrong**, collapsed. Realistic near-misses, each run against the same tests, with an explanation of why it breaks.
+
+Part I ends with a general rule for building lookaround patterns. Part II ends with rules for choosing a function. Each part has its own pitfall checklist.
+
+::: {.callout-note}
+**Conventions.** In prose, patterns are written as the regex itself, for example `\d+`. In R code, backslashes are doubled, for example `"\\d+"`. Everything here uses stringr, which runs on the ICU regex engine. Requires stringr 1.5.0 or later (for `str_split_1()`, `str_flatten_comma()`, `str_escape()`).
+:::
+
+# Part I. Lookarounds
+
+## Warm-up: the four tools
+
+| Syntax | Name | Meaning |
+|---|---|---|
+| `(?=X)` | positive lookahead | X comes next |
+| `(?!X)` | negative lookahead | X does **not** come next |
+| `(?<=X)` | positive lookbehind | X comes right before |
+| `(?<!X)` | negative lookbehind | X does **not** come right before |
+
+Three facts drive every challenge in this part:
+
+- **Zero-width.** A lookaround checks the text but does not consume it. After it succeeds, the engine is still at the same position.
+- **Lookbehind needs a bounded length.** `(?<=a{1,3})` is fine; `(?<=a+)` and `(?<=a*)` are errors in ICU.
+- **Order matters only for consuming parts.** Stacked lookaheads at the same position are an unordered AND. Consuming patterns chained with `.*` are an ordered sequence.
+
+## Challenge 1: Password rules (unordered AND, plus a NOT)
+
+**Task.** Write one pattern for `str_detect()` that requires all of:
+
+- at least one digit and at least one uppercase letter, in any order
+- the word "password" does **not** appear, in any capitalization
+- length between 8 and 20 characters
+
+```{r}
+pw <- c("Abcdef12",                  # ok
+        "12345678Zq",                # ok, digits first
+        "abcdef12",                  # no uppercase
+        "MyPassword1",               # contains password
+        "PASSWORD123x",              # contains password, any case
+        "Pass1",                     # too short
+        paste0("A1", strrep("b", 20)))  # 22 characters, too long
+pw_expected <- c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_detect(my_pattern, pw, pw_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol1 <- "^(?=.{8,20}$)(?!.*(?i:password))(?=.*\\d)(?=.*[A-Z])"
+check_detect(sol1, pw, pw_expected)
+```
+
+Reading it as a checklist, all from position 0:
+
+- `(?=.{8,20}$)`: the whole string is 8 to 20 characters
+- `(?!.*(?i:password))`: "password" appears nowhere, in any case
+- `(?=.*\d)`: a digit appears somewhere
+- `(?=.*[A-Z])`: an uppercase letter appears somewhere
+
+There is no consuming part, because `str_detect()` only needs the match to succeed.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: the length lookahead has no `$`.**
+
+```{r}
+attempt1a <- "^(?=.{8,20})(?!.*(?i:password))(?=.*\\d)(?=.*[A-Z])"
+check_detect(attempt1a, pw, pw_expected)
+```
+
+`(?=.{8,20})` is satisfied as soon as the engine has seen 8 characters. It never checks that the string ends there, so a 22-character string passes. The upper bound only means something when `$` follows it: `(?=.{8,20}$)`.
+
+**Attempt B: a global `(?i)` flag.**
+
+```{r}
+attempt1b <- "(?i)^(?=.{8,20}$)(?!.*password)(?=.*\\d)(?=.*[A-Z])"
+check_detect(attempt1b, pw, pw_expected)
+```
+
+Case-insensitivity makes "password" detection work, but the flag applies to the **whole** pattern, so `[A-Z]` now also matches lowercase letters and `abcdef12` sneaks through. Scope the flag to the one part that needs it: `(?i:password)`.
+
+**Attempt C: case-sensitive "password".**
+
+```{r}
+attempt1c <- "^(?=.{8,20}$)(?!.*password)(?=.*\\d)(?=.*[A-Z])"
+check_detect(attempt1c, pw, pw_expected)
+```
+
+`password` (lowercase) does not match `Password` or `PASSWORD`, so the forbidden word slips through whenever someone capitalizes it.
+:::
+
+## Challenge 2: Standalone numbers
+
+**Task.** Use `str_extract_all()` to pull out numbers that are **not** attached to a letter or another digit on either side. For the string below, only `45` and `9` qualify.
+
+```{r}
+txt2 <- "abc123 45 x6 78y 9"
+expected2 <- "45, 9"
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_extract_all(my_pattern, txt2, expected2)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol2 <- "(?<![A-Za-z\\d])\\d+(?![A-Za-z\\d])"
+check_extract_all(sol2, txt2, expected2)
+```
+
+The lookbehind and lookahead both forbid a letter **or a digit** next to the number. Forbidding digits on both sides is what stops the engine from taking a piece of a longer number.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: lookahead only, letters only.**
+
+```{r}
+check_extract_all("\\d+(?![A-Za-z])", txt2, expected2)
+```
+
+Two bugs. With no lookbehind, `123` and `6` are extracted even though a letter sits in front of each. And for `78y`, `\d+` first tries `78`, sees the `y`, **backtracks** to `7`, and `7` is followed by `8`, which is not a letter, so `7` passes.
+
+**Attempt B: lookbehind forbids letters only.**
+
+```{r}
+check_extract_all("(?<![A-Za-z])\\d+(?![A-Za-z])", txt2, expected2)
+```
+
+In `abc123`, the engine rejects starting at `1` (a letter is before it), then happily starts at `2`, because a digit is not a letter. Hence `23`. The same backtracking trick as above produces `7`.
+
+**Attempt C: whitespace forbidden in the lookbehind.**
+
+```{r}
+check_extract_all("(?<![A-Za-z\\d\\s])\\d+(?![A-Za-z\\d])", txt2, expected2)
+```
+
+Adding `\s` to the lookbehind forbids a space before the number, but `45` and `9` are both preceded by a space. The pattern can no longer match the very things we want.
+
+**Attempt D: word boundaries.** This one is a near miss rather than an outright failure.
+
+```{r}
+check_extract_all("\\b\\d+\\b", txt2, expected2)
+```
+
+It passes here, but `\b` treats the underscore as a word character, so it behaves differently from the explicit version when numbers touch underscores:
+
+```{r}
+other <- "id_42 a-7 3.5"
+str_extract_all(other, "(?<![A-Za-z\\d])\\d+(?![A-Za-z\\d])")[[1]]  # explicit
+str_extract_all(other, "\\b\\d+\\b")[[1]]                           # word boundary
+```
+
+Whether `42` in `id_42` should count is a question about the specification. The explicit version lets you decide; `\b` decides for you.
+:::
+
+## Challenge 3: Thousands separators that leave decimals alone
+
+**Task.** Use `str_replace_all()` to insert commas into the **integer part** of a number, without touching digits after the decimal point. Challenge 13 solves the same task by consuming the decimal part instead of vetoing it.
+
+```{r}
+nums <- c("1234567.891234", "12345.6789", "1000", "999", "0.123456", "123456.123456")
+expected3 <- c("1,234,567.891234", "12,345.6789", "1,000", "999", "0.123456", "123,456.123456")
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here (the replacement is ",")
+check_replace(my_pattern, nums, expected3, ",")
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol3 <- "(?<=\\d)(?<!\\.\\d{0,20})(?=(\\d{3})+(?!\\d))"
+check_replace(sol3, nums, expected3, ",")
+```
+
+This pattern matches a **position**, not characters, so the replacement `","` is inserted there. A position gets a comma when all three conditions hold:
+
+- `(?<=\d)`: a digit is right before it (so no comma at the very start)
+- `(?=(\d{3})+(?!\d))`: from here to the end of the digit run, the number of digits is an exact multiple of 3
+- `(?<!\.\d{0,20})`: we are **not** inside a decimal part, meaning there is no `.` followed by up to 20 digits right before this position
+
+The third condition is the trick. A lookbehind cannot be unbounded, so `\d{0,20}` is a bounded stand-in for "any run of digits". It fails only for decimals longer than 20 digits.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: the classic pattern, with no decimal protection.**
+
+```{r}
+check_replace("(?<=\\d)(?=(\\d{3})+(?!\\d))", nums, expected3, ",")
+```
+
+This pattern is perfect for integers, but the decimal digits are also a run of digits, so `891234` becomes `891,234`.
+
+**Attempt B: anchoring the lookahead with `$`.**
+
+```{r}
+check_replace("(?<=\\d)(?=(\\d{3})+$)", nums, expected3, ",")
+```
+
+Now the integer part never gets commas when a decimal follows, since the lookahead needs the digits to run to the end of the string. The decimal part, on the other hand, still does.
+
+**Attempt C: unbounded lookbehind.**
+
+```{r}
+tryCatch(
+  str_replace_all(nums, "(?<=\\d)(?<!\\.\\d*)(?=(\\d{3})+(?!\\d))", ","),
+  error = function(e) cat(conditionMessage(e))
+)
+```
+
+The right idea (not preceded by a dot and some digits), but `\d*` has no upper bound, so ICU refuses to compile it.
+:::
+
+::: {.callout-note}
+In real code, `format(x, big.mark = ",")` or `scales::comma()` is usually the better tool. This challenge is about thinking in **positions**, which is a skill that transfers to harder problems.
+:::
+
+## Challenge 4: Repeated words (a backreference, not a lookaround)
+
+**Task.** Write a `str_detect()` pattern that finds the same **whole word** twice in a row, ignoring case.
+
+```{r}
+rw <- c("this is is a test", "The the cat", "no no no", "a  a",
+        "this is a test", "island is", "this his", "is island")
+expected4 <- c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_detect(my_pattern, rw, expected4)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol4 <- "(?i)\\b(\\w+)\\s+\\1\\b"
+check_detect(sol4, rw, expected4)
+```
+
+`(\w+)` captures a word, `\s+` is the gap, and `\1` demands **the same text again**. The `\b` at both ends makes the match whole-word only. A pattern like this one is why regex is more than lookarounds: a lookaround can test "is something here", but only a backreference can say "the same thing as before".
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: no word boundaries.**
+
+```{r}
+check_detect("(\\w+)\\s+\\1", rw, expected4)
+```
+
+Without `\b` the engine can start in the **middle** of a word. In `this is a test`, `\w+` can match the tail `is` of "this", then a space, then `is`. Several wrong TRUEs follow from that, and `The the` is missed because the match is case-sensitive.
+
+**Attempt B: leading boundary only.**
+
+```{r}
+check_detect("\\b(\\w+)\\s+\\1", rw, expected4)
+```
+
+Starting at a word boundary fixes the first problem, but nothing stops the repeated word from being only the **beginning** of a longer one: in `is island`, the second `is` is a prefix of `island`. The trailing `\b` is what closes that gap.
+
+**Attempt C: case-sensitive.**
+
+```{r}
+check_detect("\\b(\\w+)\\s+\\1\\b", rw, expected4)
+```
+
+Structurally right, but `The the` fails. The fix is the `(?i)` flag; ICU applies it to the backreference as well.
+:::
+
+## Challenge 5: "ERROR" with no "IGNORE" before it
+
+**Task.** Write a `str_detect()` pattern that is TRUE when the string contains `ERROR` and there is an `ERROR` with **no `IGNORE` anywhere before it**. An `IGNORE` *after* the `ERROR` is irrelevant.
+
+```{r}
+lg <- c("ERROR disk full",
+        "ERROR then IGNORE",
+        "an ERROR then IGNORE ERROR",     # first ERROR has no IGNORE before it
+        "IGNORE ERROR",
+        "IGNORE x ERROR ERROR",
+        "all good",
+        paste0("IGNORE ", strrep("x", 60), " ERROR"))   # IGNORE far before ERROR
+expected5 <- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_detect(my_pattern, lg, expected5)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol5 <- "^(?:(?!IGNORE).)*ERROR"
+check_detect(sol5, lg, expected5)
+```
+
+The key observation: *some* `ERROR` has no `IGNORE` before it **if and only if** the *first* `ERROR` has none. So we scan from the start, one character at a time, refusing to step onto the start of `IGNORE`, and stop successfully when `ERROR` appears. This construction, `(?:(?!X).)*`, is often called a *tempered scan*: it consumes anything *except* X.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: the "negated chain" trap.**
+
+```{r}
+check_detect("^(?!.*IGNORE.*ERROR).*ERROR", lg, expected5)
+```
+
+`(?!.*IGNORE.*ERROR)` means "there is **no** IGNORE followed by an ERROR **anywhere**". That is much stronger than we need: in `an ERROR then IGNORE ERROR` the *second* ERROR has an IGNORE before it, which poisons the whole string, even though the first ERROR is perfectly clean.
+
+**Attempt B: forbidding IGNORE anywhere.**
+
+```{r}
+check_detect("^(?!.*IGNORE).*ERROR", lg, expected5)
+```
+
+Even stronger, and wronger: any `IGNORE` anywhere kills the match, including ones that come after the `ERROR`.
+
+**Attempt C: bounded lookbehind.**
+
+```{r}
+check_detect("(?<!IGNORE.{0,50})ERROR", lg, expected5)
+```
+
+This passes everything except the last case. A lookbehind must have a bounded length, so `{0,50}` can only see 50 characters back. When `IGNORE` is further away, the lookbehind misses it. The unbounded form `(?<!IGNORE.*)` would be exactly what we want, but ICU rejects it.
+:::
+
+## Challenge 6: Ordered chain plus a length check
+
+**Task.** Write a `str_detect()` pattern that is TRUE when the string has a digit, **then later** an uppercase letter, **then later** a lowercase letter, and is at least 8 characters long.
+
+```{r}
+oc <- c("1Aa56789",     # digit, upper, lower, 8 chars
+        "ab1cdE2fg",    # digit, upper, lower, 9 chars
+        "Abc12345",     # right ingredients, wrong order
+        "abcdEFG1",     # digit comes last, 8 chars
+        "9Xy",          # right order, too short
+        "1A")           # no lowercase after, too short
+expected6 <- c(TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_detect(my_pattern, oc, expected6)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol6 <- "^(?=.{8,}$).*\\d.*[A-Z].*[a-z]"
+check_detect(sol6, oc, expected6)
+```
+
+Length does not depend on order, so it gets a **lookahead**. The ordered requirement uses **consuming** `.*` between the three pieces, so each one must come after the previous one. No `$` is needed at the end, since once the lowercase letter is found the rest of the string does not matter.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: all lookaheads (unordered).**
+
+```{r}
+check_detect("^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$", oc, expected6)
+```
+
+Every lookahead restarts from position 0, so this only checks that a digit, an uppercase and a lowercase exist *somewhere*. `Abc12345` has all three, in the wrong order.
+
+**Attempt B: forgetting the leading `.*`.**
+
+```{r}
+check_detect("^(?=.{8,}$)\\d.*[A-Z].*[a-z]", oc, expected6)
+```
+
+After `^(?=...)`, the engine is still at position 0, so `\d` must match the **first character**. `ab1cdE2fg` fails because it starts with a letter. The leading `.*` lets the digit appear anywhere.
+:::
+
+## Challenge 7: Splitting camelCase (inserting at positions)
+
+**Task.** Use `str_replace_all()` with a single pattern and the replacement `" "` (a space) to split camelCase into words, including runs of capitals like `HTML`.
+
+```{r}
+cc <- c("camelCaseString", "HTMLParser", "parseHTMLString", "simple")
+expected7 <- c("camel Case String", "HTML Parser", "parse HTML String", "simple")
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here (the replacement is " ")
+check_replace(my_pattern, cc, expected7, " ")
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol7 <- "(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])"
+check_replace(sol7, cc, expected7, " ")
+```
+
+Both halves of the `|` are pure positions:
+
+- `(?<=[a-z])(?=[A-Z])`: between a lowercase letter and an uppercase letter (`camel|Case`)
+- `(?<=[A-Z])(?=[A-Z][a-z])`: between two capitals when the second one starts a normal word (`HTML|Parser`: the `P` is followed by `a`)
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: only the lowercase-to-uppercase case.**
+
+```{r}
+check_replace("(?<=[a-z])(?=[A-Z])", cc, expected7, " ")
+```
+
+Fine for plain camelCase, but `HTMLParser` has no lowercase-to-uppercase transition at all, so nothing is inserted.
+
+**Attempt B: split before every capital.**
+
+```{r}
+check_replace("(?=[A-Z])", cc, expected7, " ")
+```
+
+This shatters `HTML` into `H T M L`, because every capital is a valid split point. Position matching is powerful, so state the conditions as tightly as the problem needs.
+:::
+
+## Challenge 8: Username validation (rules from every direction)
+
+**Task.** Write a `str_detect()` pattern for a valid username. All of these must hold:
+
+- 3 to 12 characters long
+- only ASCII letters, digits, and underscores
+- starts with a letter
+- does not end with an underscore
+- no two underscores in a row
+
+```{r}
+users <- c("john_doe", "User123", "abc", "abcdefghijkl",   # valid (3 and 12 characters)
+           "_john", "9lives",                              # bad first character
+           "john_",                                        # ends with underscore
+           "jo__hn",                                       # double underscore
+           "jo", "abcdefghijklm", "a_b_c_d_e_f_g_h",       # too short / too long
+           "bob-1", "user 1", "josé")                      # forbidden characters
+users_expected <- c(TRUE, TRUE, TRUE, TRUE,
+                    FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_detect(my_pattern, users, users_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol8 <- "^(?=.{3,12}$)(?!.*__)[A-Za-z][A-Za-z0-9_]*(?<!_)$"
+check_detect(sol8, users, users_expected)
+```
+
+The rules split naturally into two kinds:
+
+- **Whole-string conditions** become lookaheads from the start: the length `(?=.{3,12}$)` and the ban on `__` `(?!.*__)`.
+- **The shape of the string** is the consuming part: one starting letter `[A-Za-z]`, then any allowed characters `[A-Za-z0-9_]*`.
+
+The one rule that depends on the *end* of the string, "does not end with an underscore", is a **negative lookbehind** placed just before `$`: `(?<!_)$` means "the character just before the end is not an underscore".
+
+An equally valid version uses a negative lookahead instead:
+
+```{r}
+check_detect("^(?=.{3,12}$)(?!.*__)(?!.*_$)[A-Za-z][A-Za-z0-9_]*$", users, users_expected)
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: the length lookahead has no `$`.**
+
+```{r}
+check_detect("^(?=.{3,12})(?!.*__)[A-Za-z][A-Za-z0-9_]*(?<!_)$", users, users_expected)
+```
+
+The familiar bug from Challenge 1. The closing `$` at the end of the pattern anchors the *consuming* part, but the lookahead `(?=.{3,12})` only checks that a 3-to-12 character prefix exists, so strings longer than 12 slip through.
+
+**Attempt B: `\w` instead of an explicit class.**
+
+```{r}
+check_detect("^(?=.{3,12}$)(?!.*__)[A-Za-z]\\w*(?<!_)$", users, users_expected)
+```
+
+`\w` is not "letters, digits, underscore" in the ASCII sense: in ICU it also matches accented and non-Latin letters, so `josé` is accepted. When the rule says ASCII, spell the class out. (This demonstration needs a UTF-8 session; Quarto uses one by default, but an old R installation that reads the file in another encoding will not show the failure.)
+
+**Attempt C: forgetting the first-character rule.**
+
+```{r}
+check_detect("^(?=.{3,12}$)(?!.*__)[A-Za-z0-9_]+(?<!_)$", users, users_expected)
+```
+
+With one class for every position, a leading underscore or digit is fine. The rule "starts with a letter" needs its own, separate character at the front.
+
+**Attempt D: forgetting the trailing-underscore rule.**
+
+```{r}
+check_detect("^(?=.{3,12}$)(?!.*__)[A-Za-z][A-Za-z0-9_]*$", users, users_expected)
+```
+
+`john_` passes because `[A-Za-z0-9_]*` allows an underscore in the last position. Rules about the *end* need either `(?<!_)$` or `(?!.*_$)`.
+:::
+
+## Challenge 9: The number after a label (bounded lookbehind)
+
+**Task.** Extract every number that follows `total:`, allowing up to 3 spaces after the colon, **without** including the label in the result. A `subtotal:` does not count.
+
+```{r}
+label_txt <- "total: 1234 and subtotal: 9 and total:   5 and total:42"
+expected9 <- "1234, 5, 42"
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_extract_all(my_pattern, label_txt, expected9)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol9 <- "(?<=\\btotal:\\s{0,3})\\d+"
+check_extract_all(sol9, label_txt, expected9)
+```
+
+A lookbehind checks the label without including it in the result. Three details make it work:
+
+- `\s{0,3}` lets the spacing vary but is **bounded**, which ICU requires inside a lookbehind.
+- `\b` before `total` stops `subtotal:` from matching: there is no word boundary between `b` and `t` in `subtotal`.
+- `\d+` is the only consuming part, so only the number is returned.
+
+A capture group gets the same answer when the label's spacing is unbounded:
+
+```{r}
+# column 2 of the match matrix holds the captured number
+str_match_all(label_txt, "\\btotal:\\s*(\\d+)")[[1]][, 2]
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: no `\b`.**
+
+```{r}
+check_extract_all("(?<=total:\\s{0,3})\\d+", label_txt, expected9)
+```
+
+`subtotal: 9` contains the text `total: `, so its number is extracted too. A label with no boundary matches inside longer words.
+
+**Attempt B: a single fixed space.**
+
+```{r}
+check_extract_all("(?<=total: )\\d+", label_txt, expected9)
+```
+
+Fixed text in a lookbehind is exact. `total:   5` has three spaces and `total:42` has none, so both are missed, while `subtotal: 9` is wrongly included.
+
+**Attempt C: unbounded `\s*`.**
+
+```{r}
+tryCatch(
+  str_extract_all(label_txt, "(?<=\\btotal:\\s*)\\d+"),
+  error = function(e) cat(conditionMessage(e))
+)
+```
+
+The natural way to write it, and ICU rejects it: the lookbehind must have a **bounded maximum length**. `\s{0,3}` is the workaround, at the cost of failing on 4 or more spaces.
+
+**Attempt D: no lookbehind.**
+
+```{r}
+check_extract_all("\\btotal:\\s*\\d+", label_txt, expected9)
+```
+
+This finds the right places, but the label is part of the match, so the result contains `total: 1234` instead of `1234`. Lookarounds exist precisely so that the context can be required without being returned.
+:::
+
+## Challenge 10: Splitting on commas outside parentheses
+
+**Task.** Use `str_split_1()` to split a string on commas, but **not** on commas inside parentheses. Parentheses are not nested.
+
+```{r}
+cs <- c("a,b,c",
+        "a,f(b,c),d",
+        "f(1,2),g(3,4)",
+        "x(1,2),(3,4),y",
+        "f(a,b,c)",
+        "no commas")
+cs_expected <- list(c("a", "b", "c"),
+                    c("a", "f(b,c)", "d"),
+                    c("f(1,2)", "g(3,4)"),
+                    c("x(1,2)", "(3,4)", "y"),
+                    "f(a,b,c)",
+                    "no commas")
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write the pattern for the separator
+check_split(my_pattern, cs, cs_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol10 <- ",(?![^(]*\\))"
+check_split(sol10, cs, cs_expected)
+```
+
+The pattern matches a comma that is **not** followed by `[^(]*\)`. Read the lookahead as: "from here, skip any characters that are not `(`, then see a `)`". If that is true, we are inside parentheses: a `)` shows up before any new `(` opens. A comma outside parentheses is followed either by a `(` first, or by no `)` at all, so the lookahead fails and the comma is a real separator.
+
+The key is `[^(]*` rather than `.*`. It **limits how far ahead** the lookahead is allowed to look.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: a plain comma.**
+
+```{r}
+check_split(",", cs, cs_expected)
+```
+
+Every comma is a separator, including those inside parentheses.
+
+**Attempt B: `.*` inside the lookahead.**
+
+```{r}
+check_split(",(?!.*\\))", cs, cs_expected)
+```
+
+`(?!.*\))` means "no `)` anywhere later in the string". Any closing parenthesis later in the text, even one belonging to a different group, makes every earlier comma look like it is inside parentheses. Scoping matters: `[^(]*` stops at the next `(`, `.*` never stops.
+
+**Attempt C: the reversed scope.**
+
+```{r}
+check_split(",(?![^)]*\\()", cs, cs_expected)
+```
+
+This asks "is a `(` coming before the next `)`?", which is true for a comma *before* a group, not inside one. It protects commas that should be split and splits those that should be protected.
+:::
+
+::: {.callout-note}
+**A known limit.** This pattern does not handle **nested** parentheses. Regular expressions cannot count matching pairs:
+
+```{r}
+str_split_1("f(a,g(b)),c", sol10)   # should be "f(a,g(b))" and "c"
+```
+
+The comma after `a` is followed by `g(`, so the lookahead sees a `(` first and decides the comma is outside. For arbitrarily nested input, use a real parser.
+:::
+
+## Avoiding an unwanted region
+
+Several challenges above share one idea: some matches are fine and others must be avoided **because of where they sit**. The decimal digits in Challenge 3, the commas inside parentheses in Challenge 10, and the `ERROR` that follows an `IGNORE` in Challenge 5 are all examples. This part names that idea, lists a technique for each kind of region, and then practises the two techniques the earlier challenges did not use.
+
+### The idea
+
+Think of every position in the string as an **address**. Some addresses are off limits: "after the decimal point", "inside the parentheses", "after the word IGNORE". Avoiding an address means checking, at each candidate spot, whether it is in that region, and refusing the match if it is.
+
+The recipe has four steps:
+
+1. **Name the unwanted region** precisely: "digits after a dot", "anything inside quotes".
+2. **Find its landmark:** the marker that tells you that you are inside, such as `.`, `(`, `"`, or the word `IGNORE`.
+3. **Locate the landmark relative to the candidate spot:** right next to it, somewhere before it, or somewhere after it?
+4. **Look in that direction and negate.** Write "the landmark is there", then put `!` on it: `(?<!...)` to look back, `(?!...)` to look ahead.
+
+When the region has no tidy landmark, flip the approach: **match the unwanted region itself first**, so the engine swallows it and moves on.
+
+| The unwanted region is... | Technique | Template | Example |
+|---|---|---|---|
+| right next to the spot | plain negative lookaround | `(?<!A)X(?!B)` | `(?<!black )cat(?!s)` skips "black cat" and "cats" |
+| after a marker, within N characters | bounded lookbehind | `(?<!MARKER.{0,N})` | `\d(?<!\.\d{0,20})` skips decimal digits (Challenge 3) |
+| after a marker, any distance | tempered scan from `^` | `^(?:(?!MARKER).)*X` | `^(?:(?!IGNORE).)*ERROR` (Challenge 5) |
+| inside brackets | scoped lookahead | `X(?![^(]*\))` | `,(?![^(]*\))` (Challenge 10) |
+| inside quotes | parity lookahead | `X(?=(?:[^"]*"[^"]*")*[^"]*$)` | Challenge 11 |
+| anything easy to match as a whole | consume it first | `REGION\|X` with a function | Challenges 12 and 13 |
+
+The first four rows are **vetoes**: the match is attempted everywhere and refused in the wrong places. The last row is **consumption**: the unwanted region is matched on purpose, so it can never be mistaken for a wanted match.
+
+## Challenge 11: Commas outside quotes (a parity check)
+
+**Task.** Use `str_split_1()` to split on commas that are **not** inside double quotes. Quotes are balanced and are never escaped.
+
+```{r}
+qs <- c('a,"b,c",d',
+        'x,y',
+        '"p,q"',
+        'a,"b,c","d,e,f",g',
+        'one')
+qs_expected <- list(c('a', '"b,c"', 'd'),
+                    c('x', 'y'),
+                    '"p,q"',
+                    c('a', '"b,c"', '"d,e,f"', 'g'),
+                    'one')
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write the pattern for the separator
+check_split(my_pattern, qs, qs_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol11 <- ',(?=(?:[^"]*"[^"]*")*[^"]*$)'
+check_split(sol11, qs, qs_expected)
+```
+
+There is no closing landmark to look for, so use **counting**. A comma is outside quotes exactly when an **even** number of quotes remains to its right. The lookahead says so:
+
+- `(?:[^"]*"[^"]*")*` is "zero or more **complete pairs** of quotes", with any non-quote text around them.
+- `[^"]*$` is "then only non-quote text until the end of the string".
+
+Inside a quoted section, an odd number of quotes remains. The pairs cannot use them all up, so the lookahead cannot reach `$` and fails, and that comma is not a separator.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: a plain comma.**
+
+```{r}
+check_split(",", qs, qs_expected)
+```
+
+**Attempt B: "no quote ahead".**
+
+```{r}
+check_split(',(?=[^"]*$)', qs, qs_expected)
+```
+
+This only allows a split when **no quote at all** follows. That is true after the *last* quote, so everything before it stays glued together.
+
+**Attempt C: parity without the `$`.**
+
+```{r}
+check_split(',(?=(?:[^"]*"[^"]*")*[^"]*)', qs, qs_expected)
+```
+
+It behaves exactly like a plain comma. Without `$`, the lookahead can succeed by matching **zero pairs** and then stopping anywhere, so it never actually checks the count. Counting only works when the check has to reach the end of the string.
+:::
+
+::: {.callout-note}
+**A known limit.** The parity trick assumes balanced quotes with no escaped quotes (`\"`) inside. For real CSV files, use a CSV reader instead.
+:::
+
+## Challenge 12: Replace outside quotes (consume first)
+
+**Task.** Replace the whole word `cat` with `dog`, except inside double quotes. Use `str_replace_all()`; the replacement may be a function.
+
+::: {.callout-important}
+**How a function replacement works in stringr.** `str_replace_all()` does **not** call your function once per match. It calls it **once**, passing a character vector of **all** the matches, and it expects a character vector of the **same length** back. So the function must be *vectorized*:
+
+- use `ifelse()` (or `dplyr::if_else()`), never a scalar `if (...) ... else ...`
+- never return a single fixed value such as `"dog"`; use `rep("dog", length(m))` instead
+
+Breaking this rule aborts with: *`replacement` function must return a vector the same length as the input*.
+:::
+
+```{r}
+ss <- c('cat "cat" cat',
+        'a cat sat',
+        '"cat" only',
+        'concatenate cat',
+        '"a cat here" cat "another cat"')
+ss_expected <- c('dog "cat" dog',
+                 'a dog sat',
+                 '"cat" only',
+                 'concatenate dog',
+                 '"a cat here" dog "another cat"')
+```
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""
+my_replacement <- function(m) m   # write the replacement logic here (vectorized!)
+check_replace(my_pattern, ss, ss_expected, my_replacement)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+keep_or_dog <- function(m) ifelse(str_starts(m, '"'), m, "dog")
+check_replace('"[^"]*"|\\bcat\\b', ss, ss_expected, keep_or_dog)
+```
+
+The pattern has two branches:
+
+- `"[^"]*"` matches a whole quoted section. The engine consumes it, so any `cat` inside it is never seen as a separate match.
+- `\bcat\b` matches the word outside quotes.
+
+The function then looks at **which branch matched**: a match starting with `"` is returned unchanged, and anything else becomes `dog`. Because `ifelse()` works on the whole vector of matches at once, it returns one answer per match, which is exactly what stringr requires. The same answer can also be reached with a veto, using the parity lookahead from Challenge 11, which needs no function at all:
+
+```{r}
+check_replace('\\bcat\\b(?=(?:[^"]*"[^"]*")*[^"]*$)', ss, ss_expected, "dog")
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: no protection and no word boundary.**
+
+```{r}
+check_replace("cat", ss, ss_expected, "dog")
+```
+
+`cat` is replaced inside quotes, and inside `concatenate`, which becomes `condogenate`.
+
+**Attempt B: a function that always answers `dog`.**
+
+```{r}
+always_dog <- function(m) rep("dog", length(m))   # one "dog" per match
+check_replace('"[^"]*"|\\bcat\\b', ss, ss_expected, always_dog)
+```
+
+The quoted section was matched correctly, but the replacement never checks which branch matched, so the whole quoted section is replaced by `dog`. Consuming the region is only half the technique; the function must hand it back unchanged.
+
+Note the `rep("dog", length(m))`. The shorter-looking `function(m) "dog"` returns a single value for all the matches, and stringr refuses it:
+
+```{r}
+tryCatch(
+  str_replace_all(ss, '"[^"]*"|\\bcat\\b', function(m) "dog"),
+  error = function(e) cat(conditionMessage(e))
+)
+```
+
+**Attempt C: greedy `".*"`.**
+
+```{r}
+check_replace('".*"|\\bcat\\b', ss, ss_expected, keep_or_dog)
+```
+
+Greedy `.*` runs from the first quote to the **last** quote. In the final row, the unquoted `cat` between two quoted sections is swallowed as if it were inside quotes. Use `[^"]*` to stop at the next quote.
+
+**Attempt D: a scalar `if` inside the function.**
+
+```{r}
+scalar_if <- function(m) {
+  if (str_starts(m, '"')) m else "dog"   # only looks at ONE value
+}
+tryCatch(
+  check_replace('"[^"]*"|\\bcat\\b', ss, ss_expected, scalar_if),
+  error = function(e) cat(conditionMessage(e))
+)
+```
+
+`if` needs a single `TRUE` or `FALSE`, but `m` holds every match at once. Depending on your R version this is an error or a silent use of only the first match. The vectorized `ifelse()` is the fix.
+:::
+
+## Challenge 13: Thousands separators again (consume first)
+
+**Task.** This is Challenge 3 with a different technique: add commas to the integer part of each number, leave the decimals alone, and do **not** use a lookbehind to guard the decimals. Reuse `nums` and `expected3` from Challenge 3. Remember that a function replacement must return one value per match (see Challenge 12).
+
+### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""
+my_replacement <- function(m) m   # write the replacement logic here (vectorized!)
+check_replace(my_pattern, nums, expected3, my_replacement)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+add_commas <- function(m) {
+  ifelse(str_starts(m, fixed(".")), m,
+         str_replace_all(m, "(?<=\\d)(?=(\\d{3})+$)", ","))
+}
+check_replace("\\.\\d+|\\d+", nums, expected3, add_commas)
+```
+
+Two branches again:
+
+- `\.\d+` matches the **decimal part** (a dot and its digits) and hands it back unchanged.
+- `\d+` matches a run of digits that is **not** after a dot, which is the integer part.
+
+Inside the function, the classic comma pattern is now safe, because it only ever sees a pure run of digits. That is why it can use `$` and needs no decimal guard. Both `ifelse()` and `str_replace_all()` are vectorized, so the function returns one value per match. Compare this with Challenge 3: the result is the same, but the decimal part was handled by **consuming** it rather than **vetoing** commas inside it.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: no decimal branch.**
+
+```{r}
+check_replace("\\d+", nums, expected3, function(m) str_replace_all(m, "(?<=\\d)(?=(\\d{3})+$)", ","))
+```
+
+Without a branch that swallows the decimals, the digits after the dot are just another run of digits and get commas.
+
+**Attempt B: `str_starts()` with a bare `.`.**
+
+```{r}
+wrong_dot <- function(m) {
+  ifelse(str_starts(m, "."), m, str_replace_all(m, "(?<=\\d)(?=(\\d{3})+$)", ","))
+}
+check_replace("\\.\\d+|\\d+", nums, expected3, wrong_dot)
+```
+
+The pattern argument of `str_starts()` is a regex too, and `.` matches **any** character. Every token "starts with a dot", so the function returns everything unchanged and nothing is formatted. Use `fixed(".")` or `"\\."`.
+
+**Attempt C: the whole number as one token.**
+
+```{r}
+whole_dot <- function(m) {
+  ifelse(str_starts(m, fixed(".")), m, str_replace_all(m, "(?<=\\d)(?=(\\d{3})+$)", ","))
+}
+check_replace("\\d+\\.?\\d*", nums, expected3, whole_dot)
+```
+
+Here the unwanted region is not separated out. The token `1234567.891234` is one match that does not start with a dot, so the function treats it as a single digit run and the `$` rule counts from the **end of the decimals**. Always give the region its own branch.
+:::
+
+::: {.callout-note}
+**Veto or consume?** Use a veto (lookaround) when the region has a clean landmark and a bounded reach, such as "right after this character". Use consumption when the region is easy to match as a whole (a quoted string, a decimal part, a comment), or when lookbehind's length limit gets in the way.
+:::
+
+## The general rule for lookarounds
+
+Almost every challenge above falls into one of a handful of families. Decide which family you are in first; the pattern follows from that.
+
+| If the English says... | Use | Shape |
+|---|---|---|
+| "contains X somewhere" (unordered) | lookahead from the start | `^(?=.*X)` |
+| "contains X and Y and Z" (unordered) | stacked lookaheads | `^(?=.*X)(?=.*Y)(?=.*Z)` |
+| "does not contain X anywhere" | negative lookahead | `^(?!.*X)` |
+| "length between a and b" | lookahead with `$` | `^(?=.{a,b}$)` |
+| "X, then later Y" (ordered) | consuming chain | `.*X.*Y` |
+| "same thing twice" | backreference | `(\w+)\s+\1` |
+| "insert / split / only at a certain spot" | zero-width lookarounds | `(?<=A)(?=B)` |
+| "no X before the first Y" | tempered scan | `^(?:(?!X).)*Y` |
+| "X right after a label, without the label" | lookbehind (bounded) | `(?<=label\s{0,3})X` |
+| "the string must not end with X" | negative lookbehind or lookahead | `(?<!X)$` or `(?!.*X$)` |
+| "X, but not inside (...)" | negative lookahead, scoped | `X(?![^(]*\))` |
+| "X, but not inside quotes" | parity lookahead | `X(?=(?:[^"]*"[^"]*")*[^"]*$)` |
+| "X, but not inside an easy-to-match region" | consume it first, then a vectorized function | `REGION\|X` |
+
+### The recipe
+
+For checking whole strings with `str_detect()`:
+
+```
+^ (?=.*MUST1) (?=.*MUST2) ... (?!.*FORBID1) ... [ordered chain, if any]
+```
+
+| Piece | Reads as |
+|---|---|
+| `^` | start at position 0, so every check runs from the same place |
+| `(?=.*X)` | X appears somewhere |
+| `(?!.*X)` | X appears nowhere |
+| `(?=.{min,max}$)` | total length is between min and max |
+| `.*A.*B` (consuming) | A appears, and B appears later |
+
+**Worked example.** "Contains `cat` and `dog` in any order, no `bird`, at most 20 characters":
+
+```{r}
+animals <- c("cat and dog", "dog, cat", "cat only", "cat dog bird",
+             "cat and dog and a very long tail")
+animals_expected <- c(TRUE, TRUE, FALSE, FALSE, FALSE)
+
+rule_demo <- "^(?=.{1,20}$)(?=.*cat)(?=.*dog)(?!.*bird)"
+check_detect(rule_demo, animals, animals_expected)
+```
+
+Each requirement became one lookahead, and the `^` made them all start at the same place.
+
+### Why the `^` matters
+
+Without the anchor, the engine tries the pattern at **every** starting position. A *positive* lookahead is safe (if it succeeds later, it also succeeds at position 0, because the rest of the string is a subset of the whole string). A *negative* lookahead is not: it can succeed late in the string, after the forbidden word has already gone past.
+
+```{r}
+str_detect("cat bird", "(?!.*bird)")      # TRUE: succeeds at the very end of the string
+str_detect("cat bird", "^(?!.*bird)")     # FALSE: the anchored version is correct
+```
+
+## Lookaround pitfall checklist
+
+Before trusting a pattern, run through this list.
+
+1. **Anchored?** Start with `^` so the zero-width checks all run from position 0.
+2. **Length bounded on both sides?** `{8,20}` needs `$` after it to mean "at most 20".
+3. **Flag scope?** A global `(?i)` also affects `[A-Z]`. Use `(?i:...)` for only the part that needs it.
+4. **Lookbehind bounded?** `*` and `+` inside a lookbehind are errors; `{0,n}` works but has a blind spot beyond n.
+5. **Backtracking?** `\d+(?!x)` can shrink to a shorter match to satisfy the lookahead. Fence both sides with the same character class.
+6. **Ordered or unordered?** Lookaheads stacked at one position are unordered. If order matters, use consuming `.*`.
+7. **Negation direction?** `(?!.*A.*B)` means "no A is *ever* followed by B", which is stronger than "this B has no A before it".
+8. **Scoped lookahead?** `.*` inside a lookahead looks all the way to the end of the string. To confine a check to one word or one group, use a class that stops at the boundary: `\w*` for a word, `[^(]*` for "before the next parenthesis".
+9. **Test the boundaries.** Include inputs that are just inside and just outside every rule: too short, too long, wrong order, wrong case, the forbidden word at the very end.
+10. **Do your delimiters behave?** The bracket and quote techniques assume balanced, non-nested pairs and no escaped quotes. When the input breaks that, switch to a parser.
+11. **Did the function check which branch matched?** With a `REGION|X` pattern and a function replacement, the function must hand the region back unchanged, and `str_starts()` or `str_detect()` inside it needs `fixed()` or an escaped dot.
+12. **Is the replacement function vectorized?** `str_replace_all()` calls a function replacement **once** with all the matches and needs a vector of the **same length** back. Use `ifelse()` and `rep(value, length(m))`; a bare `"dog"` or a scalar `if` breaks it.
+
+## Extra practice: lookarounds
+
+Short problems with the solution hidden. As before, write a pattern first.
+
+### Words containing all five vowels
+
+Extract every word that contains **all five vowels** (`a`, `e`, `i`, `o`, `u`), in any order.
+
+```{r}
+vtxt <- "education is a key; sequoia is not a cat; the facetious dog barks."
+vexpected <- "education, sequoia, facetious"
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol_vowels <- "\\b(?=\\w*a)(?=\\w*e)(?=\\w*i)(?=\\w*o)(?=\\w*u)\\w+"
+check_extract_all(sol_vowels, vtxt, vexpected)
+```
+
+This is the unordered-AND recipe from the general rule, applied **inside one word**: `\b` starts at a word boundary, five stacked lookaheads each check for one vowel, and `\w+` returns the word. The lookaheads use `\w*` rather than `.*` so they cannot look past the end of the word. Two near-misses:
+
+```{r}
+# .* looks ahead through the rest of the whole string, not just this word
+check_extract_all("\\b(?=.*a)(?=.*e)(?=.*i)(?=.*o)(?=.*u)\\w+", vtxt, vexpected)
+
+# a consuming chain requires the vowels in the order a, e, i, o, u
+check_extract_all("\\b\\w*a\\w*e\\w*i\\w*o\\w*u\\w*", vtxt, vexpected)
+```
+
+With `.*`, every word that has the five vowels *somewhere later in the text* qualifies, which is nearly all of them. The chain keeps only `facetious`, the one word whose vowels happen to appear in alphabetical order.
+:::
+
+### Write your own {.unnumbered}
+
+Pick a rule from something you work with (file names, IDs, log lines, dates, survey responses). State it in plain English, classify each part with the table in the general rule, build the pattern, and write at least two failing tests that a *near-miss* would pass. Finding the near-miss is the real skill.
+
+# Part II. From pattern to pipeline
+
+Part I went deep on one idea. This part covers the **whole stringr toolkit**. The challenge layout is the same, and the numbering continues so the two parts stay one workbook.
+
+## The map of stringr
+
+### Function families
+
+Nearly every function is named `str_<verb>()`, takes the **string vector first**, and the **pattern second**, so everything works in a pipe.
+
+| Task | Functions | Returns |
+|---|---|---|
+| Does it match? | `str_detect()`, `str_starts()`, `str_ends()` | logical vector |
+| Which ones? | `str_which()`, `str_subset()` | positions / the matching strings |
+| How many matches? | `str_count()` | integer vector |
+| Where? | `str_locate()`, `str_locate_all()` | matrix of start / end |
+| Pull text out | `str_extract()`, `str_extract_all()` | character vector / **list** |
+| Pull text out, by group | `str_match()`, `str_match_all()` | **matrix** / list of matrices |
+| Replace or delete | `str_replace()`, `str_replace_all()`, `str_remove()`, `str_remove_all()` | character vector |
+| Split | `str_split()`, `str_split_1()`, `str_split_fixed()`, `str_split_i()` | list / vector / matrix / vector |
+| Slice by position | `str_sub()` (also `str_sub<-`), `str_trunc()` | character vector |
+| Reshape | `str_pad()`, `str_trim()`, `str_squish()`, `str_wrap()`, `str_dup()` | character vector |
+| Case | `str_to_upper()`, `str_to_lower()`, `str_to_title()`, `str_to_sentence()` | character vector |
+| Combine | `str_c()`, `str_flatten()`, `str_flatten_comma()`, `str_glue()` | character vector |
+| Sort and compare | `str_sort()`, `str_order()`, `str_rank()`, `str_unique()`, `str_equal()` | various |
+| Missing values | `str_replace_na()` | character vector |
+| Debug | `str_view()` | HTML view of matches |
+
+Two naming rules explain a lot:
+
+- **`_all` means every match.** Without it you get only the first match (`str_replace` vs `str_replace_all`, `str_extract` vs `str_extract_all`).
+- **A bare function is vectorized over the input**, so one call handles a whole column.
+
+### A quick tour
+
+Run each line and read the result. Note what happens to the `NA`.
+
+```{r}
+fruit <- c("apple", "Banana", NA, "cherry pie")
+
+str_length(fruit)
+str_detect(fruit, "an")
+str_detect(fruit, "an", negate = TRUE)
+str_which(fruit, "an")
+str_subset(fruit, "an")
+str_starts(fruit, "a")
+str_ends(fruit, "pie")
+str_count(fruit, "[aeiou]")
+str_extract(fruit, "[aeiou]+")
+str_sub(fruit, 1, 3)
+str_sub(fruit, -3, -1)
+str_to_upper(fruit)
+str_pad(fruit, 12, side = "both", pad = "-")
+str_trunc(fruit, 8)
+str_remove(fruit, "[aeiou]")
+str_replace_na(fruit, "<missing>")
+```
+
+Two things to notice. First, **`NA` in means `NA` out**: stringr does not guess. Second, some functions return something other than a vector. `str_locate()` returns a matrix, `str_locate_all()` a list of matrices, and `str_split_fixed()` a matrix with a fixed number of columns:
+
+```{r}
+str_locate(c("hello world", "no match"), "o")
+str_locate_all("hello world", "o")
+str_split_fixed(c("a-b-c", "d-e"), "-", 2)
+```
+
+And the remaining verbs, in one go:
+
+```{r}
+str_to_lower("ABC")
+str_to_sentence("hELLO wORLD")
+str_dup("ab", 3)
+str_unique(c("a", "A", "a"))
+str_equal("a", "A", ignore_case = TRUE)
+str_rank(c("banana", "apple", "cherry"))
+cat(str_wrap("the quick brown fox jumps over the lazy dog", width = 15))
+```
+
+### Four ways to read a pattern
+
+A pattern is a regular expression by default. Wrap it to change how it is read:
+
+| Wrapper | Meaning | Use when |
+|---|---|---|
+| *(none)* / `regex()` | regular expression | you need structure |
+| `fixed()` | exact bytes, no special characters | you want literal text, fast |
+| `coll()` | locale-aware comparison | accents and language-specific rules matter |
+| `boundary()` | text boundaries (`"character"`, `"word"`, `"sentence"`, `"line_break"`) | you split or count by linguistic units |
+
+`regex()` also takes modifiers: `ignore_case`, `multiline` (`^` and `$` match at every line), `dotall` (`.` also matches newlines), and `comments` (whitespace and `#` comments allowed inside the pattern).
+
+To see what a pattern does while you build it, use `str_view()`:
+
+```{r}
+#| eval: false
+str_view(c("apple pie", "banana"), "an")
+```
+
+## Finding and counting
+
+### Challenge 14: Literal text with special characters
+
+**Task.** Detect strings containing the literal text `(1+1)`, parentheses and plus sign included.
+
+```{r}
+lit <- c("calc (1+1) now", "calc 1+1 now", "11", "111 apples", "(1+1", "x(1+1)y")
+lit_expected <- c(TRUE, FALSE, FALSE, FALSE, FALSE, TRUE)
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) str_detect(x, "")   # write your pattern here
+check_fn(my_answer, lit, lit_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_detect(fixed("(1+1)"), lit, lit_expected)
+```
+
+`fixed()` turns every special character off, which is the simplest way to say "this exact text". The alternative is to escape each special character yourself, or to let stringr do it:
+
+```{r}
+check_detect("\\(1\\+1\\)", lit, lit_expected)
+str_escape("(1+1)")
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: no escaping.**
+
+```{r}
+check_detect("(1+1)", lit, lit_expected)
+```
+
+In a regex, `(1+1)` is a **group** containing "one or more 1s, then a 1". It matches `11` and `111`, and never matches the real text `(1+1)`, because the `+` is a quantifier, not a character.
+
+**Attempt B: escaping the parentheses only.**
+
+```{r}
+check_detect("\\(1+1\\)", lit, lit_expected)
+```
+
+The parentheses are now literal, but `1+1` still means "one or more 1s, then a 1", so the pattern looks for `(11)`, `(111)`, and so on.
+
+**Attempt C: over-escaping.**
+
+```{r}
+check_detect("\\\\(1\\\\+1\\\\)", lit, lit_expected)
+```
+
+In an R string, `"\\\\"` is **two** characters, `\\`, which in a regex means "a literal backslash". The pattern now searches for text containing backslashes. One backslash per layer: `"\\("` in R becomes `\(` for the regex engine.
+:::
+
+### Challenge 15: Lines that start with a label (multiline text)
+
+**Task.** The string below contains five lines separated by `\n`. Use `str_extract_all()` to pull out every **whole line that starts with `ERROR:`**. The line `NOTERROR: ...` must not count.
+
+```{r}
+log2 <- paste("INFO: start", "ERROR: disk full", "NOTERROR: ignore me",
+              "INFO: retry", "ERROR: timeout", sep = "\n")
+lines_expected <- "ERROR: disk full, ERROR: timeout"
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here (hint: regex() has modifiers)
+check_extract_all(my_pattern, log2, lines_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol_lines <- regex("^ERROR:.*$", multiline = TRUE)
+check_extract_all(sol_lines, log2, lines_expected)
+```
+
+By default `^` and `$` match only the start and end of the **whole string**. With `multiline = TRUE` they match at the start and end of **every line**. The `.*` stops at the end of each line because `.` does not match a newline by default.
+
+An equally good approach is to split first, then filter:
+
+```{r}
+check_value(str_subset(str_split_1(log2, "\n"), "^ERROR:"),
+            c("ERROR: disk full", "ERROR: timeout"))
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: anchors without `multiline`.**
+
+```{r}
+check_extract_all("^ERROR:.*$", log2, lines_expected)
+```
+
+The string begins with `INFO:`, so `^ERROR:` fails at the only place `^` can match.
+
+**Attempt B: no anchors at all.**
+
+```{r}
+check_extract_all("ERROR:.*", log2, lines_expected)
+```
+
+This looks like it works, until the `NOTERROR:` line, which contains the text `ERROR:` in the middle. Without `^`, a match can begin anywhere.
+
+**Attempt C: adding `dotall`.**
+
+```{r}
+check_extract_all(regex("^ERROR:.*$", multiline = TRUE, dotall = TRUE), log2, lines_expected)
+```
+
+`dotall = TRUE` lets `.` match newlines too, so `.*` runs from the first `ERROR:` to the end of the string and returns one huge match. `multiline` and `dotall` control different things: **anchors** versus **the dot**.
+:::
+
+### Challenge 16: Greedy versus lazy
+
+**Task.** Extract the text inside every `<b>...</b>` tag. One of the pieces contains a space and one is a number.
+
+```{r}
+tags3 <- "<b>one</b> and <b>big deal</b> and <b>3</b>"
+tags_expected <- "one, big deal, 3"
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""   # write your pattern here
+check_extract_all(my_pattern, tags3, tags_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_extract_all("(?<=<b>).*?(?=</b>)", tags3, tags_expected)
+```
+
+`.*?` is the **lazy** version of `.*`: it takes as little as possible, so it stops at the first `</b>`. The surrounding lookbehind and lookahead check the tags without including them in the result.
+
+Two other correct approaches:
+
+```{r}
+# capture group with str_match_all(): column 2 holds the group
+check_value(str_match_all(tags3, "<b>(.*?)</b>")[[1]][, 2],
+            c("one", "big deal", "3"))
+
+# negated class: anything that is not "<"
+check_extract_all("(?<=<b>)[^<]+(?=</b>)", tags3, tags_expected)
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: greedy `.*`.**
+
+```{r}
+check_extract_all("(?<=<b>).*(?=</b>)", tags3, tags_expected)
+```
+
+Greedy `.*` takes as much as it can and then backs off only until the lookahead is satisfied, so it stops at the **last** `</b>`, not the first.
+
+**Attempt B: `\w+` for the content.**
+
+```{r}
+check_extract_all("(?<=<b>)\\w+(?=</b>)", tags3, tags_expected)
+```
+
+`\w+` cannot match a space, so `big deal` is not followed directly by `</b>` and is skipped. Assuming what the content looks like is the usual weakness of narrow classes.
+:::
+
+### Challenge 17: Phone numbers (a readable pattern)
+
+**Task.** Detect valid US phone numbers: ten digits, optionally written with parentheses around the area code, and with an optional space, dot, or hyphen between the three groups. The parentheses must come as a **pair**. Write the pattern with `regex(..., comments = TRUE)` so it can be read like a recipe.
+
+```{r}
+ph <- c("(202) 555-0147", "202-555-0147", "202.555.0147", "2025550147",
+        "(202)555-0147",                     # valid: no space
+        "(202 555-0147", "202) 555-0147",    # unbalanced parentheses
+        "555-0147",                          # too short
+        "12025550147",                       # eleven digits
+        "202x555x0147")                      # wrong separators
+ph_expected <- c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) str_detect(x, "")   # write your pattern here
+check_fn(my_answer, ph, ph_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+sol_phone <- regex("
+  ^
+  (?: \\( \\d{3} \\)     # area code in parentheses ...
+    |    \\d{3}   )      # ... or without them
+  [\\s.-]?               # optional separator: space, dot or hyphen
+  \\d{3}                 # exchange
+  [\\s.-]?               # optional separator
+  \\d{4}                 # line number
+  $
+", comments = TRUE)
+
+check_detect(sol_phone, ph, ph_expected)
+```
+
+With `comments = TRUE`, whitespace in the pattern is ignored and `#` starts a comment, so you can lay the pattern out in pieces. The alternation `\(\d{3}\) | \d{3}` ties the two parentheses together: either both or neither. Inside `[...]`, put `-` last so it is literal.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: each parenthesis optional on its own.**
+
+```{r}
+check_detect("^\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", ph, ph_expected)
+```
+
+`\(?` and `\)?` are independent, so a lone `(` or a lone `)` is accepted. "Both or neither" needs the alternation.
+
+**Attempt B: `.` as the separator.**
+
+```{r}
+check_detect("^(?:\\(\\d{3}\\)|\\d{3}).?\\d{3}.?\\d{4}$", ph, ph_expected)
+```
+
+An unescaped `.` is a wildcard, so `x` is accepted as a separator, and with eleven digits the first `.?` simply swallows a digit.
+
+**Attempt C: no anchors.**
+
+```{r}
+check_detect("(?:\\(\\d{3}\\)|\\d{3})[\\s.-]?\\d{3}[\\s.-]?\\d{4}", ph, ph_expected)
+```
+
+Without `^` and `$`, any **substring** of a longer string can match. A validation pattern must be anchored.
+
+**Attempt D: forgetting to escape the parentheses.**
+
+```{r}
+check_detect("^(?:(\\d{3})|\\d{3})[\\s.-]?\\d{3}[\\s.-]?\\d{4}$", ph, ph_expected)
+```
+
+Unescaped `( )` form a **group**, not literal parentheses, so numbers that actually contain parentheses are rejected.
+
+**Attempt E: an invalid character class.**
+
+```{r}
+tryCatch(str_detect(ph, "^[.-\\s]"), error = function(e) cat(conditionMessage(e)))
+```
+
+Inside a class, `.-\\s` reads as a **range** from `.` to `\\s`, which makes no sense. Move the hyphen to the end: `[\\s.-]`.
+:::
+
+### Challenge 18: Counting words
+
+**Task.** Count the words in each string with `str_count()`. A word is a run of **letters**, which may contain apostrophes or hyphens *between* letters (`Don't`, `well-known`). Numbers are not words.
+
+```{r}
+wd <- c("Don't stop-believing, ok?", "It's 5 o'clock", "well-known well-known", "", "a-b-c")
+wd_expected <- c(3, 2, 2, 0, 1)
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) str_count(x, "")   # write your pattern here
+check_fn(my_answer, wd, wd_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_count("[A-Za-z]+(?:['-][A-Za-z]+)*", wd, wd_expected)
+```
+
+The pattern says: letters, then **zero or more** groups of (apostrophe or hyphen, then more letters). That keeps `stop-believing` as one word while refusing a stray `-` or `'`.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: `\w+`.**
+
+```{r}
+check_count("\\w+", wd, wd_expected)
+```
+
+`\w` includes digits and underscores, and stops at every apostrophe and hyphen, so `Don't` becomes `Don` and `t`.
+
+**Attempt B: `boundary("word")`.**
+
+```{r}
+check_count(boundary("word"), wd, wd_expected)
+```
+
+Linguistic word boundaries keep `Don't` together but split at hyphens, and they count `5` as a word. They answer a different question from the one we asked.
+
+**Attempt C: letters and apostrophes only.**
+
+```{r}
+check_count("[A-Za-z']+", wd, wd_expected)
+```
+
+Close: apostrophes are handled, but `stop-believing` still counts as two words. Always test the **separator characters** your definition has to deal with.
+:::
+
+## Pulling pieces out
+
+### Challenge 19: Parsing `key=value` pairs
+
+**Task.** Turn the string into a **named character vector**, one element per pair. Values may contain spaces; pairs are separated by `;`.
+
+```{r}
+kv <- "name=Ann; age=31; city=New York"
+kv_expected <- c(name = "Ann", age = "31", city = "New York")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) {
+  # hint: str_match_all() returns a list holding one matrix per string
+}
+check_value(my_answer(kv), kv_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+parse_kv <- function(x) {
+  m <- str_match_all(x, "(\\w+)=([^;]+)")[[1]]
+  setNames(m[, 3], m[, 2])
+}
+check_value(parse_kv(kv), kv_expected)
+```
+
+`str_match_all()` returns a matrix per string: **column 1 is the whole match, then one column per capture group**. Here column 2 holds the keys and column 3 the values. `[^;]+` means "anything except a semicolon", which allows spaces inside a value but stops at the separator.
+
+When a string does not match at all, `str_match()` returns a row of `NA`:
+
+```{r}
+str_match(c("a=1", "none"), "(\\w)=(\\d)")
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: `str_match()` instead of `str_match_all()`.**
+
+```{r}
+str_match(kv, "(\\w+)=([^;]+)")
+```
+
+Without `_all`, only the **first** match is returned. The pattern is right, the function is wrong.
+
+**Attempt B: `\w+` for the value.**
+
+```{r}
+str_match_all(kv, "(\\w+)=(\\w+)")[[1]]
+```
+
+A value with a space is cut short: `city=New`. The value class has to allow whatever the data allows.
+
+**Attempt C: greedy `.+` on both sides.**
+
+```{r}
+str_match_all(kv, "(.+)=(.+)")[[1]]
+```
+
+Greedy `.+` swallows the separators and produces one giant match. When a delimiter separates items, forbid the delimiter with a negated class like `[^;]`.
+:::
+
+### Challenge 20: Splitting messy lists
+
+**Task.** Split the comma-separated list into clean items. The spacing is inconsistent: spaces before and after commas, and around the whole string.
+
+```{r}
+x7 <- "  red , green,blue ,   yellow  "
+list_expected <- c("red", "green", "blue", "yellow")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) str_split_1(x, "")   # write your pattern here
+check_value(my_answer(x7), list_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_value(str_split_1(str_trim(x7), "\\s*,\\s*"), list_expected)
+```
+
+Two steps: trim the **ends** of the string, then split on a comma that **absorbs the spaces around it**. `str_split_1()` handles one string and returns a plain vector; `str_split()` handles many and returns a list.
+
+Splitting loosely and cleaning each piece afterwards is equally valid:
+
+```{r}
+check_value(str_trim(str_split_1(x7, ",")), list_expected)
+```
+
+Other members of the family: `str_split_fixed(x, "-", 2)` gives a matrix with a fixed number of columns, and `str_split_i(x, "-", 2)` returns just the second piece of every string.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: no trimming.**
+
+```{r}
+check_value(str_split_1(x7, "\\s*,\\s*"), list_expected)
+```
+
+The pattern absorbs spaces *around commas*, but there is no comma at the very start or end, so `"  red"` and `"yellow  "` keep their spaces.
+
+**Attempt B: a plain comma.**
+
+```{r}
+check_value(str_split_1(x7, ","), list_expected)
+```
+
+Every item keeps its surrounding spaces.
+
+**Attempt C: `", "` (comma plus one space).**
+
+```{r}
+check_value(str_split_1(x7, ", "), list_expected)
+```
+
+This only splits where a comma is followed by a space, so it splits some places and not others. Real data rarely respects one fixed separator.
+:::
+
+## Rewriting text
+
+### Challenge 21: Reordering with backreferences
+
+**Task.** Rewrite every ISO date `YYYY-MM-DD` as `DD/MM/YYYY`, leaving the rest of the text untouched.
+
+```{r}
+d8 <- c("2024-05-17", "Born 2024-05-17, moved 2025-01-02.", "no date here", "1999-12-31")
+dates_expected <- c("17/05/2024", "Born 17/05/2024, moved 02/01/2025.", "no date here", "31/12/1999")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_pattern <- ""       # write your pattern here
+my_replacement <- ""   # and your replacement
+check_replace(my_pattern, d8, dates_expected, my_replacement)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_replace("(\\d{4})-(\\d{2})-(\\d{2})", d8, dates_expected, "\\3/\\2/\\1")
+```
+
+Each `( )` captures a piece, and `\\1`, `\\2`, `\\3` in the replacement paste them back in any order. `str_replace_all()` rewrites **every** date in a string.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: `str_replace()` instead of `str_replace_all()`.**
+
+```{r}
+check_fn(function(x) str_replace(x, "(\\d{4})-(\\d{2})-(\\d{2})", "\\3/\\2/\\1"), d8, dates_expected)
+```
+
+Only the first date in each string is rewritten, and the second date in row 2 is left alone.
+
+**Attempt B: `$1` syntax.**
+
+```{r}
+check_replace("(\\d{4})-(\\d{2})-(\\d{2})", d8, dates_expected, "$3/$2/$1")
+```
+
+`$1` is the convention in other languages. In stringr the reference is `\\1`, and `$3` is plain text.
+
+**Attempt C: too many backslashes.**
+
+```{r}
+check_replace("(\\d{4})-(\\d{2})-(\\d{2})", d8, dates_expected, "\\\\3/\\\\2/\\\\1")
+```
+
+`"\\\\3"` in R is `\\3`, which the replacement reads as "a literal backslash followed by 3". One level of escaping gets you the group reference; two gets you the literal text.
+
+**Attempt D: no capture groups.**
+
+```{r}
+tryCatch(
+  str_replace_all(d8, "\\d{4}-\\d{2}-\\d{2}", "\\3/\\2/\\1"),
+  error = function(e) cat(conditionMessage(e))
+)
+```
+
+Without `( )` there are no groups to refer to. The message is cryptic, but "index out of bounds" means exactly that.
+:::
+
+### Challenge 22: Swapping two letters (per-match logic)
+
+**Task.** In each string, turn every `a` into `b` and every `b` into `a`, at the same time.
+
+```{r}
+s9 <- c("abba cab", "bbb", "xyz")
+swap_expected <- c("baab cba", "aaa", "xyz")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) str_replace_all(x, "", "")   # write your answer here
+check_fn(my_answer, s9, swap_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+swap_ab <- function(x) {
+  str_replace_all(x, "[ab]", function(m) c(a = "b", b = "a")[m])
+}
+check_fn(swap_ab, s9, swap_expected)
+```
+
+When the replacement depends on **what was matched**, pass a **function**. It receives all the matched pieces at once and must return one replacement for each. Here the function looks each match up in a small dictionary.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: a named vector of replacements.**
+
+```{r}
+check_fn(function(x) str_replace_all(x, c("a" = "b", "b" = "a")), s9, swap_expected)
+```
+
+A named vector looks like a dictionary, but stringr applies the replacements **one after another**: first every `a` becomes `b`, then every `b` (including the new ones) becomes `a`, so everything ends up as `a`.
+
+**Attempt B: two calls in a row.**
+
+```{r}
+check_fn(function(x) str_replace_all(str_replace_all(x, "a", "b"), "b", "a"), s9, swap_expected)
+```
+
+The same trap in disguise. Any sequence of replacements where later steps can see earlier results will corrupt a swap.
+
+**Attempt C: groups with `\\2\\1`.**
+
+```{r}
+check_replace("(a)|(b)", s9, swap_expected, "\\2\\1")
+```
+
+On an `a`, group 1 is filled and group 2 is empty, so `\\2\\1` gives `"" + "a"`. Each letter is replaced by itself. Alternation groups do not swap; they only record which branch matched.
+:::
+
+### Challenge 23: Masking card numbers
+
+**Task.** Replace every digit with `*` **except the last four digits**. Separators (spaces and hyphens) stay where they are. Strings with four or fewer digits are unchanged.
+
+```{r}
+cn <- c("4111111111111111", "1234-5678-9012-3456", "12345", "1234", "123",
+        "1234 5678 9012", "1234-56-78")
+mask_expected <- c("************1111", "****-****-****-3456", "*2345", "1234", "123",
+                   "**** **** 9012", "****-56-78")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) str_replace_all(x, "", "")   # write your answer here
+check_fn(my_answer, cn, mask_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_replace("\\d(?=(?:\\D*\\d){4})", cn, mask_expected, "*")
+```
+
+A digit is masked when **at least four more digits follow it**, whatever sits between them. `(?:\\D*\\d){4}` reads "four times: some non-digits, then a digit". That is the exact statement of the rule, so it works regardless of how the number is formatted.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: four digits in a row.**
+
+```{r}
+check_replace("\\d(?=\\d{4})", cn, mask_expected, "*")
+```
+
+`\d{4}` means four **consecutive** digits. In `1234-5678-...` no digit is followed by four digits in a row, so nothing is masked.
+
+**Attempt B: positions with `str_sub()` and `str_pad()`.**
+
+```{r}
+mask_pad <- function(x) str_pad(str_sub(x, -4), width = str_length(x), pad = "*")
+check_fn(mask_pad, cn, mask_expected)
+```
+
+Neat for plain digit strings. But it treats the **last four characters** as the last four digits, masks the separators too, and gets `1234-56-78` wrong.
+
+**Attempt C: replacing the last four digits instead of keeping them.**
+
+```{r}
+check_replace("\\d{4}$", cn, mask_expected, "****")
+```
+
+The rule is the reverse: mask everything **except** the last four.
+
+**Attempt D: `.*\\d{4}`.**
+
+```{r}
+check_replace("\\d(?=.*\\d{4})", cn, mask_expected, "*")
+```
+
+Almost always right: "there are four consecutive digits somewhere later". But `1234-56-78` has no run of four digits after its first digits, so they stay visible. The test case at the end is what exposes it.
+:::
+
+## Cleaning and assembling
+
+### Challenge 24: A cleaning pipeline
+
+**Task.** Normalize messy names: no leading, trailing, or repeated spaces, and title case. `NA` must stay `NA`, and blank strings must become empty strings.
+
+```{r}
+x11 <- c("  jOHN   sMITH ", "mary-ann   jones", NA, "", "  ")
+clean_expected <- c("John Smith", "Mary-Ann Jones", NA, "", "")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) x   # build a pipeline here
+check_fn(my_answer, x11, clean_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+clean_names <- function(x) x |> str_squish() |> str_to_title()
+check_fn(clean_names, x11, clean_expected)
+```
+
+`str_squish()` trims both ends **and** collapses internal runs of whitespace into one space, so it replaces a `str_trim()` plus a `str_replace_all("\\s+", " ")`. `NA` passes through every step unchanged. Because the verbs are small and pipe-friendly, a cleaning step is easy to read, reorder, and test.
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: `str_trim()`.**
+
+```{r}
+check_fn(function(x) x |> str_trim() |> str_to_title(), x11, clean_expected)
+```
+
+`str_trim()` removes only the **outer** whitespace. The repeated spaces inside a name remain.
+
+**Attempt B: collapse spaces by hand.**
+
+```{r}
+check_fn(function(x) x |> str_replace_all("\\s+", " ") |> str_to_title(), x11, clean_expected)
+```
+
+This collapses runs, but a single leading or trailing space survives (` John Smith `), and a blank string becomes a single space.
+
+**Attempt C: sentence case.**
+
+```{r}
+check_fn(function(x) x |> str_squish() |> str_to_sentence(), x11, clean_expected)
+```
+
+`str_to_sentence()` capitalizes only the first letter of the string. Pick the case function that matches the rule.
+:::
+
+### Challenge 25: Building a sentence from a vector with gaps
+
+**Task.** Turn the vector into exactly this sentence, skipping missing values: `Hello, Ann, Bob and Cy!`
+
+```{r}
+nm <- c("Ann", "Bob", NA, "Cy")
+greet_expected <- "Hello, Ann, Bob and Cy!"
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) ""   # write your answer here
+check_value(my_answer(nm), greet_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+greet <- function(x) {
+  str_c("Hello, ", str_flatten_comma(x, last = " and ", na.rm = TRUE), "!")
+}
+check_value(greet(nm), greet_expected)
+```
+
+`str_flatten_comma()` collapses a vector into one string, with `last` replacing the final separator and `na.rm = TRUE` dropping the `NA`. `str_c()` then glues the pieces. `str_glue()` is the template-style alternative:
+
+```{r}
+str_glue("Hello, {str_flatten_comma(nm, last = ' and ', na.rm = TRUE)}!")
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: base `paste()`.**
+
+```{r}
+check_value(paste("Hello,", paste(nm, collapse = ", "), "!"), greet_expected)
+```
+
+`paste()` converts `NA` to the text `"NA"`, puts a space before the `!` (its default separator), and has no way to write "and".
+
+**Attempt B: `str_c(collapse = )`.**
+
+```{r}
+check_value(str_c("Hello, ", str_c(nm, collapse = ", "), "!"), greet_expected)
+```
+
+In stringr, `NA` is **contagious**: one missing value makes the whole result `NA`, with no warning.
+
+**Attempt C: `str_flatten()` with `na.rm`.**
+
+```{r}
+check_value(str_c("Hello, ", str_flatten(nm, ", ", na.rm = TRUE), "!"), greet_expected)
+```
+
+The missing value is handled, but there is no "and". Without `na.rm = TRUE`, `str_flatten()` returns `NA` for the whole thing, the same contagion as above.
+:::
+
+### Challenge 26: Sorting names with numbers
+
+**Task.** Sort the file names so that `file2.txt` comes before `file10.txt`, the way a person would sort them.
+
+```{r}
+fl <- c("file10.txt", "file2.txt", "file1.txt", "file20.txt")
+sort_expected <- c("file1.txt", "file2.txt", "file10.txt", "file20.txt")
+```
+
+#### Your turn {.unnumbered .unlisted}
+
+```{r}
+#| eval: false
+my_answer <- function(x) sort(x)   # change this
+check_value(my_answer(fl), sort_expected)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_value(str_sort(fl, numeric = TRUE), sort_expected)
+```
+
+`numeric = TRUE` compares runs of digits **as numbers**. To reorder a whole data frame by a text column, use `str_order()`, which returns positions:
+
+```{r}
+files <- data.frame(name = fl, size_kb = c(10, 2, 1, 20))
+files[str_order(files$name, numeric = TRUE), ]
+```
+:::
+
+::: {.callout-warning collapse="true" title="Close, but wrong"}
+**Attempt A: base `sort()`.**
+
+```{r}
+check_value(sort(fl), sort_expected)
+```
+
+Text is compared character by character, so `"1"` in `file10` is compared with `"2"` in `file2`, and `file10` wins.
+
+**Attempt B: `str_sort()` without `numeric`.**
+
+```{r}
+check_value(str_sort(fl), sort_expected)
+```
+
+`str_sort()` is locale-aware (useful for accents and case), but it still compares text. The numeric behavior must be requested.
+:::
+
+## The general rules for choosing a function
+
+Ask two questions, in this order.
+
+### What do I want back?
+
+| I want... | Use |
+|---|---|
+| a yes/no per string | `str_detect()` (or `str_starts()` / `str_ends()`) |
+| the strings that match | `str_subset()` |
+| their positions in the vector | `str_which()` |
+| how many matches | `str_count()` |
+| the matched text | `str_extract()` / `str_extract_all()` |
+| the matched text **split into groups** | `str_match()` / `str_match_all()` |
+| where the match sits | `str_locate()` / `str_locate_all()` |
+| the text changed | `str_replace()` / `str_replace_all()` / `str_remove()` |
+| pieces of the text | `str_split()` family, or `str_sub()` by position |
+
+**First match or every match?** Add `_all` for every match. Remember: `extract_all`, `match_all`, `locate_all`, and `split` return **lists**; `count`, `replace_all`, and `remove_all` return **vectors**.
+
+### How should the pattern be read?
+
+| If your pattern is... | Then |
+|---|---|
+| plain text, possibly with `. ( + * ?` | `fixed("...")` (or `str_escape()`) |
+| a structure ("digits, then a dash, ...") | a regex, anchored if it is validation |
+| case-insensitive | `regex(..., ignore_case = TRUE)` or `(?i)` for the whole pattern, `(?i:...)` for part of it |
+| over multiple lines | `regex(..., multiline = TRUE)` for `^` / `$`, `dotall = TRUE` for `.` |
+| long and complicated | `regex(..., comments = TRUE)` with comments |
+| about words, sentences, or characters as people see them | `boundary("word" / "sentence" / "character")` |
+| a language-aware comparison | `coll()` |
+
+### Rules of the road
+
+1. **Vectors in, vectors out.** Functions are vectorized over the strings, and the pattern may be a vector too, in which case it is matched element by element:
+
+   ```{r}
+   str_detect(c("apple", "bread", "cake"), c("^a", "^b", "^a"))
+   ```
+
+2. **`NA` in, `NA` out.** Missing values propagate, and a single `NA` can turn a whole `str_c()` into `NA`. Handle it deliberately with `na.rm = TRUE`, `str_replace_na()`, or `is.na()`.
+
+3. **Mind the return type.** `str_extract_all()` gives a list; `str_match()` gives a matrix whose first column is the whole match. Do not use the result of a `_all` function as if it were a plain vector.
+
+4. **Escaping happens twice.** R reads the string first, then the regex engine reads the pattern. To match a literal dot, write `"\\."`. For a literal backslash in a replacement, write `"\\\\"`.
+
+5. **Replacements are templates.** `\\1` is a group, and a function gives per-match logic. A named vector of replacements runs **sequentially**.
+
+6. **Combining is strict.** `str_c()` recycles only length-1 inputs and returns `character(0)` if any input has length zero:
+
+   ```{r}
+   tryCatch(str_c(c("a", "b"), c("x", "y", "z", "w")), error = function(e) cat(conditionMessage(e)))
+   str_c("x", character(0))
+   ```
+
+7. **Build, then test small.** Start with a tiny vector that has a normal case, an edge case, an empty string, and an `NA`. Add `str_view()` when a pattern surprises you.
+
+## Pipeline pitfall checklist
+
+Before trusting a stringr expression, run through this list.
+
+1. **Is the dot literal or a wildcard?** `.` matches any character. For literal text, use `fixed()` or `\\.`.
+2. **Did you escape for both layers?** `"\\d"`, not `"\d"`. A literal backslash needs `"\\\\"`.
+3. **First match or every match?** `str_replace()` and `str_extract()` stop at the first.
+4. **Is the pattern greedy?** `.*` runs to the **last** possible end. Use `.*?` or a negated class like `[^;]`.
+5. **Anchors:** `^` and `$` mean the whole string unless `multiline = TRUE`; `.` ignores newlines unless `dotall = TRUE`.
+6. **Validation needs anchors.** Without `^` and `$`, a pattern accepts any string that merely *contains* a match.
+7. **Is the replacement syntax right?** `\\1`, not `$1`. No groups means no `\\1`.
+8. **Does one replacement see another's output?** Sequential replacements can undo or distort each other; use a function for simultaneous changes.
+9. **What about `NA`, empty strings, and extra whitespace?** Put at least one of each in your test vector.
+10. **Does your class assume too much?** `\w`, `[A-Za-z]`, and `\d` each make assumptions about letters, accents, and digits. Test with the awkward cases (`o'clock`, `well-known`, `5`).
+11. **Locale and case:** `str_sort()` and `str_to_title()` follow language rules; base `sort()` may not.
+
+## Extra practice: pipelines
+
+Short problems with the solution hidden. As before, write your answer first.
+
+### Expanding abbreviations
+
+Replace the abbreviations `St` and `Ave` with `Street` and `Avenue`, but only when they are **whole words**.
+
+```{r}
+st <- c("12 Stanley St", "5 Ave Q, Stone St", "Main Ave")
+st_expected <- c("12 Stanley Street", "5 Avenue Q, Stone Street", "Main Avenue")
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+abbrev <- c("\\bSt\\b" = "Street", "\\bAve\\b" = "Avenue")
+check_fn(function(x) str_replace_all(x, abbrev), st, st_expected)
+```
+
+A **named vector** is a convenient way to apply several replacements in one call. The `\\b` word boundaries stop `St` from matching inside `Stanley` or `Stone`:
+
+```{r}
+check_fn(function(x) str_replace_all(x, c("St" = "Street", "Ave" = "Avenue")), st, st_expected)
+```
+:::
+
+### Overlapping matches
+
+Count occurrences of `aa` **including overlaps**: `aaaa` contains three.
+
+```{r}
+ov <- c("aaaa", "aaa", "a")
+ov_expected <- c(3, 2, 0)
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_count("(?=aa)", ov, ov_expected)
+```
+
+Normal matching consumes characters, so `aa` matches cannot overlap. A lookahead matches a **position** without consuming anything, so each position that starts `aa` is counted (the same zero-width idea as Part I). For comparison, the plain pattern gives:
+
+```{r}
+check_count("aa", ov, ov_expected)
+```
+:::
+
+### Extracting the middle piece
+
+Extract the **month** from each ISO date, as text.
+
+```{r}
+dates <- c("2024-05-17", "1999-12-31")
+month_expected <- c("05", "12")
+```
+
+::: {.callout-tip collapse="true" title="Solution"}
+```{r}
+check_fn(function(x) str_split_i(x, "-", 2), dates, month_expected)
+check_fn(function(x) str_sub(x, 6, 7), dates, month_expected)
+```
+
+`str_split_i()` picks one piece by position after splitting. `str_sub()` slices by **character position**, which is faster but only safe when the format is fixed-width.
+:::
+
+### Write your own {.unnumbered}
+
+Pick a text-cleaning job from your own data (names, IDs, addresses, survey answers). Decide which family it belongs to using the decision tables, write the pipeline, and create a test vector containing at least one `NA`, one empty string, and one input that a *near-miss* pattern would pass. Finding that input is the real skill.
+
+## Functions covered
+
+| Function | Where it appears |
+|---|---|
+| `str_detect()`, `str_starts()`, `str_ends()`, `str_which()`, `str_subset()` | tour, Challenges 14, 15, 17 |
+| `str_count()` | tour, Challenge 18, Extra practice |
+| `str_locate()` | tour |
+| `str_extract()`, `str_extract_all()` | tour, Challenges 15, 16 |
+| `str_match()`, `str_match_all()` | Challenges 16, 19 |
+| `str_replace()`, `str_replace_all()`, `str_remove()` | tour, Challenges 21, 22, 23, Extra practice |
+| `str_split()` family (`str_split_1()`, `str_split_i()`, `str_split_fixed()`) | Challenges 15, 20, Extra practice |
+| `str_sub()`, `str_pad()`, `str_trunc()`, `str_length()` | tour, Challenge 23 |
+| `str_trim()`, `str_squish()`, case functions | tour, Challenge 24 |
+| `str_c()`, `str_flatten()`, `str_flatten_comma()`, `str_glue()`, `str_replace_na()` | tour, Challenge 25 |
+| `str_sort()`, `str_order()` | Challenge 26 |
+| `fixed()`, `regex()` modifiers, `boundary()`, `str_escape()`, `str_view()` | tour, Challenges 14, 15, 17, 18 |
