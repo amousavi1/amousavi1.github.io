@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-10-29T16:56:00-04:00"
-LAST_UPDATED_TEXT = "October 29, 2026, 4:56 PM EDT"
+LAST_UPDATED_ISO = "2026-11-05T20:20:00-05:00"
+LAST_UPDATED_TEXT = "November 5, 2026, 8:20 PM EST"
 
 NOTES = [
     {
@@ -271,7 +271,7 @@ NOTES = [
         "slug": "forcats-factors",
         "week": 10,
         "title": "10.1 forcats: Factors",
-        "lead": "A factor is an integer plus labels. Reorder, recode, collapse, and drop levels.",
+        "lead": "The level order is what tables and plots follow. Reorder, rename, collapse rare levels, and drop the ones a filter left behind.",
     },
     {
         "slug": "lubridate-dates",
