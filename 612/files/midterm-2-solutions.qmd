@@ -12,9 +12,9 @@ format:
       warning: true
 ---
 
-November 11, 2026. 75 minutes. Questions 1 to 4 are 100 points, 25 each. Question 5 is 10 points of extra credit.
+November 11, 2026. 75 minutes. Steps 1 to 13 are 100 points. Step 14 is 10 points of extra credit.
 
-This file matches `midterm-2.qmd`. Accept `|>` or `%>%`. Accept a rebuilt connection when a later question needs `con`. The relative path `data/soccer.sqlite` is what the exam asks for. The path from the notes, `data/soccer/soccer.sqlite`, is also full credit.
+This file matches `midterm-2.qmd`. Accept `|>` or `%>%`. Accept a rebuilt connection when a later step needs `con`. The relative path `data/soccer.sqlite` is what the exam asks for. The path from the notes, `data/soccer/soccer.sqlite`, is also full credit.
 
 ```{r}
 #| label: setup
@@ -26,14 +26,27 @@ library(RSQLite)
 library(dbplyr)
 ```
 
-# 1. The database (25 points)
+## 1. Load the packages (5 points)
 
-## (a) Connect and list the tables (8 points)
-
-Seven tables remain: `Country`, `League`, `Match`, `Player`, `Player_Attributes`, `Team`, and `Team_Attributes`. Counting `sqlite_sequence` as an eighth soccer table is a 2-point deduction. An absolute path is a 1-point deduction. The connection object has to be created with `dbConnect()` and `SQLite()`.
+The chunk has to load tidyverse, DBI, RSQLite, and dbplyr, and it has to hide messages and warnings. A missing package is 1 point. Messages left visible are a 1-point deduction.
 
 ```{r}
-#| label: q1a
+#| label: s1
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(DBI)
+library(RSQLite)
+library(dbplyr)
+```
+
+## 2. Connect to the soccer database (8 points)
+
+Seven tables remain: `Country`, `League`, `Match`, `Player`, `Player_Attributes`, `Team`, and `Team_Attributes`. Counting `sqlite_sequence` as an eighth soccer table is a 2-point deduction. An absolute path is a 1-point deduction. The file comes from <https://dcgerard.github.io/stat_412_612/data.html>.
+
+```{r}
+#| label: s2
 
 con <- dbConnect(SQLite(), "data/soccer.sqlite")
 
@@ -43,100 +56,81 @@ tables
 sum(tables != "sqlite_sequence")
 ```
 
-## (b) A key (9 points)
+## 3. Bring two tables into R (8 points)
 
-`Player` has 11,060 rows and 11,060 distinct ids, so `player_api_id` is a primary key there. `Player_Attributes` has 183,978 rows and the same 11,060 ids, so the id repeats and is not a primary key there. Counting in R after `collect()` is full credit. Swapping the two tables is a 4-point deduction. dbplyr may print a one-time warning that SQL aggregates drop missing values. `n()` and `n_distinct(player_api_id)` do not use that rule. Grade the counts below.
+`Player` has 11,060 rows. The attributes data frame has the same 183,978 rows and only the three named columns. Keeping every attribute column is a 1-point deduction. Leaving either table as a lazy `tbl()` is a 3-point deduction, because the later stringr steps have to run in R.
 
 ```{r}
-#| label: q1b
-#| warning: false
+#| label: s3
 
-tbl(con, "Player") |>
-  summarise(n = n(), n_id = n_distinct(player_api_id)) |>
+Player <- tbl(con, "Player") |>
   collect()
 
-tbl(con, "Player_Attributes") |>
-  summarise(n = n(), n_id = n_distinct(player_api_id)) |>
+Player_Attributes <- tbl(con, "Player_Attributes") |>
+  select(player_api_id, potential, sprint_speed) |>
   collect()
 ```
+
+## 4. Prove that `player_api_id` is a key (10 points)
+
+`Player` has 11,060 rows and 11,060 distinct ids, so `player_api_id` is a primary key there. `Player_Attributes` has 183,978 rows and 11,060 distinct ids, so the id repeats and is not a primary key there. One sentence has to state both conclusions. The counts without the sentence are 8 points. Swapping the two tables is a 4-point deduction.
 
 `player_api_id` is a primary key of `Player` because each id appears once. It is not a primary key of `Player_Attributes` because each player has many attribute rows.
 
-## (c) One season (8 points)
-
-3,326 matches. The mean of `goal_diff` is about 0.333. Home teams score about a third of a goal more than away teams in this season.
-
-`show_query()` has to appear before `collect()`. Omitting the SQL is a 2-point deduction. The sentence has to say that `collect()` brings the rows into R. Before that, the object is a lazy table and the database has not returned the rows. Naming the lazy table and the data frame is enough.
-
 ```{r}
-#| label: q1c
+#| label: s4
 
-season_matches <- tbl(con, "Match") |>
-  filter(season == "2015/2016") |>
-  select(date, home_team_goal, away_team_goal) |>
-  mutate(goal_diff = home_team_goal - away_team_goal)
+Player |>
+  summarise(n = n(), n_id = n_distinct(player_api_id))
 
-show_query(season_matches)
-
-season_matches <- collect(season_matches)
-nrow(season_matches)
-mean(season_matches$goal_diff)
+Player_Attributes |>
+  summarise(n = n(), n_id = n_distinct(player_api_id))
 ```
 
-`collect()` runs the query and returns an ordinary data frame. The object before `collect()` is only a description of the query.
+## 5. Keep the name columns (5 points)
 
-# 2. Player names (25 points)
-
-## (a) Simple names (10 points)
-
-9,232 simple names. `str_count()` has to be used for both the uppercase letters and the space. `separate()` on the single space is the split. `str_split_fixed()` or `separate_wider_delim()` is full credit. Filtering after the split, or dropping `player_api_id`, is a 1-point deduction. The six rows are the first six after arranging by family name, then first name.
+Two columns: `player_api_id` and `player_name`.
 
 ```{r}
-#| label: q2a
+#| label: s5
 
-players <- tbl(con, "Player") |>
-  select(player_api_id, player_name) |>
-  collect()
+players <- Player |>
+  select(player_api_id, player_name)
+```
+
+## 6. Keep the simple names (8 points)
+
+9,232 names. Both counts have to use `str_count()`. One count done with `nchar()` or a base-R pattern is a 2-point deduction.
+
+```{r}
+#| label: s6
 
 simple <- players |>
   filter(
     str_count(player_name, "[A-Z]") == 2,
     str_count(player_name, " ") == 1
-  ) |>
-  separate(player_name, into = c("first_name", "family_name"), sep = " ")
+  )
 
 nrow(simple)
-
-simple |>
-  arrange(family_name, first_name) |>
-  slice_head(n = 6) |>
-  select(player_api_id, first_name, family_name)
 ```
 
-## (b) Two ways to keep a player (8 points)
+## 7. Split each simple name (6 points)
 
-341 players remain. Fifteen of them are named Martinez. The first names, in order, are Alex, Carles, Carlos, Emiliano, Hans, Igor, Inigo, Jackson, Javier, Jorge, Josef, Mario, Nacho, Pablo, and Roman. `str_ends(family_name, "ez")` is the ending. `str_detect(family_name, "ez$")` is full credit. Keeping only one of the two conditions is 4 points if the Martinez list is otherwise built from that smaller set.
+`separate()` on the single space. `str_split_fixed()` or `separate_wider_delim()` is full credit. Dropping `player_api_id` is a 1-point deduction.
 
 ```{r}
-#| label: q2b
+#| label: s7
 
-kept <- simple |>
-  filter(first_name %in% c("Luis", "Kevin") | str_ends(family_name, "ez"))
-
-nrow(kept)
-
-kept |>
-  filter(family_name == "Martinez") |>
-  arrange(first_name) |>
-  select(first_name, family_name)
+simple <- simple |>
+  separate(player_name, into = c("first_name", "family_name"), sep = " ")
 ```
 
-## (c) Initials (7 points)
+## 8. Initials (8 points)
 
-The five initials are `M.S.` (117), `M.B.` (100), `M.M.` (94), `A.M.` (89), and `M.P.` (84). The periods are part of the string. Missing both periods is a 1-point deduction. Building the initials from the 341 names in part (b), rather than from all 9,232 simple names, is a 3-point deduction. `slice_max()` is full credit when the tie break is alphabetical.
+The five initials are `M.S.` (117), `M.B.` (100), `M.M.` (94), `A.M.` (89), and `M.P.` (84). The periods are part of the string. Missing both periods is a 1-point deduction. Overwriting `simple` so that step 9 sees only these five rows is a 3-point deduction.
 
 ```{r}
-#| label: q2c
+#| label: s8
 
 simple |>
   mutate(
@@ -150,69 +144,74 @@ simple |>
   slice_head(n = 5)
 ```
 
-# 3. Potential and sprint speed (25 points)
+## 9. Keep the players in the plot (8 points)
 
-## (a) The players (8 points)
-
-`named` has 373 rows. Reusing `simple` from question 2 is full credit. The chunk below rebuilds it so this part can be read on its own. `str_starts(first_name, "M")` and `str_length(family_name) >= 8` are the two filters. `unite()` puts the names back. A hand-built `str_c(first_name, " ", family_name)` is full credit.
+`str_starts(first_name, "M")` and `str_length(family_name) >= 8`. Doing only one of the two filters is 4 points.
 
 ```{r}
-#| label: q3a
+#| label: s9
 
-named <- players |>
-  filter(
-    str_count(player_name, "[A-Z]") == 2,
-    str_count(player_name, " ") == 1
-  ) |>
-  separate(player_name, into = c("first_name", "family_name"), sep = " ") |>
-  filter(str_starts(first_name, "M"), str_length(family_name) >= 8) |>
+kept <- simple |>
+  filter(str_starts(first_name, "M"), str_length(family_name) >= 8)
+```
+
+## 10. Put the name back together (6 points)
+
+`df1` has 373 rows and two columns, `player_api_id` and `player_name`. A hand-built `str_c(first_name, " ", family_name)` is full credit in place of `unite()`.
+
+```{r}
+#| label: s10
+
+df1 <- kept |>
   unite(player_name, first_name, family_name, sep = " ") |>
   select(player_api_id, player_name)
 
-nrow(named)
+nrow(df1)
 ```
 
-## (b) One row per player (9 points)
+## 11. Average potential and the spread of sprint speed (10 points)
 
-One row per `player_api_id`. The summary covers every player in `Player_Attributes`, not only the 373 names. Restricting the summary to those 373 before the means is full credit, because the join in part (c) drops the rest. Dropping `na.rm = TRUE` is a 2-point deduction: a player with one missing sprint speed would then have a missing standard deviation. `sd()` and `var()` followed by a square root are both fine.
+One row per `player_api_id`, for every player in `Player_Attributes`, not only the 373 names. Restricting the summary to those 373 before the means is full credit, because the join drops the rest. Dropping `na.rm = TRUE` is a 2-point deduction.
 
 ```{r}
-#| label: q3b
+#| label: s11
 
-attr_sum <- tbl(con, "Player_Attributes") |>
-  select(player_api_id, potential, sprint_speed) |>
+df2 <- Player_Attributes |>
   group_by(player_api_id) |>
   summarise(
     potential_avg = mean(potential, na.rm = TRUE),
     sd_speed = sd(sprint_speed, na.rm = TRUE),
     .groups = "drop"
-  ) |>
-  collect()
-
-attr_sum
+  )
 ```
 
-## (c) Join and plot (8 points)
+## 12. Join the names to the summary (8 points)
 
-The left join keeps 373 rows. None of these 373 have a missing mean or a missing standard deviation, so the filter does not drop a point. `inner_join()` happens to give the same 373 rows. It is full credit here. A join that multiplies rows, because the attributes were not summarised first, is a 4-point deduction.
-
-The smooth is `method = "lm"`, `se = FALSE`, black, and dashed. A loess curve is a 1-point deduction. A gray band is a 1-point deduction. Color mapped to a third variable is a 1-point deduction. `theme_bw()`, the title, and the two axis labels are required.
-
-The dashed line rises slightly. Mean potential is only a little higher when the standard deviation of sprint speed is higher, and the cloud is wide. "A weak positive relationship" is full credit. "A strong increase" is not.
+373 rows. None of these 373 have a missing mean or a missing standard deviation, so the filter does not drop a point. `inner_join()` gives the same 373 rows and is full credit here. A join that multiplies rows, because the attributes were not summarised first, is a 4-point deduction.
 
 ```{r}
-#| label: q3c
+#| label: s12
+
+joined <- df1 |>
+  left_join(df2, by = "player_api_id") |>
+  filter(!is.na(potential_avg), !is.na(sd_speed))
+
+nrow(joined)
+```
+
+## 13. The plot (10 points)
+
+The smooth is `method = "lm"`, `se = FALSE`, black, and dashed. A loess curve is a 1-point deduction. A gray band is a 1-point deduction. `theme_bw()`, the title, and the two axis labels are required.
+
+The dashed line rises slightly. Mean potential is only a little higher when the standard deviation of sprint speed is higher, and the cloud is wide. A weak positive relationship is full credit for the sentence.
+
+```{r}
+#| label: s13
 #| fig-width: 7
 #| fig-height: 4.5
 #| message: false
 
-plot_df <- named |>
-  left_join(attr_sum, by = "player_api_id") |>
-  filter(!is.na(potential_avg), !is.na(sd_speed))
-
-nrow(plot_df)
-
-ggplot(plot_df, aes(x = sd_speed, y = potential_avg)) +
+ggplot(joined, aes(x = sd_speed, y = potential_avg)) +
   geom_point(alpha = 0.4) +
   geom_smooth(method = "lm", se = FALSE, color = "black", linetype = "dashed") +
   theme_bw() +
@@ -223,89 +222,12 @@ ggplot(plot_df, aes(x = sd_speed, y = potential_avg)) +
   )
 ```
 
-# 4. Team names and birthdays (25 points)
+## 14. A function (10 extra credit)
 
-## (a) Long names (10 points)
-
-43 long names contain a non-ASCII character. Four names change when the leading number is removed:
-
-- `1. FC Köln` becomes `FC Köln`
-- `1. FC Nürnberg` becomes `FC Nürnberg`
-- `1. FSV Mainz 05` becomes `FSV Mainz 05`
-- `1. FC Kaiserslautern` becomes `FC Kaiserslautern`
-
-`FSV Mainz 05` keeps the `05`. The pattern is anchored at the start, so a number later in the name stays. Removing every digit in the name is a 2-point deduction.
+The name is not graded. `last_word` below is one acceptable name. The four results are `Martinez`, `Sadio`, `Luisinho`, and the stop message. The function still has to reject a missing string.
 
 ```{r}
-#| label: q4a
-
-teams <- tbl(con, "Team") |>
-  select(team_api_id, team_long_name, team_short_name) |>
-  collect() |>
-  mutate(
-    team_name = str_remove(team_long_name, "^\\d+\\.\\s+")
-  )
-
-sum(str_detect(teams$team_long_name, "[^\\x00-\\x7F]"))
-
-teams |>
-  filter(team_name != team_long_name) |>
-  select(team_long_name, team_name)
-```
-
-## (b) Short names and FC (8 points)
-
-Three short names are not three characters: Rio Ave FC (`RA`), Gil Vicente FC (`GV`), and BSC Young Boys (`YB`).
-
-47 names contain `FC` as a whole word. 50 contain the letters `FC` anywhere. The three extra names are `FCV Dender EH`, `Dijon FCO`, and `GFC Ajaccio`.
-
-`FC` matches those letters inside a longer word. `\\b` requires a break before and after `FC`, so `FCV`, `FCO`, and `GFC` do not count.
-
-```{r}
-#| label: q4b
-
-teams |>
-  filter(str_length(team_short_name) != 3) |>
-  select(team_name, team_short_name)
-
-sum(str_detect(teams$team_name, "\\bFC\\b"))
-sum(str_detect(teams$team_name, "FC"))
-
-teams |>
-  filter(
-    str_detect(team_name, "FC"),
-    !str_detect(team_name, "\\bFC\\b")
-  ) |>
-  select(team_name)
-```
-
-## (c) The month in the birthday (7 points)
-
-1,073 players have month `02`. Eleven of those birthdays are on the 29th. `str_extract()` of the month, plus a second extract of the day, is full credit. `ymd_hms()` and then `month()` and `day()` are full credit on the counts. The pattern has to be applied after `collect()`.
-
-February 29 is a real day in a leap year. The years stored with these eleven birthdays are leap years, so the date is valid.
-
-```{r}
-#| label: q4c
-
-birthdays <- tbl(con, "Player") |>
-  select(birthday) |>
-  collect()
-
-parts <- str_match(birthdays$birthday, "^(\\d{4})-(\\d{2})-(\\d{2})")
-
-sum(parts[, 3] == "02")
-sum(parts[, 3] == "02" & parts[, 4] == "29")
-```
-
-# 5. A function (10 extra credit)
-
-The name is not graded. `last_word` below is one acceptable name. A pipe inside the function is acceptable. It is not required. The whole question is 10 extra-credit points.
-
-The four results are `Martinez`, `Sadio`, `Luisinho`, and the stop message. The comma row drops `,22` and then takes the last remaining word. `Luisinho` has no space, so it comes back unchanged. The last call has length 2, so it stops. Leaving `NA` untested in the calls is fine. The function still has to reject a missing string.
-
-```{r}
-#| label: q5
+#| label: s14
 #| error: true
 
 last_word <- function(name) {
