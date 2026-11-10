@@ -189,7 +189,7 @@ pairs <- c("abec", "atom", "idea", "kite", "upon", "Atec", "Upon", "Hope")
 
 ```
 
-2. Write one pattern with two groups and pass `pairs` to `str_replace_all()`. Each group is one lowercase vowel followed by one consonant. The two pairs do not have to be the same. Switch the pairs. The only vowels are `a`, `e`, `i`, `o`, and `u`. Capital letters are not vowels. `A`, `E`, `I`, `O`, `U`, and `H` are not vowels. (5 points)
+2. Write one pattern with two groups and pass `pairs` to `str_replace_all()`. Each group is one vowel followed by one consonant. The two pairs do not have to be the same. Switch the pairs. Vowels are `a`, `e`, `i`, `o`, and `u`. We are not considering capital vowels in this question. (5 points)
 
 ```{r}
 #| label: q2b

@@ -230,7 +230,7 @@ Each pattern is 5 points. An equivalent pattern is full credit.
 
 The eleven badges are `TRUE`, `TRUE`, `TRUE`, `FALSE`, `TRUE`, `TRUE`, `TRUE`, `FALSE`, `FALSE`, `FALSE`, `TRUE`. The length check has to be anchored at the end. `(?=.{8,14})` without `$` lets the 15-character badge through and is a 2-point deduction. One missed condition, with the others right, is a 1-point deduction.
 
-`str_replace_all()` returns `ecab`, `omat`, `idea`, `kite`, `onup`, `Atec`, `Upon`, and `Hope`. `idea` and `kite` stay as they are: `idea` does not contain two vowel-consonant pairs in a row, and `kite` starts with a consonant. `Atec`, `Upon`, and `Hope` stay as they are because `A`, `U`, and `H` are not vowels. A pattern that treats capital letters as vowels is not full credit. The replacement is `\\2\\1`. Requiring the two pairs to be the same pair is not full credit.
+`str_replace_all()` returns `ecab`, `omat`, `idea`, `kite`, `onup`, `Atec`, `Upon`, and `Hope`. `idea` and `kite` stay as they are: `idea` does not contain two vowel-consonant pairs in a row, and `kite` starts with a consonant. `Atec`, `Upon`, and `Hope` stay as they are. Capital vowels are not counted in this question. A pattern that treats `A`, `E`, `I`, `O`, or `U` as vowels is not full credit. The replacement is `\\2\\1`. Requiring the two pairs to be the same pair is not full credit.
 
 ```{r}
 #| label: q2-data
@@ -267,7 +267,7 @@ str_detect(
 )
 ```
 
-2. Write one pattern with two groups and pass `pairs` to `str_replace_all()`. Each group is one lowercase vowel followed by one consonant. The two pairs do not have to be the same. Switch the pairs. The only vowels are `a`, `e`, `i`, `o`, and `u`. Capital letters are not vowels. `A`, `E`, `I`, `O`, `U`, and `H` are not vowels. (5 points)
+2. Write one pattern with two groups and pass `pairs` to `str_replace_all()`. Each group is one vowel followed by one consonant. The two pairs do not have to be the same. Switch the pairs. Vowels are `a`, `e`, `i`, `o`, and `u`. We are not considering capital vowels in this question. (5 points)
 
 ```{r}
 #| label: q2b
