@@ -39,9 +39,7 @@ library(RSQLite)
 library(dbplyr)
 ```
 
-## 1. Load the packages (5 points)
-
-Load tidyverse, DBI, RSQLite, and dbplyr. This chunk must not display messages or warnings.
+1. Load tidyverse, DBI, RSQLite, and dbplyr. This chunk must not display messages or warnings. (5 points)
 
 ```{r}
 #| label: s1
@@ -51,13 +49,7 @@ Load tidyverse, DBI, RSQLite, and dbplyr. This chunk must not display messages o
 
 ```
 
-## 2. Connect to the soccer database (8 points)
-
-`soccer.sqlite` is the European soccer database on David Gerard's data page, <https://dcgerard.github.io/stat_412_612/data.html>. Download it, unzip it, and save `soccer.sqlite` in a folder `data` next to this file.
-
-Connect with `dbConnect()` and `SQLite()`, using the relative path `data/soccer.sqlite`. Assign the connection to `con`.
-
-Print the table names. Print how many tables remain when `sqlite_sequence` is not counted.
+2. Download `soccer.sqlite`, the European soccer database, from David Gerard's data page, <https://dcgerard.github.io/stat_412_612/data.html>. Unzip it, and save `soccer.sqlite` in a folder `data` next to this file. Connect with `dbConnect()` and `SQLite()` using the relative path `data/soccer.sqlite`, and assign the connection to `con`. Print the table names, and print how many tables remain when `sqlite_sequence` is not counted. (8 points)
 
 ```{r}
 #| label: s2
@@ -65,11 +57,7 @@ Print the table names. Print how many tables remain when `sqlite_sequence` is no
 
 ```
 
-## 3. Bring two tables into R (8 points)
-
-Collect `Player` into a data frame. Collect `Player_Attributes` into a data frame, and keep only `player_api_id`, `potential`, and `sprint_speed`.
-
-From step 4 on, work with these data frames.
+3. Collect `Player` into a data frame. Collect `Player_Attributes` into a data frame, and keep only `player_api_id`, `potential`, and `sprint_speed`. From step 4 on, work with these data frames. (8 points)
 
 ```{r}
 #| label: s3
@@ -77,11 +65,7 @@ From step 4 on, work with these data frames.
 
 ```
 
-## 4. Prove that `player_api_id` is a key (10 points)
-
-Prove that `player_api_id` is a primary key of `Player`, and that it is not a primary key of `Player_Attributes`.
-
-For each data frame, print the number of rows and the number of distinct `player_api_id`. In one sentence, say what those two comparisons show.
+4. Prove that `player_api_id` is a primary key of `Player`, and that it is not a primary key of `Player_Attributes`. For each data frame, print the number of rows and the number of distinct `player_api_id`. In one sentence, say what those two comparisons show. (10 points)
 
 ```{r}
 #| label: s4
@@ -89,9 +73,7 @@ For each data frame, print the number of rows and the number of distinct `player
 
 ```
 
-## 5. Keep the name columns (5 points)
-
-From `Player`, keep `player_api_id` and `player_name`.
+5. From `Player`, keep `player_api_id` and `player_name`. (5 points)
 
 ```{r}
 #| label: s5
@@ -99,9 +81,7 @@ From `Player`, keep `player_api_id` and `player_name`.
 
 ```
 
-## 6. Keep the simple names (8 points)
-
-A simple name has exactly two uppercase letters and exactly one space. Keep those rows. Use `str_count()` for both counts.
+6. Keep the simple names. A simple name has exactly two uppercase letters and exactly one space. Use `str_count()` for both counts. (8 points)
 
 ```{r}
 #| label: s6
@@ -109,9 +89,7 @@ A simple name has exactly two uppercase letters and exactly one space. Keep thos
 
 ```
 
-## 7. Split each simple name (6 points)
-
-Split `player_name` on the space into `first_name` and `family_name`, with `separate()`.
+7. Split `player_name` on the space into `first_name` and `family_name`, with `separate()`. (6 points)
 
 ```{r}
 #| label: s7
@@ -119,13 +97,7 @@ Split `player_name` on the space into `first_name` and `family_name`, with `sepa
 
 ```
 
-## 8. Initials (8 points)
-
-From the data frame in step 7, build `initials` with `str_sub()` and `str_c()`. Take the first letter of `first_name`, a period, the first letter of `family_name`, and a period. `Luis Martinez` becomes `L.M.`.
-
-Show the five initials that occur most often, with their counts, largest count first. Break a tie by the initial, A to Z.
-
-Leave the data frame from step 7 intact for the next step.
+8. From the data frame in step 7, build `initials` with `str_sub()` and `str_c()`: the first letter of `first_name`, a period, the first letter of `family_name`, and a period. `Luis Martinez` becomes `L.M.`. Show the five initials that occur most often, with their counts, largest count first. Break a tie by the initial, A to Z. Leave the data frame from step 7 intact. (8 points)
 
 ```{r}
 #| label: s8
@@ -133,9 +105,7 @@ Leave the data frame from step 7 intact for the next step.
 
 ```
 
-## 9. Keep the players in the plot (8 points)
-
-From the data frame in step 7, keep rows whose `first_name` starts with `M` and whose `family_name` has at least 8 characters. Use `str_starts()` and `str_length()`.
+9. From the data frame in step 7, keep rows whose `first_name` starts with `M` and whose `family_name` has at least 8 characters. Use `str_starts()` and `str_length()`. (8 points)
 
 ```{r}
 #| label: s9
@@ -143,11 +113,7 @@ From the data frame in step 7, keep rows whose `first_name` starts with `M` and 
 
 ```
 
-## 10. Put the name back together (6 points)
-
-Unite `first_name` and `family_name` into `player_name`, with one space between them. Keep `player_api_id` and `player_name` only. Assign the result to `df1`.
-
-Print how many rows `df1` has.
+10. Unite `first_name` and `family_name` into `player_name`, with one space between them. Keep `player_api_id` and `player_name` only. Assign the result to `df1`, and print how many rows it has. (6 points)
 
 ```{r}
 #| label: s10
@@ -155,9 +121,7 @@ Print how many rows `df1` has.
 
 ```
 
-## 11. Average potential and the spread of sprint speed (10 points)
-
-From the `Player_Attributes` data frame, group by `player_api_id`. For each player, compute `potential_avg`, the mean of `potential`, and `sd_speed`, the standard deviation of `sprint_speed`. Ignore missing values. Assign the result to `df2`.
+11. From `Player_Attributes`, group by `player_api_id`. For each player, compute `potential_avg`, the mean of `potential`, and `sd_speed`, the standard deviation of `sprint_speed`. Ignore missing values. Assign the result to `df2`. (10 points)
 
 ```{r}
 #| label: s11
@@ -165,9 +129,7 @@ From the `Player_Attributes` data frame, group by `player_api_id`. For each play
 
 ```
 
-## 12. Join the names to the summary (8 points)
-
-Left join `df1` to `df2` by `player_api_id`. Drop a row when `potential_avg` or `sd_speed` is missing. Print how many rows remain.
+12. Left join `df1` to `df2` by `player_api_id`. Drop a row when `potential_avg` or `sd_speed` is missing. Print how many rows remain. (8 points)
 
 ```{r}
 #| label: s12
@@ -175,15 +137,7 @@ Left join `df1` to `df2` by `player_api_id`. Drop a row when `potential_avg` or 
 
 ```
 
-## 13. The plot (10 points)
-
-Plot `sd_speed` on the horizontal axis and `potential_avg` on the vertical axis.
-
-- Points, with an alpha so overlapping points stay visible.
-- One straight smooth in black, dashed, with no gray band.
-- Use `theme_bw()`. Title the plot `Potential and sprint speed`. Label the axes `SD of sprint speed` and `Mean potential`.
-
-In one sentence, say how mean potential changes as the standard deviation of sprint speed increases.
+13. Plot `sd_speed` on the horizontal axis and `potential_avg` on the vertical axis. Use points with an alpha so overlapping points stay visible, and one straight smooth in black, dashed, with no gray band. Use `theme_bw()`. Title the plot `Potential and sprint speed`. Label the axes `SD of sprint speed` and `Mean potential`. In one sentence, say how mean potential changes as the standard deviation of sprint speed increases. (10 points)
 
 ```{r}
 #| label: s13
@@ -193,22 +147,7 @@ In one sentence, say how mean potential changes as the standard deviation of spr
 
 ```
 
-## 14. A function (10 extra credit)
-
-Write a function of one argument, `name`.
-
-- If `name` is not a character vector of length 1, or it is missing, stop with the message `name must be one string`.
-- Collapse the whitespace with `str_squish()`.
-- If a comma appears, drop the comma and everything after it with `str_remove()`, then squish again.
-- If the result contains no space, return it unchanged.
-- Otherwise return the last word, with `str_extract()` and the pattern `\\S+$`.
-
-Write the function in this chunk, then run it on these four inputs. This chunk already has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible.
-
-- `"  Luis   Martinez "`
-- `"Abdoulaye Diallo Sadio,22"`
-- `"Luisinho"`
-- `c("Aaron", "Taylor")`
+14. Write a function of one argument, `name`. If `name` is not a character vector of length 1, or it is missing, stop with the message `name must be one string`. Collapse the whitespace with `str_squish()`. If a comma appears, drop the comma and everything after it with `str_remove()`, then squish again. If the result contains no space, return it unchanged. Otherwise return the last word, with `str_extract()` and the pattern `\\S+$`. Run it on `"  Luis   Martinez "`, `"Abdoulaye Diallo Sadio,22"`, `"Luisinho"`, and `c("Aaron", "Taylor")`. This chunk has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible. (10 extra credit)
 
 ```{r}
 #| label: s14
