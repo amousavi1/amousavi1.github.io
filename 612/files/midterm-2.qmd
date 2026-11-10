@@ -12,9 +12,9 @@ format:
       warning: true
 ---
 
-November 11, 2026. You have 75 minutes. Steps 1 to 13 are 100 points. Step 14 is 10 points of extra credit.
+November 11, 2026. You have 75 minutes. Question 1 is 100 points. Question 2 is 10 points of extra credit, and it does not use the database.
 
-Put your name in the subtitle at the top of this file. Follow the steps in order. Write the code for each step in the chunk under that step. Render to PDF. Submit this `.qmd` and the PDF before the 75 minutes are up.
+Put your name in the subtitle at the top of this file. Follow the steps of question 1 in order. Write the code for each step in the chunk under that step. Render to PDF. Submit this `.qmd` and the PDF before the 75 minutes are up.
 
 The goal is a plot of mean potential against the standard deviation of sprint speed. The players in that plot have a simple name, a first name that starts with M, and a family name of at least 8 letters. A simple name has exactly two uppercase letters and exactly one space.
 
@@ -22,7 +22,7 @@ The goal is a plot of mean potential against the standard deviation of sprint sp
 - You may use this course website, <https://amousavi1.github.io/612/data-612.html>, and David Gerard's data page for the database file, <https://dcgerard.github.io/stat_412_612/data.html>.
 - You may not use Google, any other website, or an LLM.
 - You may not communicate with anyone else.
-- Use the tidyverse where a tidyverse verb exists. For text, use stringr. Step 14 is a function; base R is appropriate for the `stop()` check.
+- Use the tidyverse where a tidyverse verb exists. For text, use stringr. Question 2 is two patterns.
 - `collect()` before `separate()`, `unite()`, or any `str_` verb. Those run in R. This SQLite file does not run a regular expression.
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next step.
@@ -38,6 +38,8 @@ library(DBI)
 library(RSQLite)
 library(dbplyr)
 ```
+
+# Question 1 (100 points)
 
 1. Load tidyverse, DBI, RSQLite, and dbplyr. This chunk must not display messages or warnings. (5 points)
 
@@ -147,11 +149,48 @@ library(dbplyr)
 
 ```
 
-14. Write a function of one argument, `name`. If `name` is not a character vector of length 1, or it is missing, stop with the message `name must be one string`. Collapse the whitespace with `str_squish()`. If a comma appears, drop the comma and everything after it with `str_remove()`, then squish again. If the result contains no space, return it unchanged. Otherwise return the last word, with `str_extract()` and the pattern `\\S+$`. Run it on `"  Luis   Martinez "`, `"Abdoulaye Diallo Sadio,22"`, `"Luisinho"`, and `c("Aaron", "Taylor")`. This chunk has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible. (10 extra credit)
+# Question 2 (10 extra credit)
+
+This question does not use the soccer database. The chunk below is complete. Do not edit it. Write one lookahead pattern in each answer chunk.
 
 ```{r}
-#| label: s14
-#| error: true
+#| label: q2-data
+
+badges <- c(
+  "Ab3defgh",
+  "k9MnoPqr",
+  "A1b2C3de",
+  "Abcdefg1",
+  "abcdefgh",
+  "ABCDEF3H",
+  "Ab3 defg",
+  "Ab3de",
+  "Ab3defghijklmno",
+  "A12bcdef",
+  "Zz9yyyyy"
+)
+
+weights <- "12 kg, 8 g, 15 kg, 4 g, 100 g, 7kg, 3 g"
+```
+
+1. Write one pattern and pass `badges` to `str_detect()`. A badge matches only when every condition below is true. (5 points)
+
+- It is 8 to 14 characters long.
+- It contains a digit, an uppercase letter, and a lowercase letter.
+- It contains no space.
+- It contains no two digits in a row.
+- It does not end with a digit.
+
+```{r}
+#| label: q2a
+
+
+```
+
+2. Write one pattern and pass `weights` to `str_extract_all()`. Pull every whole number that is followed by a space and then a unit other than `kg`. A number glued to letters, such as `7kg`, does not count. Do not return part of a longer number. (5 points)
+
+```{r}
+#| label: q2b
 
 
 ```

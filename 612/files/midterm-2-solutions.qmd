@@ -12,7 +12,7 @@ format:
       warning: true
 ---
 
-November 11, 2026. 75 minutes. Steps 1 to 13 are 100 points. Step 14 is 10 points of extra credit.
+November 11, 2026. 75 minutes. Question 1 is 100 points. Question 2 is 10 points of extra credit and does not use the database.
 
 This file matches `midterm-2.qmd`. Accept `|>` or `%>%`. Accept a rebuilt connection when a later step needs `con`. The relative path `data/soccer.sqlite` is what the exam asks for. The path from the notes, `data/soccer/soccer.sqlite`, is also full credit.
 
@@ -25,6 +25,8 @@ library(DBI)
 library(RSQLite)
 library(dbplyr)
 ```
+
+# Question 1 (100 points)
 
 1. Load tidyverse, DBI, RSQLite, and dbplyr. This chunk must not display messages or warnings. (5 points)
 
@@ -222,31 +224,57 @@ ggplot(joined, aes(x = sd_speed, y = potential_avg)) +
   )
 ```
 
-14. Write a function of one argument, `name`. If `name` is not a character vector of length 1, or it is missing, stop with the message `name must be one string`. Collapse the whitespace with `str_squish()`. If a comma appears, drop the comma and everything after it with `str_remove()`, then squish again. If the result contains no space, return it unchanged. Otherwise return the last word, with `str_extract()` and the pattern `\\S+$`. Run it on `"  Luis   Martinez "`, `"Abdoulaye Diallo Sadio,22"`, `"Luisinho"`, and `c("Aaron", "Taylor")`. This chunk has `#| error: true`, so the last call can stop and the document still renders. Leave that error visible. (10 extra credit)
+# Question 2 (10 extra credit)
 
-The name is not graded. `last_word` below is one acceptable name. The four results are `Martinez`, `Sadio`, `Luisinho`, and the stop message. The function still has to reject a missing string.
+This question does not use the soccer database. Each pattern is 5 points. An equivalent pattern is full credit.
+
+The eleven badges are `TRUE`, `TRUE`, `TRUE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `TRUE`. The length check has to be anchored at the end. `(?=.{8,14})` without `$` lets the 15-character badge through and is a 2-point deduction. One missed condition, with the others right, is a 1-point deduction.
+
+`str_extract_all()` returns `"8"`, `"4"`, `"100"`, and `"3"`. `\\b\\d+\\b(?! kg)` and `\\b\\d+\\b(?= (?!kg))` are both full credit. A pattern that also returns `12` or `15` misses the unit check. A pattern that returns `1` from `12` or `7` from `7kg` is the backtracking error from the lookahead notes.
 
 ```{r}
-#| label: s14
-#| error: true
+#| label: q2-data
 
-last_word <- function(name) {
-  if (!is.character(name) || length(name) != 1 || is.na(name)) {
-    stop("name must be one string")
-  }
-  name <- str_squish(name)
-  name <- str_remove(name, ",.*")
-  name <- str_squish(name)
-  if (!str_detect(name, " ")) {
-    return(name)
-  }
-  str_extract(name, "\\S+$")
-}
+badges <- c(
+  "Ab3defgh",
+  "k9MnoPqr",
+  "A1b2C3de",
+  "Abcdefg1",
+  "abcdefgh",
+  "ABCDEF3H",
+  "Ab3 defg",
+  "Ab3de",
+  "Ab3defghijklmno",
+  "A12bcdef",
+  "Zz9yyyyy"
+)
 
-last_word("  Luis   Martinez ")
-last_word("Abdoulaye Diallo Sadio,22")
-last_word("Luisinho")
-last_word(c("Aaron", "Taylor"))
+weights <- "12 kg, 8 g, 15 kg, 4 g, 100 g, 7kg, 3 g"
+```
+
+1. Write one pattern and pass `badges` to `str_detect()`. A badge matches only when every condition below is true. (5 points)
+
+- It is 8 to 14 characters long.
+- It contains a digit, an uppercase letter, and a lowercase letter.
+- It contains no space.
+- It contains no two digits in a row.
+- It does not end with a digit.
+
+```{r}
+#| label: q2a
+
+str_detect(
+  badges,
+  "^(?=.{8,14}$)(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?!.* )(?!.*\\d{2})(?!.*\\d$)"
+)
+```
+
+2. Write one pattern and pass `weights` to `str_extract_all()`. Pull every whole number that is followed by a space and then a unit other than `kg`. A number glued to letters, such as `7kg`, does not count. Do not return part of a longer number. (5 points)
+
+```{r}
+#| label: q2b
+
+str_extract_all(weights, "\\b\\d+\\b(?! kg)")
 ```
 
 ```{r}
