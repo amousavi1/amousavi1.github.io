@@ -12,11 +12,9 @@ format:
       warning: true
 ---
 
-November 11, 2026. You have 75 minutes. Question 1 is 100 points. Question 2 is 10 points of extra credit, and it does not use the database.
+November 11, 2026. You have 75 minutes. Question 1 is 100 points. Question 2 is 10 points of extra credit.
 
 Put your name in the subtitle at the top of this file. Follow the steps of question 1 in order. Write the code for each step in the chunk under that step. Render to PDF. Submit this `.qmd` and the PDF before the 75 minutes are up.
-
-The goal is a plot of mean potential against the standard deviation of sprint speed. The players in that plot have a simple name, a first name that starts with M, and a family name of at least 8 letters. A simple name has exactly two uppercase letters and exactly one space.
 
 - You may use your notes and the R help files inside RStudio.
 - You may use this course website, <https://amousavi1.github.io/612/data-612.html>, and David Gerard's data page for the database file, <https://dcgerard.github.io/stat_412_612/data.html>.
@@ -27,7 +25,9 @@ The goal is a plot of mean potential against the standard deviation of sprint sp
 - Either pipe is fine: `|>` or `%>%`.
 - Partial credit is given for code that runs. If you are stuck, go to the next step.
 
-Each step starts from the data frame the previous step made. Step 8 prints a summary and must not drop any rows. Steps 9 and 10 continue from the data frame in step 7.
+```{=latex}
+\newpage
+```
 
 ```{r}
 #| label: setup
@@ -40,6 +40,10 @@ library(dbplyr)
 ```
 
 # Question 1 (100 points)
+
+The goal is a plot of mean potential against the standard deviation of sprint speed. The players in that plot have a simple name, a first name that starts with M, and a family name of at least 8 letters. A simple name has exactly two uppercase letters and exactly one space.
+
+Each step starts from the data frame the previous step made. Step 8 prints a summary and must not drop any rows. Steps 9 and 10 continue from the data frame in step 7.
 
 1. Load tidyverse, DBI, RSQLite, and dbplyr. This chunk must not display messages or warnings. (5 points)
 
@@ -151,7 +155,7 @@ library(dbplyr)
 
 # Question 2 (10 extra credit)
 
-This question does not use the soccer database. The chunk below is complete. Do not edit it. Write one lookahead pattern in each answer chunk.
+The chunk below is complete. Do not edit it. Write one pattern in each answer chunk.
 
 ```{r}
 #| label: q2-data
@@ -170,14 +174,12 @@ badges <- c(
   "Zz9yyyyy"
 )
 
-weights <- "12 kg, 8 g, 15 kg, 4 g, 100 g, 7kg, 3 g"
+pairs <- c("abec", "atom", "idea", "kite", "upon")
 ```
 
 1. Write one pattern and pass `badges` to `str_detect()`. A badge matches only when every condition below is true. (5 points)
 
 - It is 8 to 14 characters long.
-- It contains a digit, an uppercase letter, and a lowercase letter.
-- It contains no space.
 - It contains no two digits in a row.
 - It does not end with a digit.
 
@@ -187,7 +189,7 @@ weights <- "12 kg, 8 g, 15 kg, 4 g, 100 g, 7kg, 3 g"
 
 ```
 
-2. Write one pattern and pass `weights` to `str_extract_all()`. Pull every whole number that is followed by a space and then a unit other than `kg`. A number glued to letters, such as `7kg`, does not count. Do not return part of a longer number. (5 points)
+2. Write one pattern with two groups and pass `pairs` to `str_replace_all()`. Each group is one vowel followed by one consonant. The two pairs do not have to be the same. Switch the pairs. Vowels are `a`, `e`, `i`, `o`, and `u`. (5 points)
 
 ```{r}
 #| label: q2b

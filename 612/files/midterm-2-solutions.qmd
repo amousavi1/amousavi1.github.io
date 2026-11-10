@@ -12,7 +12,7 @@ format:
       warning: true
 ---
 
-November 11, 2026. 75 minutes. Question 1 is 100 points. Question 2 is 10 points of extra credit and does not use the database.
+November 11, 2026. 75 minutes. Question 1 is 100 points. Question 2 is 10 points of extra credit.
 
 This file matches `midterm-2.qmd`. Accept `|>` or `%>%`. Accept a rebuilt connection when a later step needs `con`. The relative path `data/soccer.sqlite` is what the exam asks for. The path from the notes, `data/soccer/soccer.sqlite`, is also full credit.
 
@@ -226,11 +226,11 @@ ggplot(joined, aes(x = sd_speed, y = potential_avg)) +
 
 # Question 2 (10 extra credit)
 
-This question does not use the soccer database. Each pattern is 5 points. An equivalent pattern is full credit.
+Each pattern is 5 points. An equivalent pattern is full credit.
 
-The eleven badges are `TRUE`, `TRUE`, `TRUE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `FALSE`, `TRUE`. The length check has to be anchored at the end. `(?=.{8,14})` without `$` lets the 15-character badge through and is a 2-point deduction. One missed condition, with the others right, is a 1-point deduction.
+The eleven badges are `TRUE`, `TRUE`, `TRUE`, `FALSE`, `TRUE`, `TRUE`, `TRUE`, `FALSE`, `FALSE`, `FALSE`, `TRUE`. The length check has to be anchored at the end. `(?=.{8,14})` without `$` lets the 15-character badge through and is a 2-point deduction. One missed condition, with the others right, is a 1-point deduction.
 
-`str_extract_all()` returns `"8"`, `"4"`, `"100"`, and `"3"`. `\\b\\d+\\b(?! kg)` and `\\b\\d+\\b(?= (?!kg))` are both full credit. A pattern that also returns `12` or `15` misses the unit check. A pattern that returns `1` from `12` or `7` from `7kg` is the backtracking error from the lookahead notes.
+`str_replace_all()` returns `ecab`, `omat`, `idea`, `kite`, and `onup`. `idea` and `kite` stay as they are: `idea` does not contain two vowel-consonant pairs in a row, and `kite` starts with a consonant. The replacement is `\\2\\1`. Requiring the two pairs to be the same pair is not full credit.
 
 ```{r}
 #| label: q2-data
@@ -249,14 +249,12 @@ badges <- c(
   "Zz9yyyyy"
 )
 
-weights <- "12 kg, 8 g, 15 kg, 4 g, 100 g, 7kg, 3 g"
+pairs <- c("abec", "atom", "idea", "kite", "upon")
 ```
 
 1. Write one pattern and pass `badges` to `str_detect()`. A badge matches only when every condition below is true. (5 points)
 
 - It is 8 to 14 characters long.
-- It contains a digit, an uppercase letter, and a lowercase letter.
-- It contains no space.
 - It contains no two digits in a row.
 - It does not end with a digit.
 
@@ -265,16 +263,16 @@ weights <- "12 kg, 8 g, 15 kg, 4 g, 100 g, 7kg, 3 g"
 
 str_detect(
   badges,
-  "^(?=.{8,14}$)(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(?!.* )(?!.*\\d{2})(?!.*\\d$)"
+  "^(?=.{8,14}$)(?!.*\\d{2})(?!.*\\d$)"
 )
 ```
 
-2. Write one pattern and pass `weights` to `str_extract_all()`. Pull every whole number that is followed by a space and then a unit other than `kg`. A number glued to letters, such as `7kg`, does not count. Do not return part of a longer number. (5 points)
+2. Write one pattern with two groups and pass `pairs` to `str_replace_all()`. Each group is one vowel followed by one consonant. The two pairs do not have to be the same. Switch the pairs. Vowels are `a`, `e`, `i`, `o`, and `u`. (5 points)
 
 ```{r}
 #| label: q2b
 
-str_extract_all(weights, "\\b\\d+\\b(?! kg)")
+str_replace_all(pairs, "([aeiou][^aeiou])([aeiou][^aeiou])", "\\2\\1")
 ```
 
 ```{r}
