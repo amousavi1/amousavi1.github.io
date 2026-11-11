@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-11-11T03:06:00-05:00"
-LAST_UPDATED_TEXT = "November 11, 2026, 3:06 AM EST"
+LAST_UPDATED_ISO = "2026-11-11T04:46:00-05:00"
+LAST_UPDATED_TEXT = "November 11, 2026, 4:46 AM EST"
 
 NOTES = [
     {
@@ -277,7 +277,7 @@ NOTES = [
         "slug": "lubridate-dates",
         "week": 10,
         "title": "10.2 lubridate: Dates and Times",
-        "lead": "Parse with ymd(), pull pieces out, and know duration vs period vs interval.",
+        "lead": "A string that looks like a date is still text. Parse it, then pull out pieces, add calendar time, and keep a duration distinct from a period.",
     },
     {
         "slug": "lab-10-factors-dates",

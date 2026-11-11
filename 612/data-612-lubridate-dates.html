@@ -111,140 +111,580 @@
                     <header>
                         <h1 id="page-title" class="page__title" itemprop="name">10.2 lubridate: Dates and Times</h1>
                     </header>
-                                                            <section class="page__content" itemprop="text">
+                    <section class="page__content" itemprop="text">
                         <p class="lecture-meta">
                             <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-10.html">Week 10</a> &middot;
-                            <a href="files/lubridate-dates.pdf" target="_blank" rel="noopener">PDF</a>
-                         &middot; <a href="files/lectures/lubridate-dates.qmd">Source (.qmd)</a></p>
-<p>Parse with ymd(), pull pieces out, and know duration vs period vs
-interval.</p>
-<div id="load-lubridate-and-look-at-the-class" class="section level2">
-<h2>1. Load lubridate and look at the class</h2>
-<p>tidyverse attaches lubridate, but load it yourself so the parsers are
-obvious.</p>
+                            <a href="files/lubridate-dates.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/lectures/lubridate-dates.qmd">Source (.qmd)</a>
+                        </p>
+                        <p>
+                            A string that looks like a date is still text. Parse it, then pull out pieces, add calendar time, and keep a duration distinct from a period.
+                        </p>
+<h2>1. A string is not a date</h2>
+<p>A column can look like a date and still be text. Text does not know that November comes after October, and you cannot subtract two strings to get a number of days.</p>
+<pre><code class="language-r">x &lt;- &quot;2026-11-11&quot;
+class(x)
+</code></pre>
+<pre><code>## [1] &quot;character&quot;
+</code></pre>
+<p>Turn the string into a date or a datetime before you filter, subtract, or plot. Three tools do that conversion.</p>
+<ol>
+<li>Base R: <code>as.Date()</code>, <code>as.POSIXct()</code>, <code>strptime()</code>.</li>
+<li>readr: <code>parse_date()</code>, <code>parse_datetime()</code>, <code>parse_time()</code>.</li>
+<li>lubridate: <code>ymd()</code>, <code>mdy()</code>, <code>dmy()</code>, <code>ymd_hms()</code>, and the helpers that come after the parse.</li>
+</ol>
+<p>All three can turn a string into a date. lubridate is the one that also makes the next steps short: pull out the month, add two calendar months, change the time zone.</p>
+<p>tidyverse attaches readr and lubridate. Load lubridate yourself so the parsers are obvious.</p>
 <pre><code class="language-r">library(tidyverse)
-library(lubridate)</code></pre>
-<p>Two classes matter. A <strong>Date</strong> is a calendar day. A
-<strong>POSIXct</strong> is a datetime: a Date plus a time of day,
-stored as seconds since 1970-01-01 UTC. <code>class()</code> tells you
-which you have.</p>
-<pre><code class="language-r">ymd(&quot;2017-01-31&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
-<pre><code class="language-r">ymd_hms(&quot;2017-01-31 20:11:59&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
+library(lubridate)
+</code></pre>
 <hr />
-</div>
-<div id="parsers-and-constructors" class="section level2">
-<h2>2. Parsers and constructors</h2>
-<p>Name the function after the order of the pieces. The separators can
-vary.</p>
-<pre><code class="language-r">ymd(&quot;2017-01-31&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
-<pre><code class="language-r">mdy(&quot;January 31st, 2017&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
-<pre><code class="language-r">dmy(&quot;31-Jan-2017&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
-<pre><code class="language-r">ymd_hms(&quot;2017-01-31 20:11:59&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
-<pre><code class="language-r">mdy_hm(&quot;01/31/2017 08:15&quot;)</code></pre>
-<pre><code>## [1] &quot;2017-01-31 08:15:00 UTC&quot;</code></pre>
-<p><code>make_date()</code> and <code>make_datetime()</code> build a
-date from numeric columns.</p>
-<pre><code class="language-r">make_date(2017, 1, 31)</code></pre>
-<pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
-<pre><code class="language-r">make_datetime(2017, 1, 31, 20, 11, 59)</code></pre>
-<pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
-<p>Put the CSV files from the Data section of the course page in a
-<code>data/</code> folder of your project.
-<code>wmata_ridership.csv</code> has a <code>Date</code> column (ISO
-text) and a <code>Total</code> column (daily Metro rail rides).</p>
+<h2>2. Three kinds of time</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Example</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Calendar date</td>
+<td><code>2026-11-11</code></td>
+<td><code>Date</code></td>
+</tr>
+<tr>
+<td>Date and time</td>
+<td><code>2026-11-11 14:30:00</code></td>
+<td><code>POSIXct</code></td>
+</tr>
+<tr>
+<td>Time of day</td>
+<td><code>14:30:00</code></td>
+<td><code>hms</code>, from readr</td>
+</tr>
+</tbody>
+</table></div>
+<p>A <code>Date</code> is a calendar day, with no clock time. A <code>POSIXct</code> is one instant: a date, a time of day, and a time zone, stored as seconds since 1970-01-01 00:00:00 UTC. An <code>hms</code> value is a clock time with no date, such as a departure time.</p>
+<pre><code class="language-r">ymd(&quot;2017-01-31&quot;)
+ymd_hms(&quot;2017-01-31 20:11:59&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;
+## [1] &quot;2017-01-31 20:11:59 UTC&quot;
+</code></pre>
+<p>The first is a <code>Date</code>. The second is a <code>POSIXct</code>, printed in UTC.</p>
+<hr />
+<h2>3. Base R</h2>
+<p>No extra package. You tell R the layout of the string with <code>format</code>.</p>
+<h3><code>as.Date()</code></h3>
+<p>Use this for a calendar date.</p>
+<pre><code class="language-r">x &lt;- &quot;2026-11-11&quot;
+d &lt;- as.Date(x)
+d
+class(d)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-11&quot;
+## [1] &quot;Date&quot;
+</code></pre>
+<p>ISO text, year-month-day, is the default. Any other layout needs <code>format</code>.</p>
+<pre><code class="language-r">as.Date(&quot;11/25/2026&quot;, format = &quot;%m/%d/%Y&quot;)
+as.Date(&quot;25-Nov-2026&quot;, format = &quot;%d-%b-%Y&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-25&quot;
+## [1] &quot;2026-11-25&quot;
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%Y</code></td>
+<td>Four-digit year</td>
+<td>2026</td>
+</tr>
+<tr>
+<td><code>%y</code></td>
+<td>Two-digit year</td>
+<td>26</td>
+</tr>
+<tr>
+<td><code>%m</code></td>
+<td>Month number</td>
+<td>11</td>
+</tr>
+<tr>
+<td><code>%d</code></td>
+<td>Day of the month</td>
+<td>25</td>
+</tr>
+<tr>
+<td><code>%b</code></td>
+<td>Abbreviated month</td>
+<td>Nov</td>
+</tr>
+<tr>
+<td><code>%B</code></td>
+<td>Full month</td>
+<td>November</td>
+</tr>
+<tr>
+<td><code>%H</code></td>
+<td>Hour, 00–23</td>
+<td>14</td>
+</tr>
+<tr>
+<td><code>%I</code></td>
+<td>Hour, 01–12</td>
+<td>02</td>
+</tr>
+<tr>
+<td><code>%p</code></td>
+<td>AM or PM</td>
+<td>PM</td>
+</tr>
+<tr>
+<td><code>%M</code></td>
+<td>Minute</td>
+<td>30</td>
+</tr>
+<tr>
+<td><code>%S</code></td>
+<td>Second</td>
+<td>45</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>%m</code> is the month. <code>%M</code> is the minute.</p>
+<h3><code>as.POSIXct()</code></h3>
+<p>Use this when the string has a date and a time. <code>tz</code> is the time zone.</p>
+<pre><code class="language-r">dt &lt;- as.POSIXct(
+  &quot;2026-11-11 14:30:00&quot;,
+  format = &quot;%Y-%m-%d %H:%M:%S&quot;,
+  tz = &quot;UTC&quot;
+)
+dt
+class(dt)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-11 14:30:00 UTC&quot;
+## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;
+</code></pre>
+<h3><code>strptime()</code></h3>
+<p><code>strptime()</code> also parses a datetime, and it returns a <code>POSIXlt</code>.</p>
+<pre><code class="language-r">lt &lt;- strptime(
+  &quot;11/25/2026 14:30&quot;,
+  format = &quot;%m/%d/%Y %H:%M&quot;,
+  tz = &quot;UTC&quot;
+)
+lt
+class(lt)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-25 14:30:00 UTC&quot;
+## [1] &quot;POSIXlt&quot; &quot;POSIXt&quot;
+</code></pre>
+<p><code>POSIXct</code> stores the instant as one number of seconds. <code>POSIXlt</code> stores a list of pieces: year, month, day, hour, and the rest. For a column in a data frame, use <code>POSIXct</code>.</p>
+<h3><code>format()</code> goes back to text</h3>
+<p><code>format()</code> prints a date in a layout you choose. The result is a character string, not a <code>Date</code>.</p>
+<pre><code class="language-r">d &lt;- as.Date(&quot;2026-11-11&quot;)
+format(d, &quot;%B %d, %Y&quot;)
+format(d, &quot;%Y&quot;)
+class(format(d, &quot;%Y&quot;))
+</code></pre>
+<pre><code>## [1] &quot;November 11, 2026&quot;
+## [1] &quot;2026&quot;
+## [1] &quot;character&quot;
+</code></pre>
+<hr />
+<h2>4. readr</h2>
+<p>readr parses character vectors, and it records the values it could not parse.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Input</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parse_date()</code></td>
+<td>a calendar date</td>
+<td><code>Date</code></td>
+</tr>
+<tr>
+<td><code>parse_datetime()</code></td>
+<td>a date and a time</td>
+<td><code>POSIXct</code></td>
+</tr>
+<tr>
+<td><code>parse_time()</code></td>
+<td>a time of day</td>
+<td><code>hms</code></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-r">parse_date(&quot;2026-11-11&quot;)
+parse_date(&quot;11/25/2026&quot;, format = &quot;%m/%d/%Y&quot;)
+
+parse_datetime(&quot;2026-11-11 14:30:00&quot;)
+
+parse_time(&quot;14:30:00&quot;)
+parse_time(&quot;2:30pm&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-11&quot;
+## [1] &quot;2026-11-25&quot;
+## [1] &quot;2026-11-11 14:30:00 UTC&quot;
+## 14:30:00
+## 14:30:00
+</code></pre>
+<p><code>parse_datetime()</code> prints the result in UTC unless the string or the locale says otherwise. <code>parse_time()</code> is the right tool for a column that is only a clock time, such as a store opening.</p>
+<p>A bad value becomes <code>NA</code>, and readr keeps a record of why.</p>
+<pre><code class="language-r">dates &lt;- parse_date(c(&quot;2026-11-11&quot;, &quot;2026-13-25&quot;, &quot;2026-12-01&quot;))
+dates
+problems(dates)
+</code></pre>
+<pre><code>## Warning: 1 parsing failure.
+## row col   expected     actual
+##   2  -- valid date 2026-13-25
+## [1] &quot;2026-11-11&quot; NA           &quot;2026-12-01&quot;
+## # A tibble: 1 × 4
+##     row   col expected   actual
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;
+## 1     2    NA valid date 2026-13-25
+</code></pre>
+<p>Month 13 is not a month. <code>problems()</code> shows the row and the string that failed. That is the reason to parse with readr while you are still importing.</p>
+<p>You can parse during <code>read_csv()</code> instead of converting a character column later. Put the course CSV files in a <code>data/</code> folder of your project.</p>
+<pre><code class="language-r">read_csv(
+  &quot;data.csv&quot;,
+  col_types = cols(
+    date = col_date(format = &quot;%m/%d/%Y&quot;),
+    time = col_time(),
+    .default = col_guess()
+  )
+)
+</code></pre>
+<p><code>wmata_ridership.csv</code> has a <code>Date</code> column of ISO text and a <code>Total</code> column of daily Metro rail rides. lubridate parses that column in the next section. <code>col_date()</code> would do the same job inside <code>read_csv()</code>.</p>
+<p>Base R and readr both turn strings into dates. readr is the one that sets column types at import and keeps a table of the failures.</p>
+<hr />
+<h2>5. lubridate parsers</h2>
+<p>The function name is the order of the pieces. <code>y</code> is year, <code>m</code> is month, <code>d</code> is day. The separators can vary.</p>
+<pre><code class="language-r">ymd(&quot;2026-11-25&quot;)
+mdy(&quot;11/25/2026&quot;)
+dmy(&quot;25/11/2026&quot;)
+
+ymd(&quot;2017-01-31&quot;)
+mdy(&quot;January 31st, 2017&quot;)
+dmy(&quot;31-Jan-2017&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-25&quot;
+## [1] &quot;2026-11-25&quot;
+## [1] &quot;2026-11-25&quot;
+## [1] &quot;2017-01-31&quot;
+## [1] &quot;2017-01-31&quot;
+## [1] &quot;2017-01-31&quot;
+</code></pre>
+<p>All of those are <code>Date</code> objects. The same string, three ways:</p>
+<pre><code class="language-r">x &lt;- &quot;11/25/2026&quot;
+as.Date(x, format = &quot;%m/%d/%Y&quot;)
+parse_date(x, format = &quot;%m/%d/%Y&quot;)
+mdy(x)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-25&quot;
+## [1] &quot;2026-11-25&quot;
+## [1] &quot;2026-11-25&quot;
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Call</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base R</td>
+<td><code>as.Date(x, format = "%m/%d/%Y")</code></td>
+<td><code>2026-11-25</code></td>
+</tr>
+<tr>
+<td>readr</td>
+<td><code>parse_date(x, format = "%m/%d/%Y")</code></td>
+<td><code>2026-11-25</code></td>
+</tr>
+<tr>
+<td>lubridate</td>
+<td><code>mdy(x)</code></td>
+<td><code>2026-11-25</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>mdy()</code> does not need <code>"%m/%d/%Y"</code>. The name of the function is the format.</p>
+<p>Add <code>_hms</code>, <code>_hm</code>, or <code>_h</code> when the string has a clock time. Pass <code>tz</code> when you know the zone.</p>
+<pre><code class="language-r">ymd_hms(&quot;2026-11-11 14:30:45&quot;, tz = &quot;UTC&quot;)
+ymd_hm(&quot;2026-11-11 14:30&quot;, tz = &quot;UTC&quot;)
+mdy_hms(&quot;11/11/2026 14:30:45&quot;, tz = &quot;UTC&quot;)
+dmy_hm(&quot;11 November 2026 14:30&quot;, tz = &quot;UTC&quot;)
+
+ymd_hms(&quot;2017-01-31 20:11:59&quot;)
+mdy_hm(&quot;01/31/2017 08:15&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-11 14:30:45 UTC&quot;
+## [1] &quot;2026-11-11 14:30:00 UTC&quot;
+## [1] &quot;2026-11-11 14:30:45 UTC&quot;
+## [1] &quot;2026-11-11 14:30:00 UTC&quot;
+## [1] &quot;2017-01-31 20:11:59 UTC&quot;
+## [1] &quot;2017-01-31 08:15:00 UTC&quot;
+</code></pre>
+<p><code>make_date()</code> and <code>make_datetime()</code> build a date from numeric columns.</p>
+<pre><code class="language-r">make_date(2017, 1, 31)
+make_datetime(2017, 1, 31, 20, 11, 59)
+</code></pre>
+<pre><code>## [1] &quot;2017-01-31&quot;
+## [1] &quot;2017-01-31 20:11:59 UTC&quot;
+</code></pre>
+<p>Once <code>wmata_ridership.csv</code> is in <code>data/</code>, parse <code>Date</code> with <code>ymd()</code>. This chunk is not run here, because that file is not part of the notes.</p>
 <pre><code class="language-r">wmata &lt;- read_csv(&quot;data/wmata_ridership.csv&quot;)
 wmata &lt;- wmata |&gt;
-  mutate(Date = ymd(Date))</code></pre>
+  mutate(Date = ymd(Date))
+</code></pre>
 <hr />
-</div>
-<div id="pull-pieces-out" class="section level2">
-<h2>3. Pull pieces out</h2>
+<h2>6. Components</h2>
+<p>After the parse, lubridate pulls the pieces out as numbers, or as an ordered factor when you ask for a label.</p>
+<pre><code class="language-r">d &lt;- ymd(&quot;2026-11-11&quot;)
+year(d)
+month(d)
+day(d)
+month(d, label = TRUE)
+wday(d, label = TRUE)
+</code></pre>
+<pre><code>## [1] 2026
+## [1] 11
+## [1] 11
+## [1] Nov
+## 12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; ... &lt; Dec
+## [1] Wed
+## Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat
+</code></pre>
+<p><code>label = TRUE</code> returns an ordered factor. <code>abbr = FALSE</code> spells the name out. The same extractors work on a datetime.</p>
 <pre><code class="language-r">dt &lt;- ymd_hms(&quot;2016-07-08 12:34:56&quot;)
-year(dt)</code></pre>
-<pre><code>## [1] 2016</code></pre>
-<pre><code class="language-r">month(dt)</code></pre>
-<pre><code>## [1] 7</code></pre>
-<pre><code class="language-r">month(dt, label = TRUE)</code></pre>
-<pre><code>## [1] Jul
-## 12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; ... &lt; Dec</code></pre>
-<pre><code class="language-r">day(dt)</code></pre>
-<pre><code>## [1] 8</code></pre>
-<pre><code class="language-r">wday(dt)</code></pre>
-<pre><code>## [1] 6</code></pre>
-<pre><code class="language-r">wday(dt, label = TRUE)</code></pre>
-<pre><code>## [1] Fri
-## Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat</code></pre>
-<pre><code class="language-r">hour(dt)</code></pre>
-<pre><code>## [1] 12</code></pre>
-<p><code>label = TRUE</code> on <code>month()</code> and
-<code>wday()</code> returns an ordered factor. <code>abbr = FALSE</code>
-spells the name out.</p>
+year(dt)
+month(dt)
+month(dt, label = TRUE)
+day(dt)
+wday(dt)
+wday(dt, label = TRUE)
+hour(dt)
+yday(dt)
+quarter(dt)
+</code></pre>
+<pre><code>## [1] 2016
+## [1] 7
+## [1] Jul
+## 12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; ... &lt; Dec
+## [1] 8
+## [1] 6
+## [1] Fri
+## Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat
+## [1] 12
+## [1] 190
+## [1] 3
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>What it returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>year()</code></td>
+<td>year</td>
+</tr>
+<tr>
+<td><code>month()</code></td>
+<td>month</td>
+</tr>
+<tr>
+<td><code>day()</code></td>
+<td>day of the month</td>
+</tr>
+<tr>
+<td><code>wday()</code></td>
+<td>weekday</td>
+</tr>
+<tr>
+<td><code>yday()</code></td>
+<td>day of the year</td>
+</tr>
+<tr>
+<td><code>week()</code></td>
+<td>week number</td>
+</tr>
+<tr>
+<td><code>quarter()</code></td>
+<td>quarter, 1–4</td>
+</tr>
+<tr>
+<td><code>hour()</code></td>
+<td>hour</td>
+</tr>
+<tr>
+<td><code>minute()</code></td>
+<td>minute</td>
+</tr>
+<tr>
+<td><code>second()</code></td>
+<td>second</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>wday()</code> counts Sunday as 1 unless you set <code>week_start</code>.</p>
+<p>Base R can print the same pieces with <code>format()</code>, and the result is text. <code>year()</code> returns a number.</p>
+<pre><code class="language-r">format(d, &quot;%Y&quot;)
+class(format(d, &quot;%Y&quot;))
+year(d)
+class(year(d))
+</code></pre>
+<pre><code>## [1] &quot;2026&quot;
+## [1] &quot;character&quot;
+## [1] 2026
+## [1] &quot;numeric&quot;
+</code></pre>
+<p>You can also replace one component. The other pieces stay.</p>
+<pre><code class="language-r">d &lt;- ymd(&quot;2026-11-11&quot;)
+year(d) &lt;- 2027
+d
+month(d) &lt;- 12
+d
+</code></pre>
+<pre><code>## [1] &quot;2027-11-11&quot;
+## [1] &quot;2027-12-11&quot;
+</code></pre>
+<p>That assignment can build a date that does not exist, such as February 31. Check the result around month ends and leap days.</p>
+<p>On the WMATA file, after the parse in the previous section:</p>
 <pre><code class="language-r">wmata |&gt;
   mutate(
     year = year(Date),
     month = month(Date, label = TRUE),
     wday = wday(Date, label = TRUE)
-  )</code></pre>
-<pre><code>## Error:
-## ! object &#39;wmata&#39; not found</code></pre>
+  )
+</code></pre>
 <hr />
-</div>
-<div id="durations-periods-and-intervals" class="section level2">
-<h2>4. Durations, periods, and intervals</h2>
-<p>A <strong>duration</strong> is an exact number of seconds.
-<code>ddays(1)</code> is always 86,400 seconds.</p>
-<p>A <strong>period</strong> is a human unit. <code>days(1)</code> is
-“one calendar day,” which can be 23 or 25 hours when clocks change.</p>
+<h2>7. Calendar arithmetic</h2>
+<p><code>days()</code>, <code>months()</code>, and <code>years()</code> add calendar units.</p>
+<pre><code class="language-r">d &lt;- ymd(&quot;2026-11-11&quot;)
+d + days(10)
+d + months(2)
+d + years(1)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-21&quot;
+## [1] &quot;2027-01-11&quot;
+## [1] &quot;2027-11-11&quot;
+</code></pre>
+<p>Subtract two dates to get a difftime.</p>
+<pre><code class="language-r">start &lt;- ymd(&quot;2026-11-01&quot;)
+end &lt;- ymd(&quot;2026-11-11&quot;)
+end - start
+</code></pre>
+<pre><code>## Time difference of 10 days
+</code></pre>
+<p><code>interval()</code> stores the two endpoints. <code>time_length()</code> turns that span into a number of days.</p>
+<pre><code class="language-r">interval(start, end)
+time_length(interval(start, end), unit = &quot;days&quot;)
+</code></pre>
+<pre><code>## [1] 2026-11-01 UTC--2026-11-11 UTC
+## [1] 10
+</code></pre>
+<p><code>floor_date()</code> and <code>ceiling_date()</code> snap a date to the start of a week, a month, or a year. That is how you group daily rows into months.</p>
+<pre><code class="language-r">d &lt;- ymd(&quot;2026-11-11&quot;)
+floor_date(d, unit = &quot;month&quot;)
+ceiling_date(d, unit = &quot;month&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-01&quot;
+## [1] &quot;2026-12-01&quot;
+</code></pre>
+<hr />
+<h2>8. Durations, periods, and intervals</h2>
+<p>A <strong>duration</strong> is an exact number of seconds. <code>ddays(1)</code> is always 86,400 seconds. <code>dyears(1)</code> is 365.25 of those days.</p>
+<p>A <strong>period</strong> is a human unit. <code>days(1)</code> is one calendar day, which can be 23 or 25 hours when the clocks change. <code>years(1)</code> is one calendar year, 365 or 366 days.</p>
 <p>An <strong>interval</strong> is the span between two instants.</p>
-<pre><code class="language-r">ddays(1)</code></pre>
-<pre><code>## [1] &quot;86400s (~1 days)&quot;</code></pre>
-<pre><code class="language-r">days(1)</code></pre>
-<pre><code>## [1] &quot;1d 0H 0M 0S&quot;</code></pre>
-<pre><code class="language-r">years(1)</code></pre>
-<pre><code>## [1] &quot;1y 0m 0d 0H 0M 0S&quot;</code></pre>
-<pre><code class="language-r">ymd(&quot;2016-01-01&quot;) + ddays(365)</code></pre>
-<pre><code>## [1] &quot;2016-12-31&quot;</code></pre>
-<pre><code class="language-r">ymd(&quot;2016-01-01&quot;) + days(365)</code></pre>
-<pre><code>## [1] &quot;2016-12-31&quot;</code></pre>
-<pre><code class="language-r">ymd(&quot;2016-01-01&quot;) + years(1)</code></pre>
-<pre><code>## [1] &quot;2017-01-01&quot;</code></pre>
+<pre><code class="language-r">ddays(1)
+days(1)
+years(1)
+
+ymd(&quot;2016-01-01&quot;) + ddays(365)
+ymd(&quot;2016-01-01&quot;) + days(365)
+ymd(&quot;2016-01-01&quot;) + years(1)
+ymd(&quot;2016-01-01&quot;) + dyears(1)
+</code></pre>
+<pre><code>## [1] &quot;86400s (~1 days)&quot;
+## [1] &quot;1d 0H 0M 0S&quot;
+## [1] &quot;1y 0m 0d 0H 0M 0S&quot;
+## [1] &quot;2016-12-31&quot;
+## [1] &quot;2016-12-31&quot;
+## [1] &quot;2017-01-01&quot;
+## [1] &quot;2016-12-31 06:00:00 UTC&quot;
+</code></pre>
+<p>2016 is a leap year, so a calendar year is 366 days. <code>ddays(365)</code> and <code>days(365)</code> both land on 2016-12-31. <code>years(1)</code> lands on 2017-01-01. <code>dyears(1)</code> is 365.25 days of seconds, so the result is a datetime six hours before the end of December 31.</p>
 <pre><code class="language-r">int &lt;- interval(ymd(&quot;2004-01-01&quot;), ymd(&quot;2018-12-21&quot;))
-int</code></pre>
-<pre><code>## [1] 2004-01-01 UTC--2018-12-21 UTC</code></pre>
-<pre><code class="language-r">as.duration(int)</code></pre>
-<pre><code>## [1] &quot;472435200s (~14.97 years)&quot;</code></pre>
-<p>2016 is a leap year, so <code>ddays(365)</code> and
-<code>days(365)</code> land on different days. Use a duration when you
-want elapsed time. Use a period when you want “same date next month.”
-Use an interval when you have two endpoints.</p>
+int
+as.duration(int)
+</code></pre>
+<pre><code>## [1] 2004-01-01 UTC--2018-12-21 UTC
+## [1] &quot;472435200s (~14.97 years)&quot;
+</code></pre>
+<p>Use a duration when you want elapsed seconds. Use a period when you want the same date next month. Use an interval when you have two endpoints.</p>
 <hr />
-</div>
-<div id="time-zones" class="section level2">
-<h2>5. Time zones</h2>
-<p>Datetimes default to <strong>UTC</strong>. <code>force_tz()</code>
-keeps the clock face and changes the zone (the instant moves).
-<code>with_tz()</code> keeps the instant and redraws the clock in
-another zone.</p>
+<h2>9. Time zones</h2>
+<p>A datetime from <code>ymd_hms()</code> with no <code>tz</code> is <strong>UTC</strong>.</p>
+<p><code>with_tz()</code> keeps the instant and redraws the clock in another zone. <code>force_tz()</code> keeps the clock face and changes which instant that clock face means.</p>
+<pre><code class="language-r">dt &lt;- ymd_hms(&quot;2026-11-11 14:30:00&quot;, tz = &quot;UTC&quot;)
+with_tz(dt, &quot;America/New_York&quot;)
+force_tz(dt, &quot;America/New_York&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-11 09:30:00 EST&quot;
+## [1] &quot;2026-11-11 14:30:00 EST&quot;
+</code></pre>
+<p>14:30 UTC is 09:30 Eastern that day. <code>force_tz()</code> leaves the digits 14:30 and labels them Eastern, which is a different instant.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Clock</th>
+<th>Instant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>with_tz()</code></td>
+<td>changes</td>
+<td>stays the same</td>
+</tr>
+<tr>
+<td><code>force_tz()</code></td>
+<td>stays the same</td>
+<td>changes</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>OlsonNames()</code> lists the zone names. <code>"America/New_York"</code> is Eastern time, daylight saving included.</p>
+<p>The same pair on a datetime that was parsed with no zone, so lubridate stored it as UTC:</p>
 <pre><code class="language-r">x &lt;- ymd_hms(&quot;2020-03-08 01:30:00&quot;)
-x</code></pre>
-<pre><code>## [1] &quot;2020-03-08 01:30:00 UTC&quot;</code></pre>
-<pre><code class="language-r">force_tz(x, &quot;America/New_York&quot;)</code></pre>
-<pre><code>## [1] &quot;2020-03-08 01:30:00 EST&quot;</code></pre>
-<pre><code class="language-r">with_tz(x, &quot;America/New_York&quot;)</code></pre>
-<pre><code>## [1] &quot;2020-03-07 20:30:00 EST&quot;</code></pre>
-<p><code>OlsonNames()</code> lists the zone names.
-<code>"America/New_York"</code> is Eastern time, daylight saving
-included.</p>
-<p>A clock that is missing a timezone is often stored as UTC by
-accident. On the spring-forward Sunday the computed duration can jump by
-an hour. <code>force_tz()</code> is the fix when the numbers on the
-clock were already Eastern.</p>
+x
+force_tz(x, &quot;America/New_York&quot;)
+with_tz(x, &quot;America/New_York&quot;)
+</code></pre>
+<pre><code>## [1] &quot;2020-03-08 01:30:00 UTC&quot;
+## [1] &quot;2020-03-08 01:30:00 EST&quot;
+## [1] &quot;2020-03-07 20:30:00 EST&quot;
+</code></pre>
+<p>A clock that was recorded in local time is often stored as UTC by accident. On the morning the clocks spring forward, 2:00 a.m. does not exist, so a span that looks like two hours is one hour of real time. Subtracting datetimes gives a difftime. Ask <code>as.numeric()</code> for hours. Dividing by 3,600 is right only when that difftime is still in seconds. For a gap of a couple of hours, R has already chosen hours.</p>
 <pre><code class="language-r">toy &lt;- tibble(
   start = mdy_hm(c(&quot;3/13/2016 1:30&quot;, &quot;3/13/2016 1:30&quot;)),
   end   = mdy_hm(c(&quot;3/13/2016 3:30&quot;, &quot;3/13/2016 3:30&quot;))
@@ -253,26 +693,220 @@ toy |&gt;
   mutate(
     start_ny = force_tz(start, &quot;America/New_York&quot;),
     end_ny = force_tz(end, &quot;America/New_York&quot;),
-    hours_utc = as.numeric(end - start) / 3600,
-    hours_ny = as.numeric(end_ny - start_ny) / 3600
-  )</code></pre>
-<pre><code>## # A tibble: 2 × 6
-##   start               end                 start_ny           
-##   &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
-## 1 2016-03-13 01:30:00 2016-03-13 03:30:00 2016-03-13 01:30:00
-## 2 2016-03-13 01:30:00 2016-03-13 03:30:00 2016-03-13 01:30:00
-## # ℹ 3 more variables: end_ny &lt;dttm&gt;, hours_utc &lt;dbl&gt;, hours_ny &lt;dbl&gt;</code></pre>
+    hours_utc = as.numeric(end - start, units = &quot;hours&quot;),
+    hours_ny = as.numeric(end_ny - start_ny, units = &quot;hours&quot;)
+  ) |&gt;
+  select(hours_utc, hours_ny)
+</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   hours_utc hours_ny
+##       &lt;dbl&gt;    &lt;dbl&gt;
+## 1         2        1
+## 2         2        1
+</code></pre>
+<p>UTC reports 2 hours. New York reports 1 hour. <code>force_tz()</code> is the fix when the numbers on the clock were already Eastern.</p>
 <hr />
-</div>
-<div id="practice" class="section level2">
-<h2>6. Practice</h2>
-<ol style="list-style-type: decimal">
-<li>Parse <code>"2010-02-01"</code>, <code>"February 1, 2010"</code>,
-<code>"01-02-2010"</code>, and <code>"2010-02-01 08:15:00"</code>.
-<code>"01-02-2010"</code> is <code>dmy</code> or <code>mdy</code>
-depending on the country.</li>
-<li>Build dates from this tribble and keep the rows before
-<code>2010-02-01</code>.</li>
+<h2>10. One small data set</h2>
+<p>Five transactions. <code>date_string</code> is text.</p>
+<pre><code class="language-r">sales &lt;- tibble(
+  customer = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;, &quot;E&quot;),
+  date_string = c(
+    &quot;11/01/2026&quot;,
+    &quot;11/03/2026&quot;,
+    &quot;11/03/2026&quot;,
+    &quot;11/08/2026&quot;,
+    &quot;11/11/2026&quot;
+  ),
+  amount = c(100, 150, 80, 200, 120)
+)
+
+sales &lt;- sales |&gt;
+  mutate(
+    date = mdy(date_string),
+    year = year(date),
+    month = month(date),
+    weekday = wday(date, label = TRUE)
+  )
+
+sales
+</code></pre>
+<pre><code>## # A tibble: 5 × 7
+##   customer date_string amount date        year month weekday
+##   &lt;chr&gt;    &lt;chr&gt;        &lt;dbl&gt; &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;ord&gt;
+## 1 A        11/01/2026     100 2026-11-01  2026    11 Sun
+## 2 B        11/03/2026     150 2026-11-03  2026    11 Tue
+## 3 C        11/03/2026      80 2026-11-03  2026    11 Tue
+## 4 D        11/08/2026     200 2026-11-08  2026    11 Sun
+## 5 E        11/11/2026     120 2026-11-11  2026    11 Wed
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>customer</th>
+<th>date</th>
+<th>year</th>
+<th>month</th>
+<th>weekday</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>2026-11-01</td>
+<td>2026</td>
+<td>11</td>
+<td>Sun</td>
+</tr>
+<tr>
+<td>B</td>
+<td>2026-11-03</td>
+<td>2026</td>
+<td>11</td>
+<td>Tue</td>
+</tr>
+<tr>
+<td>C</td>
+<td>2026-11-03</td>
+<td>2026</td>
+<td>11</td>
+<td>Tue</td>
+</tr>
+<tr>
+<td>D</td>
+<td>2026-11-08</td>
+<td>2026</td>
+<td>11</td>
+<td>Sun</td>
+</tr>
+<tr>
+<td>E</td>
+<td>2026-11-11</td>
+<td>2026</td>
+<td>11</td>
+<td>Wed</td>
+</tr>
+</tbody>
+</table></div>
+<p>Sum the amount by weekday. The weekday factor puts Sunday first.</p>
+<pre><code class="language-r">sales |&gt;
+  group_by(weekday) |&gt;
+  summarise(total_sales = sum(amount), .groups = &quot;drop&quot;)
+</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##   weekday total_sales
+##   &lt;ord&gt;         &lt;dbl&gt;
+## 1 Sun             300
+## 2 Tue             230
+## 3 Wed             120
+</code></pre>
+<p>Then plot. B and C share November 3, so the line drops vertically between 150 and 80 on that day.</p>
+<pre><code class="language-r">sales |&gt;
+  ggplot(aes(x = date, y = amount)) +
+  geom_point(size = 3) +
+  geom_line(group = 1) +
+  labs(title = &quot;Sales over time&quot;, x = &quot;Date&quot;, y = &quot;Amount&quot;)
+</code></pre>
+<p><img alt="Sales amounts from November 1 to November 11, 2026, with two points on November 3." src="files/graphics/lubridate-sales.png" /></p>
+<p>The order of the work is: read the rows, parse the date, pull out the pieces you need, then summarise or plot.</p>
+<hr />
+<h2>11. Which tool</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Base R</th>
+<th>readr</th>
+<th>lubridate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parse a date</td>
+<td><code>as.Date()</code></td>
+<td><code>parse_date()</code></td>
+<td><code>ymd()</code>, <code>mdy()</code>, <code>dmy()</code></td>
+</tr>
+<tr>
+<td>Parse a datetime</td>
+<td><code>as.POSIXct()</code></td>
+<td><code>parse_datetime()</code></td>
+<td><code>ymd_hms()</code> and the rest</td>
+</tr>
+<tr>
+<td>Parse a time of day</td>
+<td><code>strptime()</code> plus a date</td>
+<td><code>parse_time()</code></td>
+<td><code>hms()</code>, which is a period</td>
+</tr>
+<tr>
+<td>Say how the string is laid out</td>
+<td><code>%Y-%m-%d</code> and the rest</td>
+<td>the same codes</td>
+<td>usually the function name</td>
+</tr>
+<tr>
+<td>Year as a number</td>
+<td><code>format()</code> returns text</td>
+<td></td>
+<td><code>year()</code></td>
+</tr>
+<tr>
+<td>Month, weekday</td>
+<td><code>format()</code>, <code>weekdays()</code></td>
+<td></td>
+<td><code>month()</code>, <code>wday()</code></td>
+</tr>
+<tr>
+<td>Add a calendar month</td>
+<td>you build it</td>
+<td></td>
+<td><code>months()</code></td>
+</tr>
+<tr>
+<td>Snap to the start of a month</td>
+<td>you build it</td>
+<td></td>
+<td><code>floor_date()</code></td>
+</tr>
+<tr>
+<td>See which rows failed to parse</td>
+<td>little built in</td>
+<td><code>problems()</code></td>
+<td>a warning, and <code>NA</code></td>
+</tr>
+<tr>
+<td>Change the time zone</td>
+<td><code>tz</code>, then convert</td>
+<td>the locale</td>
+<td><code>with_tz()</code>, <code>force_tz()</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>lubridate::hms()</code> builds a <strong>period</strong>: 14 hours, 30 minutes, 0 seconds. <code>readr::parse_time()</code> builds an <strong>hms</strong> time of day. They can print looking alike. <code>class()</code> tells them apart.</p>
+<p>Use base R when you are learning the classes and the <code>%</code> codes, or when you cannot add a package. Use readr when you are importing a file and you need to know which rows failed. Use lubridate when the layouts vary, or when you need components, calendar arithmetic, grouping by time, or time zones.</p>
+<p>They fit together. Import with readr. Manipulate the dates with lubridate.</p>
+<hr />
+<h2>12. Questions</h2>
+<ol>
+<li>Which readr function turns a string that is only a date into a <code>Date</code>?</li>
+<li>Which lubridate function parses <code>"25/11/2026"</code>?</li>
+<li>What is the difference between <code>format(d, "%Y")</code> and <code>year(d)</code>?</li>
+<li>What does <code>with_tz()</code> change?</li>
+<li>Which function snaps a date to the first day of its month?</li>
+</ol>
+<h3>Answers</h3>
+<ol>
+<li><code>parse_date()</code>. <code>parse_datetime()</code> wants a time as well. <code>parse_time()</code> is only a clock time. <code>ymd_hms()</code> is lubridate, not readr.</li>
+<li><code>dmy()</code>. The pieces are day, month, year.</li>
+<li><code>format()</code> returns a character string. <code>year()</code> returns a number. The printed year can look the same.</li>
+<li>The clock. The instant stays the same, and it is displayed in the other zone. <code>force_tz()</code> is the one that keeps the clock and changes the instant.</li>
+<li><code>floor_date(d, unit = "month")</code>.</li>
+</ol>
+<hr />
+<h2>13. Practice</h2>
+<ol>
+<li>Parse <code>"2010-02-01"</code>, <code>"February 1, 2010"</code>, <code>"01-02-2010"</code>, and <code>"2010-02-01 08:15:00"</code>. <code>"01-02-2010"</code> is <code>dmy</code> or <code>mdy</code> depending on the country.</li>
+<li>Build dates from this tribble and keep the rows before <code>2010-02-01</code>.</li>
 </ol>
 <pre><code class="language-r">events &lt;- tribble(
   ~year, ~month, ~day,
@@ -280,10 +914,12 @@ depending on the country.</li>
   2010,      1,   15,
   2010,      2,    1,
   2010,      3,   10
-)</code></pre>
-<nav class="course-page-nav" aria-label="Page">
+)
+</code></pre>
+<p>Base R supplies the classes. readr parses on the way in and reports the failures. lubridate is how you work with the dates after that.</p>
+                        <nav class="course-page-nav" aria-label="Page">
                             <a class="course-page-nav__prev" href="data-612-forcats-factors.html"><span aria-hidden="true">←</span> 10.1 forcats: Factors</a>
-                        <a class="course-page-nav__week" href="data-612-week-10.html">Week 10</a>
+                            <a class="course-page-nav__week" href="data-612-week-10.html">Week 10</a>
                             <a class="course-page-nav__next" href="data-612-lab-10-factors-dates.html">Lab 10: Factors and Dates <span aria-hidden="true">→</span></a>
                         </nav>
                     </section>
@@ -294,7 +930,7 @@ depending on the country.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-11T03:06:00-05:00">November 11, 2026, 3:06 AM EST</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-11T04:46:00-05:00">November 11, 2026, 4:46 AM EST</time></div>
             </footer>
         </div>
 
