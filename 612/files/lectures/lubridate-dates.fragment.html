@@ -77,7 +77,9 @@ hour, and the rest</td>
 base R. <code>hms</code> comes from the <code>hms</code> package, which
 <code>readr</code> loads. For a column in a data frame, use
 <code>POSIXct</code>. <code>strptime()</code> returns
-<code>POSIXlt</code>.</p>
+<code>POSIXlt</code>. <code>as_date()</code> turns a datetime into a
+<code>Date</code>. <code>as_datetime()</code> turns a <code>Date</code>
+into a <code>POSIXct</code>. Section 5 shows both.</p>
 <pre class="r"><code>class(as.Date(&quot;2026-11-11&quot;))</code></pre>
 <pre><code>## [1] &quot;Date&quot;</code></pre>
 <pre class="r"><code>class(as.POSIXct(&quot;2026-11-11 14:30:00&quot;, tz = &quot;UTC&quot;))</code></pre>
@@ -260,6 +262,11 @@ dt</code></pre>
 <pre><code>## [1] &quot;2026-11-11 14:30:00 UTC&quot;</code></pre>
 <pre class="r"><code>class(dt)</code></pre>
 <pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
+<p>When <code>x</code> is already a <code>POSIXct</code>,
+<code>as.Date(x)</code> takes the calendar day in UTC. Pass
+<code>tz</code> to take the day in another zone. <code>as_date()</code>
+uses the zone stored on <code>x</code>. The evening example is in
+section 5.</p>
 </div>
 <div id="strptime" class="section level3">
 <h3><code>strptime()</code></h3>
@@ -448,6 +455,56 @@ date from numeric columns.</p>
 <pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
 <pre class="r"><code>make_datetime(2017, 1, 31, 20, 11, 59)</code></pre>
 <pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
+<div id="as_date-and-as_datetime" class="section level3">
+<h3><code>as_date()</code> and <code>as_datetime()</code></h3>
+<p>These two change the class. <code>as_date()</code> returns a
+<code>Date</code>. <code>as_datetime()</code> returns a
+<code>POSIXct</code>.</p>
+<pre class="r"><code>as_date(&quot;2026-11-11&quot;)</code></pre>
+<pre><code>## [1] &quot;2026-11-11&quot;</code></pre>
+<pre class="r"><code>as_datetime(&quot;2026-11-11 14:30:00&quot;)</code></pre>
+<pre><code>## [1] &quot;2026-11-11 14:30:00 UTC&quot;</code></pre>
+<pre class="r"><code>as_datetime(as_date(&quot;2026-11-11&quot;))</code></pre>
+<pre><code>## [1] &quot;2026-11-11 UTC&quot;</code></pre>
+<pre class="r"><code>as_datetime(as_date(&quot;2026-11-11&quot;), tz = &quot;America/New_York&quot;)</code></pre>
+<pre><code>## [1] &quot;2026-11-11 EST&quot;</code></pre>
+<p>A <code>Date</code> has no clock, so <code>as_datetime()</code> puts
+it at midnight. With no <code>tz</code>, that midnight is UTC. Pass
+<code>tz</code> to put midnight in another zone.</p>
+<p>On a string, both look for an order they recognize, usually year,
+then month, then day. <code>"11/25/2026"</code> does not match that
+order. Pass <code>format</code>, or use <code>mdy()</code>.</p>
+<pre class="r"><code>as_date(&quot;11/25/2026&quot;)</code></pre>
+<pre><code>## Warning: All formats failed to parse. No formats found.</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>as_date(&quot;11/25/2026&quot;, format = &quot;%m/%d/%Y&quot;)</code></pre>
+<pre><code>## [1] &quot;2026-11-25&quot;</code></pre>
+<p>A number means days since 1970-01-01 for <code>as_date()</code>, and
+seconds since that midnight for <code>as_datetime()</code>.</p>
+<pre class="r"><code>as_date(0)</code></pre>
+<pre><code>## [1] &quot;1970-01-01&quot;</code></pre>
+<pre class="r"><code>as_date(1)</code></pre>
+<pre><code>## [1] &quot;1970-01-02&quot;</code></pre>
+<pre class="r"><code>as_datetime(0)</code></pre>
+<pre><code>## [1] &quot;1970-01-01 UTC&quot;</code></pre>
+<pre class="r"><code>as_datetime(3600)</code></pre>
+<pre><code>## [1] &quot;1970-01-01 01:00:00 UTC&quot;</code></pre>
+<p><code>as_date()</code> on a datetime keeps the calendar day in that
+datetime’s zone. 22:00 in New York is still November 11 there. The same
+instant is 03:00 on November 12 in UTC. <code>as.Date()</code> reads the
+day in UTC, so it returns November 12. <code>as_date()</code> returns
+November 11. Pass <code>tz = "UTC"</code> when you want the UTC day.</p>
+<pre class="r"><code>ny &lt;- ymd_hms(&quot;2026-11-11 22:00:00&quot;, tz = &quot;America/New_York&quot;)
+ny</code></pre>
+<pre><code>## [1] &quot;2026-11-11 22:00:00 EST&quot;</code></pre>
+<pre class="r"><code>with_tz(ny, &quot;UTC&quot;)</code></pre>
+<pre><code>## [1] &quot;2026-11-12 03:00:00 UTC&quot;</code></pre>
+<pre class="r"><code>as.Date(ny)</code></pre>
+<pre><code>## [1] &quot;2026-11-12&quot;</code></pre>
+<pre class="r"><code>as_date(ny)</code></pre>
+<pre><code>## [1] &quot;2026-11-11&quot;</code></pre>
+<pre class="r"><code>as_date(ny, tz = &quot;UTC&quot;)</code></pre>
+<pre><code>## [1] &quot;2026-11-12&quot;</code></pre>
 <p>Once <code>wmata_ridership.csv</code> is in <code>data/</code>, parse
 <code>Date</code> with <code>ymd()</code>. This chunk is not run here,
 because that file is not part of the notes.</p>
@@ -455,6 +512,7 @@ because that file is not part of the notes.</p>
 wmata &lt;- wmata |&gt;
   mutate(Date = ymd(Date))</code></pre>
 <hr />
+</div>
 </div>
 <div id="components" class="section level2">
 <h2>6. Components</h2>
@@ -901,6 +959,18 @@ pieces you need, then summarise or plot.</p>
 <td><code>as.POSIXct()</code></td>
 <td><code>parse_datetime()</code></td>
 <td><code>ymd_hms()</code> and the rest</td>
+</tr>
+<tr class="odd">
+<td>Turn a datetime into a <code>Date</code></td>
+<td><code>as.Date(x, tz = ...)</code></td>
+<td></td>
+<td><code>as_date()</code></td>
+</tr>
+<tr class="even">
+<td>Turn a <code>Date</code> into a datetime</td>
+<td><code>as.POSIXct()</code></td>
+<td></td>
+<td><code>as_datetime()</code></td>
 </tr>
 <tr class="odd">
 <td>Parse a time of day</td>

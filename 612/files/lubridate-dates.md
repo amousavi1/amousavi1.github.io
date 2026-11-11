@@ -41,7 +41,7 @@ A date type is either a moment on the calendar or a length of time. The two tabl
 | Date-time, as pieces | The same kind of instant, stored as a list of year, month, day, hour, and the rest | `POSIXlt`, `POSIXt` |
 | Time of day | A clock time with no date, such as 14:30:00 | `hms`, `difftime` |
 
-`Date`, `POSIXct`, and `POSIXlt` are base R. `hms` comes from the `hms` package, which `readr` loads. For a column in a data frame, use `POSIXct`. `strptime()` returns `POSIXlt`.
+`Date`, `POSIXct`, and `POSIXlt` are base R. `hms` comes from the `hms` package, which `readr` loads. For a column in a data frame, use `POSIXct`. `strptime()` returns `POSIXlt`. `as_date()` turns a datetime into a `Date`. `as_datetime()` turns a `Date` into a `POSIXct`. Section 5 shows both.
 
 ```r
 class(as.Date("2026-11-11"))
@@ -170,6 +170,8 @@ class(dt)
 ## [1] "2026-11-11 14:30:00 UTC"
 ## [1] "POSIXct" "POSIXt"
 ```
+
+When `x` is already a `POSIXct`, `as.Date(x)` takes the calendar day in UTC. Pass `tz` to take the day in another zone. `as_date()` uses the zone stored on `x`. The evening example is in section 5.
 
 ### `strptime()`
 
@@ -358,6 +360,74 @@ make_datetime(2017, 1, 31, 20, 11, 59)
 ```
 ## [1] "2017-01-31"
 ## [1] "2017-01-31 20:11:59 UTC"
+```
+
+### `as_date()` and `as_datetime()`
+
+These two change the class. `as_date()` returns a `Date`. `as_datetime()` returns a `POSIXct`.
+
+```r
+as_date("2026-11-11")
+as_datetime("2026-11-11 14:30:00")
+as_datetime(as_date("2026-11-11"))
+as_datetime(as_date("2026-11-11"), tz = "America/New_York")
+```
+
+```
+## [1] "2026-11-11"
+## [1] "2026-11-11 14:30:00 UTC"
+## [1] "2026-11-11 UTC"
+## [1] "2026-11-11 EST"
+```
+
+A `Date` has no clock, so `as_datetime()` puts it at midnight. With no `tz`, that midnight is UTC. Pass `tz` to put midnight in another zone.
+
+On a string, both look for an order they recognize, usually year, then month, then day. `"11/25/2026"` does not match that order. Pass `format`, or use `mdy()`.
+
+```r
+as_date("11/25/2026")
+as_date("11/25/2026", format = "%m/%d/%Y")
+```
+
+```
+## Warning: All formats failed to parse. No formats found.
+## [1] NA
+## [1] "2026-11-25"
+```
+
+A number means days since 1970-01-01 for `as_date()`, and seconds since that midnight for `as_datetime()`.
+
+```r
+as_date(0)
+as_date(1)
+as_datetime(0)
+as_datetime(3600)
+```
+
+```
+## [1] "1970-01-01"
+## [1] "1970-01-02"
+## [1] "1970-01-01 UTC"
+## [1] "1970-01-01 01:00:00 UTC"
+```
+
+`as_date()` on a datetime keeps the calendar day in that datetime's zone. 22:00 in New York is still November 11 there. The same instant is 03:00 on November 12 in UTC. `as.Date()` reads the day in UTC, so it returns November 12. `as_date()` returns November 11. Pass `tz = "UTC"` when you want the UTC day.
+
+```r
+ny <- ymd_hms("2026-11-11 22:00:00", tz = "America/New_York")
+ny
+with_tz(ny, "UTC")
+as.Date(ny)
+as_date(ny)
+as_date(ny, tz = "UTC")
+```
+
+```
+## [1] "2026-11-11 22:00:00 EST"
+## [1] "2026-11-12 03:00:00 UTC"
+## [1] "2026-11-12"
+## [1] "2026-11-11"
+## [1] "2026-11-12"
 ```
 
 Once `wmata_ridership.csv` is in `data/`, parse `Date` with `ymd()`. This chunk is not run here, because that file is not part of the notes.
@@ -750,6 +820,8 @@ The order of the work is: read the rows, parse the date, pull out the pieces you
 |---|---|---|---|
 | Parse a date | `as.Date()` | `parse_date()` | `ymd()`, `mdy()`, `dmy()` |
 | Parse a datetime | `as.POSIXct()` | `parse_datetime()` | `ymd_hms()` and the rest |
+| Turn a datetime into a `Date` | `as.Date(x, tz = ...)` | | `as_date()` |
+| Turn a `Date` into a datetime | `as.POSIXct()` | | `as_datetime()` |
 | Parse a time of day | `strptime()` plus a date | `parse_time()` | `hms()`, which is a period |
 | Say how the string is laid out | `%Y-%m-%d` and the rest | the same codes | usually the function name |
 | Year as a number | `format()` returns text | | `year()` |
