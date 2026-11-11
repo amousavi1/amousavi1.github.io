@@ -28,15 +28,34 @@ library(lubridate)
 
 ---
 
-## 2. Three kinds of time
+## 2. Date types in R
 
-| Kind | Example | Class |
+A date type is either a moment on the calendar or a length of time. The two tables below are the ones you will meet in this course.
+
+### A moment: a day, an instant, or a clock time
+
+| Type | What it stores | Class |
 |---|---|---|
-| Calendar date | `2026-11-11` | `Date` |
-| Date and time | `2026-11-11 14:30:00` | `POSIXct` |
-| Time of day | `14:30:00` | `hms`, from readr |
+| Date | A calendar day, with no time of day | `Date` |
+| Date-time | One instant, stored as seconds since 1970-01-01 00:00:00 UTC | `POSIXct`, `POSIXt` |
+| Date-time, as pieces | The same kind of instant, stored as a list of year, month, day, hour, and the rest | `POSIXlt`, `POSIXt` |
+| Time of day | A clock time with no date, such as 14:30:00 | `hms`, `difftime` |
 
-A `Date` is a calendar day, with no clock time. A `POSIXct` is one instant: a date, a time of day, and a time zone, stored as seconds since 1970-01-01 00:00:00 UTC. An `hms` value is a clock time with no date, such as a departure time.
+`Date`, `POSIXct`, and `POSIXlt` are base R. `hms` comes from the `hms` package, which `readr` loads. For a column in a data frame, use `POSIXct`. `strptime()` returns `POSIXlt`.
+
+```r
+class(as.Date("2026-11-11"))
+class(as.POSIXct("2026-11-11 14:30:00", tz = "UTC"))
+class(strptime("2026-11-11 14:30:00", format = "%Y-%m-%d %H:%M:%S", tz = "UTC"))
+class(parse_time("14:30:00"))
+```
+
+```
+## [1] "Date"
+## [1] "POSIXct" "POSIXt"
+## [1] "POSIXlt" "POSIXt"
+## [1] "hms"      "difftime"
+```
 
 ```r
 ymd("2017-01-31")
@@ -49,6 +68,39 @@ ymd_hms("2017-01-31 20:11:59")
 ```
 
 The first is a `Date`. The second is a `POSIXct`, printed in UTC.
+
+### A length of time
+
+These types do not name a day. They say how long something lasts.
+
+| Type | What it stores | Class | How you get one |
+|---|---|---|---|
+| Difference | How far apart two dates are | `difftime` | `end - start` |
+| Duration | An exact number of seconds | `Duration` | `ddays(1)` |
+| Period | A calendar unit. A day can be 23 or 25 hours when the clocks change. | `Period` | `days(1)`, `months(1)`, `years(1)` |
+| Interval | The span between two instants | `Interval` | `interval(start, end)` |
+
+`difftime` is base R. Duration, period, and interval are lubridate. Section 7 subtracts two dates. Section 8 shows why a duration and a period can land on different days.
+
+```r
+class(as.Date("2026-11-11") - as.Date("2026-11-01"))
+class(ddays(1))
+class(days(1))
+class(interval(ymd("2026-11-01"), ymd("2026-11-11")))
+```
+
+```
+## [1] "difftime"
+## [1] "Duration"
+## attr(,"package")
+## [1] "lubridate"
+## [1] "Period"
+## attr(,"package")
+## [1] "lubridate"
+## [1] "Interval"
+## attr(,"package")
+## [1] "lubridate"
+```
 
 ---
 
@@ -488,6 +540,15 @@ ceiling_date(d, unit = "month")
 ---
 
 ## 8. Durations, periods, and intervals
+
+The length types from section 2, next to the functions that build them:
+
+| Type | What it stores | Class | How you get one |
+|---|---|---|---|
+| Difference | How far apart two dates are | `difftime` | `end - start` |
+| Duration | An exact number of seconds | `Duration` | `ddays(1)` |
+| Period | A calendar unit. A day can be 23 or 25 hours when the clocks change. | `Period` | `days(1)`, `months(1)`, `years(1)` |
+| Interval | The span between two instants | `Interval` | `interval(start, end)` |
 
 A **duration** is an exact number of seconds. `ddays(1)` is always 86,400 seconds. `dyears(1)` is 365.25 of those days.
 

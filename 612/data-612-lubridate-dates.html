@@ -138,34 +138,51 @@ class(x)
 library(lubridate)
 </code></pre>
 <hr />
-<h2>2. Three kinds of time</h2>
+<h2>2. Date types in R</h2>
+<p>A date type is either a moment on the calendar or a length of time. The two tables below are the ones you will meet in this course.</p>
+<h3>A moment: a day, an instant, or a clock time</h3>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Kind</th>
-<th>Example</th>
+<th>Type</th>
+<th>What it stores</th>
 <th>Class</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Calendar date</td>
-<td><code>2026-11-11</code></td>
+<td>Date</td>
+<td>A calendar day, with no time of day</td>
 <td><code>Date</code></td>
 </tr>
 <tr>
-<td>Date and time</td>
-<td><code>2026-11-11 14:30:00</code></td>
-<td><code>POSIXct</code></td>
+<td>Date-time</td>
+<td>One instant, stored as seconds since 1970-01-01 00:00:00 UTC</td>
+<td><code>POSIXct</code>, <code>POSIXt</code></td>
+</tr>
+<tr>
+<td>Date-time, as pieces</td>
+<td>The same kind of instant, stored as a list of year, month, day, hour, and the rest</td>
+<td><code>POSIXlt</code>, <code>POSIXt</code></td>
 </tr>
 <tr>
 <td>Time of day</td>
-<td><code>14:30:00</code></td>
-<td><code>hms</code>, from readr</td>
+<td>A clock time with no date, such as 14:30:00</td>
+<td><code>hms</code>, <code>difftime</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>A <code>Date</code> is a calendar day, with no clock time. A <code>POSIXct</code> is one instant: a date, a time of day, and a time zone, stored as seconds since 1970-01-01 00:00:00 UTC. An <code>hms</code> value is a clock time with no date, such as a departure time.</p>
+<p><code>Date</code>, <code>POSIXct</code>, and <code>POSIXlt</code> are base R. <code>hms</code> comes from the <code>hms</code> package, which <code>readr</code> loads. For a column in a data frame, use <code>POSIXct</code>. <code>strptime()</code> returns <code>POSIXlt</code>.</p>
+<pre><code class="language-r">class(as.Date(&quot;2026-11-11&quot;))
+class(as.POSIXct(&quot;2026-11-11 14:30:00&quot;, tz = &quot;UTC&quot;))
+class(strptime(&quot;2026-11-11 14:30:00&quot;, format = &quot;%Y-%m-%d %H:%M:%S&quot;, tz = &quot;UTC&quot;))
+class(parse_time(&quot;14:30:00&quot;))
+</code></pre>
+<pre><code>## [1] &quot;Date&quot;
+## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;
+## [1] &quot;POSIXlt&quot; &quot;POSIXt&quot;
+## [1] &quot;hms&quot;      &quot;difftime&quot;
+</code></pre>
 <pre><code class="language-r">ymd(&quot;2017-01-31&quot;)
 ymd_hms(&quot;2017-01-31 20:11:59&quot;)
 </code></pre>
@@ -173,6 +190,61 @@ ymd_hms(&quot;2017-01-31 20:11:59&quot;)
 ## [1] &quot;2017-01-31 20:11:59 UTC&quot;
 </code></pre>
 <p>The first is a <code>Date</code>. The second is a <code>POSIXct</code>, printed in UTC.</p>
+<h3>A length of time</h3>
+<p>These types do not name a day. They say how long something lasts.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What it stores</th>
+<th>Class</th>
+<th>How you get one</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Difference</td>
+<td>How far apart two dates are</td>
+<td><code>difftime</code></td>
+<td><code>end - start</code></td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>An exact number of seconds</td>
+<td><code>Duration</code></td>
+<td><code>ddays(1)</code></td>
+</tr>
+<tr>
+<td>Period</td>
+<td>A calendar unit. A day can be 23 or 25 hours when the clocks change.</td>
+<td><code>Period</code></td>
+<td><code>days(1)</code>, <code>months(1)</code>, <code>years(1)</code></td>
+</tr>
+<tr>
+<td>Interval</td>
+<td>The span between two instants</td>
+<td><code>Interval</code></td>
+<td><code>interval(start, end)</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><code>difftime</code> is base R. Duration, period, and interval are lubridate. Section 7 subtracts two dates. Section 8 shows why a duration and a period can land on different days.</p>
+<pre><code class="language-r">class(as.Date(&quot;2026-11-11&quot;) - as.Date(&quot;2026-11-01&quot;))
+class(ddays(1))
+class(days(1))
+class(interval(ymd(&quot;2026-11-01&quot;), ymd(&quot;2026-11-11&quot;)))
+</code></pre>
+<pre><code>## [1] &quot;difftime&quot;
+## [1] &quot;Duration&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;
+## [1] &quot;Period&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;
+## [1] &quot;Interval&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;
+</code></pre>
 <hr />
 <h2>3. Base R</h2>
 <p>No extra package. You tell R the layout of the string with <code>format</code>.</p>
@@ -611,6 +683,43 @@ ceiling_date(d, unit = &quot;month&quot;)
 </code></pre>
 <hr />
 <h2>8. Durations, periods, and intervals</h2>
+<p>The length types from section 2, next to the functions that build them:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What it stores</th>
+<th>Class</th>
+<th>How you get one</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Difference</td>
+<td>How far apart two dates are</td>
+<td><code>difftime</code></td>
+<td><code>end - start</code></td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>An exact number of seconds</td>
+<td><code>Duration</code></td>
+<td><code>ddays(1)</code></td>
+</tr>
+<tr>
+<td>Period</td>
+<td>A calendar unit. A day can be 23 or 25 hours when the clocks change.</td>
+<td><code>Period</code></td>
+<td><code>days(1)</code>, <code>months(1)</code>, <code>years(1)</code></td>
+</tr>
+<tr>
+<td>Interval</td>
+<td>The span between two instants</td>
+<td><code>Interval</code></td>
+<td><code>interval(start, end)</code></td>
+</tr>
+</tbody>
+</table></div>
 <p>A <strong>duration</strong> is an exact number of seconds. <code>ddays(1)</code> is always 86,400 seconds. <code>dyears(1)</code> is 365.25 of those days.</p>
 <p>A <strong>period</strong> is a human unit. <code>days(1)</code> is one calendar day, which can be 23 or 25 hours when the clocks change. <code>years(1)</code> is one calendar year, 365 or 366 days.</p>
 <p>An <strong>interval</strong> is the span between two instants.</p>
@@ -930,7 +1039,7 @@ sales
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-11T04:46:00-05:00">November 11, 2026, 4:46 AM EST</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-11T05:06:00-05:00">November 11, 2026, 5:06 AM EST</time></div>
             </footer>
         </div>
 

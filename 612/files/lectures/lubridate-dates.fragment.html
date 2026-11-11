@@ -29,46 +29,136 @@ the parsers are obvious.</p>
 library(lubridate)</code></pre>
 <hr />
 </div>
-<div id="three-kinds-of-time" class="section level2">
-<h2>2. Three kinds of time</h2>
+<div id="date-types-in-r" class="section level2">
+<h2>2. Date types in R</h2>
+<p>A date type is either a moment on the calendar or a length of time.
+The two tables below are the ones you will meet in this course.</p>
+<div id="a-moment-a-day-an-instant-or-a-clock-time"
+class="section level3">
+<h3>A moment: a day, an instant, or a clock time</h3>
 <table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th>Kind</th>
-<th>Example</th>
+<th>Type</th>
+<th>What it stores</th>
 <th>Class</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Calendar date</td>
-<td><code>2026-11-11</code></td>
+<td>Date</td>
+<td>A calendar day, with no time of day</td>
 <td><code>Date</code></td>
 </tr>
 <tr class="even">
-<td>Date and time</td>
-<td><code>2026-11-11 14:30:00</code></td>
-<td><code>POSIXct</code></td>
+<td>Date-time</td>
+<td>One instant, stored as seconds since 1970-01-01 00:00:00 UTC</td>
+<td><code>POSIXct</code>, <code>POSIXt</code></td>
 </tr>
 <tr class="odd">
+<td>Date-time, as pieces</td>
+<td>The same kind of instant, stored as a list of year, month, day,
+hour, and the rest</td>
+<td><code>POSIXlt</code>, <code>POSIXt</code></td>
+</tr>
+<tr class="even">
 <td>Time of day</td>
-<td><code>14:30:00</code></td>
-<td><code>hms</code>, from readr</td>
+<td>A clock time with no date, such as 14:30:00</td>
+<td><code>hms</code>, <code>difftime</code></td>
 </tr>
 </tbody>
 </table>
-<p>A <code>Date</code> is a calendar day, with no clock time. A
-<code>POSIXct</code> is one instant: a date, a time of day, and a time
-zone, stored as seconds since 1970-01-01 00:00:00 UTC. An
-<code>hms</code> value is a clock time with no date, such as a departure
-time.</p>
+<p><code>Date</code>, <code>POSIXct</code>, and <code>POSIXlt</code> are
+base R. <code>hms</code> comes from the <code>hms</code> package, which
+<code>readr</code> loads. For a column in a data frame, use
+<code>POSIXct</code>. <code>strptime()</code> returns
+<code>POSIXlt</code>.</p>
+<pre class="r"><code>class(as.Date(&quot;2026-11-11&quot;))</code></pre>
+<pre><code>## [1] &quot;Date&quot;</code></pre>
+<pre class="r"><code>class(as.POSIXct(&quot;2026-11-11 14:30:00&quot;, tz = &quot;UTC&quot;))</code></pre>
+<pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
+<pre class="r"><code>class(strptime(&quot;2026-11-11 14:30:00&quot;, format = &quot;%Y-%m-%d %H:%M:%S&quot;, tz = &quot;UTC&quot;))</code></pre>
+<pre><code>## [1] &quot;POSIXlt&quot; &quot;POSIXt&quot;</code></pre>
+<pre class="r"><code>class(parse_time(&quot;14:30:00&quot;))</code></pre>
+<pre><code>## [1] &quot;hms&quot;      &quot;difftime&quot;</code></pre>
 <pre class="r"><code>ymd(&quot;2017-01-31&quot;)</code></pre>
 <pre><code>## [1] &quot;2017-01-31&quot;</code></pre>
 <pre class="r"><code>ymd_hms(&quot;2017-01-31 20:11:59&quot;)</code></pre>
 <pre><code>## [1] &quot;2017-01-31 20:11:59 UTC&quot;</code></pre>
 <p>The first is a <code>Date</code>. The second is a
 <code>POSIXct</code>, printed in UTC.</p>
+</div>
+<div id="a-length-of-time" class="section level3">
+<h3>A length of time</h3>
+<p>These types do not name a day. They say how long something lasts.</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>What it stores</th>
+<th>Class</th>
+<th>How you get one</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Difference</td>
+<td>How far apart two dates are</td>
+<td><code>difftime</code></td>
+<td><code>end - start</code></td>
+</tr>
+<tr class="even">
+<td>Duration</td>
+<td>An exact number of seconds</td>
+<td><code>Duration</code></td>
+<td><code>ddays(1)</code></td>
+</tr>
+<tr class="odd">
+<td>Period</td>
+<td>A calendar unit. A day can be 23 or 25 hours when the clocks
+change.</td>
+<td><code>Period</code></td>
+<td><code>days(1)</code>, <code>months(1)</code>,
+<code>years(1)</code></td>
+</tr>
+<tr class="even">
+<td>Interval</td>
+<td>The span between two instants</td>
+<td><code>Interval</code></td>
+<td><code>interval(start, end)</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>difftime</code> is base R. Duration, period, and interval are
+lubridate. Section 7 subtracts two dates. Section 8 shows why a duration
+and a period can land on different days.</p>
+<pre class="r"><code>class(as.Date(&quot;2026-11-11&quot;) - as.Date(&quot;2026-11-01&quot;))</code></pre>
+<pre><code>## [1] &quot;difftime&quot;</code></pre>
+<pre class="r"><code>class(ddays(1))</code></pre>
+<pre><code>## [1] &quot;Duration&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;</code></pre>
+<pre class="r"><code>class(days(1))</code></pre>
+<pre><code>## [1] &quot;Period&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;</code></pre>
+<pre class="r"><code>class(interval(ymd(&quot;2026-11-01&quot;), ymd(&quot;2026-11-11&quot;)))</code></pre>
+<pre><code>## [1] &quot;Interval&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;lubridate&quot;</code></pre>
 <hr />
+</div>
 </div>
 <div id="base-r" class="section level2">
 <h2>3. Base R</h2>
@@ -522,6 +612,52 @@ floor_date(d, unit = &quot;month&quot;)</code></pre>
 </div>
 <div id="durations-periods-and-intervals" class="section level2">
 <h2>8. Durations, periods, and intervals</h2>
+<p>The length types from section 2, next to the functions that build
+them:</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>What it stores</th>
+<th>Class</th>
+<th>How you get one</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Difference</td>
+<td>How far apart two dates are</td>
+<td><code>difftime</code></td>
+<td><code>end - start</code></td>
+</tr>
+<tr class="even">
+<td>Duration</td>
+<td>An exact number of seconds</td>
+<td><code>Duration</code></td>
+<td><code>ddays(1)</code></td>
+</tr>
+<tr class="odd">
+<td>Period</td>
+<td>A calendar unit. A day can be 23 or 25 hours when the clocks
+change.</td>
+<td><code>Period</code></td>
+<td><code>days(1)</code>, <code>months(1)</code>,
+<code>years(1)</code></td>
+</tr>
+<tr class="even">
+<td>Interval</td>
+<td>The span between two instants</td>
+<td><code>Interval</code></td>
+<td><code>interval(start, end)</code></td>
+</tr>
+</tbody>
+</table>
 <p>A <strong>duration</strong> is an exact number of seconds.
 <code>ddays(1)</code> is always 86,400 seconds. <code>dyears(1)</code>
 is 365.25 of those days.</p>
