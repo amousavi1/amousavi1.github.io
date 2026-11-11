@@ -1,22 +1,30 @@
 
 
 
-<p>A factor is an integer plus labels. Reorder, recode, collapse, and
-drop levels.</p>
-<div id="a-factor-is-an-integer-plus-labels" class="section level2">
-<h2>1. A factor is an integer plus labels</h2>
-<p>A factor stores a categorical vector as integer codes plus a
-<code>levels</code> attribute. What prints is the label. What sits
-underneath is <code>1</code>, <code>2</code>, <code>3</code>, … in the
-order of the levels.</p>
-<p>A useful longer read: McNamara and Horton, <a
-href="https://doi.org/10.7287/peerj.preprints.3163v2">Wrangling
-Categorical Data in R</a>.</p>
-<p>That is why <code>as.numeric()</code> on a factor of numbers is the
-<strong>index</strong>, not the printed value.</p>
+<div id="values-and-levels" class="section level2">
+<h2>1. Values and levels</h2>
+<p>A factor has two parts.</p>
+<ul>
+<li><strong>Values.</strong> The category on each row.</li>
+<li><strong>Levels.</strong> The categories that are allowed, in an
+order.</li>
+</ul>
+<p>Tables, legends, and axes follow the levels. They do not follow the
+order of the rows. <code>forcats</code> comes with
+<code>library(tidyverse)</code>. Every helper starts with
+<code>fct_</code>.</p>
 <pre class="r"><code>library(tidyverse)
 
-xf &lt;- factor(c(10, 11, 13, 10))
+fc &lt;- factor(c(&quot;B&quot;, &quot;A&quot;, &quot;B&quot;), levels = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
+fc</code></pre>
+<pre><code>## [1] B A B
+## Levels: A B C</code></pre>
+<p><code>C</code> is a level. No row has that value.</p>
+<p>What prints is the label. Under the label, each value is an integer:
+<code>1</code> for the first level, <code>2</code> for the second, and
+so on. That is why <code>as.numeric()</code> on a factor of numbers
+returns the <strong>index</strong>, not the number you see.</p>
+<pre class="r"><code>xf &lt;- factor(c(10, 11, 13, 10))
 xf</code></pre>
 <pre><code>## [1] 10 11 13 10
 ## Levels: 10 11 13</code></pre>
@@ -24,41 +32,93 @@ xf</code></pre>
 <pre><code>## [1] 1 2 3 1</code></pre>
 <pre class="r"><code>parse_number(as.character(xf))</code></pre>
 <pre><code>## [1] 10 11 13 10</code></pre>
-<pre class="r"><code>parse_number(levels(xf)[xf])</code></pre>
-<pre><code>## [1] 10 11 13 10</code></pre>
-<p><code>as.character()</code> (or <code>levels(xf)[xf]</code>) gets the
-labels back. <code>parse_number()</code> turns them into numbers.</p>
-<p>Create a factor with <code>factor()</code>. Set <code>levels</code>
-yourself when the order is not alphabetical.</p>
-<pre class="r"><code>month_levels &lt;- c(&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;, &quot;Apr&quot;, &quot;May&quot;, &quot;Jun&quot;,
-                  &quot;Jul&quot;, &quot;Aug&quot;, &quot;Sep&quot;, &quot;Oct&quot;, &quot;Nov&quot;, &quot;Dec&quot;)
-factor(c(&quot;Dec&quot;, &quot;Apr&quot;, &quot;Jan&quot;, &quot;Mar&quot;), levels = month_levels)</code></pre>
-<pre><code>## [1] Dec Apr Jan Mar
-## Levels: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</code></pre>
-<p>Values that are not in <code>levels</code> become <code>NA</code>.
-Extra levels stay in the attribute even if no row uses them.</p>
+<p><code>as.character()</code> gets the labels back.
+<code>parse_number()</code> turns those labels into numbers.
+<code>levels(xf)[xf]</code> is the same recovery without converting to
+character first: a factor used as an index returns its labels.</p>
+<p><code>factor()</code> sorts the levels. <code>as_factor()</code>
+keeps the order the values first appear, which is what you want when the
+data is already in the right order.</p>
+<pre class="r"><code>factor(c(&quot;Wed&quot;, &quot;Mon&quot;, &quot;Fri&quot;, &quot;Mon&quot;))</code></pre>
+<pre><code>## [1] Wed Mon Fri Mon
+## Levels: Fri Mon Wed</code></pre>
+<pre class="r"><code>as_factor(c(&quot;Wed&quot;, &quot;Mon&quot;, &quot;Fri&quot;, &quot;Mon&quot;))</code></pre>
+<pre><code>## [1] Wed Mon Fri Mon
+## Levels: Wed Mon Fri</code></pre>
+<p>Set <code>levels</code> yourself when the order is a real order, such
+as months or weekdays. A value that is not in <code>levels</code>
+becomes <code>NA</code>.</p>
+<pre class="r"><code>weekdays &lt;- c(&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;)
+factor(c(&quot;Mon&quot;, &quot;Sun&quot;), levels = weekdays)</code></pre>
+<pre><code>## [1] Mon  &lt;NA&gt;
+## Levels: Mon Tue Wed Thu Fri</code></pre>
+<p><code>read_csv()</code> does not make factors. A column stays
+character until you call <code>factor()</code>,
+<code>as_factor()</code>, or <code>col_factor()</code> inside
+<code>read_csv()</code>.</p>
+<p>A useful longer read: McNamara and Horton, <a
+href="https://doi.org/10.7287/peerj.preprints.3163v2">Wrangling
+Categorical Data in R</a>.</p>
 <hr />
 </div>
-<div id="gss_cat" class="section level2">
-<h2>2. <code>gss_cat</code></h2>
+<div id="the-axis-follows-the-levels" class="section level2">
+<h2>2. The axis follows the levels</h2>
+<p>Nine bus stops, stored as text. <code>factor()</code> with no
+<code>levels</code> argument sorts them alphabetically, so Friday comes
+before Monday.</p>
+<pre class="r"><code>weekdays &lt;- c(&quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;)
+stops &lt;- tibble(
+  day = c(&quot;Wed&quot;, &quot;Mon&quot;, &quot;Fri&quot;, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Fri&quot;, &quot;Fri&quot;, &quot;Thu&quot;, &quot;Mon&quot;)
+)
+
+stops |&gt;
+  mutate(day = factor(day)) |&gt;
+  count(day)</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   day       n
+##   &lt;fct&gt; &lt;int&gt;
+## 1 Fri       3
+## 2 Mon       3
+## 3 Thu       1
+## 4 Tue       1
+## 5 Wed       1</code></pre>
+<div class="float">
+<img src="../graphics/forcats-days-alpha.png"
+alt="Bars in alphabetical level order: Fri, Mon, Thu, Tue, Wed" />
+<div class="figcaption">Bars in alphabetical level order: Fri, Mon, Thu,
+Tue, Wed</div>
+</div>
+<p>Pass the order you want. The counts do not change. The rows do not
+change. The axis does.</p>
+<pre class="r"><code>stops |&gt;
+  mutate(day = factor(day, levels = weekdays)) |&gt;
+  count(day)</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   day       n
+##   &lt;fct&gt; &lt;int&gt;
+## 1 Mon       3
+## 2 Tue       1
+## 3 Wed       1
+## 4 Thu       1
+## 5 Fri       3</code></pre>
+<div class="float">
+<img src="../graphics/forcats-days-order.png"
+alt="Bars in Monday-to-Friday order" />
+<div class="figcaption">Bars in Monday-to-Friday order</div>
+</div>
+<p>On a vertical axis, ggplot draws the <strong>first</strong> level at
+the bottom. After <code>coord_flip()</code>, the first level is at the
+bottom of a horizontal bar chart. <code>fct_rev()</code> flips the
+current levels when you want the opposite end there.</p>
+<hr />
+</div>
+<div id="level-order-is-not-frequency" class="section level2">
+<h2>3. Level order is not frequency</h2>
 <p><code>gss_cat</code> is a General Social Survey slice that ships with
-forcats. <code>?gss_cat</code>. Useful factors: <code>marital</code>,
-<code>rincome</code>, <code>partyid</code>, <code>relig</code>.</p>
-<pre class="r"><code>gss_cat</code></pre>
-<pre><code>## # A tibble: 21,483 × 9
-##     year marital         age race  rincome        partyid    relig denom tvhours
-##    &lt;int&gt; &lt;fct&gt;         &lt;int&gt; &lt;fct&gt; &lt;fct&gt;          &lt;fct&gt;      &lt;fct&gt; &lt;fct&gt;   &lt;int&gt;
-##  1  2000 Never married    26 White $8000 to 9999  Ind,near … Prot… Sout…      12
-##  2  2000 Divorced         48 White $8000 to 9999  Not str r… Prot… Bapt…      NA
-##  3  2000 Widowed          67 White Not applicable Independe… Prot… No d…       2
-##  4  2000 Never married    39 White Not applicable Ind,near … Orth… Not …       4
-##  5  2000 Divorced         25 White Not applicable Not str d… None  Not …       1
-##  6  2000 Married          25 White $20000 - 24999 Strong de… Prot… Sout…      NA
-##  7  2000 Never married    36 White $25000 or more Not str r… Chri… Not …       3
-##  8  2000 Divorced         44 White $7000 to 7999  Ind,near … Prot… Luth…      NA
-##  9  2000 Married          44 White $25000 or more Not str d… Prot… Other       0
-## 10  2000 Married          47 White $25000 or more Strong re… Prot… Sout…       3
-## # ℹ 21,473 more rows</code></pre>
+forcats. <code>?gss_cat</code>. The factors you will use are
+<code>marital</code>, <code>rincome</code>, <code>partyid</code>, and
+<code>relig</code>. <code>count()</code> follows the level order, so the
+first row is the first level, not the largest group.</p>
 <pre class="r"><code>count(gss_cat, partyid)</code></pre>
 <pre><code>## # A tibble: 10 × 2
 ##    partyid                n
@@ -73,30 +133,316 @@ forcats. <code>?gss_cat</code>. Useful factors: <code>marital</code>,
 ##  8 Ind,near dem        2499
 ##  9 Not str democrat    3690
 ## 10 Strong democrat     3490</code></pre>
-<p><code>forcats</code> comes with <code>library(tidyverse)</code>.
-Every helper starts with <code>fct_</code>.</p>
+<p><code>Independent</code> is the largest group and the seventh row,
+because that is where its level sits.</p>
 <hr />
 </div>
-<div id="reorder-levels" class="section level2">
-<h2>3. Reorder levels</h2>
-<p>Plots follow the level order. Change the order, not the data.</p>
-<ul>
-<li><code>fct_reorder(f, x)</code> — order <code>f</code> by a summary
-of <code>x</code> (median by default). The usual choice for a scatter or
-bar of a summary.</li>
-<li><code>fct_infreq(f)</code> — most common level first.</li>
-<li><code>fct_rev(f)</code> — reverse the current levels.</li>
-<li><code>fct_relevel(f, ...)</code> — move named levels to the front
-(or pass a function).</li>
-</ul>
-<pre class="r"><code>gss_cat |&gt;
+<div id="which-function" class="section level2">
+<h2>4. Which function</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>You want</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>a fixed order you type (weekdays, months)</td>
+<td><code>factor(x, levels = )</code> or <code>fct_relevel()</code></td>
+</tr>
+<tr class="even">
+<td>levels ordered by a summary of another variable</td>
+<td><code>fct_reorder()</code></td>
+</tr>
+<tr class="odd">
+<td>most common level first</td>
+<td><code>fct_infreq()</code></td>
+</tr>
+<tr class="even">
+<td>the current order flipped</td>
+<td><code>fct_rev()</code></td>
+</tr>
+<tr class="odd">
+<td>order of first appearance</td>
+<td><code>as_factor()</code> or <code>fct_inorder()</code></td>
+</tr>
+<tr class="even">
+<td>new names, one level at a time</td>
+<td><code>fct_recode()</code></td>
+</tr>
+<tr class="odd">
+<td>several levels of one factor merged into one name</td>
+<td><code>fct_collapse()</code></td>
+</tr>
+<tr class="even">
+<td>several factor vectors stacked into one factor</td>
+<td><code>fct_c()</code></td>
+</tr>
+<tr class="odd">
+<td>rare levels folded into Other</td>
+<td><code>fct_lump_n()</code> or <code>fct_lump_prop()</code></td>
+</tr>
+<tr class="even">
+<td>unused levels removed</td>
+<td><code>fct_drop()</code></td>
+</tr>
+<tr class="odd">
+<td>a new level before any row has it</td>
+<td><code>fct_expand()</code></td>
+</tr>
+<tr class="even">
+<td>missing values turned into a level</td>
+<td><code>fct_na_value_to_level()</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>fct_c()</code> stacks vectors. <code>fct_collapse()</code>
+merges levels. Those are different jobs.</p>
+<hr />
+</div>
+<div id="fct_reorder" class="section level2">
+<h2>5. <code>fct_reorder()</code></h2>
+<p><code>fct_reorder()</code> changes the level order. It does not sort
+the rows. <code>arrange()</code> is what reorders rows.</p>
+<pre class="r"><code>fct_reorder(.f, .x, .fun = median, ..., .desc = FALSE)</code></pre>
+<p><code>.f</code> is the categorical variable. <code>.x</code> is the
+numeric variable. <code>.fun</code> summarizes <code>.x</code> inside
+each level, and that one number decides where the level goes. The
+default summary is the median. <code>.desc = TRUE</code> reverses the
+order. Extra arguments in <code>...</code> are passed on to
+<code>.fun</code>.</p>
+<p><code>.fun</code> has to return a single number for each level. A
+vector has no single place in the order, and <code>fct_reorder()</code>
+errors if it gets one.</p>
+<p>Missing numbers in <code>.x</code> are dropped, with a warning,
+unless you set <code>.na_rm</code>. <code>.na_rm = TRUE</code> drops
+them quietly. <code>.na_rm = FALSE</code> keeps them.</p>
+<div id="a-summary-that-is-already-a-function" class="section level3">
+<h3>A summary that is already a function</h3>
+<p>Mean salary puts Math first, then Physics, then CS.</p>
+<pre class="r"><code>df &lt;- tibble(
+  department = c(&quot;Math&quot;, &quot;Math&quot;, &quot;CS&quot;, &quot;CS&quot;, &quot;Physics&quot;, &quot;Physics&quot;),
+  salary = c(80, 100, 120, 140, 90, 110)
+)
+
+df |&gt;
+  mutate(department = fct_reorder(department, salary, .fun = mean)) |&gt;
+  pull(department) |&gt;
+  levels()</code></pre>
+<pre><code>## [1] &quot;Math&quot;    &quot;Physics&quot; &quot;CS&quot;</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Department</th>
+<th>Mean salary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Math</td>
+<td>90</td>
+</tr>
+<tr class="even">
+<td>Physics</td>
+<td>100</td>
+</tr>
+<tr class="odd">
+<td>CS</td>
+<td>130</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="a-summary-you-write" class="section level3">
+<h3>A summary you write</h3>
+<p>The same helper takes a function you define. This one summarizes each
+group by the mean of <span class="math inline">\(x^2 +
+\cos(x)\)</span>.</p>
+<pre class="r"><code>myfun &lt;- function(x) {
+  mean(x^2 + cos(x))
+}
+
+df2 &lt;- tibble(
+  group = c(&quot;A&quot;, &quot;A&quot;, &quot;B&quot;, &quot;B&quot;, &quot;C&quot;, &quot;C&quot;),
+  x = c(1, 2, 3, 4, 0, 1)
+)
+
+df2 |&gt;
+  mutate(group = fct_reorder(group, x, .fun = myfun)) |&gt;
+  pull(group) |&gt;
+  levels()</code></pre>
+<pre><code>## [1] &quot;C&quot; &quot;A&quot; &quot;B&quot;</code></pre>
+<p>The function is applied to the rows in each group, separately. The
+order is C, then A, then B.</p>
+<p>Replace the body with <code>max()</code> and the groups are ranked by
+their largest transformed value instead of their average. On
+<strong>these</strong> six numbers the order does not move: it is still
+C, A, B.</p>
+<pre class="r"><code>myfun &lt;- function(x) {
+  max(x^2 + cos(x))
+}
+
+df2 |&gt;
+  mutate(group = fct_reorder(group, x, .fun = myfun)) |&gt;
+  pull(group) |&gt;
+  levels()</code></pre>
+<pre><code>## [1] &quot;C&quot; &quot;A&quot; &quot;B&quot;</code></pre>
+<p>A smaller set where the choice matters. Group A is <code>0</code> and
+<code>4</code>: the mean of <span class="math inline">\(x^2 +
+\cos(x)\)</span> is about 8.17, and the max is about 15.3. Group B is
+<code>3</code> and <code>3.1</code>: the mean is about 8.31, and the max
+is about 8.61.</p>
+<pre class="r"><code>df3 &lt;- tibble(
+  group = c(&quot;A&quot;, &quot;A&quot;, &quot;B&quot;, &quot;B&quot;),
+  x = c(0, 4, 3, 3.1)
+)
+
+df3 |&gt;
+  group_by(group) |&gt;
+  summarize(
+    mean_fx = mean(x^2 + cos(x)),
+    max_fx = max(x^2 + cos(x)),
+    .groups = &quot;drop&quot;
+  )</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##   group mean_fx max_fx
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 A        8.17  15.3 
+## 2 B        8.31   8.61</code></pre>
+<pre class="r"><code>df3 |&gt;
+  mutate(group = fct_reorder(group, x, .fun = function(x) mean(x^2 + cos(x)))) |&gt;
+  pull(group) |&gt;
+  levels()</code></pre>
+<pre><code>## [1] &quot;A&quot; &quot;B&quot;</code></pre>
+<pre class="r"><code>df3 |&gt;
+  mutate(group = fct_reorder(group, x, .fun = function(x) max(x^2 + cos(x)))) |&gt;
+  pull(group) |&gt;
+  levels()</code></pre>
+<pre><code>## [1] &quot;B&quot; &quot;A&quot;</code></pre>
+<p>The mean order is A, B. The max order is B, A.</p>
+</div>
+<div id="the-same-idea-on-gss_cat" class="section level3">
+<h3>The same idea on <code>gss_cat</code></h3>
+<p>Here the mean is computed first, one row per religion, and
+<code>fct_reorder()</code> sorts those rows. <code>arrange(relig)</code>
+prints them in the new level order. The plot uses the same order: least
+TV at the bottom, because that level is first.</p>
+<pre class="r"><code>tv &lt;- gss_cat |&gt;
+  filter(!is.na(tvhours)) |&gt;
   group_by(relig) |&gt;
-  summarize(tv = mean(tvhours, na.rm = TRUE), n = n()) |&gt;
-  mutate(relig = fct_reorder(relig, tv)) |&gt;
-  ggplot(aes(x = tv, y = relig)) +
-  geom_point() +
-  theme_bw()</code></pre>
-<p><img src="files/lectures/_figs/forcats-factors/chunk-4-1.png" alt="" width="720" style="display: block; margin: auto;" /></p>
+  summarize(hours = mean(tvhours), .groups = &quot;drop&quot;) |&gt;
+  mutate(relig = fct_reorder(relig, hours)) |&gt;
+  arrange(relig)
+
+tv</code></pre>
+<pre><code>## # A tibble: 15 × 2
+##    relig                   hours
+##    &lt;fct&gt;                   &lt;dbl&gt;
+##  1 Other eastern            1.67
+##  2 Hinduism                 1.89
+##  3 Buddhism                 2.38
+##  4 Orthodox-christian       2.42
+##  5 Moslem/islam             2.44
+##  6 Jewish                   2.52
+##  7 None                     2.71
+##  8 No answer                2.72
+##  9 Other                    2.73
+## 10 Christian                2.79
+## 11 Inter-nondenominational  2.87
+## 12 Catholic                 2.96
+## 13 Protestant               3.15
+## 14 Native american          3.46
+## 15 Don&#39;t know               4.62</code></pre>
+<div class="float">
+<img src="../graphics/forcats-relig-tv.png"
+alt="Religions ordered by mean hours of TV" />
+<div class="figcaption">Religions ordered by mean hours of TV</div>
+</div>
+<p>You do not have to summarize first. <code>fct_reorder()</code> will
+take the mean inside each religion. <code>.na_rm = TRUE</code> drops
+missing <code>tvhours</code> without a warning. The order matches the
+table. <code>Not applicable</code> is last: every <code>tvhours</code>
+in that group is missing, so there is no mean, and that level is sent to
+the end.</p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(relig = fct_reorder(relig, tvhours, .fun = mean, .na_rm = TRUE)) |&gt;
+  pull(relig) |&gt;
+  levels()</code></pre>
+<pre><code>##  [1] &quot;Other eastern&quot;           &quot;Hinduism&quot;               
+##  [3] &quot;Buddhism&quot;                &quot;Orthodox-christian&quot;     
+##  [5] &quot;Moslem/islam&quot;            &quot;Jewish&quot;                 
+##  [7] &quot;None&quot;                    &quot;No answer&quot;              
+##  [9] &quot;Other&quot;                   &quot;Christian&quot;              
+## [11] &quot;Inter-nondenominational&quot; &quot;Catholic&quot;               
+## [13] &quot;Protestant&quot;              &quot;Native american&quot;        
+## [15] &quot;Don&#39;t know&quot;              &quot;Not applicable&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="fct_infreq" class="section level2">
+<h2>6. <code>fct_infreq()</code></h2>
+<p><code>fct_infreq()</code> orders levels by how often they occur. The
+most common level is first.</p>
+<pre class="r"><code>fc &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;, &quot;C&quot;, &quot;A&quot;, &quot;B&quot;))
+fct_infreq(fc)</code></pre>
+<pre><code>## [1] A B A C A B
+## Levels: A B C</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>Rows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>So the levels are A, B, C. On a vertical bar chart the first level is
+the left bar, and that bar is the tallest.</p>
+<pre class="r"><code>tibble(group = c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;, &quot;C&quot;, &quot;A&quot;, &quot;B&quot;)) |&gt;
+  mutate(group = fct_infreq(group)) |&gt;
+  ggplot(aes(x = group)) +
+  geom_bar()</code></pre>
+<p><img src="files/lectures/_figs/forcats-factors/infreq-bars-1.png" alt="Bars for groups A, B, and C, tallest to shortest." width="720" style="display: block; margin: auto;" /></p>
+<p>Mutate the column, then map it. Writing
+<code>aes(x = fct_infreq(group))</code> works, and the axis title
+becomes the expression.</p>
+<p>Pipe <code>fct_infreq()</code> into <code>fct_rev()</code> when the
+longest bar should sit on the <strong>right</strong> of a vertical bar
+chart, or at the <strong>top</strong> of a horizontal one.
+<code>marital</code> below runs from rarest to most common.</p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(marital = marital |&gt; fct_infreq() |&gt; fct_rev()) |&gt;
+  count(marital)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   marital           n
+##   &lt;fct&gt;         &lt;int&gt;
+## 1 No answer        17
+## 2 Separated       743
+## 3 Widowed        1807
+## 4 Divorced       3383
+## 5 Never married  5416
+## 6 Married       10117</code></pre>
+<p><code>fct_relevel()</code> moves named levels to the front and leaves
+the rest in their old order. A function in that spot is applied to the
+level names, so <code>sort</code> is alphabetical order.</p>
 <pre class="r"><code>gss_cat |&gt;
   mutate(partyid = fct_relevel(partyid, &quot;Independent&quot;)) |&gt;
   count(partyid)</code></pre>
@@ -113,14 +459,85 @@ bar of a summary.</li>
 ##  8 Ind,near dem        2499
 ##  9 Not str democrat    3690
 ## 10 Strong democrat     3490</code></pre>
-<p><code>fct_infreq()</code> then <code>fct_rev()</code> puts the most
-common level on the <strong>right</strong> of a bar chart.</p>
+<pre class="r"><code>levels(fct_relevel(gss_cat$partyid, sort))</code></pre>
+<pre><code>##  [1] &quot;Don&#39;t know&quot;         &quot;Ind,near dem&quot;       &quot;Ind,near rep&quot;      
+##  [4] &quot;Independent&quot;        &quot;No answer&quot;          &quot;Not str democrat&quot;  
+##  [7] &quot;Not str republican&quot; &quot;Other party&quot;        &quot;Strong democrat&quot;   
+## [10] &quot;Strong republican&quot;</code></pre>
 <hr />
 </div>
-<div id="recode-collapse-lump" class="section level2">
-<h2>4. Recode, collapse, lump</h2>
-<p><code>fct_recode()</code> renames levels. Old name on the right. Drop
-a level with <code>NULL = "old"</code>.</p>
+<div id="fct_c-stacks-vectors" class="section level2">
+<h2>7. <code>fct_c()</code> stacks vectors</h2>
+<p><code>fct_c()</code> binds factor vectors into one factor and keeps
+every level. The vectors do not need to share levels. It does not invent
+a new category. It stacks the rows you already have.</p>
+<pre class="r"><code>fc1 &lt;- factor(c(&quot;A&quot;, &quot;B&quot;), levels = c(&quot;A&quot;, &quot;B&quot;))
+fc2 &lt;- factor(c(&quot;C&quot;, &quot;D&quot;), levels = c(&quot;C&quot;, &quot;D&quot;))
+
+fct_c(fc1, fc2)</code></pre>
+<pre><code>## [1] A B C D
+## Levels: A B C D</code></pre>
+<pre class="r"><code>str(fct_c(fc1, fc2))</code></pre>
+<pre><code>##  Factor w/ 4 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;: 1 2 3 4</code></pre>
+<p>Since R 4.1.0, base <code>c()</code> does the same thing with
+factors:</p>
+<pre class="r"><code>c(fc1, fc2)</code></pre>
+<pre><code>## [1] A B C D
+## Levels: A B C D</code></pre>
+<hr />
+</div>
+<div id="fct_collapse-merges-levels" class="section level2">
+<h2>8. <code>fct_collapse()</code> merges levels</h2>
+<p><code>fct_collapse()</code> replaces several levels of
+<strong>one</strong> factor with one new level. The new name is on the
+left. The old names are on the right.</p>
+<pre class="r"><code>fc &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
+fct_collapse(fc, AB = c(&quot;A&quot;, &quot;B&quot;))</code></pre>
+<pre><code>## [1] AB AB C  AB AB C 
+## Levels: AB C</code></pre>
+<p><code>A</code> and <code>B</code> are gone. The rows that had those
+values are now <code>AB</code>.</p>
+<p>The same pattern groups departments into fields. Wrap a character
+column in <code>factor()</code> first.</p>
+<pre class="r"><code>tibble(department = c(&quot;Math&quot;, &quot;Physics&quot;, &quot;Chemistry&quot;, &quot;History&quot;, &quot;English&quot;)) |&gt;
+  mutate(
+    field = fct_collapse(
+      factor(department),
+      STEM = c(&quot;Math&quot;, &quot;Physics&quot;, &quot;Chemistry&quot;),
+      Humanities = c(&quot;History&quot;, &quot;English&quot;)
+    )
+  )</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   department field     
+##   &lt;chr&gt;      &lt;fct&gt;     
+## 1 Math       STEM      
+## 2 Physics    STEM      
+## 3 Chemistry  STEM      
+## 4 History    Humanities
+## 5 English    Humanities</code></pre>
+<p>On <code>gss_cat</code>, several party answers share one name:</p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(partyid = fct_collapse(
+    partyid,
+    other = c(&quot;No answer&quot;, &quot;Don&#39;t know&quot;, &quot;Other party&quot;),
+    rep   = c(&quot;Strong republican&quot;, &quot;Not str republican&quot;),
+    ind   = c(&quot;Ind,near rep&quot;, &quot;Independent&quot;, &quot;Ind,near dem&quot;),
+    dem   = c(&quot;Not str democrat&quot;, &quot;Strong democrat&quot;)
+  )) |&gt;
+  count(partyid)</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   partyid     n
+##   &lt;fct&gt;   &lt;int&gt;
+## 1 other     548
+## 2 rep      5346
+## 3 ind      8409
+## 4 dem      7180</code></pre>
+<p>Levels you do not name stay as they are.</p>
+<p><code>fct_recode()</code> is the one-name version of the same idea.
+The <strong>new</strong> name is on the left, the <strong>old</strong>
+name on the right, the same direction as <code>mutate()</code>. A name
+that matches nothing is left unchanged. <code>NULL = "old"</code> drops
+that level and turns its rows into <code>NA</code>.</p>
 <pre class="r"><code>gss_cat |&gt;
   mutate(partyid = fct_recode(
     partyid,
@@ -143,69 +560,384 @@ a level with <code>NULL = "old"</code>.</p>
 ##  8 Ind,near dem  2499
 ##  9 Dem, weak     3690
 ## 10 Dem, strong   3490</code></pre>
-<p><code>fct_collapse()</code> is recode for many-to-one.
-<code>fct_lump()</code> folds rare levels into <code>Other</code>.
-<code>n</code> keeps the most common; <code>prop</code> keeps levels
-above a share.</p>
-<pre class="r"><code>gss_cat |&gt;
-  mutate(partyid = fct_collapse(
-    partyid,
-    other = c(&quot;No answer&quot;, &quot;Don&#39;t know&quot;, &quot;Other party&quot;),
-    rep   = c(&quot;Strong republican&quot;, &quot;Not str republican&quot;),
-    ind   = c(&quot;Ind,near rep&quot;, &quot;Independent&quot;, &quot;Ind,near dem&quot;),
-    dem   = c(&quot;Not str democrat&quot;, &quot;Strong democrat&quot;)
-  )) |&gt;
+<p>Keep these apart.</p>
+<ul>
+<li><code>fct_c()</code> stacks factor vectors.</li>
+<li><code>fct_collapse()</code> merges levels of one factor.</li>
+<li><code>fct_recode()</code> renames levels one at a time.</li>
+</ul>
+<hr />
+</div>
+<div id="fct_drop-and-fct_expand" class="section level2">
+<h2>9. <code>fct_drop()</code> and <code>fct_expand()</code></h2>
+<p><code>fct_drop()</code> removes levels that no row uses.</p>
+<pre class="r"><code>fc &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;), levels = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;))
+fc</code></pre>
+<pre><code>## [1] A B A
+## Levels: A B C D</code></pre>
+<pre class="r"><code>fct_drop(fc)</code></pre>
+<pre><code>## [1] A B A
+## Levels: A B</code></pre>
+<p><code>C</code> and <code>D</code> were allowed. Neither appears.
+After <code>fct_drop()</code>, the levels are A and B. The rows are
+unchanged.</p>
+<p><code>filter()</code> removes rows. It does not remove levels. This
+is the usual reason to call <code>fct_drop()</code>.</p>
+<pre class="r"><code>grades &lt;- tibble(
+  grade = factor(
+    c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;A&quot;, &quot;B&quot;),
+    levels = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;)
+  )
+)
+
+kept &lt;- grades |&gt; filter(grade != &quot;C&quot;)
+levels(kept$grade)</code></pre>
+<pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot;</code></pre>
+<pre class="r"><code>kept |&gt;
+  mutate(grade = fct_drop(grade)) |&gt;
+  pull(grade)</code></pre>
+<pre><code>## [1] A B A B
+## Levels: A B</code></pre>
+<p>After the filter, the values are A and B, and the levels are still A,
+B, C, and D. <code>fct_drop()</code> leaves A and B.</p>
+<p>The same thing on <code>gss_cat</code>. Keeping only Independents
+leaves all ten party levels in the attribute.</p>
+<pre class="r"><code>party &lt;- gss_cat |&gt; filter(partyid == &quot;Independent&quot;)
+levels(party$partyid)</code></pre>
+<pre><code>##  [1] &quot;No answer&quot;          &quot;Don&#39;t know&quot;         &quot;Other party&quot;       
+##  [4] &quot;Strong republican&quot;  &quot;Not str republican&quot; &quot;Ind,near rep&quot;      
+##  [7] &quot;Independent&quot;        &quot;Ind,near dem&quot;       &quot;Not str democrat&quot;  
+## [10] &quot;Strong democrat&quot;</code></pre>
+<pre class="r"><code>party |&gt;
+  mutate(partyid = fct_drop(partyid)) |&gt;
   count(partyid)</code></pre>
-<pre><code>## # A tibble: 4 × 2
-##   partyid     n
-##   &lt;fct&gt;   &lt;int&gt;
-## 1 other     548
-## 2 rep      5346
-## 3 ind      8409
-## 4 dem      7180</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   partyid         n
+##   &lt;fct&gt;       &lt;int&gt;
+## 1 Independent  4119</code></pre>
+<p><code>fct_expand()</code> adds levels before any row has them. Lab
+questions that say “add a level” mean this, not a new observation.</p>
+<pre class="r"><code>fc &lt;- factor(c(&quot;A&quot;, &quot;B&quot;))
+fct_expand(fc, &quot;C&quot;, &quot;D&quot;)</code></pre>
+<pre><code>## [1] A B
+## Levels: A B C D</code></pre>
+<pre class="r"><code>status &lt;- factor(c(&quot;Pending&quot;, &quot;Approved&quot;, &quot;Pending&quot;))
+status2 &lt;- fct_expand(status, &quot;Rejected&quot;, &quot;Under Review&quot;)
+levels(status2)</code></pre>
+<pre><code>## [1] &quot;Approved&quot;     &quot;Pending&quot;      &quot;Rejected&quot;     &quot;Under Review&quot;</code></pre>
+<p><code>Approved</code> and <code>Pending</code> were already there, in
+alphabetical order, because that is what <code>factor()</code> does.
+<code>Rejected</code> and <code>Under Review</code> are added at the
+end. No row is assigned to them.</p>
+<p><code>fct_drop()</code> removes empty levels.
+<code>fct_expand()</code> adds empty levels.</p>
+<hr />
+</div>
+<div id="fct_na_value_to_level" class="section level2">
+<h2>10. <code>fct_na_value_to_level()</code></h2>
+<p><code>NA</code> in a factor is not a level. <code>count()</code>
+skips it. A ggplot2 bar chart still draws those rows, and it parks the
+bar <strong>after</strong> the last level. <code>fct_infreq()</code> and
+<code>fct_reorder()</code> do not move that bar, because they only
+reorder levels.</p>
+<p><code>fct_na_value_to_level()</code> turns the missing values into a
+real level. <code>fct_explicit_na()</code> is the old name, and it is
+deprecated. Use <code>fct_na_value_to_level()</code>.</p>
+<pre class="r"><code>fc &lt;- factor(c(&quot;Red&quot;, &quot;Blue&quot;, NA, &quot;Red&quot;, NA))
+fc</code></pre>
+<pre><code>## [1] Red  Blue &lt;NA&gt; Red  &lt;NA&gt;
+## Levels: Blue Red</code></pre>
+<pre class="r"><code>fc2 &lt;- fct_na_value_to_level(fc, level = &quot;Missing&quot;)
+fc2</code></pre>
+<pre><code>## [1] Red     Blue    Missing Red     Missing
+## Levels: Blue Red Missing</code></pre>
+<p><code>"Missing"</code> is a level. It is not a missing value.
+<code>levels()</code> lists it, and <code>count()</code> will count
+it.</p>
+<pre class="r"><code>tibble(color = factor(c(&quot;Red&quot;, &quot;Blue&quot;, NA, &quot;Red&quot;, NA, &quot;Blue&quot;))) |&gt;
+  mutate(color = fct_na_value_to_level(color, &quot;Missing&quot;)) |&gt;
+  ggplot(aes(x = color)) +
+  geom_bar()</code></pre>
+<p><img src="files/lectures/_figs/forcats-factors/color-missing-1.png" alt="Equal bars for Blue, Red, and Missing." width="720" style="display: block; margin: auto;" /></p>
+<p>To omit the parked <code>NA</code> bar instead of naming it, add
+<code>scale_x_discrete(na.translate = FALSE)</code>.</p>
+<hr />
+</div>
+<div id="four-orders-one-plot" class="section level2">
+<h2>11. Four orders, one plot</h2>
+<p><code>patchwork</code> puts ggplot objects on one page. It is not
+part of the tidyverse. Install it once with
+<code>install.packages("patchwork")</code>.</p>
+<p><code>starwars</code> ships with dplyr. <code>hair_color</code> is
+character, so a plain bar chart sorts the colors alphabetically. Five
+characters have no hair color. Those rows are drawn as <code>NA</code>
+at the end of the axis until they become a level.</p>
+<pre class="r"><code>library(patchwork)
+
+p1 &lt;- starwars |&gt;
+  ggplot(aes(x = hair_color)) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = &quot;Original order&quot;, x = NULL)
+
+p2 &lt;- starwars |&gt;
+  ggplot(aes(x = fct_reorder(hair_color, height, .fun = max, .na_rm = TRUE))) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = &quot;Ordered by maximum height&quot;, x = NULL)
+
+p3 &lt;- starwars |&gt;
+  ggplot(aes(x = fct_infreq(hair_color))) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = &quot;Ordered by frequency&quot;, x = NULL)
+
+p4 &lt;- starwars |&gt;
+  mutate(
+    hair_color = fct_na_value_to_level(factor(hair_color), level = &quot;Missing&quot;)
+  ) |&gt;
+  ggplot(aes(x = fct_infreq(hair_color))) +
+  geom_bar() +
+  coord_flip() +
+  labs(title = &quot;Frequency, including missing&quot;, x = NULL)
+
+(p1 + p2) / (p3 + p4)</code></pre>
+<p><img src="files/lectures/_figs/forcats-factors/hair-compare-1.png" alt="Four hair-color bar charts. The first three leave NA at the end. The fourth places Missing by frequency." width="984" style="display: block; margin: auto;" /></p>
+<p><code>(p1 + p2) / (p3 + p4)</code> puts the first two plots on top
+and the last two underneath.</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Plot</th>
+<th>Function</th>
+<th>What sets the order?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>none</td>
+<td>Alphabetical order of the character values. <code>NA</code> is
+drawn, and it is not a level, so it sits at the end.</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>fct_reorder()</code></td>
+<td>The maximum <code>height</code> inside each hair color.
+<code>.na_rm = TRUE</code> drops missing heights before the max. The
+<code>NA</code> bar stays at the end.</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>fct_infreq()</code></td>
+<td>How many rows use each hair color. The <code>NA</code> bar stays at
+the end.</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>fct_na_value_to_level()</code> then
+<code>fct_infreq()</code></td>
+<td>Frequency, with the missing rows as a level named Missing, so that
+bar is placed with the others.</td>
+</tr>
+</tbody>
+</table>
+<p>The bar lengths are still counts. In plot 2, maximum height chooses
+the <strong>order</strong> of the colors. It does not choose the length
+of the bars.</p>
+<p><code>fct_na_value_to_level()</code> needs a factor.
+<code>hair_color</code> is character, so plot 4 wraps it in
+<code>factor()</code> first. <code>.na_rm</code> belongs to
+<code>fct_reorder()</code>. Writing <code>na.rm = TRUE</code> in that
+call does not set it. That name is passed through <code>...</code> to
+<code>max()</code>.</p>
+<hr />
+</div>
+<div id="rare-levels" class="section level2">
+<h2>12. Rare levels</h2>
+<p>A religion plot with fifteen labels is hard to read.
+<code>fct_lump_n(f, n)</code> keeps the <code>n</code> most common
+levels and folds the rest into <code>Other</code>. <code>Other</code> is
+an extra level, so <code>n = 5</code> produces <strong>six</strong>
+rows.</p>
 <pre class="r"><code>gss_cat |&gt;
-  mutate(relig = fct_lump(relig, n = 5)) |&gt;
-  count(relig)</code></pre>
+  mutate(relig = fct_lump_n(relig, n = 5)) |&gt;
+  count(relig, sort = TRUE)</code></pre>
 <pre><code>## # A tibble: 6 × 2
 ##   relig          n
 ##   &lt;fct&gt;      &lt;int&gt;
-## 1 Christian    689
-## 2 None        3523
-## 3 Jewish       388
-## 4 Catholic    5124
-## 5 Protestant 10846
-## 6 Other        913</code></pre>
+## 1 Protestant 10846
+## 2 Catholic    5124
+## 3 None        3523
+## 4 Other        913
+## 5 Christian    689
+## 6 Jewish       388</code></pre>
+<p><code>fct_lump_prop(f, prop)</code> keeps levels that are at least
+that share of the rows. Ten percent leaves three religions, plus
+<code>Other</code>.</p>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(relig = fct_lump_prop(relig, prop = 0.1)) |&gt;
+  count(relig, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   relig          n
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 Protestant 10846
+## 2 Catholic    5124
+## 3 None        3523
+## 4 Other       1990</code></pre>
+<p><code>fct_lump(f, n = 5)</code> is the older spelling of
+<code>fct_lump_n()</code>.</p>
 <hr />
 </div>
-<div id="add-drop-and-missing-levels" class="section level2">
-<h2>5. Add, drop, and missing levels</h2>
-<pre class="r"><code>f &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;), levels = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
-fct_drop(f)</code></pre>
-<pre><code>## [1] A B A
-## Levels: A B</code></pre>
-<pre class="r"><code>g &lt;- factor(c(&quot;A&quot;, &quot;B&quot;))
-fct_expand(g, &quot;C&quot;, &quot;D&quot;)</code></pre>
-<pre><code>## [1] A B
-## Levels: A B C D</code></pre>
-<pre class="r"><code>h &lt;- factor(c(&quot;A&quot;, NA, &quot;B&quot;))
-fct_explicit_na(h, na_level = &quot;(Missing)&quot;)</code></pre>
-<pre><code>## [1] A         (Missing) B        
-## Levels: A B (Missing)</code></pre>
-<p><code>fct_drop()</code> removes unused levels.
-<code>fct_expand()</code> adds empty ones.
-<code>fct_explicit_na()</code> turns <code>NA</code> into a real level
-so it appears in tables and plots. Filtering out rows does
-<strong>not</strong> drop the level; call <code>fct_drop()</code>
-after.</p>
+<div id="ordered-factors" class="section level2">
+<h2>13. Ordered factors</h2>
+<p>An <strong>ordered</strong> factor says the levels are ranked: low
+&lt; medium &lt; high, or January &lt; February.
+<code>factor(x, levels, ordered = TRUE)</code> builds one.
+<code>month(date, label = TRUE)</code> and
+<code>wday(date, label = TRUE)</code> in lubridate return ordered
+factors, which is why a month axis comes out in calendar order.</p>
+<p>Party and religion are not ranks. Leave them unordered. Order those
+with <code>fct_relevel()</code> or <code>fct_reorder()</code> when the
+plot needs an order. An ordered factor also changes the contrasts in a
+model, so use it only when the ranking is real.</p>
 <hr />
+</div>
+<div id="questions" class="section level2">
+<h2>14. Questions</h2>
+<ol style="list-style-type: decimal">
+<li>What is the difference between <code>fct_c()</code> and
+<code>fct_collapse()</code>?</li>
+<li>Does <code>fct_reorder()</code> rearrange the rows, or only the
+levels?</li>
+<li>Why must <code>.fun</code> return one number per level?</li>
+<li>What is the difference between <code>fct_drop()</code> and
+<code>fct_expand()</code>?</li>
+<li>A factor has 5 levels and rows from only 3 of them. What is left
+after <code>fct_drop()</code>?</li>
+<li>How does <code>fct_infreq()</code> pick the order?</li>
+<li>What is the difference between a missing value, <code>NA</code>, and
+a level named <code>"Missing"</code>?</li>
+</ol>
+<div id="answers" class="section level3">
+<h3>Answers</h3>
+<ol style="list-style-type: decimal">
+<li><code>fct_c()</code> stacks factor vectors and keeps every level.
+<code>fct_collapse()</code> merges several levels of one factor into one
+new level.</li>
+<li>Only the levels. The rows stay where they are. A table or an axis
+that follows the levels will look reordered. <code>arrange()</code> is
+what moves rows.</li>
+<li>Each level needs one position in the order. A vector does not have
+one position. <code>fct_reorder()</code> checks and stops.</li>
+<li><code>fct_drop()</code> removes levels that no row uses.
+<code>fct_expand()</code> adds levels that no row uses yet.</li>
+<li>The two unused levels are removed. Three levels remain. The values
+in the rows do not change.</li>
+<li>By how many rows use each level. The most common level is first.
+<code>NA</code> is not a level, so it is not part of that order.</li>
+<li><code>NA</code> is a missing value. It is not a level, so
+<code>count()</code> skips it, and a bar chart parks it after the real
+levels. <code>"Missing"</code> is a level. It is counted, and
+<code>fct_infreq()</code> can place it.</li>
+</ol>
+<hr />
+</div>
 </div>
 <div id="practice" class="section level2">
-<h2>6. Practice</h2>
-<p>Use <code>gss_cat</code>.</p>
+<h2>15. Practice</h2>
+<p>Use <code>gss_cat</code> unless the question says otherwise.</p>
 <ol style="list-style-type: decimal">
+<li>Rebuild the weekday factor from section 2 so the levels run Friday
+back to Monday.</li>
 <li>Reorder <code>partyid</code> alphabetically.</li>
-<li>Move <code>rincome</code> level <code>"Not applicable"</code> to the
-front.</li>
-<li>Abbreviate <code>marital</code> with <code>fct_recode()</code>.</li>
+<li>Move the <code>rincome</code> level <code>"Not applicable"</code> to
+the front.</li>
+<li>Abbreviate <code>marital</code> with <code>fct_recode()</code>:
+Never, Sep, Div, Wid, Mar.</li>
+<li>Keep the four most common <code>relig</code> levels. How many rows
+does <code>count()</code> return, and why?</li>
+<li>Keep the rows with <code>marital == "Married"</code>. Look at
+<code>levels()</code> before and after <code>fct_drop()</code>.</li>
 </ol>
+<div id="solutions" class="section level3">
+<h3>Solutions</h3>
+<pre class="r"><code>stops |&gt;
+  mutate(day = factor(day, levels = weekdays) |&gt; fct_rev()) |&gt;
+  count(day)</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   day       n
+##   &lt;fct&gt; &lt;int&gt;
+## 1 Fri       3
+## 2 Thu       1
+## 3 Wed       1
+## 4 Tue       1
+## 5 Mon       3</code></pre>
+<pre class="r"><code>levels(fct_relevel(gss_cat$partyid, sort))</code></pre>
+<pre><code>##  [1] &quot;Don&#39;t know&quot;         &quot;Ind,near dem&quot;       &quot;Ind,near rep&quot;      
+##  [4] &quot;Independent&quot;        &quot;No answer&quot;          &quot;Not str democrat&quot;  
+##  [7] &quot;Not str republican&quot; &quot;Other party&quot;        &quot;Strong democrat&quot;   
+## [10] &quot;Strong republican&quot;</code></pre>
+<pre class="r"><code>levels(fct_relevel(gss_cat$rincome, &quot;Not applicable&quot;))</code></pre>
+<pre><code>##  [1] &quot;Not applicable&quot; &quot;No answer&quot;      &quot;Don&#39;t know&quot;     &quot;Refused&quot;       
+##  [5] &quot;$25000 or more&quot; &quot;$20000 - 24999&quot; &quot;$15000 - 19999&quot; &quot;$10000 - 14999&quot;
+##  [9] &quot;$8000 to 9999&quot;  &quot;$7000 to 7999&quot;  &quot;$6000 to 6999&quot;  &quot;$5000 to 5999&quot; 
+## [13] &quot;$4000 to 4999&quot;  &quot;$3000 to 3999&quot;  &quot;$1000 to 2999&quot;  &quot;Lt $1000&quot;</code></pre>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(marital = fct_recode(
+    marital,
+    Never = &quot;Never married&quot;,
+    Div = &quot;Divorced&quot;,
+    Wid = &quot;Widowed&quot;,
+    Sep = &quot;Separated&quot;,
+    Mar = &quot;Married&quot;
+  )) |&gt;
+  count(marital)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   marital       n
+##   &lt;fct&gt;     &lt;int&gt;
+## 1 No answer    17
+## 2 Never      5416
+## 3 Sep         743
+## 4 Div        3383
+## 5 Wid        1807
+## 6 Mar       10117</code></pre>
+<pre class="r"><code>gss_cat |&gt;
+  mutate(relig = fct_lump_n(relig, n = 4)) |&gt;
+  count(relig, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   relig          n
+##   &lt;fct&gt;      &lt;int&gt;
+## 1 Protestant 10846
+## 2 Catholic    5124
+## 3 None        3523
+## 4 Other       1301
+## 5 Christian    689</code></pre>
+<pre class="r"><code>married &lt;- gss_cat |&gt; filter(marital == &quot;Married&quot;)
+levels(married$marital)</code></pre>
+<pre><code>## [1] &quot;No answer&quot;     &quot;Never married&quot; &quot;Separated&quot;     &quot;Divorced&quot;     
+## [5] &quot;Widowed&quot;       &quot;Married&quot;</code></pre>
+<pre class="r"><code>levels(fct_drop(married$marital))</code></pre>
+<pre><code>## [1] &quot;Married&quot;</code></pre>
+<p>Friday-to-Monday is the weekday levels reversed, so the counts run
+Fri, Thu, Wed, Tue, Mon. Alphabetical <code>partyid</code> starts at
+<code>Don't know</code> and ends at <code>Strong republican</code>.
+<code>"Not applicable"</code> is the first <code>rincome</code> level;
+<code>No answer</code> and <code>Don't know</code> stay next.</p>
+<p>The recode leaves <code>No answer</code> alone and renames the other
+five. <code>fct_lump_n(relig, n = 4)</code> returns
+<strong>five</strong> rows. The four kept levels are Protestant,
+Catholic, None, and Christian. <code>Other</code> is the fifth, and it
+is larger than Christian (1301 against 689), so a count sorted by
+<code>n</code> places <code>Other</code> above Christian.</p>
+<p>After the filter, <code>levels()</code> still lists all six marital
+statuses. <code>fct_drop()</code> leaves only <code>Married</code>.</p>
+<p>Factor functions control how categories are stored, combined,
+grouped, and ordered. ggplot2 follows that order.</p>
+</div>
 </div>
