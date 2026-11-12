@@ -277,12 +277,21 @@ iris |>
 
 ## 7. Anonymous functions
 
-A function you need once does not need a name. Four ways to pass "mean, and drop missing values." Each call prints the same list.
+A function you need once does not need a name. These four calls all mean "the mean, dropping missing values," and each one prints the same list.
+
+| Way | What you type | Name of the current element | Remember |
+|---|---|---|---|
+| The function's name | `map(x, mean, na.rm = TRUE)` | the function's own first argument | no parentheses on `mean` |
+| `function()` | `function(x) mean(x, na.rm = TRUE)` | the name you choose | works in every version of R |
+| Lambda `\()` | `\(.x) mean(.x, na.rm = TRUE)` | the name you choose. `.x` here is only a name you picked | short form of `function()`, from R 4.1 on. Use this in new code |
+| Tilde `~` | `~ mean(.x, na.rm = TRUE)` | always `.x`. A second argument is always `.y` | the older purrr formula. It still runs |
+
+The lambda and the tilde can look alike because both can say `.x`. In `\(.x)` you wrote that name. In `~`, purrr supplies `.x` and you do not write parentheses.
 
 ```r
 map(measurements, mean, na.rm = TRUE)
 map(measurements, function(x) mean(x, na.rm = TRUE))
-map(measurements, \(x) mean(x, na.rm = TRUE))
+map(measurements, \(.x) mean(.x, na.rm = TRUE))
 map(measurements, ~ mean(.x, na.rm = TRUE))
 ```
 
@@ -297,7 +306,6 @@ map(measurements, ~ mean(.x, na.rm = TRUE))
 ## [1] 75
 ```
 
-`\(x)` is `function(x)`, from R 4.1 on. Use that in new code. `~` is the older purrr formula. `.x` is the current element. Both still run.
 
 How many distinct values are in each column of `iris`:
 
@@ -316,13 +324,40 @@ map_int(iris, \(x) length(unique(x)))
 
 `map()` always returns a list. The typed variants require one value of a fixed type from each element, and they return an atomic vector. A surprise length or type stops the walk, which is the point.
 
-| Function | What you get back |
-|---|---|
-| `map()` | list |
-| `map_dbl()` | double vector |
-| `map_int()` | integer vector |
-| `map_chr()` | character vector |
-| `map_lgl()` | logical vector |
+The suffix is the same for one input and for two.
+
+| Input 1 | Input 2 | Returns |
+|---|---|---|
+| `map()` | `map2()` | list |
+| `map_chr()` | `map2_chr()` | character vector |
+| `map_dbl()` | `map2_dbl()` | double vector (numeric) |
+| `map_int()` | `map2_int()` | integer vector |
+| `map_lgl()` | `map2_lgl()` | logical vector |
+| `map()` then `list_cbind()` | `map2()` then `list_cbind()` | data frame, one column per result |
+| `map()` then `list_rbind()` | `map2()` then `list_rbind()` | data frame, one row per result |
+
+`map_dfc()`, `map_dfr()`, `map2_dfc()`, and `map2_dfr()` still run. purrr marks them superseded. The current spelling is the last two rows: bind the list with `list_cbind()` or `list_rbind()`.
+
+```r
+map(1:2, \(i) tibble(i = i, value = i * 10)) |>
+  list_rbind()
+
+list(tibble(a = 1:2), tibble(b = 3:4)) |>
+  list_cbind()
+```
+
+```
+## # A tibble: 2 × 2
+##       i value
+##   <int> <dbl>
+## 1     1    10
+## 2     2    20
+## # A tibble: 2 × 2
+##       a     b
+##   <int> <int>
+## 1     1     3
+## 2     2     4
+```
 
 ```r
 map_dbl(measurements, mean)
@@ -349,6 +384,14 @@ map_int(iris, \(x) sum(is.na(x)))
 ---
 
 ## 9. `map2()` and `pmap()`
+
+Count how many inputs change. The rest of the call stays fixed.
+
+| How many inputs change | Function | They line up by |
+|---|---|---|
+| 1 | `map()` | each element alone |
+| 2 | `map2()` | position: first with first, second with second |
+| 3 or more | `pmap()` | position. Names in the list are the argument names |
 
 `map2(.x, .y, .f)` walks two objects in step. Element 1 of `.x` is paired with element 1 of `.y`.
 
@@ -456,14 +499,14 @@ mtcars |>
 
 ## 11. `walk()`, `imap()`, `map_if()`, `map_at()`
 
-| Function | Job |
-|---|---|
-| `pmap()` | three or more inputs, or a whole set of arguments |
-| `walk()` | a side effect, such as writing a file |
-| `imap()` | the element and its name or index |
-| `map_if()` | apply `.f` only where a test is true |
-| `map_at()` | apply `.f` at selected names or positions |
-| `group_walk()` | a side effect, one group at a time |
+| Function | What is special | Do you keep the result? |
+|---|---|---|
+| `walk()` | a file or a plot is the point | no. `.x` comes back invisibly |
+| `group_walk()` | the same, once per group | no |
+| `imap()` | you also receive the name, or the index | yes |
+| `map_if()` | `.f` runs only where a test is true | yes. the other elements stay as they were |
+| `map_at()` | `.f` runs only at the names or positions you list | yes |
+| `pmap()` | three or more inputs at once | yes |
 
 `walk()` runs `.f` and invisibly returns `.x`. Use it when you want the plots on disk and you do not need a list of ggplot objects afterwards. This chunk is not run here. It would write three files under `figures/`.
 
@@ -554,12 +597,12 @@ Same three means. `map()` builds the output list. The loop makes you name the in
 
 Base R has the same jobs under other names. purrr's names say what you get back.
 
-| purrr | Base R |
-|---|---|
-| `map()` | `lapply()` |
-| `map_dbl()` and the other typed forms | `vapply()` |
-| `map2()`, `pmap()` | `mapply()` |
-| `map()` when you simplify by hand | `sapply()`, and the type can change |
+| You want | purrr | Base R | Remember |
+|---|---|---|---|
+| a list | `map()` | `lapply()` | both return a list |
+| a vector whose type you name | `map_dbl()` and the rest | `vapply()` | the type is part of the demand |
+| two or more inputs | `map2()`, `pmap()` | `mapply()` | pair by position |
+| a simpler vector, type not promised | you simplify yourself | `sapply()` | `sapply()` chooses the type, and it can change |
 
 A for-loop is still the right shape for `while`, for an early `break`, and for filling a structure whose next value depends on the previous one, as in the cumulative sum in section 3.
 
@@ -567,17 +610,19 @@ A for-loop is still the right shape for `while`, for an early `break`, and for f
 
 ## 13. Which function
 
-| You want | Use |
-|---|---|
-| The same function on several columns, inside a pipeline | `across()` |
-| One input, a list back | `map()` |
-| One input, a double, integer, character, or logical vector back | `map_dbl()`, `map_int()`, `map_chr()`, `map_lgl()` |
-| Two inputs, paired by position | `map2()` |
-| Three or more inputs | `pmap()` |
-| One result per group, stacked | `group_modify()`, or `split()` then `map()` |
-| A file or a plot per element | `walk()`, or `group_walk()` |
-| The name or the index as well as the element | `imap()` |
-| The function only on some elements | `map_if()`, `map_at()` |
+Ask down the rows. Stop at the first yes.
+
+| Ask | Function | Comes back |
+|---|---|---|
+| Inside `mutate()` or `summarize()`, same function on each column? | `across()` | columns in the data frame |
+| One input, and a list is fine? | `map()` | a list |
+| One input, and I need a plain vector? | `map_dbl()`, `map_int()`, `map_chr()`, `map_lgl()` | that vector. The ending is the type |
+| Two inputs that move together? | `map2()` | a list, or `map2_dbl()` when each result is one number |
+| Three or more inputs? | `pmap()` | a list |
+| One result per group, stacked? | `group_modify()` | one data frame. `group_map()` is the list version |
+| A file or a plot, and nothing to collect? | `walk()` | `.x`, invisibly. `group_walk()` is once per group |
+| The name or the index as well? | `imap()` | a list |
+| The function on only some elements? | `map_if()` for a test, `map_at()` for chosen names | a list |
 
 The operation is the function. The elements are `.x`. Keeping those two apart is what makes the code shorter the second time you need it.
 
@@ -603,7 +648,7 @@ The operation is the function. The elements are `.x`. Keeping those two apart is
 3. `map()` returns a list. `map_dbl()` returns a double vector, and it stops if any element is not one double.
 4. `df |> summarize(across(where(is.numeric), median))`, or `map_dbl()` after `keep(is.numeric)`.
 5. `map_int(df, \(x) sum(is.na(x)))`.
-6. They are the same function syntax. `\(x)` is the short form from R 4.1 on.
+6. `function(x)` and `\(x)` are the same syntax. `\(x)` is the short form from R 4.1 on. The tilde is the other form: `~` always calls the element `.x`. The table in section 7 has all four.
 7. The function needs two values that change together, paired by position.
 8. Both walk the groups. `group_map()` returns a list. `group_modify()` row-binds the data frames you return.
 9. The point of that walk is the files. `walk()` runs the function for the side effect. `map()` would also build a list you do not need.

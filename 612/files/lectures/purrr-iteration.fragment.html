@@ -241,8 +241,58 @@ summarizes what remains.</p>
 </div>
 <div id="anonymous-functions" class="section level2">
 <h2>7. Anonymous functions</h2>
-<p>A function you need once does not need a name. Four ways to pass
-“mean, and drop missing values”:</p>
+<p>A function you need once does not need a name. These four calls all
+mean “the mean, dropping missing values,” and each one prints the same
+list.</p>
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Way</th>
+<th>What you type</th>
+<th>Name of the current element</th>
+<th>Remember</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The function’s name</td>
+<td><code>map(x, mean, na.rm = TRUE)</code></td>
+<td>the function’s own first argument</td>
+<td>no parentheses on <code>mean</code></td>
+</tr>
+<tr class="even">
+<td><code>function()</code></td>
+<td><code>function(x) mean(x, na.rm = TRUE)</code></td>
+<td>the name you choose</td>
+<td>works in every version of R</td>
+</tr>
+<tr class="odd">
+<td>Lambda <code>\()</code></td>
+<td><code>\(.x) mean(.x, na.rm = TRUE)</code></td>
+<td>the name you choose. <code>.x</code> here is only a name you
+picked</td>
+<td>short form of <code>function()</code>, from R 4.1 on. Use this in
+new code</td>
+</tr>
+<tr class="even">
+<td>Tilde <code>~</code></td>
+<td><code>~ mean(.x, na.rm = TRUE)</code></td>
+<td>always <code>.x</code>. A second argument is always
+<code>.y</code></td>
+<td>the older purrr formula. It still runs</td>
+</tr>
+</tbody>
+</table>
+<p>The lambda and the tilde can look alike because both can say
+<code>.x</code>. In <code>\(.x)</code> you wrote that name. In
+<code>~</code>, purrr supplies <code>.x</code> and you do not write
+parentheses.</p>
 <pre class="r"><code>map(measurements, mean, na.rm = TRUE)</code></pre>
 <pre><code>## $blood_glucose
 ## [1] 95
@@ -261,7 +311,7 @@ summarizes what remains.</p>
 ## 
 ## $heart_rate
 ## [1] 75</code></pre>
-<pre class="r"><code>map(measurements, \(x) mean(x, na.rm = TRUE))</code></pre>
+<pre class="r"><code>map(measurements, \(.x) mean(.x, na.rm = TRUE))</code></pre>
 <pre><code>## $blood_glucose
 ## [1] 95
 ## 
@@ -279,9 +329,6 @@ summarizes what remains.</p>
 ## 
 ## $heart_rate
 ## [1] 75</code></pre>
-<p><code>\(x)</code> is <code>function(x)</code>, from R 4.1 on. Use
-that in new code. <code>~</code> is the older purrr formula.
-<code>.x</code> is the current element. Both still run.</p>
 <p>How many distinct values are in each column of <code>iris</code>:</p>
 <pre class="r"><code>map_int(iris, \(x) length(unique(x)))</code></pre>
 <pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
@@ -294,36 +341,77 @@ that in new code. <code>~</code> is the older purrr formula.
 one value of a fixed type from each element, and they return an atomic
 vector. A surprise length or type stops the walk, which is the
 point.</p>
+<p>The suffix is the same for one input and for two.</p>
 <table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th>Function</th>
-<th>What you get back</th>
+<th>Input 1</th>
+<th>Input 2</th>
+<th>Returns</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>map()</code></td>
+<td><code>map2()</code></td>
 <td>list</td>
 </tr>
 <tr class="even">
-<td><code>map_dbl()</code></td>
-<td>double vector</td>
-</tr>
-<tr class="odd">
-<td><code>map_int()</code></td>
-<td>integer vector</td>
-</tr>
-<tr class="even">
 <td><code>map_chr()</code></td>
+<td><code>map2_chr()</code></td>
 <td>character vector</td>
 </tr>
 <tr class="odd">
+<td><code>map_dbl()</code></td>
+<td><code>map2_dbl()</code></td>
+<td>double vector (numeric)</td>
+</tr>
+<tr class="even">
+<td><code>map_int()</code></td>
+<td><code>map2_int()</code></td>
+<td>integer vector</td>
+</tr>
+<tr class="odd">
 <td><code>map_lgl()</code></td>
+<td><code>map2_lgl()</code></td>
 <td>logical vector</td>
+</tr>
+<tr class="even">
+<td><code>map()</code> then <code>list_cbind()</code></td>
+<td><code>map2()</code> then <code>list_cbind()</code></td>
+<td>data frame, one column per result</td>
+</tr>
+<tr class="odd">
+<td><code>map()</code> then <code>list_rbind()</code></td>
+<td><code>map2()</code> then <code>list_rbind()</code></td>
+<td>data frame, one row per result</td>
 </tr>
 </tbody>
 </table>
+<p><code>map_dfc()</code>, <code>map_dfr()</code>,
+<code>map2_dfc()</code>, and <code>map2_dfr()</code> still run. purrr
+marks them superseded. The current spelling is the last two rows: bind
+the list with <code>list_cbind()</code> or
+<code>list_rbind()</code>.</p>
+<pre class="r"><code>map(1:2, \(i) tibble(i = i, value = i * 10)) |&gt;
+  list_rbind()</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##       i value
+##   &lt;int&gt; &lt;dbl&gt;
+## 1     1    10
+## 2     2    20</code></pre>
+<pre class="r"><code>list(tibble(a = 1:2), tibble(b = 3:4)) |&gt;
+  list_cbind()</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##       a     b
+##   &lt;int&gt; &lt;int&gt;
+## 1     1     3
+## 2     2     4</code></pre>
 <pre class="r"><code>map_dbl(measurements, mean)</code></pre>
 <pre><code>## blood_glucose           age    heart_rate 
 ##            95            30            75</code></pre>
@@ -346,6 +434,38 @@ class.</p>
 </div>
 <div id="map2-and-pmap" class="section level2">
 <h2>9. <code>map2()</code> and <code>pmap()</code></h2>
+<p>Count how many inputs change. The rest of the call stays fixed.</p>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>How many inputs change</th>
+<th>Function</th>
+<th>They line up by</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>map()</code></td>
+<td>each element alone</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>map2()</code></td>
+<td>position: first with first, second with second</td>
+</tr>
+<tr class="odd">
+<td>3 or more</td>
+<td><code>pmap()</code></td>
+<td>position. Names in the list are the argument names</td>
+</tr>
+</tbody>
+</table>
 <p><code>map2(.x, .y, .f)</code> walks two objects in step. Element 1 of
 <code>.x</code> is paired with element 1 of <code>.y</code>.</p>
 <pre class="r"><code>map2_dbl(c(1, 2, 3), c(10, 20, 30), \(a, b) a + b)</code></pre>
@@ -453,36 +573,48 @@ one side effect per group, nothing collected.</p>
 <h2>11. <code>walk()</code>, <code>imap()</code>, <code>map_if()</code>,
 <code>map_at()</code></h2>
 <table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th>Function</th>
-<th>Job</th>
+<th>What is special</th>
+<th>Do you keep the result?</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>pmap()</code></td>
-<td>three or more inputs, or a whole set of arguments</td>
-</tr>
-<tr class="even">
 <td><code>walk()</code></td>
-<td>a side effect, such as writing a file</td>
-</tr>
-<tr class="odd">
-<td><code>imap()</code></td>
-<td>the element and its name or index</td>
-</tr>
-<tr class="even">
-<td><code>map_if()</code></td>
-<td>apply <code>.f</code> only where a test is true</td>
-</tr>
-<tr class="odd">
-<td><code>map_at()</code></td>
-<td>apply <code>.f</code> at selected names or positions</td>
+<td>a file or a plot is the point</td>
+<td>no. <code>.x</code> comes back invisibly</td>
 </tr>
 <tr class="even">
 <td><code>group_walk()</code></td>
-<td>a side effect, one group at a time</td>
+<td>the same, once per group</td>
+<td>no</td>
+</tr>
+<tr class="odd">
+<td><code>imap()</code></td>
+<td>you also receive the name, or the index</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><code>map_if()</code></td>
+<td><code>.f</code> runs only where a test is true</td>
+<td>yes. the other elements stay as they were</td>
+</tr>
+<tr class="odd">
+<td><code>map_at()</code></td>
+<td><code>.f</code> runs only at the names or positions you list</td>
+<td>yes</td>
+</tr>
+<tr class="even">
+<td><code>pmap()</code></td>
+<td>three or more inputs at once</td>
+<td>yes</td>
 </tr>
 </tbody>
 </table>
@@ -557,31 +689,43 @@ makes you name the index and the container.</p>
 you get back.</p>
 <table>
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th>You want</th>
 <th>purrr</th>
 <th>Base R</th>
+<th>Remember</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td>a list</td>
 <td><code>map()</code></td>
 <td><code>lapply()</code></td>
+<td>both return a list</td>
 </tr>
 <tr class="even">
-<td><code>map_dbl()</code> and the other typed forms</td>
+<td>a vector whose type you name</td>
+<td><code>map_dbl()</code> and the rest</td>
 <td><code>vapply()</code></td>
+<td>the type is part of the demand</td>
 </tr>
 <tr class="odd">
+<td>two or more inputs</td>
 <td><code>map2()</code>, <code>pmap()</code></td>
 <td><code>mapply()</code></td>
+<td>pair by position</td>
 </tr>
 <tr class="even">
-<td><code>map()</code> when you simplify by hand</td>
-<td><code>sapply()</code>, and the type can change</td>
+<td>a simpler vector, type not promised</td>
+<td>you simplify yourself</td>
+<td><code>sapply()</code></td>
+<td><code>sapply()</code> chooses the type, and it can change</td>
 </tr>
 </tbody>
 </table>
@@ -592,55 +736,70 @@ depends on the previous one, as in the cumulative sum in section 3.</p>
 </div>
 <div id="which-function" class="section level2">
 <h2>13. Which function</h2>
+<p>Ask down the rows. Stop at the first yes.</p>
 <table>
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th>You want</th>
-<th>Use</th>
+<th>Ask</th>
+<th>Function</th>
+<th>Comes back</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>The same function on several columns, inside a pipeline</td>
+<td>Inside <code>mutate()</code> or <code>summarize()</code>, same
+function on each column?</td>
 <td><code>across()</code></td>
+<td>columns in the data frame</td>
 </tr>
 <tr class="even">
-<td>One input, a list back</td>
+<td>One input, and a list is fine?</td>
 <td><code>map()</code></td>
+<td>a list</td>
 </tr>
 <tr class="odd">
-<td>One input, a double, integer, character, or logical vector back</td>
+<td>One input, and I need a plain vector?</td>
 <td><code>map_dbl()</code>, <code>map_int()</code>,
 <code>map_chr()</code>, <code>map_lgl()</code></td>
+<td>that vector. The ending is the type</td>
 </tr>
 <tr class="even">
-<td>Two inputs, paired by position</td>
+<td>Two inputs that move together?</td>
 <td><code>map2()</code></td>
+<td>a list, or <code>map2_dbl()</code> when each result is one
+number</td>
 </tr>
 <tr class="odd">
-<td>Three or more inputs</td>
+<td>Three or more inputs?</td>
 <td><code>pmap()</code></td>
+<td>a list</td>
 </tr>
 <tr class="even">
-<td>One result per group, stacked</td>
-<td><code>group_modify()</code>, or <code>split()</code> then
-<code>map()</code></td>
+<td>One result per group, stacked?</td>
+<td><code>group_modify()</code></td>
+<td>one data frame. <code>group_map()</code> is the list version</td>
 </tr>
 <tr class="odd">
-<td>A file or a plot per element</td>
-<td><code>walk()</code>, or <code>group_walk()</code></td>
+<td>A file or a plot, and nothing to collect?</td>
+<td><code>walk()</code></td>
+<td><code>.x</code>, invisibly. <code>group_walk()</code> is once per
+group</td>
 </tr>
 <tr class="even">
-<td>The name or the index as well as the element</td>
+<td>The name or the index as well?</td>
 <td><code>imap()</code></td>
+<td>a list</td>
 </tr>
 <tr class="odd">
-<td>The function only on some elements</td>
-<td><code>map_if()</code>, <code>map_at()</code></td>
+<td>The function on only some elements?</td>
+<td><code>map_if()</code> for a test, <code>map_at()</code> for chosen
+names</td>
+<td>a list</td>
 </tr>
 </tbody>
 </table>
@@ -681,8 +840,10 @@ double vector, and it stops if any element is not one double.</li>
 <li><code>df |&gt; summarize(across(where(is.numeric), median))</code>,
 or <code>map_dbl()</code> after <code>keep(is.numeric)</code>.</li>
 <li><code>map_int(df, \(x) sum(is.na(x)))</code>.</li>
-<li>They are the same function syntax. <code>\(x)</code> is the short
-form from R 4.1 on.</li>
+<li><code>function(x)</code> and <code>\(x)</code> are the same syntax.
+<code>\(x)</code> is the short form from R 4.1 on. The tilde is the
+other form: <code>~</code> always calls the element <code>.x</code>. The
+table in section 7 has all four.</li>
 <li>The function needs two values that change together, paired by
 position.</li>
 <li>Both walk the groups. <code>group_map()</code> returns a list.
