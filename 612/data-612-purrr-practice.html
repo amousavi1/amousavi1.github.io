@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Functional Programming with purrr: 10 Examples - DATA 412/612 - Ahmad Mousavi</title>
+        <link rel="icon" href="../website-only/favicon.ico?v=3" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
+        <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
+        <link rel="stylesheet" href="../website-only/assets/css/main.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css" />
+        <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
+    </head>
+    <body class="layout--single page-courses page-lecture">
+        <nav class="skip-links">
+            <a href="#main" class="screen-reader-shortcut">Skip to content</a>
+        </nav>
+
+        <div class="masthead">
+            <div class="masthead__inner-wrap">
+                <nav id="site-nav" class="greedy-nav masthead-nav-bar" aria-label="Primary">
+                    <a class="site-title" href="../website-only/index.html">Ahmad Mousavi</a>
+                    <ul class="visible-links">
+                        <li class="masthead__menu-item"><a href="../website-only/index.html">Bio</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/news.html">News</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/research.html">Research</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/publications.html">Publications</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/teaching.html">Teaching</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/courses.html" class="active">Courses</a></li>
+                        <li class="masthead__menu-item"><a href="../website-only/cv.html">CV</a></li>
+                    </ul>
+                    <button id="theme-toggle" type="button" aria-label="Toggle theme">
+                        <i id="theme-icon" class="fas fa-sun" aria-hidden="true"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div id="main" role="main">
+            <div class="sidebar sticky">
+                <div itemscope itemtype="https://schema.org/Person">
+                    <div class="author__avatar">
+                        <img src="../website-only/assets/images/ahmad-profile.png" alt="Ahmad Mousavi" itemprop="image" />
+                    </div>
+                    <div class="author__content">
+                        <h3 class="author__name" itemprop="name">Ahmad Mousavi</h3>
+                        <p class="author__bio" itemprop="description">
+                            Assistant Prof. of Data Science,<br />
+                            Dept. of Math. and Stat.,<br />
+                            American University
+                        </p>
+                    </div>
+                    <div class="author__urls-wrapper">
+                        <button type="button" class="btn btn--inverse">Follow</button>
+                        <ul class="author__urls social-icons">
+                            <li>
+                                <a href="https://scholar.google.com/citations?user=IStw0S4AAAAJ&amp;hl=en" target="_blank" rel="noopener">
+                                    <i class="ai ai-google-scholar-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">Google Scholar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://orcid.org/0000-0003-4518-5857" target="_blank" rel="noopener">
+                                    <i class="ai ai-orcid-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ORCID</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://openreview.net/profile?id=%7EAhmad_Mousavi1" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-openreview" aria-hidden="true"></i>
+                                    <span class="label">OpenReview</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/amousavi1" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-github" aria-hidden="true"></i>
+                                    <span class="label">GitHub</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.researchgate.net/profile/Ahmad-Mousavi-5?ev=hdr_xprf" target="_blank" rel="noopener">
+                                    <i class="ai ai-researchgate-square ai-fw" aria-hidden="true"></i>
+                                    <span class="label">ResearchGate</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:mousavi@american.edu">
+                                    <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i>
+                                    <span class="label">Email</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.american.edu/cas/faculty/mousavi.cfm" target="_blank" rel="noopener">
+                                    <i class="icon-brand icon-au" aria-hidden="true"></i>
+                                    <span class="label">AU Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.linkedin.com/in/ahmad-mousavi-635986b0/" target="_blank" rel="noopener">
+                                    <i class="fab fa-fw fa-linkedin" aria-hidden="true"></i>
+                                    <span class="label">LinkedIn</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <article class="page" itemscope itemtype="https://schema.org/LearningResource">
+                <div class="page__inner-wrap">
+                    <header>
+                        <h1 id="page-title" class="page__title" itemprop="name">Functional Programming with purrr: 10 Examples</h1>
+                    </header>
+                    <section class="page__content" itemprop="text">
+                        <p class="lecture-meta">
+                            <a href="data-612.html">DATA 412/612</a> &middot; <a href="data-612-week-14.html">Week 14</a> &middot;
+                            <a href="files/purrr-practice.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/lectures/purrr-practice.qmd">Source (.qmd)</a>
+                        </p>
+                        <p>
+                            Ten examples from map() to walk(), each with a worked example and a solution.
+                        </p>
+<p>Apply the same operation to each piece: a vector, a list, the columns of a data frame, a group, or several inputs side by side.</p>
+<p>Datasets: <code>iris</code>, <code>mtcars</code>, <code>airquality</code>, <code>ToothGrowth</code>, <code>ChickWeight</code>.</p>
+<p>Run the worked example. Then write Your turn before you read the solution. Some exercises use different columns from the worked example.</p>
+<pre><code class="language-r">set.seed(612)
+library(tidyverse)
+</code></pre>
+<hr />
+<h2>1. A list and <code>map()</code></h2>
+<p><code>mtcars</code>. Split a column, then apply one function to each piece.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">mpg_by_cyl &lt;- split(mtcars$mpg, mtcars$cyl)
+str(mpg_by_cyl)
+</code></pre>
+<pre><code>## List of 3
+##  $ 4: num [1:11] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26 30.4 ...
+##  $ 6: num [1:7] 21 21 21.4 18.1 19.2 17.8 19.7
+##  $ 8: num [1:14] 18.7 14.3 16.4 17.3 15.2 10.4 10.4 14.7 15.5 15.2 ...
+</code></pre>
+<pre><code class="language-r">map(mpg_by_cyl, mean)
+</code></pre>
+<pre><code>## $`4`
+## [1] 26.66364
+## 
+## $`6`
+## [1] 19.74286
+## 
+## $`8`
+## [1] 15.1
+</code></pre>
+<pre><code class="language-r">map_dbl(mpg_by_cyl, mean)
+</code></pre>
+<pre><code>##        4        6        8 
+## 26.66364 19.74286 15.10000
+</code></pre>
+<p><code>map()</code> applies <code>mean</code> to the 4-, 6-, and 8-cylinder groups. Pass <code>mean</code> without parentheses.</p>
+<h3>Your turn</h3>
+<p>Split <code>mtcars$hp</code> by <code>mtcars$gear</code>. Map <code>max</code>. Repeat with <code>map_dbl()</code>. What changes?</p>
+<h3>Solution</h3>
+<pre><code class="language-r">hp_by_gear &lt;- split(mtcars$hp, mtcars$gear)
+map(hp_by_gear, max)
+</code></pre>
+<pre><code>## $`3`
+## [1] 245
+## 
+## $`4`
+## [1] 123
+## 
+## $`5`
+## [1] 335
+</code></pre>
+<pre><code class="language-r">map_dbl(hp_by_gear, max)
+</code></pre>
+<pre><code>##   3   4   5 
+## 245 123 335
+</code></pre>
+<p><code>map()</code> returns a list. <code>map_dbl()</code> returns a double vector. Each group must produce one numeric value.</p>
+<hr />
+<h2>2. <code>map()</code> on data-frame columns</h2>
+<p><code>iris</code>. A data frame is a list of columns, so <code>map()</code> walks the columns.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">map(iris, class)
+</code></pre>
+<pre><code>## $Sepal.Length
+## [1] &quot;numeric&quot;
+## 
+## $Sepal.Width
+## [1] &quot;numeric&quot;
+## 
+## $Petal.Length
+## [1] &quot;numeric&quot;
+## 
+## $Petal.Width
+## [1] &quot;numeric&quot;
+## 
+## $Species
+## [1] &quot;factor&quot;
+</code></pre>
+<pre><code class="language-r">iris |&gt;
+  select(where(is.numeric)) |&gt;
+  map_dbl(sd)
+</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+##    0.8280661    0.4358663    1.7652982    0.7622377
+</code></pre>
+<p><code>Species</code> is a factor. Select the numeric columns before <code>sd()</code>.</p>
+<h3>Your turn</h3>
+<p>Median of every numeric <code>iris</code> column, as one named numeric vector. Class of each column, as a character vector. Why does <code>map_chr(iris, class)</code> work here?</p>
+<h3>Solution</h3>
+<pre><code class="language-r">iris |&gt;
+  select(where(is.numeric)) |&gt;
+  map_dbl(median)
+</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+##         5.80         3.00         4.35         1.30
+</code></pre>
+<pre><code class="language-r">map_chr(iris, class)
+</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;     &quot;factor&quot;
+</code></pre>
+<p><code>class()</code> produces one string per column here. <code>map_chr()</code> requires exactly one character value per element.</p>
+<hr />
+<h2>3. Missing values and a lambda</h2>
+<p><code>airquality</code>. <code>\(x)</code> is short for <code>function(x)</code>, from R 4.1.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">map_lgl(airquality, \(x) any(is.na(x)))
+</code></pre>
+<pre><code>##   Ozone Solar.R    Wind    Temp   Month     Day 
+##    TRUE    TRUE   FALSE   FALSE   FALSE   FALSE
+</code></pre>
+<pre><code class="language-r">map_int(airquality, \(x) sum(is.na(x)))
+</code></pre>
+<pre><code>##   Ozone Solar.R    Wind    Temp   Month     Day 
+##      37       7       0       0       0       0
+</code></pre>
+<p>The first call is logical. The second is an integer count.</p>
+<h3>Your turn</h3>
+<p>Proportion missing in every column, with <code>map_dbl()</code>. Names of the columns that have any missing value. Mean of <code>Ozone</code>, ignoring missing values.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">missing_proportion &lt;- map_dbl(airquality, \(x) mean(is.na(x)))
+missing_proportion
+</code></pre>
+<pre><code>##      Ozone    Solar.R       Wind       Temp      Month        Day 
+## 0.24183007 0.04575163 0.00000000 0.00000000 0.00000000 0.00000000
+</code></pre>
+<pre><code class="language-r">missing_any &lt;- map_lgl(airquality, \(x) any(is.na(x)))
+names(missing_any)[missing_any]
+</code></pre>
+<pre><code>## [1] &quot;Ozone&quot;   &quot;Solar.R&quot;
+</code></pre>
+<pre><code class="language-r">mean(airquality$Ozone, na.rm = TRUE)
+</code></pre>
+<pre><code>## [1] 42.12931
+</code></pre>
+<pre><code class="language-r">map_dbl(airquality[&quot;Ozone&quot;], \(x) mean(x, na.rm = TRUE))
+</code></pre>
+<pre><code>##    Ozone 
+## 42.12931
+</code></pre>
+<p><code>mean(is.na(x))</code> is the fraction of <code>TRUE</code>, because <code>TRUE</code> is 1 and <code>FALSE</code> is 0.</p>
+<hr />
+<h2>4. <code>across()</code></h2>
+<p><code>iris</code>. <code>across()</code> inside <code>summarise()</code> keeps one row per species. <code>map()</code> on a data frame does not keep the grouping column.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">iris |&gt;
+  group_by(Species) |&gt;
+  summarise(
+    across(
+      ends_with(&quot;Length&quot;),
+      list(mean = mean, sd = sd),
+      .names = &quot;{.col}_{.fn}&quot;
+    ),
+    .groups = &quot;drop&quot;
+  )
+</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   Species    Sepal.Length_mean Sepal.Length_sd Petal.Length_mean Petal.Length_sd
+##   &lt;fct&gt;                  &lt;dbl&gt;           &lt;dbl&gt;             &lt;dbl&gt;           &lt;dbl&gt;
+## 1 setosa                  5.01           0.352              1.46           0.174
+## 2 versicolor              5.94           0.516              4.26           0.470
+## 3 virginica               6.59           0.636              5.55           0.552
+</code></pre>
+<h3>Your turn</h3>
+<p>For each species, the median and the IQR of <code>Sepal.Width</code> and <code>Petal.Width</code>. Names such as <code>Sepal.Width_median</code> and <code>Sepal.Width_IQR</code>.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">iris |&gt;
+  group_by(Species) |&gt;
+  summarise(
+    across(
+      c(Sepal.Width, Petal.Width),
+      list(median = median, IQR = IQR),
+      .names = &quot;{.col}_{.fn}&quot;
+    ),
+    .groups = &quot;drop&quot;
+  )
+</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   Species  Sepal.Width_median Sepal.Width_IQR Petal.Width_median Petal.Width_IQR
+##   &lt;fct&gt;                 &lt;dbl&gt;           &lt;dbl&gt;              &lt;dbl&gt;           &lt;dbl&gt;
+## 1 setosa                  3.4           0.475                0.2             0.1
+## 2 versico…                2.8           0.475                1.3             0.3
+## 3 virgini…                3             0.375                2               0.5
+</code></pre>
+<p>One row for each of the three species.</p>
+<hr />
+<h2>5. One function, many groups</h2>
+<p><code>ToothGrowth</code>. A named function can return a one-row data frame. <code>map()</code> then returns a list of those data frames.</p>
+<p><code>map_dfr()</code> and <code>map_dfc()</code> still run and purrr marks them superseded; collect data frames with <code>map(...) |&gt; list_rbind()</code> or <code>list_cbind()</code>.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">mean_sd &lt;- function(x) {
+  tibble(mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
+}
+length_by_supp &lt;- split(ToothGrowth$len, ToothGrowth$supp)
+results &lt;- map(length_by_supp, mean_sd)
+results
+</code></pre>
+<pre><code>## $OJ
+## # A tibble: 1 × 2
+##    mean    sd
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1  20.7  6.61
+## 
+## $VC
+## # A tibble: 1 × 2
+##    mean    sd
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1  17.0  8.27
+</code></pre>
+<pre><code class="language-r">bind_rows(results, .id = &quot;supp&quot;)
+</code></pre>
+<pre><code>## # A tibble: 2 × 3
+##   supp   mean    sd
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 OJ     20.7  6.61
+## 2 VC     17.0  8.27
+</code></pre>
+<p><code>.id</code> puts the list names <code>OJ</code> and <code>VC</code> into <code>supp</code>.</p>
+<h3>Your turn</h3>
+<p>Write <code>five_number()</code> so it returns a one-row tibble with the minimum, the median, and the maximum. Apply it to <code>ToothGrowth$len</code> split by <code>dose</code>. Combine the rows and keep a <code>dose</code> column.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">five_number &lt;- function(x) {
+  tibble(minimum = min(x), median = median(x), maximum = max(x))
+}
+ToothGrowth$len |&gt;
+  split(ToothGrowth$dose) |&gt;
+  map(five_number) |&gt;
+  bind_rows(.id = &quot;dose&quot;)
+</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   dose  minimum median maximum
+##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 0.5       4.2   9.85    21.5
+## 2 1        13.6  19.2     27.3
+## 3 2        18.5  26.0     33.9
+</code></pre>
+<p><code>dose</code> is character because it was a list name. Use <code>as.numeric(dose)</code> when you need a number.</p>
+<hr />
+<h2>6. <code>map2()</code></h2>
+<p><code>mtcars</code>. Two vectors, paired by position.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">mpg &lt;- mtcars$mpg[1:5]
+distance &lt;- c(100, 150, 80, 120, 200)
+price_per_gallon &lt;- 3.50
+cost &lt;- map2_dbl(distance, mpg, \(d, m) (d / m) * price_per_gallon)
+tibble(car = rownames(mtcars)[1:5], distance, mpg, cost)
+</code></pre>
+<pre><code>## # A tibble: 5 × 4
+##   car               distance   mpg  cost
+##   &lt;chr&gt;                &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Mazda RX4              100  21    16.7
+## 2 Mazda RX4 Wag          150  21    25  
+## 3 Datsun 710              80  22.8  12.3
+## 4 Hornet 4 Drive         120  21.4  19.6
+## 5 Hornet Sportabout      200  18.7  37.4
+</code></pre>
+<h3>Your turn</h3>
+<p>The first five cars. Distances <code>c(50, 75, 100, 125, 150)</code>. Four dollars a gallon. <code>map2_dbl()</code> for the fuel cost. A tibble with the car name and the fuel cost.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">d &lt;- c(50, 75, 100, 125, 150)
+m &lt;- mtcars$mpg[1:5]
+fuel_cost &lt;- map2_dbl(d, m, \(distance, mpg) distance / mpg * 4)
+tibble(car = rownames(mtcars)[1:5], fuel_cost)
+</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   car               fuel_cost
+##   &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Mazda RX4              9.52
+## 2 Mazda RX4 Wag         14.3 
+## 3 Datsun 710            17.5 
+## 4 Hornet 4 Drive        23.4 
+## 5 Hornet Sportabout     32.1
+</code></pre>
+<hr />
+<h2>7. <code>pmap()</code></h2>
+<p><code>mtcars</code>. Three inputs, still paired by position.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">trips &lt;- tibble(
+  car = rownames(mtcars)[1:4],
+  distance = c(50, 100, 150, 200),
+  mpg = mtcars$mpg[1:4],
+  price = c(3.25, 3.50, 3.75, 4.00)
+)
+trips |&gt;
+  mutate(
+    cost = pmap_dbl(
+      list(distance, mpg, price),
+      \(distance, mpg, price) distance / mpg * price
+    )
+  )
+</code></pre>
+<pre><code>## # A tibble: 4 × 5
+##   car            distance   mpg price  cost
+##   &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Mazda RX4            50  21    3.25  7.74
+## 2 Mazda RX4 Wag       100  21    3.5  16.7 
+## 3 Datsun 710          150  22.8  3.75 24.7 
+## 4 Hornet 4 Drive      200  21.4  4    37.4
+</code></pre>
+<h3>Your turn</h3>
+<p>A shipping tibble: <code>weight = c(2, 5, 8)</code>, <code>rate = c(1.5, 2, 2.5)</code>, <code>base_fee = c(3, 4, 5)</code>. <code>pmap_dbl()</code> for <code>base_fee + weight * rate</code>.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">shipping &lt;- tibble(
+  weight = c(2, 5, 8),
+  rate = c(1.5, 2, 2.5),
+  base_fee = c(3, 4, 5)
+)
+shipping |&gt;
+  mutate(
+    cost = pmap_dbl(
+      list(base_fee, weight, rate),
+      \(base_fee, weight, rate) base_fee + weight * rate
+    )
+  )
+</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   weight  rate base_fee  cost
+##    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;
+## 1      2   1.5        3     6
+## 2      5   2          4    14
+## 3      8   2.5        5    25
+</code></pre>
+<p>The costs are 6, 14, and 25.</p>
+<hr />
+<h2>8. <code>group_map()</code> and <code>group_modify()</code></h2>
+<p><code>ChickWeight</code>. <code>data</code> is the group's rows. <code>key</code> is the group id. <code>group_map()</code> returns a list. <code>group_modify()</code> binds the data frames and keeps the group column.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">fit_slope &lt;- function(data) {
+  fit &lt;- lm(weight ~ Time, data = data)
+  tibble(slope = unname(coef(fit)[&quot;Time&quot;]))
+}
+ChickWeight |&gt;
+  group_by(Diet) |&gt;
+  group_map(\(data, key) fit_slope(data))
+</code></pre>
+<pre><code>## [[1]]
+## # A tibble: 1 × 1
+##   slope
+##   &lt;dbl&gt;
+## 1  6.84
+## 
+## [[2]]
+## # A tibble: 1 × 1
+##   slope
+##   &lt;dbl&gt;
+## 1  8.61
+## 
+## [[3]]
+## # A tibble: 1 × 1
+##   slope
+##   &lt;dbl&gt;
+## 1  11.4
+## 
+## [[4]]
+## # A tibble: 1 × 1
+##   slope
+##   &lt;dbl&gt;
+## 1  9.71
+</code></pre>
+<pre><code class="language-r">ChickWeight |&gt;
+  group_by(Diet) |&gt;
+  group_modify(\(data, key) fit_slope(data)) |&gt;
+  ungroup()
+</code></pre>
+<pre><code>## # A tibble: 4 × 2
+##   Diet  slope
+##   &lt;fct&gt; &lt;dbl&gt;
+## 1 1      6.84
+## 2 2      8.61
+## 3 3     11.4 
+## 4 4      9.71
+</code></pre>
+<h3>Your turn</h3>
+<p><code>mtcars</code>. Fit <code>mpg ~ wt</code> inside each <code>cyl</code> group. One row per cylinder group, with the slope on <code>wt</code>. Which group has the most negative slope?</p>
+<h3>Solution</h3>
+<pre><code class="language-r">model_slopes &lt;- mtcars |&gt;
+  group_by(cyl) |&gt;
+  group_modify(\(data, key) {
+    model &lt;- lm(mpg ~ wt, data = data)
+    tibble(wt_slope = unname(coef(model)[&quot;wt&quot;]))
+  }) |&gt;
+  ungroup()
+model_slopes
+</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##     cyl wt_slope
+##   &lt;dbl&gt;    &lt;dbl&gt;
+## 1     4    -5.65
+## 2     6    -2.78
+## 3     8    -2.19
+</code></pre>
+<pre><code class="language-r">model_slopes |&gt;
+  slice_min(wt_slope, n = 1)
+</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##     cyl wt_slope
+##   &lt;dbl&gt;    &lt;dbl&gt;
+## 1     4    -5.65
+</code></pre>
+<p>A more negative slope means fitted MPG falls faster as weight rises inside that cylinder group. That is an association, not a cause.</p>
+<hr />
+<h2>9. <code>imap()</code></h2>
+<p><code>iris</code>. <code>imap()</code> passes the element and its name.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">numeric_iris &lt;- iris |&gt;
+  select(where(is.numeric))
+column_reports &lt;- imap_chr(
+  numeric_iris,
+  \(values, column_name) paste0(column_name, &quot;: mean = &quot;, round(mean(values), 2))
+)
+column_reports
+</code></pre>
+<pre><code>##                Sepal.Length                 Sepal.Width 
+## &quot;Sepal.Length: mean = 5.84&quot;  &quot;Sepal.Width: mean = 3.06&quot; 
+##                Petal.Length                 Petal.Width 
+## &quot;Petal.Length: mean = 3.76&quot;   &quot;Petal.Width: mean = 1.2&quot;
+</code></pre>
+<h3>Your turn</h3>
+<p><code>imap_chr()</code> on the numeric columns of <code>mtcars</code>. Strings like <code>mpg: min = 10.4</code>.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">mtcars |&gt;
+  select(where(is.numeric)) |&gt;
+  imap_chr(\(values, column_name) paste0(column_name, &quot;: min = &quot;, min(values)))
+</code></pre>
+<pre><code>##                mpg                cyl               disp                 hp 
+##  &quot;mpg: min = 10.4&quot;     &quot;cyl: min = 4&quot; &quot;disp: min = 71.1&quot;     &quot;hp: min = 52&quot; 
+##               drat                 wt               qsec                 vs 
+## &quot;drat: min = 2.76&quot;  &quot;wt: min = 1.513&quot; &quot;qsec: min = 14.5&quot;      &quot;vs: min = 0&quot; 
+##                 am               gear               carb 
+##      &quot;am: min = 0&quot;    &quot;gear: min = 3&quot;    &quot;carb: min = 1&quot;
+</code></pre>
+<hr />
+<h2>10. <code>walk()</code> for a side effect</h2>
+<p><code>iris</code>. <code>walk()</code> is for a file or a plot. It returns the input invisibly. The files below are written under <code>tempdir()</code>, not in the project folder.</p>
+<h3>Worked example</h3>
+<pre><code class="language-r">plot_dir &lt;- file.path(tempdir(), &quot;data612_iris_plots&quot;)
+unlink(plot_dir, recursive = TRUE)
+dir.create(plot_dir)
+plot_vars &lt;- c(&quot;Sepal.Length&quot;, &quot;Sepal.Width&quot;, &quot;Petal.Length&quot;)
+walk(plot_vars, \(var) {
+  p &lt;- ggplot(iris, aes(x = .data[[var]])) +
+    geom_histogram(bins = 15)
+  ggsave(
+    filename = file.path(plot_dir, paste0(var, &quot;.png&quot;)),
+    plot = p,
+    width = 5,
+    height = 3.5,
+    units = &quot;in&quot;
+  )
+})
+list.files(plot_dir)
+</code></pre>
+<pre><code>## [1] &quot;Petal.Length.png&quot; &quot;Sepal.Length.png&quot; &quot;Sepal.Width.png&quot;
+</code></pre>
+<h3>Your turn</h3>
+<p>Four histogram PNGs, one per numeric <code>iris</code> column, in a different temporary directory. Check that four PNG files are there.</p>
+<h3>Solution</h3>
+<pre><code class="language-r">out_dir &lt;- file.path(tempdir(), &quot;data612_iris_numeric&quot;)
+unlink(out_dir, recursive = TRUE)
+dir.create(out_dir)
+numeric_cols &lt;- names(iris)[map_lgl(iris, is.numeric)]
+walk(numeric_cols, \(var) {
+  p &lt;- ggplot(iris, aes(x = .data[[var]])) +
+    geom_histogram(bins = 15)
+  ggsave(
+    filename = file.path(out_dir, paste0(var, &quot;.png&quot;)),
+    plot = p,
+    width = 5,
+    height = 3.5,
+    units = &quot;in&quot;
+  )
+})
+saved_files &lt;- list.files(out_dir)
+saved_files
+</code></pre>
+<pre><code>## [1] &quot;Petal.Length.png&quot; &quot;Petal.Width.png&quot;  &quot;Sepal.Length.png&quot; &quot;Sepal.Width.png&quot;
+</code></pre>
+<pre><code class="language-r">length(saved_files)
+</code></pre>
+<pre><code>## [1] 4
+</code></pre>
+<hr />
+<h2>Quick reference</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Function</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apply one function to each element</td>
+<td><code>map()</code></td>
+<td>List</td>
+</tr>
+<tr>
+<td>Return one number per element</td>
+<td><code>map_dbl()</code></td>
+<td>Double vector</td>
+</tr>
+<tr>
+<td>Return one integer per element</td>
+<td><code>map_int()</code></td>
+<td>Integer vector</td>
+</tr>
+<tr>
+<td>Return one string per element</td>
+<td><code>map_chr()</code></td>
+<td>Character vector</td>
+</tr>
+<tr>
+<td>Return one <code>TRUE</code>/<code>FALSE</code> per element</td>
+<td><code>map_lgl()</code></td>
+<td>Logical vector</td>
+</tr>
+<tr>
+<td>Apply functions across selected columns</td>
+<td><code>across()</code></td>
+<td>Depends on <code>mutate()</code> / <code>summarise()</code></td>
+</tr>
+<tr>
+<td>Iterate over two inputs</td>
+<td><code>map2()</code> / <code>map2_dbl()</code></td>
+<td>List / double vector</td>
+</tr>
+<tr>
+<td>Iterate over many inputs</td>
+<td><code>pmap()</code> / <code>pmap_dbl()</code></td>
+<td>List / double vector</td>
+</tr>
+<tr>
+<td>Work with elements and their names</td>
+<td><code>imap()</code> / <code>imap_chr()</code></td>
+<td>List / character vector</td>
+</tr>
+<tr>
+<td>Return a list of grouped results</td>
+<td><code>group_map()</code></td>
+<td>List</td>
+</tr>
+<tr>
+<td>Combine data frames from groups</td>
+<td><code>group_modify()</code></td>
+<td>Data frame</td>
+</tr>
+<tr>
+<td>Write files or generate plots</td>
+<td><code>walk()</code></td>
+<td>The input, invisibly</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2>Concept check</h2>
+<p>Why is <code>map_dbl()</code> often preferable to <code>map()</code> when every iteration must produce a single number?</p>
+<p>Why is <code>walk()</code> more appropriate than <code>map()</code> when saving images?</p>
+                        <nav class="course-page-nav" aria-label="Page">
+                            <a class="course-page-nav__prev" href="data-612-lab-14-iteration.html"><span aria-hidden="true">←</span> Lab 14: Vectors and Iteration</a>
+                            <a class="course-page-nav__week" href="data-612-week-14.html">Week 14</a>
+                            <a class="course-page-nav__next" href="data-612-week-14.html">Week 14 <span aria-hidden="true">→</span></a>
+                        </nav>
+                    </section>
+                </div>
+            </article>
+        </div>
+
+        <div class="page__footer">
+            <footer>
+                <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-12T17:36:00-05:00">November 12, 2026, 5:36 PM EST</time></div>
+            </footer>
+        </div>
+
+        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "__CF_BEACON_TOKEN__"}'></script>
+        <script src="../website-only/assets/js/site.js"></script>
+    </body>
+</html>

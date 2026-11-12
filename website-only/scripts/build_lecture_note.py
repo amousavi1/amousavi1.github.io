@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-11-12T17:09:00-05:00"
-LAST_UPDATED_TEXT = "November 12, 2026, 5:09 PM EST"
+LAST_UPDATED_ISO = "2026-11-12T17:36:00-05:00"
+LAST_UPDATED_TEXT = "November 12, 2026, 5:36 PM EST"
 
 NOTES = [
     {
@@ -356,6 +356,12 @@ NOTES = [
         "week": 14,
         "title": "Lab 14: Vectors and Iteration",
         "lead": "Simulate a sampling distribution, then map models over diamonds.",
+    },
+    {
+        "slug": "purrr-practice",
+        "week": 14,
+        "title": "Functional Programming with purrr: 10 Examples",
+        "lead": "Ten examples from map() to walk(), each with a worked example and a solution.",
     },
 ]
 

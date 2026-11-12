@@ -1,0 +1,472 @@
+---
+title: "Functional Programming with purrr: 10 Examples"
+---
+
+```{r}
+#| label: setup
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 6,
+  fig.height = 3.6,
+  fig.align = "center",
+  dpi = 120,
+  fig.path = "_figs/purrr-practice/"
+)
+library(tidyverse)
+```
+
+Apply the same operation to each piece: a vector, a list, the columns of a data frame, a group, or several inputs side by side.
+
+Datasets: `iris`, `mtcars`, `airquality`, `ToothGrowth`, `ChickWeight`.
+
+Run the worked example. Then write Your turn before you read the solution. Some exercises use different columns from the worked example.
+
+```{r}
+#| label: libraries
+set.seed(612)
+library(tidyverse)
+```
+
+```{r}
+#| label: check-claims
+#| include: false
+mpg_by_cyl <- split(mtcars$mpg, mtcars$cyl)
+stopifnot(is.list(map(mpg_by_cyl, mean)))
+stopifnot(is.double(map_dbl(mpg_by_cyl, mean)))
+stopifnot(all.equal(unlist(map(mpg_by_cyl, mean)), map_dbl(mpg_by_cyl, mean)))
+shipping_cost <- pmap_dbl(
+  list(c(3, 4, 5), c(2, 5, 8), c(1.5, 2, 2.5)),
+  \(base_fee, weight, rate) base_fee + weight * rate
+)
+stopifnot(all.equal(shipping_cost, c(6, 14, 25)))
+```
+
+---
+
+## 1. A list and `map()`
+
+`mtcars`. Split a column, then apply one function to each piece.
+
+### Worked example
+
+```{r}
+#| label: ex1-worked
+mpg_by_cyl <- split(mtcars$mpg, mtcars$cyl)
+str(mpg_by_cyl)
+map(mpg_by_cyl, mean)
+map_dbl(mpg_by_cyl, mean)
+```
+
+`map()` applies `mean` to the 4-, 6-, and 8-cylinder groups. Pass `mean` without parentheses.
+
+### Your turn
+
+Split `mtcars$hp` by `mtcars$gear`. Map `max`. Repeat with `map_dbl()`. What changes?
+
+### Solution
+
+```{r}
+#| label: ex1-solution
+hp_by_gear <- split(mtcars$hp, mtcars$gear)
+map(hp_by_gear, max)
+map_dbl(hp_by_gear, max)
+```
+
+`map()` returns a list. `map_dbl()` returns a double vector. Each group must produce one numeric value.
+
+---
+
+## 2. `map()` on data-frame columns
+
+`iris`. A data frame is a list of columns, so `map()` walks the columns.
+
+### Worked example
+
+```{r}
+#| label: ex2-worked
+map(iris, class)
+iris |>
+  select(where(is.numeric)) |>
+  map_dbl(sd)
+```
+
+`Species` is a factor. Select the numeric columns before `sd()`.
+
+### Your turn
+
+Median of every numeric `iris` column, as one named numeric vector. Class of each column, as a character vector. Why does `map_chr(iris, class)` work here?
+
+### Solution
+
+```{r}
+#| label: ex2-solution
+iris |>
+  select(where(is.numeric)) |>
+  map_dbl(median)
+map_chr(iris, class)
+```
+
+`class()` produces one string per column here. `map_chr()` requires exactly one character value per element.
+
+---
+
+## 3. Missing values and a lambda
+
+`airquality`. `\(x)` is short for `function(x)`, from R 4.1.
+
+### Worked example
+
+```{r}
+#| label: ex3-worked
+map_lgl(airquality, \(x) any(is.na(x)))
+map_int(airquality, \(x) sum(is.na(x)))
+```
+
+The first call is logical. The second is an integer count.
+
+### Your turn
+
+Proportion missing in every column, with `map_dbl()`. Names of the columns that have any missing value. Mean of `Ozone`, ignoring missing values.
+
+### Solution
+
+```{r}
+#| label: ex3-solution
+missing_proportion <- map_dbl(airquality, \(x) mean(is.na(x)))
+missing_proportion
+missing_any <- map_lgl(airquality, \(x) any(is.na(x)))
+names(missing_any)[missing_any]
+mean(airquality$Ozone, na.rm = TRUE)
+map_dbl(airquality["Ozone"], \(x) mean(x, na.rm = TRUE))
+```
+
+`mean(is.na(x))` is the fraction of `TRUE`, because `TRUE` is 1 and `FALSE` is 0.
+
+---
+
+## 4. `across()`
+
+`iris`. `across()` inside `summarise()` keeps one row per species. `map()` on a data frame does not keep the grouping column.
+
+### Worked example
+
+```{r}
+#| label: ex4-worked
+iris |>
+  group_by(Species) |>
+  summarise(
+    across(
+      ends_with("Length"),
+      list(mean = mean, sd = sd),
+      .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
+  )
+```
+
+### Your turn
+
+For each species, the median and the IQR of `Sepal.Width` and `Petal.Width`. Names such as `Sepal.Width_median` and `Sepal.Width_IQR`.
+
+### Solution
+
+```{r}
+#| label: ex4-solution
+iris |>
+  group_by(Species) |>
+  summarise(
+    across(
+      c(Sepal.Width, Petal.Width),
+      list(median = median, IQR = IQR),
+      .names = "{.col}_{.fn}"
+    ),
+    .groups = "drop"
+  )
+```
+
+One row for each of the three species.
+
+---
+
+## 5. One function, many groups
+
+`ToothGrowth`. A named function can return a one-row data frame. `map()` then returns a list of those data frames.
+
+`map_dfr()` and `map_dfc()` still run and purrr marks them superseded; collect data frames with `map(...) |> list_rbind()` or `list_cbind()`.
+
+### Worked example
+
+```{r}
+#| label: ex5-worked
+mean_sd <- function(x) {
+  tibble(mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
+}
+length_by_supp <- split(ToothGrowth$len, ToothGrowth$supp)
+results <- map(length_by_supp, mean_sd)
+results
+bind_rows(results, .id = "supp")
+```
+
+`.id` puts the list names `OJ` and `VC` into `supp`.
+
+### Your turn
+
+Write `five_number()` so it returns a one-row tibble with the minimum, the median, and the maximum. Apply it to `ToothGrowth$len` split by `dose`. Combine the rows and keep a `dose` column.
+
+### Solution
+
+```{r}
+#| label: ex5-solution
+five_number <- function(x) {
+  tibble(minimum = min(x), median = median(x), maximum = max(x))
+}
+ToothGrowth$len |>
+  split(ToothGrowth$dose) |>
+  map(five_number) |>
+  bind_rows(.id = "dose")
+```
+
+`dose` is character because it was a list name. Use `as.numeric(dose)` when you need a number.
+
+---
+
+## 6. `map2()`
+
+`mtcars`. Two vectors, paired by position.
+
+### Worked example
+
+```{r}
+#| label: ex6-worked
+mpg <- mtcars$mpg[1:5]
+distance <- c(100, 150, 80, 120, 200)
+price_per_gallon <- 3.50
+cost <- map2_dbl(distance, mpg, \(d, m) (d / m) * price_per_gallon)
+tibble(car = rownames(mtcars)[1:5], distance, mpg, cost)
+```
+
+### Your turn
+
+The first five cars. Distances `c(50, 75, 100, 125, 150)`. Four dollars a gallon. `map2_dbl()` for the fuel cost. A tibble with the car name and the fuel cost.
+
+### Solution
+
+```{r}
+#| label: ex6-solution
+d <- c(50, 75, 100, 125, 150)
+m <- mtcars$mpg[1:5]
+fuel_cost <- map2_dbl(d, m, \(distance, mpg) distance / mpg * 4)
+tibble(car = rownames(mtcars)[1:5], fuel_cost)
+```
+
+---
+
+## 7. `pmap()`
+
+`mtcars`. Three inputs, still paired by position.
+
+### Worked example
+
+```{r}
+#| label: ex7-worked
+trips <- tibble(
+  car = rownames(mtcars)[1:4],
+  distance = c(50, 100, 150, 200),
+  mpg = mtcars$mpg[1:4],
+  price = c(3.25, 3.50, 3.75, 4.00)
+)
+trips |>
+  mutate(
+    cost = pmap_dbl(
+      list(distance, mpg, price),
+      \(distance, mpg, price) distance / mpg * price
+    )
+  )
+```
+
+### Your turn
+
+A shipping tibble: `weight = c(2, 5, 8)`, `rate = c(1.5, 2, 2.5)`, `base_fee = c(3, 4, 5)`. `pmap_dbl()` for `base_fee + weight * rate`.
+
+### Solution
+
+```{r}
+#| label: ex7-solution
+shipping <- tibble(
+  weight = c(2, 5, 8),
+  rate = c(1.5, 2, 2.5),
+  base_fee = c(3, 4, 5)
+)
+shipping |>
+  mutate(
+    cost = pmap_dbl(
+      list(base_fee, weight, rate),
+      \(base_fee, weight, rate) base_fee + weight * rate
+    )
+  )
+```
+
+The costs are 6, 14, and 25.
+
+---
+
+## 8. `group_map()` and `group_modify()`
+
+`ChickWeight`. `data` is the group's rows. `key` is the group id. `group_map()` returns a list. `group_modify()` binds the data frames and keeps the group column.
+
+### Worked example
+
+```{r}
+#| label: ex8-worked
+fit_slope <- function(data) {
+  fit <- lm(weight ~ Time, data = data)
+  tibble(slope = unname(coef(fit)["Time"]))
+}
+ChickWeight |>
+  group_by(Diet) |>
+  group_map(\(data, key) fit_slope(data))
+ChickWeight |>
+  group_by(Diet) |>
+  group_modify(\(data, key) fit_slope(data)) |>
+  ungroup()
+```
+
+### Your turn
+
+`mtcars`. Fit `mpg ~ wt` inside each `cyl` group. One row per cylinder group, with the slope on `wt`. Which group has the most negative slope?
+
+### Solution
+
+```{r}
+#| label: ex8-solution
+model_slopes <- mtcars |>
+  group_by(cyl) |>
+  group_modify(\(data, key) {
+    model <- lm(mpg ~ wt, data = data)
+    tibble(wt_slope = unname(coef(model)["wt"]))
+  }) |>
+  ungroup()
+model_slopes
+model_slopes |>
+  slice_min(wt_slope, n = 1)
+```
+
+A more negative slope means fitted MPG falls faster as weight rises inside that cylinder group. That is an association, not a cause.
+
+---
+
+## 9. `imap()`
+
+`iris`. `imap()` passes the element and its name.
+
+### Worked example
+
+```{r}
+#| label: ex9-worked
+numeric_iris <- iris |>
+  select(where(is.numeric))
+column_reports <- imap_chr(
+  numeric_iris,
+  \(values, column_name) paste0(column_name, ": mean = ", round(mean(values), 2))
+)
+column_reports
+```
+
+### Your turn
+
+`imap_chr()` on the numeric columns of `mtcars`. Strings like `mpg: min = 10.4`.
+
+### Solution
+
+```{r}
+#| label: ex9-solution
+mtcars |>
+  select(where(is.numeric)) |>
+  imap_chr(\(values, column_name) paste0(column_name, ": min = ", min(values)))
+```
+
+---
+
+## 10. `walk()` for a side effect
+
+`iris`. `walk()` is for a file or a plot. It returns the input invisibly. The files below are written under `tempdir()`, not in the project folder.
+
+### Worked example
+
+```{r}
+#| label: ex10-worked
+plot_dir <- file.path(tempdir(), "data612_iris_plots")
+unlink(plot_dir, recursive = TRUE)
+dir.create(plot_dir)
+plot_vars <- c("Sepal.Length", "Sepal.Width", "Petal.Length")
+walk(plot_vars, \(var) {
+  p <- ggplot(iris, aes(x = .data[[var]])) +
+    geom_histogram(bins = 15)
+  ggsave(
+    filename = file.path(plot_dir, paste0(var, ".png")),
+    plot = p,
+    width = 5,
+    height = 3.5,
+    units = "in"
+  )
+})
+list.files(plot_dir)
+```
+
+### Your turn
+
+Four histogram PNGs, one per numeric `iris` column, in a different temporary directory. Check that four PNG files are there.
+
+### Solution
+
+```{r}
+#| label: ex10-solution
+out_dir <- file.path(tempdir(), "data612_iris_numeric")
+unlink(out_dir, recursive = TRUE)
+dir.create(out_dir)
+numeric_cols <- names(iris)[map_lgl(iris, is.numeric)]
+walk(numeric_cols, \(var) {
+  p <- ggplot(iris, aes(x = .data[[var]])) +
+    geom_histogram(bins = 15)
+  ggsave(
+    filename = file.path(out_dir, paste0(var, ".png")),
+    plot = p,
+    width = 5,
+    height = 3.5,
+    units = "in"
+  )
+})
+saved_files <- list.files(out_dir)
+saved_files
+length(saved_files)
+```
+
+---
+
+## Quick reference
+
+| Goal | Function | Output |
+|---|---|---|
+| Apply one function to each element | `map()` | List |
+| Return one number per element | `map_dbl()` | Double vector |
+| Return one integer per element | `map_int()` | Integer vector |
+| Return one string per element | `map_chr()` | Character vector |
+| Return one `TRUE`/`FALSE` per element | `map_lgl()` | Logical vector |
+| Apply functions across selected columns | `across()` | Depends on `mutate()` / `summarise()` |
+| Iterate over two inputs | `map2()` / `map2_dbl()` | List / double vector |
+| Iterate over many inputs | `pmap()` / `pmap_dbl()` | List / double vector |
+| Work with elements and their names | `imap()` / `imap_chr()` | List / character vector |
+| Return a list of grouped results | `group_map()` | List |
+| Combine data frames from groups | `group_modify()` | Data frame |
+| Write files or generate plots | `walk()` | The input, invisibly |
+
+---
+
+## Concept check
+
+Why is `map_dbl()` often preferable to `map()` when every iteration must produce a single number?
+
+Why is `walk()` more appropriate than `map()` when saving images?
