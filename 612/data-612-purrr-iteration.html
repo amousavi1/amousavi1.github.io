@@ -371,12 +371,13 @@ map(measurements, ~ mean(.x, na.rm = TRUE))
 <hr />
 <h2>8. <code>map_*()</code> picks the type</h2>
 <p><code>map()</code> always returns a list. The typed variants require one value of a fixed type from each element, and they return an atomic vector. A surprise length or type stops the walk, which is the point.</p>
-<p>The suffix is the same for one input and for two.</p>
+<p>The suffix is the same for one input, for two, and for n.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
 <th>Input 1</th>
 <th>Input 2</th>
+<th>Input n</th>
 <th>Returns</th>
 </tr>
 </thead>
@@ -384,41 +385,54 @@ map(measurements, ~ mean(.x, na.rm = TRUE))
 <tr>
 <td><code>map()</code></td>
 <td><code>map2()</code></td>
+<td><code>pmap()</code></td>
 <td>list</td>
 </tr>
 <tr>
 <td><code>map_chr()</code></td>
 <td><code>map2_chr()</code></td>
+<td><code>pmap_chr()</code></td>
 <td>character vector</td>
 </tr>
 <tr>
 <td><code>map_dbl()</code></td>
 <td><code>map2_dbl()</code></td>
+<td><code>pmap_dbl()</code></td>
 <td>double vector (numeric)</td>
 </tr>
 <tr>
 <td><code>map_int()</code></td>
 <td><code>map2_int()</code></td>
+<td><code>pmap_int()</code></td>
 <td>integer vector</td>
 </tr>
 <tr>
 <td><code>map_lgl()</code></td>
 <td><code>map2_lgl()</code></td>
+<td><code>pmap_lgl()</code></td>
 <td>logical vector</td>
 </tr>
 <tr>
-<td><code>map()</code> then <code>list_cbind()</code></td>
-<td><code>map2()</code> then <code>list_cbind()</code></td>
-<td>data frame, one column per result</td>
+<td><code>map_dfc()</code></td>
+<td><code>map2_dfc()</code></td>
+<td><code>pmap_dfc()</code></td>
+<td>data frame (by column)</td>
 </tr>
 <tr>
-<td><code>map()</code> then <code>list_rbind()</code></td>
-<td><code>map2()</code> then <code>list_rbind()</code></td>
-<td>data frame, one row per result</td>
+<td><code>map_dfr()</code></td>
+<td><code>map2_dfr()</code></td>
+<td><code>pmap_dfr()</code></td>
+<td>data frame (by row)</td>
+</tr>
+<tr>
+<td><code>walk()</code></td>
+<td><code>walk2()</code></td>
+<td><code>pwalk()</code></td>
+<td>the input (the point is a side effect)</td>
 </tr>
 </tbody>
 </table></div>
-<p><code>map_dfc()</code>, <code>map_dfr()</code>, <code>map2_dfc()</code>, and <code>map2_dfr()</code> still run. purrr marks them superseded. The current spelling is the last two rows: bind the list with <code>list_cbind()</code> or <code>list_rbind()</code>.</p>
+<p><code>map_dfc()</code>, <code>map_dfr()</code>, and the <code>map2_</code> and <code>pmap_</code> forms still run. purrr marks them superseded: bind the list with <code>list_cbind()</code> or <code>list_rbind()</code>.</p>
 <pre><code class="language-r">map(1:2, \(i) tibble(i = i, value = i * 10)) |&gt;
   list_rbind()
 
@@ -837,7 +851,7 @@ y
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-12T16:58:00-05:00">November 12, 2026, 4:58 PM EST</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-12T17:09:00-05:00">November 12, 2026, 5:09 PM EST</time></div>
             </footer>
         </div>
 

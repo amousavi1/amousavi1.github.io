@@ -266,19 +266,20 @@ map_int(iris, \(x) length(unique(x)))
 
 `map()` always returns a list. The typed variants require one value of a fixed type from each element, and they return an atomic vector. A surprise length or type stops the walk, which is the point.
 
-The suffix is the same for one input and for two.
+The suffix is the same for one input, for two, and for n.
 
-| Input 1 | Input 2 | Returns |
-|---|---|---|
-| `map()` | `map2()` | list |
-| `map_chr()` | `map2_chr()` | character vector |
-| `map_dbl()` | `map2_dbl()` | double vector (numeric) |
-| `map_int()` | `map2_int()` | integer vector |
-| `map_lgl()` | `map2_lgl()` | logical vector |
-| `map()` then `list_cbind()` | `map2()` then `list_cbind()` | data frame, one column per result |
-| `map()` then `list_rbind()` | `map2()` then `list_rbind()` | data frame, one row per result |
+| Input 1 | Input 2 | Input n | Returns |
+|---|---|---|---|
+| `map()` | `map2()` | `pmap()` | list |
+| `map_chr()` | `map2_chr()` | `pmap_chr()` | character vector |
+| `map_dbl()` | `map2_dbl()` | `pmap_dbl()` | double vector (numeric) |
+| `map_int()` | `map2_int()` | `pmap_int()` | integer vector |
+| `map_lgl()` | `map2_lgl()` | `pmap_lgl()` | logical vector |
+| `map_dfc()` | `map2_dfc()` | `pmap_dfc()` | data frame (by column) |
+| `map_dfr()` | `map2_dfr()` | `pmap_dfr()` | data frame (by row) |
+| `walk()` | `walk2()` | `pwalk()` | the input (the point is a side effect) |
 
-`map_dfc()`, `map_dfr()`, `map2_dfc()`, and `map2_dfr()` still run. purrr marks them superseded. The current spelling is the last two rows: bind the list with `list_cbind()` or `list_rbind()`.
+`map_dfc()`, `map_dfr()`, and the `map2_` and `pmap_` forms still run. purrr marks them superseded: bind the list with `list_cbind()` or `list_rbind()`.
 
 ```{r}
 #| label: list-bind
