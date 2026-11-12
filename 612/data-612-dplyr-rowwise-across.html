@@ -394,6 +394,30 @@ values <strong>within the current row</strong>.</li>
 ## 1 A        20    40    60
 ## 2 B        40    80   120
 ## 3 C        60   120   180</code></pre>
+<p><code>mutate(across(x:z, mean))</code> is a different job.
+<code>mean()</code> returns one number, and <code>mutate()</code> keeps
+every row, so that number is repeated down the column.</p>
+<pre><code class="language-r">xyz |&gt; mutate(across(x:z, mean))</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   name      x     y     z
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 A        20    40    60
+## 2 B        20    40    60
+## 3 C        20    40    60</code></pre>
+<p>Pass the function itself when you do not need an extra argument.
+<code>list(mean = mean, sd = sd)</code> runs both. <code>.names</code>
+builds the new column names. <code>{.col}</code> is the column.
+<code>{.fn}</code> is the name in that list.</p>
+<pre><code class="language-r">xyz |&gt;
+  summarize(across(
+    x:z,
+    list(mean = mean, sd = sd),
+    .names = "{.col}_{.fn}"
+  ))</code></pre>
+<pre><code>## # A tibble: 1 × 6
+##   x_mean  x_sd y_mean  y_sd z_mean  z_sd
+##    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1     20    10     40    20     60    30</code></pre>
 <p>One mean <strong>per row</strong> (<code>mean(c(10, 20, 30))</code>,
 <code>mean(c(20, 40, 60))</code>, …):</p>
 <pre><code class="language-r">xyz |&gt;
@@ -590,7 +614,7 @@ descending.</li>
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-11T16:29:00-05:00">November 11, 2026, 4:29 PM EST</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-12T16:26:00-05:00">November 12, 2026, 4:26 PM EST</time></div>
             </footer>
         </div>
 

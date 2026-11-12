@@ -14,6 +14,16 @@ length(x)
 
 `c(1, 10, 2)` is double. The `L` makes an integer. `typeof()` is the storage type. `length()` is how many elements.
 
+A vector holds one type. `c("hello", 1)` stores both as text. The number `1` becomes `"1"`.
+
+```r
+c("hello", 1)
+```
+
+```
+## [1] "hello" "1"
+```
+
 A factor is an integer with labels. A `Date` is a double. Both still behave like atomic vectors when you subset them.
 
 ---
@@ -84,11 +94,45 @@ Remove an element by assigning `NULL`:
 my_list$x <- NULL
 ```
 
+A list can hold a function. The element stores `mean`. Calling the element runs it.
+
+```r
+ops <- list(greeting = "hello", number = 1, operation = mean)
+ops$operation(c(10, 20, 30))
+```
+
+```
+## [1] 20
+```
+
 ---
 
 ## 5. A data frame is a list of columns
 
-A tibble is a list. Each element is a column. That is why `df[[2]]` is the second column and `df$species` is the `species` column.
+A tibble is a list. Each element is a column, and every column has the same number of rows. That is why `df[[2]]` is the second column and `df$species` is the `species` column.
+
+```r
+df <- tibble(
+  name = c("Alice", "Bob", "Carol"),
+  age = c(21, 25, 22)
+)
+df["age"]
+df[["age"]]
+df$age
+```
+
+```
+## # A tibble: 3 × 1
+##     age
+##   <dbl>
+## 1    21
+## 2    25
+## 3    22
+## [1] 21 25 22
+## [1] 21 25 22
+```
+
+`df["age"]` is still a data frame, with one column. `df[["age"]]` and `df$age` are the numeric vector. `map()` in the next lecture walks columns because a data frame is this kind of list.
 
 A list can also hold a tibble as one of its elements. Subset the list to get the tibble; then use dplyr on that tibble.
 

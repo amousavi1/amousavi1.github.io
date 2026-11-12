@@ -7,8 +7,7 @@ columns.</p>
 <h2>1. Two kinds of vectors</h2>
 <p>R has two kinds of vectors: <strong>atomic</strong> vectors and
 <strong>lists</strong>.</p>
-<p><img
-src="files/graphics/data-structures-overview.png" /></p>
+<p><img src="files/graphics/data-structures-overview.png" /></p>
 <p>An atomic vector holds one type: logical, integer, double, character
 (plus complex and raw, which we will not use). A list can hold mixed
 types, including other lists.</p>
@@ -20,6 +19,10 @@ typeof(x)</code></pre>
 <p><code>c(1, 10, 2)</code> is double. The <code>L</code> makes an
 integer. <code>typeof()</code> is the storage type.
 <code>length()</code> is how many elements.</p>
+<p>A vector holds one type. <code>c("hello", 1)</code> stores both as
+text. The number <code>1</code> becomes <code>"1"</code>.</p>
+<pre class="r"><code>c(&quot;hello&quot;, 1)</code></pre>
+<pre><code>## [1] &quot;hello&quot; &quot;1&quot;</code></pre>
 <p>A factor is an integer with labels. A <code>Date</code> is a double.
 Both still behave like atomic vectors when you subset them.</p>
 <hr />
@@ -84,13 +87,38 @@ you create the object:</p>
 <pre><code>## [1] 1</code></pre>
 <p>Remove an element by assigning <code>NULL</code>:</p>
 <pre class="r"><code>my_list$x &lt;- NULL</code></pre>
+<p>A list can hold a function. The element stores <code>mean</code>.
+Calling the element runs it.</p>
+<pre class="r"><code>ops &lt;- list(greeting = &quot;hello&quot;, number = 1, operation = mean)
+ops$operation(c(10, 20, 30))</code></pre>
+<pre><code>## [1] 20</code></pre>
 <hr />
 </div>
 <div id="a-data-frame-is-a-list-of-columns" class="section level2">
 <h2>5. A data frame is a list of columns</h2>
-<p>A tibble is a list. Each element is a column. That is why
-<code>df[[2]]</code> is the second column and <code>df$species</code> is
-the <code>species</code> column.</p>
+<p>A tibble is a list. Each element is a column, and every column has
+the same number of rows. That is why <code>df[[2]]</code> is the second
+column and <code>df$species</code> is the <code>species</code>
+column.</p>
+<pre class="r"><code>df &lt;- tibble(
+  name = c(&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;),
+  age = c(21, 25, 22)
+)
+df[&quot;age&quot;]</code></pre>
+<pre><code>## # A tibble: 3 × 1
+##     age
+##   &lt;dbl&gt;
+## 1    21
+## 2    25
+## 3    22</code></pre>
+<pre class="r"><code>df[[&quot;age&quot;]]</code></pre>
+<pre><code>## [1] 21 25 22</code></pre>
+<pre class="r"><code>df$age</code></pre>
+<pre><code>## [1] 21 25 22</code></pre>
+<p><code>df["age"]</code> is still a data frame, with one column.
+<code>df[["age"]]</code> and <code>df$age</code> are the numeric vector.
+<code>map()</code> in the next lecture walks columns because a data
+frame is this kind of list.</p>
 <p>A list can also hold a tibble as one of its elements. Subset the list
 to get the tibble; then use dplyr on that tibble.</p>
 <hr />

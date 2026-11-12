@@ -228,6 +228,25 @@ xyz |> summarize(across(x:z, mean))
 xyz |> mutate(across(x:z, ~ .x * 2))
 ```
 
+`mutate(across(x:z, mean))` is a different job. `mean()` returns one number, and `mutate()` keeps every row, so that number is repeated down the column.
+
+```{r}
+#| label: across-mean-repeat
+xyz |> mutate(across(x:z, mean))
+```
+
+Pass the function itself when you do not need an extra argument. `list(mean = mean, sd = sd)` runs both. `.names` builds the new column names. `{.col}` is the column. `{.fn}` is the name in that list.
+
+```{r}
+#| label: across-names
+xyz |>
+  summarize(across(
+    x:z,
+    list(mean = mean, sd = sd),
+    .names = "{.col}_{.fn}"
+  ))
+```
+
 One mean **per row** (`mean(c(10, 20, 30))`, `mean(c(20, 40, 60))`, ...):
 
 ```{r}

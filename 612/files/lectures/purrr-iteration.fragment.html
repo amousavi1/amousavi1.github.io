@@ -1,15 +1,83 @@
 
 
 
-<p>Pre-allocate a for-loop. map() walks a list. across() often replaces
-a column loop.</p>
+<p>Pass a function in, and let <code>map()</code> or
+<code>across()</code> walk the pieces. A for-loop is still the tool when
+you need the index, or when you do not know how many steps you will
+take.</p>
+<p>By the end of this lecture you should be able to:</p>
+<ol style="list-style-type: decimal">
+<li>Tell a vector, a list, and a data frame apart, including
+<code>[</code> and <code>[[</code>.</li>
+<li>Treat a function as an object you can pass to another function.</li>
+<li>Repeat a function down columns with <code>across()</code>.</li>
+<li>Walk a list or the columns of a data frame with
+<code>map()</code>.</li>
+<li>Write a named function, or an anonymous one with
+<code>\(x)</code>.</li>
+<li>Pick <code>map_dbl()</code>, <code>map_int()</code>,
+<code>map_chr()</code>, or <code>map_lgl()</code> from the type you want
+back.</li>
+<li>Fit one model per group with <code>group_modify()</code> or with
+<code>split()</code> plus <code>map()</code>.</li>
+<li>Walk two or more inputs with <code>map2()</code> and
+<code>pmap()</code>.</li>
+<li>Use <code>walk()</code> when the point is a file or a plot, not a
+returned value.</li>
+<li>Put a <code>map()</code> next to the for-loop it replaces.</li>
+</ol>
+<p>Lecture 14.1 has the longer account of vectors and lists. The rowwise
+lecture has the longer account of <code>across()</code>.</p>
+<hr />
+<div id="a-list-then-a-data-frame" class="section level2">
+<h2>1. A list, then a data frame</h2>
+<p>An atomic vector holds one type. A list can mix types, including a
+function. A data frame is a list of columns that all have the same
+length.</p>
+<pre class="r"><code>x &lt;- list(greeting = &quot;hello&quot;, number = 1, operation = mean)
+x[1]</code></pre>
+<pre><code>## $greeting
+## [1] &quot;hello&quot;</code></pre>
+<pre class="r"><code>x[[1]]</code></pre>
+<pre><code>## [1] &quot;hello&quot;</code></pre>
+<pre class="r"><code>x$greeting</code></pre>
+<pre><code>## [1] &quot;hello&quot;</code></pre>
+<p><code>x[1]</code> is still a list. <code>x[[1]]</code> and
+<code>x$greeting</code> are the element inside.</p>
+<pre class="r"><code>df &lt;- tibble(
+  name = c(&quot;Alice&quot;, &quot;Bob&quot;, &quot;Carol&quot;),
+  age = c(21, 25, 22),
+  score = c(85, 90, 88)
+)
+df[&quot;age&quot;]</code></pre>
+<pre><code>## # A tibble: 3 × 1
+##     age
+##   &lt;dbl&gt;
+## 1    21
+## 2    25
+## 3    22</code></pre>
+<pre class="r"><code>df[[&quot;age&quot;]]</code></pre>
+<pre><code>## [1] 21 25 22</code></pre>
+<p><code>df["age"]</code> is a one-column data frame.
+<code>df[["age"]]</code> is the numeric vector. <code>map()</code> can
+walk a data frame because each column is one element of that list.</p>
+<hr />
+</div>
+<div id="a-function-is-an-object" class="section level2">
+<h2>2. A function is an object</h2>
+<p><code>mean</code> is an object. <code>mean(1:10)</code> calls it. You
+can store the function under another name and call that name.</p>
+<pre class="r"><code>f &lt;- mean
+f(c(10, 20, 30))</code></pre>
+<pre><code>## [1] 20</code></pre>
+<p><code>map()</code> and <code>across()</code> take the function as an
+argument. Write <code>mean</code>, not <code>mean()</code>. The
+parentheses would call it immediately, before <code>map()</code> has an
+element to hand it.</p>
+<hr />
+</div>
 <div id="a-for-loop-pre-allocated" class="section level2">
-<h2>1. A for-loop, pre-allocated</h2>
-<pre class="r"><code>for (i in seq_along(x)) {
-  # use x[[i]]
-}</code></pre>
-<pre><code>## Error:
-## ! object &#39;x&#39; not found</code></pre>
+<h2>3. A for-loop, pre-allocated</h2>
 <p><code>seq_along(x)</code> is <code>1, 2, …, length(x)</code>. Prefer
 it to <code>1:length(x)</code>, which misbehaves on an empty
 <code>x</code>. Growing a vector with <code>c()</code> inside the loop
@@ -20,13 +88,14 @@ total &lt;- 0
 for (i in seq_along(x)) {
   total &lt;- total + x[[i]]
   cumvec[[i]] &lt;- total
-}</code></pre>
+}
+cumvec</code></pre>
+<pre><code>## [1]  1  3  6 10 15</code></pre>
 <p><code>vector("double", n)</code> is <code>n</code> zeros. You
-overwrite them.</p>
-<hr />
-</div>
-<div id="while-when-n-is-unknown" class="section level2">
-<h2>2. <code>while</code> when <code>n</code> is unknown</h2>
+overwrite them. <code>x[[i]]</code> pulls one element.
+<code>cumvec[[i]] &lt;-</code> writes one element back.</p>
+<div id="while-when-n-is-unknown" class="section level3">
+<h3><code>while</code> when <code>n</code> is unknown</h3>
 <p>A <code>for</code> loop needs the sequence up front. A
 <code>while</code> loop keeps going until a condition is false:</p>
 <pre class="r"><code>nheads &lt;- 0
@@ -37,108 +106,598 @@ while (nheads &lt; 3) {
     nheads &lt;- nheads + 1
   }
 }</code></pre>
-<p>Use <code>while</code> when you cannot say how many steps you
-need.</p>
+<p>Use <code>while</code> when you cannot say how many steps you need.
+Add <code>flips</code> as the last line when you want the count. That
+number changes from run to run.</p>
 <hr />
 </div>
-<div id="across-often-replaces-a-column-loop" class="section level2">
-<h2>3. <code>across()</code> often replaces a column loop</h2>
-<p>Looping over <code>mtcars</code> columns to take a mean works.
-<code>across()</code> is the dplyr version, and it stays in a
-pipeline:</p>
-<pre class="r"><code>means &lt;- vector(&quot;double&quot;, ncol(mtcars))
-for (i in seq_along(mtcars)) {
-  means[[i]] &lt;- mean(mtcars[[i]], na.rm = TRUE)
-}
-
-mtcars |&gt;
-  summarize(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))</code></pre>
-<pre><code>##        mpg    cyl     disp       hp     drat      wt     qsec     vs      am
-## 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625
-##     gear   carb
-## 1 3.6875 2.8125</code></pre>
-<p>Reach for a loop when the result is not one number per column: a
-model, a plot, a file.</p>
+</div>
+<div id="across-on-columns" class="section level2">
+<h2>4. <code>across()</code> on columns</h2>
+<p><code>across()</code> is the dplyr form of “the same function, many
+columns.” It lives inside <code>summarize()</code> or
+<code>mutate()</code>. The full treatment, including
+<code>rowwise()</code> and <code>c_across()</code>, is the rowwise
+lecture. Two patterns matter here.</p>
+<p>One number per column, inside <code>summarize()</code>. Pass
+<code>mean</code> and <code>sd</code> as functions. <code>.names</code>
+builds names from the column and the function.</p>
+<pre class="r"><code>mtcars |&gt;
+  summarize(across(
+    c(mpg, wt),
+    list(mean = mean, sd = sd),
+    .names = &quot;{.col}_{.fn}&quot;
+  ))</code></pre>
+<pre><code>##   mpg_mean   mpg_sd wt_mean     wt_sd
+## 1 20.09062 6.026948 3.21725 0.9784574</code></pre>
+<p><code>where(is.numeric)</code> selects by type.
+<code>is.numeric</code> has no parentheses. <code>where()</code> wants
+the function, not the result of calling it.</p>
+<pre class="r"><code>mtcars |&gt;
+  summarize(across(where(is.numeric), median))</code></pre>
+<pre><code>##    mpg cyl  disp  hp  drat    wt  qsec vs am gear carb
+## 1 19.2   6 196.3 123 3.695 3.325 17.71  0  0    4    2</code></pre>
+<p>Inside <code>mutate()</code>, a function that returns one number is
+repeated down the column. Every row of <code>x</code> below becomes
+<code>mean(x)</code>.</p>
+<pre class="r"><code>xyz &lt;- tibble(x = c(10, 20, 30), y = c(20, 40, 60))
+xyz |&gt; mutate(across(x:y, mean))</code></pre>
+<pre><code>## # A tibble: 3 × 2
+##       x     y
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1    20    40
+## 2    20    40
+## 3    20    40</code></pre>
+<p><code>summarize(across(...))</code> collapses to one row per group.
+<code>mutate(across(...))</code> keeps the rows.</p>
 <hr />
 </div>
-<div id="purrrmap" class="section level2">
-<h2>4. <code>purrr::map</code></h2>
-<p><code>map()</code> applies a function to each element and returns a
-list. Typed variants return an atomic vector: <code>map_dbl()</code>,
-<code>map_chr()</code>, <code>map_lgl()</code>.</p>
-<p><code>.f</code> is a function name, <strong>not</strong> a call.
-<code>map_dbl(mtcars, mean)</code> works.
-<code>map_dbl(mtcars, mean())</code> does not.</p>
-<pre class="r"><code>map_dbl(mtcars, mean)</code></pre>
-<pre><code>##        mpg        cyl       disp         hp       drat         wt       qsec 
-##  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
-##         vs         am       gear       carb 
-##   0.437500   0.406250   3.687500   2.812500</code></pre>
+<div id="map" class="section level2">
+<h2>5. <code>map()</code></h2>
+<p><code>map(.x, .f)</code> applies <code>.f</code> to each element of
+<code>.x</code> and returns a <strong>list</strong>.</p>
+<pre class="r"><code>measurements &lt;- list(
+  blood_glucose = c(90, 95, 100),
+  age = c(20, 30, 40),
+  heart_rate = c(70, 75, 80)
+)
+map(measurements, mean)</code></pre>
+<pre><code>## $blood_glucose
+## [1] 95
+## 
+## $age
+## [1] 30
+## 
+## $heart_rate
+## [1] 75</code></pre>
+<p>Each element is handled on its own. The names come along.</p>
+<p>A data frame is a list of columns, so <code>map()</code> handles one
+column at a time. <code>select(where(is.numeric))</code> drops the
+factor columns of <code>iris</code> first. <code>sd</code> of a factor
+is not a useful number.</p>
+<pre class="r"><code>iris |&gt;
+  select(where(is.numeric)) |&gt;
+  map(sd)</code></pre>
+<pre><code>## $Sepal.Length
+## [1] 0.8280661
+## 
+## $Sepal.Width
+## [1] 0.4358663
+## 
+## $Petal.Length
+## [1] 1.765298
+## 
+## $Petal.Width
+## [1] 0.7622377</code></pre>
+<p><code>map(mtcars, class)</code> asks for the class of every column.
+That is a useful first look at a new table. The result is a list because
+<code>class()</code> is allowed to return more than one string.
+<code>cut</code> in <code>diamonds</code> is an ordered factor, so
+<code>class()</code> returns <code>"ordered"</code> and
+<code>"factor"</code>. <code>map_chr()</code> would stop there. Section
+8 is the rule.</p>
+<p>Extra arguments of <code>.f</code> go after the function. They are
+the same on every element.</p>
 <pre class="r"><code>map_dbl(mtcars, mean, na.rm = TRUE)</code></pre>
 <pre><code>##        mpg        cyl       disp         hp       drat         wt       qsec 
 ##  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
 ##         vs         am       gear       carb 
 ##   0.437500   0.406250   3.687500   2.812500</code></pre>
-<p>A formula <code>~</code> is a short anonymous function.
-<code>.x</code> is the current element:</p>
-<pre class="r"><code>map_dbl(mtcars, ~ mean(.x, na.rm = TRUE))</code></pre>
-<pre><code>##        mpg        cyl       disp         hp       drat         wt       qsec 
-##  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 
-##         vs         am       gear       carb 
-##   0.437500   0.406250   3.687500   2.812500</code></pre>
 <hr />
 </div>
-<div id="map2-and-pmap" class="section level2">
-<h2>5. <code>map2</code> and <code>pmap</code></h2>
-<p><code>map2(.x, .y, .f)</code> walks two vectors together.
-<code>pmap()</code> walks a list of arguments:</p>
-<pre class="r"><code>mu &lt;- c(-10, 0, 10)
-sigma &lt;- c(1, 1, 2)
-map2(mu, sigma, rnorm, n = 5)</code></pre>
-<pre><code>## [[1]]
-## [1] -10.385849  -9.948049  -9.872957  -8.765055  -9.292933
-## 
-## [[2]]
-## [1]  0.12053990  0.57957222  0.42511028 -1.51520107  0.04904086
-## 
-## [[3]]
-## [1] 11.693601  6.693857 10.557797 12.044683  5.717007</code></pre>
-<pre class="r"><code>args &lt;- list(n = 5, mean = mu, sd = sigma)
-pmap(args, rnorm)</code></pre>
-<pre><code>## [[1]]
-## [1]  -7.253338  -8.717668 -10.459492 -11.343773 -10.509500
-## 
-## [[2]]
-## [1] -0.4296248  0.2900308  0.1374587  0.4737093  0.7913126
-## 
-## [[3]]
-## [1]  9.377468  9.243811  7.911468  8.600905 11.002417</code></pre>
-<hr />
-</div>
-<div id="keep-discard-and-split-plus-map" class="section level2">
-<h2>6. <code>keep</code> / <code>discard</code> and split-plus-map</h2>
+<div id="write-the-function-once" class="section level2">
+<h2>6. Write the function once</h2>
+<p>Copying a block three times is a good moment to name a function.
+Calling that function three times is a good moment to use
+<code>map()</code>.</p>
+<p>Several Excel files with the same odd layout: skip four rows, take
+sheet 2, and supply the names. One function holds that layout. This
+chunk is not run here. There are no workbooks in the notes.</p>
+<pre class="r"><code>library(readxl)
+
+read_weird_excel &lt;- function(file) {
+  read_excel(
+    file,
+    sheet = 2,
+    skip = 4,
+    col_names = c(&quot;id&quot;, &quot;value&quot;, &quot;group&quot;)
+  )
+}
+
+files &lt;- c(&quot;data1.xlsx&quot;, &quot;data2.xlsx&quot;, &quot;data3.xlsx&quot;)
+datasets &lt;- map(files, read_weird_excel)
+combined &lt;- bind_rows(datasets)</code></pre>
+<p><code>datasets</code> would be a list of three data frames.
+<code>bind_rows()</code> stacks them.</p>
 <p><code>keep()</code> holds the elements where a test is true.
-<code>discard()</code> drops them.</p>
+<code>discard()</code> drops them. Then <code>map_dbl()</code>
+summarizes what remains.</p>
 <pre class="r"><code>iris |&gt;
   keep(is.numeric) |&gt;
   map_dbl(mean)</code></pre>
 <pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
 ##     5.843333     3.057333     3.758000     1.199333</code></pre>
-<p><code>split()</code> turns a data frame into a list of data frames,
-one per group. Then <code>map()</code> fits a model on each:</p>
+<hr />
+</div>
+<div id="anonymous-functions" class="section level2">
+<h2>7. Anonymous functions</h2>
+<p>A function you need once does not need a name. Four ways to pass
+“mean, and drop missing values”:</p>
+<pre class="r"><code>map(measurements, mean, na.rm = TRUE)</code></pre>
+<pre><code>## $blood_glucose
+## [1] 95
+## 
+## $age
+## [1] 30
+## 
+## $heart_rate
+## [1] 75</code></pre>
+<pre class="r"><code>map(measurements, function(x) mean(x, na.rm = TRUE))</code></pre>
+<pre><code>## $blood_glucose
+## [1] 95
+## 
+## $age
+## [1] 30
+## 
+## $heart_rate
+## [1] 75</code></pre>
+<pre class="r"><code>map(measurements, \(x) mean(x, na.rm = TRUE))</code></pre>
+<pre><code>## $blood_glucose
+## [1] 95
+## 
+## $age
+## [1] 30
+## 
+## $heart_rate
+## [1] 75</code></pre>
+<pre class="r"><code>map(measurements, ~ mean(.x, na.rm = TRUE))</code></pre>
+<pre><code>## $blood_glucose
+## [1] 95
+## 
+## $age
+## [1] 30
+## 
+## $heart_rate
+## [1] 75</code></pre>
+<p><code>\(x)</code> is <code>function(x)</code>, from R 4.1 on. Use
+that in new code. <code>~</code> is the older purrr formula.
+<code>.x</code> is the current element. Both still run.</p>
+<p>How many distinct values are in each column of <code>iris</code>:</p>
+<pre class="r"><code>map_int(iris, \(x) length(unique(x)))</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##           35           23           43           22            3</code></pre>
+<hr />
+</div>
+<div id="map_-picks-the-type" class="section level2">
+<h2>8. <code>map_*()</code> picks the type</h2>
+<p><code>map()</code> always returns a list. The typed variants require
+one value of a fixed type from each element, and they return an atomic
+vector. A surprise length or type stops the walk, which is the
+point.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>What you get back</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>map()</code></td>
+<td>list</td>
+</tr>
+<tr class="even">
+<td><code>map_dbl()</code></td>
+<td>double vector</td>
+</tr>
+<tr class="odd">
+<td><code>map_int()</code></td>
+<td>integer vector</td>
+</tr>
+<tr class="even">
+<td><code>map_chr()</code></td>
+<td>character vector</td>
+</tr>
+<tr class="odd">
+<td><code>map_lgl()</code></td>
+<td>logical vector</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>map_dbl(measurements, mean)</code></pre>
+<pre><code>## blood_glucose           age    heart_rate 
+##            95            30            75</code></pre>
+<pre class="r"><code>map_chr(mtcars, class)</code></pre>
+<pre><code>##       mpg       cyl      disp        hp      drat        wt      qsec        vs 
+## &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot; 
+##        am      gear      carb 
+## &quot;numeric&quot; &quot;numeric&quot; &quot;numeric&quot;</code></pre>
+<pre class="r"><code>map_lgl(mtcars, \(x) any(is.na(x)))</code></pre>
+<pre><code>##   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb 
+## FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+<pre class="r"><code>map_int(iris, \(x) sum(is.na(x)))</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##            0            0            0            0            0</code></pre>
+<p><code>class()</code> on an ordered factor has length 2, so
+<code>map_chr(diamonds, class)</code> stops at <code>cut</code>. Use
+<code>map(diamonds, class)</code> when a column may have more than one
+class.</p>
+<hr />
+</div>
+<div id="map2-and-pmap" class="section level2">
+<h2>9. <code>map2()</code> and <code>pmap()</code></h2>
+<p><code>map2(.x, .y, .f)</code> walks two objects in step. Element 1 of
+<code>.x</code> is paired with element 1 of <code>.y</code>.</p>
+<pre class="r"><code>map2_dbl(c(1, 2, 3), c(10, 20, 30), \(a, b) a + b)</code></pre>
+<pre><code>## [1] 11 22 33</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>First input</th>
+<th>Second input</th>
+<th><code>a + b</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>10</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>2</td>
+<td>20</td>
+<td>22</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>3</td>
+<td>30</td>
+<td>33</td>
+</tr>
+</tbody>
+</table>
+<p>The same pairing draws one normal sample per mean and standard
+deviation. <code>n = 5</code> is fixed. <code>set.seed()</code> makes
+the draws match this page.</p>
+<pre class="r"><code>set.seed(14)
+mu &lt;- c(-10, 0, 10)
+sigma &lt;- c(1, 1, 2)
+map2(mu, sigma, rnorm, n = 5)</code></pre>
+<pre><code>## [[1]]
+## [1] -10.661850  -8.281046  -7.878333  -8.502846 -10.036141
+## 
+## [[2]]
+## [1]  1.23194518 -0.06488077  1.06899373 -0.37696531  1.04318309
+## 
+## [[3]]
+## [1]  9.234356 10.598843 11.348480  9.414367 10.976107</code></pre>
+<p><code>pmap()</code> walks a list of argument vectors. Names in the
+list match arguments of the function.</p>
+<pre class="r"><code>set.seed(14)
+args &lt;- list(n = 5, mean = mu, sd = sigma)
+pmap(args, rnorm)</code></pre>
+<pre><code>## [[1]]
+## [1] -10.661850  -8.281046  -7.878333  -8.502846 -10.036141
+## 
+## [[2]]
+## [1]  1.23194518 -0.06488077  1.06899373 -0.37696531  1.04318309
+## 
+## [[3]]
+## [1]  9.234356 10.598843 11.348480  9.414367 10.976107</code></pre>
+<p><code>map()</code> is one input. <code>map2()</code> is two.
+<code>pmap()</code> is the general case, including three or more.</p>
+<hr />
+</div>
+<div id="one-model-per-group" class="section level2">
+<h2>10. One model per group</h2>
+<p><code>group_modify()</code> hands each group to a function as a data
+frame and row-binds what you return. The function takes the group’s rows
+and a one-row tibble of the keys. <code>group_map()</code> does the same
+walk and returns a list instead of one data frame.</p>
+<pre class="r"><code>mtcars |&gt;
+  group_by(cyl) |&gt;
+  group_modify(\(data, key) {
+    fit &lt;- lm(mpg ~ wt, data = data)
+    tibble(term = names(coef(fit)), estimate = unname(coef(fit)))
+  })</code></pre>
+<pre><code>## # A tibble: 6 × 3
+## # Groups:   cyl [3]
+##     cyl term        estimate
+##   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
+## 1     4 (Intercept)    39.6 
+## 2     4 wt             -5.65
+## 3     6 (Intercept)    28.4 
+## 4     6 wt             -2.78
+## 5     8 (Intercept)    23.9 
+## 6     8 wt             -2.19</code></pre>
+<p><code>split()</code> plus <code>map()</code> is the same idea without
+<code>group_by()</code>. A string as <code>.f</code> pulls that element
+out of each result. <code>summary(fit)$r.squared</code> is how
+<code>"r.squared"</code> finds the number.</p>
 <pre class="r"><code>mtcars |&gt;
   split(mtcars$cyl) |&gt;
-  map(~ lm(mpg ~ wt, data = .x)) |&gt;
+  map(\(data) lm(mpg ~ wt, data = data)) |&gt;
   map(summary) |&gt;
   map_dbl(&quot;r.squared&quot;)</code></pre>
 <pre><code>##         4         6         8 
 ## 0.5086326 0.4645102 0.4229655</code></pre>
-<p>A string (or an integer) as <code>.f</code> extracts that name (or
-position) from each list element.</p>
+<p><code>group_walk()</code> is the grouped form of <code>walk()</code>:
+one side effect per group, nothing collected.</p>
 <hr />
 </div>
+<div id="walk-imap-map_if-map_at" class="section level2">
+<h2>11. <code>walk()</code>, <code>imap()</code>, <code>map_if()</code>,
+<code>map_at()</code></h2>
+<table>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pmap()</code></td>
+<td>three or more inputs, or a whole set of arguments</td>
+</tr>
+<tr class="even">
+<td><code>walk()</code></td>
+<td>a side effect, such as writing a file</td>
+</tr>
+<tr class="odd">
+<td><code>imap()</code></td>
+<td>the element and its name or index</td>
+</tr>
+<tr class="even">
+<td><code>map_if()</code></td>
+<td>apply <code>.f</code> only where a test is true</td>
+</tr>
+<tr class="odd">
+<td><code>map_at()</code></td>
+<td>apply <code>.f</code> at selected names or positions</td>
+</tr>
+<tr class="even">
+<td><code>group_walk()</code></td>
+<td>a side effect, one group at a time</td>
+</tr>
+</tbody>
+</table>
+<p><code>walk()</code> runs <code>.f</code> and invisibly returns
+<code>.x</code>. Use it when you want the plots on disk and you do not
+need a list of ggplot objects afterwards. This chunk is not run here. It
+would write three files under <code>figures/</code>.</p>
+<pre class="r"><code>dir.create(&quot;figures&quot;, showWarnings = FALSE)
+
+variables &lt;- c(&quot;mpg&quot;, &quot;wt&quot;, &quot;hp&quot;)
+walk(variables, \(v) {
+  p &lt;- ggplot(mtcars, aes(x = .data[[v]])) +
+    geom_histogram(bins = 15)
+  ggsave(filename = paste0(&quot;figures/&quot;, v, &quot;.png&quot;), plot = p)
+})</code></pre>
+<p><code>imap()</code> passes the name as the second argument.
+<code>.y</code> in the formula form is that name.</p>
+<pre class="r"><code>imap_chr(mtcars[c(&quot;mpg&quot;, &quot;wt&quot;)], \(x, name) paste(name, round(mean(x), 1)))</code></pre>
+<pre><code>##        mpg         wt 
+## &quot;mpg 20.1&quot;   &quot;wt 3.2&quot;</code></pre>
+<p><code>map_if()</code> leaves the elements that fail the test
+untouched. <code>map_at()</code> touches only the names you list.</p>
+<pre class="r"><code>meas &lt;- list(a = c(1, 2, 3), b = &quot;hi&quot;, c = c(10, 20))
+map_if(meas, is.numeric, mean)</code></pre>
+<pre><code>## $a
+## [1] 2
+## 
+## $b
+## [1] &quot;hi&quot;
+## 
+## $c
+## [1] 15</code></pre>
+<pre class="r"><code>map_at(meas, &quot;a&quot;, \(x) x * 10)</code></pre>
+<pre><code>## $a
+## [1] 10 20 30
+## 
+## $b
+## [1] &quot;hi&quot;
+## 
+## $c
+## [1] 10 20</code></pre>
+<hr />
+</div>
+<div id="map-beside-a-for-loop" class="section level2">
+<h2>12. <code>map()</code> beside a for-loop</h2>
+<pre class="r"><code>x &lt;- list(1:3, 4:6, 7:9)
+map(x, mean)</code></pre>
+<pre><code>## [[1]]
+## [1] 2
+## 
+## [[2]]
+## [1] 5
+## 
+## [[3]]
+## [1] 8</code></pre>
+<pre class="r"><code>y &lt;- vector(&quot;list&quot;, length(x))
+for (i in seq_along(x)) {
+  y[[i]] &lt;- mean(x[[i]])
+}
+y</code></pre>
+<pre><code>## [[1]]
+## [1] 2
+## 
+## [[2]]
+## [1] 5
+## 
+## [[3]]
+## [1] 8</code></pre>
+<p>Same three means. <code>map()</code> builds the output list. The loop
+makes you name the index and the container.</p>
+<p>Base R has the same jobs under other names. purrr’s names say what
+you get back.</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>purrr</th>
+<th>Base R</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>map()</code></td>
+<td><code>lapply()</code></td>
+</tr>
+<tr class="even">
+<td><code>map_dbl()</code> and the other typed forms</td>
+<td><code>vapply()</code></td>
+</tr>
+<tr class="odd">
+<td><code>map2()</code>, <code>pmap()</code></td>
+<td><code>mapply()</code></td>
+</tr>
+<tr class="even">
+<td><code>map()</code> when you simplify by hand</td>
+<td><code>sapply()</code>, and the type can change</td>
+</tr>
+</tbody>
+</table>
+<p>A for-loop is still the right shape for <code>while</code>, for an
+early <code>break</code>, and for filling a structure whose next value
+depends on the previous one, as in the cumulative sum in section 3.</p>
+<hr />
+</div>
+<div id="which-function" class="section level2">
+<h2>13. Which function</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>You want</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The same function on several columns, inside a pipeline</td>
+<td><code>across()</code></td>
+</tr>
+<tr class="even">
+<td>One input, a list back</td>
+<td><code>map()</code></td>
+</tr>
+<tr class="odd">
+<td>One input, a double, integer, character, or logical vector back</td>
+<td><code>map_dbl()</code>, <code>map_int()</code>,
+<code>map_chr()</code>, <code>map_lgl()</code></td>
+</tr>
+<tr class="even">
+<td>Two inputs, paired by position</td>
+<td><code>map2()</code></td>
+</tr>
+<tr class="odd">
+<td>Three or more inputs</td>
+<td><code>pmap()</code></td>
+</tr>
+<tr class="even">
+<td>One result per group, stacked</td>
+<td><code>group_modify()</code>, or <code>split()</code> then
+<code>map()</code></td>
+</tr>
+<tr class="odd">
+<td>A file or a plot per element</td>
+<td><code>walk()</code>, or <code>group_walk()</code></td>
+</tr>
+<tr class="even">
+<td>The name or the index as well as the element</td>
+<td><code>imap()</code></td>
+</tr>
+<tr class="odd">
+<td>The function only on some elements</td>
+<td><code>map_if()</code>, <code>map_at()</code></td>
+</tr>
+</tbody>
+</table>
+<p>The operation is the function. The elements are <code>.x</code>.
+Keeping those two apart is what makes the code shorter the second time
+you need it.</p>
+<hr />
+</div>
+<div id="questions" class="section level2">
+<h2>14. Questions</h2>
+<ol style="list-style-type: decimal">
+<li>What is the difference between <code>x[1]</code> and
+<code>x[[1]]</code> when <code>x</code> is a list?</li>
+<li>Why can <code>map()</code> walk a data frame?</li>
+<li>What is the difference between <code>map()</code> and
+<code>map_dbl()</code>?</li>
+<li>How do you take the median of every numeric column?</li>
+<li>How do you count missing values in every column?</li>
+<li>What is the difference between <code>function(x)</code> and
+<code>\(x)</code>?</li>
+<li>When do you use <code>map2()</code> instead of
+<code>map()</code>?</li>
+<li>What is the difference between <code>group_map()</code> and
+<code>group_modify()</code>?</li>
+<li>Why is <code>walk()</code> the function that saves a folder of
+plots?</li>
+<li>How does the for-loop in section 12 become <code>map()</code>?</li>
+</ol>
+<div id="answers" class="section level3">
+<h3>Answers</h3>
+<ol style="list-style-type: decimal">
+<li><code>x[1]</code> is a list of length 1. <code>x[[1]]</code> is the
+element that was inside.</li>
+<li>A data frame is a list of columns. <code>map()</code> applies
+<code>.f</code> to each column.</li>
+<li><code>map()</code> returns a list. <code>map_dbl()</code> returns a
+double vector, and it stops if any element is not one double.</li>
+<li><code>df |&gt; summarize(across(where(is.numeric), median))</code>,
+or <code>map_dbl()</code> after <code>keep(is.numeric)</code>.</li>
+<li><code>map_int(df, \(x) sum(is.na(x)))</code>.</li>
+<li>They are the same function syntax. <code>\(x)</code> is the short
+form from R 4.1 on.</li>
+<li>The function needs two values that change together, paired by
+position.</li>
+<li>Both walk the groups. <code>group_map()</code> returns a list.
+<code>group_modify()</code> row-binds the data frames you return.</li>
+<li>The point of that walk is the files. <code>walk()</code> runs the
+function for the side effect. <code>map()</code> would also build a list
+you do not need.</li>
+<li><code>map(x, mean)</code>. The index and the output list are inside
+<code>map()</code>.</li>
+</ol>
+<hr />
+</div>
+</div>
 <div id="practice" class="section level2">
-<h2>7. Practice</h2>
+<h2>15. Practice</h2>
 <ol style="list-style-type: decimal">
 <li>The first two Fibonacci numbers are 0 and 1. Each later number is
 the sum of the previous two. Use a loop to compute the first 100. Sanity

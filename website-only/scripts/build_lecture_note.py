@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-11-11T16:29:00-05:00"
-LAST_UPDATED_TEXT = "November 11, 2026, 4:29 PM EST"
+LAST_UPDATED_ISO = "2026-11-12T16:26:00-05:00"
+LAST_UPDATED_TEXT = "November 12, 2026, 4:26 PM EST"
 
 NOTES = [
     {
@@ -343,7 +343,7 @@ NOTES = [
         "slug": "purrr-iteration",
         "week": 14,
         "title": "14.2 Iteration: Loops and purrr",
-        "lead": "Pre-allocate a for-loop. map() walks a list. across() often replaces a column loop.",
+        "lead": "Pass the function in. map() walks a list, across() walks columns, and a for-loop is for the index.",
     },
     {
         "slug": "course-wrap",
