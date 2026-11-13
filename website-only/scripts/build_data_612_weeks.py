@@ -92,7 +92,7 @@ def week_page(sidebar: str, num: int, date: str, topic: str, body: str, total: i
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title} - DATA 412/612 - Ahmad Mousavi</title>
         <link rel="stylesheet" href="../website-only/assets/css/main.css" />
-        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=5" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=6" />
         <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
     </head>
     <body class="layout--single page-courses page-week">
