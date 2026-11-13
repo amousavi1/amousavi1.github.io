@@ -345,7 +345,7 @@ body.page-courses:not(.site-nav-full) #site-nav.greedy-nav.masthead-nav-bar {
   margin-bottom: 0;
   padding-bottom: 3.5rem;
   font-size: 0.78rem;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .page-toc__weeks .page-toc__title {
@@ -353,18 +353,8 @@ body.page-courses:not(.site-nav-full) #site-nav.greedy-nav.masthead-nav-bar {
   margin-bottom: 0.55em;
 }
 
-.page-toc__weeks .page-toc__list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.35rem;
-}
-
 .page-toc__weeks .page-toc__list > li {
-  margin: 0 0 0.28em;
-}
-
-.page-toc__weeks a {
-  white-space: nowrap;
+  margin: 0 0 0.38em;
 }
 
 .page-toc__contents {
