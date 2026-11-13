@@ -1,7 +1,7 @@
 (() => {
   // Single source of truth for the site-wide "Last updated" footer stamp.
   // Bump this ISO datetime whenever website content is changed.
-  const SITE_LAST_UPDATED = '2026-11-12T17:36:00-05:00';
+  const SITE_LAST_UPDATED = '2026-11-12T20:10:00-05:00';
 
   function formatSiteLastUpdated(isoDateTime) {
     const date = new Date(isoDateTime);
@@ -712,6 +712,19 @@
     });
   }
 
+  function layoutPageToc() {
+    const toc = document.querySelector('.page-toc');
+    if (!toc) return;
+    const wide = window.matchMedia('(min-width: 57.8125em)').matches;
+    toc.classList.remove('page-toc--flow');
+    if (!wide) return;
+    const top = parseFloat(getComputedStyle(toc).top) || 0;
+    const available = window.innerHeight - top - 16;
+    if (toc.getBoundingClientRect().height > available) {
+      toc.classList.add('page-toc--flow');
+    }
+  }
+
   // Run early.
   setHtmlJsClass();
 
@@ -724,5 +737,9 @@
     initPageToc();
     initCourseWeekTabs();
     initLectureCode();
+    layoutPageToc();
   });
+
+  window.addEventListener('load', layoutPageToc);
+  window.addEventListener('resize', layoutPageToc);
 })();
