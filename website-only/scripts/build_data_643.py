@@ -48,7 +48,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title} - {COURSE_TITLE} - Ahmad Mousavi</title>
         <link rel="stylesheet" href="../website-only/assets/css/main.css" />
-        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=6" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=7" />
         <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
     </head>
     <body class="layout--single page-courses page-lecture">
@@ -280,7 +280,7 @@ def write_hub() -> pathlib.Path:
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{COURSE_TITLE}: {COURSE_LONG} - Ahmad Mousavi</title>
         <link rel="stylesheet" href="../website-only/assets/css/main.css" />
-        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=6" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=7" />
         <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
     </head>
     <body class="layout--single page-courses">

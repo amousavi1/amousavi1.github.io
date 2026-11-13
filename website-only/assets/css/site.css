@@ -158,7 +158,7 @@ body.page-courses:not(.site-nav-full) #site-nav.greedy-nav.masthead-nav-bar {
   #main {
     display: grid;
     /* minmax(0, …) keeps tracks from growing with TOC or sidebar content. */
-    grid-template-columns: minmax(0, 18%) minmax(0, 64%) minmax(0, 14%);
+    grid-template-columns: minmax(0, 18%) minmax(0, 66%) minmax(0, 12%);
     column-gap: 2%;
     align-items: start;
     width: 100%;
@@ -367,10 +367,17 @@ body.page-courses:not(.site-nav-full) #site-nav.greedy-nav.masthead-nav-bar {
 
 .page-toc__contents {
   margin-top: 0.7rem;
+  font-size: 0.72rem;
+  line-height: 1.28;
+}
+
+.page-toc__contents .page-toc__title {
+  font-size: 0.6rem;
+  margin-bottom: 0.4em;
 }
 
 .page-toc__contents .page-toc__list > li {
-  margin: 0 0 0.42em;
+  margin: 0 0 0.28em;
 }
 
 .course-week-jump {

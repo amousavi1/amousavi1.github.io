@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-11-12T20:47:00-05:00"
-LAST_UPDATED_TEXT = "November 12, 2026, 8:47 PM EST"
+LAST_UPDATED_ISO = "2026-11-12T23:08:00-05:00"
+LAST_UPDATED_TEXT = "November 12, 2026, 11:08 PM EST"
 
 NOTES = [
     {
@@ -652,7 +652,7 @@ def write_site_page(note: dict, body: str) -> pathlib.Path:
         <link rel="icon" type="image/png" sizes="32x32" href="../website-only/assets/images/favicon-32.png?v=3" />
         <link rel="apple-touch-icon" href="../website-only/assets/images/apple-touch-icon.png?v=3" />
         <link rel="stylesheet" href="../website-only/assets/css/main.css" />
-        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=6" />
+        <link rel="stylesheet" href="../website-only/assets/css/site.css?v=7" />
         <link rel="stylesheet" href="../website-only/assets/css/academicons.css" />
     </head>
     <body class="layout--single page-courses page-lecture">
