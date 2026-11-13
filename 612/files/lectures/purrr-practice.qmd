@@ -1,5 +1,5 @@
 ---
-title: "Functional Programming with purrr: 10 Examples"
+title: "Functional Programming with purrr: 20 Examples"
 ---
 
 ```{r}
@@ -22,7 +22,7 @@ Apply the same operation to each piece: a vector, a list, the columns of a data 
 
 Datasets: `iris`, `mtcars`, `airquality`, `ToothGrowth`, `ChickWeight`.
 
-Run the worked example. Then write Your turn before you read the solution. Some exercises use different columns from the worked example.
+Run the worked example. Then write Your turn before you read the solution. Some exercises use different columns from the worked example. Examples 11–20 continue the same pattern, and each solution stays closed until you expand it.
 
 ```{r}
 #| label: libraries
@@ -470,3 +470,557 @@ length(saved_files)
 Why is `map_dbl()` often preferable to `map()` when every iteration must produce a single number?
 
 Why is `walk()` more appropriate than `map()` when saving images?
+
+---
+
+## Examples 11–20
+
+These are **10 additional examples** that build on examples 1–10. Each example has (i) a question to discuss, (ii) a guided demonstration, (iii) an exercise, and (iv) a solution you can expand after trying the exercise. The examples use only datasets distributed with R: `mtcars`, `iris`, `airquality`, and `ToothGrowth`.
+
+**Key idea:** The first argument of `split(x, f)` is **what you want to divide**. If `x` is a vector, you get a list of vectors; if `x` is a data frame, you get a list of data frames. The second argument `f` determines the groups.
+
+## Example 11 — Split a vector by month, then calculate summaries
+
+**Dataset:** `airquality` (daily air-quality measurements in New York).
+
+**Goal:** Distinguish *grouping values* from *calculating within each group*.
+
+### Worked example
+
+```{r}
+#| label: ex11-worked
+# Split the temperature vector into groups defined by Month.
+temp_by_month <- split(airquality$Temp, airquality$Month)
+
+names(temp_by_month)  # Group labels
+lengths(temp_by_month) # Days in each month
+str(temp_by_month)    # A list of numeric vectors
+
+map(temp_by_month, max)       # List output
+map_dbl(temp_by_month, max)   # Named double vector
+map_dbl(temp_by_month, mean)  # Average temperature by month
+```
+
+**Discuss:** `split()` has not computed any averages. It has only organized values into separate vectors. The calculation happens in `map()`.
+
+### Your turn
+
+1. Split **wind speed** by month.
+2. Find the minimum wind speed for each month with `map_dbl()`.
+3. Find the difference between the maximum and minimum wind speed in each month. Use a lambda function.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 11</summary>
+```
+
+```{r}
+#| label: ex11-solution
+wind_by_month <- split(airquality$Wind, airquality$Month)
+map_dbl(wind_by_month, min)
+map_dbl(wind_by_month, \(x) max(x) - min(x))
+```
+
+**Takeaway:** A lambda such as `\(x) max(x) - min(x)` is helpful when the operation is more complicated than a single existing function.
+
+```{=html}
+</details>
+```
+
+## Example 12 — Split a complete data frame and keep all its columns
+
+**Dataset:** `iris`.
+
+**Goal:** See why `split(iris, iris$Species)` is different from `split(iris$Sepal.Length, iris$Species)`.
+
+### Worked example
+
+```{r}
+#| label: ex12-worked
+iris_groups <- split(iris, iris$Species)
+
+class(iris_groups)             # list
+map_int(iris_groups, nrow)     # rows per species
+map_int(iris_groups, ncol)     # columns per species
+names(iris_groups)            # species labels
+
+# Each element is a complete data frame, so we can use multiple columns.
+map_dbl(iris_groups, \(d) cor(d$Sepal.Length, d$Petal.Length))
+```
+
+**Discuss:** Splitting the complete `iris` object preserves all five columns in each group. Splitting `iris$Sepal.Length` preserves only that numerical variable.
+
+### Your turn
+
+1. Split the **entire** `mtcars` data frame by `cyl`.
+2. Find the number of cars per cylinder group.
+3. Find the mean `mpg` within each group, using `map_dbl()`.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 12</summary>
+```
+
+```{r}
+#| label: ex12-solution
+cars_by_cyl <- split(mtcars, mtcars$cyl)
+map_int(cars_by_cyl, nrow)
+map_dbl(cars_by_cyl, \(d) mean(d$mpg))
+```
+
+**Takeaway:** When a list element is a data frame, the anonymous function receives a data frame (`d`) rather than a single number.
+
+```{=html}
+</details>
+```
+
+## Example 13 — Handle missing values inside mapping functions
+
+**Dataset:** `airquality`.
+
+**Goal:** Learn why `na.rm = TRUE` matters when summarizing columns.
+
+### Worked example
+
+```{r}
+#| label: ex13-worked
+# Airquality has missing values in some columns.
+map_int(airquality, \(x) sum(is.na(x)))
+
+# Without na.rm, the Ozone average is missing.
+mean(airquality$Ozone)
+mean(airquality$Ozone, na.rm = TRUE)
+
+# Compute means for every column safely.
+map_dbl(airquality, \(x) mean(x, na.rm = TRUE))
+```
+
+**Discuss:** `map_dbl()` expects **one number per column**, but that number can be `NA_real_` if the chosen function produces a missing result. It does not automatically remove missing observations.
+
+### Your turn
+
+1. Calculate the **median** of every column in `airquality`, ignoring missing observations.
+2. Calculate the 90th percentile of each column, ignoring missing observations.
+3. Why would `map_dbl(airquality, quantile)` fail with default arguments?
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 13</summary>
+```
+
+```{r}
+#| label: ex13-solution
+map_dbl(airquality, \(x) median(x, na.rm = TRUE))
+map_dbl(airquality, \(x) unname(quantile(x, probs = 0.90, na.rm = TRUE)))
+```
+
+`quantile(x)` usually returns **five values** (0%, 25%, 50%, 75%, 100%), not one. `map_dbl()` requires a single double value for each column; the default `quantile()` call may also encounter missing values.
+
+```{=html}
+</details>
+```
+
+## Example 14 — Use `map_lgl()` to check properties of each column
+
+**Dataset:** `iris`.
+
+**Goal:** Write functions that return `TRUE` or `FALSE` for each column.
+
+### Worked example
+
+```{r}
+#| label: ex14-worked
+map_lgl(iris, is.numeric)               # Which columns are numeric?
+map_lgl(iris, is.factor)                # Which columns are factors?
+map_lgl(iris, \(x) any(is.na(x)))       # Any missing values?
+map_lgl(iris, \(x) length(unique(x)) > 10) # More than 10 distinct values?
+```
+
+**Discuss:** `map_lgl()` does not keep a list of TRUE/FALSE values; it returns a named logical vector.
+
+### Your turn
+
+For `mtcars`, use `map_lgl()` to find which columns have (a) at least 10 distinct values and (b) any value greater than 200.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 14</summary>
+```
+
+```{r}
+#| label: ex14-solution
+map_lgl(mtcars, \(x) length(unique(x)) >= 10)
+map_lgl(mtcars, \(x) any(x > 200))
+```
+
+**Takeaway:** A predicate function answers a yes/no question, making `map_lgl()` a natural choice.
+
+```{=html}
+</details>
+```
+
+## Example 15 — Use `imap()` when you need column names as well as values
+
+**Dataset:** `iris`.
+
+**Goal:** Understand how `imap()` differs from `map()`.
+
+### Worked example
+
+```{r}
+#| label: ex15-worked
+# imap() passes both the column itself (x) and its name (nm).
+column_messages <- imap_chr(
+  iris,
+  \(x, nm) paste(nm, "contains", length(unique(x)), "distinct values")
+)
+column_messages
+```
+
+**Discuss:** `map()` gets each column; `imap()` gets the column **and** its name (or position if the input has no names).
+
+### Your turn
+
+Use `imap_chr()` on the numeric columns of `mtcars` to generate text such as `mpg: mean = 20.09` with the mean rounded to two decimal places.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 15</summary>
+```
+
+```{r}
+#| label: ex15-solution
+map_messages <- imap_chr(
+  mtcars,
+  \(x, nm) paste0(nm, ": mean = ", sprintf("%.2f", mean(x)))
+)
+map_messages
+```
+
+**Takeaway:** This is useful for automatic reports, validation messages, and readable summaries.
+
+```{=html}
+</details>
+```
+
+## Example 16 — Use `map_if()` to change only appropriate list elements
+
+**Dataset:** `iris`.
+
+**Goal:** Selectively modify elements while preserving others.
+
+### Worked example
+
+```{r}
+#| label: ex16-worked
+# Center only numeric columns; leave the Species factor unchanged.
+centered <- map_if(
+  iris,
+  is.numeric,
+  \(x) x - mean(x)
+)
+
+class(centered)         # list
+map_chr(centered, \(x) class(x)[1])
+map_dbl(centered[1:4], mean)  # Approximately zero
+
+# Convert the list back to a data frame if needed.
+centered_df <- as_tibble(centered)
+```
+
+**Discuss:** `map_if()` is a conditional mapping tool. For typical data-frame column transformations, `mutate(across(where(is.numeric), ...))` is also a good approach.
+
+### Your turn
+
+Create a data frame in which every numeric column of `iris` is divided by its standard deviation, but `Species` is left untouched. Verify that the result still contains 150 rows and five columns.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 16</summary>
+```
+
+```{r}
+#| label: ex16-solution
+scaled_columns <- map_if(iris, is.numeric, \(x) x / sd(x))
+result <- as_tibble(scaled_columns)
+dim(result)
+class(result$Species)
+
+# An equivalent dplyr approach:
+result_dplyr <- iris %>%
+  mutate(across(where(is.numeric), \(x) x / sd(x)))
+```
+
+**Takeaway:** `map_if()` selects elements according to a predicate and applies the function only to those elements.
+
+```{=html}
+</details>
+```
+
+## Example 17 — Use `map2()` for different rules for different groups
+
+**Dataset:** `mtcars`.
+
+**Goal:** Use one list of values together with a second vector of thresholds.
+
+### Worked example
+
+```{r}
+#| label: ex17-worked
+hp_by_gear <- split(mtcars$hp, mtcars$gear)
+
+# A different horsepower cutoff for each gear group.
+cutoffs <- c(`3` = 150, `4` = 100, `5` = 200)
+
+# Match cutoffs to the order of the list's group names.
+cutoffs <- cutoffs[names(hp_by_gear)]
+
+map2_int(
+  hp_by_gear,
+  cutoffs,
+  \(horsepower, limit) sum(horsepower > limit)
+)
+```
+
+**Discuss:** `map()` supplies one varying input, while `map2()` supplies two corresponding inputs. The first horsepower vector uses the first cutoff, and so on.
+
+### Your turn
+
+For each gear group, compute the **fraction** of cars above its cutoff using `map2_dbl()`. Confirm the outputs are between 0 and 1.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 17</summary>
+```
+
+```{r}
+#| label: ex17-solution
+fractions <- map2_dbl(
+  hp_by_gear,
+  cutoffs,
+  \(horsepower, limit) mean(horsepower > limit)
+)
+fractions
+all(fractions >= 0 & fractions <= 1)
+```
+
+**Takeaway:** A logical expression is converted to a fraction by `mean()` because `TRUE` counts as 1 and `FALSE` as 0.
+
+```{=html}
+</details>
+```
+
+## Example 18 — Use `pmap()` when a function needs several inputs
+
+**Dataset:** `mtcars`.
+
+**Goal:** Feed multiple columns into a function one row at a time.
+
+### Worked example
+
+```{r}
+#| label: ex18-worked
+# Fit a model to the built-in mtcars dataset.
+fit <- lm(mpg ~ wt + hp, data = mtcars)
+
+# Use three observations as a demonstration.
+new_cars <- mtcars[1:3, c("wt", "hp")]
+
+# Each iteration receives wt and hp from one row.
+predictions <- pmap_dbl(
+  new_cars,
+  \(wt, hp) {
+    new_observation <- data.frame(wt = wt, hp = hp)
+    as.numeric(predict(fit, newdata = new_observation))
+  }
+)
+predictions
+
+# Check against the usual vectorized prediction call.
+predict(fit, newdata = new_cars)
+```
+
+**Discuss:** We normally prefer the vectorized `predict()` call for this specific task. `pmap()` is useful here to **illustrate** how to iterate across multiple inputs, especially when each row requires a more complicated custom operation.
+
+### Your turn
+
+Use `pmap_dbl()` to predict `mpg` for the first **five** cars in `mtcars`, using the same model. Check that your results match `predict(fit, ...)`.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 18</summary>
+```
+
+```{r}
+#| label: ex18-solution
+five_cars <- mtcars[1:5, c("wt", "hp")]
+
+five_predictions <- pmap_dbl(
+  five_cars,
+  \(wt, hp) as.numeric(predict(
+    fit,
+    newdata = data.frame(wt = wt, hp = hp)
+  ))
+)
+
+five_predictions
+all.equal(unname(five_predictions), unname(predict(fit, newdata = five_cars)))
+```
+
+**Takeaway:** `pmap()` generalizes `map2()` to an arbitrary collection of input arguments.
+
+```{=html}
+</details>
+```
+
+## Example 19 — Fit a separate regression for each group
+
+**Dataset:** `mtcars`.
+
+**Goal:** Connect the earlier ideas of splitting and mapping to grouped statistical modeling.
+
+### Worked example
+
+```{r}
+#| label: ex19-worked
+# Method A: split + map()
+cars_by_cyl <- split(mtcars, mtcars$cyl)
+models <- map(cars_by_cyl, \(d) lm(mpg ~ wt, data = d))
+map_dbl(models, \(model) unname(coef(model)["wt"]))
+
+# Method B: group_modify() returns a combined data frame.
+slopes <- mtcars %>%
+  group_by(cyl) %>%
+  group_modify(\(d, key) {
+    fit_group <- lm(mpg ~ wt, data = d)
+    tibble(slope = unname(coef(fit_group)["wt"]))
+  })
+slopes
+```
+
+**Discuss:** `group_modify()` passes the group's data as its first argument and its grouping key as its second; it combines the group-specific output data frames automatically.
+
+### Your turn
+
+For every cylinder group, fit `lm(mpg ~ hp)` and return a combined data frame containing the cylinder count and the slope for `hp`.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 19</summary>
+```
+
+```{r}
+#| label: ex19-solution
+mtcars %>%
+  group_by(cyl) %>%
+  group_modify(\(d, key) {
+    group_fit <- lm(mpg ~ hp, data = d)
+    tibble(hp_slope = unname(coef(group_fit)["hp"]))
+  })
+```
+
+**Takeaway:** This is useful when the same statistical model must be fitted independently to multiple groups.
+
+```{=html}
+</details>
+```
+
+## Example 20 — Use `walk()` for actions such as writing files
+
+**Dataset:** `iris`.
+
+**Goal:** Distinguish calculating a value from producing a side effect.
+
+### Worked example
+
+```{r}
+#| label: ex20-worked
+# Create a temporary directory, rather than cluttering the project folder.
+output_dir <- file.path(tempdir(), "data612_species")
+dir.create(output_dir, showWarnings = FALSE)
+
+species_data <- split(iris, iris$Species)
+
+# walk2() pairs each group name with its corresponding data frame.
+walk2(
+  names(species_data),
+  species_data,
+  \(nm, d) write.csv(
+    d,
+    file = file.path(output_dir, paste0(nm, ".csv")),
+    row.names = FALSE
+  )
+)
+
+list.files(output_dir)
+```
+
+**Discuss:** `walk2()` is for **doing something** for each pair of inputs. The desired result is the written CSV files, not a list of computed values. `walk()` is the one-input version.
+
+### Your turn
+
+Split `mtcars` by `gear`. Create one CSV file for each gear count in a new temporary folder, with file names `gear_3.csv`, `gear_4.csv`, and `gear_5.csv`. Check that all three files exist.
+
+```{=html}
+<details class="lecture-solution">
+<summary>Solution — Example 20</summary>
+```
+
+```{r}
+#| label: ex20-solution
+gear_dir <- file.path(tempdir(), "data612_gears")
+dir.create(gear_dir, showWarnings = FALSE)
+
+cars_by_gear <- split(mtcars, mtcars$gear)
+walk2(
+  names(cars_by_gear),
+  cars_by_gear,
+  \(gear_name, group_data) write.csv(
+    group_data,
+    file.path(gear_dir, paste0("gear_", gear_name, ".csv")),
+    row.names = FALSE
+  )
+)
+
+list.files(gear_dir)
+length(list.files(gear_dir)) == 3
+```
+
+**Takeaway:** Choose `walk()` or `walk2()` when the primary purpose is saving files, printing reports, or other side effects.
+
+```{=html}
+</details>
+```
+
+## End-of-class concept check
+
+Try to answer these without running R first:
+
+1. What is the difference between `split(mtcars$hp, mtcars$gear)` and `split(mtcars, mtcars$gear)`?
+2. Why does `map_dbl(x, quantile)` usually fail if `x` contains numeric vectors?
+3. What two inputs does the function inside `imap()` receive?
+4. How is `map2()` different from `pmap()`?
+5. What is the difference between `map()` and `walk()`?
+6. When should you use `group_modify()` rather than `group_map()`?
+
+```{=html}
+<details class="lecture-solution">
+<summary>Instructor answer key</summary>
+```
+
+1. The first splits just horsepower into numeric vectors. The second splits every row and column of the data frame into data frames by gear.
+2. With default probabilities, `quantile()` returns five numbers, but `map_dbl()` requires one double value from each element (and missing values can also cause an error).
+3. The element and its name (or position, when unnamed).
+4. `map2()` iterates over two varying inputs; `pmap()` can use many varying inputs.
+5. `map()` collects outputs in a list; `walk()` is intended primarily for side effects and invisibly returns its input.
+6. Use `group_modify()` when each group produces a data frame and you want those group results combined into one data frame.
+
+```{=html}
+</details>
+```
+
+## Functions practiced in examples 11–20
+
+`split()`, `map()`, `map_dbl()`, `map_int()`, `map_chr()`, `map_lgl()`, `map_if()`, `imap_chr()`, `map2_int()`, `map2_dbl()`, `pmap_dbl()`, `group_modify()`, and `walk2()`.
+
+**Installation (only if needed):** `install.packages("tidyverse")`.

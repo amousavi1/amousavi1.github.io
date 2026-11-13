@@ -7,8 +7,9 @@ of a data frame, a group, or several inputs side by side.</p>
 <code>airquality</code>, <code>ToothGrowth</code>,
 <code>ChickWeight</code>.</p>
 <p>Run the worked example. Then write Your turn before you read the
-solution. Some exercises use different columns from the worked
-example.</p>
+solution. Some exercises use different columns from the worked example.
+Examples 11–20 continue the same pattern, and each solution stays closed
+until you expand it.</p>
 <pre class="r"><code>set.seed(612)
 library(tidyverse)</code></pre>
 <hr />
@@ -628,4 +629,634 @@ saved_files</code></pre>
 when every iteration must produce a single number?</p>
 <p>Why is <code>walk()</code> more appropriate than <code>map()</code>
 when saving images?</p>
+<hr />
+</div>
+<div id="examples-1120" class="section level2">
+<h2>Examples 11–20</h2>
+<p>These are <strong>10 additional examples</strong> that build on
+examples 1–10. Each example has (i) a question to discuss, (ii) a guided
+demonstration, (iii) an exercise, and (iv) a solution you can expand
+after trying the exercise. The examples use only datasets distributed
+with R: <code>mtcars</code>, <code>iris</code>, <code>airquality</code>,
+and <code>ToothGrowth</code>.</p>
+<p><strong>Key idea:</strong> The first argument of
+<code>split(x, f)</code> is <strong>what you want to divide</strong>. If
+<code>x</code> is a vector, you get a list of vectors; if <code>x</code>
+is a data frame, you get a list of data frames. The second argument
+<code>f</code> determines the groups.</p>
+</div>
+<div id="example-11-split-a-vector-by-month-then-calculate-summaries"
+class="section level2">
+<h2>Example 11 — Split a vector by month, then calculate summaries</h2>
+<p><strong>Dataset:</strong> <code>airquality</code> (daily air-quality
+measurements in New York).</p>
+<p><strong>Goal:</strong> Distinguish <em>grouping values</em> from
+<em>calculating within each group</em>.</p>
+<div id="worked-example-10" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># Split the temperature vector into groups defined by Month.
+temp_by_month &lt;- split(airquality$Temp, airquality$Month)
+
+names(temp_by_month)  # Group labels</code></pre>
+<pre><code>## [1] &quot;5&quot; &quot;6&quot; &quot;7&quot; &quot;8&quot; &quot;9&quot;</code></pre>
+<pre class="r"><code>lengths(temp_by_month) # Days in each month</code></pre>
+<pre><code>##  5  6  7  8  9 
+## 31 30 31 31 30</code></pre>
+<pre class="r"><code>str(temp_by_month)    # A list of numeric vectors</code></pre>
+<pre><code>## List of 5
+##  $ 5: int [1:31] 67 72 74 62 56 66 65 59 61 69 ...
+##  $ 6: int [1:30] 78 74 67 84 85 79 82 87 90 87 ...
+##  $ 7: int [1:31] 84 85 81 84 83 83 88 92 92 89 ...
+##  $ 8: int [1:31] 81 81 82 86 85 87 89 90 90 92 ...
+##  $ 9: int [1:30] 91 92 93 93 87 84 80 78 75 73 ...</code></pre>
+<pre class="r"><code>map(temp_by_month, max)       # List output</code></pre>
+<pre><code>## $`5`
+## [1] 81
+## 
+## $`6`
+## [1] 93
+## 
+## $`7`
+## [1] 92
+## 
+## $`8`
+## [1] 97
+## 
+## $`9`
+## [1] 93</code></pre>
+<pre class="r"><code>map_dbl(temp_by_month, max)   # Named double vector</code></pre>
+<pre><code>##  5  6  7  8  9 
+## 81 93 92 97 93</code></pre>
+<pre class="r"><code>map_dbl(temp_by_month, mean)  # Average temperature by month</code></pre>
+<pre><code>##        5        6        7        8        9 
+## 65.54839 79.10000 83.90323 83.96774 76.90000</code></pre>
+<p><strong>Discuss:</strong> <code>split()</code> has not computed any
+averages. It has only organized values into separate vectors. The
+calculation happens in <code>map()</code>.</p>
+</div>
+<div id="your-turn-10" class="section level3">
+<h3>Your turn</h3>
+<ol style="list-style-type: decimal">
+<li>Split <strong>wind speed</strong> by month.</li>
+<li>Find the minimum wind speed for each month with
+<code>map_dbl()</code>.</li>
+<li>Find the difference between the maximum and minimum wind speed in
+each month. Use a lambda function.</li>
+</ol>
+<details class="lecture-solution">
+<summary>Solution — Example 11</summary>
+<pre class="r"><code>wind_by_month &lt;- split(airquality$Wind, airquality$Month)
+map_dbl(wind_by_month, min)</code></pre>
+<pre><code>##   5   6   7   8   9 
+## 5.7 1.7 4.1 2.3 2.8</code></pre>
+<pre class="r"><code>map_dbl(wind_by_month, \(x) max(x) - min(x))</code></pre>
+<pre><code>##    5    6    7    8    9 
+## 14.4 19.0 10.8 13.2 13.8</code></pre>
+<p><strong>Takeaway:</strong> A lambda such as
+<code>\(x) max(x) - min(x)</code> is helpful when the operation is more
+complicated than a single existing function.</p>
+</details>
+</div>
+</div>
+<div
+id="example-12-split-a-complete-data-frame-and-keep-all-its-columns"
+class="section level2">
+<h2>Example 12 — Split a complete data frame and keep all its
+columns</h2>
+<p><strong>Dataset:</strong> <code>iris</code>.</p>
+<p><strong>Goal:</strong> See why <code>split(iris, iris$Species)</code>
+is different from
+<code>split(iris$Sepal.Length, iris$Species)</code>.</p>
+<div id="worked-example-11" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code>iris_groups &lt;- split(iris, iris$Species)
+
+class(iris_groups)             # list</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code>map_int(iris_groups, nrow)     # rows per species</code></pre>
+<pre><code>##     setosa versicolor  virginica 
+##         50         50         50</code></pre>
+<pre class="r"><code>map_int(iris_groups, ncol)     # columns per species</code></pre>
+<pre><code>##     setosa versicolor  virginica 
+##          5          5          5</code></pre>
+<pre class="r"><code>names(iris_groups)            # species labels</code></pre>
+<pre><code>## [1] &quot;setosa&quot;     &quot;versicolor&quot; &quot;virginica&quot;</code></pre>
+<pre class="r"><code># Each element is a complete data frame, so we can use multiple columns.
+map_dbl(iris_groups, \(d) cor(d$Sepal.Length, d$Petal.Length))</code></pre>
+<pre><code>##     setosa versicolor  virginica 
+##  0.2671758  0.7540490  0.8642247</code></pre>
+<p><strong>Discuss:</strong> Splitting the complete <code>iris</code>
+object preserves all five columns in each group. Splitting
+<code>iris$Sepal.Length</code> preserves only that numerical
+variable.</p>
+</div>
+<div id="your-turn-11" class="section level3">
+<h3>Your turn</h3>
+<ol style="list-style-type: decimal">
+<li>Split the <strong>entire</strong> <code>mtcars</code> data frame by
+<code>cyl</code>.</li>
+<li>Find the number of cars per cylinder group.</li>
+<li>Find the mean <code>mpg</code> within each group, using
+<code>map_dbl()</code>.</li>
+</ol>
+<details class="lecture-solution">
+<summary>Solution — Example 12</summary>
+<pre class="r"><code>cars_by_cyl &lt;- split(mtcars, mtcars$cyl)
+map_int(cars_by_cyl, nrow)</code></pre>
+<pre><code>##  4  6  8 
+## 11  7 14</code></pre>
+<pre class="r"><code>map_dbl(cars_by_cyl, \(d) mean(d$mpg))</code></pre>
+<pre><code>##        4        6        8 
+## 26.66364 19.74286 15.10000</code></pre>
+<p><strong>Takeaway:</strong> When a list element is a data frame, the
+anonymous function receives a data frame (<code>d</code>) rather than a
+single number.</p>
+</details>
+</div>
+</div>
+<div id="example-13-handle-missing-values-inside-mapping-functions"
+class="section level2">
+<h2>Example 13 — Handle missing values inside mapping functions</h2>
+<p><strong>Dataset:</strong> <code>airquality</code>.</p>
+<p><strong>Goal:</strong> Learn why <code>na.rm = TRUE</code> matters
+when summarizing columns.</p>
+<div id="worked-example-12" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># Airquality has missing values in some columns.
+map_int(airquality, \(x) sum(is.na(x)))</code></pre>
+<pre><code>##   Ozone Solar.R    Wind    Temp   Month     Day 
+##      37       7       0       0       0       0</code></pre>
+<pre class="r"><code># Without na.rm, the Ozone average is missing.
+mean(airquality$Ozone)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>mean(airquality$Ozone, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 42.12931</code></pre>
+<pre class="r"><code># Compute means for every column safely.
+map_dbl(airquality, \(x) mean(x, na.rm = TRUE))</code></pre>
+<pre><code>##      Ozone    Solar.R       Wind       Temp      Month        Day 
+##  42.129310 185.931507   9.957516  77.882353   6.993464  15.803922</code></pre>
+<p><strong>Discuss:</strong> <code>map_dbl()</code> expects <strong>one
+number per column</strong>, but that number can be <code>NA_real_</code>
+if the chosen function produces a missing result. It does not
+automatically remove missing observations.</p>
+</div>
+<div id="your-turn-12" class="section level3">
+<h3>Your turn</h3>
+<ol style="list-style-type: decimal">
+<li>Calculate the <strong>median</strong> of every column in
+<code>airquality</code>, ignoring missing observations.</li>
+<li>Calculate the 90th percentile of each column, ignoring missing
+observations.</li>
+<li>Why would <code>map_dbl(airquality, quantile)</code> fail with
+default arguments?</li>
+</ol>
+<details class="lecture-solution">
+<summary>Solution — Example 13</summary>
+<pre class="r"><code>map_dbl(airquality, \(x) median(x, na.rm = TRUE))</code></pre>
+<pre><code>##   Ozone Solar.R    Wind    Temp   Month     Day 
+##    31.5   205.0     9.7    79.0     7.0    16.0</code></pre>
+<pre class="r"><code>map_dbl(airquality, \(x) unname(quantile(x, probs = 0.90, na.rm = TRUE)))</code></pre>
+<pre><code>##   Ozone Solar.R    Wind    Temp   Month     Day 
+##    87.0   288.5    14.9    90.0     9.0    28.0</code></pre>
+<p><code>quantile(x)</code> usually returns <strong>five values</strong>
+(0%, 25%, 50%, 75%, 100%), not one. <code>map_dbl()</code> requires a
+single double value for each column; the default <code>quantile()</code>
+call may also encounter missing values.</p>
+</details>
+</div>
+</div>
+<div id="example-14-use-map_lgl-to-check-properties-of-each-column"
+class="section level2">
+<h2>Example 14 — Use <code>map_lgl()</code> to check properties of each
+column</h2>
+<p><strong>Dataset:</strong> <code>iris</code>.</p>
+<p><strong>Goal:</strong> Write functions that return <code>TRUE</code>
+or <code>FALSE</code> for each column.</p>
+<div id="worked-example-13" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code>map_lgl(iris, is.numeric)               # Which columns are numeric?</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##         TRUE         TRUE         TRUE         TRUE        FALSE</code></pre>
+<pre class="r"><code>map_lgl(iris, is.factor)                # Which columns are factors?</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##        FALSE        FALSE        FALSE        FALSE         TRUE</code></pre>
+<pre class="r"><code>map_lgl(iris, \(x) any(is.na(x)))       # Any missing values?</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##        FALSE        FALSE        FALSE        FALSE        FALSE</code></pre>
+<pre class="r"><code>map_lgl(iris, \(x) length(unique(x)) &gt; 10) # More than 10 distinct values?</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##         TRUE         TRUE         TRUE         TRUE        FALSE</code></pre>
+<p><strong>Discuss:</strong> <code>map_lgl()</code> does not keep a list
+of TRUE/FALSE values; it returns a named logical vector.</p>
+</div>
+<div id="your-turn-13" class="section level3">
+<h3>Your turn</h3>
+<p>For <code>mtcars</code>, use <code>map_lgl()</code> to find which
+columns have (a) at least 10 distinct values and (b) any value greater
+than 200.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 14</summary>
+<pre class="r"><code>map_lgl(mtcars, \(x) length(unique(x)) &gt;= 10)</code></pre>
+<pre><code>##   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb 
+##  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE</code></pre>
+<pre class="r"><code>map_lgl(mtcars, \(x) any(x &gt; 200))</code></pre>
+<pre><code>##   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb 
+## FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
+<p><strong>Takeaway:</strong> A predicate function answers a yes/no
+question, making <code>map_lgl()</code> a natural choice.</p>
+</details>
+</div>
+</div>
+<div
+id="example-15-use-imap-when-you-need-column-names-as-well-as-values"
+class="section level2">
+<h2>Example 15 — Use <code>imap()</code> when you need column names as
+well as values</h2>
+<p><strong>Dataset:</strong> <code>iris</code>.</p>
+<p><strong>Goal:</strong> Understand how <code>imap()</code> differs
+from <code>map()</code>.</p>
+<div id="worked-example-14" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># imap() passes both the column itself (x) and its name (nm).
+column_messages &lt;- imap_chr(
+  iris,
+  \(x, nm) paste(nm, &quot;contains&quot;, length(unique(x)), &quot;distinct values&quot;)
+)
+column_messages</code></pre>
+<pre><code>##                               Sepal.Length 
+## &quot;Sepal.Length contains 35 distinct values&quot; 
+##                                Sepal.Width 
+##  &quot;Sepal.Width contains 23 distinct values&quot; 
+##                               Petal.Length 
+## &quot;Petal.Length contains 43 distinct values&quot; 
+##                                Petal.Width 
+##  &quot;Petal.Width contains 22 distinct values&quot; 
+##                                    Species 
+##       &quot;Species contains 3 distinct values&quot;</code></pre>
+<p><strong>Discuss:</strong> <code>map()</code> gets each column;
+<code>imap()</code> gets the column <strong>and</strong> its name (or
+position if the input has no names).</p>
+</div>
+<div id="your-turn-14" class="section level3">
+<h3>Your turn</h3>
+<p>Use <code>imap_chr()</code> on the numeric columns of
+<code>mtcars</code> to generate text such as
+<code>mpg: mean = 20.09</code> with the mean rounded to two decimal
+places.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 15</summary>
+<pre class="r"><code>map_messages &lt;- imap_chr(
+  mtcars,
+  \(x, nm) paste0(nm, &quot;: mean = &quot;, sprintf(&quot;%.2f&quot;, mean(x)))
+)
+map_messages</code></pre>
+<pre><code>##                   mpg                   cyl                  disp 
+##   &quot;mpg: mean = 20.09&quot;    &quot;cyl: mean = 6.19&quot; &quot;disp: mean = 230.72&quot; 
+##                    hp                  drat                    wt 
+##   &quot;hp: mean = 146.69&quot;   &quot;drat: mean = 3.60&quot;     &quot;wt: mean = 3.22&quot; 
+##                  qsec                    vs                    am 
+##  &quot;qsec: mean = 17.85&quot;     &quot;vs: mean = 0.44&quot;     &quot;am: mean = 0.41&quot; 
+##                  gear                  carb 
+##   &quot;gear: mean = 3.69&quot;   &quot;carb: mean = 2.81&quot;</code></pre>
+<p><strong>Takeaway:</strong> This is useful for automatic reports,
+validation messages, and readable summaries.</p>
+</details>
+</div>
+</div>
+<div id="example-16-use-map_if-to-change-only-appropriate-list-elements"
+class="section level2">
+<h2>Example 16 — Use <code>map_if()</code> to change only appropriate
+list elements</h2>
+<p><strong>Dataset:</strong> <code>iris</code>.</p>
+<p><strong>Goal:</strong> Selectively modify elements while preserving
+others.</p>
+<div id="worked-example-15" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># Center only numeric columns; leave the Species factor unchanged.
+centered &lt;- map_if(
+  iris,
+  is.numeric,
+  \(x) x - mean(x)
+)
+
+class(centered)         # list</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code>map_chr(centered, \(x) class(x)[1])</code></pre>
+<pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
+##    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;    &quot;numeric&quot;     &quot;factor&quot;</code></pre>
+<pre class="r"><code>map_dbl(centered[1:4], mean)  # Approximately zero</code></pre>
+<pre><code>##  Sepal.Length   Sepal.Width  Petal.Length   Petal.Width 
+## -3.666902e-16  9.169893e-17 -3.158931e-17 -3.359437e-17</code></pre>
+<pre class="r"><code># Convert the list back to a data frame if needed.
+centered_df &lt;- as_tibble(centered)</code></pre>
+<p><strong>Discuss:</strong> <code>map_if()</code> is a conditional
+mapping tool. For typical data-frame column transformations,
+<code>mutate(across(where(is.numeric), ...))</code> is also a good
+approach.</p>
+</div>
+<div id="your-turn-15" class="section level3">
+<h3>Your turn</h3>
+<p>Create a data frame in which every numeric column of
+<code>iris</code> is divided by its standard deviation, but
+<code>Species</code> is left untouched. Verify that the result still
+contains 150 rows and five columns.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 16</summary>
+<pre class="r"><code>scaled_columns &lt;- map_if(iris, is.numeric, \(x) x / sd(x))
+result &lt;- as_tibble(scaled_columns)
+dim(result)</code></pre>
+<pre><code>## [1] 150   5</code></pre>
+<pre class="r"><code>class(result$Species)</code></pre>
+<pre><code>## [1] &quot;factor&quot;</code></pre>
+<pre class="r"><code># An equivalent dplyr approach:
+result_dplyr &lt;- iris %&gt;%
+  mutate(across(where(is.numeric), \(x) x / sd(x)))</code></pre>
+<p><strong>Takeaway:</strong> <code>map_if()</code> selects elements
+according to a predicate and applies the function only to those
+elements.</p>
+</details>
+</div>
+</div>
+<div id="example-17-use-map2-for-different-rules-for-different-groups"
+class="section level2">
+<h2>Example 17 — Use <code>map2()</code> for different rules for
+different groups</h2>
+<p><strong>Dataset:</strong> <code>mtcars</code>.</p>
+<p><strong>Goal:</strong> Use one list of values together with a second
+vector of thresholds.</p>
+<div id="worked-example-16" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code>hp_by_gear &lt;- split(mtcars$hp, mtcars$gear)
+
+# A different horsepower cutoff for each gear group.
+cutoffs &lt;- c(`3` = 150, `4` = 100, `5` = 200)
+
+# Match cutoffs to the order of the list&#39;s group names.
+cutoffs &lt;- cutoffs[names(hp_by_gear)]
+
+map2_int(
+  hp_by_gear,
+  cutoffs,
+  \(horsepower, limit) sum(horsepower &gt; limit)
+)</code></pre>
+<pre><code>##  3  4  5 
+## 10  5  2</code></pre>
+<p><strong>Discuss:</strong> <code>map()</code> supplies one varying
+input, while <code>map2()</code> supplies two corresponding inputs. The
+first horsepower vector uses the first cutoff, and so on.</p>
+</div>
+<div id="your-turn-16" class="section level3">
+<h3>Your turn</h3>
+<p>For each gear group, compute the <strong>fraction</strong> of cars
+above its cutoff using <code>map2_dbl()</code>. Confirm the outputs are
+between 0 and 1.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 17</summary>
+<pre class="r"><code>fractions &lt;- map2_dbl(
+  hp_by_gear,
+  cutoffs,
+  \(horsepower, limit) mean(horsepower &gt; limit)
+)
+fractions</code></pre>
+<pre><code>##         3         4         5 
+## 0.6666667 0.4166667 0.4000000</code></pre>
+<pre class="r"><code>all(fractions &gt;= 0 &amp; fractions &lt;= 1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><strong>Takeaway:</strong> A logical expression is converted to a
+fraction by <code>mean()</code> because <code>TRUE</code> counts as 1
+and <code>FALSE</code> as 0.</p>
+</details>
+</div>
+</div>
+<div id="example-18-use-pmap-when-a-function-needs-several-inputs"
+class="section level2">
+<h2>Example 18 — Use <code>pmap()</code> when a function needs several
+inputs</h2>
+<p><strong>Dataset:</strong> <code>mtcars</code>.</p>
+<p><strong>Goal:</strong> Feed multiple columns into a function one row
+at a time.</p>
+<div id="worked-example-17" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># Fit a model to the built-in mtcars dataset.
+fit &lt;- lm(mpg ~ wt + hp, data = mtcars)
+
+# Use three observations as a demonstration.
+new_cars &lt;- mtcars[1:3, c(&quot;wt&quot;, &quot;hp&quot;)]
+
+# Each iteration receives wt and hp from one row.
+predictions &lt;- pmap_dbl(
+  new_cars,
+  \(wt, hp) {
+    new_observation &lt;- data.frame(wt = wt, hp = hp)
+    as.numeric(predict(fit, newdata = new_observation))
+  }
+)
+predictions</code></pre>
+<pre><code>## [1] 23.57233 22.58348 25.27582</code></pre>
+<pre class="r"><code># Check against the usual vectorized prediction call.
+predict(fit, newdata = new_cars)</code></pre>
+<pre><code>##     Mazda RX4 Mazda RX4 Wag    Datsun 710 
+##      23.57233      22.58348      25.27582</code></pre>
+<p><strong>Discuss:</strong> We normally prefer the vectorized
+<code>predict()</code> call for this specific task. <code>pmap()</code>
+is useful here to <strong>illustrate</strong> how to iterate across
+multiple inputs, especially when each row requires a more complicated
+custom operation.</p>
+</div>
+<div id="your-turn-17" class="section level3">
+<h3>Your turn</h3>
+<p>Use <code>pmap_dbl()</code> to predict <code>mpg</code> for the first
+<strong>five</strong> cars in <code>mtcars</code>, using the same model.
+Check that your results match <code>predict(fit, ...)</code>.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 18</summary>
+<pre class="r"><code>five_cars &lt;- mtcars[1:5, c(&quot;wt&quot;, &quot;hp&quot;)]
+
+five_predictions &lt;- pmap_dbl(
+  five_cars,
+  \(wt, hp) as.numeric(predict(
+    fit,
+    newdata = data.frame(wt = wt, hp = hp)
+  ))
+)
+
+five_predictions</code></pre>
+<pre><code>## [1] 23.57233 22.58348 25.27582 21.26502 18.32727</code></pre>
+<pre class="r"><code>all.equal(unname(five_predictions), unname(predict(fit, newdata = five_cars)))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><strong>Takeaway:</strong> <code>pmap()</code> generalizes
+<code>map2()</code> to an arbitrary collection of input arguments.</p>
+</details>
+</div>
+</div>
+<div id="example-19-fit-a-separate-regression-for-each-group"
+class="section level2">
+<h2>Example 19 — Fit a separate regression for each group</h2>
+<p><strong>Dataset:</strong> <code>mtcars</code>.</p>
+<p><strong>Goal:</strong> Connect the earlier ideas of splitting and
+mapping to grouped statistical modeling.</p>
+<div id="worked-example-18" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># Method A: split + map()
+cars_by_cyl &lt;- split(mtcars, mtcars$cyl)
+models &lt;- map(cars_by_cyl, \(d) lm(mpg ~ wt, data = d))
+map_dbl(models, \(model) unname(coef(model)[&quot;wt&quot;]))</code></pre>
+<pre><code>##         4         6         8 
+## -5.647025 -2.780106 -2.192438</code></pre>
+<pre class="r"><code># Method B: group_modify() returns a combined data frame.
+slopes &lt;- mtcars %&gt;%
+  group_by(cyl) %&gt;%
+  group_modify(\(d, key) {
+    fit_group &lt;- lm(mpg ~ wt, data = d)
+    tibble(slope = unname(coef(fit_group)[&quot;wt&quot;]))
+  })
+slopes</code></pre>
+<pre><code>## # A tibble: 3 × 2
+## # Groups:   cyl [3]
+##     cyl slope
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     4 -5.65
+## 2     6 -2.78
+## 3     8 -2.19</code></pre>
+<p><strong>Discuss:</strong> <code>group_modify()</code> passes the
+group’s data as its first argument and its grouping key as its second;
+it combines the group-specific output data frames automatically.</p>
+</div>
+<div id="your-turn-18" class="section level3">
+<h3>Your turn</h3>
+<p>For every cylinder group, fit <code>lm(mpg ~ hp)</code> and return a
+combined data frame containing the cylinder count and the slope for
+<code>hp</code>.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 19</summary>
+<pre class="r"><code>mtcars %&gt;%
+  group_by(cyl) %&gt;%
+  group_modify(\(d, key) {
+    group_fit &lt;- lm(mpg ~ hp, data = d)
+    tibble(hp_slope = unname(coef(group_fit)[&quot;hp&quot;]))
+  })</code></pre>
+<pre><code>## # A tibble: 3 × 2
+## # Groups:   cyl [3]
+##     cyl hp_slope
+##   &lt;dbl&gt;    &lt;dbl&gt;
+## 1     4 -0.113  
+## 2     6 -0.00761
+## 3     8 -0.0142</code></pre>
+<p><strong>Takeaway:</strong> This is useful when the same statistical
+model must be fitted independently to multiple groups.</p>
+</details>
+</div>
+</div>
+<div id="example-20-use-walk-for-actions-such-as-writing-files"
+class="section level2">
+<h2>Example 20 — Use <code>walk()</code> for actions such as writing
+files</h2>
+<p><strong>Dataset:</strong> <code>iris</code>.</p>
+<p><strong>Goal:</strong> Distinguish calculating a value from producing
+a side effect.</p>
+<div id="worked-example-19" class="section level3">
+<h3>Worked example</h3>
+<pre class="r"><code># Create a temporary directory, rather than cluttering the project folder.
+output_dir &lt;- file.path(tempdir(), &quot;data612_species&quot;)
+dir.create(output_dir, showWarnings = FALSE)
+
+species_data &lt;- split(iris, iris$Species)
+
+# walk2() pairs each group name with its corresponding data frame.
+walk2(
+  names(species_data),
+  species_data,
+  \(nm, d) write.csv(
+    d,
+    file = file.path(output_dir, paste0(nm, &quot;.csv&quot;)),
+    row.names = FALSE
+  )
+)
+
+list.files(output_dir)</code></pre>
+<pre><code>## [1] &quot;setosa.csv&quot;     &quot;versicolor.csv&quot; &quot;virginica.csv&quot;</code></pre>
+<p><strong>Discuss:</strong> <code>walk2()</code> is for <strong>doing
+something</strong> for each pair of inputs. The desired result is the
+written CSV files, not a list of computed values. <code>walk()</code> is
+the one-input version.</p>
+</div>
+<div id="your-turn-19" class="section level3">
+<h3>Your turn</h3>
+<p>Split <code>mtcars</code> by <code>gear</code>. Create one CSV file
+for each gear count in a new temporary folder, with file names
+<code>gear_3.csv</code>, <code>gear_4.csv</code>, and
+<code>gear_5.csv</code>. Check that all three files exist.</p>
+<details class="lecture-solution">
+<summary>Solution — Example 20</summary>
+<pre class="r"><code>gear_dir &lt;- file.path(tempdir(), &quot;data612_gears&quot;)
+dir.create(gear_dir, showWarnings = FALSE)
+
+cars_by_gear &lt;- split(mtcars, mtcars$gear)
+walk2(
+  names(cars_by_gear),
+  cars_by_gear,
+  \(gear_name, group_data) write.csv(
+    group_data,
+    file.path(gear_dir, paste0(&quot;gear_&quot;, gear_name, &quot;.csv&quot;)),
+    row.names = FALSE
+  )
+)
+
+list.files(gear_dir)</code></pre>
+<pre><code>## [1] &quot;gear_3.csv&quot; &quot;gear_4.csv&quot; &quot;gear_5.csv&quot;</code></pre>
+<pre class="r"><code>length(list.files(gear_dir)) == 3</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><strong>Takeaway:</strong> Choose <code>walk()</code> or
+<code>walk2()</code> when the primary purpose is saving files, printing
+reports, or other side effects.</p>
+</details>
+</div>
+</div>
+<div id="end-of-class-concept-check" class="section level2">
+<h2>End-of-class concept check</h2>
+<p>Try to answer these without running R first:</p>
+<ol style="list-style-type: decimal">
+<li>What is the difference between
+<code>split(mtcars$hp, mtcars$gear)</code> and
+<code>split(mtcars, mtcars$gear)</code>?</li>
+<li>Why does <code>map_dbl(x, quantile)</code> usually fail if
+<code>x</code> contains numeric vectors?</li>
+<li>What two inputs does the function inside <code>imap()</code>
+receive?</li>
+<li>How is <code>map2()</code> different from <code>pmap()</code>?</li>
+<li>What is the difference between <code>map()</code> and
+<code>walk()</code>?</li>
+<li>When should you use <code>group_modify()</code> rather than
+<code>group_map()</code>?</li>
+</ol>
+<details class="lecture-solution">
+<summary>Instructor answer key</summary>
+<ol style="list-style-type: decimal">
+<li>The first splits just horsepower into numeric vectors. The second
+splits every row and column of the data frame into data frames by
+gear.</li>
+<li>With default probabilities, <code>quantile()</code> returns five
+numbers, but <code>map_dbl()</code> requires one double value from each
+element (and missing values can also cause an error).</li>
+<li>The element and its name (or position, when unnamed).</li>
+<li><code>map2()</code> iterates over two varying inputs;
+<code>pmap()</code> can use many varying inputs.</li>
+<li><code>map()</code> collects outputs in a list; <code>walk()</code>
+is intended primarily for side effects and invisibly returns its
+input.</li>
+<li>Use <code>group_modify()</code> when each group produces a data
+frame and you want those group results combined into one data
+frame.</li>
+</ol>
+</details>
+</div>
+<div id="functions-practiced-in-examples-1120" class="section level2">
+<h2>Functions practiced in examples 11–20</h2>
+<p><code>split()</code>, <code>map()</code>, <code>map_dbl()</code>,
+<code>map_int()</code>, <code>map_chr()</code>, <code>map_lgl()</code>,
+<code>map_if()</code>, <code>imap_chr()</code>, <code>map2_int()</code>,
+<code>map2_dbl()</code>, <code>pmap_dbl()</code>,
+<code>group_modify()</code>, and <code>walk2()</code>.</p>
+<p><strong>Installation (only if needed):</strong>
+<code>install.packages("tidyverse")</code>.</p>
 </div>

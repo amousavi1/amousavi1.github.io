@@ -17,8 +17,8 @@ except ImportError:
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 EDGE = pathlib.Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 
-LAST_UPDATED_ISO = "2026-11-12T20:10:00-05:00"
-LAST_UPDATED_TEXT = "November 12, 2026, 8:10 PM EST"
+LAST_UPDATED_ISO = "2026-11-12T20:20:00-05:00"
+LAST_UPDATED_TEXT = "November 12, 2026, 8:20 PM EST"
 
 NOTES = [
     {
@@ -360,8 +360,8 @@ NOTES = [
     {
         "slug": "purrr-practice",
         "week": 14,
-        "title": "Functional Programming with purrr: 10 Examples",
-        "lead": "Ten examples from map() to walk(), each with a worked example and a solution.",
+        "title": "Functional Programming with purrr: 20 Examples",
+        "lead": "Twenty examples from map() to walk2(), each with a worked example and a solution. Examples 11–20 keep the solution closed until you expand it.",
     },
 ]
 
