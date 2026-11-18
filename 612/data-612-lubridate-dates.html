@@ -117,7 +117,7 @@
                             <a href="files/lubridate-dates.pdf" target="_blank" rel="noopener">PDF</a> &middot; <a href="files/lectures/lubridate-dates.qmd">Source (.qmd)</a>
                         </p>
                         <p>
-                            A string that looks like a date is still text. Parse it, then pull out pieces, add calendar time, and keep a duration distinct from a period.
+                            A string that looks like a date is still text. Parse it, then pull out pieces, add calendar time, and keep a duration, a period, and an interval distinct.
                         </p>
 <h2>1. A string is not a date</h2>
 <p>A column can look like a date and still be text. Text does not know that November comes after October, and you cannot subtract two strings to get a number of days.</p>
@@ -216,19 +216,19 @@ ymd_hms(&quot;2017-01-31 20:11:59&quot;)
 </tr>
 <tr>
 <td>Period</td>
-<td>A calendar unit. A day can be 23 or 25 hours when the clocks change.</td>
+<td>Calendar units, such as a day or a month</td>
 <td><code>Period</code></td>
 <td><code>days(1)</code>, <code>months(1)</code>, <code>years(1)</code></td>
 </tr>
 <tr>
 <td>Interval</td>
-<td>The span between two instants</td>
+<td>The time between two specific instants</td>
 <td><code>Interval</code></td>
 <td><code>interval(start, end)</code></td>
 </tr>
 </tbody>
 </table></div>
-<p><code>difftime</code> is base R. Duration, period, and interval are lubridate. Section 7 subtracts two dates. Section 8 shows why a duration and a period can land on different days.</p>
+<p><code>difftime</code> is base R. Duration, period, and interval are lubridate. Section 7 subtracts two dates. Section 8 compares the three lubridate classes.</p>
 <pre><code class="language-r">class(as.Date(&quot;2026-11-11&quot;) - as.Date(&quot;2026-11-01&quot;))
 class(ddays(1))
 class(days(1))
@@ -685,7 +685,7 @@ d
 <pre><code>## [1] &quot;2027-11-11&quot;
 ## [1] &quot;2027-12-11&quot;
 </code></pre>
-<p>That assignment can build a date that does not exist, such as February 31. Check the result around month ends and leap days.</p>
+<p>That assignment can build a date that does not exist, such as February 31. Adding <code>months(1)</code> can do the same. Section 8 shows both.</p>
 <p>On the WMATA file, after the parse in the previous section:</p>
 <pre><code class="language-r">wmata |&gt;
   mutate(
@@ -706,6 +706,7 @@ d + years(1)
 ## [1] &quot;2027-01-11&quot;
 ## [1] &quot;2027-11-11&quot;
 </code></pre>
+<p><code>months(2)</code> from November 11 lands on January 11. January 31 plus one month is not a date. Section 8 shows the <code>NA</code> and <code>%m+%</code>.</p>
 <p>Subtract two dates to get a difftime.</p>
 <pre><code class="language-r">start &lt;- ymd(&quot;2026-11-01&quot;)
 end &lt;- ymd(&quot;2026-11-11&quot;)
@@ -730,72 +731,129 @@ ceiling_date(d, unit = &quot;month&quot;)
 </code></pre>
 <hr />
 <h2>8. Durations, periods, and intervals</h2>
-<p>The length types from section 2, next to the functions that build them:</p>
+<p>A duration, a period, and an interval are three different ways to measure a length of time.</p>
 <div class="table-wrap"><table>
 <thead>
 <tr>
-<th>Type</th>
-<th>What it stores</th>
-<th>Class</th>
-<th>How you get one</th>
+<th></th>
+<th>Duration</th>
+<th>Period</th>
+<th>Interval</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Difference</td>
-<td>How far apart two dates are</td>
-<td><code>difftime</code></td>
-<td><code>end - start</code></td>
+<td>Measures</td>
+<td>Exact seconds</td>
+<td>Calendar and clock units</td>
+<td>Time between two specific datetimes</td>
 </tr>
 <tr>
-<td>Duration</td>
-<td>An exact number of seconds</td>
-<td><code>Duration</code></td>
-<td><code>ddays(1)</code></td>
+<td>Mental model</td>
+<td>Stopwatch</td>
+<td>Calendar or wall clock</td>
+<td>A start and an end</td>
 </tr>
 <tr>
-<td>Period</td>
-<td>A calendar unit. A day can be 23 or 25 hours when the clocks change.</td>
-<td><code>Period</code></td>
-<td><code>days(1)</code>, <code>months(1)</code>, <code>years(1)</code></td>
+<td>Fixed length in seconds?</td>
+<td>Yes</td>
+<td>No. It depends on the date you add it to.</td>
+<td>Yes, once the two ends are fixed</td>
 </tr>
 <tr>
-<td>Interval</td>
-<td>The span between two instants</td>
-<td><code>Interval</code></td>
-<td><code>interval(start, end)</code></td>
+<td>Anchored to dates?</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Constructors</td>
+<td><code>ddays()</code>, <code>dhours()</code>, <code>dyears()</code>, <code>as.duration()</code></td>
+<td><code>days()</code>, <code>months()</code>, <code>years()</code></td>
+<td><code>interval()</code>, <code>%--%</code></td>
 </tr>
 </tbody>
 </table></div>
-<p>A <strong>duration</strong> is an exact number of seconds. <code>ddays(1)</code> is always 86,400 seconds. <code>dyears(1)</code> is 365.25 of those days.</p>
-<p>A <strong>period</strong> is a human unit. <code>days(1)</code> is one calendar day, which can be 23 or 25 hours when the clocks change. <code>years(1)</code> is one calendar year, 365 or 366 days.</p>
-<p>An <strong>interval</strong> is the span between two instants.</p>
-<pre><code class="language-r">ddays(1)
-days(1)
-years(1)
-
-ymd(&quot;2016-01-01&quot;) + ddays(365)
+<h3>Duration</h3>
+<p>A duration is a fixed number of seconds. A day is always 86,400 seconds. A year is always 365.25 days, which is 31,557,600 seconds. It ignores the calendar, so adding one can move the clock when the span crosses a daylight-saving change.</p>
+<pre><code class="language-r">dminutes(90)
+ddays(1)
+</code></pre>
+<pre><code>## [1] &quot;5400s (~1.5 hours)&quot;
+## [1] &quot;86400s (~1 days)&quot;
+</code></pre>
+<h3>Period</h3>
+<p>A period is a human unit: one day, one month, one year. Its length in seconds depends on the start date. It keeps the clock time the same, as in "the same time tomorrow," even when fewer or more real hours have passed.</p>
+<pre><code class="language-r">days(1)
+</code></pre>
+<pre><code>## [1] &quot;1d 0H 0M 0S&quot;
+</code></pre>
+<h3>Interval</h3>
+<p>An interval is the elapsed time between two specific datetimes. It remembers the start and the end. Use it to measure a span, to test whether an instant falls inside (<code>%within%</code>), to test whether two spans overlap (<code>int_overlaps()</code>), or to turn the span into a duration or a period.</p>
+<pre><code class="language-r">i &lt;- interval(ymd(&quot;2026-01-01&quot;), ymd(&quot;2026-03-01&quot;))
+i
+i / ddays(1)
+i / months(1)
+ymd(&quot;2026-02-01&quot;) %within% i
+</code></pre>
+<pre><code>## [1] 2026-01-01 UTC--2026-03-01 UTC
+## [1] 59
+## [1] 2
+## [1] TRUE
+</code></pre>
+<p><code>start %--% end</code> builds the same object as <code>interval(start, end)</code>.</p>
+<h3>When a duration and a period disagree</h3>
+<p>They disagree only when the span crosses a daylight-saving transition. On every other day, 24 hours later and "the same clock time tomorrow" are the same instant.</p>
+<p>Spring forward in the United States in 2026 is March 8. That day has 23 hours, so <code>ddays(1)</code> lands one hour later on the clock than <code>days(1)</code>.</p>
+<pre><code class="language-r">x &lt;- ymd_hms(&quot;2026-03-07 12:00:00&quot;, tz = &quot;America/New_York&quot;)
+x + ddays(1)
+x + days(1)
+</code></pre>
+<pre><code>## [1] &quot;2026-03-08 13:00:00 EDT&quot;
+## [1] &quot;2026-03-08 12:00:00 EDT&quot;
+</code></pre>
+<p>A day that does not cross the change gives the same result either way.</p>
+<pre><code class="language-r">y &lt;- ymd_hms(&quot;2026-03-10 12:00:00&quot;, tz = &quot;America/New_York&quot;)
+y + ddays(1)
+y + days(1)
+</code></pre>
+<pre><code>## [1] &quot;2026-03-11 12:00:00 EDT&quot;
+## [1] &quot;2026-03-11 12:00:00 EDT&quot;
+</code></pre>
+<p>Fall back is the other direction. In 2026 the United States turns the clocks back on November 1, and that day has 25 hours. <code>ddays(1)</code> lands one hour earlier on the clock than <code>days(1)</code>.</p>
+<pre><code class="language-r">z &lt;- ymd_hms(&quot;2026-10-31 12:00:00&quot;, tz = &quot;America/New_York&quot;)
+z + ddays(1)
+z + days(1)
+</code></pre>
+<pre><code>## [1] &quot;2026-11-01 11:00:00 EST&quot;
+## [1] &quot;2026-11-01 12:00:00 EST&quot;
+</code></pre>
+<p>Longer durations, <code>dweeks()</code>, <code>dmonths()</code>, and <code>dyears()</code>, cross a transition more often. UTC, and zones without daylight saving such as <code>Asia/Kolkata</code> and <code>Asia/Tokyo</code>, never show this gap for a one-day span. Europe changes the clocks in late March and late October, not in early March and early November.</p>
+<h3>The calendar, separate from daylight saving</h3>
+<p>These come from the calendar itself. They happen in every time zone, including UTC.</p>
+<pre><code class="language-r">ymd(&quot;2026-01-31&quot;) + months(1)
+ymd(&quot;2026-01-31&quot;) %m+% months(1)
+ymd(&quot;2024-01-01&quot;) + years(1)
+</code></pre>
+<pre><code>## [1] NA
+## [1] &quot;2026-02-28&quot;
+## [1] &quot;2025-01-01&quot;
+</code></pre>
+<p>January 31 plus one month is not a date, so <code>+ months(1)</code> is <code>NA</code>. <code>%m+%</code> rolls back to the last valid day, February 28. <code>years(1)</code> adds one calendar year, not 365 days.</p>
+<p>2016 is a leap year, so that calendar year is 366 days. <code>ddays(365)</code> and <code>days(365)</code> both land on 2016-12-31. <code>years(1)</code> lands on 2017-01-01. <code>dyears(1)</code> is 365.25 days of seconds, so it lands at 06:00 UTC on 2016-12-31.</p>
+<pre><code class="language-r">ymd(&quot;2016-01-01&quot;) + ddays(365)
 ymd(&quot;2016-01-01&quot;) + days(365)
 ymd(&quot;2016-01-01&quot;) + years(1)
 ymd(&quot;2016-01-01&quot;) + dyears(1)
 </code></pre>
-<pre><code>## [1] &quot;86400s (~1 days)&quot;
-## [1] &quot;1d 0H 0M 0S&quot;
-## [1] &quot;1y 0m 0d 0H 0M 0S&quot;
-## [1] &quot;2016-12-31&quot;
+<pre><code>## [1] &quot;2016-12-31&quot;
 ## [1] &quot;2016-12-31&quot;
 ## [1] &quot;2017-01-01&quot;
 ## [1] &quot;2016-12-31 06:00:00 UTC&quot;
 </code></pre>
-<p>2016 is a leap year, so a calendar year is 366 days. <code>ddays(365)</code> and <code>days(365)</code> both land on 2016-12-31. <code>years(1)</code> lands on 2017-01-01. <code>dyears(1)</code> is 365.25 days of seconds, so the result is a datetime six hours before the end of December 31.</p>
-<pre><code class="language-r">int &lt;- interval(ymd(&quot;2004-01-01&quot;), ymd(&quot;2018-12-21&quot;))
-int
-as.duration(int)
-</code></pre>
-<pre><code>## [1] 2004-01-01 UTC--2018-12-21 UTC
-## [1] &quot;472435200s (~14.97 years)&quot;
-</code></pre>
-<p>Use a duration when you want elapsed seconds. Use a period when you want the same date next month. Use an interval when you have two endpoints.</p>
+<h3>Which one to use</h3>
+<p>Use a duration for physical elapsed time: timing a process, or exactly 24 hours later. Use a period for calendar language: the same time tomorrow, next month, or a year from today. Use an interval when you already have two dates and you want to measure the span, compare it, or test containment or overlap.</p>
+<p>Stopwatch language means a duration. Clock or calendar language means a period. Two dates mean an interval.</p>
 <hr />
 <h2>9. Time zones</h2>
 <p>A datetime from <code>ymd_hms()</code> with no <code>tz</code> is <strong>UTC</strong>.</p>
@@ -1028,7 +1086,7 @@ sales
 <td>Add a calendar month</td>
 <td>you build it</td>
 <td></td>
-<td><code>months()</code></td>
+<td><code>months()</code>, or <code>%m+%</code> at a month end</td>
 </tr>
 <tr>
 <td>Snap to the start of a month</td>
@@ -1061,6 +1119,8 @@ sales
 <li>What is the difference between <code>format(d, "%Y")</code> and <code>year(d)</code>?</li>
 <li>What does <code>with_tz()</code> change?</li>
 <li>Which function snaps a date to the first day of its month?</li>
+<li>On a day that does not cross a daylight-saving change, do <code>x + ddays(1)</code> and <code>x + days(1)</code> name the same instant?</li>
+<li>What does <code>ymd("2026-01-31") + months(1)</code> return, and what does <code>ymd("2026-01-31") %m+% months(1)</code> return?</li>
 </ol>
 <h3>Answers</h3>
 <ol>
@@ -1069,6 +1129,8 @@ sales
 <li><code>format()</code> returns a character string. <code>year()</code> returns a number. The printed year can look the same.</li>
 <li>The clock. The instant stays the same, and it is displayed in the other zone. <code>force_tz()</code> is the one that keeps the clock and changes the instant.</li>
 <li><code>floor_date(d, unit = "month")</code>.</li>
+<li>Yes. They differ only when the span crosses a daylight-saving transition. In spring, <code>ddays(1)</code> lands an hour later on the clock. In the fall, it lands an hour earlier.</li>
+<li><code>NA</code>, because February 31 does not exist. <code>%m+%</code> returns 2026-02-28.</li>
 </ol>
 <hr />
 <h2>13. Practice</h2>
@@ -1098,7 +1160,7 @@ sales
         <div class="page__footer">
             <footer>
                 <div class="page__footer-copyright">&copy; 2026 Ahmad Mousavi</div>
-                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-18T16:21:00-05:00">November 18, 2026, 4:21 PM EST</time></div>
+                <div class="page__footer-updated">Last updated: <time class="js-site-last-updated" datetime="2026-11-18T16:42:00-05:00">November 18, 2026, 4:42 PM EST</time></div>
             </footer>
         </div>
 

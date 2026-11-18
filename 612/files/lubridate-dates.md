@@ -77,10 +77,10 @@ These types do not name a day. They say how long something lasts.
 |---|---|---|---|
 | Difference | How far apart two dates are | `difftime` | `end - start` |
 | Duration | An exact number of seconds | `Duration` | `ddays(1)` |
-| Period | A calendar unit. A day can be 23 or 25 hours when the clocks change. | `Period` | `days(1)`, `months(1)`, `years(1)` |
-| Interval | The span between two instants | `Interval` | `interval(start, end)` |
+| Period | Calendar units, such as a day or a month | `Period` | `days(1)`, `months(1)`, `years(1)` |
+| Interval | The time between two specific instants | `Interval` | `interval(start, end)` |
 
-`difftime` is base R. Duration, period, and interval are lubridate. Section 7 subtracts two dates. Section 8 shows why a duration and a period can land on different days.
+`difftime` is base R. Duration, period, and interval are lubridate. Section 7 subtracts two dates. Section 8 compares the three lubridate classes.
 
 ```r
 class(as.Date("2026-11-11") - as.Date("2026-11-01"))
@@ -538,7 +538,7 @@ d
 ## [1] "2027-12-11"
 ```
 
-That assignment can build a date that does not exist, such as February 31. Check the result around month ends and leap days.
+That assignment can build a date that does not exist, such as February 31. Adding `months(1)` can do the same. Section 8 shows both.
 
 On the WMATA file, after the parse in the previous section:
 
@@ -569,6 +569,8 @@ d + years(1)
 ## [1] "2027-01-11"
 ## [1] "2027-11-11"
 ```
+
+`months(2)` from November 11 lands on January 11. January 31 plus one month is not a date. Section 8 shows the `NA` and `%m+%`.
 
 Subtract two dates to get a difftime.
 
@@ -611,26 +613,129 @@ ceiling_date(d, unit = "month")
 
 ## 8. Durations, periods, and intervals
 
-The length types from section 2, next to the functions that build them:
+A duration, a period, and an interval are three different ways to measure a length of time.
 
-| Type | What it stores | Class | How you get one |
+| | Duration | Period | Interval |
 |---|---|---|---|
-| Difference | How far apart two dates are | `difftime` | `end - start` |
-| Duration | An exact number of seconds | `Duration` | `ddays(1)` |
-| Period | A calendar unit. A day can be 23 or 25 hours when the clocks change. | `Period` | `days(1)`, `months(1)`, `years(1)` |
-| Interval | The span between two instants | `Interval` | `interval(start, end)` |
+| Measures | Exact seconds | Calendar and clock units | Time between two specific datetimes |
+| Mental model | Stopwatch | Calendar or wall clock | A start and an end |
+| Fixed length in seconds? | Yes | No. It depends on the date you add it to. | Yes, once the two ends are fixed |
+| Anchored to dates? | No | No | Yes |
+| Constructors | `ddays()`, `dhours()`, `dyears()`, `as.duration()` | `days()`, `months()`, `years()` | `interval()`, `%--%` |
 
-A **duration** is an exact number of seconds. `ddays(1)` is always 86,400 seconds. `dyears(1)` is 365.25 of those days.
+### Duration
 
-A **period** is a human unit. `days(1)` is one calendar day, which can be 23 or 25 hours when the clocks change. `years(1)` is one calendar year, 365 or 366 days.
-
-An **interval** is the span between two instants.
+A duration is a fixed number of seconds. A day is always 86,400 seconds. A year is always 365.25 days, which is 31,557,600 seconds. It ignores the calendar, so adding one can move the clock when the span crosses a daylight-saving change.
 
 ```r
+dminutes(90)
 ddays(1)
-days(1)
-years(1)
+```
 
+```
+## [1] "5400s (~1.5 hours)"
+## [1] "86400s (~1 days)"
+```
+
+### Period
+
+A period is a human unit: one day, one month, one year. Its length in seconds depends on the start date. It keeps the clock time the same, as in "the same time tomorrow," even when fewer or more real hours have passed.
+
+```r
+days(1)
+```
+
+```
+## [1] "1d 0H 0M 0S"
+```
+
+### Interval
+
+An interval is the elapsed time between two specific datetimes. It remembers the start and the end. Use it to measure a span, to test whether an instant falls inside (`%within%`), to test whether two spans overlap (`int_overlaps()`), or to turn the span into a duration or a period.
+
+```r
+i <- interval(ymd("2026-01-01"), ymd("2026-03-01"))
+i
+i / ddays(1)
+i / months(1)
+ymd("2026-02-01") %within% i
+```
+
+```
+## [1] 2026-01-01 UTC--2026-03-01 UTC
+## [1] 59
+## [1] 2
+## [1] TRUE
+```
+
+`start %--% end` builds the same object as `interval(start, end)`.
+
+### When a duration and a period disagree
+
+They disagree only when the span crosses a daylight-saving transition. On every other day, 24 hours later and "the same clock time tomorrow" are the same instant.
+
+Spring forward in the United States in 2026 is March 8. That day has 23 hours, so `ddays(1)` lands one hour later on the clock than `days(1)`.
+
+```r
+x <- ymd_hms("2026-03-07 12:00:00", tz = "America/New_York")
+x + ddays(1)
+x + days(1)
+```
+
+```
+## [1] "2026-03-08 13:00:00 EDT"
+## [1] "2026-03-08 12:00:00 EDT"
+```
+
+A day that does not cross the change gives the same result either way.
+
+```r
+y <- ymd_hms("2026-03-10 12:00:00", tz = "America/New_York")
+y + ddays(1)
+y + days(1)
+```
+
+```
+## [1] "2026-03-11 12:00:00 EDT"
+## [1] "2026-03-11 12:00:00 EDT"
+```
+
+Fall back is the other direction. In 2026 the United States turns the clocks back on November 1, and that day has 25 hours. `ddays(1)` lands one hour earlier on the clock than `days(1)`.
+
+```r
+z <- ymd_hms("2026-10-31 12:00:00", tz = "America/New_York")
+z + ddays(1)
+z + days(1)
+```
+
+```
+## [1] "2026-11-01 11:00:00 EST"
+## [1] "2026-11-01 12:00:00 EST"
+```
+
+Longer durations, `dweeks()`, `dmonths()`, and `dyears()`, cross a transition more often. UTC, and zones without daylight saving such as `Asia/Kolkata` and `Asia/Tokyo`, never show this gap for a one-day span. Europe changes the clocks in late March and late October, not in early March and early November.
+
+### The calendar, separate from daylight saving
+
+These come from the calendar itself. They happen in every time zone, including UTC.
+
+```r
+ymd("2026-01-31") + months(1)
+ymd("2026-01-31") %m+% months(1)
+ymd("2024-01-01") + years(1)
+```
+
+```
+## [1] NA
+## [1] "2026-02-28"
+## [1] "2025-01-01"
+```
+
+January 31 plus one month is not a date, so `+ months(1)` is `NA`. `%m+%` rolls back to the last valid day, February 28. `years(1)` adds one calendar year, not 365 days.
+
+2016 is a leap year, so that calendar year is 366 days. `ddays(365)` and `days(365)` both land on 2016-12-31. `years(1)` lands on 2017-01-01. `dyears(1)` is 365.25 days of seconds, so it lands at 06:00 UTC on 2016-12-31.
+
+```r
 ymd("2016-01-01") + ddays(365)
 ymd("2016-01-01") + days(365)
 ymd("2016-01-01") + years(1)
@@ -638,29 +743,17 @@ ymd("2016-01-01") + dyears(1)
 ```
 
 ```
-## [1] "86400s (~1 days)"
-## [1] "1d 0H 0M 0S"
-## [1] "1y 0m 0d 0H 0M 0S"
 ## [1] "2016-12-31"
 ## [1] "2016-12-31"
 ## [1] "2017-01-01"
 ## [1] "2016-12-31 06:00:00 UTC"
 ```
 
-2016 is a leap year, so a calendar year is 366 days. `ddays(365)` and `days(365)` both land on 2016-12-31. `years(1)` lands on 2017-01-01. `dyears(1)` is 365.25 days of seconds, so the result is a datetime six hours before the end of December 31.
+### Which one to use
 
-```r
-int <- interval(ymd("2004-01-01"), ymd("2018-12-21"))
-int
-as.duration(int)
-```
+Use a duration for physical elapsed time: timing a process, or exactly 24 hours later. Use a period for calendar language: the same time tomorrow, next month, or a year from today. Use an interval when you already have two dates and you want to measure the span, compare it, or test containment or overlap.
 
-```
-## [1] 2004-01-01 UTC--2018-12-21 UTC
-## [1] "472435200s (~14.97 years)"
-```
-
-Use a duration when you want elapsed seconds. Use a period when you want the same date next month. Use an interval when you have two endpoints.
+Stopwatch language means a duration. Clock or calendar language means a period. Two dates mean an interval.
 
 ---
 
@@ -826,7 +919,7 @@ The order of the work is: read the rows, parse the date, pull out the pieces you
 | Say how the string is laid out | `%Y-%m-%d` and the rest | the same codes | usually the function name |
 | Year as a number | `format()` returns text | | `year()` |
 | Month, weekday | `format()`, `weekdays()` | | `month()`, `wday()` |
-| Add a calendar month | you build it | | `months()` |
+| Add a calendar month | you build it | | `months()`, or `%m+%` at a month end |
 | Snap to the start of a month | you build it | | `floor_date()` |
 | See which rows failed to parse | little built in | `problems()` | a warning, and `NA` |
 | Change the time zone | `tz`, then convert | the locale | `with_tz()`, `force_tz()` |
@@ -846,6 +939,8 @@ They fit together. Import with readr. Manipulate the dates with lubridate.
 3. What is the difference between `format(d, "%Y")` and `year(d)`?
 4. What does `with_tz()` change?
 5. Which function snaps a date to the first day of its month?
+6. On a day that does not cross a daylight-saving change, do `x + ddays(1)` and `x + days(1)` name the same instant?
+7. What does `ymd("2026-01-31") + months(1)` return, and what does `ymd("2026-01-31") %m+% months(1)` return?
 
 ### Answers
 
@@ -854,6 +949,8 @@ They fit together. Import with readr. Manipulate the dates with lubridate.
 3. `format()` returns a character string. `year()` returns a number. The printed year can look the same.
 4. The clock. The instant stays the same, and it is displayed in the other zone. `force_tz()` is the one that keeps the clock and changes the instant.
 5. `floor_date(d, unit = "month")`.
+6. Yes. They differ only when the span crosses a daylight-saving transition. In spring, `ddays(1)` lands an hour later on the clock. In the fall, it lands an hour earlier.
+7. `NA`, because February 31 does not exist. `%m+%` returns 2026-02-28.
 
 ---
 
