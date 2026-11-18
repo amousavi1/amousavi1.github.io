@@ -34,52 +34,53 @@ DATA 412/612
 
 \vspace{0.25em}
 
-Weeks 1--13. The new material is R Markdown presentations,
-chunk options, tables, and citations.
+Weeks 1--10. The new material is stringr, factors, and lubridate.
 
-Write your answers in an R script or a short \texttt{.Rmd}.
-You may use R and RStudio.
+Write your answers in an R script. You may use R and RStudio.
 You may use your notes and the course website
 (\texttt{https://amousavi1.github.io/612/data-612.html}).
 You may not use Google, any other website, or an LLM.
-You do not have to knit.
+Load the tidyverse.
 
 \begin{enumerate}
-\item For each goal, name the output format from this course and write
-the YAML \texttt{output} (or Quarto \texttt{format}) line you would use.
-\begin{itemize}
-  \item HTML slides you can open in a browser.
-  \item A PDF slide deck that needs LaTeX.
-  \item A file someone else will click through in PowerPoint.
-\end{itemize}
-For the HTML choice, say what marks the start of a new slide.
-If you choose xaringan instead of ioslides, say that slides are
-separated by a line that contains only \texttt{---}.
+\item In \texttt{people}, turn the missing value into the text
+\texttt{missing}, put every string in title case, and paste the
+three strings into one string separated by \texttt{"; "}.
 
-\item Match each goal to one of \texttt{eval = FALSE},
-\texttt{echo = FALSE}, or \texttt{include = FALSE}.
-\begin{itemize}
-  \item The reader must see the code, and R must not run it.
-  \item R must run the chunk, and the reader must see the plot but
-        not the code.
-  \item R must load the packages, and the reader must see nothing
-        from that chunk.
-\end{itemize}
+\begin{lstlisting}
+people <- c("ada lovelace", "grace hopper", NA)
+\end{lstlisting}
 
-\item Write a Quarto plot chunk labeled \texttt{fig-hwy} that draws
-highway mileage against engine size for \texttt{mpg}, with the
-caption \texttt{Highway mileage and engine size}.
-In the next paragraph, refer to that figure with a Quarto
-cross-reference.
-Then write the bookdown equivalent: the chunk option \texttt{fig.cap}
-and the \texttt{\textbackslash @ref} call, for a chunk labeled
-\texttt{hwy}.
+\item \texttt{party} is already a factor. Merge \texttt{Dem} and
+\texttt{Rep} into one level named \texttt{Major}. Then put the
+most common level first. Report the levels.
 
-\item In \texttt{mpg}, reorder \texttt{class} by median \texttt{hwy}
-and make a boxplot of \texttt{hwy} by that factor.
-Put the plot in a chunk that has a caption, and send a one-row
-count of the reordered levels to \texttt{knitr::kable()} with a
-caption. The count table should be visible. The plot code should not.
+\begin{lstlisting}
+party <- factor(c(
+  "Dem", "Dem", "Rep", "Rep", "Rep", "Ind", "Other", "Other"
+))
+\end{lstlisting}
+
+\item Start from \texttt{ymd("2016-01-01")}. The year 2016 is a
+leap year. What date does adding \texttt{years(1)} land on?
+What date does adding \texttt{ddays(365)} land on?
+Which of those two functions is a period, and which is a duration?
+Also give \texttt{floor\_date(ymd("2026-11-11"), unit = "month")}.
+
+\item In \texttt{events}, the date strings are day, then month,
+then year. Parse them. Keep rows on or after 1 February 2010.
+Put \texttt{label} in upper case, then set the level order to
+\texttt{TALK} followed by \texttt{LAB-A}. Report the levels, and
+the labels in row order.
+
+\begin{lstlisting}
+events <- tribble(
+  ~label, ~opened,
+  "Lab-A", "01-02-2010",
+  "Lab-B", "15-01-2010",
+  "Talk",  "10-03-2010"
+)
+\end{lstlisting}
 \end{enumerate}
 
 \end{document}

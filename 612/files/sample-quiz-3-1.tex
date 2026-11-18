@@ -34,50 +34,57 @@ DATA 412/612
 
 \vspace{0.25em}
 
-Weeks 1--13. The new material is R Markdown presentations,
-chunk options, tables, and citations.
+Weeks 1--10. The new material is stringr, factors, and lubridate.
 
-Write your answers in an R script or a short \texttt{.Rmd}.
-You may use R and RStudio.
+Write your answers in an R script. You may use R and RStudio.
 You may use your notes and the course website
 (\texttt{https://amousavi1.github.io/612/data-612.html}).
 You may not use Google, any other website, or an LLM.
-You do not have to knit. Write the YAML, the chunk headers, and the
-code you would put in the file.
+Load the tidyverse.
 
 \begin{enumerate}
-\item Write a minimal YAML header for an ioslides presentation titled
-\texttt{Delay notes}, with you as the author.
-Under it, write the markdown for two slides after the title slide.
-Each slide has a title and one sentence.
-Say which heading level starts a slide in ioslides.
+\item On the character vector below, return only the digits that
+follow a lowercase \texttt{room} and a space. Use one \texttt{stringr}
+call. Every other string should be \texttt{NA}.
 
-\item You need three chunks:
-\begin{itemize}
-  \item a setup chunk that loads the tidyverse and is not printed;
-  \item a chunk that shows both the code and a \texttt{knitr::kable()}
-        table of \texttt{mpg} summarized to the median \texttt{hwy}
-        by \texttt{class}, with the caption \texttt{Median highway
-        mileage};
-  \item a plot chunk whose code is hidden, whose messages are hidden,
-        and whose figure still appears.
-\end{itemize}
-Write the chunk options for each.
-Set the shared defaults in the setup chunk with
+\begin{lstlisting}
+c("room 214", "lab", "room 8", "Room 30", "hall 12")
+\end{lstlisting}
 
-\texttt{knitr::opts\_chunk\$set()}.
+\item In \texttt{labs}, reorder \texttt{dept} by the mean of
+\texttt{score}, highest mean first. Report the levels.
+Do not use \texttt{arrange()}.
 
-Override them only where a chunk differs.
+\begin{lstlisting}
+labs <- tibble(
+  dept = c("Math", "Math", "CS", "CS", "Physics", "Physics"),
+  score = c(80, 100, 120, 140, 90, 110)
+)
+\end{lstlisting}
 
-\item Point the document at a bibliography file \texttt{refs.bib}.
-In the body, cite the key \texttt{wickham2017r4ds} in parentheses,
-and end the file with a \texttt{References} heading so the entry
-is printed.
+\item Let \texttt{dt} be
 
-\item Still in that document, add a chunk with \texttt{echo = TRUE}
-that runs a two-sample \texttt{t.test()} of \texttt{hwy} for
-\texttt{drv} \texttt{"f"} against \texttt{drv} \texttt{"r"} in
-\texttt{mpg}. State the null hypothesis in one sentence under the chunk.
+\begin{lstlisting}
+ymd_hms("2026-11-11 14:30:00", tz = "UTC")
+\end{lstlisting}
+
+Show \texttt{with\_tz(dt, "America/New\_York")} and
+\texttt{force\_tz(dt, "America/New\_York")}.
+In one sentence, say which call changes the instant and which
+call only changes the clock.
+
+\item From \texttt{visits}, parse \texttt{when} with \texttt{ymd()}.
+Put \texttt{note} in lower case and keep the rows whose note starts
+with \texttt{gate}. On the rows that remain, order \texttt{site}
+by frequency, most common first, and report the levels.
+
+\begin{lstlisting}
+visits <- tibble(
+  when = c("2026-11-01", "2026-11-11", "2026-11-03", "2026-12-02"),
+  site = c("north", "south", "north", "east"),
+  note = c("gate A", "GATE b", "gate a", "hall C")
+)
+\end{lstlisting}
 \end{enumerate}
 
 \end{document}
