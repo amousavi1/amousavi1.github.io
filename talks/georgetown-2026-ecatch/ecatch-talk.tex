@@ -199,16 +199,16 @@
       \node[box] (s) {text\\ $\mathbf{s}_i$};
       \node[box, right=0.38cm of s] (im) {image\\ $\mathbf{i}_i$};
       \node[box, right=0.38cm of im] (y) {label\\ $y_i\in\{0,1\}$};
-      \node[box, right=0.38cm of y] (t) {time\\ $t_i$};
+      \node[box, right=0.38cm of y] (t) {time\\ $\tau_i$};
     \end{tikzpicture}
   \end{center}
   \vspace{0.35em}
   \[
-    (\mathbf{s}_i,\ \mathbf{i}_i,\ y_i,\ t_i)
+    (\mathbf{s}_i,\ \mathbf{i}_i,\ y_i,\ \tau_i)
   \]
   \begin{itemize}
-    \item $y_i\in\{0,1\}$ is the binary misinformation label (real or fake).
-    \item $t_i$ is the timestamp. Order is part of the data, not a feature we invent later.
+    \item $y_i$ is a post label: real or fake. The event label is not given.
+    \item $\tau_i$ is the timestamp. Order is part of the data, not a feature we invent later.
   \end{itemize}
   \note{Walk the four coordinates slowly. Stress that the label is post-level and noisy, and that no event id sits in the tuple. We have to build events. Do not say ``BERT'' yet.}
 \end{frame}
@@ -294,12 +294,12 @@
 \begin{frame}{One formula: scaled dot-product attention}
   \[
     \mathrm{Attention}(Q,K,V)
-    = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d}}\right) V
+    = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right) V
   \]
   \begin{itemize}
     \item $Q$, $K$, and $V$ are learned linear maps of the same sequence.
     \item Row $i$, column $j$ of $QK^{\top}$ is a score: how much token $i$ uses token $j$.
-    \item Dividing by $\sqrt{d}$ keeps those scores from saturating the softmax.
+    \item Dividing by $\sqrt{d_k}$ keeps those scores from saturating the softmax.
     \item \textbf{Multi-head} means several of these maps in parallel. Their outputs are concatenated and mixed by one more matrix.
   \end{itemize}
   \note{Stay on this formula. If someone wants the matrix, point at $QK^{\top}$: rows are queries, columns are keys. The square root is a scale, nothing more. Do not derive backpropagation.}
@@ -388,21 +388,15 @@
 
 % ----- 14. Gate formula -----
 \begin{frame}{The gate is a convex combination in each coordinate}
-  {\small
-  \[
-    H_i^{\mathrm{text}}=W_o\,\mathrm{MHSA}(\mathcal{T}_i)+b_o,
-    \qquad
-    H_i^{\mathrm{img}}=\overline{W}_o\,\mathrm{MHSA}(\mathcal{I}_i)+\overline{b}_o.
-  \]
-  }
-  \vspace{-0.2em}
+  Each modality vector is passed through the self-attention map, with that same vector as query, key, and value. Call the results $H_i^{\mathrm{text}}$ and $H_i^{\mathrm{img}}$.
+  \vspace{0.35em}
   {\small
   \[
     C_i^{\mathcal{T}\to\mathcal{I}}
-      = W_{\overline{o}}\,\MHAttn(H_i^{\mathrm{text}},H_i^{\mathrm{img}},H_i^{\mathrm{img}})+b_{\overline{o}},
+      = W\,\MHAttn(H_i^{\mathrm{text}},H_i^{\mathrm{img}},H_i^{\mathrm{img}})+b,
     \quad
     C_i^{\mathcal{I}\to\mathcal{T}}
-      = \overline{W}_{\overline{o}}\,\MHAttn(H_i^{\mathrm{img}},H_i^{\mathrm{text}},H_i^{\mathrm{text}})+\overline{b}_{\overline{o}}.
+      = \overline{W}\,\MHAttn(H_i^{\mathrm{img}},H_i^{\mathrm{text}},H_i^{\mathrm{text}})+\overline{b}.
   \]}
   \vspace{-0.35em}
   \[
@@ -412,7 +406,7 @@
   \]
   {\small
     $\sigma(g_i)\in(0,1)^{d}$, so coordinate $k$ of $\mathcal{P}_i$ is a convex combination of the two directions.
-    The gate is $g_i = W_g[C_i^{\mathcal{T}\to\mathcal{I}};C_i^{\mathcal{I}\to\mathcal{T}}]+b_g$, with $W_g\in\R^{d\times 2d}$.
+    The gate is $g_i = W_g \begin{bmatrix} C_i^{\mathcal{T}\to\mathcal{I}} \\ C_i^{\mathcal{I}\to\mathcal{T}} \end{bmatrix}+b_g$, with $W_g\in\R^{d\times 2d}$.
     With one vector on each side, the interesting mix is this gate.}
 \end{frame}
 
@@ -426,7 +420,7 @@
       \node[win, right=1.35cm of w1] (w2) {window $t$};
       \draw[-{Stealth[length=2.2mm]}, gtownmid, line width=0.7pt] (w1) -- (w2);
       \node[below=0.45cm of w1, font=\scriptsize, align=center, text=muted]
-        {posts ordered by $t$};
+        {posts ordered by $\tau$};
       \node[below=0.45cm of w2, font=\scriptsize, align=center, text=muted]
         {half of these posts\\ also sit in $t-1$};
     \end{tikzpicture}
@@ -446,7 +440,7 @@
       \centering
       \textbf{Inside window $t$}\\[0.55em]
       {\small $\displaystyle
-        \lambda_i=\exp\!\bigl(-\alpha(t_{\max}-t_i)\bigr)
+        \lambda_i=\exp\!\bigl(-\alpha(\tau_{t,\max}-\tau_i)\bigr)
       $}\\[0.7em]
       {\small $\displaystyle
         L_t
@@ -466,7 +460,7 @@
     \end{column}
   \end{columns}
   \vspace{0.7em}
-  The LSTM receives $\bar L_t=[L_t;\Delta_t;M_t]$.
+  The LSTM receives $\bar L_t=[L_t;\Delta_t;M_t]\in\R^{3d}$, with the scalar $M_t$ repeated across $d$ coordinates.
 \end{frame}
 
 % ----- 17. LSTM -----
@@ -494,19 +488,18 @@
   \vspace{0.25em}
   \begin{itemize}
     \item The event is a short sequence of windows. One new vector updates the state.
-    \item The hidden state starts at $T_0=\mathbf{0}$, and it is reset at every new event.
-    \item We classify from $T_{t_{\max}}$, the state after the last window.
+    \item The state and the cell start at $0$, and both are reset at every new event.
+    \item We classify from $T_{T_E}$, the state after the last window.
   \end{itemize}
   \note{The picture is the whole explanation: input, state, pass it on, reset per event. If asked for backpropagation through time, defer. Sequences here are short, which is why a standard unidirectional LSTM is enough.}
 \end{frame}
 
 % ----- 18. Prediction and weights -----
-\begin{frame}{One probability, then a weight on each post}
+\begin{frame}{One probability per event, with a class weight}
   \[
-    p=\sigma(W_c T_{t_{\max}}+b_c),
-    \qquad p\in[0,1]
+    p_E=\sigma(W_c T_{T_E}+b_c)
   \]
-  The weight of class $c\in\{0,1\}$ uses the number of posts in that class:
+  The weight of class $c\in\{0,1\}$ is computed on events, not on posts:
   \[
     w_c=\frac{\bar n}{n_c+\varepsilon},
     \qquad
@@ -514,52 +507,50 @@
     \qquad \varepsilon>0.
   \]
   \[
-    \mathcal{L}^{E}_{\mathrm{CL}}
-    = -\sum_{i\in E} w_{y_i}
-      \bigl[y_i\log p_i+(1-y_i)\log(1-p_i)\bigr],
-    \qquad
     \mathcal{L}_{\mathrm{CE}}
-    = \sum_{E\in\mathcal{E}}\mathcal{L}^{E}_{\mathrm{CL}}.
+    = -\sum_{E\in\mathcal{E}} w_{y_E}
+      \bigl[y_E\log p_E+(1-y_E)\log(1-p_E)\bigr].
   \]
-  The smaller class gets the larger weight. Each epoch keeps the top-$k$ highest-loss samples.
+  The smaller class gets the larger weight. Training also emphasizes events whose loss is already large.
 \end{frame}
 
-% ----- 19. Per-event loss -----
-\begin{frame}{The loss sums the post labels inside the event}
+% ----- 19. Event label -----
+\begin{frame}{The event label comes from the last window}
   \[
-    \mathcal{L}^{E}_{\mathrm{CL}}
-    = -\sum_{i\in E} w_{y_i}
-      \bigl[y_i\log p_i+(1-y_i)\log(1-p_i)\bigr]
+    y_E
+    = \mathbf{1}\!\left(
+        \sum_{i\in\mathcal{W}_{T_E}} \lambda_i\, y_i
+        \;\ge\;
+        \frac12\sum_{i\in\mathcal{W}_{T_E}} \lambda_i
+      \right)
   \]
   \begin{itemize}
-    \item $p=\sigma(W_c T_{t_{\max}}+b_c)$ is the probability from the last window.
-    \item The sum runs over the posts $i$ in the event, and each post keeps its own label $y_i$.
-    \item $\mathcal{L}_{\mathrm{CE}}$ adds $\mathcal{L}^{E}_{\mathrm{CL}}$ over the events.
+    \item Only the most recent window votes, and recent posts inside it vote more.
+    \item Early speculation in the same event does not get a vote.
+    \item The displayed rule uses $\ge$. The paper also says a tie defaults to label $0$.
   \end{itemize}
+  \vspace{0.4em}
+  Event-level annotation is not in the data. This is the supervision the loss sees.
 \end{frame}
 
 % ----- 20. Total loss -----
 \begin{frame}{The loss asks for fit, smoothness, and small weights}
   \[
-    \mathcal{L}^{E}_{\mathrm{TC}}
-    = \sum_{t\in[t_{\max}]}
-      \|T_t-T_{t-1}\|^{2}
-      \cdot \mathrm{sim}(T_t,T_{t-1}),
-    \qquad
-    \mathrm{sim}(a,b)=\frac{a\cdot b}{\|a\|\,\|b\|}
-  \]
-  \[
     \mathcal{L}_{\mathrm{TC}}
-    = \sum_{E\in\mathcal{E}}\mathcal{L}^{E}_{\mathrm{TC}}
+    = \sum_{E\in\mathcal{E}}\sum_{t=2}^{T_E}
+      \|T_t-T_{t-1}\|_2^2
+      \cdot \mathrm{sim}(T_t,T_{t-1})
   \]
-  \vspace{0.2em}
+  $\mathrm{sim}$ is cosine similarity.
+  The penalty is the squared step times the cosine of the angle between neighboring states.
+  \vspace{0.45em}
   \[
     \mathcal{L}_{\mathrm{total}}
     = \mathcal{L}_{\mathrm{CE}}
     + \lambda_{\mathrm{TC}}\,\mathcal{L}_{\mathrm{TC}}
     + \lambda_{\mathrm{reg}}\,\|\Theta\|_2^2
   \]
-  $\Theta$ is the set of trainable parameters.
+  $\Theta$ is the set of trainable parameters. Each term is computed at event level.
 \end{frame}
 
 % ----- 21. Fakeddit -----
@@ -762,7 +753,7 @@
   {\Large I would like to leave the rest of the hour for questions.}
   \vspace{1.1em}
   \begin{itemize}
-    \item The gate, the per-event loss, and the text-only clustering are the pieces I am happiest to unpack.
+    \item The gate, the event label, and the text-only clustering are the pieces I am happiest to unpack.
   \end{itemize}
   \vspace{1.2em}
   {\small
